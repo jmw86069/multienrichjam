@@ -1,0 +1,21 @@
+Package: jamenrich
+Type: Package
+Title: Jam MultiEnrich analysis of multiple gene set enrichment results
+Version: 0.0.0.900
+Authors@R: person(given="James M.", family="Ward",
+    email="jmw86069@gmail.com", role=c("aut", "cre"))
+Maintainer: James M. Ward <jmw86069@gmail.com>
+Description: Methods to analyze multiple gene set enrichment results, extending
+    EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu) functions
+    specifically to explore and compare multiple enrichment results. Extends
+    igraph with coloredrectangle node type.
+Depends: R (>= 3.4.3)
+Imports: jamba,
+    igraph
+Suggests: knitr,
+    rmarkdown
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+URL: http://github.com/jmw86069/jamenrich
+BugReports: http://github.com/jmw86069/jamenrich/issues
