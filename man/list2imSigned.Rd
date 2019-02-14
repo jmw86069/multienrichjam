@@ -4,7 +4,8 @@
 \alias{list2imSigned}
 \title{convert list to directional incidence matrix}
 \usage{
-list2imSigned(x, makeUnique = TRUE, doTimer = FALSE, verbose = FALSE, ...)
+list2imSigned(x, makeUnique = TRUE, doTimer = FALSE, verbose = FALSE,
+  ...)
 }
 \value{
 numeric matrix with rownames defined by names from each vector

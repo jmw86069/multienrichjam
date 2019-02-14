@@ -4,7 +4,8 @@
 \alias{list2im}
 \title{convert list to incidence matrix}
 \usage{
-list2im(x, makeUnique = TRUE, keepCounts = TRUE, verbose = FALSE, ...)
+list2im(x, makeUnique = TRUE, keepCounts = TRUE, verbose = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{list of vectors}

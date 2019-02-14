@@ -88,5 +88,11 @@ and the coloredrectangle vertex shapes are drawn on top of the edges.
 Transparent nodes will therefore show edges beneath them.
 }
 \seealso{
-\code{\link[igraph]{shapes}}
+`igraph::shapes()`
+
+Other jam igraph functions: \code{\link{cnetplotJam}},
+  \code{\link{cnetplot_internalJam}},
+  \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfr}}
 }
+\concept{jam igraph functions}

@@ -1,0 +1,20 @@
+template:
+  params:
+    bootswatch: cosmo
+reference:
+- title: MultiEnrichMap functions
+  desc: Functions for the MultiEnrichMap workflow
+  contents:
+  - has_concept("jam MultiEnrichMap functions")
+- title: conversion functions
+  desc: Functions that convert data types
+  contents:
+  - has_concept("jam conversion functions")
+- title: igraph-related functions
+  desc: Functions that extend or customize igraph-related features
+  contents:
+  - has_concept("jam igraph functions")
+- title: list functions
+  desc: Functions that operate on list objects
+  contents:
+  - has_concept("jam list functions")

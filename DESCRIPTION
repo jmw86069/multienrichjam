@@ -1,24 +1,28 @@
-Package: jamenrich
+Package: multienrichjam
 Type: Package
-Title: Jam MultiEnrich analysis of multiple gene set enrichment results
-Version: 0.0.0.900
+Title: Analysis and Visualization of Multiple Gene Set Enrichments
+Version: 0.0.1.900
 Authors@R: person(given="James M.", family="Ward",
     email="jmw86069@gmail.com", role=c("aut", "cre"))
 Maintainer: James M. Ward <jmw86069@gmail.com>
-Description: Methods to analyze multiple gene set enrichment results, extending
-    EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu) functions
-    specifically to explore and compare multiple enrichment results. Extends
-    igraph with coloredrectangle node type.
-Depends: R (>= 3.4.3)
+Description: Methods to analyze multiple gene set enrichment results,
+    extending EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu)
+    functions specifically to explore and compare multiple enrichment
+    results. New igraph node shape "coloredrectangle".
+Depends: R (>= 3.5.0)
 Imports: jamba,
+    colorjam (>= 0.0.8.900),
     igraph,
     qgraph,
-    arules
+    arules,
+    dplyr,
+    DOSE,
+    enrichplot
 Suggests: knitr,
     rmarkdown
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-URL: http://github.com/jmw86069/jamenrich
-BugReports: http://github.com/jmw86069/jamenrich/issues
-RoxygenNote: 6.0.1
+URL: http://github.com/jmw86069/multienrichjam
+BugReports: http://github.com/jmw86069/multienrichjam/issues
+RoxygenNote: 6.1.1

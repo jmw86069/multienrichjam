@@ -5,7 +5,8 @@
 \title{igraph layout using qgraph Fruchterman-Reingold}
 \usage{
 layout_with_qfr(g, repulse = 3.1, area = 8 * (vcount(g)^2),
-  repulse.rad = (vcount(g)^repulse), constraints = NULL, seed = 123, ...)
+  repulse.rad = (vcount(g)^repulse), constraints = NULL, seed = 123,
+  ...)
 }
 \arguments{
 \item{g}{igraph object}
@@ -63,5 +64,11 @@ plot(g, main="layout_with_qfr, repulse=6\\n(qgraph custom)",
 
 }
 \seealso{
-\code{\link[qgraph]{qgraph.layout.fruchtermanreingold}}
+`qgraph::qgraph.layout.fruchtermanreingold()`
+
+Other jam igraph functions: \code{\link{cnetplotJam}},
+  \code{\link{cnetplot_internalJam}},
+  \code{\link{igraph2pieGraph}},
+  \code{\link{shape.coloredrectangle.plot}}
 }
+\concept{jam igraph functions}
