@@ -9,8 +9,8 @@ list2imSigned(x, makeUnique = TRUE, doTimer = FALSE, verbose = FALSE,
 }
 \value{
 numeric matrix with rownames defined by names from each vector
-   in the input list, and colnames defined by the names of the input
-   list. Values in the matrix are values from each vector.
+in the input list, and colnames defined by the names of the input
+list. Values in the matrix are values from each vector.
 }
 \description{
 convert list to directional incidence matrix

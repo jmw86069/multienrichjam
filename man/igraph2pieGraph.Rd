@@ -16,21 +16,21 @@ Convert igraph to use pie node shapes
 \details{
 This function converts an igraph to use pie node shapes,
 where pie wedges are colored using values derived from a
-numeric matrix `valueIM` or pre-defined in a character matrix
-containing colors `valueIMcolors`.
+numeric matrix \code{valueIM} or pre-defined in a character matrix
+containing colors \code{valueIMcolors}.
 
 Note that pie wedge sizes are equally-sized and do not vary
 by score, instead the color intensity is applied to each pie
 wedge.
 
-Node names using `V(g)$name` matching `rownames(valueIMcolors)`
+Node names using \code{V(g)$name} matching \code{rownames(valueIMcolors)}
 are colorized and the node shape is converted to pie. All other
 nodes are not modified.
 
-When `valueIMcolors` is not defined, it is derived from `valueIM`
-using `colorjam::matrix2heatColors()`. In that case, `colorV` defines the color
+When \code{valueIMcolors} is not defined, it is derived from \code{valueIM}
+using \code{colorjam::matrix2heatColors()}. In that case, \code{colorV} defines the color
 used for numeric values in each column, and other options are passed
-to `colorjam::matrix2heatColors()` via `...` arguments.
+to \code{colorjam::matrix2heatColors()} via \code{...} arguments.
 }
 \seealso{
 Other jam igraph functions: \code{\link{cnetplotJam}},

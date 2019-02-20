@@ -10,8 +10,8 @@ mergeAllXY(...)
 Merge a list of data.frames keeping all rows
 }
 \details{
-This function is an extension to the `base::merge.data.frame()`
-function, with the default arguments `all.x=TRUE, all.y=TRUE` in
+This function is an extension to the \code{base::merge.data.frame()}
+function, with the default arguments \code{all.x=TRUE, all.y=TRUE} in
 order to maintain all rows of all input data.frames.
 }
 \seealso{

@@ -17,20 +17,20 @@ cnetplotJam(x, showCategory = 5, categorySize = "geneNum",
 resulting Cnet plot.}
 
 \item{categorySize}{character value indicating how to size the pathway
-nodes, where `"geneNum"` sizes nodes by the number of genes in that
-pathway, and `"pvalue"` sizes nodes by the enrichment P-value using
-the format `-log10(pvalue)`.}
+nodes, where \code{"geneNum"} sizes nodes by the number of genes in that
+pathway, and \code{"pvalue"} sizes nodes by the enrichment P-value using
+the format \code{-log10(pvalue)}.}
 
 \item{nodeLabel}{character value indicating which colname in
-`as.data.frame(x)` to use as a node label. Depending upon the source
+\code{as.data.frame(x)} to use as a node label. Depending upon the source
 of data, there may be alternative colnames that are more suitable
 as node labels.}
 
 \item{foldChange}{numeric vector named by gene, or NULL. When supplied,
-the vector names must use the same nomenclature as the `x` input
-object, which can be inspected with `print(head(x@gene))`.}
+the vector names must use the same nomenclature as the \code{x} input
+object, which can be inspected with \code{print(head(x@gene))}.}
 
-\item{fixed}{optional argument passed to `netplot`.}
+\item{fixed}{optional argument passed to \code{netplot}.}
 
 \item{doPlot}{logical indicating whether to plot the result.}
 
@@ -46,7 +46,7 @@ and category node sizes to be in relative proportion.}
 object, and is applied directly to the igraph object.}
 
 \item{colorSub}{character vector of valid R colors, whose names
-are compared to node names, for example `V(g)$name %in% names(colorSub)`.}
+are compared to node names, for example \code{V(g)$name \%in\% names(colorSub)}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 
@@ -56,7 +56,7 @@ are compared to node names, for example `V(g)$name %in% names(colorSub)`.}
 Create a cnetplot igraph object
 }
 \details{
-The purpose of this function is to mimic the steps in `DOSE:::cnetplot()`
+The purpose of this function is to mimic the steps in \code{DOSE:::cnetplot()}
 except not plot the output, and provide some customizations.
 }
 \seealso{

@@ -64,7 +64,7 @@ plot(g, main="layout_with_qfr, repulse=6\\n(qgraph custom)",
 
 }
 \seealso{
-`qgraph::qgraph.layout.fruchtermanreingold()`
+\code{qgraph::qgraph.layout.fruchtermanreingold()}
 
 Other jam igraph functions: \code{\link{cnetplotJam}},
   \code{\link{cnetplot_internalJam}},

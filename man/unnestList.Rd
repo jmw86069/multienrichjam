@@ -12,7 +12,7 @@ unnestList(x, unnamedBase = "x", parentName = NULL, sep = ".",
 \item{x}{list potentially containing lists}
 
 \item{unnamedBase}{character value used as a base for naming any
-un-named lists, using the format `makeNamesFunc(rep(unnamedBase, n))`.}
+un-named lists, using the format \code{makeNamesFunc(rep(unnamedBase, n))}.}
 
 \item{sep}{character delimiter used between nested list names.}
 
@@ -23,7 +23,7 @@ useful in case some classes inherit list properties.}
 
 \item{makeNamesFunc}{function that takes a character vector and returns
 non-duplicated character vector of equal length. By default it
-uses `jamba::makeNames()`.}
+uses \code{jamba::makeNames()}.}
 }
 \description{
 Un-nest a nested list into a simple list

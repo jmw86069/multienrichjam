@@ -14,7 +14,7 @@ isColorBlank(x, c_max = 7, l_min = 95, alpha_max = 0.1,
 range of no color 0 to maximum color 100.}
 
 \item{l_min}{numeric minimum luminance required for a color to be
-considered blank, combined with the `c_max` argument. This
+considered blank, combined with the \code{c_max} argument. This
 threshold prevents grey colors from being considered blank,
 unless their luminance is above this threshold.}
 
@@ -23,7 +23,7 @@ below which a color is considered blank, in range of fully
 transparent 0, to fully non-transparent 1.}
 
 \item{blankColor}{character vector of R colors directly matched to
-the input `x` vector. The value `"transparent"` is useful here,
+the input \code{x} vector. The value \code{"transparent"} is useful here,
 because it is not easily converted to HCL color space.}
 
 \item{...}{additional arguments are ignored.}
@@ -35,7 +35,7 @@ Determine if colors are blank colors
 This function takes a vector of colors and determines if each color
 is considered a "blank color", based upon direct match and the
 color chroma saturation and luminance. For example, extremely pale
-colors from `vals2colorLevels()` may be considered "blank" if the
+colors from \code{colorjam::vals2colorLevels()} may be considered "blank" if the
 color saturation is extremely low. Similarly, colors with
 extremely high alpha transparency may be considered "blank".
 }

@@ -22,12 +22,12 @@ which are nodes that have no remaining edges.}
 
 \item{minSetDegree}{integer value indicating the minimum number
 of edges each Set node must have to be retained in the resulting
-igraph. Use `minSetDegree=2` to retain only Set nodes that
+igraph. Use \code{minSetDegree=2} to retain only Set nodes that
 have multiple connected Gene nodes.}
 
 \item{minGeneDegree}{integer value indicating the minimum number
 of edges each Gene node must have to be retained in the resulting
-igraph. Use `minGeneDegree=2` to retain only Gene nodes that
+igraph. Use \code{minGeneDegree=2} to retain only Gene nodes that
 connect to multiple Set nodes.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
@@ -41,23 +41,23 @@ set names or gene names. This function is intended to be a convenient
 method of filtering a Cnet igraph to a pre-defined set of "Set"
 names.
 
-The function assumes graph nodes have an attribute `"nodeType"` with
-values either `"Set"` or `"Gene"` to indicate the type of node.
+The function assumes graph nodes have an attribute \code{"nodeType"} with
+values either \code{"Set"} or \code{"Gene"} to indicate the type of node.
 
-When `includeSets` is supplied, the graph is subsetted to include
-only nodes with `nodeType="Set"` with matching `V(gCnet)$name` or
-`V(gCnet)$label`. Then only neighboring nodes are retained, thus
-removing any nodes with `nodeType="Gene"` that do not connect to
+When \code{includeSets} is supplied, the graph is subsetted to include
+only nodes with \code{nodeType="Set"} with matching \code{V(gCnet)$name} or
+\code{V(gCnet)$label}. Then only neighboring nodes are retained, thus
+removing any nodes with \code{nodeType="Gene"} that do not connect to
 any of the given Set nodes.
 The result is a proper Cnet igraph that only contains
 Gene nodes connected to the subset of Set nodes.
 
-If `includeGenes` is supplied, the graph is subsetted to include
-only nodes with `nodeType="Gene"` with matching `V(gCnet)$name` or
-`V(gCnet)$label`.
+If \code{includeGenes} is supplied, the graph is subsetted to include
+only nodes with \code{nodeType="Gene"} with matching \code{V(gCnet)$name} or
+\code{V(gCnet)$label}.
 
-When `removeSinglets=TRUE` then any nodes that have no remaining
-edges are removed. Especially when supplying `includeGenes`, this
+When \code{removeSinglets=TRUE} then any nodes that have no remaining
+edges are removed. Especially when supplying \code{includeGenes}, this
 option is useful to hide any Set nodes that have no connected Gene
 nodes.
 }

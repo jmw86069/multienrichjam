@@ -11,17 +11,17 @@ removeIgraphBlanks(g, blankColor = c("#FFFFFF", "#FFFFFFFF",
 }
 \arguments{
 \item{g}{igraph object containing one or more attributes from
-`"pie.color"` or `"coloredrect.color"`.}
+\code{"pie.color"} or \code{"coloredrect.color"}.}
 
 \item{blankColor}{character vector of R colors directly matched to
-the input `x` vector. The value `"transparent"` is useful here,
+the input \code{x} vector. The value \code{"transparent"} is useful here,
 because it is not easily converted to HCL color space.}
 
 \item{c_max}{maximum chroma as determined by HCL color space, in
 range of no color 0 to maximum color 100.}
 
 \item{l_min}{numeric minimum luminance required for a color to be
-considered blank, combined with the `c_max` argument. This
+considered blank, combined with the \code{c_max} argument. This
 threshold prevents grey colors from being considered blank,
 unless their luminance is above this threshold.}
 
@@ -30,8 +30,8 @@ below which a color is considered blank, in range of fully
 transparent 0, to fully non-transparent 1.}
 
 \item{constrain}{character value indicating for node shape
-`"coloredrectangle"` whether to constrain the `"coloredrect.nrow"`
-or `"coloredrect.ncol"` values. When `"none"` the nrow is usually
+\code{"coloredrectangle"} whether to constrain the \code{"coloredrect.nrow"}
+or \code{"coloredrect.ncol"} values. When \code{"none"} the nrow is usually
 dropped to nrow=1 whenever colors are removed.}
 
 \item{resizeNodes}{logical indicating whether to resize the resulting
@@ -39,7 +39,7 @@ nodes to maintain roughly proportional size to the number of
 colored wedges.}
 
 \item{applyToPie}{logical indicating whether to apply the logic to
-nodes with shape `"pie"`.}
+nodes with shape \code{"pie"}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 
@@ -49,17 +49,17 @@ nodes with shape `"pie"`.}
 Remove igraph blank wedges
 }
 \details{
-This function is intended to affect nodes with shapes `"pie"` or
-`"coloredrectangle"`, and evaluates the vertex attributes
-`"coloredrect.color"` and `"pie.color"`. For each node, any colors
+This function is intended to affect nodes with shapes \code{"pie"} or
+\code{"coloredrectangle"}, and evaluates the vertex attributes
+\code{"coloredrect.color"} and \code{"pie.color"}. For each node, any colors
 considered blank are removed, along with corresponding values in
-related vertex attributes, including `"pie","pie.value","pie.names"`,
-`"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"`.
+related vertex attributes, including \code{"pie","pie.value","pie.names"},
+\code{"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"}.
 
-This function calls `isColorBlank()` to determine which colors are
+This function calls \code{isColorBlank()} to determine which colors are
 blank.
 
-This function is originally intended to follow `igraph2pieGraph()` which
+This function is originally intended to follow \code{igraph2pieGraph()} which
 assigns colors to pie and coloredrectangle attributes, where missing
 values or values of zero are often given a "blank" color. To enhance the
 resulting node coloration, these blank colors can be removed in order to

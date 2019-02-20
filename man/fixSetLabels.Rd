@@ -9,41 +9,41 @@ fixSetLabels(x, wrap = TRUE, width = 25, maxNchar = Inf,
   removeGrep = "^KEGG.", ...)
 }
 \arguments{
-\item{x}{character vector, or `igraph` object. When an `igraph`
-object is supplied, the `V(g)$name` attribute is used as the
-basis of generating a label, which is then stored as `V(g)$label`.}
+\item{x}{character vector, or \code{igraph} object. When an \code{igraph}
+object is supplied, the \code{V(g)$name} attribute is used as the
+basis of generating a label, which is then stored as \code{V(g)$label}.}
 
 \item{wrap}{logical indicating whether to apply word wrap, based upon
-the supplied `width` argument.}
+the supplied \code{width} argument.}
 
-\item{width}{integer value used when `wrap=TRUE`, it is sent to
-`base::strwrap()`.}
+\item{width}{integer value used when \code{wrap=TRUE}, it is sent to
+\code{base::strwrap()}.}
 
-\item{maxNchar}{numeric value or `Inf` to limit the maximum characters
-allowed for each string. This option is preferred when `wrap=TRUE`
-is not feasible, for example heatmap labels. When `NULL` or `Inf`
-no limit is applied. See `base::nchar()`.}
+\item{maxNchar}{numeric value or \code{Inf} to limit the maximum characters
+allowed for each string. This option is preferred when \code{wrap=TRUE}
+is not feasible, for example heatmap labels. When \code{NULL} or \code{Inf}
+no limit is applied. See \code{base::nchar()}.}
 
-\item{suffix}{character value used as a suffix when `maxNchar` is used,
+\item{suffix}{character value used as a suffix when \code{maxNchar} is used,
 the string is shortened so that the shortened string and suffix
-values are `maxNchar` characters long. It serves as an indicator
+values are \code{maxNchar} characters long. It serves as an indicator
 that the string label has been shortened.}
 
 \item{nodeType}{character value compared to the vertex attribute
-`"nodeType"` when the input `x` is an `igraph` object. This option
-is used to restrict label changes to certain nodes. When `NULL` or
-`nodeType="any"` then all node labels are updated.}
+\code{"nodeType"} when the input \code{x} is an \code{igraph} object. This option
+is used to restrict label changes to certain nodes. When \code{NULL} or
+\code{nodeType="any"} then all node labels are updated.}
 
 \item{removeGrep}{character regular expression pattern used to remove
-patterns from the resulting label. For example, `"^KEGG."` will remove
-the prefix `"KEGG_"` from all MSigDB KEGG pathways, in order to
+patterns from the resulting label. For example, \code{"^KEGG."} will remove
+the prefix \code{"KEGG_"} from all MSigDB KEGG pathways, in order to
 shorten the label. Due respect and credit to KEGG for their
 wonderful pathway data.}
 
 \item{...}{additional arguments are ignored.}
 }
 \value{
-vector or igraph object, to match the input `x`.
+vector or igraph object, to match the input \code{x}.
 }
 \description{
 Fix Set labels for legibility

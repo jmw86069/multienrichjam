@@ -13,8 +13,8 @@ cnetplot_internalJam(inputList, categorySize = "geneNum",
 cnetplot internal function
 }
 \details{
-This function is intended to mimic the `DOSE:::cnetplot_internal()`
-function to support `cnetplotJam()` customizations, including
+This function is intended to mimic the \code{DOSE:::cnetplot_internal()}
+function to support \code{cnetplotJam()} customizations, including
 not plotting the output, and including additional custom igraph
 attributes.
 }

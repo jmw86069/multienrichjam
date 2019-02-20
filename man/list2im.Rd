@@ -28,7 +28,7 @@ the number of occurrences of each item, only useful when
 }
 \value{
 numeric matrix whose rownames were vector items of the input list,
-   and whole colnames were list names.
+and whole colnames were list names.
 }
 \description{
 convert list to incidence matrix
