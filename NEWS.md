@@ -1,3 +1,19 @@
+# multienrichjam version 0.0.2.900
+
+## changes
+
+* `fixSetLabels()` was updated to include a wider set of canonical
+pathway prefixes used in MsigDB v6.1.
+
+## new functions
+
+* `cnet2im()` and `cnet2df()` are helper functions used to convert
+a Cnet igraph to either a incidence matrix, or a table summary useful
+for extracting subsets of pathways using various network descriptors.
+* `drawEllipse()` and `shape.ellipse.plot()` add an igraph vertex
+shape "ellipse" whose shape is controlled by vertex.ellipse.ratio,
+where `1` creates a circular node.
+
 # multienrichjam version 0.0.1.900
 
 ## new functions

@@ -6,7 +6,8 @@
 \usage{
 fixSetLabels(x, wrap = TRUE, width = 25, maxNchar = Inf,
   suffix = "...", nodeType = c("Set", "Gene", "any"),
-  removeGrep = "^KEGG.", ...)
+  adjustCase = TRUE,
+  removeGrep = "^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]", ...)
 }
 \arguments{
 \item{x}{character vector, or \code{igraph} object. When an \code{igraph}
@@ -34,11 +35,13 @@ that the string label has been shortened.}
 is used to restrict label changes to certain nodes. When \code{NULL} or
 \code{nodeType="any"} then all node labels are updated.}
 
+\item{adjustCase}{logical indicating whether to adjust the uppercase
+and lowercase lettering.}
+
 \item{removeGrep}{character regular expression pattern used to remove
-patterns from the resulting label. For example, \code{"^KEGG."} will remove
-the prefix \code{"KEGG_"} from all MSigDB KEGG pathways, in order to
-shorten the label. Due respect and credit to KEGG for their
-wonderful pathway data.}
+patterns from the resulting label. The default values remove the
+prefix used in MsigDB canonical pathway names, which is a prefix
+indicating the source of each pathway.}
 
 \item{...}{additional arguments are ignored.}
 }

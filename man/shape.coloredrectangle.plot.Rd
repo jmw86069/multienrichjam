@@ -90,9 +90,11 @@ Transparent nodes will therefore show edges beneath them.
 \seealso{
 \code{igraph::shapes()}
 
-Other jam igraph functions: \code{\link{cnetplotJam}},
+Other jam igraph functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
   \code{\link{cnetplot_internalJam}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfr}}
+  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfr}},
+  \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
 }
 \concept{jam igraph functions}

@@ -66,9 +66,11 @@ plot(g, main="layout_with_qfr, repulse=6\\n(qgraph custom)",
 \seealso{
 \code{qgraph::qgraph.layout.fruchtermanreingold()}
 
-Other jam igraph functions: \code{\link{cnetplotJam}},
+Other jam igraph functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
   \code{\link{cnetplot_internalJam}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{shape.coloredrectangle.plot}}
+  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
+  \code{\link{shape.coloredrectangle.plot}},
+  \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
 }
 \concept{jam igraph functions}

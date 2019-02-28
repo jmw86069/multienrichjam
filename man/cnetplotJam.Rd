@@ -60,9 +60,12 @@ The purpose of this function is to mimic the steps in \code{DOSE:::cnetplot()}
 except not plot the output, and provide some customizations.
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnetplot_internalJam}},
-  \code{\link{igraph2pieGraph}},
+Other jam igraph functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}},
+  \code{\link{cnetplot_internalJam}},
+  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
   \code{\link{layout_with_qfr}},
-  \code{\link{shape.coloredrectangle.plot}}
+  \code{\link{shape.coloredrectangle.plot}},
+  \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
 }
 \concept{jam igraph functions}

@@ -871,6 +871,8 @@ shape.coloredrectangle.plot <- function
 #' This function defines the plotting function for custom igraph vertex
 #' shape ellipse.
 #'
+#' @family jam igraph functions
+#'
 #' @export
 shape.ellipse.plot <- function
 (coords,
@@ -934,6 +936,8 @@ shape.ellipse.plot <- function
 #'    to use as the origin. When non-zero it implies the first point
 #'    of each segment.
 #' @param ... additional arguments are ignored.
+#'
+#' @family jam igraph functions
 #'
 #' @examples
 #' # by default output is in degrees
@@ -1004,6 +1008,7 @@ xyAngle <- function
 #' @param ... additional arguments are passed to `graphics::polygon()`
 #'    when `draw=TRUE`.
 #'
+#' @family jam igraph functions
 #'
 #' @export
 drawEllipse <- function
@@ -1063,4 +1068,112 @@ drawEllipse <- function
    }
    invisible(list(x=xp,
       y=yp));
+}
+
+#' Summarize Cnet igraph as a data.frame
+#'
+#' Summarize Cnet igraph as a data.frame
+#'
+#' This function provides a data.frame summary of an igraph object
+#' containing "Cnet" data, including vertex attribute `"nodeType"`
+#' with values `"Set"` and `"Gene"`, and where `"Set"` nodes are
+#' only connected to `"Gene"` nodes.
+#'
+#' The data.frame is intended to provide a convenient method for
+#' subsetting nodes, typically based upon a connected cluster,
+#' or the minimum number of edges per node. For example, filter
+#' for the connected component containing a node of interest, or
+#' filter for `"Set"` nodes with more than one `"Gene"`.
+#'
+#' @return data.frame with the node name, label, degree (number of
+#'    edges), membership (based upon connected component), and
+#'    if `getNeighbors=TRUE` it includes comma-delimited names
+#'    of neighboring nodes.
+#'
+#' @family jam igraph functions
+#'
+#' @param g igraph object containing Cnet data, specifically vertex
+#'    attribute name "nodeType" with values "Set" and "Gene", and
+#'    where "Set" nodes are only connected to "Gene" nodes.
+#' @param getNeighbors logical indicating whether to include
+#'    the connected neighbor node names.
+#' @param checkSubsets logical indicating whether to test "Set"
+#'    nodes to determine if the neighbors are all represented by
+#'    another "Set" node.
+#' @param ... additional arguments are ignored.
+#'
+#' @export
+cnet2df <- function
+(g,
+ getNeighbors=TRUE,
+ checkSubsets=getNeighbors,
+ ...)
+{
+   ## Purpose is to summarize an igraph object by connectivity,
+   ## connected components, and neighbors
+   df <- data.frame(nodeType=V(g)$nodeType,
+      name=V(g)$name,
+      label=V(g)$label,
+      degree=degree(g),
+      membership=components(g)$membership);
+   if (getNeighbors || checkSubsets) {
+      df$neighbors <- cPaste(lapply(seq_len(vcount(g)), function(i){
+         neighbors(g, i)$name;
+      }));
+   }
+   if (checkSubsets) {
+      im <- cnet2im(df=df)
+      ## determine if neighbors for a Set node are completely contained
+      ## in another Set node
+      imSet <- (t(im) %*% im);
+      isSubset <- (rowSums(imSet >= rowMaxs(imSet)) > 1);
+      df$isSubset <- FALSE;
+      if (any(isSubset)) {
+         df[match(rownames(imSet), df$name),"isSubset"] <- isSubset;
+      }
+   }
+   df;
+}
+
+#' Convert Cnet igraph to incidence matrix
+#'
+#' Convert Cnet igraph to incidence matrix
+#'
+#' This function takes igraph object containing "Cnet" data,
+#' including vertex attribute `"nodeType"` with values `"Set"`
+#' and `"Gene"`, and where `"Set"` nodes are only connected
+#' to `"Gene"` nodes. It returns an incidence matrix whose
+#' columns are "Set" node names and whose rows are "Gene"
+#' node names.
+#'
+#' @return numeric matrix with colnames defined by `"Set"` node
+#'    names, and rownames defined by `"Gene"` node names.
+#'
+#' @family jam igraph functions
+#'
+#' @param g igraph object containing Cnet data, specifically vertex
+#'    attribute name "nodeType" with values "Set" and "Gene", and
+#'    where "Set" nodes are only connected to "Gene" nodes.
+#' @param df data.frame as optional input instead of `g`, usually
+#'    the result of a previous call to `cnet2df()`.
+#' @param ... additional arguments are ignored.
+#'
+#' @export
+cnet2im <- function
+(g=NULL,
+ df=NULL,
+ ...)
+{
+   ## Purpose is to convert a Cnet igraph to an incidence matrix
+   if (length(g) > 0 && "data.frame" %in% class(g)) {
+      df <- g;
+   } else if (length(df) == 0) {
+      df <- cnet2df(g,
+         getNeighbors=TRUE,
+         checkSubsets=FALSE);
+   }
+   dfV <- nameVector(subset(df, nodeType %in% "Set")[,c("neighbors","name")]);
+   dfL <- strsplit(dfV, ",");
+   im <- list2im(dfL);
+   im;
 }

@@ -13,3 +13,13 @@ plot function for igraph vertex shape ellipse
 This function defines the plotting function for custom igraph vertex
 shape ellipse.
 }
+\seealso{
+Other jam igraph functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
+  \code{\link{cnetplot_internalJam}},
+  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfr}},
+  \code{\link{shape.coloredrectangle.plot}},
+  \code{\link{xyAngle}}
+}
+\concept{jam igraph functions}

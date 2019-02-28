@@ -1621,7 +1621,7 @@ subsetCnetIgraph <- function
    ## Optionally subset by degree of Set and Gene nodes
    if (length(minSetDegree) > 0) {
       dropSetNodes <- (V(gCnet)$nodeType %in% "Set" &
-            iDegree < minSetDegree);
+            degree(gCnet) < minSetDegree);
       if (any(dropSetNodes)) {
          if (verbose) {
             jamba::printDebug("subsetCnetIgraph(): ",
@@ -1636,7 +1636,7 @@ subsetCnetIgraph <- function
    }
    if (length(minGeneDegree) > 0) {
       dropGeneNodes <- (V(gCnet)$nodeType %in% "Gene" &
-         iDegree < minGeneDegree);
+            degree(gCnet) < minGeneDegree);
       if (any(dropGeneNodes)) {
          if (verbose) {
             jamba::printDebug("subsetCnetIgraph(): ",
@@ -1960,11 +1960,12 @@ isColorBlank <- function
 #'    `"nodeType"` when the input `x` is an `igraph` object. This option
 #'    is used to restrict label changes to certain nodes. When `NULL` or
 #'    `nodeType="any"` then all node labels are updated.
+#' @param adjustCase logical indicating whether to adjust the uppercase
+#'    and lowercase lettering.
 #' @param removeGrep character regular expression pattern used to remove
-#'    patterns from the resulting label. For example, `"^KEGG."` will remove
-#'    the prefix `"KEGG_"` from all MSigDB KEGG pathways, in order to
-#'    shorten the label. Due respect and credit to KEGG for their
-#'    wonderful pathway data.
+#'    patterns from the resulting label. The default values remove the
+#'    prefix used in MsigDB canonical pathway names, which is a prefix
+#'    indicating the source of each pathway.
 #' @param ... additional arguments are ignored.
 #'
 #' @examples
@@ -1984,25 +1985,25 @@ fixSetLabels <- function
  maxNchar=Inf,
  suffix="...",
  nodeType=c("Set","Gene","any"),
- removeGrep="^KEGG.",
+ adjustCase=TRUE,
+ removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]",
  ...)
 {
    if (igrepHas("igraph", class(x))) {
-      xPrep <- jamba::ucfirst(
-         tolower(
-            gsub("_", " ",
-               gsub(removeGrep,
-                  "",
-                  ignore.case=TRUE,
-                  V(x)$name))));
+      xPrep <- gsub("_", " ",
+         gsub(removeGrep,
+            "",
+            ignore.case=TRUE,
+            V(x)$name));
    } else {
-      xPrep <- ucfirst(
-         tolower(
-            gsub("_", " ",
-               gsub(removeGrep,
-                  "",
-                  ignore.case=TRUE,
-                  x))));
+      xPrep <- gsub("_", " ",
+         gsub(removeGrep,
+            "",
+            ignore.case=TRUE,
+            x));
+   }
+   if (adjustCase) {
+      xPrep <- jamba::ucfirst(tolower(xPrep));
    }
    ## Optionally limit the character length
    if (length(maxNchar) > 0 && maxNchar < Inf) {

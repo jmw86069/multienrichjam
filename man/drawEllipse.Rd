@@ -5,7 +5,7 @@
 \title{Draw ellipse}
 \usage{
 drawEllipse(x, y, a = 1, b = 1, angle = 0, segment = NULL,
-  arc.only = TRUE, nv = 30, deg = TRUE, border = NULL, col = NA,
+  arc.only = TRUE, nv = 100, deg = TRUE, border = NULL, col = NA,
   lty = 1, lwd = 1, draw = TRUE, ...)
 }
 \arguments{
@@ -48,3 +48,13 @@ This function draws an ellipse centered on the given coordinates,
 rotated the given degrees relative to the center point, with give
 x- and y-axis radius values.
 }
+\seealso{
+Other jam igraph functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
+  \code{\link{cnetplot_internalJam}},
+  \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfr}},
+  \code{\link{shape.coloredrectangle.plot}},
+  \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
+}
+\concept{jam igraph functions}
