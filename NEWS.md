@@ -1,3 +1,10 @@
+# multienrichjam version 0.0.3.900
+
+## changes
+
+* removed `mergeAllXY()` and `unnestList()` and moved them to the `jamba`
+package. Added corresponding version requirement on jamba.
+
 # multienrichjam version 0.0.2.900
 
 ## changes

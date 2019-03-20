@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-sets.r
 \name{list2imSigned}
 \alias{list2imSigned}
-\title{convert list to directional incidence matrix}
+\title{convert list to signeddirectional incidence matrix}
 \usage{
 list2imSigned(x, makeUnique = TRUE, doTimer = FALSE, verbose = FALSE,
   ...)

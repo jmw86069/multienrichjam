@@ -108,7 +108,7 @@ list2im <- function
    return(xM);
 }
 
-#' convert list to directional incidence matrix
+#' convert list to signeddirectional incidence matrix
 #'
 #' convert list to directional incidence matrix
 #'
