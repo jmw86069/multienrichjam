@@ -1790,6 +1790,12 @@ isColorBlank <- function
 #'    patterns from the resulting label. The default values remove the
 #'    prefix used in MsigDB canonical pathway names, which is a prefix
 #'    indicating the source of each pathway.
+#' @param words_from,words_to character vectors of words to match
+#'    in case-insensitive manner, to be replaced with fixed-case
+#'    alternatives. It uses perl-based regular expression matching
+#'    in `base::gsub()`, and the `\\b` expression to enforce a
+#'    word boundary, either via delimiter, whitespace, or the end
+#'    of the string.
 #' @param ... additional arguments are ignored.
 #'
 #' @examples
@@ -1811,6 +1817,14 @@ fixSetLabels <- function
  nodeType=c("Set","Gene","any"),
  adjustCase=TRUE,
  removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]",
+ words_from=c("als", "ii", "iii", "iv", "v", "tgf",
+    "nfkb", "trna", "rrna",
+    "mirna", "mrna", "snrna", "snorna",
+    "scrna", "lincrna"),
+ words_to=c("ALS", "II", "III", "IV", "V", "TGF",
+    "NFKB", "tRNA", "rRNA",
+    "miRNA", "mRNA", "snRNA", "snoRNA",
+    "scRNA", "lincRNA"),
  ...)
 {
    if (igrepHas("igraph", class(x))) {
@@ -1828,6 +1842,16 @@ fixSetLabels <- function
    }
    if (adjustCase) {
       xPrep <- jamba::ucfirst(tolower(xPrep));
+   }
+   ## Optionally replace certain words with fixed capitalization
+   if (length(words_from) > 0 && length(words_to) == length(words_from)) {
+      for (i in seq_along(words_from)) {
+         xPrep <- gsub(paste0("\\b", words_from[i], "\\b"),
+            words_to[i],
+            ignore.case=TRUE,
+            perl=TRUE,
+            xPrep);
+      }
    }
    ## Optionally limit the character length
    if (length(maxNchar) > 0 && maxNchar < Inf) {
@@ -1848,10 +1872,10 @@ fixSetLabels <- function
       xNew <- cPaste(sep="\n",
          doSort=FALSE,
          lapply(xPrep, function(i){
-            strwrap(i, width=25);
+            strwrap(i, width=width);
          }));
    } else {
-      xNew <- x;
+      xNew <- xPrep;
    }
    ## Update the proper data to return
    if (igrepHas("igraph", class(x))) {

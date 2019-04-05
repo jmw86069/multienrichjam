@@ -1,3 +1,14 @@
+# multienrichjam version 0.0.4.900
+
+## bug fixed
+
+* Fixed small issues with `fixSetLabels()`.
+
+## changes
+
+* Updated `fixSetLabels()` to handle words the should be kept
+uppercase, with some defaults pre-configured, e.g. "mRNA".
+
 # multienrichjam version 0.0.3.900
 
 ## changes

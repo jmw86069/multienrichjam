@@ -7,7 +7,11 @@
 fixSetLabels(x, wrap = TRUE, width = 25, maxNchar = Inf,
   suffix = "...", nodeType = c("Set", "Gene", "any"),
   adjustCase = TRUE,
-  removeGrep = "^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]", ...)
+  removeGrep = "^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]",
+  words_from = c("als", "ii", "iii", "iv", "v", "tgf", "nfkb", "trna",
+  "rrna", "mirna", "mrna", "snrna", "snorna", "scrna", "lincrna"),
+  words_to = c("ALS", "II", "III", "IV", "V", "TGF", "NFKB", "tRNA",
+  "rRNA", "miRNA", "mRNA", "snRNA", "snoRNA", "scRNA", "lincRNA"), ...)
 }
 \arguments{
 \item{x}{character vector, or \code{igraph} object. When an \code{igraph}
@@ -42,6 +46,13 @@ and lowercase lettering.}
 patterns from the resulting label. The default values remove the
 prefix used in MsigDB canonical pathway names, which is a prefix
 indicating the source of each pathway.}
+
+\item{words_from, words_to}{character vectors of words to match
+in case-insensitive manner, to be replaced with fixed-case
+alternatives. It uses perl-based regular expression matching
+in \code{base::gsub()}, and the \code{\\b} expression to enforce a
+word boundary, either via delimiter, whitespace, or the end
+of the string.}
 
 \item{...}{additional arguments are ignored.}
 }
