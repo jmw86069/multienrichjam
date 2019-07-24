@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -77,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -131,7 +143,7 @@ range of no color 0 to maximum color 100.</p></td>
     <tr>
       <th>l_min</th>
       <td><p>numeric minimum luminance required for a color to be
-considered blank, combined with the `c_max` argument. This
+considered blank, combined with the <code>c_max</code> argument. This
 threshold prevents grey colors from being considered blank,
 unless their luminance is above this threshold.</p></td>
     </tr>
@@ -144,7 +156,7 @@ transparent 0, to fully non-transparent 1.</p></td>
     <tr>
       <th>blankColor</th>
       <td><p>character vector of R colors directly matched to
-the input `x` vector. The value `"transparent"` is useful here,
+the input <code>x</code> vector. The value <code>"transparent"</code> is useful here,
 because it is not easily converted to HCL color space.</p></td>
     </tr>
     <tr>
@@ -158,7 +170,7 @@ because it is not easily converted to HCL color space.</p></td>
     <p>This function takes a vector of colors and determines if each color
 is considered a "blank color", based upon direct match and the
 color chroma saturation and luminance. For example, extremely pale
-colors from `vals2colorLevels()` may be considered "blank" if the
+colors from <code><a href='https://www.rdocumentation.org/packages/colorjam/topics/vals2colorLevels'>colorjam::vals2colorLevels()</a></code> may be considered "blank" if the
 color saturation is extremely low. Similarly, colors with
 extremely high alpha transparency may be considered "blank".</p>
     

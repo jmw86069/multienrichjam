@@ -1,0 +1,1451 @@
+© 2000-2017 QIAGEN. All rights reserved.
+
+Analysis Details for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+Workspace	My Projects
+Project	Alicia-IPA
+Analysis	OlderChildren-Combined - 2017-12-07 12:37 PM
+Date	Thu Dec 07 09:38:01 PST 2017
+Analysis ID	15776121
+
+Analysis Settings
+Cutoff before duplicate resolution	true
+Reference set	Ingenuity Knowledge Base (Genes Only)
+Relationship to include	Direct and Indirect
+Includes Endogenous Chemicals	No
+Optional Analyses	My Pathways My List
+Filter Summary	
+Consider only relationships where
+confidence = Experimentally Observed
+
+Canonical Pathways for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+Ingenuity Canonical Pathways	 -log(p-value)	zScore	Ratio	Molecules
+3-phosphoinositide Biosynthesis	-0E00	NaN	5.00E-03	ACP5,	
+3-phosphoinositide Degradation	-0E00	NaN	6.33E-03	ACP5,	
+Acute Phase Response Signaling	-0E00	NaN	5.88E-03	ITIH4,	
+Cdc42 Signaling	-0E00	NaN	5.99E-03	PRKCZ,	
+Colorectal Cancer Metastasis Signaling	-0E00	NaN	4.03E-03	ADCY3,	
+D-myo-inositol (1,4,5,6)-Tetrakisphosphate Biosynthesis	-0E00	NaN	6.94E-03	ACP5,	
+D-myo-inositol (3,4,5,6)-tetrakisphosphate Biosynthesis	-0E00	NaN	6.94E-03	ACP5,	
+D-myo-inositol-5-phosphate Metabolism	-0E00	NaN	6.17E-03	ACP5,	
+EIF2 Signaling	-0E00	NaN	4.52E-03	IGF1R,	
+Ephrin Receptor Signaling	-0E00	NaN	5.71E-03	NCK1,	
+Glioblastoma Multiforme Signaling	-0E00	NaN	6.17E-03	IGF1R,	
+ILK Signaling	-0E00	NaN	5.08E-03	PPP2CA,	
+Neuroinflammation Signaling Pathway	-0E00	NaN	6.43E-03	NCSTN,IL4	
+Osteoarthritis Pathway	-0E00	NaN	4.74E-03	DDIT4,	
+Protein Ubiquitination Pathway	-0E00	NaN	3.77E-03	SUGT1,	
+Regulation of the Epithelial-Mesenchymal Transition Pathway	-0E00	NaN	5.29E-03	NCSTN,	
+Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis	-0E00	NaN	6.41E-03	PRKCH,PRKCZ	
+Role of NFAT in Regulation of the Immune Response	-0E00	NaN	5.38E-03	MS4A2,	
+Signaling by Rho Family GTPases	-0E00	NaN	3.97E-03	PRKCZ,	
+Superpathway of Inositol Phosphate Compounds	-0E00	NaN	4.26E-03	ACP5,	
+Systemic Lupus Erythematosus Signaling	-0E00	NaN	4.44E-03	LSM14B,	
+Sphingosine-1-phosphate Signaling	2.32E-01	NaN	8.00E-03	ADCY3,	
+RhoA Signaling	2.34E-01	NaN	8.06E-03	IGF1R,	
+Role of Tissue Factor in Cancer	2.36E-01	NaN	8.13E-03	RPS6KA2,	
+G-Protein Coupled Receptor Signaling	2.37E-01	NaN	7.25E-03	ADCY3,PDE6H	
+LXR/RXR Activation	2.4E-01	NaN	8.26E-03	ITIH4,	
+p38 MAPK Signaling	2.43E-01	NaN	8.33E-03	RPS6KA2,	
+Rac Signaling	2.5E-01	NaN	8.55E-03	PRKCZ,	
+Paxillin Signaling	2.6E-01	NaN	8.85E-03	NCK1,	
+Telomerase Signaling	2.65E-01	NaN	9.01E-03	PPP2CA,	
+Gαs Signaling	2.67E-01	NaN	9.09E-03	ADCY3,	
+Oxidative Phosphorylation	2.7E-01	NaN	9.17E-03	ATPAF2,	
+Chronic Myeloid Leukemia Signaling	2.78E-01	NaN	9.43E-03	RBL2,	
+UVA-Induced MAPK Signaling	2.78E-01	NaN	9.43E-03	RPS6KA2,	
+RANK Signaling in Osteoclasts	2.89E-01	NaN	9.80E-03	MITF,	
+PAK Signaling	2.92E-01	NaN	9.90E-03	NCK1,	
+CTLA4 Signaling in Cytotoxic T Lymphocytes	2.98E-01	NaN	1.01E-02	PPP2CA,	
+ATM Signaling	3.01E-01	NaN	1.02E-02	PPP2CA,	
+Cardiac Hypertrophy Signaling	3.05E-01	NaN	8.47E-03	IGF1R,ADCY3	
+Salvage Pathways of Pyrimidine Ribonucleotides	3.11E-01	NaN	1.05E-02	PRKCH,	
+Role of Osteoblasts, Osteoclasts and Chondrocytes in Rheumatoid Arthritis	3.11E-01	NaN	8.58E-03	ACP5,IL4	
+Communication between Innate and Adaptive Immune Cells	3.14E-01	NaN	1.06E-02	IL4,	
+Death Receptor Signaling	3.17E-01	NaN	1.08E-02	TANK,	
+IL-1 Signaling	3.21E-01	NaN	1.09E-02	ADCY3,	
+cAMP-mediated signaling	3.23E-01	NaN	8.81E-03	ADCY3,PDE6H	
+Altered T Cell and B Cell Signaling in Rheumatoid Arthritis	3.27E-01	NaN	1.11E-02	IL4,	
+Crosstalk between Dendritic Cells and Natural Killer Cells	3.31E-01	NaN	1.12E-02	IL4,	
+IL-4 Signaling	3.31E-01	NaN	1.12E-02	IL4,	
+LPS/IL-1 Mediated Inhibition of RXR Function	3.34E-01	NaN	9.01E-03	ABCB9,NR0B2	
+Integrin Signaling	3.41E-01	NaN	9.13E-03	RALB,NCK1	
+FLT3 Signaling in Hematopoietic Progenitor Cells	3.42E-01	NaN	1.16E-02	RPS6KA2,	
+Leptin Signaling in Obesity	3.42E-01	NaN	1.16E-02	ADCY3,	
+Allograft Rejection Signaling	3.49E-01	NaN	1.19E-02	IL4,	
+Leukocyte Extravasation Signaling	3.59E-01	NaN	9.48E-03	PRKCH,PRKCZ	
+Cyclins and Cell Cycle Regulation	3.65E-01	NaN	1.25E-02	PPP2CA,	
+CD40 Signaling	3.69E-01	NaN	1.27E-02	TANK,	
+Estrogen-Dependent Breast Cancer Signaling	3.73E-01	NaN	1.28E-02	IGF1R,	
+GDNF Family Ligand-Receptor Interactions	3.82E-01	NaN	1.32E-02	NCK1,	
+IL-15 Signaling	3.82E-01	NaN	1.32E-02	IL4,	
+ERK/MAPK Signaling	3.86E-01	NaN	1.00E-02	YWHAQ,PPP2CA	
+STAT3 Pathway	3.9E-01	NaN	1.35E-02	IGF1R,	
+GPCR-Mediated Integration of Enteroendocrine Signaling Exemplified by an L Cell	3.95E-01	NaN	1.37E-02	ADCY3,	
+T Helper Cell Differentiation	3.95E-01	NaN	1.37E-02	IL4,	
+Role of JAK1 and JAK3 in γc Cytokine Signaling	4.04E-01	NaN	1.41E-02	IL4,	
+NRF2-mediated Oxidative Stress Response	4.05E-01	NaN	1.04E-02	PRKCH,PRKCZ	
+Axonal Guidance Signaling	4.06E-01	NaN	8.85E-03	SHANK2,PRKCH,PRKCZ,NCK1	
+Cell Cycle: G1/S Checkpoint Regulation	4.29E-01	NaN	1.52E-02	RBL2,	
+Mitotic Roles of Polo-Like Kinase	4.29E-01	NaN	1.52E-02	PPP2CA,	
+Pyridoxal 5'-phosphate Salvage Pathway	4.34E-01	NaN	1.54E-02	PRKCH,	
+Calcium Signaling	4.42E-01	NaN	1.11E-02	SLC8B1,ATP2C1	
+PPARα/RXRα Activation	4.42E-01	NaN	1.11E-02	ADCY3,NR0B2	
+Activation of IRF by Cytosolic Pattern Recognition Receptors	4.45E-01	NaN	1.59E-02	TANK,	
+CNTF Signaling	4.45E-01	NaN	1.59E-02	RPS6KA2,	
+Wnt/Ca+ pathway	4.45E-01	NaN	1.59E-02	PDE6H,	
+autophagy	4.5E-01	NaN	1.61E-02	CTSB,	
+Wnt/β-catenin Signaling	4.67E-01	NaN	1.16E-02	TLE4,PPP2CA	
+Mitochondrial Dysfunction	4.71E-01	NaN	1.17E-02	NCSTN,ATPAF2	
+Sirtuin Signaling Pathway	4.75E-01	NaN	1.03E-02	RPTOR,TOMM34,PGAM2	
+Role of CHK Proteins in Cell Cycle Checkpoint Control	4.8E-01	NaN	1.75E-02	PPP2CA,	
+Aldosterone Signaling in Epithelial Cells	4.81E-01	NaN	1.19E-02	PRKCH,PRKCZ	
+Actin Nucleation by ARP-WASP Complex	4.86E-01	NaN	1.79E-02	NCK1,	
+Melanoma Signaling	4.93E-01	NaN	1.82E-02	MITF,	
+Role of Cytokines in Mediating Communication between Immune Cells	4.99E-01	NaN	1.85E-02	IL4,	
+Gαq Signaling	5.05E-01	NaN	1.24E-02	PRKCH,PRKCZ	
+Phototransduction Pathway	5.06E-01	NaN	1.89E-02	PDE6H,	
+Amyloid Processing	5.2E-01	NaN	1.96E-02	NCSTN,	
+Regulation of eIF4 and p70S6K Signaling	5.2E-01	NaN	1.27E-02	PRKCZ,PPP2CA	
+Assembly of RNA Polymerase II Complex	5.27E-01	NaN	2.00E-02	POLR2B,	
+TNFR1 Signaling	5.27E-01	NaN	2.00E-02	TANK,	
+Autoimmune Thyroid Disease Signaling	5.49E-01	NaN	2.13E-02	IL4,	
+Hematopoiesis from Pluripotent Stem Cells	5.49E-01	NaN	2.13E-02	IL4,	
+Phagosome Maturation	5.55E-01	NaN	1.35E-02	NAPA,CTSB	
+Role of IL-17F in Allergic Inflammatory Airway Diseases	5.65E-01	NaN	2.22E-02	RPS6KA2,	
+Hereditary Breast Cancer Signaling	5.71E-01	NaN	1.39E-02	POLR2B,SMARCD3	
+Role of RIG1-like Receptors in Antiviral Innate Immunity	5.74E-01	NaN	2.27E-02	TANK,	
+Serotonin Receptor Signaling	5.82E-01	NaN	2.33E-02	ADCY3,	
+Stearate Biosynthesis I (Animals)	5.82E-01	NaN	2.33E-02	ACOT7,	
+tRNA Splicing	6E-01	NaN	2.44E-02	PDE6H,	
+Th1 Pathway	6.11E-01	NaN	1.48E-02	NCSTN,IL4	
+Adipogenesis pathway	6.15E-01	NaN	1.49E-02	LPIN1,KAT6B	
+Netrin Signaling	6.19E-01	NaN	2.56E-02	NCK1,	
+HMGB1 Signaling	6.2E-01	NaN	1.50E-02	IL4,KAT6B	
+Notch Signaling	6.29E-01	NaN	2.63E-02	NCSTN,	
+Cellular Effects of Sildenafil (Viagra)	6.3E-01	NaN	1.53E-02	ADCY3,KCNH2	
+CCR3 Signaling in Eosinophils	6.34E-01	NaN	1.54E-02	PRKCH,PRKCZ	
+PI3K Signaling in B Lymphocytes	6.34E-01	NaN	1.54E-02	IL4,PRKCZ	
+Phagosome Formation	6.34E-01	NaN	1.54E-02	PRKCH,PRKCZ	
+Cell Cycle Regulation by BTG Family Proteins	6.39E-01	NaN	2.70E-02	PPP2CA,	
+Type II Diabetes Mellitus Signaling	6.44E-01	NaN	1.56E-02	PRKCH,PRKCZ	
+Gustation Pathway	6.49E-01	NaN	1.57E-02	ADCY3,PDE6H	
+Sperm Motility	6.49E-01	NaN	1.57E-02	PRKCH,PRKCZ	
+Nucleotide Excision Repair Pathway	6.6E-01	NaN	2.86E-02	POLR2B,	
+Glucocorticoid Receptor Signaling	6.66E-01	NaN	1.18E-02	POLR2B,KRT19,SMARCD3,IL4	
+fMLP Signaling in Neutrophils	6.7E-01	NaN	1.63E-02	PRKCH,PRKCZ	
+Synaptic Long Term Potentiation	6.75E-01	NaN	1.64E-02	PRKCH,PRKCZ	
+NGF Signaling	6.8E-01	NaN	1.65E-02	RPS6KA2,PRKCZ	
+Gαi Signaling	6.85E-01	NaN	1.67E-02	RALB,ADCY3	
+PTEN Signaling	6.91E-01	NaN	1.68E-02	IGF1R,PRKCZ	
+AMPK Signaling	7.11E-01	NaN	1.39E-02	RPTOR,SMARCD3,PPP2CA	
+HGF Signaling	7.13E-01	NaN	1.74E-02	PRKCH,PRKCZ	
+TNFR2 Signaling	7.2E-01	NaN	3.33E-02	TANK,	
+IL-15 Production	7.47E-01	NaN	3.57E-02	PRKCZ,	
+Thrombin Signaling	7.61E-01	NaN	1.47E-02	ADCY3,PRKCH,PRKCZ	
+NAD Salvage Pathway II	7.76E-01	NaN	3.85E-02	ACP5,	
+Phosphatidylglycerol Biosynthesis II (Non-plastidic)	7.76E-01	NaN	3.85E-02	LPCAT2,	
+IL-8 Signaling	7.92E-01	NaN	1.52E-02	ANGPT2,PRKCH,PRKCZ	
+Virus Entry via Endocytic Pathways	7.93E-01	NaN	1.96E-02	PRKCH,PRKCZ	
+Cholecystokinin/Gastrin-mediated Signaling	8E-01	NaN	1.98E-02	PRKCH,PRKCZ	
+Gap Junction Signaling	8.01E-01	NaN	1.54E-02	ADCY3,PRKCH,PRKCZ	
+CDP-diacylglycerol Biosynthesis I	8.08E-01	NaN	4.17E-02	LPCAT2,	
+CDK5 Signaling	8.14E-01	NaN	2.02E-02	ADCY3,PPP2CA	
+Protein Kinase A Signaling	8.2E-01	NaN	1.25E-02	YWHAQ,ADCY3,PRKCH,PRKCZ,PDE6H	
+TCA Cycle II (Eukaryotic)	8.25E-01	NaN	4.35E-02	CS,	
+Endothelin-1 Signaling	8.25E-01	NaN	1.58E-02	ADCY3,PRKCH,PRKCZ	
+Xenobiotic Metabolism Signaling	8.3E-01	NaN	1.38E-02	PRKCH,PRKCZ,CITED2,PPP2CA	
+Molecular Mechanisms of Cancer	8.39E-01	NaN	1.27E-02	RALB,NCSTN,ADCY3,PRKCH,PRKCZ	
+Hepatic Fibrosis / Hepatic Stellate Cell Activation	8.39E-01	NaN	1.60E-02	IGF1R,COL15A1,IL4	
+PPAR Signaling	8.42E-01	NaN	2.11E-02	CITED2,NR0B2	
+Th1 and Th2 Activation Pathway	8.49E-01	NaN	1.62E-02	NCSTN,PTGDR2,IL4	
+Ceramide Signaling	8.57E-01	NaN	2.15E-02	PRKCZ,PPP2CA	
+Factors Promoting Cardiogenesis in Vertebrates	8.64E-01	NaN	2.17E-02	PRKCH,PRKCZ	
+NF-κB Signaling	8.7E-01	NaN	1.66E-02	IGF1R,TANK,PRKCZ	
+Inflammasome pathway	8.81E-01	NaN	5.00E-02	CTSB,	
+G Beta Gamma Signaling	8.96E-01	NaN	2.27E-02	PRKCH,PRKCZ	
+HER-2 Signaling in Breast Cancer	8.96E-01	NaN	2.27E-02	PRKCH,PRKCZ	
+Neuregulin Signaling	8.96E-01	NaN	2.27E-02	PRKCH,PRKCZ	
+VEGF Family Ligand-Receptor Interactions	8.96E-01	NaN	2.27E-02	PRKCH,PRKCZ	
+LPS-stimulated MAPK Signaling	9.04E-01	NaN	2.30E-02	PRKCH,PRKCZ	
+NF-κB Activation by Viruses	9.04E-01	NaN	2.30E-02	PRKCH,PRKCZ	
+Tec Kinase Signaling	9.28E-01	NaN	1.76E-02	PRKCH,PRKCZ,MS4A2	
+IL-3 Signaling	9.37E-01	NaN	2.41E-02	PRKCH,PRKCZ	
+Prolactin Signaling	9.37E-01	NaN	2.41E-02	PRKCH,PRKCZ	
+Dermatan Sulfate Degradation (Metazoa)	9.47E-01	NaN	5.88E-02	HEXA,	
+Erythropoietin Signaling	9.55E-01	NaN	2.47E-02	PRKCH,PRKCZ	
+Macropinocytosis Signaling	9.55E-01	NaN	2.47E-02	PRKCH,PRKCZ	
+CXCR4 Signaling	9.57E-01	NaN	1.82E-02	ADCY3,PRKCH,PRKCZ	
+Role of BRCA1 in DNA Damage Response	9.64E-01	NaN	2.50E-02	RBL2,SMARCD3	
+Chondroitin Sulfate Degradation (Metazoa)	9.72E-01	NaN	6.25E-02	HEXA,	
+Angiopoietin Signaling	9.82E-01	NaN	2.56E-02	ANGPT2,NCK1	
+VDR/RXR Activation	9.82E-01	NaN	2.56E-02	PRKCH,PRKCZ	
+Dopamine Receptor Signaling	9.91E-01	NaN	2.60E-02	ADCY3,PPP2CA	
+Relaxin Signaling	1.01E00	NaN	1.91E-02	ADCY3,PRKCZ,PDE6H	
+Colanic Acid Building Blocks Biosynthesis	1.03E00	NaN	7.14E-02	GPI,	
+MSP-RON Signaling Pathway	1.04E00	NaN	2.78E-02	RPS6KA2,PRKCZ	
+Melatonin Signaling	1.04E00	NaN	2.78E-02	PRKCH,PRKCZ	
+Phospholipase C Signaling	1.04E00	NaN	1.66E-02	RALB,ADCY3,PRKCH,PRKCZ	
+Th2 Pathway	1.05E00	NaN	2.00E-02	NCSTN,PTGDR2,IL4	
+Choline Biosynthesis III	1.06E00	NaN	7.69E-02	PCYT1A,	
+NAD Phosphorylation and Dephosphorylation	1.06E00	NaN	7.69E-02	ACP5,	
+CCR5 Signaling in Macrophages	1.07E00	NaN	2.90E-02	PRKCH,PRKCZ	
+GABA Receptor Signaling	1.07E00	NaN	2.90E-02	ADCY3,KCNH2	
+IL-12 Signaling and Production in Macrophages	1.08E00	NaN	2.05E-02	IL4,PRKCH,PRKCZ	
+GNRH Signaling	1.09E00	NaN	2.08E-02	ADCY3,PRKCH,PRKCZ	
+Acyl-CoA Hydrolysis	1.09E00	NaN	8.33E-02	ACOT7,	
+Hematopoiesis from Multipotent Stem Cells	1.09E00	NaN	8.33E-02	IL4,	
+Calcium-induced T Lymphocyte Apoptosis	1.1E00	NaN	3.03E-02	PRKCH,PRKCZ	
+UVB-Induced MAPK Signaling	1.1E00	NaN	3.03E-02	PRKCH,PRKCZ	
+Aryl Hydrocarbon Receptor Signaling	1.11E00	NaN	2.13E-02	RBL2,NFIA,NR0B2	
+Insulin Receptor Signaling	1.11E00	NaN	2.13E-02	RPTOR,PRKCZ,NCK1	
+PXR/RXR Activation	1.12E00	NaN	3.08E-02	ABCB9,NR0B2	
+Thrombopoietin Signaling	1.12E00	NaN	3.08E-02	PRKCH,PRKCZ	
+Cardiac β-adrenergic Signaling	1.12E00	NaN	2.14E-02	ADCY3,PDE6H,PPP2CA	
+Glucose and Glucose-1-phosphate Degradation	1.13E00	NaN	9.09E-02	HK2,	
+Role of Pattern Recognition Receptors in Recognition of Bacteria and Viruses	1.14E00	NaN	2.19E-02	IL4,PRKCH,PRKCZ	
+GP6 Signaling Pathway	1.16E00	NaN	2.24E-02	COL15A1,PRKCH,PRKCZ	
+P2Y Purigenic Receptor Signaling Pathway	1.16E00	NaN	2.24E-02	ADCY3,PRKCH,PRKCZ	
+Calcium Transport I	1.17E00	NaN	1.00E-01	ATP2C1,	
+GDP-glucose Biosynthesis	1.17E00	NaN	1.00E-01	HK2,	
+14-3-3-mediated Signaling	1.19E00	NaN	2.29E-02	YWHAQ,PRKCH,PRKCZ	
+Estrogen Receptor Signaling	1.21E00	NaN	2.34E-02	POLR2B,MED27,NR0B2	
+FXR/RXR Activation	1.23E00	NaN	2.38E-02	ITIH4,FBP1,NR0B2	
+PI3K/AKT Signaling	1.24E00	NaN	2.40E-02	YWHAQ,PRKCZ,PPP2CA	
+Breast Cancer Regulation by Stathmin1	1.25E00	NaN	1.95E-02	ADCY3,PRKCH,PRKCZ,PPP2CA	
+Natural Killer Cell Signaling	1.26E00	NaN	2.46E-02	PRKCH,PRKCZ,NCK1	
+Renin-Angiotensin Signaling	1.26E00	NaN	2.46E-02	ADCY3,PRKCH,PRKCZ	
+Production of Nitric Oxide and Reactive Oxygen Species in Macrophages	1.32E00	NaN	2.06E-02	IL4,PRKCH,PRKCZ,PPP2CA	
+Phosphatidylcholine Biosynthesis I	1.32E00	NaN	1.43E-01	PCYT1A,	
+Neuropathic Pain Signaling In Dorsal Horn Neurons	1.32E00	NaN	2.61E-02	PRKCH,PRKCZ,KCNH2	
+Role of NFAT in Cardiac Hypertrophy	1.32E00	NaN	2.07E-02	IGF1R,ADCY3,PRKCH,PRKCZ	
+Cell Cycle: G2/M DNA Damage Checkpoint Regulation	1.33E00	NaN	4.08E-02	YWHAQ,PRKCZ	
+Corticotropin Releasing Hormone Signaling	1.34E00	NaN	2.65E-02	ADCY3,PRKCH,PRKCZ	
+Nitric Oxide Signaling in the Cardiovascular System	1.34E00	NaN	2.65E-02	SLC7A1,PRKCH,PRKCZ	
+Androgen Signaling	1.36E00	NaN	2.70E-02	POLR2B,PRKCH,PRKCZ	
+nNOS Signaling in Neurons	1.37E00	NaN	4.26E-02	PRKCH,PRKCZ	
+CREB Signaling in Neurons	1.37E00	NaN	2.15E-02	POLR2B,ADCY3,PRKCH,PRKCZ	
+Triacylglycerol Biosynthesis	1.38E00	NaN	4.35E-02	LPIN1,LPCAT2	
+GDP-mannose Biosynthesis	1.38E00	NaN	1.67E-01	GPI,	
+Rapoport-Luebering Glycolytic Shunt	1.38E00	NaN	1.67E-01	PGAM2,	
+IGF-1 Signaling	1.41E00	NaN	2.83E-02	IGF1R,YWHAQ,PRKCZ	
+UVC-Induced MAPK Signaling	1.44E00	NaN	4.65E-02	PRKCH,PRKCZ	
+Trehalose Degradation II (Trehalase)	1.46E00	NaN	2.00E-01	HK2,	
+Mechanisms of Viral Exit from Host Cells	1.47E00	NaN	4.88E-02	PRKCH,PRKCZ	
+eNOS Signaling	1.48E00	NaN	2.33E-02	ADCY3,SLC7A1,PRKCH,PRKCZ	
+Huntington's Disease Signaling	1.5E00	NaN	2.00E-02	IGF1R,POLR2B,NAPA,PRKCH,PRKCZ	
+ErbB Signaling	1.5E00	NaN	3.06E-02	PRKCH,PRKCZ,NCK1	
+Melanocyte Development and Pigmentation Signaling	1.5E00	NaN	3.06E-02	ADCY3,RPS6KA2,MITF	
+Tight Junction Signaling	1.52E00	NaN	2.40E-02	PATJ,NAPA,PRKCZ,PPP2CA	
+Dopamine-DARPP32 Feedback in cAMP Signaling	1.54E00	NaN	2.44E-02	ADCY3,PRKCH,PRKCZ,PPP2CA	
+Fcγ Receptor-mediated Phagocytosis in Macrophages and Monocytes	1.56E00	NaN	3.23E-02	PRKCH,PRKCZ,NCK1	
+Airway Inflammation in Asthma	1.56E00	NaN	2.50E-01	IL4,	
+α-Adrenergic Signaling	1.63E00	NaN	3.45E-02	ADCY3,PRKCH,PRKCZ	
+GPCR-Mediated Nutrient Sensing in Enteroendocrine Cells	1.64E00	NaN	3.49E-02	ADCY3,PRKCH,PRKCZ	
+Synaptic Long Term Depression	1.69E00	NaN	2.70E-02	IGF1R,PRKCH,PRKCZ,PPP2CA	
+ErbB4 Signaling	1.85E00	NaN	4.17E-02	NCSTN,PRKCH,PRKCZ	
+Myc Mediated Apoptosis Signaling	1.88E00	NaN	4.29E-02	IGF1R,YWHAQ,PRKCZ	
+ERK5 Signaling	1.95E00	NaN	4.55E-02	YWHAQ,RPS6KA2,PRKCZ	
+RAR Activation	1.95E00	NaN	2.63E-02	ADCY3,SMARCD3,PRKCH,PRKCZ,CITED2	
+Fc Epsilon RI Signaling	2E00	NaN	3.36E-02	IL4,PRKCH,PRKCZ,MS4A2	
+Glioma Signaling	2.07E00	NaN	3.51E-02	IGF1R,RBL2,PRKCH,PRKCZ	
+Hepatic Cholestasis	2.26E00	NaN	3.12E-02	ADCY3,IL4,PRKCH,PRKCZ,NR0B2	
+HIPPO signaling	2.48E00	NaN	4.60E-02	PATJ,YWHAQ,PRKCZ,PPP2CA	
+Growth Hormone Signaling	2.52E00	NaN	4.71E-02	IGF1R,RPS6KA2,PRKCH,PRKCZ	
+mTOR Signaling	2.52E00	NaN	2.99E-02	RPTOR,RPS6KA2,DDIT4,PRKCH,PRKCZ,PPP2CA	
+UDP-N-acetyl-D-galactosamine Biosynthesis II	2.59E00	NaN	1.82E-01	HK2,GPI	
+p70S6K Signaling	2.62E00	NaN	3.79E-02	YWHAQ,IL4,PRKCH,PRKCZ,PPP2CA	
+Gluconeogenesis I	3.11E00	NaN	1.15E-01	FBP1,PGAM2,GPI	
+Glycolysis I	3.11E00	NaN	1.15E-01	FBP1,PGAM2,GPI	
+
+Upstream Regulators for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+Analysis	ID	Upstream Regulator	Molecule Type	Predicted Activation State	Activation z-score	Notes	Bias Term	Bias-corrected z-score	p-value of overlap	Target molecules in dataset	Mechanistic Network	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CCR3	g-protein coupled receptor	 	 	 	 	 	5.04E-05	IL4,PRG2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	4-hydroxytamoxifen	chemical drug	 	 	 	 	 	8.58E-05	DDIT4,IGF1R,IL4,KRT19,PRKCH,RHOBTB2,TFF2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PCGEM1	other	 	 	 	 	 	1.85E-04	CS,GPI,HK2,PGAM2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	GATA1	transcription regulator	 	 	 	 	 	2.50E-04	ANGPT2,DICER1,IL4,MITF,MS4A2,PRG2,RNASE2,ZFPM1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	cisplatin	chemical drug	 	 	 	 	 	3.49E-04	ASCC1,BNIP3L,CTSB,DDIT4,DICER1,HK2,IGF1R,KAT6B,KRT19,LPIN1,NR0B2,PRG2,RHOBTB2,TLE4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	methotrexate	chemical drug	 	 	 	 	 	3.61E-04	BNIP3L,GPI,IL4,ITIH4,LPIN1,MECR,MITF,PCYT1A	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ESRRG	ligand-dependent nuclear receptor	 	 	 	 	 	3.77E-04	HK2,KCNH2,LPIN1,NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	FOXO3	transcription regulator	 	 	 	 	 	4.20E-04	ANGPT2,BNIP3L,CTSB,DDIT4,ELOVL7,IGF1R,IL4,RBL2,SLC7A1	ERK1/2,FOXO1,FOXO3,TP53	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-125b-5p (and other miRNAs w/seed CCCUGAG)	mature microrna	 	 	 	 	 	5.38E-04	ARID3A,DICER1,HK2,KRT19,PPT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CEBPE	transcription regulator	 	 	 	 	 	5.52E-04	EPX,IL5RA,PRG2,RNASE2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	COMMD1	transporter	 	 	 	 	 	6.42E-04	DDIT4,HK2,KRT19	COMMD1,HIF1A	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-221-3p (and other miRNAs w/seed GCUACAU)	mature microrna	 	 	 	 	 	1.02E-03	BNIP3L,DDIT4,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	FOXO1	transcription regulator	 	 	 	 	 	1.03E-03	ANGPT2,BANK1,CITED2,CS,DDIT4,ELOVL7,GPI,IGF1R,RBL2,SLC25A25	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	progesterone	chemical - endogenous mammalian	 	 	 	 	 	1.21E-03	ACOT7,ACP5,CITED2,COL15A1,DICER1,ENG,IL4,KCNH2,LPIN1,PMP22,PPP2CA,ST3GAL1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TP63	transcription regulator	 	 	 	 	 	1.70E-03	CITED2,DDIT4,DICER1,ENG,HK2,HSPA7,PPP2CA,PRKCZ,TFF2	HIF1A,TP53,TP63	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	nedocromil sodium	chemical drug	 	 	 	 	 	1.76E-03	ANGPT2,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PTEN	phosphatase	 	 	 	 	 	1.76E-03	ANGPT2,CITED2,CS,CSRP1,CTSB,CYB561,IGF1R,KIF3B,KRT19,RBL2	FOXO1,PTEN	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SETD2	enzyme	 	 	 	 	 	1.80E-03	CITED2,ENG,IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	GATA2	transcription regulator	 	 	 	 	 	2.21E-03	ANGPT2,EPX,FOXP1,IL4,MS4A2,PRG2,PRG3,RNASE2,ZFPM1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	WNT1	cytokine	 	 	 	 	 	2.32E-03	IGF1R,KRT19,NCK1,RBL2,TFF2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HIF1A	transcription regulator	 	 	 	 	 	2.41E-03	BNIP3L,CITED2,DDIT4,ENG,GPI,HK2,KRT19,MITF,ST3GAL1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HGF	growth factor	 	 	 	 	 	2.82E-03	ANGPT2,BAG2,EHF,HK2,IL4,IL5RA,KRT19,PMP22,PSMC3IP,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TP53	transcription regulator	 	 	 	 	 	3.06E-03	ATL3,CITED2,CSRP1,CTSB,DDIT4,DICER1,ENG,GPI,HK2,IGF1R,IL4,IL5RA,LPIN1,mir-1205,NR0B2,PPP2CA,PRKCZ,RBL2,RPS6KA2,STEAP3,TANK	FOXO3,HIF1A,PI3K (complex),TP53,TP63	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MKL2	transcription regulator	 	 	 	 	 	3.07E-03	EPX,PRG2,PRG3,ZFPM1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	BHLHE41	transcription regulator	 	 	 	 	 	3.17E-03	HK2,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Vegf	group	 	 	 	 	 	3.25E-03	ANGPT2,BAG2,EHF,HK2,IL4,IL5RA,LRIG1,PMP22,PSMC3IP,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	mir-122	microrna	 	 	 	 	 	3.63E-03	CS,CSRP1,PPP2CA,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	dimethylnitrosamine	chemical toxicant	 	 	 	 	 	4.04E-03	PRKCH,PRKCZ,RALB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL5	cytokine	 	 	 	 	 	4.07E-03	ACP5,BNIP3L,CITED2,IL4,IL5RA,MS4A2,PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	beta-estradiol	chemical - endogenous mammalian	 	 	 	 	 	4.23E-03	ACP5,BNIP3L,CITED2,CTSB,DDIT4,EMG1,IGF1R,IL4,IRF6,ITIH4,KRT19,LPCAT2,LPIN1,NR0B2,OSBPL3,PMP22,PPP2CA,PRKCH,PRKCZ,RBL2,SIGLEC8,TANK,TFF2	TP53,TP63,beta-estradiol	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	YWHAG	other	 	 	 	 	 	4.33E-03	GPI,NAPA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	iloprost	chemical drug	 	 	 	 	 	4.33E-03	ANGPT2,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	methoxsalen	chemical drug	 	 	 	 	 	4.33E-03	IL4,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-100-5p (and other miRNAs w/seed ACCCGUA)	mature microrna	 	 	 	 	 	4.33E-03	IGF1R,RPTOR	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MAP3K8	kinase	 	 	 	 	 	4.44E-03	GPR176,IGF1R,IL4,IRF2BPL,KIF5C	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	EGR2	transcription regulator	 	 	 	 	 	4.69E-03	BNIP3L,IL4,PMP22,PPP2CA,PPT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PI3K (complex)	complex	 	 	 	 	 	4.92E-03	DDIT4,HK2,IGF1R,IL4,MITF,PRKCZ,RBL2	ERK1/2,FOXO1,FOXO3,MTOR,PI3K (complex),TP53	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ERK1/2	group	 	 	 	 	 	5.39E-03	ANGPT2,CTSB,HK2,IGF1R,IL4,KCNH2,PRKCZ	ERK1/2,TP53,TP63	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	epigallocatechin-gallate	chemical drug	 	 	 	 	 	5.56E-03	ACP5,ANGPT2,DAPK2,EPX,IGF1R,PRG2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PD98059	chemical - kinase inhibitor	 	 	 	 	 	6.05E-03	ACOT7,ANGPT2,CTSB,ENG,GPI,IGF1R,IL4,KRT19,MITF,PCYT1A	ERK1/2,PD98059,TP53	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Creb	group	 	 	 	 	 	6.21E-03	CSRP1,CTSB,MITF,NDFIP2,OSBPL3,PPP2CA,PSMC3IP	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	carbonyl cyanide m-chlorophenyl hydrazone	chemical toxicant	 	 	 	 	 	6.39E-03	DDIT4,HK2,IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	mono-(2-ethylhexyl)phthalate	chemical toxicant	 	 	 	 	 	6.45E-03	CS,DDIT4,GPI,HK2,PGAM2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	D-glucose	chemical - endogenous mammalian	 	 	 	 	 	6.68E-03	ANGPT2,CTSB,DDIT4,FBP1,GPI,HK2,IGF1R,KIF5C,PRKCZ,SLC7A1	D-glucose,ERK1/2,FOXO1,FOXO3,PI3K (complex),TP53	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MTOR	kinase	 	 	 	 	 	6.89E-03	CITED2,CS,DDIT4,HK2,IL4,PPP2CA,PRKCZ	FOXO3,MTOR,PI3K (complex),TP53,TP63	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	2210013O21Rik	other	 	 	 	 	 	7.12E-03	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CDC42BPB	kinase	 	 	 	 	 	7.12E-03	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Cd1d2	other	 	 	 	 	 	7.12E-03	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	DNASE1	enzyme	 	 	 	 	 	7.12E-03	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IMPDH1	enzyme	 	 	 	 	 	7.12E-03	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PCGF5	other	 	 	 	 	 	7.12E-03	MCC	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PF-4523655	biologic drug	 	 	 	 	 	7.12E-03	DDIT4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RNF207	other	 	 	 	 	 	7.12E-03	KCNH2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Rep1	other	 	 	 	 	 	7.12E-03	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SLC51B	transporter	 	 	 	 	 	7.12E-03	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Stat6 dimer	complex	 	 	 	 	 	7.12E-03	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	UGT2B4	enzyme	 	 	 	 	 	7.12E-03	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ZNF287	transcription regulator	 	 	 	 	 	7.12E-03	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-615-5p (and other miRNAs w/seed GGGGUCC)	mature microrna	 	 	 	 	 	7.12E-03	KRT19	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	mir-493	microrna	 	 	 	 	 	7.12E-03	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PPARGC1B	transcription regulator	 	 	 	 	 	7.45E-03	CS,HK2,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	genistein	chemical drug	 	 	 	 	 	7.70E-03	ABCB9,ACP5,CITED2,CTSB,HEXA,IGF1R,OSBPL3,VPS52	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MTM1	phosphatase	 	 	 	 	 	7.96E-03	BNIP3L,IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NR4A1	ligand-dependent nuclear receptor	 	 	 	 	 	8.22E-03	EHF,FBP1,IL4,LPIN1,PGAM2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SHH	peptidase	 	 	 	 	 	8.22E-03	ANGPT2,HK2,IL4,PMP22,PSMC3IP	ERK1/2,SHH,TP53	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MBD2	transcription regulator	 	 	 	 	 	8.60E-03	HK2,IL4,TFF2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL4	cytokine	 	 	 	 	 	9.26E-03	ACP5,BNIP3L,CITED2,HK2,IGF1R,IL4,IL5RA,MS4A2,PMP22,PTGDR2,SLC25A25,TMEM131,TNIK	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NR4A3	ligand-dependent nuclear receptor	 	 	 	 	 	9.42E-03	FBP1,IL4,LPIN1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	BCOR	transcription regulator	 	 	 	 	 	9.68E-03	ARID3A,BANK1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NTN1	other	 	 	 	 	 	9.68E-03	CTSB,IL4	ERK1/2,NTN1,TP53	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ARNT	transcription regulator	 	 	 	 	 	1.04E-02	CITED2,ENG,GPI,HK2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL3	cytokine	 	 	 	 	 	1.05E-02	BNIP3L,CITED2,HK2,IL4,IL5RA,MS4A2,PRG2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IPMK	kinase	 	 	 	 	 	1.06E-02	CSRP1,PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SKI	transcription regulator	 	 	 	 	 	1.06E-02	MITF,PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	phorbol myristate acetate	chemical drug	 	 	 	 	 	1.12E-02	ANGPT2,BNIP3L,CTSB,DDIT4,FOXP1,IKZF3,IL4,MITF,NDFIP2,PRKCH,PRKCZ,SIGLEC8,SLC7A1,ST3GAL1,TFF2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	FAM3B	cytokine	 	 	 	 	 	1.16E-02	DAPK2,KRT19	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RC3H1	enzyme	 	 	 	 	 	1.16E-02	IL4,IL5RA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	desipramine	chemical drug	 	 	 	 	 	1.16E-02	IL4,KCNH2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-122-5p (miRNAs w/seed GGAGUGU)	mature microrna	 	 	 	 	 	1.17E-02	CS,FOXP1,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	AZGP1	transporter	 	 	 	 	 	1.25E-02	HK2,KRT19	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MTA2	transcription regulator	 	 	 	 	 	1.25E-02	IL4,MS4A2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SAFB2	other	 	 	 	 	 	1.25E-02	HEXA,SAFB2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PPP3CA	phosphatase	 	 	 	 	 	1.32E-02	CSRP1,IGF1R,PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	APC	enzyme	 	 	 	 	 	1.33E-02	CS,HK2,KCNH2,PRKCZ	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ELF1	transcription regulator	 	 	 	 	 	1.36E-02	CITED2,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	3,7,12-trihydroxycoprostanic acid	chemical - endogenous non-mammalian	 	 	 	 	 	1.42E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	3alpha,7alpha-dihydroxy-5beta-cholestanic acid	chemical - endogenous mammalian	 	 	 	 	 	1.42E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	4-[(4'-chloro-2'-fluoro)phenylamino]-6,7-dimethoxyquinazoline	chemical - kinase inhibitor	 	 	 	 	 	1.42E-02	ANGPT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	5beta-cholestane-3alpha,7alpha,12alpha,25-tetrol	chemical - endogenous mammalian	 	 	 	 	 	1.42E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Alpha 1 antitrypsin	group	 	 	 	 	 	1.42E-02	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CD200R1L	other	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Cd200r3	other	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	EDF1	transcription regulator	 	 	 	 	 	1.42E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	EGOT	other	 	 	 	 	 	1.42E-02	RNASE2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	FGL2	peptidase	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	GABA-A receptor	complex	 	 	 	 	 	1.42E-02	PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	GUCY	group	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HEXB	enzyme	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HSPE1	enzyme	 	 	 	 	 	1.42E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	LCMT1	enzyme	 	 	 	 	 	1.42E-02	PPP2CA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MID1	other	 	 	 	 	 	1.42E-02	PPP2CA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NFATC2IP	other	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NIBR-14	chemical reagent	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PRG2	other	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SLC22A3	transporter	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TLE6	other	 	 	 	 	 	1.42E-02	ACP5	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TXNDC5	enzyme	 	 	 	 	 	1.42E-02	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ZP3	transporter	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	cholestane-3,7,26-triol	chemical - endogenous mammalian	 	 	 	 	 	1.42E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	dihydrolipoic acid	chemical - endogenous mammalian	 	 	 	 	 	1.42E-02	MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	guggulu extract	chemical - endogenous non-mammalian	 	 	 	 	 	1.42E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	mir-504	microrna	 	 	 	 	 	1.42E-02	FOXP1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	saponin	chemical - other	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	tolnaftate	chemical drug	 	 	 	 	 	1.42E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ATM	kinase	 	 	 	 	 	1.42E-02	IGF1R,IL4,LPIN1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ZFPM1	transcription regulator	 	 	 	 	 	1.42E-02	IL4,MS4A2,PRG2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ADORA2A	g-protein coupled receptor	 	 	 	 	 	1.44E-02	GPI,IL4,NAPA,PPP2CA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Sos	group	 	 	 	 	 	1.49E-02	ARID3A,ATP2C1,DAP,DAPK2,RALB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MKL1	transcription regulator	 	 	 	 	 	1.52E-02	EPX,PRG2,PRG3,ZFPM1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CTSB	peptidase	 	 	 	 	 	1.57E-02	CTSB,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ESRRB	ligand-dependent nuclear receptor	 	 	 	 	 	1.57E-02	HK2,NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SYVN1	transporter	 	 	 	 	 	1.63E-02	CYB561,IGF1R,NDFIP2,POLR2B	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	halofuginone	chemical drug	 	 	 	 	 	1.63E-02	ACP5,MS4A2,PMP22,STEAP3	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SREBF1	transcription regulator	 	 	 	 	 	1.64E-02	ELOVL7,HK2,LPIN1,NR0B2,PCYT1A	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	formaldehyde	chemical - endogenous mammalian	 	 	 	 	 	1.69E-02	IGF1R,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	indican	chemical - endogenous mammalian	 	 	 	 	 	1.69E-02	ANGPT2,CITED2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	sterol	chemical - endogenous mammalian	 	 	 	 	 	1.69E-02	LPIN1,PCYT1A	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NR0B2	ligand-dependent nuclear receptor	 	 	 	 	 	1.70E-02	FBP1,LPIN1,NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	B2M	transmembrane receptor	 	 	 	 	 	1.80E-02	IGF1R,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	STAT6	transcription regulator	 	 	 	 	 	1.87E-02	ACP5,CTSB,IL4,SLC25A25,TMEM131,TNIK	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NFAT5	transcription regulator	 	 	 	 	 	1.92E-02	DDIT4,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PRKCQ	kinase	 	 	 	 	 	1.92E-02	IL4,PRKCH	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SOX10	transcription regulator	 	 	 	 	 	1.92E-02	MITF,PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ADRB	group	 	 	 	 	 	1.93E-02	BNIP3L,DDIT4,LPIN1,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	metformin	chemical drug	 	 	 	 	 	1.97E-02	DDIT4,DICER1,IGF1R,NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	LYN	kinase	 	 	 	 	 	2.02E-02	IL4,IL5RA,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	4-tert-octylphenol	chemical toxicant	 	 	 	 	 	2.05E-02	ITIH4,TANK	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ABCG1	transporter	 	 	 	 	 	2.05E-02	IL4,IL5RA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HOXC8	transcription regulator	 	 	 	 	 	2.05E-02	KRT19,PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	INPP5D	phosphatase	 	 	 	 	 	2.05E-02	IL4,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TG	other	 	 	 	 	 	2.05E-02	ANGPT2,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	bafilomycin A1	chemical drug	 	 	 	 	 	2.05E-02	KCNH2,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RB1	transcription regulator	 	 	 	 	 	2.06E-02	ANGPT2,CITED2,IGF1R,MECR,PGAM2,PPT2,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	isobutylmethylxanthine	chemical toxicant	 	 	 	 	 	2.06E-02	IGF1R,IL4,MITF,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	AA-861	chemical reagent	 	 	 	 	 	2.12E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ABCB11	transporter	 	 	 	 	 	2.12E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CACNA1S	ion channel	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	EBF3	transcription regulator	 	 	 	 	 	2.12E-02	ADCY3	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	EPX	enzyme	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HPRT1	enzyme	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	KMT2C	transcription regulator	 	 	 	 	 	2.12E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	LOC290071	other	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MARK3	kinase	 	 	 	 	 	2.12E-02	ACP5	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SLC6A14	transporter	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SLC7A5	transporter	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	STARD7	other	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TGX-221	chemical - kinase inhibitor	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TRIM41	other	 	 	 	 	 	2.12E-02	PRKCZ	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	VSX2	transcription regulator	 	 	 	 	 	2.12E-02	MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Zfp35	other	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	apomine	chemical drug	 	 	 	 	 	2.12E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	nilutamide	chemical drug	 	 	 	 	 	2.12E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	taurochenodeoxycholate	chemical - endogenous mammalian	 	 	 	 	 	2.12E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	terbinafine	chemical drug	 	 	 	 	 	2.12E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	turofexorate isopropyl	chemical drug	 	 	 	 	 	2.12E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NFATC2	transcription regulator	 	 	 	 	 	2.20E-02	ACP5,CITED2,IL4,TLE4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CAMK4	kinase	 	 	 	 	 	2.30E-02	CSRP1,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Fgf	group	 	 	 	 	 	2.30E-02	IGF1R,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	APP	other	 	 	 	 	 	2.37E-02	ASCC1,CITED2,CS,CTSB,ENG,EVL,GPI,IGF1R,IL4,PPP2CA,STX1B,VKORC1L1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TO-901317	chemical reagent	 	 	 	 	 	2.38E-02	FBP1,GPI,HK2,ITIH4,NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL10RA	transmembrane receptor	 	 	 	 	 	2.38E-02	CLEC12A,DDIT4,EHF,MECR,PMP22,PPT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MYC	transcription regulator	 	 	 	 	 	2.43E-02	ABCB9,ANGPT2,COL15A1,CTSB,DDIT4,GPI,HK2,IL5RA,IRF6,MITF,PMP22,PPP2CA,ST3GAL1,TLE4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ACVRL1	kinase	 	 	 	 	 	2.44E-02	ANGPT2,ENG	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CD80	transmembrane receptor	 	 	 	 	 	2.57E-02	IGF1R,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RARA	ligand-dependent nuclear receptor	 	 	 	 	 	2.59E-02	IL4,IL5RA,IRF6,PHF19,SHANK2,TLE4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TRH	other	 	 	 	 	 	2.71E-02	ANGPT2,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-182-5p (and other miRNAs w/seed UUGGCAA)	mature microrna	 	 	 	 	 	2.71E-02	IGF1R,MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Nfat (family)	group	 	 	 	 	 	2.73E-02	ACP5,IL4,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	AMACR	enzyme	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ANKRD13C	other	 	 	 	 	 	2.82E-02	PTGDR2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CHST2	enzyme	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CHST4	enzyme	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CMIP	other	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CYP11B2	enzyme	 	 	 	 	 	2.82E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Cd1	group	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Gzmb	peptidase	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HLA-E	transmembrane receptor	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL20RB	other	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IRF2BP2	transcription regulator	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Il12 receptor	complex	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MPP5	kinase	 	 	 	 	 	2.82E-02	PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NLN	peptidase	 	 	 	 	 	2.82E-02	FBP1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PAK4	kinase	 	 	 	 	 	2.82E-02	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Pou3f1	transcription regulator	 	 	 	 	 	2.82E-02	PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RASAL3	other	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RGL2	other	 	 	 	 	 	2.82E-02	RALB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RPRD1A	other	 	 	 	 	 	2.82E-02	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SIGMAR1	transmembrane receptor	 	 	 	 	 	2.82E-02	KCNH2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	XPO5	transporter	 	 	 	 	 	2.82E-02	DICER1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ganglioside GQ1B	chemical - endogenous mammalian	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	goserelin	biologic drug	 	 	 	 	 	2.82E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-378a-3p (and other miRNAs w/seed CUGGACU)	mature microrna	 	 	 	 	 	2.82E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	mir-128	microrna	 	 	 	 	 	2.82E-02	BAG2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	pentamidine	chemical drug	 	 	 	 	 	2.82E-02	KCNH2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ramatroban	chemical drug	 	 	 	 	 	2.82E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	pioglitazone	chemical drug	 	 	 	 	 	2.82E-02	FBP1,IL4,KRT19,LPIN1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	anandamide	chemical - endogenous mammalian	 	 	 	 	 	2.85E-02	IL4,NCSTN	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL22	cytokine	 	 	 	 	 	2.88E-02	IL4,RBL2,TFF2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	desmopressin	biologic drug	 	 	 	 	 	2.88E-02	ADCY3,KIF26A,YWHAQ	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	dextran sulfate	chemical drug	 	 	 	 	 	2.88E-02	ENG,IGF1R,IL4,STEAP3,TFF2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	AGN194204	chemical drug	 	 	 	 	 	2.94E-02	BNIP3L,CSRP1,HK2,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CDK2	kinase	 	 	 	 	 	3.00E-02	PCYT1A,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL9	cytokine	 	 	 	 	 	3.00E-02	IL4,IL5RA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL33	cytokine	 	 	 	 	 	3.05E-02	EPX,IL4,PRG2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RELA	transcription regulator	 	 	 	 	 	3.10E-02	BNIP3L,CITED2,CTSB,EHF,IGF1R,IL4,TANK	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	nitrofurantoin	chemical drug	 	 	 	 	 	3.11E-02	CTSB,ITIH4,KRT19,PCYT1A	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TFEB	transcription regulator	 	 	 	 	 	3.14E-02	CTSB,HEXA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	DMRT1	transcription regulator	 	 	 	 	 	3.21E-02	EPX,IGF1R,PRG2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CEACAM1	transporter	 	 	 	 	 	3.29E-02	ANGPT2,IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ZEB2	transcription regulator	 	 	 	 	 	3.29E-02	KRT19,MS4A2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	roscovitine	chemical drug	 	 	 	 	 	3.29E-02	PCYT1A,RALB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SIRT1	transcription regulator	 	 	 	 	 	3.35E-02	IGF1R,IL4,KIF5C,MED27,SHANK2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TNFSF10	cytokine	 	 	 	 	 	3.38E-02	ANGPT2,CTSB,IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	WNT3A	cytokine	 	 	 	 	 	3.40E-02	DDIT4,ENG,MITF,PMP22,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ID2	transcription regulator	 	 	 	 	 	3.41E-02	IKZF3,IL4,IRF6,RPS6KA2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	2-4-6-trinitrophenyl-lipopolysaccharide	chemical toxicant	 	 	 	 	 	3.51E-02	IL5RA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ADAM8	peptidase	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CADM1	other	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CCL15	cytokine	 	 	 	 	 	3.51E-02	EPX	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CEBPZ	transcription regulator	 	 	 	 	 	3.51E-02	HSPA7	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IgD	complex	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	JV-1-65 hGHRH(1-29)NH2	chemical reagent	 	 	 	 	 	3.51E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	MNK1/2	group	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PDE4D	enzyme	 	 	 	 	 	3.51E-02	MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RAB4A	enzyme	 	 	 	 	 	3.51E-02	KCNH2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RIDA	enzyme	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RIPK4	kinase	 	 	 	 	 	3.51E-02	IRF6	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SNCG	other	 	 	 	 	 	3.51E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	STK17B	kinase	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TRA2B	other	 	 	 	 	 	3.51E-02	LPIN1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Trbv13-1	other	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	W146	chemical reagent	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	decanoic acid	chemical - endogenous mammalian	 	 	 	 	 	3.51E-02	ACP5	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	etidronic acid	chemical drug	 	 	 	 	 	3.51E-02	ACP5	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ganglioside GD1b	chemical - endogenous mammalian	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	harmol	chemical - endogenous non-mammalian	 	 	 	 	 	3.51E-02	MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	hypochlorous acid	chemical drug	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-431-3p (miRNAs w/seed AGGUCGU)	mature microrna	 	 	 	 	 	3.51E-02	DICER1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	mir-503	microrna	 	 	 	 	 	3.51E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ranitidine	chemical drug	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	terfenadine	chemical drug	 	 	 	 	 	3.51E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	tyrphostin 25	chemical - kinase inhibitor	 	 	 	 	 	3.51E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ionomycin	chemical reagent	 	 	 	 	 	3.54E-02	IL4,NDFIP2,PRKCZ,TLE4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	baicalein	chemical - endogenous non-mammalian	 	 	 	 	 	3.60E-02	IGF1R,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ESRRA	ligand-dependent nuclear receptor	 	 	 	 	 	3.67E-02	HK2,IKZF3,KRT19,NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	BRCA1	transcription regulator	 	 	 	 	 	3.73E-02	DDIT4,IGF1R,LPIN1,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CD3 group	group	 	 	 	 	 	3.76E-02	IL4,LPCAT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	azoxymethane	chemical toxicant	 	 	 	 	 	3.76E-02	IGF1R,PRKCZ	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	bicalutamide	chemical drug	 	 	 	 	 	3.76E-02	DDIT4,IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	mir-133	microrna	 	 	 	 	 	3.76E-02	IGF1R,KCNH2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	methylprednisolone	chemical drug	 	 	 	 	 	3.80E-02	CITED2,DDIT4,KRT19,NFIA,NR0B2,PCYT1A,PPP2CA,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ID3	transcription regulator	 	 	 	 	 	3.93E-02	IKZF3,IL4,IRF6,RPS6KA2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PPRC1	transcription regulator	 	 	 	 	 	4.09E-02	DDIT4,HK2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ZMPSTE24	peptidase	 	 	 	 	 	4.09E-02	DDIT4,IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	13-hydroxyoctadecadienoic acid	chemical - endogenous mammalian	 	 	 	 	 	4.20E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	2-morpholin-4-yl-6-thianthren-1-yl-pyran-4-one	chemical reagent	 	 	 	 	 	4.20E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CALCB	other	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CPXM1	peptidase	 	 	 	 	 	4.20E-02	COL15A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Cr3	complex	 	 	 	 	 	4.20E-02	FOXP1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Cxcl9	cytokine	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	DUSP10	phosphatase	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	GSK690693	chemical drug	 	 	 	 	 	4.20E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HOXD8	transcription regulator	 	 	 	 	 	4.20E-02	ANGPT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Hrg	other	 	 	 	 	 	4.20E-02	ANGPT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL12RB1	transmembrane receptor	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL22RA2	transmembrane receptor	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	INPPL1	phosphatase	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Nfatc	group	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	P glycoprotein	group	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SDC4	other	 	 	 	 	 	4.20E-02	ANGPT2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SOST	other	 	 	 	 	 	4.20E-02	ACP5	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SSPN	other	 	 	 	 	 	4.20E-02	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	Trbv13-2	other	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	UBASH3A	enzyme	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	VAV	group	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	WIF1	other	 	 	 	 	 	4.20E-02	MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	aurintricarboxylic acid	chemical drug	 	 	 	 	 	4.20E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	dimethyl sulfone	chemical drug	 	 	 	 	 	4.20E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	histidinol	chemical - endogenous mammalian	 	 	 	 	 	4.20E-02	SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-139-5p (miRNAs w/seed CUACAGU)	mature microrna	 	 	 	 	 	4.20E-02	IGF1R	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-219a-5p (and other miRNAs w/seed GAUUGUC)	mature microrna	 	 	 	 	 	4.20E-02	ELOVL7	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	olomoucine	chemical - kinase inhibitor	 	 	 	 	 	4.20E-02	PCYT1A	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	palmitoylethanolamide	chemical drug	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	penicillamine	chemical drug	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	praziquantel	chemical drug	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	proteoglycan	chemical - other	 	 	 	 	 	4.20E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	sevelamer	chemical drug	 	 	 	 	 	4.20E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	topotecan	chemical drug	 	 	 	 	 	4.21E-02	CITED2,ENG,NFIA,TANK	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	FYN	kinase	 	 	 	 	 	4.25E-02	IL4,IL5RA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ERBB2	kinase	 	 	 	 	 	4.30E-02	BAG2,CTSB,CYB561,DAP,EHF,IGF1R,IRF6,MITF,RALB,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TNF	cytokine	 	 	 	 	 	4.32E-02	ACP5,ANGPT2,CITED2,COL15A1,CTSB,EHF,ENG,GPR176,HEXA,HK2,IGF1R,IL4,KCNH2,LRIG1,NCK1,NR0B2,PCYT1A,RNASE2,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RUNX1	transcription regulator	 	 	 	 	 	4.35E-02	CYB561,ENG,IL4,SHANK2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	valproic acid	chemical drug	 	 	 	 	 	4.38E-02	BAG2,CTSB,DICER1,IGF1R,IL4,NR0B2,PRKCZ	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	GRB2	kinase	 	 	 	 	 	4.42E-02	IRF6,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	SP1	transcription regulator	 	 	 	 	 	4.47E-02	BNIP3L,CITED2,ENG,HK2,IGF1R,KRT19,PCYT1A,SLC7A1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HMOX1	enzyme	 	 	 	 	 	4.50E-02	ANGPT2,CS,ENG	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	8-chlorophenylthio-adenosine 3',5'-cyclic monophosphate	chemical - kinase inhibitor	 	 	 	 	 	4.59E-02	KCNH2,LPIN1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	GSK3B	kinase	 	 	 	 	 	4.60E-02	IGF1R,KIF3B,PMP22	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HOXA3	transcription regulator	 	 	 	 	 	4.76E-02	ENG,SHANK2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RGS10	other	 	 	 	 	 	4.76E-02	IL4,IL5RA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ZEB1	transcription regulator	 	 	 	 	 	4.76E-02	KRT19,RBL2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	guanidinopropionic acid	chemical - endogenous non-mammalian	 	 	 	 	 	4.76E-02	ATP2C1,ATPAF2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	IL1B	cytokine	 	 	 	 	 	4.82E-02	CTSB,DDIT4,EHF,ENG,HEXA,HK2,KCNH2,KRT19,NR0B2,SLC25A25,SLC2A9	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CTSE	peptidase	 	 	 	 	 	4.88E-02	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	CXCL16	cytokine	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	DEFB4A/DEFB4B	other	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HDAC10	transcription regulator	 	 	 	 	 	4.88E-02	MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	HSP	group	 	 	 	 	 	4.88E-02	KCNH2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	KLB	enzyme	 	 	 	 	 	4.88E-02	NR0B2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	LRP2	transporter	 	 	 	 	 	4.88E-02	CTSB	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	LTC4S	enzyme	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	OXTR	g-protein coupled receptor	 	 	 	 	 	4.88E-02	PRKCZ	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	PDK1	kinase	 	 	 	 	 	4.88E-02	HK2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	RASGRP4	other	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TARBP2	other	 	 	 	 	 	4.88E-02	DICER1	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TIMD4	other	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TNFRSF10B	transmembrane receptor	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TPSD1	peptidase	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	TRPA1	transporter	 	 	 	 	 	4.88E-02	IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ZNF423	transcription regulator	 	 	 	 	 	4.88E-02	ADCY3	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	glucosylceramide	chemical - endogenous mammalian	 	 	 	 	 	4.88E-02	PCYT1A	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-126a-5p (and other miRNAs w/seed AUUAUUA)	mature microrna	 	 	 	 	 	4.88E-02	MITF	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	miR-138-5p (miRNAs w/seed GCUGGUG)	mature microrna	 	 	 	 	 	4.88E-02	KRT19	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NR3C2	ligand-dependent nuclear receptor	 	 	 	 	 	4.91E-02	DDIT4,IGF1R,NFIA	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ADRB2	g-protein coupled receptor	 	 	 	 	 	4.94E-02	ANGPT2,HK2	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	ATG7	enzyme	 	 	 	 	 	4.94E-02	CTSB,IL4	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	NRL	transcription regulator	 	 	 	 	 	4.94E-02	IGF1R,PDE6H	 	
+OlderChildren-Combined - 2017-12-07 12:37 PM	 	FOXA2	transcription regulator	 	 	 	 	 	4.94E-02	EPX,HK2,IL4,RNASE2	 	
+
+Causal Networks for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+
+Diseases and Bio Functions for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+Categories	Functions	Diseases or Functions Annotation	p-Value	Predicted Activation State	Activation z-score	Notes	Bias-corrected z-score	Molecules	# Molecules	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Hypersensitivity Response, Immune Cell Trafficking, Inflammatory Response	activation	Activation of basophils	9.24E-08	 	 	 	 	PRG2,PTGDR2,IL4,EPX,PRG3	5	
+Carbohydrate Metabolism	glycolysis	Glycolysis of cells	8.30E-07	 	 	 	 	IGF1R,RPTOR,IL4,DDIT4,FBP1,PGAM2,HK2,CITED2,GPI	9	
+Cell Death and Survival, Organismal Injury and Abnormalities	cell death	Cell death of epithelial cells	6.48E-06	 	 	 	 	PRG2,ITIH4,YWHAQ,RBL2,BNIP3L,IL4,ENG,MITF,CITED2,NR0B2,IGF1R,DICER1,CTSB,EPX,HK2,PMP22,PPP2CA	17	
+Cell Death and Survival, Organismal Injury and Abnormalities	necrosis	Necrosis of epithelial tissue	2.03E-05	 	 	 	 	PRG2,ITIH4,YWHAQ,ANGPT2,RBL2,BNIP3L,IL4,ENG,MITF,CITED2,NR0B2,IGF1R,DICER1,CTSB,EPX,HK2,PMP22,PPP2CA	18	
+Cell Death and Survival	necrosis	Necrosis	2.66E-05	 	 	 	 	DAPK2,RBL2,BNIP3L,EHF,MITF,RALB,LRIG1,DICER1,ATP2C1,EMG1,PRKCH,NCK1,TLE4,GPI,DDIT4,ENG,CITED2,IGF1R,RPTOR,RPS6KA2,CS,PPT2,YWHAQ,SIGLEC8,FOXP1,RHOBTB2,NAPA,IKZF3,MS4A2,STEAP3,STX1B,EPX,PRKCZ,HK2,ST3GAL1,TLDC2,PMP22,PPP2CA,PRG2,ITIH4,TANK,PTGDR2,ANGPT2,IL4,IL5RA,NR0B2,CTSB,FOXK2,RNASE2	49	
+Cell Morphology, Hematological System Development and Function, Hypersensitivity Response, Immunological Disease	abnormal morphology	Abnormal morphology of eosinophils	4.90E-05	 	 	 	 	PRG2,EPX	2	
+Cellular Development	differentiation	Differentiation of tumor cell lines	5.28E-05	 	 	 	 	FOXP1,RBL2,IL4,IGF1R,TRAPPC9,DICER1,PCYT1A,ATP2C1,MCC,PRKCH,PRKCZ,NCK1,RNASE2	13	
+Cell Morphology, Cellular Function and Maintenance	autophagy	Autophagy of tumor cell lines	6.78E-05	 	 	 	 	KIF5C,YWHAQ,RPTOR,DICER1,BNIP3L,DDIT4,MITF,CATSPER4	8	
+Cell Morphology, Cellular Function and Maintenance	autophagy	Autophagy	6.87E-05	 	 	 	 	DAPK2,KIF5C,YWHAQ,SOGA1,BNIP3L,DAP,DDIT4,ENG,MITF,CATSPER4,CLEC12A,IGF1R,RPTOR,DICER1	14	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development	proliferation	Proliferation of B lymphocytes	6.97E-05	 	 	 	 	TANK,LPIN1,RPTOR,DICER1,PCYT1A,RBL2,IL4,IL5RA,IKZF3,PRKCZ,BANK1	11	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function	activation	Activation of myeloid cells	7.00E-05	 	 	 	 	IRF6,PRG2,PTGDR2,SIGLEC8,ANGPT2,FOXP1,TFF2,IL4,IL5RA,METRNL,EPX,PRG3	12	
+Hematological Disease, Immunological Disease	eosinophilia	Eosinophilia of tissue	7.13E-05	 	 	 	 	PTGDR2,SIGLEC8,IL4	3	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	release	Release of leukotriene	1.16E-04	 	 	 	 	PRG2,IL4,PRG3,MS4A2	4	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	release	Release of eicosanoid	1.45E-04	 	 	 	 	IGF1R,PRG2,LPIN1,CTSB,IL4,PRG3,MS4A2	7	
+Cellular Function and Maintenance	homeostasis	Cellular homeostasis	1.94E-04	 	 	 	 	ZFPM1,DAPK2,YWHAQ,FOXP1,SOGA1,RBL2,BNIP3L,SLC25A33,MITF,MS4A2,KCNH2,DICER1,ATP2C1,PRKCH,PRKCZ,GPI,PPP2CA,KIF5C,ANGPT2,SLC25A25,SLC8B1,DAP,DDIT4,IL4,IL5RA,ENG,CATSPER4,CLEC12A,NR0B2,IGF1R,NCSTN,RPTOR	32	
+Cell Morphology	morphology	Morphology of blood cells	2.23E-04	 	 	 	 	ZFPM1,PRG2,SLC7A1,BNIP3L,IL4,IL5RA,MITF,RPTOR,STEAP3,PRKCH,EPX,ARID3A,PRKCZ	13	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of granulocytes	2.45E-04	 	 	 	 	PRG2,PTGDR2,IL4,IL5RA,EPX,PRG3	6	
+Cancer, Organismal Injury and Abnormalities	cancer	Cancer	2.75E-04	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,DAP,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,GPR176,KAT6B,BANK1,RNASE2,RBL2,BNIP3L,EHF,ANKRD7,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,RFPL4B,CATSPER4,PRG3,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,PGAM2,FAM216B,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC,RNF122,SLC38A8	138	
+Cell Cycle, Hair and Skin Development and Function	G1 phase	Arrest in G1 phase of keratinocytes	2.91E-04	 	 	 	 	LPIN1,PRKCH	2	
+Carbohydrate Metabolism, Small Molecule Biochemistry	modification	Modification of glucose-6-phosphate	2.91E-04	 	 	 	 	HK2,GPI	2	
+Cancer, Cellular Growth and Proliferation, Organismal Functions, Organismal Injury and Abnormalities, Tumor Morphology	inhibition	Inhibition of tumor cells	3.03E-04	 	 	 	 	DDIT4,IL4,HK2	3	
+Gene Expression	transcription	Transcription of DNA	3.18E-04	 	 	 	 	ZFPM1,YWHAQ,DMAP1,FOXP1,EHF,MITF,IKZF3,POLR2B,IRF6,LPIN1,DICER1,MED27,IRF2BPL,ASCC1,ARID3A,PHF19,NCK1,TLE4,PPP2CA,DAP,IL4,ENG,NFIA,PSMC3IP,CITED2,NR0B2,IGF1R,SMARCD3,FOXK2,KAT6B	30	
+Cell Morphology, Cellular Function and Maintenance	autophagy	Autophagy of cells	3.42E-04	 	 	 	 	DAPK2,KIF5C,YWHAQ,RPTOR,DICER1,BNIP3L,DDIT4,ENG,MITF,CATSPER4	10	
+Gene Expression	expression	Expression of RNA	3.48E-04	 	 	 	 	SEC16B,ZFPM1,YWHAQ,DMAP1,FOXP1,RBL2,EHF,MITF,IKZF3,POLR2B,IRF6,NDFIP2,LPIN1,DICER1,ATP2C1,MED27,IRF2BPL,PRKCZ,ASCC1,ARID3A,PHF19,NCK1,TLE4,PPP2CA,TANK,DAP,IL4,ENG,NFIA,PSMC3IP,PRG3,CITED2,NR0B2,IGF1R,RPS6KA2,SMARCD3,FOXK2,KAT6B,BANK1	39	
+Endocrine System Disorders, Organismal Injury and Abnormalities	goiter	Goiter	3.55E-04	 	 	 	 	IGF1R,KRT19,DICER1	3	
+Gene Expression	transcription	Transcription of RNA	3.73E-04	 	 	 	 	ZFPM1,YWHAQ,DMAP1,FOXP1,RBL2,EHF,MITF,IKZF3,POLR2B,IRF6,LPIN1,DICER1,ATP2C1,MED27,IRF2BPL,PRKCZ,ASCC1,ARID3A,PHF19,NCK1,TLE4,PPP2CA,TANK,DAP,IL4,ENG,NFIA,PSMC3IP,CITED2,NR0B2,IGF1R,SMARCD3,FOXK2,KAT6B	34	
+Gene Expression	transcription	Transcription	3.84E-04	 	 	 	 	SEC16B,ZFPM1,YWHAQ,DMAP1,FOXP1,RBL2,EHF,MITF,IKZF3,POLR2B,IRF6,NDFIP2,LPIN1,DICER1,ATP2C1,MED27,IRF2BPL,PRKCZ,ASCC1,ARID3A,PHF19,NCK1,TLE4,PPP2CA,TANK,DAP,IL4,ENG,NFIA,PSMC3IP,CITED2,NR0B2,IGF1R,RPS6KA2,SMARCD3,FOXK2,KAT6B	37	
+Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of B-1 lymphocytes	3.92E-04	 	 	 	 	RPTOR,IL4,IL5RA,ARID3A,BANK1	5	
+Cellular Movement	invasion	Invasion of cells	3.95E-04	 	 	 	 	YWHAQ,ANGPT2,FOXP1,RHOBTB2,ENG,MITF,KCNH2,PLGRKT,IRF6,IGF1R,RALB,LRIG1,KRT19,ADCY3,RPTOR,DICER1,TFF2,CTSB,PRKCZ,ST3GAL1,GPI	21	
+Cellular Assembly and Organization, Cellular Function and Maintenance	organization	Organization of actin cytoskeleton	4.20E-04	 	 	 	 	RALB,LPIN1,TNIK,CSRP1,ATP2C1,ENG,EVL,PRKCZ,NCK1,GPI	10	
+Cellular Growth and Proliferation	colony formation	Colony formation of cells	4.41E-04	 	 	 	 	DMAP1,RHOBTB2,RBL2,BNIP3L,IL4,EHF,MITF,IGF1R,KRT19,DICER1,CTSB,SUGT1,PRKCZ,PPP2CA	14	
+Cell Morphology	conversion	Conversion of placental cells	4.83E-04	 	 	 	 	SMARCD3,MITF	2	
+Cancer, Cellular Growth and Proliferation, Organismal Functions, Organismal Injury and Abnormalities, Tumor Morphology	inhibition	Inhibition of mammary tumor cells	4.83E-04	 	 	 	 	IL4,HK2	2	
+Cell Morphology, Cellular Assembly and Organization, Nervous System Development and Function	orientation	Orientation of axons	4.83E-04	 	 	 	 	NFIA,PRKCZ	2	
+Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of naive B cells	4.83E-04	 	 	 	 	IL4,IKZF3	2	
+Cardiovascular System Development and Function, Organ Development	stroke volume index	Stroke volume index	4.83E-04	 	 	 	 	ANGPT2,ENG	2	
+Cancer	transformation	Transformation of prostate cancer cell lines	4.83E-04	 	 	 	 	IGF1R,DDIT4	2	
+Cancer, Organismal Injury and Abnormalities	abdominal neoplasm	Abdominal neoplasm	4.96E-04	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,PPT2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RNASE2,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,CATSPER4,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,GID4,CTSB,MCC,FOXK2,IRGC	128	
+Cell Death and Survival	cell death	Cell death	5.06E-04	 	 	 	 	DAPK2,RBL2,BNIP3L,EHF,MITF,RALB,LRIG1,DICER1,ATP2C1,EMG1,PRKCH,NCK1,TLE4,GPI,DAP,DDIT4,ENG,PRG3,CITED2,IGF1R,RPTOR,RPS6KA2,CS,PPT2,YWHAQ,SIGLEC8,FOXP1,RHOBTB2,NAPA,IKZF3,MS4A2,KCNH2,KRT19,STEAP3,STX1B,EPX,PRKCZ,HK2,ST3GAL1,TLDC2,PMP22,PPP2CA,PRG2,ITIH4,TANK,PTGDR2,ANGPT2,IL4,IL5RA,NR0B2,NCSTN,CTSB,FOXK2,RNASE2	54	
+Hematological System Development and Function, Lymphoid Tissue Structure and Development, Tissue Morphology	morphology	Morphology of lymph follicle	5.07E-04	 	 	 	 	IL4,IKZF3,PRKCZ,TLE4,BANK1,PPT2	6	
+Cancer, Cellular Development, Cellular Growth and Proliferation, Organismal Injury and Abnormalities, Tumor Morphology	colony formation	Colony formation of tumor cells	5.24E-04	 	 	 	 	DICER1,RHOBTB2,CTSB,SUGT1	4	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	release	Release of leukotriene C4	5.43E-04	 	 	 	 	PRG2,IL4,PRG3	3	
+Organismal Survival	morbidity or mortality	Morbidity or mortality	5.77E-04	 	 	 	 	ZFPM1,DMAP1,RBL2,BNIP3L,VPS52,MITF,IKZF3,HEXA,KCNH2,RALB,KRT19,ADCY3,DICER1,FBXW8,PCYT1A,ATP2C1,STX1B,EPX,PRKCH,HK2,ARID3A,NCK1,TLE4,PPP2CA,TANK,ANGPT2,SLC25A25,SLC7A1,IL4,ENG,NFIA,KIF26A,CLEC12A,CITED2,KIF3B,IGF1R,NCSTN,SLC2A9,RPTOR,CTSB,SHANK2,PPT2	42	
+Carbohydrate Metabolism	flux	Flux of carbohydrate	6.17E-04	 	 	 	 	PCYT1A,PGAM2,GPI	3	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of phagocytes	6.27E-04	 	 	 	 	IRF6,PRG2,SIGLEC8,ANGPT2,FOXP1,TFF2,IL4,METRNL,EPX,RNASE2,PRG3	11	
+Cancer, Organismal Injury and Abnormalities	solid tumor	Solid tumor	6.49E-04	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,PPT2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,GPR176,KAT6B,BANK1,RNASE2,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,RFPL4B,CATSPER4,PRG3,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,PGAM2,FAM216B,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC,RNF122,SLC38A8	137	
+Cell Death and Survival	apoptosis	Apoptosis	6.51E-04	 	 	 	 	DAPK2,SIGLEC8,YWHAQ,FOXP1,RHOBTB2,RBL2,NAPA,BNIP3L,EHF,MITF,IKZF3,MS4A2,KCNH2,RALB,LRIG1,DICER1,ATP2C1,STEAP3,PRKCH,PRKCZ,HK2,NCK1,TLE4,ST3GAL1,GPI,PMP22,PPP2CA,ITIH4,ANGPT2,DAP,DDIT4,IL4,IL5RA,ENG,CITED2,NR0B2,IGF1R,NCSTN,RPTOR,RPS6KA2,CTSB,CS,FOXK2,PPT2	44	
+Cell Death and Survival	cell death	Cell death of connective tissue cells	6.92E-04	 	 	 	 	TANK,RBL2,BNIP3L,DDIT4,IL4,ENG,NR0B2,IGF1R,RALB,DICER1,RPS6KA2,CTSB,PRKCZ,NCK1,GPI	15	
+Cardiovascular Disease, Cardiovascular System Development and Function, Cell Morphology, Hematological System Development and Function, Hematopoiesis, Tissue Morphology	abnormal morphology	Abnormal morphology of reticulocytes	7.22E-04	 	 	 	 	SLC7A1,STEAP3	2	
+Cell Morphology	conversion	Conversion of chondrocytes	7.22E-04	 	 	 	 	SMARCD3,MITF	2	
+Carbohydrate Metabolism, Molecular Transport, Small Molecule Biochemistry	flux	Flux of D-glucose	7.22E-04	 	 	 	 	PGAM2,GPI	2	
+Cell Cycle, DNA Replication, Recombination, and Repair	homologous pairing	Homologous pairing of DNA	7.22E-04	 	 	 	 	EVL,PSMC3IP	2	
+Cancer, Organismal Injury and Abnormalities	malignant solid tumor	Malignant solid tumor	7.48E-04	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,GPR176,KAT6B,BANK1,RNASE2,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,RFPL4B,CATSPER4,PRG3,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,PGAM2,FAM216B,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC,RNF122,SLC38A8	136	
+Humoral Immune Response, Protein Synthesis	quantity	Quantity of IgM	7.51E-04	 	 	 	 	TANK,IL4,IL5RA,IKZF3,ARID3A,BANK1	6	
+Hematological System Development and Function, Tissue Morphology	quantity	Quantity of blood cells	7.59E-04	 	 	 	 	TANK,SIGLEC8,PTGDR2,SLC7A1,RBL2,BNIP3L,IL4,IL5RA,IKZF3,IRF6,IGF1R,RPTOR,DICER1,CTSB,STEAP3,PRKCH,ARID3A,BANK1,TLE4,ST3GAL1,PPT2,PPP2CA	22	
+Cancer, Cellular Development, Organismal Injury and Abnormalities	immortalization	Immortalization of fibroblasts	7.84E-04	 	 	 	 	RBL2,PGAM2,ARID3A	3	
+Cell Morphology	morphology	Morphology of cells	7.93E-04	 	 	 	 	ZFPM1,DAPK2,RBL2,BNIP3L,MITF,HEXA,IRF6,LPIN1,DICER1,ATP2C1,STEAP3,EGFLAM,STX1B,EPX,PRKCH,PRKCZ,HK2,ARID3A,NCK1,GPI,PMP22,PRG2,ANGPT2,COL15A1,SLC7A1,IL4,IL5RA,NFIA,PSMC3IP,KIF26A,CITED2,KIF3B,IGF1R,RPTOR,RPS6KA2,CTSB,SHANK2,PPT2	38	
+Cellular Compromise, Inflammatory Response	degranulation	Degranulation of cells	7.98E-04	 	 	 	 	ZFPM1,PRG2,RALB,LPIN1,DICER1,IL4,EHF,MS4A2	8	
+Cellular Movement	migration	Migration of cells	8.16E-04	 	 	 	 	DAPK2,SIGLEC8,FOXP1,RHOBTB2,EHF,MITF,KCNH2,PLGRKT,IRF6,PATJ,RALB,KRT19,ADCY3,DICER1,LRP12,PRKCZ,NCK1,GPI,PMP22,PTGDR2,ANGPT2,DDIT4,IL4,NISCH,ENG,NFIA,CITED2,IGF1R,RPTOR,ACP5,TFF2,CTSB,EVL,RNASE2,PPT2	35	
+Organismal Survival	organismal death	Organismal death	8.58E-04	 	 	 	 	ZFPM1,DMAP1,RBL2,BNIP3L,VPS52,MITF,IKZF3,HEXA,KCNH2,RALB,KRT19,ADCY3,DICER1,FBXW8,PCYT1A,ATP2C1,STX1B,EPX,PRKCH,HK2,ARID3A,NCK1,TLE4,PPP2CA,TANK,ANGPT2,SLC25A25,SLC7A1,IL4,ENG,NFIA,KIF26A,CITED2,KIF3B,IGF1R,NCSTN,SLC2A9,RPTOR,CTSB,SHANK2,PPT2	41	
+Inflammatory Response	inflammatory response	Inflammatory response	9.11E-04	 	 	 	 	PRG2,DAPK2,PTGDR2,ANGPT2,FOXP1,IL4,METRNL,ENG,PRG3,CLEC12A,MS4A2,IRF6,RALB,DICER1,TFF2,CTSB,EPX,RNASE2	18	
+Cellular Growth and Proliferation	proliferation	Proliferation of bone marrow cell lines	9.17E-04	 	 	 	 	IGF1R,RALB,RBL2,IL4,PPP2CA	5	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	granulopoiesis	Granulopoiesis	9.18E-04	 	 	 	 	IGF1R,ZFPM1,RALB,SIGLEC8,IL4,CITED2	6	
+Cancer, Organismal Injury and Abnormalities	nonhematologic malignant neoplasm	Nonhematologic malignant neoplasm	9.64E-04	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,GPR176,KAT6B,BANK1,RNASE2,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,RFPL4B,CATSPER4,PRG3,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,PGAM2,FAM216B,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC,RNF122,SLC38A8	135	
+Cell-To-Cell Signaling and Interaction, Inflammatory Response	inflammatory response	Inflammatory response of tumor cell lines	1.01E-03	 	 	 	 	CTSB,ENG	2	
+Cellular Movement, Hematological System Development and Function, Hypersensitivity Response, Immune Cell Trafficking	migration	Migration of basophils	1.01E-03	 	 	 	 	PTGDR2,ENG	2	
+Cell Morphology, Endocrine System Development and Function, Organ Morphology, Organismal Development	morphology	Morphology of thyroid cells	1.01E-03	 	 	 	 	IGF1R,CTSB	2	
+Developmental Disorder, Neurological Disease, Organismal Injury and Abnormalities	congenital malformation	Congenital malformation of brain	1.01E-03	 	 	 	 	RALB,KIF5C,ANGPT2,RPTOR,DICER1,ATP2C1,EMG1,NFIA,CITED2,KIF3B	10	
+Cellular Movement	cell movement	Cell movement	1.01E-03	 	 	 	 	DAPK2,SIGLEC8,FOXP1,RHOBTB2,EHF,MITF,KCNH2,PLGRKT,IRF6,PATJ,RALB,TNIK,LRIG1,KRT19,ADCY3,DICER1,LRP12,PRKCZ,NCK1,GPI,PMP22,PTGDR2,ANGPT2,DDIT4,IL4,NISCH,ENG,NFIA,CATSPER4,CITED2,IGF1R,RPTOR,ACP5,TFF2,CTSB,EVL,RNASE2,PPT2	38	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Hypersensitivity Response, Immune Cell Trafficking, Inflammatory Response	activation	Activation of eosinophils	1.09E-03	 	 	 	 	PTGDR2,IL4,IL5RA	3	
+Cell Morphology, Hair and Skin Development and Function	transepithelial electrical resistance	Transepithelial electrical resistance of cells	1.09E-03	 	 	 	 	IL4,PRKCZ,PPP2CA	3	
+Cancer, Organismal Injury and Abnormalities	abdominal cancer	Abdominal cancer	1.11E-03	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RNASE2,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,CATSPER4,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,GID4,CTSB,MCC,FOXK2,IRGC	126	
+Cell Cycle	cell cycle progression	Arrest in cell cycle progression	1.14E-03	 	 	 	 	IGF1R,IRF6,KRT19,RPTOR,RBL2,DDIT4,EHF,PRKCH,PGAM2,MITF	10	
+Cell Morphology, Cellular Development, Cellular Growth and Proliferation, Nervous System Development and Function, Organismal Development, Tissue Development	morphogenesis	Morphogenesis of neurons	1.20E-03	 	 	 	 	CSRP1,NFIA,HEXA,KIF3B,IGF1R,RALB,TNIK,ADCY3,DICER1,FBXW8,SHANK2,LRP12,PRKCZ,PMP22,PPP2CA	15	
+Cancer, Organismal Injury and Abnormalities	metastasis	Metastasis of colorectal cancer cell lines	1.20E-03	 	 	 	 	IGF1R,DICER1,RPTOR	3	
+Cell Death and Survival	cell death	Cell death of blood cells	1.24E-03	 	 	 	 	DAPK2,SIGLEC8,FOXP1,BNIP3L,DDIT4,IL4,IL5RA,IKZF3,MS4A2,LRIG1,RPTOR,DICER1,CTSB,PRKCZ,TLE4,ST3GAL1	16	
+Tissue Development	growth	Growth of epithelial tissue	1.25E-03	 	 	 	 	ITIH4,ANGPT2,RBL2,IL4,ENG,CITED2,IRF6,IGF1R,NCSTN,LRIG1,RPTOR,DICER1,CTSB,MCC,PRKCH,PRKCZ	16	
+Tissue Morphology	quantity	Quantity of cells	1.38E-03	 	 	 	 	SIGLEC8,RBL2,BNIP3L,MITF,IKZF3,IRF6,KRT19,DICER1,ATP2C1,STEAP3,STX1B,PRKCH,ARID3A,TLE4,ST3GAL1,PPP2CA,TANK,PTGDR2,KIF5C,ANGPT2,SLC7A1,IL4,IL5RA,ENG,NFIA,CITED2,IGF1R,RPTOR,TFF2,CTSB,BANK1,PPT2	32	
+Embryonic Development, Organismal Development, Tissue Morphology	size	Size of embryo	1.44E-03	 	 	 	 	ZFPM1,IGF1R,NCSTN,DICER1,RBL2,ATP2C1,ENG,CITED2,KIF3B,PPP2CA	10	
+Cardiovascular Disease, Developmental Disorder, Organismal Injury and Abnormalities	failure of heart looping	Failure of heart looping	1.45E-03	 	 	 	 	NCSTN,RBL2,ENG	3	
+Cell Morphology, Hematological System Development and Function	morphology	Morphology of granulocytes	1.45E-03	 	 	 	 	PRG2,IL4,EPX	3	
+Cancer, Organismal Injury and Abnormalities	precancerous condition	Precancerous condition	1.48E-03	 	 	 	 	IL4,ENG,PRKCH,ASCC1,PRKCZ	5	
+Cellular Development, Cellular Growth and Proliferation	cell proliferation	Cell proliferation of tumor cell lines	1.49E-03	 	 	 	 	DAPK2,YWHAQ,DMAP1,FOXP1,RHOBTB2,RBL2,EHF,MITF,IRF6,RALB,TNIK,LRIG1,KRT19,FBXW8,STEAP3,PRKCH,PRKCZ,HK2,ARID3A,TLE4,PPP2CA,ELOVL7,ANGPT2,IL4,ENG,IGF1R,NCSTN,RPTOR,TFF2,CTSB	30	
+Cell-To-Cell Signaling and Interaction, Inflammatory Response	immune response	Immune response of tumor cell lines	1.50E-03	 	 	 	 	RALB,DICER1,FOXP1,CTSB,IL4,ENG	6	
+Cellular Development, Cellular Growth and Proliferation, Nervous System Development and Function	myelination	Myelination of cells	1.65E-03	 	 	 	 	SERINC5,DICER1,DDIT4,HEXA,PMP22	5	
+Cancer, Endocrine System Disorders, Gastrointestinal Disease, Organismal Injury and Abnormalities	growth	Growth of pancreatic endocrine tumor	1.71E-03	 	 	 	 	CTSB,ENG	2	
+Cardiovascular System Development and Function, Organismal Development, Skeletal and Muscular System Development and Function	muscularization	Muscularization of artery	1.71E-03	 	 	 	 	RPTOR,IL4	2	
+Cell Death and Survival	cell death	Cell death of immune cells	1.76E-03	 	 	 	 	DAPK2,SIGLEC8,FOXP1,DDIT4,IL4,IL5RA,IKZF3,MS4A2,LRIG1,RPTOR,DICER1,CTSB,PRKCZ,TLE4,ST3GAL1	15	
+Cell Death and Survival	apoptosis	Apoptosis of hepatoma cell lines	1.78E-03	 	 	 	 	IGF1R,CTSB,IL4,PRKCZ,PPP2CA,NR0B2	6	
+Cancer, Organismal Injury and Abnormalities	tumorigenesis	Tumorigenesis of tissue	1.79E-03	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RBL2,BNIP3L,EHF,ANKRD7,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,CATSPER4,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC	128	
+Cell-To-Cell Signaling and Interaction	activation	Activation of cells	1.80E-03	 	 	 	 	PRG2,TANK,SIGLEC8,PTGDR2,ANGPT2,FOXP1,DDIT4,IL4,METRNL,IL5RA,PRG3,CLEC12A,IRF6,TFF2,EPX,PRKCZ,NCK1,BANK1,RNASE2,PPP2CA	20	
+Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of B lymphocytes	1.80E-03	 	 	 	 	TANK,RPTOR,CTSB,IL4,IL5RA,PRKCH,IKZF3,ARID3A,BANK1,TLE4	10	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Hypersensitivity Response, Immune Cell Trafficking, Inflammatory Response	activation	Activation of mast cells	1.84E-03	 	 	 	 	PRG2,SIGLEC8,IL4,EPX	4	
+Cell Death and Survival	cell death	Cell death of lymphatic system cells	1.88E-03	 	 	 	 	LRIG1,DICER1,FOXP1,CTSB,BNIP3L,STEAP3,DDIT4,IL4,IL5RA,TLE4,ST3GAL1	11	
+Cancer, Cardiovascular Disease, Organismal Injury and Abnormalities	formation	Formation of angioma	1.93E-03	 	 	 	 	ANGPT2,DICER1,IKZF3,KAT6B	4	
+Cardiovascular Disease, Developmental Disorder	congenital anomaly of cardiovascular system	Congenital anomaly of cardiovascular system	1.95E-03	 	 	 	 	NCSTN,ANGPT2,DICER1,RBL2,ENG,KAT6B,CITED2,KCNH2	8	
+Cancer, Organismal Injury and Abnormalities	neoplasia	Neoplasia of epithelial tissue	2.02E-03	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,CATSPER4,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC	127	
+Cellular Growth and Proliferation	colony formation	Colony formation of tumor cell lines	2.08E-03	 	 	 	 	IGF1R,KRT19,DMAP1,DICER1,RBL2,CTSB,IL4,EHF,MITF	9	
+Cellular Growth and Proliferation, Connective Tissue Development and Function, Tissue Development	proliferation	Proliferation of connective tissue cells	2.08E-03	 	 	 	 	RBL2,IL4,ENG,CITED2,IRF6,IGF1R,NCSTN,LRIG1,DICER1,CTSB,PRKCH,PGAM2,ARID3A,GPI	14	
+Cell Morphology	abnormal morphology	Abnormal morphology of cells	2.09E-03	 	 	 	 	ZFPM1,RBL2,BNIP3L,HEXA,ATP2C1,STEAP3,EGFLAM,STX1B,PRKCH,ARID3A,PMP22,SLC7A1,COL15A1,IL4,IL5RA,NFIA,PSMC3IP,KIF26A,CITED2,KIF3B,IGF1R,RPS6KA2,CTSB,SHANK2,PPT2	25	
+Hematological Disease	anisopoikilocytosis	Anisopoikilocytosis	2.13E-03	 	 	 	 	SLC7A1,STEAP3	2	
+Free Radical Scavenging	synthesis	Synthesis of reactive oxygen species	2.14E-03	 	 	 	 	PRG2,IRF6,ITIH4,ANGPT2,BNIP3L,SHANK2,DDIT4,IL4,FBP1,PRKCZ,HK2,PRG3	12	
+Cell Cycle, Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation	contact growth inhibition	Contact growth inhibition	2.16E-03	 	 	 	 	IGF1R,RBL2,IL4,IKZF3,PRKCZ,GPI	6	
+Cell Death and Survival, Embryonic Development	cell death	Cell death of embryonic cell lines	2.27E-03	 	 	 	 	IGF1R,TANK,YWHAQ,RBL2,CTSB,BNIP3L,DDIT4,HK2,CITED2,PMP22	10	
+Cellular Assembly and Organization, Cellular Function and Maintenance	organization	Organization of cytoplasm	2.27E-03	 	 	 	 	SEC16B,CSRP1,SLC25A33,HEXA,MS4A2,LPIN1,RALB,TNIK,ADCY3,DICER1,FBXW8,ATP2C1,LRP12,PRKCH,PRKCZ,NCK1,GPI,PMP22,PPP2CA,KIF5C,ANGPT2,ENG,NFIA,ATL3,KIF3B,IGF1R,SHANK2,EVL	28	
+Hematological System Development and Function, Tissue Morphology	quantity	Quantity of leukocytes	2.28E-03	 	 	 	 	TANK,SIGLEC8,PTGDR2,RBL2,IL4,IL5RA,IKZF3,IRF6,IGF1R,RPTOR,DICER1,CTSB,PRKCH,ARID3A,BANK1,TLE4,ST3GAL1,PPT2,PPP2CA	19	
+Cell Cycle	cell cycle progression	Cell cycle progression	2.30E-03	 	 	 	 	RHOBTB2,RBL2,DDIT4,IL4,EHF,MITF,IKZF3,CITED2,IRF6,IGF1R,LRIG1,KRT19,RPTOR,DICER1,RPS6KA2,SUGT1,PRKCH,PGAM2,PRKCZ,GPI,PPP2CA	21	
+Cellular Movement	invasion	Invasion of tumor cell lines	2.31E-03	 	 	 	 	YWHAQ,FOXP1,MITF,IRF6,PLGRKT,IGF1R,RALB,KRT19,LRIG1,RPTOR,DICER1,CTSB,TFF2,PRKCZ,ST3GAL1,GPI	16	
+Cell Cycle	cell cycle progression	Arrest in cell cycle progression of tumor cell lines	2.33E-03	 	 	 	 	IGF1R,KRT19,RBL2,DDIT4,EHF,PRKCH	6	
+Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of B-1a lymphocytes	2.39E-03	 	 	 	 	RPTOR,ARID3A,BANK1	3	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	myelopoiesis	Myelopoiesis of leukocytes	2.41E-03	 	 	 	 	IGF1R,ZFPM1,RALB,SIGLEC8,FOXP1,IL4,CITED2	7	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Lymphoid Tissue Structure and Development	proliferation	Proliferation of lymphocytes	2.49E-03	 	 	 	 	TANK,RBL2,IL4,IL5RA,IKZF3,IRF6,NCSTN,LPIN1,RPTOR,DICER1,PCYT1A,PRKCH,PRKCZ,BANK1,NCK1,GPI	16	
+Cell Cycle	cell cycle progression	Cell cycle progression of prostate cancer cell lines	2.58E-03	 	 	 	 	LRIG1,DDIT4,EHF	3	
+Cancer, Cellular Development, Cellular Growth and Proliferation, Organismal Injury and Abnormalities, Tumor Morphology	colony formation	Colony formation of cancer cells	2.58E-03	 	 	 	 	DICER1,CTSB,SUGT1	3	
+Carbohydrate Metabolism	metabolism	Metabolism of monosaccharide	2.58E-03	 	 	 	 	IGF1R,NISCH,FBP1,HK2,GPI	5	
+Cell-mediated Immune Response, Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking, Lymphoid Tissue Structure and Development	homing	Homing of Th2 cells	2.59E-03	 	 	 	 	PTGDR2,IL4	2	
+Cellular Movement	invasion	Invasion of lymphoma cell lines	2.59E-03	 	 	 	 	PLGRKT,CTSB	2	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of follicular B lymphocytes	2.59E-03	 	 	 	 	DICER1,IL4	2	
+Cell Morphology, Hair and Skin Development and Function	transepithelial electrical resistance	Transepithelial electrical resistance of colorectal cancer cell lines	2.59E-03	 	 	 	 	IL4,PPP2CA	2	
+Cellular Growth and Proliferation, Lymphoid Tissue Structure and Development	proliferation	Proliferation of lymphatic system cells	2.59E-03	 	 	 	 	TANK,RBL2,IL4,IL5RA,IKZF3,IRF6,IGF1R,LPIN1,NCSTN,RPTOR,DICER1,PCYT1A,PRKCH,PRKCZ,NCK1,BANK1,GPI	17	
+Cell Death and Survival	cell death	Cell death of tumor cell lines	2.68E-03	 	 	 	 	DAPK2,RHOBTB2,RBL2,NAPA,BNIP3L,EHF,MITF,RALB,LRIG1,DICER1,EMG1,PRKCH,PRKCZ,HK2,ST3GAL1,TLDC2,GPI,PPP2CA,ANGPT2,DDIT4,IL4,ENG,NR0B2,IGF1R,RPTOR,CTSB,CS,FOXK2	28	
+Gene Expression	activation	Activation of DNA endogenous promoter	2.74E-03	 	 	 	 	ZFPM1,DMAP1,IL4,EHF,ENG,MITF,NFIA,PSMC3IP,IKZF3,CITED2,NR0B2,POLR2B,IRF6,LPIN1,DICER1,MED27,FOXK2,IRF2BPL,ARID3A,PHF19,NCK1,TLE4,PPP2CA	23	
+Free Radical Scavenging	production	Production of superoxide	2.75E-03	 	 	 	 	PRG2,ANGPT2,IL4,PRKCZ,PRG3	5	
+Cancer, Organismal Injury and Abnormalities	metastasis	Metastasis of tumor cell lines	2.79E-03	 	 	 	 	IGF1R,RALB,ANGPT2,RPTOR,DICER1,CTSB,GPI	7	
+Cancer, Organismal Injury and Abnormalities	epithelial cancer	Carcinoma	2.88E-03	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,CATSPER4,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC	126	
+Cell Morphology, Cellular Assembly and Organization, Cellular Development, Cellular Function and Maintenance, Cellular Growth and Proliferation, Nervous System Development and Function, Organismal Development, Tissue Development	neuritogenesis	Neuritogenesis	2.91E-03	 	 	 	 	CSRP1,NFIA,KIF3B,IGF1R,RALB,TNIK,ADCY3,DICER1,FBXW8,SHANK2,LRP12,PRKCZ,PMP22,PPP2CA	14	
+Cell Morphology	morphology	Morphology of leukocytes	2.93E-03	 	 	 	 	PRG2,RPTOR,IL4,IL5RA,PRKCH,EPX,MITF,ARID3A,PRKCZ	9	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of leukocytes	2.95E-03	 	 	 	 	PRG2,PTGDR2,SIGLEC8,ANGPT2,FOXP1,IL4,METRNL,IL5RA,PRG3,IRF6,TFF2,EPX,BANK1,NCK1,RNASE2	15	
+Tissue Morphology	quantity	Quantity of epithelial tissue	3.01E-03	 	 	 	 	IGF1R,ANGPT2,DICER1,TFF2,CTSB,MITF	6	
+Cardiovascular System Development and Function, Tissue Morphology	contraction	Contraction of vein	3.09E-03	 	 	 	 	DICER1,IL4	2	
+Cellular Assembly and Organization, Cellular Compromise, Cellular Function and Maintenance	instability	Instability of microtubules	3.09E-03	 	 	 	 	KIF5C,KIF3B	2	
+Cancer, Organismal Injury and Abnormalities	non-melanoma solid tumor	Non-melanoma solid tumor	3.11E-03	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,SMARCD3,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,CYB561,MS4A2,KRT19,MED27,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,VKORC1L1,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RBL2,BNIP3L,EHF,OSBPL3,GDF5OS,IRF6,TRAPPC9,LPIN1,RALB,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,ELOVL7,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,CATSPER4,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,YWHAQ,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,NCSTN,GID4,CTSB,MCC,FOXK2,IRGC	128	
+Cancer, Endocrine System Disorders, Organismal Injury and Abnormalities	follicular thyroid tumor	Follicular thyroid tumor	3.18E-03	 	 	 	 	KRT19,ANGPT2,CTSB,ENG	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	leukopoiesis	Leukopoiesis	3.21E-03	 	 	 	 	ZFPM1,SIGLEC8,FOXP1,RBL2,IL4,IL5RA,IKZF3,CITED2,NR0B2,IGF1R,RALB,RPTOR,DICER1,PRKCH,PRKCZ,ARID3A,TLE4	17	
+Cellular Growth and Proliferation, Tissue Development	proliferation	Proliferation of epithelial cells	3.24E-03	 	 	 	 	IRF6,IGF1R,NCSTN,ITIH4,LRIG1,DICER1,RBL2,IL4,MCC,ENG,PRKCH,CITED2	12	
+Cell Cycle	cell cycle progression	Cell cycle progression of tumor cell lines	3.26E-03	 	 	 	 	IGF1R,KRT19,LRIG1,RHOBTB2,RBL2,DDIT4,EHF,PRKCH	8	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking	cellular infiltration	Cellular infiltration by granulocytes	3.29E-03	 	 	 	 	IRF6,PTGDR2,SIGLEC8,ANGPT2,DICER1,CTSB,IL4	7	
+Humoral Immune Response, Protein Synthesis	quantity	Quantity of IgA	3.31E-03	 	 	 	 	TANK,IL4,IL5RA,IKZF3	4	
+Cellular Development	differentiation	Delay in differentiation of cells	3.41E-03	 	 	 	 	IGF1R,ATP2C1,CTSB	3	
+Cell Cycle	fission	Fission	3.41E-03	 	 	 	 	SEC16B,LPIN1,RPTOR	3	
+Cancer, Dermatological Diseases and Conditions, Organismal Injury and Abnormalities	skin papilloma	Skin papilloma	3.41E-03	 	 	 	 	ATP2C1,ENG,PRKCH	3	
+Endocrine System Disorders, Organismal Injury and Abnormalities	nodular goiter	Nodular goiter	3.63E-03	 	 	 	 	KRT19,DICER1	2	
+Cell Morphology, Cellular Assembly and Organization, Cellular Function and Maintenance	reorganization	Reorganization of actin cytoskeleton	3.84E-03	 	 	 	 	LPIN1,TNIK,ATP2C1,ENG,PRKCZ	5	
+Cell Death and Survival	apoptosis	Apoptosis of tumor cell lines	3.85E-03	 	 	 	 	DAPK2,ANGPT2,RHOBTB2,RBL2,NAPA,BNIP3L,DDIT4,IL4,EHF,ENG,MITF,NR0B2,IGF1R,RALB,RPTOR,DICER1,CTSB,CS,FOXK2,PRKCZ,HK2,ST3GAL1,PPP2CA	23	
+Cell Death and Survival, Organismal Injury and Abnormalities, Respiratory Disease	cell death	Cell death of lung cells	3.88E-03	 	 	 	 	IGF1R,PRG2,EPX	3	
+Cell Death and Survival	cell death	Cell death of mononuclear leukocytes	3.93E-03	 	 	 	 	LRIG1,DICER1,FOXP1,CTSB,DDIT4,IL4,IL5RA,TLE4,ST3GAL1,MS4A2	10	
+Cardiovascular Disease, Developmental Disorder, Organismal Injury and Abnormalities	congenital heart disease	Congenital heart disease	4.00E-03	 	 	 	 	NCSTN,DICER1,RBL2,ENG,KAT6B,CITED2,KCNH2	7	
+Cellular Movement	invasion	Invasion of carcinoma cell lines	4.00E-03	 	 	 	 	IRF6,RALB,FOXP1,CTSB,MITF,PRKCZ,ST3GAL1	7	
+Cardiovascular Disease, Hematological Disease, Metabolic Disease	hypercholesterolemia	Hypercholesterolemia	4.05E-03	 	 	 	 	ITIH4,LPIN1,RPTOR,NR0B2	4	
+Humoral Immune Response, Protein Synthesis	quantity	Quantity of IgG1	4.19E-03	 	 	 	 	TANK,IL4,IL5RA,IKZF3,ARID3A	5	
+Cell Morphology	cell flattening	Cell flattening of tumor cell lines	4.22E-03	 	 	 	 	RBL2,PRKCH	2	
+Cellular Movement	cell movement	Cell movement of prostate cell lines	4.22E-03	 	 	 	 	IGF1R,ENG	2	
+Cellular Compromise, Gastrointestinal Disease, Hepatic System Disease, Organismal Injury and Abnormalities	damage	Damage of hepatocytes	4.22E-03	 	 	 	 	IGF1R,DICER1	2	
+Cell-To-Cell Signaling and Interaction, Cellular Assembly and Organization, Cellular Function and Maintenance, Molecular Transport	priming	Priming of synaptic vesicles	4.22E-03	 	 	 	 	NAPA,STX1B	2	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development	proliferation	Proliferation of germinal center B lymphocytes	4.22E-03	 	 	 	 	DICER1,IL4	2	
+Cell Morphology	size	Size of antigen presenting cells	4.22E-03	 	 	 	 	RPTOR,IL4	2	
+Cell Morphology, Cellular Assembly and Organization, Cellular Development, Cellular Function and Maintenance, Cellular Growth and Proliferation, Nervous System Development and Function, Organismal Development, Tissue Development	axonogenesis	Axonogenesis	4.24E-03	 	 	 	 	IGF1R,ADCY3,DICER1,NFIA,PRKCZ,PMP22,PPP2CA	7	
+Cellular Development	epithelial-mesenchymal transition	Epithelial-mesenchymal transition	4.24E-03	 	 	 	 	IGF1R,RPTOR,DICER1,SLC25A33,PRKCZ,GPI,PPP2CA	7	
+Organismal Injury and Abnormalities	abnormal ratio tissue	Abnormal ratio tissue	4.37E-03	 	 	 	 	KRT19,IL5RA,ENG,PRKCZ	4	
+Organismal Injury and Abnormalities, Renal and Urological Disease	hydronephrosis	Hydronephrosis	4.37E-03	 	 	 	 	IGF1R,SLC2A9,IL4,NFIA	4	
+Dermatological Diseases and Conditions, Organ Morphology, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of hair follicle	4.39E-03	 	 	 	 	IGF1R,DICER1,RBL2	3	
+Cell Death and Survival, Organismal Injury and Abnormalities	apoptosis	Apoptosis of epithelial cells	4.41E-03	 	 	 	 	ITIH4,DICER1,RBL2,CTSB,IL4,ENG,MITF,NR0B2	8	
+Dermatological Diseases and Conditions, Organ Morphology, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of epidermis	4.43E-03	 	 	 	 	IGF1R,LRIG1,DICER1,RBL2,CTSB	5	
+Cancer, Organismal Injury and Abnormalities	neck neoplasm	Neck neoplasm	4.45E-03	 	 	 	 	ANGPT2,COL15A1,FOXP1,IL4,IL5RA,ENG,KIF26A,IRF6,IGF1R,TRAPPC9,TNIK,KRT19,RPTOR,DICER1,CTSB,MCC,DNAH17,PHF19,TLE4	19	
+Cell-To-Cell Signaling and Interaction	detachment	Detachment of cells	4.54E-03	 	 	 	 	IGF1R,ANGPT2,NAPA,ENG	4	
+Molecular Transport, Small Molecule Biochemistry	release	Release of histamine	4.66E-03	 	 	 	 	PRG2,IL4,PRG3	3	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	development	Development of plasma cells	4.85E-03	 	 	 	 	DICER1,IL4	2	
+Cellular Movement	dissemination	Dissemination of tumor cells	4.85E-03	 	 	 	 	IGF1R,ANGPT2	2	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking	migration	Migration of B-lymphocyte derived cell lines	4.85E-03	 	 	 	 	PTGDR2,ENG	2	
+Cellular Movement, Nervous System Development and Function	migration	Migration of cerebellar granule cell	4.85E-03	 	 	 	 	IGF1R,NFIA	2	
+Cellular Movement	migration	Migration of myeloma cell lines	4.85E-03	 	 	 	 	IGF1R,RALB	2	
+Cell-To-Cell Signaling and Interaction, Cellular Movement	recruitment	Recruitment of muscle cells	4.85E-03	 	 	 	 	IL4,ENG	2	
+Cell Morphology	enlargement	Enlargement of cells	4.87E-03	 	 	 	 	DAPK2,LPIN1,ANGPT2,DICER1,RPS6KA2,CTSB,IL4,PRKCH,PMP22	9	
+Cell Death and Survival, Gastrointestinal Disease, Hepatic System Disease, Organismal Injury and Abnormalities	apoptosis	Apoptosis of hepatocytes	4.94E-03	 	 	 	 	ITIH4,DICER1,CTSB,IL4,NR0B2	5	
+Cellular Development, Cellular Growth and Proliferation, Digestive System Development and Function, Hepatic System Development and Function, Organ Development	proliferation	Proliferation of liver cells	5.21E-03	 	 	 	 	IGF1R,ITIH4,DICER1,CTSB,IL4,CITED2	6	
+Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Tissue Development	cell proliferation	Cell proliferation of fibroblasts	5.37E-03	 	 	 	 	IGF1R,NCSTN,CTSB,IL4,ENG,PGAM2,ARID3A,CITED2,GPI	9	
+Cellular Function and Maintenance	homeostasis	Homeostasis of blood cells	5.51E-03	 	 	 	 	ZFPM1,FOXP1,RBL2,IL4,IL5RA,NR0B2,IGF1R,NCSTN,RPTOR,DICER1,PRKCH,PRKCZ,GPI	13	
+Tissue Development	accumulation	Accumulation of lymphatic system cells	5.51E-03	 	 	 	 	NCSTN,IL4	2	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of Th2 cells	5.51E-03	 	 	 	 	PTGDR2,IL4	2	
+Cellular Growth and Proliferation	colony formation	Colony formation of stomach cancer cell lines	5.51E-03	 	 	 	 	IGF1R,DMAP1	2	
+Cardiovascular System Development and Function, Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Organismal Development, Tissue Development	development	Development of PBMCs	5.51E-03	 	 	 	 	DICER1,IL4	2	
+Cellular Development, Cellular Growth and Proliferation, Organ Development, Skeletal and Muscular System Development and Function, Tissue Development	proliferation	Proliferation of skeletal muscle cells	5.51E-03	 	 	 	 	IGF1R,ANGPT2	2	
+Cell Morphology, Cellular Assembly and Organization, Cellular Function and Maintenance	reorganization	Reorganization of cytoskeleton	5.66E-03	 	 	 	 	LPIN1,TNIK,ATP2C1,ENG,PRKCZ,MS4A2	6	
+Cell Death and Survival	cell viability	Cell viability	5.72E-03	 	 	 	 	TANK,SIGLEC8,PTGDR2,ANGPT2,SLC7A1,IL4,ENG,MITF,IGF1R,NCSTN,RALB,LRIG1,KRT19,RPTOR,DICER1,ATP2C1,CTSB,SMARCD3,STX1B,PRKCH,PRKCZ,HK2,RNASE2,PPP2CA	24	
+Cellular Assembly and Organization, Cellular Function and Maintenance	organization	Microtubule dynamics	5.78E-03	 	 	 	 	KIF5C,ANGPT2,CSRP1,ENG,NFIA,MS4A2,KIF3B,IGF1R,RALB,TNIK,ADCY3,DICER1,FBXW8,ATP2C1,SHANK2,LRP12,PRKCH,EVL,PRKCZ,NCK1,PMP22,PPP2CA	22	
+Carbohydrate Metabolism, Small Molecule Biochemistry	metabolism	Metabolism of D-hexose	5.84E-03	 	 	 	 	IGF1R,NISCH,FBP1,HK2	4	
+Cellular Development, Cellular Growth and Proliferation	proliferation	Proliferation of blood cells	5.85E-03	 	 	 	 	TANK,RBL2,IL4,IL5RA,IKZF3,IRF6,IGF1R,LPIN1,NCSTN,RPTOR,DICER1,PCYT1A,PRKCH,PRKCZ,NCK1,BANK1,GPI	17	
+Cancer, Cardiovascular Disease, Organismal Injury and Abnormalities	hemangioma	Hemangioma	5.93E-03	 	 	 	 	IGF1R,ANGPT2,DICER1,IKZF3,KAT6B	5	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	cell viability	Cell viability of cancer cells	6.04E-03	 	 	 	 	IGF1R,RALB,IL4,MITF	4	
+Cell Death and Survival	cell death	Cell death of B lymphocytes	6.09E-03	 	 	 	 	LRIG1,DICER1,FOXP1,CTSB,IL4	5	
+Hematological System Development and Function, Lymphoid Tissue Structure and Development, Tissue Morphology	morphology	Morphology of lymphoid tissue	6.21E-03	 	 	 	 	RBL2,BNIP3L,STEAP3,IL4,IL5RA,PRKCH,IKZF3,PRKCZ,BANK1,TLE4,CITED2,PPT2	12	
+Carbohydrate Metabolism, Small Molecule Biochemistry	catabolism	Catabolism of proteoglycan	6.22E-03	 	 	 	 	CTSB,IL4	2	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of memory B cells	6.22E-03	 	 	 	 	FOXP1,IL4	2	
+Cancer	hyperplasia	Hyperplasia of cell lines	6.22E-03	 	 	 	 	IGF1R,IL4	2	
+Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Organ Development, Skeletal and Muscular System Development and Function, Tissue Development	proliferation	Proliferation of myofibroblasts	6.22E-03	 	 	 	 	CTSB,IL4	2	
+Cell Death and Survival	survival	Cell survival	6.27E-03	 	 	 	 	SIGLEC8,MITF,RALB,LRIG1,KRT19,DICER1,ATP2C1,STX1B,PRKCH,PRKCZ,HK2,NCK1,PPP2CA,TANK,PTGDR2,ANGPT2,SLC7A1,IL4,ENG,IGF1R,NCSTN,RPTOR,CTSB,SMARCD3,RNASE2	25	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	lymphopoiesis	Lymphopoiesis	6.41E-03	 	 	 	 	ZFPM1,FOXP1,RBL2,IL4,IL5RA,IKZF3,NR0B2,IGF1R,RPTOR,DICER1,PRKCH,PRKCZ,ARID3A,TLE4	14	
+Cellular Development	differentiation	Differentiation of neuroblastoma cell lines	6.48E-03	 	 	 	 	IGF1R,PCYT1A,ATP2C1	3	
+Neurological Disease, Organismal Injury and Abnormalities	neurodegeneration	Neurodegeneration of cerebellum	6.48E-03	 	 	 	 	DICER1,CTSB,PPT2	3	
+Cancer, Organismal Injury and Abnormalities	genitourinary tumor	Genitourinary tumor	6.54E-03	 	 	 	 	SOGA1,RBL2,BNIP3L,EHF,MITF,OSBPL3,PLGRKT,IRF6,GDF5OS,TRAPPC9,LPIN1,RALB,TNIK,LRIG1,DICER1,ATP2C1,LRP12,PRKCH,DNAH17,ASCC1,ARID3A,ELOVL7,SLC7A1,ABCB9,SAFB2,DDIT4,ENG,PSMC3IP,CATSPER4,IGF1R,SLC2A9,RPTOR,RPS6KA2,TMEM131,ACP5,TFF2,SHANK2,CS,ZNF862,SMARCD3,SUGT1,ZFPM1,SEC16B,YWHAQ,AP5B1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,MS4A2,POLR2B,KRT19,STEAP3,MED27,EGFLAM,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,PHF19,PMP22,PPP2CA,ITIH4,KIF5C,ANGPT2,COL15A1,IL4,VKORC1L1,IL5RA,NISCH,ATL3,CLEC12A,ACOT7,NR0B2,CTSB,MCC,FOXK2,KAT6B,RNASE2	82	
+Hematological System Development and Function, Tissue Morphology	quantity	Quantity of myeloid cells	6.56E-03	 	 	 	 	IRF6,PTGDR2,SIGLEC8,RBL2,CTSB,IL4,IL5RA,ARID3A,TLE4,PPT2,PPP2CA	11	
+Free Radical Scavenging	production	Production of reactive oxygen species	6.58E-03	 	 	 	 	IRF6,PRG2,ANGPT2,SHANK2,IL4,FBP1,PRKCZ,HK2,PRG3	9	
+Cell Morphology	morphology	Morphology of tumor cell lines	6.73E-03	 	 	 	 	IGF1R,IRF6,RBL2,PRKCH,MITF,PRKCZ,GPI	7	
+Antimicrobial Response, Inflammatory Response	antiviral response	Antiviral response	6.80E-03	 	 	 	 	SERINC5,DICER1,BNIP3L,IL4,DDIT4,RNASE2	6	
+Hereditary Disorder, Organismal Injury and Abnormalities	autosomal dominant disease	Autosomal dominant disease	6.84E-03	 	 	 	 	KIF5C,ANGPT2,BNIP3L,ENG,MITF,CYB561,ATL3,KCNH2,IRF6,KRT19,SLC2A9,DICER1,STEAP3,STX1B,KAT6B,TLE4,PMP22	17	
+Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of lymph follicle	6.89E-03	 	 	 	 	IKZF3,ARID3A,PRKCZ,TLE4,BANK1	5	
+Carbohydrate Metabolism	gluconeogenesis	Gluconeogenesis	6.90E-03	 	 	 	 	SOGA1,FBP1,PGAM2,NR0B2	4	
+Cell-To-Cell Signaling and Interaction, Cellular Assembly and Organization, Skeletal and Muscular System Development and Function	fusion	Fusion of myotube	6.96E-03	 	 	 	 	IGF1R,IL4	2	
+Cell Morphology, Inflammatory Response	size	Size of phagocytes	6.96E-03	 	 	 	 	RPTOR,IL4	2	
+Cell Signaling, Molecular Transport, Vitamin and Mineral Metabolism	translocation	Translocation of Ca2+	6.96E-03	 	 	 	 	SLC8B1,ATP2C1	2	
+Dermatological Diseases and Conditions, Organ Morphology, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of small hair follicle	7.02E-03	 	 	 	 	IGF1R	1	
+Hematological System Development and Function, Hematopoiesis, Tissue Development	accumulation	Accumulation of granulomonocytic cells	7.02E-03	 	 	 	 	NCSTN	1	
+Tissue Development	accumulation	Accumulation of neuronal progenitor cells	7.02E-03	 	 	 	 	DICER1	1	
+Cell-To-Cell Signaling and Interaction, Nervous System Development and Function	action potential	Action potential of embryonic stem cell lines	7.02E-03	 	 	 	 	KCNH2	1	
+Cell-To-Cell Signaling and Interaction, Nervous System Development and Function	action potential	Action potential of heart cell lines	7.02E-03	 	 	 	 	KCNH2	1	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Humoral Immune Response, Immune Cell Trafficking, Inflammatory Response	activation	Activation of B-1b lymphocytes	7.02E-03	 	 	 	 	IL4	1	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Immune Cell Trafficking, Inflammatory Response	activation	Activation of pre-B lymphocytes	7.02E-03	 	 	 	 	IL4	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities	albinism-deafness syndrome of tietz	Albinism-deafness syndrome of tietz	7.02E-03	 	 	 	 	MITF	1	
+Antigen Presentation, Cell-To-Cell Signaling and Interaction, Inflammatory Response	antigen presentation	Antigen presentation by Langerhans cells	7.02E-03	 	 	 	 	IL4	1	
+Cell Morphology, Endocrine System Development and Function, Organ Morphology, Organismal Development	area	Area of thyrocytes	7.02E-03	 	 	 	 	IGF1R	1	
+Organ Morphology, Tissue Development	branching	Arrest in branching of lung	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Lymphoid Tissue Structure and Development	proliferation	Arrest in proliferation of Th2 cells	7.02E-03	 	 	 	 	IL4	1	
+Neurological Disease, Organismal Injury and Abnormalities	ataxia	Ataxia of Purkinje cells	7.02E-03	 	 	 	 	DICER1	1	
+Cardiovascular Disease, Developmental Disorder, Hereditary Disorder, Organismal Injury and Abnormalities	atrial septal defect type 8	Atrial septal defect type 8	7.02E-03	 	 	 	 	CITED2	1	
+Cell-To-Cell Signaling and Interaction, Reproductive System Development and Function	attachment	Attachment of prostate cells	7.02E-03	 	 	 	 	ENG	1	
+Cell Morphology, Cellular Function and Maintenance	autophagy	Autophagy of thymocytes	7.02E-03	 	 	 	 	DDIT4	1	
+Cell Morphology, Cellular Function and Maintenance	autophagy	Autophagy of thymoma cell lines	7.02E-03	 	 	 	 	DDIT4	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities, Renal and Urological Disease	autosomal dominant renal hypouricemia type 2	Autosomal dominant renal hypouricemia type 2	7.02E-03	 	 	 	 	SLC2A9	1	
+Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	autosomal recessive Charcot-Marie-Tooth disease type 1A	Autosomal recessive Charcot-Marie-Tooth disease type 1A	7.02E-03	 	 	 	 	PMP22	1	
+Hereditary Disorder, Organismal Injury and Abnormalities, Renal and Urological Disease, Skeletal and Muscular Disorders	autosomal recessive acute recurrent myoglobinuria	Autosomal recessive acute recurrent myoglobinuria	7.02E-03	 	 	 	 	LPIN1	1	
+Connective Tissue Disorders, Developmental Disorder, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	autosomal recessive mental retardation type 13	Autosomal recessive mental retardation type 13	7.02E-03	 	 	 	 	TRAPPC9	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities, Renal and Urological Disease	autosomal recessive renal hypouricemia type 2	Autosomal recessive renal hypouricemia type 2	7.02E-03	 	 	 	 	SLC2A9	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities	beta-hexosaminidase A pseudodeficiency	Beta-hexosaminidase A pseudodeficiency	7.02E-03	 	 	 	 	HEXA	1	
+Cell Cycle, Gene Expression	binding	Binding of androgen receptor binding site	7.02E-03	 	 	 	 	IL4	1	
+Connective Tissue Disorders, Developmental Disorder, Gastrointestinal Disease, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	Bowen-Conradi syndrome	Bowen-Conradi syndrome	7.02E-03	 	 	 	 	EMG1	1	
+Carbohydrate Metabolism, Small Molecule Biochemistry	breakdown	Breakdown of proteoglycan	7.02E-03	 	 	 	 	IL4	1	
+Cell Death and Survival, Neurological Disease, Organismal Injury and Abnormalities	cell death	Cell death of corticotroph cells	7.02E-03	 	 	 	 	DICER1	1	
+Cell Death and Survival	cell death	Cell death of type 1 macrophages	7.02E-03	 	 	 	 	CTSB	1	
+Cell Morphology	cell flattening	Cell flattening of epithelial cell lines	7.02E-03	 	 	 	 	PRKCH	1	
+Cell Morphology	cell flattening	Cell flattening of keratinocyte cancer cell lines	7.02E-03	 	 	 	 	PRKCH	1	
+Cell Morphology	cell flattening	Cell flattening of skin cell lines	7.02E-03	 	 	 	 	PRKCH	1	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking	cellular infiltration	Cellular infiltration by macrophage-like	7.02E-03	 	 	 	 	IL4	1	
+Auditory Disease, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	Charcot-Marie-Tooth disease type 1e	Charcot-Marie-Tooth disease type 1e	7.02E-03	 	 	 	 	PMP22	1	
+Cancer, Organismal Injury and Abnormalities	chemosensitivity	Chemosensitivity of melanoma cell lines	7.02E-03	 	 	 	 	MITF	1	
+Developmental Disorder, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities	chromosome 1p32-p31 deletion syndrome	Chromosome 1p32-p31 deletion syndrome	7.02E-03	 	 	 	 	NFIA	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Neurological Disease, Organismal Injury and Abnormalities	chronic GM2 gangliosidosis	Chronic GM2 gangliosidosis	7.02E-03	 	 	 	 	HEXA	1	
+Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	co-stimulation	Co-stimulation of colony-forming erythroid cells	7.02E-03	 	 	 	 	IL4	1	
+Cancer, Cellular Development, Cellular Growth and Proliferation, Organismal Injury and Abnormalities, Tumor Morphology	colony formation	Colony formation of gastric cancer cells	7.02E-03	 	 	 	 	SUGT1	1	
+Developmental Disorder, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities	complex cortical dysplasia with other brain malformations 2	Complex cortical dysplasia with other brain malformations 2	7.02E-03	 	 	 	 	KIF5C	1	
+Cell Cycle, Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation	contact growth inhibition	Contact growth inhibition of fibrosarcoma cell lines	7.02E-03	 	 	 	 	GPI	1	
+Cancer, Cell-To-Cell Signaling and Interaction, Inflammatory Response	cytotoxic reaction	Cytotoxic reaction of cervical cancer cell lines	7.02E-03	 	 	 	 	DICER1	1	
+Cancer, Hereditary Disorder, Organismal Injury and Abnormalities	DICER1 syndrome	DICER1 syndrome	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Compromise, Neurological Disease, Ophthalmic Disease, Organismal Injury and Abnormalities, Tissue Morphology	degeneration	Degeneration of RPE cells	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Nervous System Development and Function, Tissue Development	differentiation	Delay in initiation of differentiation of hippocampal neurons	7.02E-03	 	 	 	 	ATP2C1	1	
+Cellular Development, Embryonic Development, Organ Development, Organismal Development, Reproductive System Development and Function, Tissue Development	differentiation	Delay in initiation of differentiation of mammary epithelial cells	7.02E-03	 	 	 	 	IGF1R	1	
+Cellular Development	differentiation	Delay in initiation of differentiation of neuroblastoma cell lines	7.02E-03	 	 	 	 	ATP2C1	1	
+Tissue Development	expansion	Delay in initiation of expansion of lumen	7.02E-03	 	 	 	 	IGF1R	1	
+Cellular Assembly and Organization, Lipid Metabolism, Small Molecule Biochemistry	formation	Delay in initiation of formation of lipid droplets	7.02E-03	 	 	 	 	IGF1R	1	
+Tissue Morphology	density	Density of B lymphocytes	7.02E-03	 	 	 	 	PRKCZ	1	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	depletion	Depletion of bile acid	7.02E-03	 	 	 	 	NR0B2	1	
+Cell-To-Cell Signaling and Interaction	detachment	Detachment of prostate cell lines	7.02E-03	 	 	 	 	ENG	1	
+Cardiovascular System Development and Function, Embryonic Development, Organismal Development, Tissue Development	development	Development of aortic sac	7.02E-03	 	 	 	 	KCNH2	1	
+Embryonic Development, Organismal Development, Tissue Development	development	Development of bulbus cordis	7.02E-03	 	 	 	 	KCNH2	1	
+Embryonic Development, Organismal Development, Tissue Development	development	Development of cardiac loop	7.02E-03	 	 	 	 	KCNH2	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Organismal Development, Tissue Development	development	Development of neuroretina cells	7.02E-03	 	 	 	 	MITF	1	
+Cell-mediated Immune Response, Cellular Development, Cellular Function and Maintenance, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of Tc2 cells	7.02E-03	 	 	 	 	IL4	1	
+Cardiovascular System Development and Function, Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	differentiation	Differentiation of burst-forming erythroid cells	7.02E-03	 	 	 	 	ZFPM1	1	
+Cellular Development, Embryonic Development, Organismal Development, Tissue Development	differentiation	Differentiation of fibro/adipocyte progenitor cells	7.02E-03	 	 	 	 	IL4	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of macrophage derived dendritic cells	7.02E-03	 	 	 	 	IL4	1	
+Cellular Development, Nervous System Development and Function, Tissue Development	differentiation	Differentiation of ophthalmic motor neurons	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Nervous System Development and Function, Tissue Development	differentiation	Differentiation of red nucleus neuron	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Nervous System Development and Function, Tissue Development	differentiation	Differentiation of serotonergic neurons	7.02E-03	 	 	 	 	DICER1	1	
+Developmental Disorder, Embryonic Development, Tissue Morphology	disorganization	Disorganization of ureteric bud branch	7.02E-03	 	 	 	 	IGF1R	1	
+Cellular Assembly and Organization, Cellular Compromise	disruption	Disruption of sarcolemma	7.02E-03	 	 	 	 	KRT19	1	
+Nutritional Disease	early-onset mild obesity	Early-onset mild obesity	7.02E-03	 	 	 	 	NR0B2	1	
+Cancer, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	embryonal rhabdomyosarcoma type 2	Embryonal rhabdomyosarcoma type 2	7.02E-03	 	 	 	 	DICER1	1	
+Cell Morphology	enlargement	Enlargement of keratinocyte cancer cell lines	7.02E-03	 	 	 	 	PRKCH	1	
+Cell Morphology	enlargement	Enlargement of skin cell lines	7.02E-03	 	 	 	 	PRKCH	1	
+Cell Cycle	cell cycle progression	Entry into cell cycle progression of stem cells	7.02E-03	 	 	 	 	DICER1	1	
+Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities	eosinophil peroxidase deficiency	Eosinophil peroxidase deficiency	7.02E-03	 	 	 	 	EPX	1	
+Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities, Respiratory Disease	eosinophilia	Eosinophilia of nasal tissue	7.02E-03	 	 	 	 	PTGDR2	1	
+Hematological Disease	erythroblastosis	Erythroblastosis of bone marrow	7.02E-03	 	 	 	 	BNIP3L	1	
+Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	erythroblastosis	Erythroblastosis of spleen	7.02E-03	 	 	 	 	BNIP3L	1	
+Drug Metabolism, Molecular Transport	exchange	Exchange of lithium	7.02E-03	 	 	 	 	SLC8B1	1	
+Cell Cycle	quiescence	Exit from quiescence of stem cells	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Cellular Growth and Proliferation, Nervous System Development and Function	expansion	Expansion of Schwann cells	7.02E-03	 	 	 	 	PMP22	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Nervous System Development and Function, Organ Development, Organismal Development, Tissue Development	expansion	Expansion of cortical precursor cells	7.02E-03	 	 	 	 	DICER1	1	
+Dermatological Diseases and Conditions, Hereditary Disorder, Infectious Diseases, Inflammatory Disease, Inflammatory Response, Organismal Injury and Abnormalities	familial acne inversa type 1	Familial acne inversa type 1	7.02E-03	 	 	 	 	NCSTN	1	
+Cancer, Hereditary Disorder, Organismal Injury and Abnormalities, Respiratory Disease	familial pleuropulmonary blastoma	Familial pleuropulmonary blastoma	7.02E-03	 	 	 	 	DICER1	1	
+Cardiovascular Disease, Organismal Injury and Abnormalities	fibrosis	Fibrosis of ventricular tissue	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Cellular Growth and Proliferation, Nervous System Development and Function, Tissue Development	formation	Formation of sling cells	7.02E-03	 	 	 	 	NFIA	1	
+Developmental Disorder, Hereditary Disorder, Ophthalmic Disease, Organismal Injury and Abnormalities	foveal hypoplasia 2 with optic nerve misrouting and anterior segment dysgenesis	Foveal hypoplasia 2 with optic nerve misrouting and anterior segment dysgenesis	7.02E-03	 	 	 	 	SLC38A8	1	
+Inflammatory Response	frequency	Frequency of BDCA-3-positive dendritic cells	7.02E-03	 	 	 	 	IL4	1	
+Embryonic Development	frequency	Frequency of hemangioblasts	7.02E-03	 	 	 	 	ENG	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities	fructose-1,6-diphosphatase deficiency	Fructose-1,6-diphosphatase deficiency	7.02E-03	 	 	 	 	FBP1	1	
+Cellular Assembly and Organization	fusion	Fusion of exocytic vesicle	7.02E-03	 	 	 	 	RALB	1	
+Cell Cycle	G1/S phase transition	G1/S phase transition of DN1 cells	7.02E-03	 	 	 	 	RPTOR	1	
+Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities	generalized epilepsy with febrile seizures plus type 9	Generalized epilepsy with febrile seizures plus type 9	7.02E-03	 	 	 	 	STX1B	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	generation	Generation of M1 macrophages	7.02E-03	 	 	 	 	IL4	1	
+Connective Tissue Disorders, Developmental Disorder, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	genitopatellar syndrome	Genitopatellar syndrome	7.02E-03	 	 	 	 	KAT6B	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities	glycogen storage disease type X	Glycogen storage disease type X	7.02E-03	 	 	 	 	PGAM2	1	
+Skeletal and Muscular System Development and Function	glycolytic capacity	Glycolytic capacity of anterior tibial muscle	7.02E-03	 	 	 	 	SMARCD3	1	
+Infectious Diseases, Organismal Development	growth	Growth of Reoviridae	7.02E-03	 	 	 	 	CTSB	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	growth	Growth of fetal liver derived megakaryocytes	7.02E-03	 	 	 	 	IGF1R	1	
+Dermatological Diseases and Conditions, Hereditary Disorder, Organismal Injury and Abnormalities	Hailey-Hailey disease	Hailey-Hailey disease	7.02E-03	 	 	 	 	ATP2C1	1	
+Organismal Functions	healing	Healing of cortical astrocytes	7.02E-03	 	 	 	 	SLC8B1	1	
+Cardiovascular Disease, Hereditary Disorder, Organismal Injury and Abnormalities	hereditary hemorrhagic telangiectasia type 1	Hereditary hemorrhagic telangiectasia type 1	7.02E-03	 	 	 	 	ENG	1	
+Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities	hereditary sensory neuropathy type IF	Hereditary sensory neuropathy type IF	7.02E-03	 	 	 	 	ATL3	1	
+Neurological Disease, Organismal Injury and Abnormalities	hydrocephaly with hop gait	Hydrocephaly with hop gait	7.02E-03	 	 	 	 	NAPA	1	
+Cardiovascular Disease, Hematological Disease, Hereditary Disorder, Organismal Injury and Abnormalities	hypochromic microcytic anemia with iron overload 2	Hypochromic microcytic anemia with iron overload 2	7.02E-03	 	 	 	 	STEAP3	1	
+Developmental Disorder, Neurological Disease, Organismal Injury and Abnormalities	hypotrophy	Hypotrophy of cerebral cortex	7.02E-03	 	 	 	 	DICER1	1	
+Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Hematological System Development and Function, Inflammatory Response	induction	Induction of giant cells	7.02E-03	 	 	 	 	IL4	1	
+Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Hematological System Development and Function, Inflammatory Response	induction	Induction of peripheral blood monocytes	7.02E-03	 	 	 	 	IL4	1	
+Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Hematological System Development and Function, Inflammatory Response	induction	Induction of peripheral blood neutrophils	7.02E-03	 	 	 	 	IL4	1	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	cellular infiltration	Infiltration by multinucleated giant cells	7.02E-03	 	 	 	 	PPT2	1	
+Inflammatory Disease, Inflammatory Response, Neurological Disease, Organismal Injury and Abnormalities	inflammation	Inflammation of motor cortex	7.02E-03	 	 	 	 	IGF1R	1	
+Inflammatory Response	inflammation	Inflammation of perivascular matrix	7.02E-03	 	 	 	 	ANGPT2	1	
+Neurological Disease	conduction block	Initiation of conduction block of sciatic nerve	7.02E-03	 	 	 	 	PMP22	1	
+Neurological Disease, Skeletal and Muscular Disorders	conduction block	Initiation of conduction block of tibial nerve	7.02E-03	 	 	 	 	PMP22	1	
+Cardiovascular Disease	instability	Instability of vasculature	7.02E-03	 	 	 	 	ANGPT2	1	
+Cancer, Organismal Injury and Abnormalities	intramucosal adenocarcinoma	Intramucosal adenocarcinoma	7.02E-03	 	 	 	 	PRKCZ	1	
+Cellular Movement	invasion	Invasion of prostate cells	7.02E-03	 	 	 	 	ENG	1	
+Cancer, Cellular Movement, Organismal Injury and Abnormalities	invasion	Invasion of urothelial cells	7.02E-03	 	 	 	 	IGF1R	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Neurological Disease, Organismal Injury and Abnormalities	juvenile onset Tay-Sachs disease	Juvenile onset Tay-Sachs disease	7.02E-03	 	 	 	 	HEXA	1	
+Auditory and Vestibular System Development and Function, Organ Morphology, Organismal Development, Tissue Morphology	length	Length of cochlear epithelium	7.02E-03	 	 	 	 	IGF1R	1	
+Connective Tissue Disorders, Neurological Disease, Organismal Injury and Abnormalities	lipoatrophy	Lipoatrophy of epineurium	7.02E-03	 	 	 	 	LPIN1	1	
+Cell Death and Survival, Nervous System Development and Function, Tissue Morphology	loss	Loss of POMC neurons	7.02E-03	 	 	 	 	DICER1	1	
+Cell Death and Survival	loss	Loss of cervical cancer cell lines	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Hematological System Development and Function, Lymphoid Tissue Structure and Development	maturation	Maturation of Th2 cells	7.02E-03	 	 	 	 	IL4	1	
+Embryonic Development, Organ Development, Organismal Development, Tissue Development	maturation	Maturation of sensory epithelium	7.02E-03	 	 	 	 	IGF1R	1	
+Developmental Disorder, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities, Psychological Disorders	mental retardation with language impairment and autistic features	Mental retardation with language impairment and autistic features	7.02E-03	 	 	 	 	FOXP1	1	
+Cellular Movement, Nervous System Development and Function	migration	Migration of sling cells	7.02E-03	 	 	 	 	NFIA	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities	mitochondrial complex V deficiency nuclear type 1	Mitochondrial complex V deficiency nuclear type 1	7.02E-03	 	 	 	 	ATPAF2	1	
+Cell Cycle	mitosis	Mitosis of melanoma cell lines	7.02E-03	 	 	 	 	MITF	1	
+Cell Cycle	mitotic index	Mitotic index of keratinocytes	7.02E-03	 	 	 	 	IL4	1	
+Hematological Disease, Immunological Disease	hypereosinophilia	Moderate hypereosinophilia	7.02E-03	 	 	 	 	RNASE2	1	
+Cell Morphology	modulation	Modulation of carcinoma cells	7.02E-03	 	 	 	 	IL4	1	
+Cardiovascular System Development and Function, Cell Morphology, Inflammatory Response, Tissue Morphology	morphology	Morphology of peripheral blood monocytes	7.02E-03	 	 	 	 	PRKCZ	1	
+Cell Morphology, Nervous System Development and Function	morphology	Morphology of tomacula	7.02E-03	 	 	 	 	PMP22	1	
+Endocrine System Disorders, Organismal Injury and Abnormalities	multinodular goiter type 1 without Sertoli-Leydig cell tumors	Multinodular goiter type 1 without Sertoli-Leydig cell tumors	7.02E-03	 	 	 	 	DICER1	1	
+Nervous System Development and Function	myelination	Myelination of dorsal root	7.02E-03	 	 	 	 	DICER1	1	
+Nervous System Development and Function	myelination	Myelination of saphenous nerve	7.02E-03	 	 	 	 	DICER1	1	
+Cell Death and Survival, Endocrine System Disorders, Gastrointestinal Disease, Organismal Injury and Abnormalities	necrosis	Necrosis of pancreatic acinus	7.02E-03	 	 	 	 	CTSB	1	
+Cardiovascular Disease, Cell Death and Survival, Connective Tissue Disorders, Developmental Disorder, Hematological Disease, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities	nonspherocytic hemolytic anemia and neurologic deficits due to glucose phosphate isomerase deficiency	Nonspherocytic hemolytic anemia and neurologic deficits due to glucose phosphate isomerase deficiency	7.02E-03	 	 	 	 	GPI	1	
+Embryonic Development, Tissue Morphology	opening	Opening of neural tube	7.02E-03	 	 	 	 	ATP2C1	1	
+Connective Tissue Disorders, Developmental Disorder, Gastrointestinal Disease, Hereditary Disorder, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	orofacial cleft 6	Orofacial cleft 6	7.02E-03	 	 	 	 	IRF6	1	
+Connective Tissue Disorders, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	osteoporosis	Osteoporosis of cortical bone	7.02E-03	 	 	 	 	IL4	1	
+Connective Tissue Disorders, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	osteoporosis	Osteoporosis of trabecular bone	7.02E-03	 	 	 	 	IL4	1	
+Developmental Disorder, Endocrine System Disorders, Hereditary Disorder, Organismal Injury and Abnormalities, Reproductive System Disease	ovarian dysgenesis type 3	Ovarian dysgenesis type 3	7.02E-03	 	 	 	 	PSMC3IP	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	pediatric high grade glioma	Pediatric high grade glioma	7.02E-03	 	 	 	 	ENG	1	
+Cell-To-Cell Signaling and Interaction, Cellular Function and Maintenance, Inflammatory Response	phagocytosis	Phagocytosis of Helicobacter pylori	7.02E-03	 	 	 	 	PRKCZ	1	
+Cellular Function and Maintenance, Inflammatory Response	phagocytosis	Phagocytosis of amyloid fibrils	7.02E-03	 	 	 	 	IL4	1	
+Carbohydrate Metabolism, Small Molecule Biochemistry	phosphorylation	Phosphorylation of glucose-6-phosphate	7.02E-03	 	 	 	 	HK2	1	
+Cell Morphology	plasticity	Plasticity of bone cancer cell lines	7.02E-03	 	 	 	 	ENG	1	
+Cell Morphology	plasticity	Plasticity of melanoma cell lines	7.02E-03	 	 	 	 	ENG	1	
+Cell Morphology	plasticity	Plasticity of sarcoma cell lines	7.02E-03	 	 	 	 	ENG	1	
+Cell Morphology, Nervous System Development and Function	polarization	Polarization of astrocytes	7.02E-03	 	 	 	 	PRKCZ	1	
+Cell Morphology, Cellular Assembly and Organization, Nervous System Development and Function	polarization	Polarization of axons	7.02E-03	 	 	 	 	PRKCZ	1	
+Nervous System Development and Function, Organ Development	presence	Presence of corpus callosum	7.02E-03	 	 	 	 	NFIA	1	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Hematopoiesis, Immune Cell Trafficking, Inflammatory Response	priming	Priming of thymocytes	7.02E-03	 	 	 	 	IL4	1	
+RNA Post-Transcriptional Modification	processing	Processing of RNA fragment	7.02E-03	 	 	 	 	DICER1	1	
+RNA Post-Transcriptional Modification	processing	Processing of dsRNA	7.02E-03	 	 	 	 	DICER1	1	
+Neurological Disease	progressive motor neuropathy	Progressive motor neuropathy of sciatic nerve	7.02E-03	 	 	 	 	PMP22	1	
+Cellular Development, Cellular Growth and Proliferation, Nervous System Development and Function	proliferation	Proliferation of cortical astrocytes	7.02E-03	 	 	 	 	SLC8B1	1	
+Cardiovascular System Development and Function, Cellular Growth and Proliferation, Organ Development	proliferation	Proliferation of epicardial cells	7.02E-03	 	 	 	 	DICER1	1	
+Cellular Development, Cellular Growth and Proliferation, Digestive System Development and Function, Organ Development	proliferation	Proliferation of gastric mucous cells	7.02E-03	 	 	 	 	TFF2	1	
+Hair and Skin Development and Function	proliferation	Proliferation of hair follicle	7.02E-03	 	 	 	 	DICER1	1	
+Endocrine System Development and Function, Organ Morphology, Tissue Morphology	quantity	Quantity of adrenocortical cells	7.02E-03	 	 	 	 	ANGPT2	1	
+Cardiovascular System Development and Function, Connective Tissue Development and Function, Organ Morphology, Tissue Morphology	quantity	Quantity of adventitial fibroblasts	7.02E-03	 	 	 	 	ANGPT2	1	
+Cellular Assembly and Organization, Cellular Function and Maintenance, Nervous System Development and Function, Tissue Morphology	quantity	Quantity of ipsilateral projection of retinal ganglion cell	7.02E-03	 	 	 	 	DICER1	1	
+Cancer, Cellular Development, Cellular Growth and Proliferation, Organismal Injury and Abnormalities, Tissue Morphology, Tumor Morphology	quantity	Quantity of non-small-cell lung cancer cells	7.02E-03	 	 	 	 	CTSB	1	
+Hematological System Development and Function, Inflammatory Response, Tissue Morphology	quantity	Quantity of spleen-derived dendritic cells	7.02E-03	 	 	 	 	RPTOR	1	
+Hematological System Development and Function, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of virtual memory CD8+ T-lymphocytes	7.02E-03	 	 	 	 	IL4	1	
+Lipid Metabolism, Nucleic Acid Metabolism, Small Molecule Biochemistry	reduction	Reduction of trans-2-hexenoyl-coenzyme A	7.02E-03	 	 	 	 	MECR	1	
+Skeletal and Muscular System Development and Function	refractoriness	Refractoriness of muscle cells	7.02E-03	 	 	 	 	KCNH2	1	
+Cellular Function and Maintenance	regulation	Regulation of cardiomyocytes	7.02E-03	 	 	 	 	SLC8B1	1	
+Tissue Morphology	remodeling	Remodeling of basal lamina	7.02E-03	 	 	 	 	ANGPT2	1	
+Cardiovascular System Development and Function, Tissue Morphology	remodeling	Remodeling of vascular endothelial tissue	7.02E-03	 	 	 	 	ENG	1	
+Cell Morphology, Cellular Assembly and Organization, Cellular Function and Maintenance	reorganization	Reorganization of intermediate filament cytoskeleton	7.02E-03	 	 	 	 	PRKCZ	1	
+Developmental Disorder, Hereditary Disorder, Organismal Injury and Abnormalities	resistance to insulin-like growth factor I	Resistance to insulin-like growth factor I	7.02E-03	 	 	 	 	IGF1R	1	
+Tissue Development	response	Response of olfactory epithelium	7.02E-03	 	 	 	 	ADCY3	1	
+Developmental Disorder, Hereditary Disorder, Ophthalmic Disease, Organismal Injury and Abnormalities	retinal cone dystrophy 3A	Retinal cone dystrophy 3A	7.02E-03	 	 	 	 	PDE6H	1	
+Cardiovascular Disease, Developmental Disorder, Endocrine System Disorders, Hereditary Disorder, Metabolic Disease, Neurological Disease, Ophthalmic Disease, Organismal Injury and Abnormalities	Say-Barber-Biesecker-Young-Simpson syndrome	Say-Barber-Biesecker-Young-Simpson syndrome	7.02E-03	 	 	 	 	KAT6B	1	
+Cancer, Cell-To-Cell Signaling and Interaction, Organismal Injury and Abnormalities, Tumor Morphology	sensitization	Sensitization of chronic lymphocytic leukemia B cells	7.02E-03	 	 	 	 	IL4	1	
+Cell Morphology	shape	Shape of fibrosarcoma cell lines	7.02E-03	 	 	 	 	GPI	1	
+Cell Morphology, Nervous System Development and Function, Organ Morphology, Organismal Development, Tissue Morphology	size	Size of medium spiny neurons	7.02E-03	 	 	 	 	DICER1	1	
+Embryonic Development, Organismal Development, Tissue Morphology	size	Size of metanephros	7.02E-03	 	 	 	 	IGF1R	1	
+Behavior, Cell-To-Cell Signaling and Interaction	social communication	Social communication	7.02E-03	 	 	 	 	SHANK2	1	
+Embryonic Development, Organismal Development, Tissue Development	specification	Specification of adrenogonadal primordium	7.02E-03	 	 	 	 	CITED2	1	
+Connective Tissue Disorders, Developmental Disorder, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders, Tissue Morphology	spinal muscular atrophy with congenital bone fractures 2	Spinal muscular atrophy with congenital bone fractures 2	7.02E-03	 	 	 	 	ASCC1	1	
+Connective Tissue Disorders, Developmental Disorder, Hereditary Disorder, Immunological Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	spondyloenchondrodysplasia with immune dysregulation	Spondyloenchondrodysplasia with immune dysregulation	7.02E-03	 	 	 	 	ACP5	1	
+Connective Tissue Disorders, Developmental Disorder, Hereditary Disorder, Ophthalmic Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	spondylometaphyseal dysplasia with cone-rod dystrophy	Spondylometaphyseal dysplasia with cone-rod dystrophy	7.02E-03	 	 	 	 	PCYT1A	1	
+Cancer, Endocrine System Disorders, Gastrointestinal Disease, Organismal Injury and Abnormalities	pancreatic cancer	Stage 2b moderately-differentiated pancreatic cancer	7.02E-03	 	 	 	 	GPI	1	
+Cancer, Endocrine System Disorders, Gastrointestinal Disease, Organismal Injury and Abnormalities	pancreatic cancer	Stage 2b poorly differentiated pancreatic cancer	7.02E-03	 	 	 	 	GPI	1	
+Cancer, Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Organismal Injury and Abnormalities, Tumor Morphology	stimulation	Stimulation of mantle cell lymphoma cells	7.02E-03	 	 	 	 	IL4	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Neurological Disease, Organismal Injury and Abnormalities	subacute GM2-gangliosidosis	Subacute GM2-gangliosidosis	7.02E-03	 	 	 	 	HEXA	1	
+Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Hematological System Development and Function	suppression	Suppression of Th17 cells	7.02E-03	 	 	 	 	IL4	1	
+Cardiovascular Disease, Developmental Disorder, Hereditary Disorder, Organismal Injury and Abnormalities	susceptibility to acquired long QT syndrome type 2	Susceptibility to acquired long QT syndrome type 2	7.02E-03	 	 	 	 	KCNH2	1	
+Developmental Disorder, Neurological Disease, Psychological Disorders	susceptibility to autism type 17	Susceptibility to autism type 17	7.02E-03	 	 	 	 	SHANK2	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Neurological Disease, Organismal Injury and Abnormalities	Tay-Sachs disease variant B1	Tay-Sachs disease variant B1	7.02E-03	 	 	 	 	HEXA	1	
+Cancer, Developmental Disorder, Endocrine System Disorders, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	thyroid mucosa associated lymphoid tissue lymphoma	Thyroid mucosa associated lymphoid tissue lymphoma	7.02E-03	 	 	 	 	FOXP1	1	
+Cellular Movement	trafficking	Trafficking of proximal tubule cells	7.02E-03	 	 	 	 	KIF3B	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Immune Cell Trafficking, Inflammatory Response, Lymphoid Tissue Structure and Development, Tissue Development	transdifferentiation	Transdifferentiation of monocytes	7.02E-03	 	 	 	 	IL4	1	
+Cellular Movement, Hematological System Development and Function, Hypersensitivity Response, Immune Cell Trafficking	transendothelial migration	Transendothelial migration of basophils	7.02E-03	 	 	 	 	ENG	1	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	transendothelial migration	Transendothelial migration of bone marrow-derived neutrophils	7.02E-03	 	 	 	 	ENG	1	
+Amino Acid Metabolism, Small Molecule Biochemistry	translocation	Translocation of L-arginine	7.02E-03	 	 	 	 	SLC7A1	1	
+Gastrointestinal Disease, Organismal Injury and Abnormalities	ulceration	Ulceration of gastric mucosa	7.02E-03	 	 	 	 	TFF2	1	
+Lipid Metabolism, Small Molecule Biochemistry	upregulation	Upregulation of ceramide	7.02E-03	 	 	 	 	DDIT4	1	
+Cardiovascular Disease, Developmental Disorder, Hereditary Disorder, Organismal Injury and Abnormalities	ventricular septal defect type 2	Ventricular septal defect type 2	7.02E-03	 	 	 	 	CITED2	1	
+Cell Morphology, Organ Morphology, Skeletal and Muscular System Development and Function, Tissue Morphology	volume	Volume of vascular smooth muscle cells	7.02E-03	 	 	 	 	ANGPT2	1	
+Connective Tissue Disorders, Dermatological Diseases and Conditions, Developmental Disorder, Gastrointestinal Disease, Hereditary Disorder, Organismal Development, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	Waardenburg syndrome type 2A	Waardenburg syndrome type 2A	7.02E-03	 	 	 	 	MITF	1	
+Cancer, Cardiovascular Disease, Organismal Injury and Abnormalities	hemangioblastoma	Hemangioblastoma	7.17E-03	 	 	 	 	DICER1,IKZF3,KAT6B	3	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of lymphoid organ	7.21E-03	 	 	 	 	BNIP3L,STEAP3,IL5RA,PRKCH,IKZF3,BANK1,TLE4,CITED2,PPT2	9	
+Dermatological Diseases and Conditions, Inflammatory Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	juvenile dermatomyositis	Juvenile dermatomyositis	7.53E-03	 	 	 	 	BNIP3L,ENG,CYB561	3	
+Cell Death and Survival	apoptosis	Apoptosis of blood cells	7.55E-03	 	 	 	 	SIGLEC8,LRIG1,RPTOR,DICER1,FOXP1,BNIP3L,IL4,IL5RA,TLE4,ST3GAL1,MS4A2	11	
+Cancer, Hematological Disease, Organismal Injury and Abnormalities	small cell lymphocytic lymphoma/chronic lymphocytic leukemia	Small cell lymphocytic lymphoma/chronic lymphocytic leukemia	7.56E-03	 	 	 	 	IL4,PSMC3IP,IKZF3,KCNH2,TRAPPC9,LPIN1,TNIK,LRIG1,STEAP3,SHANK2,TMEM131,SMARCD3,EGFLAM	13	
+Cellular Assembly and Organization	accumulation	Accumulation of lysosome	7.75E-03	 	 	 	 	IGF1R,CTSB	2	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of eosinophils	7.75E-03	 	 	 	 	SIGLEC8,IL4	2	
+Dermatological Diseases and Conditions, Organismal Injury and Abnormalities	parakeratosis	Parakeratosis	7.75E-03	 	 	 	 	LRIG1,RBL2	2	
+Cell Death and Survival	apoptosis	Apoptosis of lymphatic system cells	7.89E-03	 	 	 	 	LRIG1,DICER1,FOXP1,BNIP3L,STEAP3,IL4,IL5RA,ST3GAL1,TLE4	9	
+Endocrine System Disorders, Gastrointestinal Disease, Metabolic Disease, Organismal Injury and Abnormalities	diabetes mellitus	Diabetes mellitus	8.04E-03	 	 	 	 	ITIH4,COL15A1,FOXP1,SLC17A4,IL4,NISCH,IKZF3,CLEC12A,NR0B2,KCNH2,IGF1R,SLC2A9,LRIG1,PCYT1A,CTSB,MED27,FBP1,HK2,BANK1,PPT2	20	
+Cellular Development, Embryonic Development, Hair and Skin Development and Function, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of keratinocytes	8.14E-03	 	 	 	 	IRF6,LPIN1,LRIG1,RBL2,PRKCH	5	
+Cellular Development, Cellular Growth and Proliferation, Digestive System Development and Function, Hepatic System Development and Function, Organ Development, Tissue Development	proliferation	Proliferation of hepatocytes	8.14E-03	 	 	 	 	IGF1R,ITIH4,DICER1,IL4,CITED2	5	
+Cellular Movement	infiltration	Infiltration by myeloid cells	8.19E-03	 	 	 	 	IRF6,PTGDR2,SIGLEC8,ANGPT2,DICER1,CTSB,IL4,PPT2	8	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	hematopoiesis	Hematopoiesis in embryo	8.28E-03	 	 	 	 	ZFPM1,ENG,ARID3A	3	
+Cellular Development, Tissue Development	differentiation	Differentiation of epithelial tissue	8.50E-03	 	 	 	 	IGF1R,IRF6,LPIN1,LRIG1,ANGPT2,RBL2,SAFB2,PRKCH,MITF	9	
+Cell Death and Survival, Skeletal and Muscular System Development and Function	cell viability	Cell viability of muscle cell lines	8.57E-03	 	 	 	 	IGF1R,CTSB	2	
+Neurological Disease	demyelination	Demyelination of neurons	8.57E-03	 	 	 	 	LPIN1,DICER1	2	
+Cancer, Organismal Injury and Abnormalities	frequency	Frequency of tumor	8.57E-03	 	 	 	 	CTSB,ENG	2	
+Cell Morphology, Cellular Function and Maintenance	permeability	Permeability of colorectal cancer cell lines	8.57E-03	 	 	 	 	IL4,PPP2CA	2	
+Cancer, Organismal Injury and Abnormalities	urogenital cancer	Urogenital cancer	8.63E-03	 	 	 	 	SOGA1,RBL2,BNIP3L,EHF,MITF,OSBPL3,PLGRKT,IRF6,GDF5OS,TRAPPC9,LPIN1,RALB,TNIK,LRIG1,DICER1,ATP2C1,LRP12,PRKCH,DNAH17,ASCC1,ARID3A,ELOVL7,SLC7A1,ABCB9,SAFB2,DDIT4,ENG,PSMC3IP,CATSPER4,IGF1R,SLC2A9,RPTOR,RPS6KA2,TMEM131,ACP5,TFF2,SHANK2,CS,ZNF862,SMARCD3,SUGT1,ZFPM1,SEC16B,YWHAQ,AP5B1,RHOBTB2,NAPA,NOM1,TMEM104,LPCAT2,IKZF3,MS4A2,POLR2B,KRT19,STEAP3,MED27,EGFLAM,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,PMP22,PPP2CA,ITIH4,KIF5C,ANGPT2,COL15A1,IL4,VKORC1L1,IL5RA,NISCH,ATL3,CLEC12A,ACOT7,CTSB,MCC,FOXK2,KAT6B,RNASE2	80	
+Cellular Development, Tissue Development	differentiation	Differentiation of epithelial cells	8.66E-03	 	 	 	 	IGF1R,IRF6,LPIN1,LRIG1,RBL2,SAFB2,PRKCH,MITF	8	
+Developmental Disorder, Hereditary Disorder, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	autosomal dominant Emery-Dreifuss muscular dystrophy	Autosomal dominant Emery-Dreifuss muscular dystrophy	8.68E-03	 	 	 	 	BNIP3L,ENG,CYB561	3	
+Metabolic Disease	glucose metabolism disorder	Glucose metabolism disorder	8.78E-03	 	 	 	 	ITIH4,COL15A1,FOXP1,SLC17A4,IL4,NISCH,IKZF3,CLEC12A,NR0B2,KCNH2,IGF1R,LPIN1,SLC2A9,LRIG1,DICER1,PCYT1A,CTSB,MED27,SMARCD3,FBP1,HK2,BANK1,PPT2	23	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking	cell movement	Cell movement of granulocytes	8.83E-03	 	 	 	 	IRF6,DAPK2,PTGDR2,SIGLEC8,ANGPT2,DICER1,CTSB,IL4,ENG	9	
+Humoral Immune Response, Protein Synthesis	quantity	Quantity of IgG2a	8.85E-03	 	 	 	 	TANK,IL4,IKZF3,BANK1	4	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	cell movement	Cell movement of phagocytes	9.24E-03	 	 	 	 	IRF6,DAPK2,PTGDR2,ANGPT2,RPTOR,DICER1,CTSB,IL4,ENG,PRKCZ,RNASE2,PPT2	12	
+Cellular Compromise, Hypersensitivity Response, Inflammatory Response	degranulation	Degranulation of BMMC cells	9.43E-03	 	 	 	 	IL4,EHF	2	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	migration	Migration of Langerhans cells	9.43E-03	 	 	 	 	RPTOR,IL4	2	
+Cancer, Cellular Development, Cellular Growth and Proliferation, Endocrine System Disorders, Organismal Injury and Abnormalities, Reproductive System Disease, Tumor Morphology	proliferation	Proliferation of ovarian cancer cells	9.43E-03	 	 	 	 	IGF1R,PPP2CA	2	
+Connective Tissue Disorders, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	abnormal bone density	Abnormal bone density	9.55E-03	 	 	 	 	DICER1,ACP5,ATP2C1,IL4,MITF,NCK1	6	
+Cell Death and Survival	cell death	Cell death of lymphocytes	9.61E-03	 	 	 	 	LRIG1,DICER1,FOXP1,CTSB,DDIT4,IL4,IL5RA,TLE4,ST3GAL1	9	
+Cellular Development, Cellular Growth and Proliferation, Endocrine System Development and Function	proliferation	Proliferation of endocrine cells	9.67E-03	 	 	 	 	IGF1R,ANGPT2,DICER1,TFF2	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of myeloid leukocytes	9.74E-03	 	 	 	 	ZFPM1,IGF1R,RALB,SIGLEC8,FOXP1,IL4,CITED2	7	
+Organismal Development	abnormal morphology	Abnormal morphology of body cavity	9.81E-03	 	 	 	 	ZFPM1,RBL2,BNIP3L,IL4,IL5RA,NFIA,PSMC3IP,IKZF3,KIF26A,HEXA,CITED2,KIF3B,NCSTN,SLC2A9,RPS6KA2,TFF2,STEAP3,ARID3A,BANK1,TLE4,PPT2	21	
+Cancer, Gastrointestinal Disease, Organismal Injury and Abnormalities	digestive organ tumor	Digestive organ tumor	9.82E-03	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,KIF3B,IGF1R,PRR35,ACP5,TFF2,TMEM131,CS,ZNF862,EVL,ATPAF2,PPT2,SEC16B,AP5B1,FOXP1,RHOBTB2,NOM1,TMEM104,LPCAT2,CYB561,MS4A2,KRT19,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RBL2,BNIP3L,EHF,GDF5OS,IRF6,TRAPPC9,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,GID4,CTSB,MCC,IRGC	116	
+Cellular Growth and Proliferation	proliferation	Arrest in proliferation of cells	9.90E-03	 	 	 	 	IGF1R,YWHAQ,RBL2,IL4,ENG,MITF	6	
+Cell Death and Survival, Skeletal and Muscular System Development and Function	cell viability	Cell viability of muscle cells	9.92E-03	 	 	 	 	IGF1R,ANGPT2,HK2	3	
+Cellular Movement, Hematological System Development and Function, Hypersensitivity Response, Immune Cell Trafficking	cellular infiltration	Cellular infiltration by eosinophils	9.92E-03	 	 	 	 	SIGLEC8,PTGDR2,IL4	3	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of spleen	1.02E-02	 	 	 	 	BNIP3L,STEAP3,IL5RA,IKZF3,BANK1,CITED2,PPT2	7	
+Cellular Assembly and Organization, Cellular Function and Maintenance	organization	Organization of cytoskeleton	1.02E-02	 	 	 	 	KIF5C,ANGPT2,CSRP1,ENG,NFIA,MS4A2,KIF3B,IGF1R,LPIN1,RALB,TNIK,ADCY3,DICER1,FBXW8,ATP2C1,SHANK2,LRP12,PRKCH,EVL,PRKCZ,NCK1,GPI,PMP22,PPP2CA	24	
+Cell Death and Survival	apoptosis	Apoptosis of leukocytes	1.03E-02	 	 	 	 	SIGLEC8,LRIG1,RPTOR,DICER1,FOXP1,IL4,IL5RA,TLE4,ST3GAL1,MS4A2	10	
+Organismal Injury and Abnormalities, Renal and Urological Disease	injury	Injury of renal glomerulus	1.03E-02	 	 	 	 	ANGPT2,DICER1	2	
+Cellular Compromise, Inflammatory Response	degranulation	Degranulation of phagocytes	1.04E-02	 	 	 	 	PRG2,LPIN1,IL4,EHF,MS4A2	5	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	plasma cell dyscrasia	Plasma cell dyscrasia	1.05E-02	 	 	 	 	TNIK,RPTOR,RBL2,ACP5,DAP,IL4,PRKCZ,CITED2,KCNH2,PPP2CA	10	
+Embryonic Development, Hematological System Development and Function, Humoral Immune Response, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Organismal Injury and Abnormalities, Tissue Development, Tissue Morphology	abnormal morphology	Abnormal morphology of germinal center	1.08E-02	 	 	 	 	IL4,IKZF3,BANK1	3	
+Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of lymphatic system cells	1.08E-02	 	 	 	 	TANK,RBL2,BNIP3L,IL4,IL5RA,IKZF3,IGF1R,RPTOR,DICER1,CTSB,PRKCH,ARID3A,BANK1,TLE4,ST3GAL1	15	
+Cancer, Gastrointestinal Disease, Inflammatory Disease, Organismal Injury and Abnormalities	Barrett syndrome	Barrett syndrome	1.13E-02	 	 	 	 	IL4,ENG,ASCC1	3	
+Cell Cycle	cell cycle progression	Arrest in cell cycle progression of prostate cancer cell lines	1.13E-02	 	 	 	 	DDIT4,EHF	2	
+Lipid Metabolism, Small Molecule Biochemistry	catabolism	Catabolism of fatty acid	1.13E-02	 	 	 	 	LPIN1,ACOT7	2	
+Cell Death and Survival, Organismal Injury and Abnormalities, Respiratory Disease	cell death	Cell death of pneumocytes	1.13E-02	 	 	 	 	PRG2,EPX	2	
+Organismal Development	fat body mass	Fat body mass	1.13E-02	 	 	 	 	IGF1R,NR0B2	2	
+Cell-To-Cell Signaling and Interaction, Cellular Assembly and Organization	fusion	Fusion of plasma membrane	1.13E-02	 	 	 	 	RALB,NAPA	2	
+Organ Morphology, Tissue Morphology	quantity	Quantity of glandular epithelial cells	1.13E-02	 	 	 	 	DICER1,TFF2	2	
+Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation	stimulation	Stimulation of epithelial cells	1.13E-02	 	 	 	 	IL4,EPX	2	
+Cancer, Gastrointestinal Disease, Organismal Injury and Abnormalities	digestive system cancer	Digestive system cancer	1.13E-02	 	 	 	 	ERI3,DAPK2,DMAP1,SOGA1,C1orf198,SLC25A33,MITF,BAG2,PLGRKT,LRIG1,PCYT1A,PRR25,ATP2C1,LRP12,DNAH17,ASCC1,ARID3A,NCK1,TLE4,RHBDD2,ABCB9,C15orf54,NFIA,PSMC3IP,CITED2,IGF1R,PRR35,ACP5,TFF2,TMEM131,CS,ZNF862,EVL,ATPAF2,SEC16B,AP5B1,FOXP1,RHOBTB2,NOM1,TMEM104,LPCAT2,CYB561,MS4A2,KRT19,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,HK2,PHF19,ST3GAL1,TLDC2,PPP2CA,ITIH4,COL15A1,TMEM41A,IL4,NISCH,ATL3,CLEC12A,ACOT7,GSE1,KAT6B,BANK1,RBL2,BNIP3L,EHF,GDF5OS,IRF6,TRAPPC9,TNIK,DICER1,ADCY3,FBXW8,PRKCH,GPI,SLC25A25,SLC7A1,SAFB2,DDIT4,ENG,KIF26A,PDE6H,SLC2A9,RPTOR,RPS6KA2,SHANK2,SUGT1,ZFPM1,SIGLEC8,MECR,METRNL,ATXN7L1,VPS52,KCNH2,POLR2B,ERMAP,STEAP3,EGFLAM,FBP1,PMP22,SERINC5,KIF5C,ANGPT2,SLC17A4,MSMP,TOMM34,IL5RA,NR0B2,GID4,CTSB,MCC,IRGC	114	
+Immunological Disease	systemic autoimmune syndrome	Systemic autoimmune syndrome	1.13E-02	 	 	 	 	ITIH4,SLC7A1,SLC17A4,NOM1,IL4,VPS52,MITF,IKZF3,HEXA,CLEC12A,RALB,DICER1,GID4,ATP2C1,CTSB,PHF19,BANK1,RNASE2,PPT2,PPP2CA	20	
+Cancer, Organismal Injury and Abnormalities	genitourinary carcinoma	Genitourinary carcinoma	1.14E-02	 	 	 	 	SOGA1,RBL2,BNIP3L,EHF,MITF,OSBPL3,PLGRKT,IRF6,GDF5OS,TRAPPC9,LPIN1,RALB,TNIK,LRIG1,DICER1,ATP2C1,LRP12,PRKCH,DNAH17,ASCC1,ARID3A,SLC7A1,ABCB9,SAFB2,DDIT4,ENG,PSMC3IP,CATSPER4,IGF1R,SLC2A9,RPTOR,RPS6KA2,TMEM131,ACP5,TFF2,SHANK2,CS,ZNF862,SUGT1,ZFPM1,SEC16B,AP5B1,RHOBTB2,NAPA,NOM1,TMEM104,IKZF3,MS4A2,POLR2B,KRT19,STEAP3,MED27,EGFLAM,STX1B,EPX,IRF2BPL,LSM14B,PRKCZ,PMP22,ITIH4,KIF5C,ANGPT2,COL15A1,IL4,VKORC1L1,IL5RA,NISCH,ATL3,CLEC12A,ACOT7,CTSB,MCC,FOXK2,KAT6B	74	
+Cell Death and Survival, Hematological System Development and Function	cell viability	Cell viability of B lymphocytes	1.14E-02	 	 	 	 	DICER1,RPTOR,IL4,PRKCZ	4	
+Cellular Development, Skeletal and Muscular System Development and Function, Tissue Development	differentiation	Differentiation of muscle	1.15E-02	 	 	 	 	ANGPT2,RPTOR,DICER1,SMARCD3,ENG,PRKCZ,RNASE2,CITED2	8	
+Hereditary Disorder, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	autosomal dominant myopathy	Autosomal dominant myopathy	1.21E-02	 	 	 	 	BNIP3L,ENG,CYB561,PMP22	4	
+Cell Morphology, Cellular Function and Maintenance	permeability	Permeability of cells	1.21E-02	 	 	 	 	ANGPT2,IL4,ENG,PPP2CA	4	
+Embryonic Development, Hematological System Development and Function, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	formation	Formation of lymphoid organ	1.22E-02	 	 	 	 	RPTOR,DICER1,IL4,IKZF3,PRKCZ,BANK1,CITED2	7	
+Cell Death and Survival	apoptosis	Apoptosis of monocytes	1.22E-02	 	 	 	 	IL4,MS4A2	2	
+Reproductive System Development and Function	decidualization	Decidualization of uterus	1.22E-02	 	 	 	 	CTSB,CITED2	2	
+Organismal Survival	sudden death	Sudden death	1.22E-02	 	 	 	 	MITF,KCNH2	2	
+DNA Replication, Recombination, and Repair	synthesis	Synthesis of genomic DNA	1.22E-02	 	 	 	 	IL4,PRKCH	2	
+Cancer, Dermatological Diseases and Conditions, Organismal Injury and Abnormalities	hyperplasia	Hyperplasia of epidermis	1.24E-02	 	 	 	 	LRIG1,DICER1,RBL2,PRKCH	4	
+Hematological System Development and Function, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of lymphocytes	1.25E-02	 	 	 	 	TANK,RBL2,IL4,IL5RA,IKZF3,IGF1R,RPTOR,DICER1,CTSB,PRKCH,ARID3A,BANK1,TLE4,ST3GAL1	14	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	cell movement	Cell movement of monocytes	1.26E-02	 	 	 	 	PTGDR2,ANGPT2,IL4,ENG,PRKCZ	5	
+Humoral Immune Response, Protein Synthesis	quantity	Quantity of IgG	1.26E-02	 	 	 	 	TANK,IL4,IL5RA,IKZF3,ARID3A,BANK1	6	
+Cell Death and Survival	apoptosis	Apoptosis of bone marrow cell lines	1.27E-02	 	 	 	 	IGF1R,IL4,PPP2CA	3	
+Cellular Movement	invasion	Invasion of squamous cell carcinoma cell lines	1.27E-02	 	 	 	 	FOXP1,CTSB,PRKCZ	3	
+Cellular Growth and Proliferation	cytostasis	Cytostasis	1.27E-02	 	 	 	 	IGF1R,ADCY3,RBL2,IL4,IKZF3,PRKCZ,GPI	7	
+Cellular Movement, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	cellular infiltration	Cellular infiltration by macrophages	1.28E-02	 	 	 	 	IRF6,ANGPT2,DICER1,IL4,PPT2	5	
+Cell Death and Survival, Embryonic Development	apoptosis	Apoptosis of mesenchymal cells	1.32E-02	 	 	 	 	DICER1,ATP2C1	2	
+Hematological System Development and Function, Lymphoid Tissue Structure and Development, Organ Development, Organ Morphology, Tissue Development, Tissue Morphology	expansion	Expansion of thymus gland	1.32E-02	 	 	 	 	RBL2,IL4	2	
+Cell Morphology, Cellular Assembly and Organization, Cellular Development, Cellular Function and Maintenance, Cellular Growth and Proliferation, Nervous System Development and Function, Organismal Development, Tissue Development	myelination	Myelination of axons	1.32E-02	 	 	 	 	DICER1,PMP22	2	
+Cell Morphology, Nervous System Development and Function	morphology	Morphology of neuroglia	1.34E-02	 	 	 	 	IL4,NFIA,HEXA,PMP22	4	
+Cancer, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	muscle tumor	Muscle tumor	1.37E-02	 	 	 	 	SEC16B,ERI3,ANGPT2,SLC7A1,PSMC3IP,ATL3,NR0B2,OSBPL3,IGF1R,GSE1,LPIN1,DICER1,DNAH17	13	
+Connective Tissue Development and Function, Connective Tissue Disorders, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders, Skeletal and Muscular System Development and Function, Tissue Development	abnormal morphology	Abnormal morphology of broad rib	1.40E-02	 	 	 	 	HEXA	1	
+Digestive System Development and Function, Endocrine System Disorders, Gastrointestinal Disease, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of enlarged pancreas	1.40E-02	 	 	 	 	PPT2	1	
+Embryonic Development, Organ Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Respiratory Disease, Respiratory System Development and Function, Tissue Development	abnormal morphology	Abnormal morphology of lung lobe	1.40E-02	 	 	 	 	CITED2	1	
+Energy Production, Nucleic Acid Metabolism, Small Molecule Biochemistry	accumulation	Accumulation of ATP	1.40E-02	 	 	 	 	IRF6	1	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of M2 macrophages	1.40E-02	 	 	 	 	IL4	1	
+Lipid Metabolism, Small Molecule Biochemistry	activation	Activation of diacylglycerol	1.40E-02	 	 	 	 	IGF1R	1	
+Post-Translational Modification	activation	Activation of glycoprotein	1.40E-02	 	 	 	 	CTSB	1	
+Cardiovascular System Development and Function, Cell-To-Cell Signaling and Interaction	activation	Activation of lymphatic endothelial cells	1.40E-02	 	 	 	 	ANGPT2	1	
+Developmental Disorder, Hereditary Disorder, Metabolic Disease, Neurological Disease, Organismal Injury and Abnormalities	adult GM2 gangliosidosis	Adult GM2 gangliosidosis	1.40E-02	 	 	 	 	HEXA	1	
+Neurological Disease, Skeletal and Muscular Disorders	adult onset transitory hindlimb paralysis	Adult onset transitory hindlimb paralysis	1.40E-02	 	 	 	 	LPIN1	1	
+
+Tox Functions for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+Categories	Functions	Diseases or Functions Annotation	p-Value	Predicted Activation State	Activation z-score	Notes	Bias-corrected z-score	Molecules	# Molecules	
+Congenital Heart Anomaly	failure of heart looping	Failure of heart looping	1.45E-03	 	 	 	 	NCSTN,RBL2,ENG	3	
+Congenital Heart Anomaly	congenital heart disease	Congenital heart disease	4.00E-03	 	 	 	 	NCSTN,DICER1,RBL2,ENG,KAT6B,CITED2,KCNH2	7	
+Liver Damage	damage	Damage of hepatocytes	4.22E-03	 	 	 	 	IGF1R,DICER1	2	
+Renal Hydronephrosis	hydronephrosis	Hydronephrosis	4.37E-03	 	 	 	 	IGF1R,SLC2A9,IL4,NFIA	4	
+Liver Necrosis/Cell Death	apoptosis	Apoptosis of hepatocytes	4.94E-03	 	 	 	 	ITIH4,DICER1,CTSB,IL4,NR0B2	5	
+Liver Proliferation	proliferation	Proliferation of liver cells	5.21E-03	 	 	 	 	IGF1R,ITIH4,DICER1,CTSB,IL4,CITED2	6	
+Congenital Heart Anomaly	atrial septal defect type 8	Atrial septal defect type 8	7.02E-03	 	 	 	 	CITED2	1	
+Cardiac Fibrosis	fibrosis	Fibrosis of ventricular tissue	7.02E-03	 	 	 	 	DICER1	1	
+Cardiac Proliferation	proliferation	Proliferation of epicardial cells	7.02E-03	 	 	 	 	DICER1	1	
+Congenital Heart Anomaly	Say-Barber-Biesecker-Young-Simpson syndrome	Say-Barber-Biesecker-Young-Simpson syndrome	7.02E-03	 	 	 	 	KAT6B	1	
+Cardiac Arrythmia, Congenital Heart Anomaly	susceptibility to acquired long QT syndrome type 2	Susceptibility to acquired long QT syndrome type 2	7.02E-03	 	 	 	 	KCNH2	1	
+Congenital Heart Anomaly	ventricular septal defect type 2	Ventricular septal defect type 2	7.02E-03	 	 	 	 	CITED2	1	
+Liver Proliferation	proliferation	Proliferation of hepatocytes	8.14E-03	 	 	 	 	IGF1R,ITIH4,DICER1,IL4,CITED2	5	
+Glomerular Injury, Renal Damage	injury	Injury of renal glomerulus	1.03E-02	 	 	 	 	ANGPT2,DICER1	2	
+Liver Congestion	congestion	Congestion of liver	1.40E-02	 	 	 	 	ENG	1	
+Cardiac Arrythmia, Congenital Heart Anomaly	digenic long QT syndrome 1/2	Digenic long QT syndrome 1/2	1.40E-02	 	 	 	 	KCNH2	1	
+Cardiac Arrythmia, Congenital Heart Anomaly	digenic long QT syndrome 2/3	Digenic long QT syndrome 2/3	1.40E-02	 	 	 	 	KCNH2	1	
+Cardiac Arrythmia, Congenital Heart Anomaly	digenic long QT syndrome 2/5	Digenic long QT syndrome 2/5	1.40E-02	 	 	 	 	KCNH2	1	
+Cardiac Arrythmia, Congenital Heart Anomaly	digenic long QT syndrome 2/9	Digenic long QT syndrome 2/9	1.40E-02	 	 	 	 	KCNH2	1	
+Pulmonary Hypertension	hereditary hemorrhagic telangiectasia-related pulmonary arterial hypertension	Hereditary hemorrhagic telangiectasia-related pulmonary arterial hypertension	1.40E-02	 	 	 	 	ENG	1	
+Cardiac Dilation	dilated cardiomyopathy	Progressive dilated cardiomyopathy	1.40E-02	 	 	 	 	DICER1	1	
+Liver Fibrosis, Liver Proliferation	proliferation	Proliferation of hepatic stellate cells/myofibroblasts	1.40E-02	 	 	 	 	CTSB	1	
+Cardiac Fibrosis	fibrosis	Fibrosis of heart ventricle	1.64E-02	 	 	 	 	ANGPT2,DICER1	2	
+Congenital Heart Anomaly	familial congenital heart disease	Familial congenital heart disease	1.88E-02	 	 	 	 	DICER1,KAT6B,CITED2,KCNH2	4	
+Cardiac Arrythmia	acquired long QT syndrome	Acquired long QT syndrome	2.09E-02	 	 	 	 	KCNH2	1	
+Cardiac Hemorrhaging	bleeding	Bleeding of pericardium	2.09E-02	 	 	 	 	DICER1	1	
+Renal Dysfunction	dysfunction	Dysfunction of podocytes	2.09E-02	 	 	 	 	ANGPT2	1	
+Cardiac Arrythmia, Congenital Heart Anomaly	long QT syndrome 3	Long QT syndrome 3	2.09E-02	 	 	 	 	KCNH2	1	
+Renal Necrosis/Cell Death	cell death	Cell death of kidney cell lines	2.31E-02	 	 	 	 	IGF1R,RALB,YWHAQ,BNIP3L,HK2,CITED2,PMP22	7	
+Cardiac Arrythmia, Congenital Heart Anomaly	long QT syndrome 1	Long QT syndrome 1	2.78E-02	 	 	 	 	KCNH2	1	
+Congenital Heart Anomaly	mesocardia	Mesocardia	2.78E-02	 	 	 	 	CITED2	1	
+Cardiac Arrythmia, Tachycardia	sustained ventricular tachycardia	Sustained ventricular tachycardia	2.78E-02	 	 	 	 	KCNH2	1	
+Cardiac Arrythmia	atrial fibrillation	Symptomatic stage atrial fibrillation	2.78E-02	 	 	 	 	KCNH2	1	
+Cardiac Arrythmia, Tachycardia	torsades de pointes	Torsades de pointes	2.78E-02	 	 	 	 	KCNH2	1	
+Liver Hyperplasia/Hyperproliferation	liver tumor	Liver tumor	2.96E-02	 	 	 	 	RBL2,BAG2,TRAPPC9,TNIK,DICER1,FBXW8,PRKCH,DNAH17,GPI,RHBDD2,SLC25A25,SLC7A1,DDIT4,C15orf54,ENG,PSMC3IP,KIF26A,IGF1R,RPS6KA2,TMEM131,TFF2,ZNF862,SUGT1,PPT2,ZFPM1,SEC16B,SIGLEC8,MECR,AP5B1,FOXP1,NOM1,TMEM104,ATXN7L1,LPCAT2,CYB561,KCNH2,POLR2B,KRT19,ERMAP,EGFLAM,FBP1,EPX,HK2,PHF19,ST3GAL1,PPP2CA,SERINC5,ITIH4,ANGPT2,TMEM41A,IL5RA,ATL3,ACOT7,CTSB,MCC,IRGC,KAT6B,BANK1	58	
+Cardiac Stenosis	stenosis	Stenosis of pulmonary artery	3.46E-02	 	 	 	 	CITED2	1	
+Liver Hyperplasia/Hyperproliferation	cancer	Liver cancer	3.94E-02	 	 	 	 	RBL2,BAG2,TRAPPC9,TNIK,DICER1,FBXW8,PRKCH,DNAH17,GPI,RHBDD2,SLC25A25,SLC7A1,DDIT4,C15orf54,ENG,PSMC3IP,KIF26A,IGF1R,RPS6KA2,TMEM131,TFF2,ZNF862,SUGT1,ZFPM1,SEC16B,SIGLEC8,MECR,AP5B1,FOXP1,NOM1,TMEM104,ATXN7L1,LPCAT2,CYB561,KCNH2,POLR2B,KRT19,ERMAP,EGFLAM,FBP1,HK2,PHF19,ST3GAL1,PPP2CA,SERINC5,ITIH4,ANGPT2,TMEM41A,IL5RA,ATL3,ACOT7,CTSB,MCC,IRGC,KAT6B,BANK1	56	
+Renal Inflammation, Renal Nephritis	diffuse proliferative lupus nephritis	Diffuse proliferative lupus nephritis	4.14E-02	 	 	 	 	IL4	1	
+Liver Cholestasis	progressive familial intrahepatic cholestasis type 2	Progressive familial intrahepatic cholestasis type 2	4.14E-02	 	 	 	 	NR0B2	1	
+Cardiac Arrythmia	short QT syndrome	Short QT syndrome	4.14E-02	 	 	 	 	KCNH2	1	
+Liver Hyperplasia/Hyperproliferation	liver carcinoma	Liver carcinoma	4.31E-02	 	 	 	 	RBL2,BAG2,TRAPPC9,TNIK,DICER1,FBXW8,PRKCH,DNAH17,GPI,RHBDD2,SLC25A25,SLC7A1,DDIT4,C15orf54,ENG,PSMC3IP,KIF26A,IGF1R,RPS6KA2,TMEM131,TFF2,ZNF862,SUGT1,ZFPM1,SEC16B,SIGLEC8,MECR,AP5B1,FOXP1,NOM1,TMEM104,ATXN7L1,LPCAT2,CYB561,KCNH2,POLR2B,KRT19,ERMAP,EGFLAM,FBP1,HK2,PHF19,ST3GAL1,PPP2CA,SERINC5,ITIH4,TMEM41A,IL5RA,ATL3,ACOT7,MCC,IRGC,KAT6B,BANK1	54	
+Cardiac Proliferation	proliferation	Proliferation of heart cells	4.45E-02	 	 	 	 	DICER1,FOXP1,RBL2	3	
+Cardiac Dysfunction, Cardiac Fibrosis	interstitial fibrosis	Interstitial fibrosis of left ventricle	4.81E-02	 	 	 	 	ANGPT2	1	
+Cardiac Necrosis/Cell Death	survival	Survival of ventricular myocytes	4.81E-02	 	 	 	 	HK2	1	
+Congenital Heart Anomaly	double outlet right ventricle	Double outlet right ventricle	4.99E-02	 	 	 	 	DICER1,CITED2	2	
+Liver Damage	damage	Damage of liver	5.53E-02	 	 	 	 	IGF1R,DICER1,CTSB,IL4,PRKCZ,NR0B2	6	
+Liver Inflammation/Hepatitis	fulminant hepatitis	Fulminant hepatitis	6.15E-02	 	 	 	 	IL4	1	
+Liver Inflammation/Hepatitis, Liver Steatosis	steatohepatitis	Steatohepatitis	6.28E-02	 	 	 	 	LPIN1,NOM1	2	
+Bradycardia, Cardiac Arrythmia	sinus bradycardia	Sinus bradycardia	6.81E-02	 	 	 	 	KCNH2	1	
+Renal Atrophy	atrophy	Atrophy of renal cortex	7.46E-02	 	 	 	 	SLC2A9	1	
+Congenital Heart Anomaly	congenital malformation	Congenital malformation of heart	7.46E-02	 	 	 	 	DICER1	1	
+Increased Levels of LDH	activation	Increased activation of LDH	7.46E-02	 	 	 	 	SMARCD3	1	
+Glomerular Injury, Renal Damage	injury	Injury of podocytes	7.46E-02	 	 	 	 	ANGPT2	1	
+Cardiac Arrythmia	paroxysmal familial ventricular fibrillation type 1	Paroxysmal familial ventricular fibrillation type 1	7.46E-02	 	 	 	 	KCNH2	1	
+Renal Inflammation, Renal Nephritis	nephritis	Nephritis	8.46E-02	 	 	 	 	TANK,SLC2A9,IL4,IL5RA,IKZF3,PPP2CA	6	
+Renal Inflammation, Renal Nephritis	autoimmune glomerulonephritis	Autoimmune glomerulonephritis	8.69E-02	 	 	 	 	TANK,PPP2CA	2	
+Cardiac Damage	damage	Damage of myocardium	8.76E-02	 	 	 	 	ANGPT2	1	
+Liver Inflammation/Hepatitis	experimental hepatitis	Experimental hepatitis	8.76E-02	 	 	 	 	IL4	1	
+Cardiac Arrythmia	persistent atrial fibrillation	Persistent atrial fibrillation	8.76E-02	 	 	 	 	PPP2CA	1	
+Liver Inflammation/Hepatitis	inflammation	Inflammation of liver	9.20E-02	 	 	 	 	IGF1R,TANK,LPIN1,NOM1,IL4,NR0B2	6	
+Liver Damage, Liver Inflammation/Hepatitis	chronic hepatitis C	Chronic hepatitis C	9.33E-02	 	 	 	 	IGF1R,IL4	2	
+Heart Failure	sudden cardiac death	Sudden cardiac death	9.40E-02	 	 	 	 	KCNH2	1	
+Renal Inflammation, Renal Nephritis	glomerulonephritis	Glomerulonephritis	9.73E-02	 	 	 	 	TANK,IL4,IL5RA,IKZF3,PPP2CA	5	
+Cardiac Arrythmia, Tachycardia	catecholaminergic polymorphic ventricular tachycardia type 1	Catecholaminergic polymorphic ventricular tachycardia type 1	1.00E-01	 	 	 	 	KCNH2	1	
+Pulmonary Hypertension	primary pulmonary hypertension 1	Primary pulmonary hypertension 1	1.00E-01	 	 	 	 	ENG	1	
+Pulmonary Hypertension	pulmonary hypertension	Pulmonary Hypertension	1.02E-01	 	 	 	 	RPTOR,ATP2C1,ENG	3	
+Renal Damage, Renal Tubule Injury	injury	Injury of renal tubule	1.07E-01	 	 	 	 	DICER1	1	
+Glutathione Depletion In Liver	quantity	Quantity of glutathione in liver	1.07E-01	 	 	 	 	IL4	1	
+Cardiac Arrythmia	recurrent ventricular fibrillation	Recurrent ventricular fibrillation	1.07E-01	 	 	 	 	KCNH2	1	
+Cardiac Arrythmia, Tachycardia	hemodynamically unstable ventricular tachycardia	Refractory hemodynamically unstable ventricular tachycardia	1.07E-01	 	 	 	 	KCNH2	1	
+Cardiac Arrythmia	ventricular fibrillation	Refractory ventricular fibrillation	1.07E-01	 	 	 	 	KCNH2	1	
+Cardiac Necrosis/Cell Death	cell death	Cell death of cardiomyocytes	1.16E-01	 	 	 	 	DICER1,RPS6KA2,BNIP3L,HK2	4	
+Kidney Failure	chronic kidney disease	End-stage chronic kidney disease	1.19E-01	 	 	 	 	ATP2C1	1	
+Kidney Failure	renal failure	End-stage renal failure	1.19E-01	 	 	 	 	ATP2C1	1	
+Kidney Failure	acute renal failure	Severe acute renal failure	1.19E-01	 	 	 	 	ATP2C1	1	
+Congenital Heart Anomaly	situs inversus totalis	Situs inversus totalis	1.25E-01	 	 	 	 	CITED2	1	
+Renal Atrophy	atrophy	Atrophy of renal tubule	1.32E-01	 	 	 	 	SLC2A9	1	
+Cardiac Arrythmia	Brugada syndrome type 1	Brugada syndrome type 1	1.32E-01	 	 	 	 	KCNH2	1	
+Cardiac Enlargement	hypertrophy	Hypertrophy of heart cells	1.33E-01	 	 	 	 	ANGPT2,DICER1,CTSB	3	
+Cardiac Proliferation	proliferation	Proliferation of cardiomyocytes	1.41E-01	 	 	 	 	FOXP1,RBL2	2	
+Increased Levels of Hematocrit	hematocrit	Increased Levels of Hematocrit	1.46E-01	 	 	 	 	BNIP3L,STEAP3	2	
+Renal Inflammation, Renal Nephritis	interstitial nephritis	Interstitial nephritis	1.56E-01	 	 	 	 	SLC2A9	1	
+Renal Necrosis/Cell Death	apoptosis	Apoptosis of kidney cell lines	1.60E-01	 	 	 	 	RALB,YWHAQ,BNIP3L,CITED2	4	
+Increased Levels of Red Blood Cells	quantity	Increased Levels of Red Blood Cells	1.63E-01	 	 	 	 	SLC7A1,BNIP3L	2	
+Cardiac Arrythmia, Tachycardia	paroxysmal supraventricular tachycardia	Paroxysmal supraventricular tachycardia	1.68E-01	 	 	 	 	KCNH2	1	
+Decreased Levels of Potassium	quantity	Decreased Levels of Potassium	1.73E-01	 	 	 	 	SLC2A9	1	
+Cardiac Fibrosis	fibrosis	Fibrosis of heart	2.03E-01	 	 	 	 	IGF1R,ANGPT2,DICER1	3	
+Liver Hyperplasia/Hyperproliferation	liver cholangiocarcinoma	Liver cholangiocarcinoma	2.08E-01	 	 	 	 	KRT19	1	
+Cardiac Necrosis/Cell Death	apoptosis	Apoptosis of cardiomyocytes	2.12E-01	 	 	 	 	DICER1,RPS6KA2,BNIP3L	3	
+Congenital Heart Anomaly	persistent truncus arteriosus	Persistent truncus arteriosus	2.19E-01	 	 	 	 	CITED2	1	
+Liver Inflammation/Hepatitis, Liver Steatosis	nonalcoholic steatohepatitis	Nonalcoholic steatohepatitis	2.46E-01	 	 	 	 	NOM1	1	
+Renal Hypoplasia	agenesis	Agenesis of kidney	2.62E-01	 	 	 	 	NFIA	1	
+Liver Hypoplasia	hypoplasia	Hypoplasia of liver	2.72E-01	 	 	 	 	ARID3A	1	
+Cardiac Arrythmia	atrial flutter	Atrial flutter	2.77E-01	 	 	 	 	KCNH2	1	
+Cardiac Inflammation	inflammation	Inflammation of heart	2.77E-01	 	 	 	 	IL4	1	
+Renal Proliferation	proliferation	Proliferation of mesangial cells	2.77E-01	 	 	 	 	ANGPT2	1	
+Cardiac Arrythmia	atrial fibrillation	Atrial fibrillation	2.87E-01	 	 	 	 	KCNH2,PPP2CA	2	
+Cardiac Enlargement	hypertrophy	Hypertrophy of cardiomyocytes	2.89E-01	 	 	 	 	ANGPT2,DICER1	2	
+Liver Steatosis	hepatic steatosis	Hepatic steatosis	2.95E-01	 	 	 	 	LPIN1,RPTOR,PCYT1A,NOM1	4	
+Cardiac Stenosis	stenosis	Stenosis of aortic valve	3.02E-01	 	 	 	 	ATP2C1	1	
+Kidney Failure	end stage renal disease	End stage renal disease	3.15E-01	 	 	 	 	SLC2A9,ATP2C1	2	
+Liver Fibrosis	fibrosis	Fibrosis of liver	3.20E-01	 	 	 	 	CTSB,IL4	2	
+Glomerular Injury, Kidney Failure, Renal Fibrosis	interstitial fibrosis	Interstitial fibrosis of kidney	3.36E-01	 	 	 	 	SLC2A9	1	
+Liver Cholestasis	progressive familial intrahepatic cholestasis type 1	Progressive familial intrahepatic cholestasis type 1	3.41E-01	 	 	 	 	NR0B2	1	
+Cardiac Dilation	dilated cardiomyopathy	Dilated cardiomyopathy	3.51E-01	 	 	 	 	IGF1R,DICER1,PPP2CA	3	
+Liver Steatosis	nonalcoholic fatty liver disease	Nonalcoholic fatty liver disease	3.94E-01	 	 	 	 	PCYT1A	1	
+Liver Damage	injury	Injury of liver	4.02E-01	 	 	 	 	IGF1R,CTSB,IL4	3	
+Liver Hyperplasia/Hyperproliferation	incidence	Incidence of liver tumor	4.03E-01	 	 	 	 	ITIH4	1	
+Liver Hyperplasia/Hyperproliferation	liver metastasis	Liver metastasis	4.19E-01	 	 	 	 	IGF1R	1	
+Renal Proliferation	cell proliferation	Cell proliferation of kidney cell lines	4.52E-01	 	 	 	 	PRKCZ,PMP22	2	
+Hepatocellular Carcinoma, Liver Hyperplasia/Hyperproliferation	hepatocellular carcinoma	Hepatocellular carcinoma	4.80E-01	 	 	 	 	TNIK,SLC25A25,TMEM41A,ENG,FBP1,DNAH17,BAG2,IRGC	8	
+Renal Damage, Renal Tubule Injury	proximal tubular toxicity	Proximal tubular toxicity	4.82E-01	 	 	 	 	PRKCZ	1	
+Liver Enlargement	hepatomegaly	Hepatomegaly	4.85E-01	 	 	 	 	PPT2	1	
+Cardiac Arteriopathy	coronary artery disease	Coronary artery disease	5.03E-01	 	 	 	 	LRIG1,ATP2C1,PRKCH	3	
+Liver Cirrhosis	primary biliary cirrhosis	Primary biliary cirrhosis	5.10E-01	 	 	 	 	IL4	1	
+Cardiac Dysfunction, Cardiac Enlargement	hypertrophy	Hypertrophy of left ventricle	5.14E-01	 	 	 	 	ANGPT2	1	
+Cardiac Congestive Cardiac Failure, Heart Failure	congestive heart failure	Congestive heart failure	1.00E00	 	 	 	 	KCNH2	1	
+Heart Failure	failure	Failure of heart	1.00E00	 	 	 	 	DICER1,KCNH2	2	
+
+Regulator Effects for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+
+Networks for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+ID	Analysis	Molecules in Network	Score	Focus Molecules	Top Diseases and Functions	
+1	OlderChildren-Combined - 2017-12-07 12:37 PM	26s Proteasome,AMPK,Akt,CS,Cyclin A,ERI3,FBP1,FBXW8,FOXK2,GPI,HDL,HISTONE,HK2,Hdac,Histone h4,IRF2BPL,ITIH4,KAT6B,KCNH2,LYSMD2,MED27,NR0B2,PHF19,PP2A,PPP2CA,PRKAA,RBL2,Rb,SEC16B,SHANK2,SLC25A33,SMARCD3,SOGA1,Ubiquitin,p70 S6k	42	22	Carbohydrate Metabolism, Small Molecule Biochemistry, Cardiac Arrythmia	
+2	OlderChildren-Combined - 2017-12-07 12:37 PM	14-3-3,ADRB,ANGPT2,ASCC1,CSRP1,CaMKII,Collagen type I,Creb,DDIT4,DMAP1,EHF,ENG,Fcer1,GID4,KRT19,MAP2K1/2,MS4A2,MTORC2,NDFIP2,NFkB (complex),Nfat (family),Notch,OSBPL3,PI3K (family),PRG2,PRG3,PRKCZ,PSMC3IP,Rac,Raf,SLC7A1,ST3GAL1,TOMM34,TRAPPC9,ZFPM1	39	21	Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	
+3	OlderChildren-Combined - 2017-12-07 12:37 PM	ARID3A,ATP2C1,BANK1,BCR (complex),DAP,DAPK2,E2f,EPX,ERK1/2,Fc gamma receptor,IKZF3,IL5RA,IRF6,IgG,IgG1,IgG2a,IgG2b,Iga,Ige,Igg3,Igm,Immunoglobulin,LPIN1,Mek,NISCH,PCYT1A,PDE6H,PRKCH,RALB,RPTOR,Rsk,Sos,TANK,TFF2,VKORC1L1	34	19	Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function	
+4	OlderChildren-Combined - 2017-12-07 12:37 PM	Actin,Ap1,BAG2,CD3,CLEC12A,CYB561,ERMAP,EVL,F Actin,GSE1,Histone h3,Hsp70,Hsp90,IL12 (complex),Insulin,Interferon alpha,Jnk,KIF5C,MITF,MTORC1,NAPA,NCK1,PI3K (complex),POLR2B,RNA polymerase II,RNASE2,RNF122,SLC2A9,SLC8B1,TCR,TNIK,YWHAQ,caspase,chemokine,cytochrome C	30	17	Cellular Development, Cellular Function and Maintenance, Cellular Growth and Proliferation	
+5	OlderChildren-Combined - 2017-12-07 12:37 PM	ACOT7,AP5B1,ATL3,ATP6V1D,AURKA,CCND1,CDK2,CDK2-Cyclin D1,CREB1,ELOVL7,FLG-AS1,FOXP1,GAL3ST4,HTT,KLLN,LSM14B,MECR,MYH16,NFIA,NTRK1,POU5F1,RARA,SERINC5,SKP2,SLC22A16,STX1B,TLDC2,TLE4,TMEM104,TP53,VPS52,WDR63,miR-638 (miRNAs w/seed GGGAUCG),mir-1205,mir-638	25	15	Cell Cycle, Cancer, Cellular Development	
+6	OlderChildren-Combined - 2017-12-07 12:37 PM	ACP5,ADCY,ADCY3,Alpha catenin,BNIP3L,CITED2,COL15A1,CTSB,Collagen(s),ERK,FSH,Focal adhesion kinase,Growth hormone,IGF1R,IL1,IL4,Integrin,LDL,LRIG1,Laminin (complex),Lh,METRNL,Mapk,PMP22,Pka,Ras,SLC25A25,STAT5a/b,STEAP3,TMEM131,Tgf beta,Tnf (family),Vegf,p85 (pik3r),trypsin	23	14	Neurological Disease, Organismal Injury and Abnormalities, Cell Morphology	
+7	OlderChildren-Combined - 2017-12-07 12:37 PM	APP,AR,CATSPER4,CPPED1,CTNNB1,DMD,DNAH17,E2F1,EED,EMG1,ERBB2,ERN1,KIF26A,KIF3B,LPCAT2,MAPK1,MCC,MCM2,MSMB,NOM1,OCIAD2,OLFML2A,OVGP1,PCDHGA12,PPT2,RETREG1,RFPL4B,RHOBTB2,SLC17A4,SLC26A7,TAB2,TARP,TAS2R20,ZNF22,miR-516a-3p (and other miRNAs w/seed GCUUCCU)	21	13	Cancer, Organismal Injury and Abnormalities, Reproductive System Disease	
+8	OlderChildren-Combined - 2017-12-07 12:37 PM	ABCB9,C1orf198,CDH1,CDH9,CFAP45,DOLPP1,EGFLAM,ELAVL1,FGF1,GLOD4,LRP12,MARVELD2,MSANTD3,NCSTN,PATJ,PTPN11,PTPRM,PXYLP1,RACK1,RHBDD2,SELENOI,SH3PXD2B,SIGLEC8,STAT1,TCTN3,TM9SF3,TMEM189-UBE2V1,TMEM38B,TMEM41A,TMEM41B,TMX3,TP53I11,TRIM45,VEZT,VMP1	15	10	Cellular Growth and Proliferation, Connective Tissue Development and Function, Cellular Movement	
+9	OlderChildren-Combined - 2017-12-07 12:37 PM	ADGRD1,ADGRD2,ADGRF2,ADGRF4,Calmodulin,Ck2,DICER1,GPR137C,GPR139,GPR150,GPR152,GPR153,GPR157,GPR162,GPR176,GPR62,GPR82,Gpcr,Gsk3,HEXA,IL12 (family),IRGC,MAS1L,OXGR1,P110,P38 MAPK,PTGDR2,Pkc(s),RPS6KA2,SAFB2,SRC (family),SUGT1,Shc,VN1R2,estrogen receptor	11	8	Developmental Disorder, Hematological Disease, Hereditary Disorder	
+10	OlderChildren-Combined - 2017-12-07 12:37 PM	ANKRD7,ATPAF2,ATPIF1,ATXN7L1,CDC42EP1,CHRNA5,EDAR,EDARADD,F1 ATPase,GULP1,HAS3,HSPA7,Hdac1/2,INHBA,Igkv1-117,NRG1,PGAM2,PLG,PLGRKT,REL,REL/RELA/RELB,RELA,RelA-CRel,SLC35A3,STAB2,TMEFF2,TMEM181,TNFRSF10C,TNFSF18,TP63,TRIM6,Tnfrsf22/Tnfrsf23,VMP1,WFDC2,ZNF862	11	8	Dermatological Diseases and Conditions, Developmental Disorder, Hereditary Disorder	
+
+My Lists for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+My Lists	 -log(p-value)	Ratio	Molecules 
+
+Tox Lists for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+Ingenuity Toxicity Lists	 -log(p-value)	Ratio	Molecules 
+Hepatic Cholestasis	2.23E00	3.07E-02	ADCY3,IL4,PRKCH,PRKCZ,NR0B2
+Liver Proliferation	2.18E00	2.53E-02	IGF1R,ITIH4,DICER1,CTSB,IL4,CITED2
+RAR Activation	1.95E00	2.63E-02	ADCY3,SMARCD3,PRKCH,PRKCZ,CITED2
+Increases Liver Damage	1.82E00	2.96E-02	IGF1R,CTSB,PRKCZ,NR0B2
+Pro-Apoptosis	1.45E00	4.76E-02	DAPK2,BNIP3L
+Cell Cycle: G2/M DNA Damage Checkpoint Regulation	1.29E00	3.85E-02	YWHAQ,PRKCZ
+Hormone Receptor Regulated Cholesterol Metabolism	1.26E00	1.25E-01	NR0B2
+FXR/RXR Activation	1.23E00	2.38E-02	ITIH4,FBP1,NR0B2
+Liver Necrosis/Cell Death	1.2E00	1.64E-02	ITIH4,DICER1,CTSB,IL4,NR0B2
+PXR/RXR Activation	1.12E00	3.08E-02	ABCB9,NR0B2
+Increases Liver Hepatitis	1.05E00	2.82E-02	IL4,NR0B2
+Renal Necrosis/Cell Death	1.04E00	1.28E-02	IGF1R,RALB,YWHAQ,BNIP3L,HK2,CITED2,PMP22
+Aryl Hydrocarbon Receptor Signaling	9.87E-01	1.87E-02	RBL2,NFIA,NR0B2
+VDR/RXR Activation	9.82E-01	2.56E-02	PRKCH,PRKCZ
+Mechanism of Gene Regulation by Peroxisome Proliferators via PPARα	8.42E-01	2.11E-02	CITED2,NR0B2
+Cardiac Necrosis/Cell Death	8.38E-01	1.39E-02	DICER1,RPS6KA2,BNIP3L,HK2
+Increases Liver Steatosis	8.07E-01	2E-02	LPIN1,RPTOR
+Cardiac Fibrosis	7.44E-01	1.44E-02	IGF1R,ANGPT2,DICER1
+Increases Liver Hyperplasia/Hyperproliferation	7.13E-01	1.74E-02	IGF1R,ITIH4
+Anti-Apoptosis	6.95E-01	3.12E-02	BAG2
+Decreases Transmembrane Potential of Mitochondria and Mitochondrial Membrane	6.59E-01	1.6E-02	BNIP3L,IL4
+Xenobiotic Metabolism Signaling	6.18E-01	1.12E-02	PRKCH,PRKCZ,CITED2,PPP2CA
+Increases Cardiac Dysfunction	5.49E-01	2.13E-02	ANGPT2
+Increases Cardiac Proliferation	5.34E-01	2.04E-02	DICER1
+NF-κB Signaling	5.3E-01	1.11E-02	IGF1R,TANK,PRKCZ
+Increases Renal Nephritis	4.74E-01	1.72E-02	PPP2CA
+Mitochondrial Dysfunction	4.55E-01	1.14E-02	NCSTN,ATPAF2
+PPARα/RXRα Activation	4.33E-01	1.09E-02	ADCY3,NR0B2
+Cell Cycle: G1/S Checkpoint Regulation	4.19E-01	1.47E-02	RBL2
+Cardiac Hypertrophy	3.61E-01	8.72E-03	ANGPT2,DICER1,CTSB
+Increases Glomerular Injury	3.53E-01	1.2E-02	ANGPT2
+Increases Renal Damage	3.24E-01	1.1E-02	ANGPT2
+NRF2-mediated Oxidative Stress Response	2.88E-01	8.16E-03	PRKCH,PRKCZ
+Hepatic Fibrosis	2.84E-01	9.62E-03	IL4
+LPS/IL-1 Mediated Inhibition of RXR Function	2.72E-01	7.87E-03	ABCB9,NR0B2
+LXR/RXR Activation	2.36E-01	8.13E-03	ITIH4
+
+My Pathways for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+My Pathways	 -log(p-value)	Ratio	Molecules 
+
+Analysis Ready Molecules for My Projects->Alicia-IPA->OlderChildren-Combined - 2017-12-07 12:37 PM
+ID	Symbol
+ABCB9	ABCB9
+ACOT7	ACOT7
+ACP5	ACP5
+ADCY3	ADCY3
+ANGPT2	ANGPT2
+ANKRD7	ANKRD7
+AP5B1	AP5B1
+ARID3A	ARID3A
+ASCC1	ASCC1
+ATL3	ATL3
+C13orf35	ATP11AUN
+ATP2C1	ATP2C1
+ATPAF2	ATPAF2
+ATXN7L1	ATXN7L1
+BAG2	BAG2
+BANK1	BANK1
+BNIP3L	BNIP3L
+C15orf54	C15orf54
+C1orf198	C1orf198
+CATSPER4	CATSPER4
+CCDC19	CFAP45
+CITED2	CITED2
+CLEC12A	CLEC12A
+COL15A1	COL15A1
+CS	CS
+CSRP1	CSRP1
+CTSB	CTSB
+CYB561	CYB561
+DAP	DAP
+DAPK2	DAPK2
+DDIT4	DDIT4
+DICER1	DICER1
+DMAP1	DMAP1
+DNAH17	DNAH17
+EGFLAM	EGFLAM
+EHF	EHF
+ELOVL7	ELOVL7
+EMG1	EMG1
+ENG	ENG
+EPX	EPX
+ERI3	ERI3
+ERMAP	ERMAP
+EVL	EVL
+C13orf30	FAM216B
+FBP1	FBP1
+AK055849	FBXW8
+FOXK2	FOXK2
+FOXP1	FOXP1
+GDF5OS	GDF5OS
+C17orf39	GID4
+GPI	GPI
+GPR176	GPR176
+KIAA0182	GSE1
+BC034424	HEXA
+HK2	HK2
+HSPA7	HSPA7
+IGF1R	IGF1R
+IKZF3	IKZF3
+IL4	IL4
+IL5RA	IL5RA
+IRF2BPL	IRF2BPL
+IRF6	IRF6
+IRGC	IRGC
+ITIH4	ITIH4
+KAT6B	KAT6B
+KCNH2	KCNH2
+KIF26A	KIF26A
+KIF3B	KIF3B
+KIF5C	KIF5C
+KRT19	KRT19
+LINC00323	LINC00323
+BC039553	LINC00441
+LINC01140	LINC01140
+LINC01488	LINC01488
+LOC400710	LOC400710
+LPCAT2	LPCAT2
+LPIN1	LPIN1
+LRIG1	LRIG1
+LRP12	LRP12
+LSM14B	LSM14B
+LYSMD2	LYSMD2
+MCC	MCC
+MECR	MECR
+MED27	MED27
+METRNL	METRNL
+MIR1205	mir-1205
+MITF	MITF
+MS4A2	MS4A2
+MSMP	MSMP
+NAPA	NAPA
+NCK1	NCK1
+NCSTN	NCSTN
+NDFIP2	NDFIP2
+NFIA	NFIA
+NISCH	NISCH
+NOM1	NOM1
+NR0B2	NR0B2
+OSBPL3	OSBPL3
+INADL	PATJ
+PCYT1A	PCYT1A
+PDE6H	PDE6H
+PGAM2	PGAM2
+PHF19	PHF19
+C9orf46	PLGRKT
+PMP22	PMP22
+POLR2B	POLR2B
+PPP1R26-AS1	PPP1R26-AS1
+PPP2CA	PPP2CA
+PPT2	PPT2
+PRG2	PRG2
+PRG3	PRG3
+PRKCH	PRKCH
+PRKCZ	PRKCZ
+PRR25	PRR25
+PRR35	PRR35
+PSMC3IP	PSMC3IP
+PTGDR2	PTGDR2
+RALB	RALB
+RBL2	RBL2
+RFPL4B	RFPL4B
+RHBDD2	RHBDD2
+RHOBTB2	RHOBTB2
+RNASE2	RNASE2
+RNF122	RNF122
+RPS6KA2	RPS6KA2
+RPTOR	RPTOR
+SAFB2	SAFB2
+SEC16B	SEC16B
+SERINC5	SERINC5
+SHANK2	SHANK2
+SIGLEC8	SIGLEC8
+SLC17A4	SLC17A4
+SLC25A25	SLC25A25
+SLC25A33	SLC25A33
+SLC2A9	SLC2A9
+SLC38A8	SLC38A8
+SLC7A1	SLC7A1
+SLC24A6	SLC8B1
+SMARCD3	SMARCD3
+SND1-IT1	SND1-IT1
+KIAA0889	SOGA1
+ST3GAL1	ST3GAL1
+STEAP3	STEAP3
+STX1B	STX1B
+SUGT1	SUGT1
+TANK	TANK
+TFF2	TFF2
+TLDC2	TLDC2
+TLE4	TLE4
+TMEM104	TMEM104
+TMEM131	TMEM131
+TMEM181	TMEM181
+TMEM41A	TMEM41A
+TNIK	TNIK
+TOMM34	TOMM34
+TRAPPC9	TRAPPC9
+VKORC1L1	VKORC1L1
+VPS52	VPS52
+YWHAQ	YWHAQ
+ZFPM1	ZFPM1
+ZNF22	ZNF22
+BC045757	ZNF862
+

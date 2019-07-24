@@ -4,19 +4,29 @@
 \alias{list2imSigned}
 \title{convert list to signeddirectional incidence matrix}
 \usage{
-list2imSigned(x, makeUnique = TRUE, doTimer = FALSE, verbose = FALSE,
-  ...)
+list2imSigned(x, verbose = FALSE, ...)
+}
+\arguments{
+\item{x}{\code{list} of named vectors, where the names are used to
+identify each element, and become rownames in the output
+incidence matrix. The vector values become values in the
+incidence matrix.}
+
+\item{verbose}{logical indicating whether to print verbose output.}
+
+\item{...}{additional arguments are passed to \code{list2im()}.}
 }
 \value{
-numeric matrix with rownames defined by names from each vector
-in the input list, and colnames defined by the names of the input
+numeric matrix with rownames defined by vector names from
+each vector in the input list. The colnames are defined by
+names of the input list if they exist.
 list. Values in the matrix are values from each vector.
 }
 \description{
 convert list to directional incidence matrix
 }
 \details{
-This function extends \code{\link{list2im}} in that it stores the
+This function extends \code{list2im()} in that it stores the
 value associated with each element in the list. As such, the input
 format is a named vector, where the names of the vector are the items,
 and the numeric values are the values to be stored in the
@@ -28,6 +38,17 @@ named by the gene symbol. Each vector in the list represents one
 statistical test. Here, \code{list2imSigned()} will convert this list
 into a directional matrix representing the gene changes across the
 comparisons.
+
+Note that this function currently does not combine multiple values,
+instead only the last occurring value is stored in the resulting
+matrix. This decision is partly due to efficiency, and partly because
+there are multiple possible methods to combine multiple values.
+For example, taking the \code{mean(x)} for a given gene, which has
+a value \code{1} and \code{-1} would result in \code{0} and might suggest the
+gene is not a statistical hit. Instead, when multiple values
+are anticipated per named vector entry, use functions in a
+package like \code{data.table} or \code{dplyr} to apply a function to
+combine values.
 }
 \examples{
 L1 <- list(A=c("C","A","B","A"),

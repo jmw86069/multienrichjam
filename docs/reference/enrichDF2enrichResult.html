@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -77,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -115,10 +127,12 @@
 
     <pre class="usage"><span class='fu'>enrichDF2enrichResult</span>(<span class='kw'>enrichDF</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>msigdbGmtT</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>pvalueCutoff</span> <span class='kw'>=</span> <span class='fl'>0.15</span>, <span class='kw'>pAdjustMethod</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
-  <span class='kw'>keyColname</span> <span class='kw'>=</span> <span class='st'>"itemsetID"</span>, <span class='kw'>pathGenes</span> <span class='kw'>=</span> <span class='st'>"pathGenes"</span>,
-  <span class='kw'>geneColname</span> <span class='kw'>=</span> <span class='st'>"geneNames"</span>, <span class='kw'>geneHits</span> <span class='kw'>=</span> <span class='st'>"geneHits"</span>,
-  <span class='kw'>geneRatioColname</span> <span class='kw'>=</span> <span class='st'>"GeneRatio"</span>, <span class='kw'>geneDelim</span> <span class='kw'>=</span> <span class='st'>"[,/ ]+"</span>,
-  <span class='kw'>pvalueColname</span> <span class='kw'>=</span> <span class='st'>"P-Value"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>keyColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"itemsetID"</span>, <span class='st'>"ID"</span>, <span class='st'>"Name"</span>, <span class='st'>"Pathway"</span>),
+  <span class='kw'>pathGenes</span> <span class='kw'>=</span> <span class='st'>"pathGenes"</span>, <span class='kw'>geneColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"geneNames"</span>, <span class='st'>"geneID"</span>,
+  <span class='st'>"Gene"</span>, <span class='st'>"Genes"</span>), <span class='kw'>geneHits</span> <span class='kw'>=</span> <span class='st'>"geneHits"</span>,
+  <span class='kw'>geneRatioColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"GeneRatio"</span>, <span class='st'>"Ratio"</span>), <span class='kw'>geneDelim</span> <span class='kw'>=</span> <span class='st'>"[,/ ]+"</span>,
+  <span class='kw'>pvalueColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"P.Value"</span>, <span class='st'>"Pvalue"</span>, <span class='st'>"FDR"</span>, <span class='st'>"adj.P.Val"</span>),
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -131,7 +145,7 @@ results.</p></td>
     <tr>
       <th>msigdbGmtT</th>
       <td><p>optional gmtT object, a representation of
-`arules::transactions-class`.</p></td>
+<code>arules::transactions-class</code>.</p></td>
     </tr>
     <tr>
       <th>pvalueCutoff</th>
@@ -142,48 +156,48 @@ in downstream processing.</p></td>
     <tr>
       <th>pAdjustMethod</th>
       <td><p>character string to define the P-value
-adjustment method, or `"none"` for no additional adjustment.
-See `stats::p.adjust()` for valid values.</p></td>
+adjustment method, or <code>"none"</code> for no additional adjustment.
+See <code><a href='https://www.rdocumentation.org/packages/stats/topics/p.adjust'>stats::p.adjust()</a></code> for valid values.</p></td>
     </tr>
     <tr>
       <th>keyColname</th>
-      <td><p>character value of the `colname(enrichDF)`
+      <td><p>character value of the <code>colname(enrichDF)</code>
 containing the unique row identifier. It can be a pathway_ID
 or any uniquely identifying value.</p></td>
     </tr>
     <tr>
       <th>pathGenes</th>
-      <td><p>character or value of the `colname(enrichDF)`
+      <td><p>character or value of the <code>colname(enrichDF)</code>
 containing the number of genes in each pathway. This value will be
-derived from `geneRatioColname` if needed.</p></td>
+derived from <code>geneRatioColname</code> if needed.</p></td>
     </tr>
     <tr>
       <th>geneColname</th>
-      <td><p>character value of the `colname(enrichDF)`
+      <td><p>character value of the <code>colname(enrichDF)</code>
 containing delimiited genes in each pathway.</p></td>
     </tr>
     <tr>
       <th>geneHits</th>
-      <td><p>character value of the `colname(enrichDF)`
+      <td><p>character value of the <code>colname(enrichDF)</code>
 containing the integer count of the gene hits in each pathway.
-This value will be derived from `geneRatioColname` if needed.</p></td>
+This value will be derived from <code>geneRatioColname</code> if needed.</p></td>
     </tr>
     <tr>
       <th>geneRatioColname</th>
-      <td><p>character value of the `colname(enrichDF)`
+      <td><p>character value of the <code>colname(enrichDF)</code>
 containing the character ratio of gene hits to pathway size,
-in format "50/100". This value is used when either `"pathGenes"`
-or `"geneHits"` are not supplied.</p></td>
+in format "50/100". This value is used when either <code>"pathGenes"</code>
+or <code>"geneHits"</code> are not supplied.</p></td>
     </tr>
     <tr>
       <th>geneDelim</th>
       <td><p>regular expression pattern used to separate
-genes in the `pathGenes` column into a vector of character
+genes in the <code>pathGenes</code> column into a vector of character
 values.</p></td>
     </tr>
     <tr>
       <th>pvalueColname</th>
-      <td><p>character value of the `colname(enrichDF)`
+      <td><p>character value of the <code>colname(enrichDF)</code>
 containing enrichment P-values to use in downstream processing.</p></td>
     </tr>
     <tr>
@@ -195,14 +209,13 @@ containing enrichment P-values to use in downstream processing.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function takes a data.frame containing gene set enrichment
-results, and converts it to a proper `enrichResult` object,
-compatible with methods provided by the `clusterProfiler`
+results, and converts it to a proper <code>enrichResult</code> object,
+compatible with methods provided by the <code>clusterProfiler</code>
 package.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other jam conversion functions: <code>enrichList2IM</code>,
-  <code>multiEnrichMap</code></p></div>
+    <div class='dont-index'><p>Other jam conversion functions: <code><a href='enrichList2IM.html'>enrichList2IM</a></code></p></div>
     
 
   </div>

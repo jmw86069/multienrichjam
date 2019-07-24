@@ -86,8 +86,8 @@ layout_with_qfr <- function
 #' @export
 layout_with_qfrf <- function
 (repulse=3.1,
-seed=123,
-...)
+ seed=123,
+ ...)
 {
    ## Purpose is to wrap layout_with_qfr() into a function to make
    ## it easier to modify arguments on the fly
@@ -650,6 +650,7 @@ shape.coloredrectangle.plot <- function
    ## This function combines some logic from
    ## igraph:::.igraph.shape.pie.plot() as well.
 
+   verbose <- getOption("verbose");
    getparam <- function(pname) {
       p <- params("vertex", pname)
       if (length(p) != 1 && !is.null(v)) {
@@ -677,6 +678,11 @@ shape.coloredrectangle.plot <- function
    if (length(vertex.coloredrect.border) == 0) {
       vertex.coloredrect.border <- "grey30";
       #vertex.coloredrect.border <- vertex.frame.color;
+   }
+   if (verbose) {
+      jamba::printDebug("shape.coloredrectangle.plot(): ",
+         "vertex.coloredrect.color:");
+      print(vertex.coloredrect.color);
    }
 
    vertex.coloredrect.byrow <- getparam("coloredrect.byrow");
@@ -712,9 +718,20 @@ shape.coloredrectangle.plot <- function
 
    ## Use size1 (height) to define the size of each square, then apply that
    ## to calculate size2 (width)
-   vertex.size1 <- vertex.size1 * 5 / vertex.coloredrect.nrow;
+   #vertex.size1 <- vertex.size1 * 5 / vertex.coloredrect.nrow;
+   vertex.size1 <- vertex.size1 * 5 * pmax(vertex.coloredrect.nrow,
+      vertex.coloredrect.ncol) / vertex.coloredrect.nrow;
    vertex.size2 <- (vertex.size1 *
-         (vertex.coloredrect.nrow / vertex.coloredrect.ncol));
+         (vertex.coloredrect.nrow) / vertex.coloredrect.ncol);
+
+   if (verbose) {
+      jamba::printDebug("shape.coloredrectangle.plot(): ",
+         "vertex.size1:", vertex.size1,
+         ", vertex.coloredrect.nrow:", vertex.coloredrect.nrow);
+      jamba::printDebug("shape.coloredrectangle.plot(): ",
+         "vertex.size2:", vertex.size2,
+         ", vertex.coloredrect.ncol:", vertex.coloredrect.ncol);
+   }
 
    #printDebug("vertex.size1:", head(vertex.size1, 10),
    #   ", vertex.size2:", head(vertex.size2, 10));
@@ -724,19 +741,19 @@ shape.coloredrectangle.plot <- function
    ## data.frame of coordinates for each square and rectangle
    mycoloredrectangle <- function
    (x,
-      y,
-      size1,
-      size2,
-      col,
-      ncol,
-      nrow,
-      border,
-      lty,
-      lwd=1,
-      frame.lwd=1,
-      frame.color="grey30",
-      byrow=TRUE,
-      ...)
+    y,
+    size1,
+    size2,
+    col,
+    ncol,
+    nrow,
+    border,
+    lty,
+    lwd=1,
+    frame.lwd=0.5,
+    frame.color="grey30",
+    byrow=TRUE,
+    ...)
    {
       ## Purpose is to draw a rectangle filles with multi-color squares
       nrow <- rep(nrow, length.out=length(x));
@@ -751,7 +768,7 @@ shape.coloredrectangle.plot <- function
       ## Iterate each vertex, create a data.frame describing
       ## frame and square colors, then combine into one large
       ## data.frame for vectorized drawing.
-      rectDF <- rbindList(lapply(seq_along(x), function(k){
+      rectDF <- jamba::rbindList(lapply(seq_along(x), function(k){
          xk <- x[[k]];
          yk <- y[[k]];
          size1k <- size1[[k]];
@@ -821,7 +838,11 @@ shape.coloredrectangle.plot <- function
       ## Split into a list of data.frames, because symbols()
       ## can only use one value for lwd and lty.
       rectDFL <- split(rectDF,
-         pasteByRowOrdered(rectDF[,c("rect_type","lwd","lty")]));
+         jamba::pasteByRowOrdered(rectDF[,c("rect_type","lwd","lty")]));
+      if (verbose) {
+         jamba::printDebug("shape.coloredrectangle.plot(): ",
+            "names(rectDFL):", names(rectDFL));
+      }
 
       for (rectDFi in rev(rectDFL)) {
          symbols(x=rectDFi$x,
@@ -1176,4 +1197,742 @@ cnet2im <- function
    dfL <- strsplit(dfV, ",");
    im <- list2im(dfL);
    im;
+}
+
+
+#' Remove igraph blank wedges
+#'
+#' Remove igraph blank wedges
+#'
+#' This function is intended to affect nodes with shapes `"pie"` or
+#' `"coloredrectangle"`, and evaluates the vertex attributes
+#' `"coloredrect.color"` and `"pie.color"`. For each node, any colors
+#' considered blank are removed, along with corresponding values in
+#' related vertex attributes, including `"pie","pie.value","pie.names"`,
+#' `"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"`.
+#'
+#' This function calls `isColorBlank()` to determine which colors are
+#' blank.
+#'
+#' This function is originally intended to follow `igraph2pieGraph()` which
+#' assigns colors to pie and coloredrectangle attributes, where missing
+#' values or values of zero are often given a "blank" color. To enhance the
+#' resulting node coloration, these blank colors can be removed in order to
+#' make the remaining colors more visibly distinct.
+#'
+#' @family jam igraph functions
+#'
+#' @param g igraph object containing one or more attributes from
+#'    `"pie.color"` or `"coloredrect.color"`.
+#' @inheritParams isColorBlank
+#' @param constrain character value indicating for node shape
+#'    `"coloredrectangle"` whether to constrain the `"coloredrect.nrow"`
+#'    or `"coloredrect.ncol"` values. When `"none"` the nrow is usually
+#'    dropped to nrow=1 whenever colors are removed.
+#' @param resizeNodes logical indicating whether to resize the resulting
+#'    nodes to maintain roughly proportional size to the number of
+#'    colored wedges.
+#' @param applyToPie logical indicating whether to apply the logic to
+#'    nodes with shape `"pie"`.
+#' @param pieAttrs character vector of `vertex.attributes` from `g`
+#'    to be adjusted when `applyToPie=TRUE`. Note that `"pie.color"`
+#'    is required, and other attributes are only adjusted when
+#'    they are present in the input graph `g`.
+#' @param verbose logical indicating whether to print verbose output.
+#' @param ... additional arguments are passed to `isColorBlank()`.
+#'
+#' @examples
+#' library(igraph);
+#' library(multienrichjam);
+#' g <- graph.full(n=3);
+#' V(g)$name <- c("nodeA", "nodeB", "nodeC");
+#' V(g)$shape <- "coloredrectangle";
+#' V(g)$coloredrect.names <- split(
+#'    rep(c("up","no", "dn"), 7),
+#'    rep(V(g)$name, c(2,3,2)*3));
+#' V(g)$coloredrect.byrow <- FALSE;
+#' V(g)$coloredrect.nrow <- rep(3, 3);
+#' V(g)$coloredrect.ncol <- c(2,3,2);
+#' V(g)$label.degree <- pi*3/2;
+#' V(g)$label.dist <- 3;
+#' V(g)$size2 <- c(20,30,20);
+#'
+#' color_v <- rep("white", 21);
+#' color_v[c(1,3,7,9,15,19,20,21)] <- colorjam::rainbowJam(5);
+#' V(g)$coloredrect.color <- split(
+#'    color_v,
+#'    rep(V(g)$name, c(2,3,2)*3));
+#' par("mfrow"=c(2,2));
+#' lg <- layout_nicely(g);
+#' plot(g, layout=lg);
+#'
+#' g2 <- removeIgraphBlanks(g, constrain="none");
+#' V(g2)$size2 <- V(g2)$size2 / 3;
+#' plot(g2, layout=lg, main="constrain='none'");
+#'
+#' g3 <- removeIgraphBlanks(g, constrain="nrow");
+#' plot(g3, layout=lg, main="constrain='nrow'");
+#'
+#' g4 <- removeIgraphBlanks(g, constrain="ncol");
+#' plot(g4, layout=lg, main="constrain='ncol'");
+#'
+#' #
+#' g7 <- graph.full(n=7);
+#' V(g7)$coloredrect.color <- lapply(c(1,2,3,4,2,3,4),
+#'    function(i){colorjam::rainbowJam(i)});
+#' V(g7)$coloredrect.ncol <- c(1,1,1,1,2,3,4);
+#' V(g7)$coloredrect.nrow <- c(1,2,3,4,1,1,1);
+#' V(g7)$coloredrect.names <- V(g7)$coloredrect.color;
+#' V(g7)$shape <- "coloredrectangle";
+#' V(g7)$size <- 10;
+#' V(g7)$size2 <- V(g7)$coloredrect.ncol * 10;
+#' lg7 <- layout_nicely(g7);
+#' par("mfrow"=c(2,2));
+#' plot(g7, layout=lg7, vertez.size2=10);
+#' plot(g7, layout=lg7, vertex.size2=V(g7)$coloredrect.ncol*10);
+#' plot(g7, layout=lg7, vertex.size2=V(g7)$coloredrect.nrow*10);
+#'
+#' @export
+removeIgraphBlanks <- function
+(g,
+ blankColor=c("#FFFFFF","#FFFFFFFF","transparent"),
+ c_max=7,
+ l_min=95,
+ alpha_max=0.1,
+ constrain=c("nrow","ncol","none"),
+ resizeNodes=TRUE,
+ applyToPie=TRUE,
+ pieAttrs=c("pie", "pie.value", "pie.names", "pie.color"),
+ verbose=FALSE,
+ ...)
+{
+   ## Remove white from Cnet multinodes
+   ##
+   ## resizeNodes will proportionally resize nodes based upon the
+   ## resulting ncol and nrow.
+   ##
+   ## 14jun2018: changed to use isColorBlank() helper function,
+   ## which helps encapsulate logic regarding nearly-white colors,
+   ## and almost fully transparent colors, both of which are intended
+   ## to be considered blank for the purposes of this function
+   ##
+   ## TODO: iterate pie nodes
+
+   constrain <- match.arg(constrain);
+   #ixV <- which(V(g)$shape %in% "coloredrectangle");
+   ixV <- which(lengths(V(g)$coloredrect.color) > 0);
+
+   if ("coloredrect.color" %in% list.vertex.attributes(g)) {
+      if (verbose) {
+         printDebug("removeIgraphBlanks(): ",
+            "Adjusting coloredrect nodes.");
+      }
+      ## Rewrote code to use vectorized logic.
+
+      ## Determine the coloredrect.ncol to use in resizing
+      ncolVbefore <- get.vertex.attribute(g, "coloredrect.ncol");
+      nrowVbefore <- get.vertex.attribute(g, "coloredrect.nrow");
+
+      ## Determine which pie wedges are blank
+      iCrColorL <- igraph::get.vertex.attribute(g, "coloredrect.color");
+      crBlanksL <- isColorBlank(iCrColorL,
+         blankColor=blankColor,
+         c_max=c_max,
+         l_min=l_min,
+         alpha_max=alpha_max,
+         ...);
+      crLengths <- lengths(iCrColorL);
+      crSplitV <- rep(seq_len(vcount(g)), crLengths);
+      ## Vector of TRUE,FALSE
+      crBlanksV <- unlist(unname(crBlanksL));
+      ## Iterate each attribute
+      crAttrs <- intersect(c("coloredrect.color", "coloredrect.names"),
+         list.vertex.attributes(g));
+      crAttr <- "coloredrect.color";
+      crName <- "coloredrect.names";
+
+      crAttrL <- igraph::get.vertex.attribute(g, crAttr);
+      crNameL <- igraph::get.vertex.attribute(g, crName);
+      ## Confirm each attribute has the same lengths() as pieColorL
+      if (!all(lengths(crAttrL) == crLengths)) {
+         # Skip this crAttr since its values are
+         # not in sync with "coloredrect.color"
+         if (verbose) {
+            jamba::printDebug("removeIgraphBlanks(): ",
+               "Skipped pie attribute '",
+               pieAttr,
+               "' because its lengths() were not consistent with ",
+               "'pie.color'");
+         }
+      } else {
+         ##
+         nrowV <- get.vertex.attribute(g, "coloredrect.nrow");
+         ncolV <- get.vertex.attribute(g, "coloredrect.ncol");
+         byrowV <- get.vertex.attribute(g, "coloredrect.byrow")*1;
+         nprodV <- nrowV * ncolV;
+         if (any(crLengths != nprodV)) {
+            if (verbose) {
+               jamba::printDebug("removeIgraphBlanks(): ",
+                  "changing constrain to ",
+                  "'none'",
+                  " since some ncol,nrow were incorrect.");
+            }
+            constrain <- "none";
+         }
+
+         ## Check for shortcuts from different constraints and ncol,nrow
+         if ("nrow" %in% constrain && all(nrowV %in% 1)) {
+            if (verbose) {
+               jamba::printDebug("removeIgraphBlanks(): ",
+                  "changing constrain to ",
+                  "'none'",
+                  " since all nrow=1");
+            }
+            constrain <- "none";
+         }
+         if ("ncol" %in% constrain && all(ncolV %in% 1)) {
+            if (verbose) {
+               jamba::printDebug("removeIgraphBlanks(): ",
+                  "changing constrain to ",
+                  "'none'",
+                  " since all ncol=1");
+            }
+            constrain <- "none";
+         }
+
+         #########################################
+         ## Handle each constraint properly
+         if ("none" %in% constrain) {
+            ########################################
+            ## constrain "none"
+            crL <- unname(split(unlist(crAttrL)[!crBlanksV],
+               crSplitV[!crBlanksV]));
+            crLengthsNew <- lengths(crL);
+            crChanged <- (crLengths != crLengthsNew);
+            ncolV <- ifelse(nrowV == 1 | ncolV > 1, crLengthsNew, ncolV);
+            nrowV <- ifelse(nrowV == 1 | ncolV > 1, 1, crLengthsNew);
+
+            g <- set.vertex.attribute(g,
+               name="coloredrect.nrow",
+               value=nrowV);
+            g <- set.vertex.attribute(g,
+               name="coloredrect.ncol",
+               value=ncolV);
+            ## TODO: only update nodes that change
+            g <- igraph::set.vertex.attribute(g,
+               name=crAttr,
+               value=crL);
+         } else if (any(c("ncol","nrow") %in% constrain)) {
+            ########################################
+            ## constrain "nrow" or "ncol"
+            #
+            # for "nrow":
+            # constrain the nrow by making a giant wide matrix,
+            # find which columns are completely blank and remove
+            # only those columns.
+            #
+            # for "ncol":
+            # constrain the ncol by making a giant tall matrix,
+            # find which rows are completely blank and remove
+            # only those rows.
+            #
+            # Note that it needs to iterate each unique coloredrect.nrow
+            # in order to keep the dimensions correct.
+            nrowNcolByrowAll <- paste0(nrowV, "_", ncolV, "_", byrowV);
+            nrowNcolByrowU <- unique(nrowNcolByrowAll);
+            for (nrowNcolByrowI in nrowNcolByrowU) {
+               nrowNcolByrowV <- as.numeric(strsplit(nrowNcolByrowI, "_")[[1]]);
+               iUse <- (nrowNcolByrowAll %in% nrowNcolByrowI);
+               ## Create the extended matrix for each of four conditions:
+               ## constrain="nrow",byrow=TRUE;
+               ## constrain="nrow",byrow=FALSE
+               ## constrain="ncol",byrow=TRUE;
+               ## constrain="ncol",byrow=FALSE
+               if ("nrow" %in% constrain) {
+                  if (nrowNcolByrowV[3] == 0) {
+                     # coloredrect.byrow == FALSE
+                     iM <- matrix(nrow=nrowNcolByrowV[1],
+                        unlist(unname(crBlanksL[iUse]))*1);
+                     iMvals <- matrix(nrow=nrowNcolByrowV[1],
+                        unlist(unname(crAttrL[iUse])));
+                     iMnames <- matrix(nrow=nrowNcolByrowV[1],
+                        unlist(unname(crNameL[iUse])));
+                  } else {
+                     iM <- do.call(cbind,
+                        lapply(crBlanksL[iUse], function(k){
+                           matrix(nrow=nrowNcolByrowV[1],
+                              byrow=TRUE,
+                              k);
+                        }));
+                     iMvals <- do.call(cbind,
+                        lapply(crAttrL[iUse], function(k){
+                           matrix(nrow=nrowNcolByrowV[1],
+                              byrow=TRUE,
+                              k);
+                        }));
+                     iMnames <- do.call(cbind,
+                        lapply(crNameL[iUse], function(k){
+                           matrix(nrow=nrowNcolByrowV[1],
+                              byrow=TRUE,
+                              k);
+                        }));
+                  }
+                  ## keep track of which columns belong to which node
+                  iMcol <- factor(rep(which(iUse), crLengths[iUse]/nrowNcolByrowV[1]));
+                  ## Find columns where the colMin is 1, meaning all are blank
+                  iMblank <- (colMins(iM) == 1);
+                  # Subset for non-blank columns
+                  iMvalsM <- iMvals[,!iMblank,drop=FALSE];
+                  iMnamesM <- iMnames[,!iMblank,drop=FALSE];
+                  iMvalsL <- split(as.vector(iMvalsM),
+                     rep(iMcol[!iMblank], each=nrow(iMvalsM)));
+                  iMnamesL <- split(as.vector(iMnamesM),
+                     rep(iMcol[!iMblank], each=nrow(iMnamesM)));
+                  iMncol <- lengths(split(iMcol[!iMblank], iMcol[!iMblank]));
+                  iMnrow <- nrowNcolByrowV[1];
+               } else {
+                  ## constrain "ncol"
+                  if (nrowNcolByrowV[3] == 0) {
+                     byrow <- FALSE;
+                  } else {
+                     byrow <- TRUE;
+                  }
+                  iM <- do.call(rbind,
+                     lapply(crBlanksL[iUse], function(k){
+                        matrix(ncol=nrowNcolByrowV[2],
+                           byrow=byrow,
+                           k);
+                     }));
+                  iMvals <- do.call(rbind,
+                     lapply(crAttrL[iUse], function(k){
+                        matrix(ncol=nrowNcolByrowV[2],
+                           byrow=byrow,
+                           k);
+                     }));
+                  iMnames <- do.call(rbind,
+                     lapply(crNameL[iUse], function(k){
+                        matrix(ncol=nrowNcolByrowV[2],
+                           byrow=byrow,
+                           k);
+                     }));
+                  ## keep track of which columns belong to which node
+                  iMrow <- factor(rep(which(iUse), crLengths[iUse]/nrowNcolByrowV[2]));
+                  ## Find columns where the colMin is 1, meaning all are blank
+                  iMblank <- (rowSums(iM) == ncol(iM));
+                  # Subset for non-blank rows
+                  iMvalsM <- iMvals[!iMblank,,drop=FALSE];
+                  iMnamesM <- iMnames[!iMblank,,drop=FALSE];
+                  if (byrow) {
+                     iMrowSplit <- rep(iMrow[!iMblank], each=ncol(iMvalsM));
+                     iMvalsL <- split(as.vector(t(iMvalsM)),
+                        iMrowSplit);
+                     iMnamesL <- split(as.vector(t(iMnamesM)),
+                        iMrowSplit);
+                  } else {
+                     iMrowSplit <- rep(iMrow[!iMblank], ncol(iMvalsM));
+                     iMvalsL <- split(as.vector(iMvalsM),
+                        iMrowSplit);
+                     iMnamesL <- split(as.vector(iMnamesM),
+                        iMrowSplit);
+                  }
+                  iMnrow <- lengths(split(iMrow[!iMblank], iMrow[!iMblank]));
+                  iMncol <- rep(nrowNcolByrowV[2], length(iMnrow));
+               }
+               iSet <- as.integer(names(iMvalsL));
+               g <- set.vertex.attribute(g,
+                  index=iSet,
+                  name="coloredrect.ncol",
+                  value=iMncol);
+               g <- set.vertex.attribute(g,
+                  index=iSet,
+                  name="coloredrect.nrow",
+                  value=iMnrow);
+               g <- set.vertex.attribute(g,
+                  index=iSet,
+                  name="coloredrect.color",
+                  value=iMvalsL);
+               g <- set.vertex.attribute(g,
+                  index=iSet,
+                  name="coloredrect.names",
+                  value=iMnamesL);
+               #
+            }
+         }
+      }
+
+      ## Now resize coloredrectangle size2 values
+      ## so each square is constant size relative to
+      ## its expected node size
+      if (resizeNodes) {
+         if (verbose) {
+            printDebug("removeIgraphBlanks(): ",
+               "Resizing coloredrect nodes.");
+         }
+         ## Make multi-segment gene nodes wider
+         ncolVafter <- get.vertex.attribute(g, "coloredrect.ncol");
+         nrowVafter <- get.vertex.attribute(g, "coloredrect.nrow");
+         resizeWhich <- (ncolVbefore != ncolVafter) |  (nrowVbefore != nrowVafter);
+         if (any(resizeWhich)) {
+            new_size2 <-nrowVbefore / nrowVafter *
+               get.vertex.attribute(g,
+                  name="size2");
+            if (verbose) {
+               print(data.frame(ncolVbefore,
+                  ncolVafter,
+                  size2=V(g)$size2,
+                  new_size2));
+            }
+            g <- set.vertex.attribute(g,
+               name="size2",
+               value=new_size2[resizeWhich],
+               index=which(resizeWhich));
+         }
+      }
+   }
+
+   ## Iterate pie nodes
+   if (applyToPie) {
+      ## Adjust several pie attributes depending upon what is present
+      pieAttrs <- intersect(c("pie", "pie.value", "pie.names", "pie.color"),
+         list.vertex.attributes(g));
+
+      if ("pie.color" %in% pieAttrs) {
+         if (verbose) {
+            printDebug("removeIgraphBlanks(): ",
+               "Iterating pie nodes.");
+         }
+
+         ## Determine which pie wedges are blank
+         iPieColorL <- igraph::get.vertex.attribute(g, "pie.color");
+         pieBlanksL <- isColorBlank(iPieColorL,
+            blankColor=blankColor,
+            c_max=c_max,
+            l_min=l_min,
+            alpha_max=alpha_max,
+            ...);
+         pieLengths <- lengths(iPieColorL);
+         pieSplitV <- rep(seq_len(vcount(g)), pieLengths);
+         ## Vector of TRUE,FALSE
+         pieBlanksV <- unlist(unname(pieBlanksL));
+         ## Iterate each pie attribute
+         for (pieAttr in pieAttrs) {
+            pieAttrL <- igraph::get.vertex.attribute(g, pieAttr);
+            ## Confirm each attribute has the same lengths() as pieColorL
+            if (!all(lengths(pieAttrL) == pieLengths)) {
+               # Skip this pieAttr since its values are not in sync with "pie.color"
+               if (verbose) {
+                  jamba::printDebug("removeIgraphBlanks(): ",
+                     "Skipped pie attribute '",
+                     pieAttr,
+                     "' because its lengths() were not consistent with ",
+                     "'pie.color'");
+               }
+            } else {
+               pieL <- split(unlist(pieAttrL)[!pieBlanksV],
+                  pieSplitV[!pieBlanksV]);
+               ## TODO: only update nodes that change
+               g <- igraph::set.vertex.attribute(g,
+                  name=pieAttr,
+                  value=pieL);
+            }
+         }
+      }
+   }
+
+   return(g);
+}
+
+#' Convert pie igraph node shapes to coloredrectangle
+#'
+#' Convert pie igraph node shapes to coloredrectangle
+#'
+#' This function simply converts an igraph network with `"pie"`
+#' node shapes, to use the `"coloredrectangle"` node shape
+#' provided by the multienrichjam package.
+#'
+#' In the process, it transfers related node attributes:
+#'
+#' * `"pie.color"` are copied to `"coloredrect.color"`
+#' * `"pie.names"` are copied to `"coloredrect.names"`. The
+#' `"coloredrect.names"` can be used to label a color key.
+#' * `"size"` is converted to `"size2"` after applying
+#' `sqrt(size) * 1.5`. The `"size2"` value is used to
+#' define the size of coloredrectangle nodes.
+#'
+#' @return igraph object where node shapes were changed
+#'    from `"pie"` to `"coloredrectangle"`.
+#'
+#' @family jam igraph functions
+#'
+#' @param g igraph object, expected to contain one or more
+#'    nodes with shape `"pie"`.
+#' @param nrow,ncol integer values indicating the default
+#'    number of rows and columns to use when displaying
+#'    the colors for each node.
+#' @param byrow logical indicating whether each vector
+#'    of node colors should fill the nrow,ncol matrix
+#'    by each row, similar to how values are filled
+#'    in `base::matrix()` with argument `byrow`.
+#' @param whichNodes integer vector of nodes in `g`
+#'    which should be considered. Only nodes with shape
+#'    `"pie"` will be converted which are also within
+#'    the `whichNodes` vector. By default, all nodes
+#'    are converted, but `whichNodes` allows converting
+#'    only a subset of nodes.
+#' @param ... additional arguments are ignored.
+#'
+#' @export
+rectifyPiegraph <- function
+(g,
+ nrow=2,
+ ncol=5,
+ byrow=TRUE,
+ whichNodes=seq_len(vcount(g)),
+ ...)
+{
+   ## Purpose is to convert a piegraph igraph into coloredrectangles,
+   ## applying igraph vertex parameters as relevant.
+   ##
+   ## whichNodes is an integer vector of nodes to use, which is
+   ## further filtered for only nodes with V(g)$shape == "pie"
+   if (!igrepHas("igraph", class(g))) {
+      stop("Input g must be an igraph object.");
+   }
+   whichPie <- intersect(whichNodes,
+      which(V(g)$shape %in% "pie"));
+
+   if (length(whichPie) == 0) {
+      return(g);
+   }
+
+   V(g)[whichPie]$coloredrect.color <- V(g)[whichPie]$pie.color;
+   V(g)[whichPie]$coloredrect.names <- V(g)[whichPie]$pie.names;
+   V(g)[whichPie]$coloredrect.nrow <- nrow;
+   V(g)[whichPie]$coloredrect.ncol <- ncol;
+   V(g)[whichPie]$coloredrect.byrow <- byrow;
+   V(g)[whichPie]$shape <- "coloredrectangle";
+   V(g)[whichPie]$size2 <- sqrt(V(g)[whichPie]$size)*1.5;
+   g;
+}
+
+#' Re-order igraph nodes
+#'
+#' Re-order igraph nodes
+#'
+#' This function takes an igraph and a layout in the
+#' form of coordinates, or a function used to produce
+#' coordinates. It repositions nodes within equivalent
+#' positions, ordering nodes by color along either the
+#' `"x"` or `"y"` direction.
+#'
+#' Equivalent node positions are those with the same
+#' neighboring nodes. For example if node `"A"` and
+#' node `"B"` both have neighbors `c("D", "E", "F")`
+#' then nodes `"A"` and `"B"` are considered equivalent,
+#' and will be reordered by their color.
+#'
+#' This function is particularly effective with concept
+#' network (Cnet) graphs, where multiple terms may
+#' be connnected to the same concept. For MultiEnrichmap,
+#' it typically works when multiple genes are connected
+#' to the same pathways. When this happens, the genes
+#' are sorted to group the colors.
+#'
+#' @return igraph with nodes positioned to order
+#' nodes by color. The layout coordinates are stored in
+#' the node attributes, accessible with `V(g)$x` and
+#' `V(g)$y`. When there are not multiple nodes sharing
+#' the same neighbors, the original igraph object is
+#' returned, with the addition of layout coordinates.
+#'
+#' @param g igraph object
+#' @param sortAttributes character vector of node attribute
+#'    names, to be applied in order when sorting nodes.
+#' @param nodeSortBy character vector containing `"x"` and
+#'    `"y"` indicating the primary axis used to sort nodes.
+#' @param layout numeric matrix of node coordinates, or
+#'    function used to produce layout coordinates. When layout
+#'    is `NULL`, this function tries to use node attributes
+#'    `"x"` and `"y"`. If those attributes do not exist,
+#'    the `layout_with_qfr()` is used with default `repulse=3.5`.
+#' @param verbose logical indicating whether to print verbose output.
+#' @param ... additional arguments are ignored.
+#'
+#' @export
+reorderIgraphNodes <- function
+(g,
+ sortAttributes=c("color","coloredrect.color"),
+ nodeSortBy=c("x","y"),
+ layout=function(...)layout_with_qfr(...,repulse=3.5),
+ verbose=FALSE,
+ ...)
+{
+   ## Purpose is to reorder nodes based upon some sortable metric.
+   ## Logic is as follows:
+   ## - all nodes having identical edges are grouped, e.g. if 20
+   ##   nodes all have an edge to node "K" and no other edges, they
+   ##   are in the same group.
+   ##   Similarly, all nodes having an edge only to nodes "K" and "L"
+   ##   will be grouped.
+   ## - once nodes are grouped, they are re-ordered within that group
+   ##   using something like top-to-bottom coordinate, based upon the
+   ##   sort metric nodeSortBy=c("y","x").
+   ## The desired result for example, if a set of nodes are colored
+   ## red or blue, they should be visibly grouped together by that color.
+   ##
+   if (length(layout) == 0) {
+      if (!all(c("x","y") %in% vertex_attr_names(g))) {
+         layoutG <- layout_with_qfr(g, repulse=3.5);
+         rownames(layoutG) <- V(g)$name;
+         V(g)$x <- layoutG[,1];
+         V(g)$y <- layoutG[,2];
+      }
+   } else if (igrepHas("function", class(layout))) {
+      layoutG <- layout(g);
+      rownames(layoutG) <- V(g)$name;
+      V(g)$x <- layoutG[,1];
+      V(g)$y <- layoutG[,2];
+   } else if (igrepHas("data.*frame|matrix", class(layout))) {
+      if (all(c("x","y") %in% colnames(layout))) {
+         V(g)$x <- layout[,"x"];
+         V(g)$y <- layout[,"y"];
+      } else {
+         V(g)$x <- layout[,1];
+         V(g)$y <- layout[,2];
+      }
+   } else {
+      stop("reorderIgraphNodes() could not determine the layout from the given input.");
+   }
+
+
+   ## comma-delimited neighboring nodes for each node
+   neighborG <- cPaste(lapply(seq_len(vcount(g)), function(v){
+      neighbors(g, v, mode="all");
+   }));
+   names(neighborG) <- V(g)$name;
+   ## Determine which edge groups are present multiple times
+   neighborGct <- tcount(neighborG, minCount=2);
+   if (length(neighborGct) == 0) {
+      if (verbose) {
+         printDebug("reorderIgraphNodes(): ",
+            "found no edge groups, returning input graph unchanged.");
+      }
+      return(g);
+   }
+
+   ## Use one or more vertex attributes for grouping
+   sortAttributes <- intersect(sortAttributes, vertex_attr_names(g));
+   if (length(sortAttributes) == 0) {
+      if (verbose) {
+         printDebug("reorderIgraphNodes(): ",
+            "did not find any matching sortAttributes in the igraph object.");
+      }
+      return(g);
+   }
+   neighborA <- pasteByRow(do.call(cbind, lapply(sortAttributes,
+      function(sortAttribute){
+         j <- (get.vertex.attribute(g, sortAttribute));
+         names(j) <- V(g)$name;
+
+         if (sortAttribute %in% "coloredrect.color") {
+            jString <- sapply(seq_along(j), function(j1){
+               j2 <- matrix(
+                  data=j[[j1]],
+                  nrow=V(g)[j1]$coloredrect.nrow,
+                  byrow=V(g)[j1]$coloredrect.byrow);
+               j3 <- matrix(
+                  data=1*(!j2 %in% c("white","#FFFFFF","transparent")),
+                  nrow=V(g)[j1]$coloredrect.nrow,
+                  byrow=V(g)[j1]$coloredrect.byrow);
+               j3blendByRow <- tryCatch({
+                  apply(j3, 1, blendColors);
+               }, error=function(e) {
+                  ""
+               });
+               paste(c(
+                  rowSums(j3),
+                  j3blendByRow,
+                  pasteByRow(j3, sep=""),
+                  pasteByRow(j2)),
+                  collapse="_")
+            });
+            names(jString) <- V(g)$name;
+            if (verbose) {
+               printDebug("reorderIgraphNodes(): ",
+                  "head(jString):",
+                  head(jString));
+            }
+            jString;
+         } else {
+            if (igrepHas("list", class(j))) {
+               cPaste2(j);
+            } else if (igrepHas("numeric|integer|float", class(j))) {
+               round(j, digits=2);
+            } else {
+               j;
+            }
+         }
+      }
+   )), sep="_");
+
+   ## data.frame with the attribute sort, and the node sort
+   neighborDF <- data.frame(vertex=names(neighborG),
+      edgeGroup=neighborG,
+      sortAttribute=neighborA[names(neighborG)],
+      x=V(g)$x,
+      y=V(g)$y);
+
+   if (verbose) {
+      if (verbose) {
+         printDebug("reorderIgraphNodes(): ",
+            "head(neighborDF):");
+      }
+      ch(head(neighborDF));
+   }
+
+   ## The following code iterates each edge group and reassigns
+   ## layout coordinates from left-to-right
+   ## Bonus points: figure out the coordinates to assign using
+   ## left-to-right logic, but then assign those coordinates
+   ## top-to-bottom.
+   if (verbose) {
+      printDebug("reorderIgraphNodes(): ",
+         "nodeSortBy:",
+         nodeSortBy);
+   }
+   newDF <- rbindList(lapply(names(neighborGct), function(Gname){
+      iDF <- subset(neighborDF, edgeGroup %in% Gname);
+      xyOrder <- mixedSortDF(iDF,
+         byCols=match(nodeSortBy, colnames(iDF)));
+
+      nodeOrder <- mixedSortDF(iDF,
+         byCols=match(c("sortAttribute","vertex"), colnames(iDF)));
+
+      nodeOrder[,c("x","y")] <- xyOrder[,c("x","y")];
+      ## If there are repeated sortAttributes, we use them to place subsets
+      ## of nodes top to bottom within each group of coordinates
+      if (length(tcount(nodeOrder[,"sortAttribute"], minCount=2)) > 0) {
+         nodeOrder <- rbindList(lapply(split(nodeOrder, nodeOrder[,"sortAttribute"]), function(jDF){
+            if (nrow(jDF) > 1) {
+               byCols <- match(rev(nodeSortBy), colnames(jDF));
+               if (nodeSortBy[2] %in% "y") {
+                  #byCols <- byCols * c(-1,1);
+                  byCols <- byCols * c(-1,-1);
+               } else {
+                  byCols <- byCols * c(1,1);
+               }
+               jDFcoord <- mixedSortDF(jDF,
+                  byCols=byCols);
+               jDF[,c("x","y")] <- jDFcoord[,c("x","y")];
+            }
+            jDF;
+         }));
+         rownames(nodeOrder) <- nodeOrder$vertex;
+      }
+      nodeOrder;
+   }));
+   iMatch <- match(newDF$vertex, V(g)$name);
+   V(g)[iMatch]$x <- newDF$x;
+   V(g)[iMatch]$y <- newDF$y;
+   return(g);
 }

@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -77,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -103,7 +115,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>plot function for igraph vertex shape coloredrectangle</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-base.r'><code>R/jamenrich-base.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-igraph.r'><code>R/jamenrich-igraph.r</code></a></small>
     <div class="hidden name"><code>shape.coloredrectangle.plot.Rd</code></div>
     </div>
 
@@ -141,9 +153,9 @@ giving the name of the parameter.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>invisible <code>list</code> of <code>data.frame</code> objects which were
-   used to draw the rectangle objects.
-   However the purpose of this function is the by-product that it
-   draws rectangles onto an igraph graph.</p>
+used to draw the rectangle objects.
+However the purpose of this function is the by-product that it
+draws rectangles onto an igraph graph.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -151,52 +163,52 @@ giving the name of the parameter.</p></td>
 shape coloredrectangle. The coloredrectangle shape is described as:</p>
 <ul>
 <li><p>a vertex drawn as a rectangle, filled with squares which are
-  each individually colored.</p></li>
+each individually colored.</p></li>
 <li><p>the squares are arrayed into a number of columns and rows,
-  which are defined for each vertex using <code>coloredrect.ncol</code> and
-  <code>coloredrect.nrow</code>, respectively.</p></li>
+which are defined for each vertex using <code>coloredrect.ncol</code> and
+<code>coloredrect.nrow</code>, respectively.</p></li>
 <li><p>the vector of colors is arrayed as values of a matrix, therefore
-  <code>coloredrect.byrow</code> is boolean to indicate whether colors should fill
-  the matrix by row, similar to how <code>byrow=TRUE</code> is used.</p></li>
+<code>coloredrect.byrow</code> is logical to indicate whether colors should fill
+the matrix by row, similar to how <code>byrow=TRUE</code> is used.</p></li>
 <li><p>the colors for each vertex are defined by
-  <code>coloredrect.color</code>. When this value does not exist, this function
-  will attempt to use values from <code>pie.color</code> if they exist.</p></li>
+<code>coloredrect.color</code>. When this value does not exist, this function
+will attempt to use values from <code>pie.color</code> if they exist.</p></li>
 <li><p>the size of the rectangle is defined by <code>size2</code>, which is
-  typically the height of a <code>rectangle</code> node. The intent was to use
-  a size parameter which is already convenient, but which does not
-  conflict with the size used for vertex shapes such as <code>'circle'</code>.</p></li>
+typically the height of a <code>rectangle</code> node. The intent was to use
+a size parameter which is already convenient, but which does not
+conflict with the size used for vertex shapes such as <code>"circle"</code>.</p></li>
 <li><p>when a vertex has 3 columns, and 2 rows, and only 5 colors,
-  the colors are not cycled to fill the complete node. Instead, the
-  last color is <code>"transparent"</code> to render no color in that square.</p></li>
+the colors are not cycled to fill the complete node. Instead, the
+last color is <code>"transparent"</code> to render no color in that square.</p></li>
 <li><p>the frame around each node is described with <code>frame.color</code> and
-  <code>frame.lwd</code> which draws one rectangular border around the full
-  vertex. The border around all coloredrect vertices is drawn before the
-  squares are drawn for all coloredrect vertices, so that the border will
-  not overlap the squares. It has the visible effect of showing vertex
-  borders behind the vertex colors, while allowing for vectorized drawing,
-  which is substantially more efficient than per-vertex rendering.
-  The <code><a href='https://www.rdocumentation.org/packages/graphics/topics/symbols'>symbols</a></code> function is used to render rectangles,
-  it accepts only one value for <code>lwd</code> and <code>lty</code>, so rectangles
-  are split by <code>lwd</code> and <code>lty</code> and rendered in order. As a
-  result, if each vertex frame had a different lwd,lty combination, the
-  rendering would effectively be non-vectorized. For large numbers of
-  vertices and distinct lwd values, it would be preferred to reduce the
-  lwd values to limited significant digits (e.g. with
-  <code><a href='https://www.rdocumentation.org/packages/base/topics/Round'>signif(...,digits=2)</a></code>). That said, line width is not an optimal
-  way to convey a quantitative measurement.</p></li>
+<code>frame.lwd</code> which draws one rectangular border around the full
+vertex. The border around all coloredrect vertices is drawn before the
+squares are drawn for all coloredrect vertices, so that the border will
+not overlap the squares. It has the visible effect of showing vertex
+borders behind the vertex colors, while allowing for vectorized drawing,
+which is substantially more efficient than per-vertex rendering.
+The <code><a href='https://www.rdocumentation.org/packages/graphics/topics/symbols'>graphics::symbols()</a></code> function is used to render rectangles,
+it accepts only one value for <code>lwd</code> and <code>lty</code>, so rectangles
+are split by <code>lwd</code> and <code>lty</code> and rendered in order. As a
+result, if each vertex frame had a different lwd,lty combination, the
+rendering would effectively be non-vectorized. For large numbers of
+vertices and distinct lwd values, it would be preferred to reduce the
+lwd values to limited significant digits (e.g. with
+<code><a href='https://www.rdocumentation.org/packages/base/topics/Round'>signif(...,digits=2)</a></code>). That said, line width is not an optimal
+way to convey a quantitative measurement.</p></li>
 <li><p>a colored border can be drawn around each square in the vertex,
-  defined by <code>coloredrect.border</code> and <code>coloredrect.lwd</code>,
-  however it is recommended to use
-  this color only as a visible break, for example the default is
-  <code>"grey30"</code> which draws a simple border. Note that squares are
-  rendered after the vertex frame color, so each square color border will
-  be drawn over (on top of) the frame border.</p></li>
+defined by <code>coloredrect.border</code> and <code>coloredrect.lwd</code>,
+however it is recommended to use
+this color only as a visible break, for example the default is
+<code>"grey30"</code> which draws a simple border. Note that squares are
+rendered after the vertex frame color, so each square color border will
+be drawn over (on top of) the frame border.</p></li>
 <li><p>when <code>coloredrect.ncol</code> does not exist, it will attempt
-  to use two rows of colors if <code>coloredrect.color</code> contains
-  two or more values.</p></li>
+to use two rows of colors if <code>coloredrect.color</code> contains
+two or more values.</p></li>
 <li><p>when <code>coloredrect.nrow</code> does not exist, it will use a value
-  based upon <code>coloredrect.ncol</code> and the length of
-  <code>coloredrect.color</code>.</p></li>
+based upon <code>coloredrect.ncol</code> and the length of
+<code>coloredrect.color</code>.</p></li>
 </ul>
     <p>Currently, the plotting of coloredrectangle vertices does not define
 clipping, which means edges are drawn to the center of each vertex,
@@ -205,11 +217,15 @@ Transparent nodes will therefore show edges beneath them.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>`igraph::shapes()`</p>
-<p>Other jam igraph functions: <code>cnetplotJam</code>,
-  <code>cnetplot_internalJam</code>,
-  <code>igraph2pieGraph</code>,
-  <code>layout_with_qfr</code></p></div>
+    <div class='dont-index'><p><code><a href='https://www.rdocumentation.org/packages/igraph/topics/shapes'>igraph::shapes()</a></code></p>
+<p>Other jam igraph functions: <code><a href='cnet2df.html'>cnet2df</a></code>,
+  <code><a href='cnet2im.html'>cnet2im</a></code>, <code><a href='cnetplotJam.html'>cnetplotJam</a></code>,
+  <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a></code>,
+  <code><a href='drawEllipse.html'>drawEllipse</a></code>, <code><a href='igraph2pieGraph.html'>igraph2pieGraph</a></code>,
+  <code><a href='layout_with_qfr.html'>layout_with_qfr</a></code>,
+  <code><a href='rectifyPiegraph.html'>rectifyPiegraph</a></code>,
+  <code><a href='removeIgraphBlanks.html'>removeIgraphBlanks</a></code>,
+  <code><a href='shape.ellipse.plot.html'>shape.ellipse.plot</a></code>, <code><a href='xyAngle.html'>xyAngle</a></code></p></div>
     
 
   </div>

@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -77,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -115,55 +127,73 @@
 
     <pre class="usage"><span class='fu'>fixSetLabels</span>(<span class='no'>x</span>, <span class='kw'>wrap</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>25</span>, <span class='kw'>maxNchar</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
   <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"..."</span>, <span class='kw'>nodeType</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Set"</span>, <span class='st'>"Gene"</span>, <span class='st'>"any"</span>),
-  <span class='kw'>removeGrep</span> <span class='kw'>=</span> <span class='st'>"^KEGG."</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>adjustCase</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>removeGrep</span> <span class='kw'>=</span> <span class='st'>"^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]"</span>,
+  <span class='kw'>words_from</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"als"</span>, <span class='st'>"ii"</span>, <span class='st'>"iii"</span>, <span class='st'>"iv"</span>, <span class='st'>"v"</span>, <span class='st'>"tgf"</span>, <span class='st'>"nfkb"</span>, <span class='st'>"trna"</span>,
+  <span class='st'>"rrna"</span>, <span class='st'>"mirna"</span>, <span class='st'>"mrna"</span>, <span class='st'>"snrna"</span>, <span class='st'>"snorna"</span>, <span class='st'>"scrna"</span>, <span class='st'>"lincrna"</span>),
+  <span class='kw'>words_to</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"ALS"</span>, <span class='st'>"II"</span>, <span class='st'>"III"</span>, <span class='st'>"IV"</span>, <span class='st'>"V"</span>, <span class='st'>"TGF"</span>, <span class='st'>"NFKB"</span>, <span class='st'>"tRNA"</span>,
+  <span class='st'>"rRNA"</span>, <span class='st'>"miRNA"</span>, <span class='st'>"mRNA"</span>, <span class='st'>"snRNA"</span>, <span class='st'>"snoRNA"</span>, <span class='st'>"scRNA"</span>, <span class='st'>"lincRNA"</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>character vector, or `igraph` object. When an `igraph`
-object is supplied, the `V(g)$name` attribute is used as the
-basis of generating a label, which is then stored as `V(g)$label`.</p></td>
+      <td><p>character vector, or <code>igraph</code> object. When an <code>igraph</code>
+object is supplied, the <code>V(g)$name</code> attribute is used as the
+basis of generating a label, which is then stored as <code>V(g)$label</code>.</p></td>
     </tr>
     <tr>
       <th>wrap</th>
       <td><p>logical indicating whether to apply word wrap, based upon
-the supplied `width` argument.</p></td>
+the supplied <code>width</code> argument.</p></td>
     </tr>
     <tr>
       <th>width</th>
-      <td><p>integer value used when `wrap=TRUE`, it is sent to
-`base::strwrap()`.</p></td>
+      <td><p>integer value used when <code>wrap=TRUE</code>, it is sent to
+<code><a href='https://www.rdocumentation.org/packages/base/topics/strwrap'>base::strwrap()</a></code>.</p></td>
     </tr>
     <tr>
       <th>maxNchar</th>
-      <td><p>numeric value or `Inf` to limit the maximum characters
-allowed for each string. This option is preferred when `wrap=TRUE`
-is not feasible, for example heatmap labels. When `NULL` or `Inf`
-no limit is applied. See `base::nchar()`.</p></td>
+      <td><p>numeric value or <code>Inf</code> to limit the maximum characters
+allowed for each string. This option is preferred when <code>wrap=TRUE</code>
+is not feasible, for example heatmap labels. When <code>NULL</code> or <code>Inf</code>
+no limit is applied. See <code><a href='https://www.rdocumentation.org/packages/base/topics/nchar'>base::nchar()</a></code>.</p></td>
     </tr>
     <tr>
       <th>suffix</th>
-      <td><p>character value used as a suffix when `maxNchar` is used,
+      <td><p>character value used as a suffix when <code>maxNchar</code> is used,
 the string is shortened so that the shortened string and suffix
-values are `maxNchar` characters long. It serves as an indicator
+values are <code>maxNchar</code> characters long. It serves as an indicator
 that the string label has been shortened.</p></td>
     </tr>
     <tr>
       <th>nodeType</th>
       <td><p>character value compared to the vertex attribute
-`"nodeType"` when the input `x` is an `igraph` object. This option
-is used to restrict label changes to certain nodes. When `NULL` or
-`nodeType="any"` then all node labels are updated.</p></td>
+<code>"nodeType"</code> when the input <code>x</code> is an <code>igraph</code> object. This option
+is used to restrict label changes to certain nodes. When <code>NULL</code> or
+<code>nodeType="any"</code> then all node labels are updated.</p></td>
+    </tr>
+    <tr>
+      <th>adjustCase</th>
+      <td><p>logical indicating whether to adjust the uppercase
+and lowercase lettering.</p></td>
     </tr>
     <tr>
       <th>removeGrep</th>
       <td><p>character regular expression pattern used to remove
-patterns from the resulting label. For example, `"^KEGG."` will remove
-the prefix `"KEGG_"` from all MSigDB KEGG pathways, in order to
-shorten the label. Due respect and credit to KEGG for their
-wonderful pathway data.</p></td>
+patterns from the resulting label. The default values remove the
+prefix used in MsigDB canonical pathway names, which is a prefix
+indicating the source of each pathway.</p></td>
+    </tr>
+    <tr>
+      <th>words_from, words_to</th>
+      <td><p>character vectors of words to match
+in case-insensitive manner, to be replaced with fixed-case
+alternatives. It uses perl-based regular expression matching
+in <code><a href='https://www.rdocumentation.org/packages/base/topics/grep'>base::gsub()</a></code>, and the <code>\b</code> expression to enforce a
+word boundary, either via delimiter, whitespace, or the end
+of the string.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -173,7 +203,7 @@ wonderful pathway data.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>vector or igraph object, to match the input `x`.</p>
+    <p>vector or igraph object, to match the input <code>x</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

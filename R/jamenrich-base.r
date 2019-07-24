@@ -65,13 +65,13 @@ enrichDF2enrichResult <- function
  msigdbGmtT=NULL,#msigdbGmtTv50mouse,
  pvalueCutoff=0.15,
  pAdjustMethod="none",
- keyColname="itemsetID",
+ keyColname=c("itemsetID", "ID", "Name", "Pathway"),
  pathGenes="pathGenes",
- geneColname="geneNames",
+ geneColname=c("geneNames", "geneID", "Gene", "Genes"),
  geneHits="geneHits",
- geneRatioColname="GeneRatio",
+ geneRatioColname=c("GeneRatio", "Ratio"),
  geneDelim="[,/ ]+",
- pvalueColname="P-Value",
+ pvalueColname=c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
  verbose=FALSE,
  ...)
 {
@@ -81,15 +81,36 @@ enrichDF2enrichResult <- function
    if (suppressPackageStartupMessages(!require(clusterProfiler))) {
       stop("enrichDF2enrichResult() requires the clusterProfiler package.");
    }
+   ## Find each colname in the input data.frame
+   keyColname <- find_colname(keyColname, enrichDF);
+   pathGenes <- find_colname(pathGenes, enrichDF);
+   geneColname <- find_colname(geneColname, enrichDF);
+   geneHits <- find_colname(geneHits, enrichDF);
+   geneRatioColname <- find_colname(geneRatioColname, enrichDF);
+   pvalueColname <- find_colname(pvalueColname, enrichDF);
+   if (verbose) {
+      printDebug("enrichDF2enrichResult(): ",
+         "Colnames matched in the input data:",
+         "\nkeyColname:", keyColname,
+         "\npathGenes:", pathGenes,
+         "\ngeneColname:", geneColname,
+         "\ngeneHits:", geneHits,
+         "\ngeneRatioColname:", geneRatioColname,
+         "\npvalueColname:", pvalueColname);
+   }
+   if (length(c(keyColname, pvalueColname, geneColname)) < 3) {
+      stop("Could not find c(keyColname, pvalueColname, geneColname) in the input colnames.");
+   }
+
    enrichDF2 <- renameColumn(enrichDF,
       from=c(keyColname, pvalueColname, geneColname),
       to=c("ID", "pvalue", "geneID"));
    enrichDF2[,"p.adjust"] <- enrichDF2[,"pvalue"];
 
    ## Convert gene delimiters all to "/"
-   enrichDF2[,"geneID"] <- gsub(geneDelim,
+   enrichDF2[["geneID"]] <- gsub(geneDelim,
       "/",
-      enrichDF2[,"geneID"]);
+      enrichDF2[["geneID"]]);
 
    ## Validate input colnames
    keyColname <- intersect(keyColname, colnames(enrichDF));
@@ -98,40 +119,60 @@ enrichDF2enrichResult <- function
    geneHits <- intersect(geneHits, colnames(enrichDF));
    geneRatioColname <- intersect(geneRatioColname, colnames(enrichDF));
    pvalueColname <- intersect(pvalueColname, colnames(enrichDF));
-   if (verbose) {
-      printDebug("enrichDF2enrichResult(): ",
-         "keyColname:", keyColname,
-         "\npathGenes:", pathGenes,
-         "\ngeneColname:", geneColname,
-         "\ngeneHits:", geneHits,
-         "\ngeneRatioColname:", geneRatioColname,
-         "\npvalueColname:", pvalueColname);
-   }
 
    if (length(geneRatioColname) > 0) {
-      if (length(geneHits) == 0 ||
-            geneHits == geneRatioColname) {
+      if (length(geneHits) > 0 && geneHits == geneRatioColname) {
+         if (igrepHas("/", enrichDF2[[geneRatioColname]])) {
+            if (verbose) {
+               jamba::printDebug("enrichDF2enrichResult(): ",
+                  "deriving ",
+                  "geneHits",
+                  " from gene ratio ",
+                  geneRatioColname);
+            }
+            geneHits <- "geneHits";
+            enrichDF2[[geneHits]] <- as.numeric(gsub("[/].*$", "",
+               enrichDF2[,geneRatioColname]));
+         } else {
+            geneHits <- NULL;
+         }
+      }
+      if (length(geneHits) == 0) {
          if (verbose) {
             jamba::printDebug("enrichDF2enrichResult(): ",
                "deriving ",
                "geneHits",
-               " from ",
-               "GeneRatio");
+               " by splitting ",
+               "geneID");
          }
          geneHits <- "geneHits";
-         enrichDF2[,geneHits] <- as.numeric(gsub("[/].*$", "",
-            enrichDF2[,geneRatioColname]));
+         enrichDF2[[geneHits]] <- lengths(strsplit(enrichDF2[["geneID"]], "/"));
       }
       if (length(pathGenes) == 0) {
          pathGenes <- "pathGenes";
-         if (verbose) {
-            jamba::printDebug("enrichDF2enrichResult(): ",
-               "deriving pathGenes '",
-               pathGenes,
-               "' from GeneRatio");
+         if (length(geneRatioColname) > 0) {
+            if (verbose) {
+               jamba::printDebug("enrichDF2enrichResult(): ",
+                  "deriving ",
+                  "pathGenes",
+                  " from gene ratio ",
+                  geneRatioColname);
+            }
+            if (igrepHas("/", enrichDF2[[geneRatioColname]])) {
+               enrichDF2[[pathGenes]] <- as.numeric(gsub("^.*[/]", "",
+                  enrichDF2[[geneRatioColname]]));
+            } else if (all(rmNA(enrichDF2[[geneRatioColname]]) <= 1)) {
+               enrichDF2[[pathGenes]] <- enrichDF2[[geneHits]] /
+                  enrichDF2[[geneRatioColname]];
+            } else {
+               if (verbose) {
+                  jamba::printDebug("enrichDF2enrichResult(): ",
+                     "gene ratio did not contain '/' nor values with maximum 1, ",
+                     "therefore no pathGenes values were created.");
+               }
+               pathGenes <- NULL;
+            }
          }
-         enrichDF2[,pathGenes] <- as.numeric(gsub("^.*[/]", "",
-            enrichDF2[,geneRatioColname]));
       }
    } else {
       if (length(geneHits) == 0 || length(pathGenes) == 0) {
@@ -165,7 +206,7 @@ enrichDF2enrichResult <- function
          "class(enrichDF2):", class(enrichDF2));
    }
    enrichDF2a <- dplyr::select(enrichDF2,
-      matches("^ID$"), everything());
+      dplyr::matches("^ID$"), tidyselect::everything());
    enrichDF2 <- enrichDF2a;
    if (verbose) {
       printDebug("enrichList2df(): ",
@@ -223,45 +264,47 @@ enrichDF2enrichResult <- function
 #'
 #' Prepare MultiEnrichMap data from enrichList
 #'
-#' @family jam conversion functions
+#' @family jam enrichment functions
 #'
 #' @export
 multiEnrichMap <- function
 (enrichList,
-geneHitList=NULL,
-colorV=NULL,
-nrow=NULL,
-ncol=NULL,
-byrow=FALSE,
-enrichLabels=NULL,
-subsetSets=NULL,
-overlapThreshold=0.1,
-cutoffRowMinP=0.05,
-enrichBaseline=1.5,
-enrichLens=0,
-enrichNumLimit=4,
-nEM=500,
-topEnrichN=15,
-topEnrichSources=c("Category", "Source"),
-topEnrichCurateFrom=c("CP:.*"),
-topEnrichCurateTo=c("CP"),
-topEnrichSourceSubset=c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
-topEnrichDescriptionGrep=NULL,
-topEnrichNameGrep=NULL,
-GmtTname="msigdbGmtTv50human",
-keyColname="itemsetID",
-geneColname="geneNames",
-pvalueColname="P-value",
-descriptionColname="Description",
-descriptionCurateFrom=c("^Genes annotated by the GO term "),
-descriptionCurateTo=c(""),
-nameColname="Name",
-pathGenes="pathGenes",
-geneHits="geneHits",
-geneDelim="[,/ ]+",
-msigdbGmtT=msigdbGmtTv50human2,
-verbose=FALSE,
-...)
+ geneHitList=NULL,
+ colorV=NULL,
+ nrow=NULL,
+ ncol=NULL,
+ byrow=FALSE,
+ enrichLabels=NULL,
+ subsetSets=NULL,
+ overlapThreshold=0.1,
+ cutoffRowMinP=0.05,
+ enrichBaseline=-log10(cutoffRowMinP),
+ enrichLens=0,
+ enrichNumLimit=4,
+ nEM=500,
+ topEnrichN=15,
+ topEnrichSources=c("Category", "Source"),
+ topEnrichCurateFrom=c("CP:.*"),
+ topEnrichCurateTo=c("CP"),
+ topEnrichSourceSubset=c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
+ topEnrichDescriptionGrep=NULL,
+ topEnrichNameGrep=NULL,
+ keyColname=c("ID", "itemsetID"),
+ nameColname=c("ID", "Name", "itemsetID"),
+ geneColname=c("geneID", "geneNames", "Genes"),
+ pvalueColname=c("P-value", "pvalue", "Pval"),
+ descriptionColname=c("Description", "Name", "Pathway"),
+ descriptionCurateFrom=c("^Genes annotated by the GO term "),
+ descriptionCurateTo=c(""),
+ pathGenes=c("setSize", "pathGenes"),
+ geneHits=c("Count", "geneHits"),
+ geneDelim="[,/ ]+",
+ GmtTname=NULL,
+ #GmtTname="msigdbGmtTv50human",
+ msigdbGmtT=NULL,
+ #msigdbGmtT=msigdbGmtTv50human2,
+ verbose=FALSE,
+ ...)
 {
    ## Purpose is to create a multiEnrichMap object
    ##
@@ -341,6 +384,24 @@ verbose=FALSE,
    ## Define some default colnames
    #nameColname <- "Name";
    #geneColname <- "geneNames";
+   iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
+   keyColname <- find_colname(keyColname, iDF1);
+   geneColname <- find_colname(geneColname, iDF1);
+   pvalueColname <- find_colname(pvalueColname, iDF1);
+   descriptionColname <- find_colname(descriptionColname, iDF1);
+   nameColname <- find_colname(nameColname, iDF1);
+   if (verbose) {
+      printDebug("multiEnrichMap(): ",
+         "keyColname:", keyColname);
+      printDebug("multiEnrichMap(): ",
+         "nameColname:", nameColname);
+      printDebug("multiEnrichMap(): ",
+         "geneColname:", geneColname);
+      printDebug("multiEnrichMap(): ",
+         "pvalueColname:", pvalueColname);
+      printDebug("multiEnrichMap(): ",
+         "descriptionColname:", descriptionColname);
+   }
 
    ## Add some basic information
    if (length(enrichLabels) == 0) {
@@ -427,17 +488,31 @@ verbose=FALSE,
          printDebug("multiEnrichMap(): ",
             "running topEnrichBySource().");
       }
-      enrichList <- lapply(enrichList, function(iDF){
-         iDFtop <- topEnrichBySource(iDF,
-            sourceColnames=topEnrichSources,
-            n=topEnrichN,
-            descriptionGrep=topEnrichDescriptionGrep,
-            nameGrep=topEnrichNameGrep,
-            curateFrom=topEnrichCurateFrom,
-            curateTo=topEnrichCurateTo,
-            sourceSubset=topEnrichSourceSubset);
-         iDFtop;
-      });
+      enrichList <- topEnrichListBySource(enrichList,
+         n=topEnrichN,
+         sourceColnames=topEnrichSources,
+         curateFrom=topEnrichCurateFrom,
+         curateTo=topEnrichCurateTo,
+         sourceSubset=topEnrichSourceSubset,
+         descriptionGrep=topEnrichDescriptionGrep,
+         nameGrep=topEnrichNameGrep);
+      if (1 == 2) {
+         enrichList <- lapply(enrichList, function(iDF){
+            iDFtop <- topEnrichBySource(iDF,
+               n=topEnrichN,
+               sourceColnames=topEnrichSources,
+               sortColname=c(pvalueColname, paste0("-", geneHits)),
+               curateFrom=topEnrichCurateFrom,
+               curateTo=topEnrichCurateTo,
+               sourceSubset=topEnrichSourceSubset,
+               descriptionColname=descriptionColname,
+               nameColname=nameColname,
+               descriptionGrep=topEnrichDescriptionGrep,
+               nameGrep=topEnrichNameGrep,
+               verbose=verbose);
+            iDFtop;
+         });
+      }
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "dims after topEnrichBySource():");
@@ -515,7 +590,7 @@ verbose=FALSE,
    if (verbose) {
       printDebug("multiEnrichMap(): ",
          "head(enrichIM):");
-      ch(head(enrichIM));
+      print(head(enrichIM));
       #printDebug("multiEnrichMap(): ",
       #   "head(enrichIMM[,useCols]):");
       #ch(head(enrichIMM[,useCols]));
@@ -585,7 +660,7 @@ verbose=FALSE,
 
    #####################################################################
    ## Subset for at least one significant enrichment P-value
-   i1use <- rownames(enrichIMM)[(rowMins(enrichIMM[,useCols], na.rm=TRUE) <= cutoffRowMinP)];
+   i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols], na.rm=TRUE) <= cutoffRowMinP)];
    if (verbose) {
       printDebug("multiEnrichMap(): ",
          "nrow(enrichIM):",
@@ -612,7 +687,7 @@ verbose=FALSE,
       if (verbose) {
          printDebug("multiEnrichMap(): ",
             "dims after filtering minimum P-value():");
-         print(sdim(enrichList), Inf);
+         print(sdim(enrichList));
       }
       ## Now circle back and subset the enrichIM and enrichIMcolors rows
       enrichIM <- enrichIM[i1use,,drop=FALSE];
@@ -654,10 +729,10 @@ verbose=FALSE,
       }
       descriptionColnameFull <- paste0(descriptionColname, "Full");
       enrichDF[,descriptionColnameFull] <- enrichDF[,descriptionColname];
-      enrichDF[,descriptionColname] <- memAdjustLabel(
-         x=enrichDF[,descriptionColname],
-         descriptionCurateFrom=descriptionCurateFrom,
-         descriptionCurateTo=descriptionCurateTo);
+      #enrichDF[,descriptionColname] <- memAdjustLabel(
+      #   x=enrichDF[,descriptionColname],
+      #   descriptionCurateFrom=descriptionCurateFrom,
+      #   descriptionCurateTo=descriptionCurateTo);
    }
 
    #####################################################################
@@ -715,6 +790,8 @@ verbose=FALSE,
       nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
       vertex.label.cex=0.5,
       verbose=verbose);
+   V(enrichEM)$size <- (normScale(V(enrichEM)$size) + 0.3) * 8;
+
    mem$multiEnrichMap <- enrichEM;
 
    ## Convert EnrichMap to piegraph
@@ -739,6 +816,7 @@ verbose=FALSE,
       nrow=nrow,
       ncol=ncol,
       byrow=byrow);
+   V(enrichEMpieUseSub2)$size <- (normScale(V(enrichEMpieUseSub2)$size) + 0.3) * 6;
    mem$multiEnrichMap2 <- enrichEMpieUseSub2;
 
    #######################################################
@@ -887,10 +965,10 @@ enrichList2IM <- function
 #' @export
 enrichList2df <- function
 (enrichList,
- keyColname="itemsetID",
- geneColname="geneNames",
- geneCountColname="geneCount",
- pvalueColname="P-value",
+ keyColname=c("itemsetID","ID","Name"),
+ geneColname=c("geneNames", "Genes"),
+ geneCountColname=c("geneCount", "geneHits", "Count"),
+ pvalueColname=c("P-value", "pvalue", "Pval"),
  pvalueFloor=1e-200,
  msigdbGmtT=NULL,
  verbose=FALSE,
@@ -901,7 +979,15 @@ enrichList2df <- function
    if (!suppressPackageStartupMessages(require(matrixStats))) {
       stop("enrichList2df() requires the matrixStats package.");
    }
+   iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
+   keyColname <- find_colname(keyColname, iDF1);
+   geneColname <- find_colname(geneColname, iDF1);
+   geneCountColname <- find_colname(geneCountColname, iDF1);
+   pvalueColname <- find_colname(pvalueColname, iDF1);
    if (verbose) {
+      printDebug("enrichList2df(): ",
+         "colnames(iDF1):",
+         colnames(iDF1));
       printDebug("enrichList2df(): ",
          "keyColname:",
          keyColname);
@@ -982,9 +1068,9 @@ enrichList2df <- function
       }));
       if (useType %in% "lo") {
          enrichIMP[enrichIMP == 0] <- 1;
-         nameVector(rowMins(enrichIMP), rownames(enrichIMP));
+         nameVector(matrixStats::rowMins(enrichIMP), rownames(enrichIMP));
       } else if (useType %in% "hi") {
-         nameVector(rowMaxs(enrichIMP), rownames(enrichIMP));
+         nameVector(matrixStats::rowMaxs(enrichIMP), rownames(enrichIMP));
       }
    }));
    if (verbose) {
@@ -1063,12 +1149,20 @@ enrichList2df <- function
       to=keyColname);
    for (iName in names(enrichList)) {
       iDF <- enrichList[[iName]];
+      if (verbose) {
+         printDebug("iName:", iName);
+         printDebug("dim(iDF):", dim(iDF));
+      }
       keyVals <- iDF[,keyColname];
       keyValsUse <- setdiff(keyVals, rmNA(keepColDF[,keyColname]));
       if (verbose) {
          printDebug("iName:", iName,
             ", length(keyVals):", length(keyVals),
             ", length(keyValsUse):", length(keyValsUse));
+         printDebug("head(iDF):");
+         print(head(iDF));
+         printDebug("head(keepColDF):");
+         print(head(keepColDF));
       }
       if (length(keyValsUse) > 0) {
          keepColDF[keyValsUse,keyColname] <- keyValsUse;
@@ -1087,11 +1181,15 @@ enrichList2df <- function
          keepColDF=keepColDF));
    }
 
-   enrichDF <- data.frame(check.names=FALSE, stringsAsFactors=FALSE,
-      enrichValuesM, keepColDF, as.data.frame(enrichGeneVL));
-   whichCol1 <- max(which(colnames(enrichDF) %in% names(enrichCols))) + 1;
-   enrichDF <- insertDFcols(enrichDF, colnum=whichCol1,
-      insertDF=data.frame(allGeneHits=enrichGeneLen));
+   enrichDF <- data.frame(check.names=FALSE,
+      stringsAsFactors=FALSE,
+      enrichValuesM,
+      keepColDF,
+      as.data.frame(enrichGeneVL));
+   enrichDF[["allGeneHits"]] <- enrichGeneLen;
+   #whichCol1 <- max(which(colnames(enrichDF) %in% names(enrichCols))) + 1;
+   #enrichDF <- insertDFcols(enrichDF, colnum=whichCol1,
+   #   insertDF=data.frame(allGeneHits=enrichGeneLen));
    enrichDF;
 }
 
@@ -1477,208 +1575,6 @@ subsetCnetIgraph <- function
    return(gCnet);
 }
 
-#' Remove igraph blank wedges
-#'
-#' Remove igraph blank wedges
-#'
-#' This function is intended to affect nodes with shapes `"pie"` or
-#' `"coloredrectangle"`, and evaluates the vertex attributes
-#' `"coloredrect.color"` and `"pie.color"`. For each node, any colors
-#' considered blank are removed, along with corresponding values in
-#' related vertex attributes, including `"pie","pie.value","pie.names"`,
-#' `"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"`.
-#'
-#' This function calls `isColorBlank()` to determine which colors are
-#' blank.
-#'
-#' This function is originally intended to follow `igraph2pieGraph()` which
-#' assigns colors to pie and coloredrectangle attributes, where missing
-#' values or values of zero are often given a "blank" color. To enhance the
-#' resulting node coloration, these blank colors can be removed in order to
-#' make the remaining colors more visibly distinct.
-#'
-#' @param g igraph object containing one or more attributes from
-#'    `"pie.color"` or `"coloredrect.color"`.
-#' @inheritParams isColorBlank
-#' @param constrain character value indicating for node shape
-#'    `"coloredrectangle"` whether to constrain the `"coloredrect.nrow"`
-#'    or `"coloredrect.ncol"` values. When `"none"` the nrow is usually
-#'    dropped to nrow=1 whenever colors are removed.
-#' @param resizeNodes logical indicating whether to resize the resulting
-#'    nodes to maintain roughly proportional size to the number of
-#'    colored wedges.
-#' @param applyToPie logical indicating whether to apply the logic to
-#'    nodes with shape `"pie"`.
-#' @param verbose logical indicating whether to print verbose output.
-#'
-#' @export
-removeIgraphBlanks <- function
-(g,
- blankColor=c("#FFFFFF","#FFFFFFFF","transparent"),
- c_max=7,
- l_min=95,
- alpha_max=0.1,
- constrain=c("nrow","ncol","none"),
- resizeNodes=TRUE,
- applyToPie=TRUE,
- verbose=FALSE,
- ...)
-{
-   ## Remove white from Cnet multinodes
-   ##
-   ## resizeNodes will proportionally resize nodes based upon the
-   ## resulting ncol and nrow.
-   ##
-   ## 14jun2018: changed to use isColorBlank() helper function,
-   ## which helps encapsulate logic regarding nearly-white colors,
-   ## and almost fully transparent colors, both of which are intended
-   ## to be considered blank for the purposes of this function
-   ##
-   ## TODO: iterate pie nodes
-
-   constrain <- match.arg(constrain);
-   #ixV <- which(V(g)$shape %in% "coloredrectangle");
-   ixV <- which(lengths(V(g)$coloredrect.color) > 0);
-
-   if ("coloredrect.color" %in% list.vertex.attributes(g)) {
-      if (verbose) {
-         printDebug("removeIgraphBlanks(): ",
-            "Iterating coloredrect nodes.");
-      }
-      for (ix in ixV) {
-         ## make a color matrix with appropriate dimensions
-         ##
-         ## First check if any colors are blank colors
-         vcc1 <- V(g)[ix]$coloredrect.color[[1]];
-         vcc1blank <- isColorBlank(vcc1,
-            blankColor=blankColor,
-            c_max=c_max,
-            l_min=l_min,
-            alpha_max=alpha_max,
-            ...);
-         if (any(vcc1blank)) {
-            if (constrain %in% "nrow") {
-               vcc1m <- matrix(data=vcc1,
-                  byrow=V(g)[ix]$coloredrect.byrow,
-                  ncol=V(g)[ix]$coloredrect.ncol);
-               #vcc1mBlank <- colMaxs(1*matrix(data=!vcc1 %in% blankColor,
-               vcc1mBlank <- colMaxs(1*matrix(data=!vcc1blank,
-                  byrow=V(g)[ix]$coloredrect.byrow,
-                  ncol=V(g)[ix]$coloredrect.ncol))>0;
-               vcc1m <- vcc1m[,vcc1mBlank,drop=FALSE];
-            } else if (contrain %in% "ncol") {
-               ## Constrain ncol
-               vcc1 <- V(g)[ix]$coloredrect.color[[1]];
-               vcc1m <- matrix(data=vcc1,
-                  byrow=V(g)[ix]$coloredrect.byrow,
-                  ncol=V(g)[ix]$coloredrect.ncol);
-               vcc1mBlank <- rowMaxs(1*matrix(data=!vcc1blank,
-                  byrow=V(g)[ix]$coloredrect.byrow,
-                  ncol=V(g)[ix]$coloredrect.ncol))>0;
-               vcc1m <- vcc1m[vcc1mBlank,,drop=FALSE];
-            }
-            if (!constrain %in% "none") {
-               V(g)[ix]$coloredrect.ncol <- ncol(vcc1m);
-               V(g)[ix]$coloredrect.nrow <- nrow(vcc1m);
-               if (V(g)[ix]$coloredrect.byrow) {
-                  vcc1new <- as.vector(t(vcc1m));
-               } else {
-                  vcc1new <- as.vector(vcc1m);
-               }
-               V(g)[ix]$coloredrect.color <- list(vcc1new);
-            } else {
-               #vcc <- setdiff(vcc1, blankColor);
-               vcc <- vcc[!vcc1blank];
-               if (length(vcc) > 0 && length(vcc) < length(vcc1)) {
-                  if (verbose) {
-                     printDebug("removeCnetBlanks(): ",
-                        ix);
-                  }
-                  V(g)[ix]$coloredrect.color <- list(vcc);
-                  if (V(g)[ix]$coloredrect.ncol == 1) {
-                     V(g)[ix]$coloredrect.nrow <- length(vcc);
-                     V(g)[ix]$coloredrect.ncol <- 1;
-                  } else {
-                     V(g)[ix]$coloredrect.ncol <- length(vcc);
-                     V(g)[ix]$coloredrect.nrow <- 1;
-                  }
-               }
-            }
-         }
-      }
-
-      ## Now resize coloredrectangle size2 values
-      ## so each square is constant size relative to
-      ## its expected node size
-      if (resizeNodes) {
-         if (verbose) {
-            printDebug("removeIgraphBlanks(): ",
-               "Resizing coloredrect nodes.");
-         }
-         ## Make multi-segment gene nodes wider
-         iG2 <- which(V(g)$coloredrect.ncol > 1 |
-               V(g)$coloredrect.nrow > 1 &
-               V(g)$shape %in% "coloredrectangle");
-         maxNcol <- max(rmNA(unlist(V(g)[iG2]$coloredrect.ncol)));
-         maxNrow <- max(rmNA(unlist(V(g)[iG2]$coloredrect.nrow)));
-         if (length(iG2) > 0) {
-            V(g)[iG2]$size2 <- (
-               2 *
-                  V(g)[iG2]$size *
-                  V(g)[iG2]$coloredrect.ncol /
-                  maxNcol
-            );
-         }
-      }
-   }
-
-   ## TODO: iterate pie nodes
-   if (applyToPie) {
-      if (verbose) {
-         printDebug("removeIgraphBlanks(): ",
-            "Iterating pie nodes.");
-      }
-      ## Adjust pie values
-      V(g)$pie <- lapply(seq_along(V(g)$pie), function(i){
-         iPie <- V(g)[[i]]$pie;
-         iPieColor <- V(g)[[i]]$pie.color;
-         iPie[!isColorBlank(iPieColor,
-            blankColor=blankColor,
-            c_max=c_max,
-            l_min=l_min,
-            alpha_max=alpha_max,
-            ...)];
-      });
-      V(g)$pie.value <- lapply(seq_along(V(g)$pie.value), function(i){
-         iPie <- V(g)[[i]]$pie.value;
-         iPieColor <- V(g)[[i]]$pie.color;
-         iPie[!isColorBlank(iPieColor,
-            blankColor=blankColor,
-            c_max=c_max,
-            l_min=l_min,
-            alpha_max=alpha_max,
-            ...)];
-      });
-      ## Adjust pie colors
-      V(g)$pie.color <- lapply(V(g)$pie.color, function(i){
-         #removeBlankColors(i,
-         #   blankColor=blankColor,
-         #   c_max=c_max,
-         #   l_min=l_min,
-         #   alpha_max=alpha_max,
-         #   ...);
-         i[!isColorBlank(i,
-            blankColor=blankColor,
-            c_max=c_max,
-            l_min=l_min,
-            alpha_max=alpha_max,
-            ...)];
-      });
-   }
-
-   return(g);
-}
-
 #' Determine if colors are blank colors
 #'
 #' Determine if colors are blank colors
@@ -1745,13 +1641,30 @@ isColorBlank <- function
    if (length(c_max) != 1) {
       l_min <- 0;
    }
+   ## handle x input as list
+   x_names <- names(x);
+   is_list <- FALSE;
+   if ("list" %in% class(x)) {
+      is_list <- TRUE;
+      x_len <- lengths(x);
+      ## Note unname(x) is used to drop parent names,
+      ## and maintain child vector names if they exist.
+      x <- unlist(unname(x));
+   }
 
    ## apply logic
    isBlank <- (is.na(x) |
          (tolower(x) %in% tolower(blankColor)) |
-         (col2hcl(x)["C",] <= c_max & col2hcl(x)["L",] >= l_min) |
-         col2alpha(x) <= alpha_max);
-   names(isBlank) <- names(x);
+         (jamba::col2hcl(x)["C",] <= c_max & jamba::col2hcl(x)["L",] >= l_min) |
+         jamba::col2alpha(x) <= alpha_max);
+
+   ## handle list input
+   if (is_list) {
+      isBlank <- split(isBlank,
+         rep(seq_along(x_len), x_len));
+   }
+
+   names(isBlank) <- x_names;
    return(isBlank);
 }
 
@@ -1893,4 +1806,327 @@ fixSetLabels <- function
       x <- xNew;
    }
    return(x);
+}
+
+
+
+#' Subset enrichList for top enrichment results by source
+#'
+#' Subset enrichList for top enrichment results by source
+#'
+#' This function takes one `enrichResult` object, or
+#' a `data.frame` of enrichment results, and determines the
+#' top `n` number of pathways sorted by P-values, within
+#' each pathway source.
+#'
+#' It is particularly effective with results from MSigDB
+#' (http://software.broadinstitute.org/gsea/msigdb/index.jsp)
+#' which contains gene sets from a large number of very
+#' different sources -- which therefore impart different
+#' characteristics on the enrichment results. Notably,
+#' certain sources contain small gene sets, which
+#' produce enrichment P-values in a different possible
+#' range than other sources which provide much larger
+#' gene sets.
+#'
+#' @return `data.frame` subsetted by the given parameters.
+#'
+#' @family jam enrichment functions
+#'
+#' @param enrichDF `data.frame` containing enrichment results.
+#' @param sourceColnames character vector of colnames in
+#'    `enrichDF` to consider as the `"Source"`. Multiple
+#'    columns will be combined using delimiter argument
+#'    `sourceSep`. When `sourceColnames` is NULL or
+#'    contains no `colnames(enrichDF)`, then data
+#'    is considered `"All"`.
+#' @param sortColname character vector indicating the colnames
+#'    to use to sort data, prior to selecting the top `n`
+#'    results by source. This argument is passed to
+#'    `jamba::mixedSortDF(x, byCols=sortColname)`. Columns
+#'    can be sorted in reverse order by using the prefix `"-"`,
+#'    as described in `jamba::mixedSortDF()`.
+#' @param newColname new column name to use when `sourceColname`
+#'    contains multiple values.
+#' @param curateFrom,curateTo character vectors with
+#'    pattern,replacement values, passed to `gsubs()`
+#'    to allow some editing of values. The default values
+#'    convert MSigDB canonical pathways from the prefix `"CP:"`
+#'    to use `"CP"` which has the effect of combining all
+#'    canonical pathways before selecting the top `n` results.
+#' @param sourceSubset character vector with a subset of
+#'    sources to retain. This filter is applied after
+#'    `sourceColname` values are combined with delimiter
+#'    `sourceSep` if there are multiple colnames in `sourceColname`.
+#' @param sourceSep character string used as a delimiter
+#'    when `sourceColname` contains multiple colnames.
+#' @param descriptionColname,nameColname character vectors
+#'    indicating the colnames to consider description and name,
+#'    as returned from `find_colname()`. These arguments are
+#'    used only when `descriptionGrep` or `nameGrep` are
+#'    supplied.
+#' @param descriptionGrep,nameGrep character vector of patterns, used
+#'    to filter pathways to those matching one or more patterns.
+#'    This argument is used to help extract a specific subset
+#'    of pathways of interest using keywords.
+#'    The `descriptionGrep` argument searches only colname `"Description"`.
+#'    The `nameGrep` argument searches only colname `"Name"`.
+#' @param verbose logical indicating whether to print verbose output.
+#'
+#' @export
+topEnrichBySource <- function
+(enrichDF,
+ n=15,
+ sourceColnames=c("Category","Source"),
+ sortColname=c("P-value", "-geneHits"),
+ newColname="EnrichGroup",
+ curateFrom=c("CP:.*"),
+ curateTo=c("CP"),
+ sourceSubset=NULL,
+ sourceSep="_",
+ descriptionColname=c("Description", "Name", "Pathway"),
+ nameColname=c("ID", "Name"),
+ descriptionGrep=NULL,
+ nameGrep=NULL,
+ verbose=FALSE,
+...)
+{
+   ## Purpose is to take a data.frame of pathway enrichment, split the results
+   ## by values in sourceColnames, and return the top n rows from each
+   ## group.
+   ##
+   ## Data is sorted using sortColname, prior to selecting the top n rows.
+   ## To reverse the sort order, use a prefix "-" to the colname, e.g.
+   ## sortColname <- c("P-value","-geneHits")
+   ##
+   ## If sourceSubset is supplied, it will return only results from
+   ## source groups with these names, using names derived from:
+   ## pasteByRow(sourceColnames, sep=sourceSep).
+   ##
+   ## If supplied, curateFrom and curateTo are a vector of gsub(from, to, ...)
+   ## arguments, which are processed sequentially. The defaults will change
+   ## "CP:REACTOME" and "CP:KEGG" to "CP". These substitutions should allow
+   ## changing the sourceColnames values so they can be grouped in an
+   ## appropriate way.
+   ##
+   ## newColname is the colname of a new column to add to the data.frame,
+   ## indicating the sourceColname value used for grouping rows.
+   ## If newColname is NULL, no new column is added to the data.frame.
+   ##
+   ## Results are returned as one data.frame, ordered by the sourceColnames
+   ## groups, in order they appear in sourceSubset, or the order they appear
+   ## after the split() function. That is, you must sort by P-value downstream
+   ## if you wish data to be ordered by P-value.
+   ##
+   ## descriptionGrep is optionally used to pull out a subset of pathways
+   ## whose name matches the grep pattern
+   ##
+   ## nameGrep is optionally used to pull out a subset of pathways
+   ## whose name matches the grep pattern
+   ##
+   ## Tip: To see the available sourceColnames values, supply a false
+   ## sourceSubset, which will cause an error message that prints the
+   ## possible values.
+   ##
+
+   ## First convert enrichResult class to data.frame if needed
+   if (igrepHas("enrichResult", class(enrichDF))) {
+      enrichDF <- enrichDF@result;
+      if (!"Name" %in% colnames(enrichDF)) {
+         enrichDF[,"Name"] <- enrichDF[,"ID"];
+      }
+   }
+
+   ## Validate colnames
+   sourceColnames <- find_colname(sourceColnames, enrichDF);
+   descriptionColname <- find_colname(descriptionColname, enrichDF);
+   nameColname <- find_colname(nameColname, enrichDF);
+
+   ## Optionally determine column sort order
+   if (length(sortColname) > 0) {
+      enrichDF <- mixedSortDF(enrichDF,
+         byCols=sortColname,
+         ...);
+   }
+
+   if (length(sourceColnames) == 0) {
+      iDFsplit <- rep("All", length.out=nrow(enrichDF));
+      sourceSubset <- NULL;
+   } else if (length(sourceColnames) == 1) {
+      iDFsplit <- enrichDF[[sourceColnames]];
+   } else {
+      iDFsplit <- pasteByRow(sep=sourceSep,
+         enrichDF[,sourceColnames,drop=FALSE]);
+   }
+   if (length(curateFrom) > 0) {
+      iDFsplit <- gsubs(curateFrom,
+         curateTo,
+         iDFsplit,
+         ...);
+   }
+
+   ## Optionally add grouping value to the input data.frame
+   if (length(newColname) > 0) {
+      newColname <- head(newColname, 1);
+      enrichDF[[newColname]] <- iDFsplit;
+   }
+
+   if (verbose) {
+      jamba::printDebug("topEnrichBySource(): ",
+         "table(iDFsplit) before subsetting:");
+      print(table(iDFsplit));
+   }
+
+   ## Split the data.frame in a list
+   if (length(sourceSubset) == 0 || all(nchar(sourceSubset) == 0)) {
+      sourceSubset <- levels(factor(iDFsplit));
+   } else {
+      if (!any(sourceSubset %in% iDFsplit)) {
+         jamba::printDebug("topEnrichBySource(): ",
+            "sourceSubset:",
+            paste0("'", sourceSubset, "'"),
+            " does not match values from sourceColnames:\n   ",
+            paste0("'", levels(factor(iDFsplit)), "'"),
+            sep="\n   ");
+         print(sourceSubset);
+         stop("topEnrichBySource() failed due to sourceSubset mismatch.");
+      }
+      sourceSubset <- intersect(sourceSubset, iDFsplit);
+      enrichDF <- subset(enrichDF, iDFsplit %in% sourceSubset);
+      iDFsplit <- iDFsplit[iDFsplit %in% sourceSubset];
+   }
+   iDFsplitL <- split(enrichDF, iDFsplit);
+
+   iDFtopL <- lapply(jamba::nameVectorN(iDFsplitL), function(iSubset){
+      iDFsub <- iDFsplitL[[iSubset]];
+      if (length(descriptionColname) > 0 && length(descriptionGrep) > 0 && nrow(iDFsub) > 0) {
+         descr_keep_vals <- provigrep(descriptionGrep,
+            iDFsub[[descriptionColname]]);
+         if (length(descr_keep_vals) > 0) {
+            descr_keep <- (iDFsub[[descriptionColname]] %in% descr_keep_vals);
+         } else {
+            descr_keep <- rep(FALSE, nrow(iDFsub))
+         }
+      } else {
+         descr_keep <- rep(TRUE, nrow(iDFsub))
+      }
+      if (length(nameColname) > 0 && length(nameGrep) > 0 && nrow(iDFsub) > 0) {
+         name_keep_vals <- provigrep(nameGrep,
+            iDFsub[[nameColname]]);
+         if (length(descr_keep_vals) > 0) {
+            name_keep <- (iDFsub[[nameColname]] %in% name_keep_vals);
+         } else {
+            name_keep <- rep(FALSE, nrow(iDFsub))
+         }
+      } else {
+         name_keep <- rep(TRUE, nrow(iDFsub))
+      }
+      rows_keep <- (descr_keep | name_keep);
+      if (any(!rows_keep)) {
+         iDFsub <- sub(iDFsub, rows_keep);
+      }
+      iDFtop <- head(iDFsub, n);
+      iDFtop;
+   });
+   data.frame(rbindList(iDFtopL),
+      check.names=FALSE,
+      stringsAsFactors=FALSE);
+}
+
+
+#' Subset enrichList for top enrichment results by source
+#'
+#' Subset enrichList for top enrichment results by source
+#'
+#' This function extends `topEnrichBySource()` by applying
+#' consistent filters to each `enrichList` entry. The purpose
+#' of this function is to generate an overall set of pathways
+#' to return from any one or more enrichment results. Then
+#' apply that filter consistently across all enrichment results.
+#'
+#' For example, if `"Pathway A"` is the top `n` enriched
+#' pathway in `enrichList[[1]]`, then `"Pathway A"` will be included
+#' for every entry in `enrichList`, even when `"Pathway A"` is
+#' not significant in `enrichList[[2]]`. The purpose is to allow
+#' comparison of enrichment results when a pathway meets the
+#' filter criteria in any one entry in `enrichList`.
+#'
+#' @param enrichList `list` of `enrichDF` entries, each passed
+#'    to `topEnrichBySource()`.
+#' @inheritParams topEnrichBySource
+#'
+#' @export
+topEnrichListBySource <- function
+(enrichList,
+ n=15,
+ sourceColnames=c("Category","Source"),
+ sortColname=c("P-value", "-geneHits"),
+ newColname="EnrichGroup",
+ curateFrom=c("CP:.*"),
+ curateTo=c("CP"),
+ sourceSubset=NULL,
+ sourceSep="_",
+ descriptionColname=c("Description", "Name", "Pathway"),
+ nameColname=c("ID", "Name"),
+ descriptionGrep=NULL,
+ nameGrep=NULL,
+ verbose=TRUE,
+ ...)
+{
+   ## Purpose is to extend topEnrichBySource() in an important way when
+   ## dealing with a list of enrichment results, that it does one full
+   ## pass through all enrichment results to determine individual
+   ## pathways, then a second pass through each source using the shared
+   ## consistent set of pathways.
+
+   ## First create the subset for each enrichment result individually
+   enrichLsub <- lapply(nameVectorN(enrichList), function(iName){
+      if (verbose) {
+         printDebug("topEnrichListBySource(): ",
+            "iName:",
+            iName);
+      }
+      iDF <- enrichList[[iName]];
+      iDFsub <- topEnrichBySource(iDF,
+         n=n,
+         sourceColnames=sourceColnames,
+         sortColname=sortColname,
+         newColname=newColname,
+         curateFrom=curateFrom,
+         curateTo=curateTo,
+         sourceSubset=sourceSubset,
+         sourceSep=sourceSep,
+         descriptionColname=descriptionColname,
+         nameColname=nameColname,
+         descriptionGrep=descriptionGrep,
+         nameGrep=nameGrep,
+         verbose=FALSE,
+         ...);
+      iDFsub$Name;
+   });
+   enrichNames <- unique(unlist(enrichLsub));
+   if (verbose) {
+      printDebug("topEnrichListBySource(): ",
+         "length(enrichNames):",
+         formatInt(length(enrichNames)));
+   }
+
+   ## Step two, combine
+   enrichLsubL <- lapply(nameVectorN(enrichList), function(iName){
+      if (verbose) {
+         printDebug("topEnrichListBySource(): ",
+            "iName:",
+            iName);
+      }
+      iDF <- enrichList[[iName]];
+      if (igrepHas("enrichResult", class(iDF))) {
+         iDF <- iDF@result;
+         if (!"Name" %in% colnames(iDF)) {
+            iDF[,"Name"] <- iDF[,"ID"];
+         }
+      }
+      iDFsub <- subset(iDF, Name %in% enrichNames);
+      iDFsub;
+   });
+   enrichLsubL;
 }

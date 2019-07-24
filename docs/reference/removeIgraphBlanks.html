@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -77,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -103,7 +115,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Remove igraph blank wedges</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-base.r'><code>R/jamenrich-base.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-igraph.r'><code>R/jamenrich-igraph.r</code></a></small>
     <div class="hidden name"><code>removeIgraphBlanks.Rd</code></div>
     </div>
 
@@ -116,7 +128,8 @@
     <pre class="usage"><span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>blankColor</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"#FFFFFF"</span>, <span class='st'>"#FFFFFFFF"</span>,
   <span class='st'>"transparent"</span>), <span class='kw'>c_max</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>l_min</span> <span class='kw'>=</span> <span class='fl'>95</span>, <span class='kw'>alpha_max</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
   <span class='kw'>constrain</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"nrow"</span>, <span class='st'>"ncol"</span>, <span class='st'>"none"</span>), <span class='kw'>resizeNodes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>applyToPie</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>applyToPie</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>pieAttrs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"pie"</span>, <span class='st'>"pie.value"</span>, <span class='st'>"pie.names"</span>,
+  <span class='st'>"pie.color"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -124,13 +137,37 @@
     <tr>
       <th>g</th>
       <td><p>igraph object containing one or more attributes from
-`"pie.color"` or `"coloredrect.color"`.</p></td>
+<code>"pie.color"</code> or <code>"coloredrect.color"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>blankColor</th>
+      <td><p>character vector of R colors directly matched to
+the input <code>x</code> vector. The value <code>"transparent"</code> is useful here,
+because it is not easily converted to HCL color space.</p></td>
+    </tr>
+    <tr>
+      <th>c_max</th>
+      <td><p>maximum chroma as determined by HCL color space, in
+range of no color 0 to maximum color 100.</p></td>
+    </tr>
+    <tr>
+      <th>l_min</th>
+      <td><p>numeric minimum luminance required for a color to be
+considered blank, combined with the <code>c_max</code> argument. This
+threshold prevents grey colors from being considered blank,
+unless their luminance is above this threshold.</p></td>
+    </tr>
+    <tr>
+      <th>alpha_max</th>
+      <td><p>numeric value indicating the alpha transparency
+below which a color is considered blank, in range of fully
+transparent 0, to fully non-transparent 1.</p></td>
     </tr>
     <tr>
       <th>constrain</th>
       <td><p>character value indicating for node shape
-`"coloredrectangle"` whether to constrain the `"coloredrect.nrow"`
-or `"coloredrect.ncol"` values. When `"none"` the nrow is usually
+<code>"coloredrectangle"</code> whether to constrain the <code>"coloredrect.nrow"</code>
+or <code>"coloredrect.ncol"</code> values. When <code>"none"</code> the nrow is usually
 dropped to nrow=1 whenever colors are removed.</p></td>
     </tr>
     <tr>
@@ -142,31 +179,111 @@ colored wedges.</p></td>
     <tr>
       <th>applyToPie</th>
       <td><p>logical indicating whether to apply the logic to
-nodes with shape `"pie"`.</p></td>
+nodes with shape <code>"pie"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>pieAttrs</th>
+      <td><p>character vector of <code>vertex.attributes</code> from <code>g</code>
+to be adjusted when <code>applyToPie=TRUE</code>. Note that <code>"pie.color"</code>
+is required, and other attributes are only adjusted when
+they are present in the input graph <code>g</code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
       <td><p>logical indicating whether to print verbose output.</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>additional arguments are passed to <code><a href='isColorBlank.html'>isColorBlank()</a></code>.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is intended to affect nodes with shapes `"pie"` or
-`"coloredrectangle"`, and evaluates the vertex attributes
-`"coloredrect.color"` and `"pie.color"`. For each node, any colors
+    <p>This function is intended to affect nodes with shapes <code>"pie"</code> or
+<code>"coloredrectangle"</code>, and evaluates the vertex attributes
+<code>"coloredrect.color"</code> and <code>"pie.color"</code>. For each node, any colors
 considered blank are removed, along with corresponding values in
-related vertex attributes, including `"pie","pie.value","pie.names"`,
-`"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"`.</p>
-<p>This function calls `isColorBlank()` to determine which colors are
+related vertex attributes, including <code>"pie","pie.value","pie.names"</code>,
+<code>"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"</code>.</p>
+<p>This function calls <code><a href='isColorBlank.html'>isColorBlank()</a></code> to determine which colors are
 blank.</p>
-<p>This function is originally intended to follow `igraph2pieGraph()` which
+<p>This function is originally intended to follow <code><a href='igraph2pieGraph.html'>igraph2pieGraph()</a></code> which
 assigns colors to pie and coloredrectangle attributes, where missing
 values or values of zero are often given a "blank" color. To enhance the
 resulting node coloration, these blank colors can be removed in order to
 make the remaining colors more visibly distinct.</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p>Other jam igraph functions: <code><a href='cnet2df.html'>cnet2df</a></code>,
+  <code><a href='cnet2im.html'>cnet2im</a></code>, <code><a href='cnetplotJam.html'>cnetplotJam</a></code>,
+  <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a></code>,
+  <code><a href='drawEllipse.html'>drawEllipse</a></code>, <code><a href='igraph2pieGraph.html'>igraph2pieGraph</a></code>,
+  <code><a href='layout_with_qfr.html'>layout_with_qfr</a></code>,
+  <code><a href='rectifyPiegraph.html'>rectifyPiegraph</a></code>,
+  <code><a href='shape.coloredrectangle.plot.html'>shape.coloredrectangle.plot</a></code>,
+  <code><a href='shape.ellipse.plot.html'>shape.ellipse.plot</a></code>, <code><a href='xyAngle.html'>xyAngle</a></code></p></div>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>igraph</span>);</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘igraph’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:S4Vectors’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    union</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:BiocGenerics’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    normalize, path, union</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:arules’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    union</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    decompose, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    union</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>multienrichjam</span>);
+<span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/make_full_graph'>graph.full</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>3</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"nodeA"</span>, <span class='st'>"nodeB"</span>, <span class='st'>"nodeC"</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>shape</span> <span class='kw'>&lt;-</span> <span class='st'>"coloredrectangle"</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>coloredrect.names</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/split'>split</a></span>(
+   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"up"</span>,<span class='st'>"no"</span>, <span class='st'>"dn"</span>), <span class='fl'>7</span>),
+   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>name</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>2</span>)*<span class='fl'>3</span>));
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>coloredrect.byrow</span> <span class='kw'>&lt;-</span> <span class='fl'>FALSE</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>coloredrect.nrow</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>3</span>, <span class='fl'>3</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>coloredrect.ncol</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>2</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>label.degree</span> <span class='kw'>&lt;-</span> <span class='no'>pi</span>*<span class='fl'>3</span>/<span class='fl'>2</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>label.dist</span> <span class='kw'>&lt;-</span> <span class='fl'>3</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>size2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>20</span>,<span class='fl'>30</span>,<span class='fl'>20</span>);
+
+<span class='no'>color_v</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='st'>"white"</span>, <span class='fl'>21</span>);
+<span class='no'>color_v</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>7</span>,<span class='fl'>9</span>,<span class='fl'>15</span>,<span class='fl'>19</span>,<span class='fl'>20</span>,<span class='fl'>21</span>)] <span class='kw'>&lt;-</span> <span class='kw pkg'>colorjam</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/colorjam/topics/rainbowJam'>rainbowJam</a></span>(<span class='fl'>5</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘colorspace’ was built under R version 3.5.2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: number of items to replace is not a multiple of replacement length</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>coloredrect.color</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/split'>split</a></span>(
+   <span class='no'>color_v</span>,
+   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>name</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>2</span>)*<span class='fl'>3</span>));
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));
+<span class='no'>lg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/layout_nicely'>layout_nicely</a></span>(<span class='no'>g</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>);
+
+<span class='no'>g2</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"none"</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>size2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>size2</span> / <span class='fl'>3</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g2</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='none'"</span>);
+
+<span class='no'>g3</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"nrow"</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g3</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='nrow'"</span>);
+
+<span class='no'>g4</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"ncol"</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g4</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='ncol'"</span>);</div><div class='img'><img src='removeIgraphBlanks-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'>#</span>
+<span class='no'>g7</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/make_full_graph'>graph.full</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>7</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.color</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>),
+   <span class='kw'>function</span>(<span class='no'>i</span>){<span class='kw pkg'>colorjam</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/colorjam/topics/rainbowJam'>rainbowJam</a></span>(<span class='no'>i</span>)});
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.ncol</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.nrow</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.names</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.color</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>shape</span> <span class='kw'>&lt;-</span> <span class='st'>"coloredrectangle"</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>size</span> <span class='kw'>&lt;-</span> <span class='fl'>10</span>;
+<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>size2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.ncol</span> * <span class='fl'>10</span>;
+<span class='no'>lg7</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/layout_nicely'>layout_nicely</a></span>(<span class='no'>g7</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g7</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg7</span>, <span class='kw'>vertez.size2</span><span class='kw'>=</span><span class='fl'>10</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g7</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg7</span>, <span class='kw'>vertex.size2</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.ncol</span>*<span class='fl'>10</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g7</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg7</span>, <span class='kw'>vertex.size2</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.nrow</span>*<span class='fl'>10</span>);</div><div class='img'><img src='removeIgraphBlanks-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -174,7 +291,11 @@ make the remaining colors more visibly distinct.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-          </ul>
+
+      <li><a href="#see-also">See also</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

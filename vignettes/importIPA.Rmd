@@ -1,0 +1,270 @@
+---
+title: "How to import and use Ingenuity IPA enrichment data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to import and use Ingenuity IPA enrichment data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>"
+)
+```
+
+```{r setup}
+library(multienrichjam);
+library(jamba);
+library(colorjam);
+library(ComplexHeatmap);
+options("stringsAsFactors"=FALSE);
+knitr::opts_chunk$set(
+   fig.height=10,
+   fig.width=10,
+   fig.align="center"
+)
+```
+
+## Import and use Ingenuity IPA enrichment data
+
+This document describes steps recommended for using Ingenuity
+IPA enrichment data.
+
+Ingenuity IPA enrichment data can be exported using a function
+`"Export All"` which by default creates one text file,
+concatenating each enrichment table into one large file.
+
+This workflow demonstrates the import process using two
+IPA enrichment files used by Reese et al 2019
+https://doi.org/10.1016/j.jaci.2018.11.043
+to compare enrichment results in newborns to older children.
+
+It therefore requires IPA enrichment results have already
+been exported in text format from IPA.
+
+### Import IPA data from text files
+
+To import an IPA text file, use `importIPAenrichment()`:
+
+```{r, import_ipa_1}
+newborn_txt <- system.file("extdata",
+   "Newborns-IPA.txt",
+   package="multienrichjam");
+newborn_dfl <- importIPAenrichment(newborn_txt);
+```
+
+The result is a list of `data.frame` objects, where each
+`data.frame` represents one enrichment test. A convenient
+way to see the dimensions of each `data.frame` is with
+the function `jamba::sdim()`:
+
+```{r, ipa_1_sdim}
+sdim(newborn_dfl);
+```
+
+For MultiEnrichMap, we typically want to analyze multiple
+IPA enrichment files, so we can wrap the call in
+an `lapply()` function:
+
+```{r, import_ipa_1_2}
+newborn_txt <- system.file("extdata",
+   "Newborns-IPA.txt",
+   package="multienrichjam");
+olderchildren_txt <- system.file("extdata",
+   "OlderChildren-IPA.txt",
+   package="multienrichjam");
+ipa_files <- c(Newborns=newborn_txt,
+   OlderChildren=olderchildren_txt)
+
+ipa_l <- lapply(ipa_files, importIPAenrichment);
+```
+
+Now we can check the dimensions within each list using
+`jamba::ssdim()`:
+
+```{r, ipa_ssdim}
+ssdim(ipa_l);
+```
+
+In most cases, each IPA file should contain the same
+enrichment tests, for example `"Canonical Pathways"`,
+`"Upstream Regulators"`, `"Diseases and Bio Functions"`,
+etc. However, it is not always the case, so it is
+recommended to check and verify each IPA file contains
+at least the enrichment tests needed for downstream analysis.
+
+### Analyze IPA enrichments from one enrichment test
+
+IPA performs multiple enrichment tests, which are
+done independently and with unique assumptions
+and caveats. Therefore, I recommend using one
+enrichment test at a time in MultiEnrichMap.
+
+Extract one `data.frame` from each result:
+
+```{r, extract_canonical}
+## Take only the Ingenuity Canonical Pathways
+enrichList_canonical <- lapply(ipa_l, function(i){
+   i[["Canonical Pathways"]];
+});
+sdim(enrichList_canonical);
+
+## Convert data.frame to enrichResult
+## multienrichjam::enrichDF2enrichResult
+er_canonical <- lapply(enrichList_canonical, function(i){
+   enrichDF2enrichResult(i,
+      keyColname="Name",
+      pvalueColname="P-value",
+      geneColname="geneNames",
+      geneRatioColname="Ratio",
+      pvalueCutoff=1)
+});
+sdim(er_canonical);
+print(head(as.data.frame(er_canonical[[1]])));
+```
+
+#### run multiEnrichMap()
+
+Now given a list of `data.frame` results, we can
+run `multiEnrichMap()`:
+
+```{r, mem_canonical}
+mem_canonical <- multiEnrichMap(er_canonical,
+   enrichBaseline=1,
+   cutoffRowMinP=0.05,
+   topEnrichN=20)
+```
+
+The output `mem_canonical` is a list containing various
+results.
+
+```{r, mem_sdim}
+sdim(mem_canonical);
+```
+
+#### Plot the MultiEnrichMap network
+
+For example, we can view the "Multi Enrichment Map" itself.
+This network connects pathways when they meet a Jaccard
+overlap coefficient threshold based upon the shared genes
+between the pathways. The cutoff is defined in 
+`multiEnrichMap()` with argument `overlapThreshold=0.1`.
+
+```{r, mem_plot_1}
+plot(mem_canonical$multiEnrichMap2,
+#   vertex.shape="pie",
+#   vertex.size=(normScale(V(mem_canonical$multiEnrichMap2)$size)+0.3)*8,
+   layout=layout_with_qfrf(repulse=3.3))
+```
+
+An example of some basic operations to customize the
+igraph plot is included below.
+
+```{r, mem_plot_1_custom}
+g <- mem_canonical$multiEnrichMap2;
+plot(removeIgraphBlanks(g),
+   vertex.shape="pie",
+   vertex.size=V(g)$size*2,
+   vertex.label.cex=0.7,
+   edge.width=E(g)$width / 2,
+   layout=layout_with_qfrf(repulse=3.3))
+```
+
+
+Notice there are distinct, independent subnetworks.
+We can extract the largest connected subnetwork to plot.
+
+```{r, mem_plot_2}
+g <- mem_canonical$multiEnrichMap2;
+gc <- components(g);
+## Component sizes are stored in gc$csize
+## You can alternatively pull out any other component
+g_sub <- subgraph(g, which(gc$membership %in% which.max(gc$csize)));
+
+plot(g_sub,
+#   vertex.size2=(normScale(V(g_sub)$size2)+1)*2,
+   layout=layout_with_qfrf(repulse=4))
+```
+
+We can polish the node labels with `fixSetLabels()`.
+
+```{r, mem_plot_3}
+plot(fixSetLabels(g_sub),
+   layout=layout_with_qfrf(repulse=4))
+```
+
+
+#### Plot the enrichment P-value matrix
+
+View the combined enrichment P-value matrix:
+
+```{r, enrich_hm, fig.height=10, fig.width=10}
+par("mar"=c(7,20,4,2));
+imageByColors(mem_canonical$enrichIMcolors,
+   cellnote=format(trim=TRUE, mem_canonical$enrichIM, digits=2));
+```
+
+Alternatively you can use the ComplexHeatmap package:
+
+```{r, enrich_chm, fig.height=10, fig.width=10}
+ComplexHeatmap::Heatmap(-log10(mem_canonical$enrichIM),
+   border=TRUE,
+   col=getColorRamp("Reds", n=51))
+```
+
+#### Plot the pathway-gene incidence matrix
+
+We can view the pathway-gene matrix:
+
+```{r, mem_hm}
+ComplexHeatmap::Heatmap(mem_canonical$memIM,
+   border=TRUE,
+   top_annotation=ComplexHeatmap::HeatmapAnnotation(which="column",
+      gp=gpar(col="black"),
+      Pathways=-log10(mem_canonical$enrichIM)),
+   col=getColorRamp("Reds"),
+   left_annotation=ComplexHeatmap::HeatmapAnnotation(which="row",
+      gp=gpar(col="black"),
+      Genes=mem_canonical$geneIM[rownames(mem_canonical$memIM),])
+)
+```
+
+### Plot the Pathway-Gene Concept network (Cnet plot)
+
+We can view the Cnet plot (concept network plot) which
+shows the pathway-gene relationship.
+
+When viewing extremely large networks, they may take a
+very long time to render. For that reason, we usually
+recommend subsetting the pathways after reviewing the
+pathway-gene incidence matrix heatmap.
+
+```{r, cnet_plot_1}
+plot(mem_canonical$multiCnetPlot2,
+   vertex.shape=ifelse(V(mem_canonical$multiCnetPlot2)$nodeType %in% "Set",
+      "pie", "coloredrectangle"),
+   vertex.size=15,
+   vertex.size2=2,
+   vertex.label.cex=0.7,
+   layout=layout_with_qfrf(repulse=3.8)
+)
+```
+
+You can extract the largest connected subnetwork to plot, as before.
+
+```{r, cnet_plot_2}
+g2 <- mem_canonical$multiCnetPlot2;
+gc2 <- components(g2);
+g2_sub <- subgraph(g2, which(gc2$membership %in% which.max(gc2$csize)));
+
+plot(removeIgraphBlanks(g2_sub),
+   vertex.shape="pie",
+   vertex.size=ifelse(V(g2_sub)$nodeType %in% "Set",
+      10,5),
+   vertex.label.cex=0.7,
+   layout=layout_with_qfrf(repulse=4)
+)
+```
+

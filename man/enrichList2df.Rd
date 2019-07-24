@@ -4,10 +4,11 @@
 \alias{enrichList2df}
 \title{Convert enrichList to data.frame}
 \usage{
-enrichList2df(enrichList, keyColname = "itemsetID",
-  geneColname = "geneNames", geneCountColname = "geneCount",
-  pvalueColname = "P-value", pvalueFloor = 1e-200, msigdbGmtT = NULL,
-  verbose = FALSE, debug = 0, ...)
+enrichList2df(enrichList, keyColname = c("itemsetID", "ID", "Name"),
+  geneColname = c("geneNames", "Genes"),
+  geneCountColname = c("geneCount", "geneHits", "Count"),
+  pvalueColname = c("P-value", "pvalue", "Pval"), pvalueFloor = 1e-200,
+  msigdbGmtT = NULL, verbose = FALSE, debug = 0, ...)
 }
 \description{
 Convert enrichList to data.frame

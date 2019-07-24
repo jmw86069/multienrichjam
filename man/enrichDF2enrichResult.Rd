@@ -6,10 +6,12 @@
 \usage{
 enrichDF2enrichResult(enrichDF = NULL, msigdbGmtT = NULL,
   pvalueCutoff = 0.15, pAdjustMethod = "none",
-  keyColname = "itemsetID", pathGenes = "pathGenes",
-  geneColname = "geneNames", geneHits = "geneHits",
-  geneRatioColname = "GeneRatio", geneDelim = "[,/ ]+",
-  pvalueColname = "P-Value", verbose = FALSE, ...)
+  keyColname = c("itemsetID", "ID", "Name", "Pathway"),
+  pathGenes = "pathGenes", geneColname = c("geneNames", "geneID",
+  "Gene", "Genes"), geneHits = "geneHits",
+  geneRatioColname = c("GeneRatio", "Ratio"), geneDelim = "[,/ ]+",
+  pvalueColname = c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
+  verbose = FALSE, ...)
 }
 \arguments{
 \item{enrichDF}{data.frame representing gene set enrichment
@@ -65,7 +67,6 @@ compatible with methods provided by the \code{clusterProfiler}
 package.
 }
 \seealso{
-Other jam conversion functions: \code{\link{enrichList2IM}},
-  \code{\link{multiEnrichMap}}
+Other jam conversion functions: \code{\link{enrichList2IM}}
 }
 \concept{jam conversion functions}

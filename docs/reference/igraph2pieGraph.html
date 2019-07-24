@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -77,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -123,25 +135,29 @@
 
     <p>This function converts an igraph to use pie node shapes,
 where pie wedges are colored using values derived from a
-numeric matrix `valueIM` or pre-defined in a character matrix
-containing colors `valueIMcolors`.</p>
+numeric matrix <code>valueIM</code> or pre-defined in a character matrix
+containing colors <code>valueIMcolors</code>.</p>
 <p>Note that pie wedge sizes are equally-sized and do not vary
 by score, instead the color intensity is applied to each pie
 wedge.</p>
-<p>Node names using `V(g)$name` matching `rownames(valueIMcolors)`
+<p>Node names using <code>V(g)$name</code> matching <code><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>rownames(valueIMcolors)</a></code>
 are colorized and the node shape is converted to pie. All other
 nodes are not modified.</p>
-<p>When `valueIMcolors` is not defined, it is derived from `valueIM`
-using `colorjam::matrix2heatColors()`. In that case, `colorV` defines the color
+<p>When <code>valueIMcolors</code> is not defined, it is derived from <code>valueIM</code>
+using <code><a href='https://www.rdocumentation.org/packages/colorjam/topics/matrix2heatColors'>colorjam::matrix2heatColors()</a></code>. In that case, <code>colorV</code> defines the color
 used for numeric values in each column, and other options are passed
-to `colorjam::matrix2heatColors()` via `...` arguments.</p>
+to <code><a href='https://www.rdocumentation.org/packages/colorjam/topics/matrix2heatColors'>colorjam::matrix2heatColors()</a></code> via <code>...</code> arguments.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other jam igraph functions: <code>cnetplotJam</code>,
-  <code>cnetplot_internalJam</code>,
-  <code>layout_with_qfr</code>,
-  <code>shape.coloredrectangle.plot</code></p></div>
+    <div class='dont-index'><p>Other jam igraph functions: <code><a href='cnet2df.html'>cnet2df</a></code>,
+  <code><a href='cnet2im.html'>cnet2im</a></code>, <code><a href='cnetplotJam.html'>cnetplotJam</a></code>,
+  <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a></code>,
+  <code><a href='drawEllipse.html'>drawEllipse</a></code>, <code><a href='layout_with_qfr.html'>layout_with_qfr</a></code>,
+  <code><a href='rectifyPiegraph.html'>rectifyPiegraph</a></code>,
+  <code><a href='removeIgraphBlanks.html'>removeIgraphBlanks</a></code>,
+  <code><a href='shape.coloredrectangle.plot.html'>shape.coloredrectangle.plot</a></code>,
+  <code><a href='shape.ellipse.plot.html'>shape.ellipse.plot</a></code>, <code><a href='xyAngle.html'>xyAngle</a></code></p></div>
     
 
   </div>

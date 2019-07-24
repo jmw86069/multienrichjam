@@ -70,6 +70,8 @@ Other jam igraph functions: \code{\link{cnet2df}},
   \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
   \code{\link{cnetplot_internalJam}},
   \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
+  \code{\link{rectifyPiegraph}},
+  \code{\link{removeIgraphBlanks}},
   \code{\link{shape.coloredrectangle.plot}},
   \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
 }

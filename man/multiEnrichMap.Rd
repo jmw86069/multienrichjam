@@ -7,25 +7,25 @@
 multiEnrichMap(enrichList, geneHitList = NULL, colorV = NULL,
   nrow = NULL, ncol = NULL, byrow = FALSE, enrichLabels = NULL,
   subsetSets = NULL, overlapThreshold = 0.1, cutoffRowMinP = 0.05,
-  enrichBaseline = 1.5, enrichLens = 0, enrichNumLimit = 4,
-  nEM = 500, topEnrichN = 15, topEnrichSources = c("Category",
-  "Source"), topEnrichCurateFrom = c("CP:.*"),
-  topEnrichCurateTo = c("CP"), topEnrichSourceSubset = c("C2_CP",
-  "C5_BP", "C5_CC", "C5_MF"), topEnrichDescriptionGrep = NULL,
-  topEnrichNameGrep = NULL, GmtTname = "msigdbGmtTv50human",
-  keyColname = "itemsetID", geneColname = "geneNames",
-  pvalueColname = "P-value", descriptionColname = "Description",
+  enrichBaseline = -log10(cutoffRowMinP), enrichLens = 0,
+  enrichNumLimit = 4, nEM = 500, topEnrichN = 15,
+  topEnrichSources = c("Category", "Source"),
+  topEnrichCurateFrom = c("CP:.*"), topEnrichCurateTo = c("CP"),
+  topEnrichSourceSubset = c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
+  topEnrichDescriptionGrep = NULL, topEnrichNameGrep = NULL,
+  keyColname = c("ID", "itemsetID"), nameColname = c("ID", "Name",
+  "itemsetID"), geneColname = c("geneID", "geneNames", "Genes"),
+  pvalueColname = c("P-value", "pvalue", "Pval"),
+  descriptionColname = c("Description", "Name", "Pathway"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
-  descriptionCurateTo = c(""), nameColname = "Name",
-  pathGenes = "pathGenes", geneHits = "geneHits",
-  geneDelim = "[,/ ]+", msigdbGmtT = msigdbGmtTv50human2,
-  verbose = FALSE, ...)
+  descriptionCurateTo = c(""), pathGenes = c("setSize", "pathGenes"),
+  geneHits = c("Count", "geneHits"), geneDelim = "[,/ ]+",
+  GmtTname = NULL, msigdbGmtT = NULL, verbose = FALSE, ...)
 }
 \description{
 Prepare MultiEnrichMap data from enrichList
 }
 \seealso{
-Other jam conversion functions: \code{\link{enrichDF2enrichResult}},
-  \code{\link{enrichList2IM}}
+Other jam enrichment functions: \code{\link{topEnrichBySource}}
 }
-\concept{jam conversion functions}
+\concept{jam enrichment functions}

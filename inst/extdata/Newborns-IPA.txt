@@ -1,0 +1,807 @@
+© 2000-2017 QIAGEN. All rights reserved.
+
+Analysis Details for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+Workspace	My Projects
+Project	IPA-Sarah
+Analysis	Newborns-Combined - 2017-12-07 12:37 PM
+Date	Thu Dec 07 09:37:18 PST 2017
+Analysis ID	15776117
+
+Analysis Settings
+Cutoff before duplicate resolution	true
+Reference set	Ingenuity Knowledge Base (Genes Only)
+Relationship to include	Direct and Indirect
+Includes Endogenous Chemicals	No
+Optional Analyses	My Pathways My List
+Filter Summary	
+Consider only relationships where
+confidence = Experimentally Observed
+
+Canonical Pathways for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+Ingenuity Canonical Pathways	 -log(p-value)	zScore	Ratio	Molecules
+Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis	4.05E-01	NaN	3.21E-03	TNFSF13B,	
+Neuroinflammation Signaling Pathway	4.06E-01	NaN	3.22E-03	CASP8,	
+Sirtuin Signaling Pathway	4.28E-01	NaN	3.44E-03	HIST1H1D,	
+G-Protein Coupled Receptor Signaling	4.47E-01	NaN	3.62E-03	PRKAR2B,	
+Protein Ubiquitination Pathway	4.61E-01	NaN	3.77E-03	TAP2,	
+Signaling by Rho Family GTPases	4.78E-01	NaN	3.97E-03	RDX,	
+Huntington's Disease Signaling	4.81E-01	NaN	4.00E-03	CASP8,	
+Colorectal Cancer Metastasis Signaling	4.84E-01	NaN	4.03E-03	PRKAR2B,	
+Cardiac Hypertrophy Signaling	5.02E-01	NaN	4.24E-03	PRKAR2B,	
+cAMP-mediated signaling	5.16E-01	NaN	4.41E-03	PRKAR2B,	
+Systemic Lupus Erythematosus Signaling	5.19E-01	NaN	4.44E-03	TNFSF13B,	
+EIF2 Signaling	5.26E-01	NaN	4.52E-03	RPS23,	
+Integrin Signaling	5.29E-01	NaN	4.57E-03	ACTN1,	
+AMPK Signaling	5.34E-01	NaN	4.63E-03	PRKAR2B,	
+Osteoarthritis Pathway	5.43E-01	NaN	4.74E-03	CASP8,	
+Breast Cancer Regulation by Stathmin1	5.53E-01	NaN	4.88E-03	PRKAR2B,	
+mTOR Signaling	5.6E-01	NaN	4.98E-03	RPS23,	
+ERK/MAPK Signaling	5.62E-01	NaN	5.00E-03	PRKAR2B,	
+ILK Signaling	5.68E-01	NaN	5.08E-03	ACTN1,	
+Gap Junction Signaling	5.72E-01	NaN	5.13E-03	PRKAR2B,	
+Role of NFAT in Cardiac Hypertrophy	5.76E-01	NaN	5.18E-03	PRKAR2B,	
+Agranulocyte Adhesion and Diapedesis	5.79E-01	NaN	5.24E-03	RDX,	
+B Cell Receptor Signaling	5.79E-01	NaN	5.24E-03	EBF1,	
+Endothelin-1 Signaling	5.81E-01	NaN	5.26E-03	CASP8,	
+RAR Activation	5.81E-01	NaN	5.26E-03	PRKAR2B,	
+CREB Signaling in Neurons	5.89E-01	NaN	5.38E-03	PRKAR2B,	
+Calcium Signaling	6.02E-01	NaN	5.56E-03	PRKAR2B,	
+PPARα/RXRα Activation	6.02E-01	NaN	5.56E-03	PRKAR2B,	
+Granulocyte Adhesion and Diapedesis	6.04E-01	NaN	5.59E-03	RDX,	
+RhoGDI Signaling	6.08E-01	NaN	5.65E-03	RDX,	
+Germ Cell-Sertoli Cell Junction Signaling	6.17E-01	NaN	5.78E-03	ACTN1,	
+Mitochondrial Dysfunction	6.21E-01	NaN	5.85E-03	CASP8,	
+Tight Junction Signaling	6.3E-01	NaN	5.99E-03	PRKAR2B,	
+Dopamine-DARPP32 Feedback in cAMP Signaling	6.37E-01	NaN	6.10E-03	PRKAR2B,	
+Hepatic Cholestasis	6.46E-01	NaN	6.25E-03	PRKAR2B,	
+Regulation of eIF4 and p70S6K Signaling	6.54E-01	NaN	6.37E-03	RPS23,	
+Relaxin Signaling	6.54E-01	NaN	6.37E-03	PRKAR2B,	
+Epithelial Adherens Junction Signaling	6.82E-01	NaN	6.85E-03	ACTN1,	
+GNRH Signaling	6.87E-01	NaN	6.94E-03	PRKAR2B,	
+Ovarian Cancer Signaling	6.87E-01	NaN	6.94E-03	PRKAR2B,	
+Insulin Receptor Signaling	6.95E-01	NaN	7.09E-03	PRKAR2B,	
+Cardiac β-adrenergic Signaling	6.98E-01	NaN	7.14E-03	PRKAR2B,	
+Adipogenesis pathway	7.15E-01	NaN	7.46E-03	EBF1,	
+P2Y Purigenic Receptor Signaling Pathway	7.15E-01	NaN	7.46E-03	PRKAR2B,	
+Cellular Effects of Sildenafil (Viagra)	7.24E-01	NaN	7.63E-03	PRKAR2B,	
+Gustation Pathway	7.36E-01	NaN	7.87E-03	PRKAR2B,	
+Sperm Motility	7.36E-01	NaN	7.87E-03	PRKAR2B,	
+Sphingosine-1-phosphate Signaling	7.42E-01	NaN	8.00E-03	CASP8,	
+RhoA Signaling	7.45E-01	NaN	8.06E-03	RDX,	
+Renin-Angiotensin Signaling	7.52E-01	NaN	8.20E-03	PRKAR2B,	
+Synaptic Long Term Potentiation	7.52E-01	NaN	8.20E-03	PRKAR2B,	
+Gαi Signaling	7.58E-01	NaN	8.33E-03	PRKAR2B,	
+Neuroprotective Role of THOP1 in Alzheimer's Disease	7.62E-01	NaN	8.40E-03	PRKAR2B,	
+Neuropathic Pain Signaling In Dorsal Horn Neurons	7.75E-01	NaN	8.70E-03	PRKAR2B,	
+Corticotropin Releasing Hormone Signaling	7.82E-01	NaN	8.85E-03	PRKAR2B,	
+Nitric Oxide Signaling in the Cardiovascular System	7.82E-01	NaN	8.85E-03	PRKAR2B,	
+Paxillin Signaling	7.82E-01	NaN	8.85E-03	ACTN1,	
+Androgen Signaling	7.89E-01	NaN	9.01E-03	PRKAR2B,	
+Type I Diabetes Mellitus Signaling	7.89E-01	NaN	9.01E-03	CASP8,	
+Axonal Guidance Signaling	7.92E-01	NaN	4.42E-03	ADAMTS6,PRKAR2B	
+Gαs Signaling	7.93E-01	NaN	9.09E-03	PRKAR2B,	
+IGF-1 Signaling	8.08E-01	NaN	9.43E-03	PRKAR2B,	
+VEGF Signaling	8.19E-01	NaN	9.71E-03	ACTN1,	
+CDK5 Signaling	8.35E-01	NaN	1.01E-02	PRKAR2B,	
+Melanocyte Development and Pigmentation Signaling	8.39E-01	NaN	1.02E-02	PRKAR2B,	
+Communication between Innate and Adaptive Immune Cells	8.56E-01	NaN	1.06E-02	TNFSF13B,	
+Acute Myeloid Leukemia Signaling	8.6E-01	NaN	1.08E-02	RUNX1,	
+Death Receptor Signaling	8.6E-01	NaN	1.08E-02	CASP8,	
+IL-1 Signaling	8.64E-01	NaN	1.09E-02	PRKAR2B,	
+IL-7 Signaling Pathway	8.69E-01	NaN	1.10E-02	EBF1,	
+Altered T Cell and B Cell Signaling in Rheumatoid Arthritis	8.73E-01	NaN	1.11E-02	TNFSF13B,	
+Apoptosis Signaling	8.73E-01	NaN	1.11E-02	CASP8,	
+G Beta Gamma Signaling	8.82E-01	NaN	1.14E-02	PRKAR2B,	
+PEDF Signaling	8.87E-01	NaN	1.15E-02	CASP8,	
+α-Adrenergic Signaling	8.87E-01	NaN	1.15E-02	PRKAR2B,	
+Molecular Mechanisms of Cancer	8.87E-01	NaN	5.08E-03	PRKAR2B,CASP8	
+GPCR-Mediated Nutrient Sensing in Enteroendocrine Cells	8.92E-01	NaN	1.16E-02	PRKAR2B,	
+Leptin Signaling in Obesity	8.92E-01	NaN	1.16E-02	PRKAR2B,	
+Dopamine Receptor Signaling	9.37E-01	NaN	1.30E-02	PRKAR2B,	
+BMP signaling pathway	9.42E-01	NaN	1.32E-02	PRKAR2B,	
+TREM1 Signaling	9.48E-01	NaN	1.33E-02	NLRP6,	
+GM-CSF Signaling	9.59E-01	NaN	1.37E-02	RUNX1,	
+GPCR-Mediated Integration of Enteroendocrine Signaling Exemplified by an L Cell	9.59E-01	NaN	1.37E-02	PRKAR2B,	
+Melatonin Signaling	9.64E-01	NaN	1.39E-02	PRKAR2B,	
+Myc Mediated Apoptosis Signaling	9.76E-01	NaN	1.43E-02	CASP8,	
+Remodeling of Epithelial Adherens Junctions	9.82E-01	NaN	1.45E-02	ACTN1,	
+PXR/RXR Activation	1.01E00	NaN	1.54E-02	PRKAR2B,	
+Retinoic acid Mediated Apoptosis Signaling	1.03E00	NaN	1.61E-02	CASP8,	
+Induction of Apoptosis by HIV1	1.03E00	NaN	1.64E-02	CASP8,	
+Regulation of Cellular Mechanics by Calpain Protease	1.06E00	NaN	1.75E-02	ACTN1,	
+CD27 Signaling in Lymphocytes	1.09E00	NaN	1.89E-02	CASP8,	
+Phototransduction Pathway	1.09E00	NaN	1.89E-02	PRKAR2B,	
+Amyloid Processing	1.11E00	NaN	1.96E-02	PRKAR2B,	
+TNFR1 Signaling	1.12E00	NaN	2.00E-02	CASP8,	
+Primary Immunodeficiency Signaling	1.13E00	NaN	2.08E-02	TAP2,	
+Role of RIG1-like Receptors in Antiviral Innate Immunity	1.17E00	NaN	2.27E-02	CASP8,	
+B Cell Activating Factor Signaling	1.2E00	NaN	2.44E-02	TNFSF13B,	
+Role of PKR in Interferon Induction and Antiviral Response	1.2E00	NaN	2.44E-02	CASP8,	
+Netrin Signaling	1.22E00	NaN	2.56E-02	PRKAR2B,	
+Antigen Presentation Pathway	1.23E00	NaN	2.63E-02	TAP2,	
+TWEAK Signaling	1.27E00	NaN	2.86E-02	CASP8,	
+Actin Cytoskeleton Signaling	1.3E00	NaN	8.81E-03	ACTN1,RDX	
+Cytotoxic T Lymphocyte-mediated Apoptosis of Target Cells	1.3E00	NaN	3.12E-02	CASP8,	
+Sonic Hedgehog Signaling	1.33E00	NaN	3.33E-02	PRKAR2B,	
+Leukocyte Extravasation Signaling	1.35E00	NaN	9.48E-03	ACTN1,RDX	
+Tumoricidal Function of Hepatic Natural Killer Cells	1.43E00	NaN	4.17E-02	CASP8,	
+NF-κB Signaling	1.47E00	NaN	1.10E-02	TNFSF13B,CASP8	
+Sertoli Cell-Sertoli Cell Junction Signaling	1.49E00	NaN	1.12E-02	PRKAR2B,ACTN1	
+Granzyme A Signaling	1.5E00	NaN	5.00E-02	HIST1H1D,	
+Inflammasome pathway	1.5E00	NaN	5.00E-02	CASP8,	
+eNOS Signaling	1.51E00	NaN	1.16E-02	PRKAR2B,CASP8	
+Protein Kinase A Signaling	1.59E00	NaN	7.50E-03	HIST1H1D,PRKAR2B,DUSP22	
+Granzyme B Signaling	1.6E00	NaN	6.25E-02	CASP8,	
+
+Upstream Regulators for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+Analysis	ID	Upstream Regulator	Molecule Type	Predicted Activation State	Activation z-score	Notes	Bias Term	Bias-corrected z-score	p-value of overlap	Target molecules in dataset	Mechanistic Network	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IL17RC	transmembrane receptor	 	 	 	 	 	1.63E-03	STEAP4	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	mir-654	microrna	 	 	 	 	 	1.63E-03	PTPRN2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	pubchem compound 6603792	chemical - kinase inhibitor	 	 	 	 	 	1.63E-03	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	MED13	transcription regulator	 	 	 	 	 	1.75E-03	ACSM3,PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	STAT1	transcription regulator	 	 	 	 	 	2.29E-03	ALPK1,CASP8,RUNX1,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IRF1	transcription regulator	 	 	 	 	 	2.43E-03	CASP8,TAP2,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	SATB1	transcription regulator	 	 	 	 	 	2.43E-03	ACTN1,RUNX1,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	tetrachlorodibenzodioxin	chemical toxicant	 	 	 	 	 	2.97E-03	ACTN1,PRKAR2B,STEAP4,ZFP57	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	FAIM2	other	 	 	 	 	 	3.26E-03	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	KMT5A	enzyme	 	 	 	 	 	3.26E-03	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	L3MBTL1	other	 	 	 	 	 	3.26E-03	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	ZFP91	transcription regulator	 	 	 	 	 	3.26E-03	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	mir-342	microrna	 	 	 	 	 	3.26E-03	PTPRN2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IRF2	transcription regulator	 	 	 	 	 	4.88E-03	TAP2,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	MAP2	other	 	 	 	 	 	4.88E-03	PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	mir-541	microrna	 	 	 	 	 	4.88E-03	PTPRN2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	3,3'-diindolylmethane	chemical drug	 	 	 	 	 	5.49E-03	CASP8,TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	delta-9-tetrahydrocannabinol	chemical drug	 	 	 	 	 	6.47E-03	CASP8,TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	8-chloro-cAMP	chemical drug	 	 	 	 	 	6.50E-03	PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CD55	other	 	 	 	 	 	6.50E-03	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	NPLOC4	other	 	 	 	 	 	6.50E-03	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	UFD1	peptidase	 	 	 	 	 	6.50E-03	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	miR-324-5p (miRNAs w/seed GCAUCCC)	mature microrna	 	 	 	 	 	6.50E-03	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	maslinic acid	chemical - endogenous non-mammalian	 	 	 	 	 	7.89E-03	ACTN1,PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	(-)-gossypol	chemical drug	 	 	 	 	 	8.12E-03	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	DCX	other	 	 	 	 	 	8.12E-03	ACTN1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TRIM33	transcription regulator	 	 	 	 	 	8.12E-03	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	XAF1	other	 	 	 	 	 	8.12E-03	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	mir-665	microrna	 	 	 	 	 	8.12E-03	PTPRN2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	pubchem compound 11483544	chemical reagent	 	 	 	 	 	8.12E-03	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	PRDM5	transcription regulator	 	 	 	 	 	8.84E-03	EBF1,RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	ficusin	chemical drug	 	 	 	 	 	9.74E-03	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	miR-139-5p (miRNAs w/seed CUACAGU)	mature microrna	 	 	 	 	 	9.74E-03	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	OSM	cytokine	 	 	 	 	 	1.07E-02	ATP13A3,JMJD1C,RUNX1,TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	ONECUT1	transcription regulator	 	 	 	 	 	1.07E-02	CLNS1A,PTPRN2,TTI2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	HESX1	transcription regulator	 	 	 	 	 	1.13E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	HIST4H4	other	 	 	 	 	 	1.13E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TRPV2	ion channel	 	 	 	 	 	1.13E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	citric acid	chemical - endogenous mammalian	 	 	 	 	 	1.13E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	miR-542-3p (miRNAs w/seed GUGACAG)	mature microrna	 	 	 	 	 	1.13E-02	RPS23	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	pubchem compound 11368987	chemical reagent	 	 	 	 	 	1.13E-02	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CD8A	other	 	 	 	 	 	1.30E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	lead acetate	chemical toxicant	 	 	 	 	 	1.30E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CD24	other	 	 	 	 	 	1.34E-02	ATP13A3,JMJD1C	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	SERPINB2	other	 	 	 	 	 	1.46E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	Ifn	group	 	 	 	 	 	1.61E-02	CASP8,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	BCL6B	transcription regulator	 	 	 	 	 	1.62E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	HES5	transcription regulator	 	 	 	 	 	1.62E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	RYBP	transcription regulator	 	 	 	 	 	1.62E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	camptothecin	chemical drug	 	 	 	 	 	1.62E-02	CASP8,PRKAR2B,PTPRN2,RDX	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	PRKCA	kinase	 	 	 	 	 	1.63E-02	PTPRN2,RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	AHR	ligand-dependent nuclear receptor	 	 	 	 	 	1.77E-02	ACTN1,CASP8,STEAP4	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	HIST2H3C	other	 	 	 	 	 	1.78E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TRAF4	other	 	 	 	 	 	1.78E-02	STEAP4	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	teriflunomide	chemical drug	 	 	 	 	 	1.78E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	EBF1	transcription regulator	 	 	 	 	 	1.92E-02	EBF1,PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CLCA2	ion channel	 	 	 	 	 	1.94E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	PPP3CB	phosphatase	 	 	 	 	 	1.94E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IL10	cytokine	 	 	 	 	 	2.07E-02	CASP8,TAP2,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IKZF1	transcription regulator	 	 	 	 	 	2.09E-02	EBF1,RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	GSX2	transcription regulator	 	 	 	 	 	2.10E-02	EBF1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	YWHAQ	other	 	 	 	 	 	2.10E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TCR	complex	 	 	 	 	 	2.11E-02	RPS23,RUNX1,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	FAS	transmembrane receptor	 	 	 	 	 	2.24E-02	CASP8,PTPRN2,RDX	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CBX2	transcription regulator	 	 	 	 	 	2.26E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	VCP	enzyme	 	 	 	 	 	2.26E-02	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	onapristone	chemical drug	 	 	 	 	 	2.26E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IRF4	transcription regulator	 	 	 	 	 	2.39E-02	SUB1,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	PURA	transcription regulator	 	 	 	 	 	2.42E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	mir-31	microrna	 	 	 	 	 	2.42E-02	RDX	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CGB3 (includes others)	other	 	 	 	 	 	2.58E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	GPI	enzyme	 	 	 	 	 	2.58E-02	STEAP4	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IFT57	other	 	 	 	 	 	2.58E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	Stat5 dimer	complex	 	 	 	 	 	2.58E-02	EBF1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	doxorubicin	chemical drug	 	 	 	 	 	2.73E-02	CASP8,RUNX1,TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	ACSL5	enzyme	 	 	 	 	 	2.73E-02	ADAMTS6	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	DAXX	transcription regulator	 	 	 	 	 	2.73E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	miR-199a-3p (and other miRNAs w/seed CAGUAGU)	mature microrna	 	 	 	 	 	2.73E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	ACVR1C	kinase	 	 	 	 	 	2.89E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TNFRSF13C	transmembrane receptor	 	 	 	 	 	2.89E-02	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	STAT5B	transcription regulator	 	 	 	 	 	2.96E-02	CASP8,EBF1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IRF7	transcription regulator	 	 	 	 	 	3.05E-02	TAP2,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	DOT1L	phosphatase	 	 	 	 	 	3.21E-02	RPS23	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	peoniflorin	chemical drug	 	 	 	 	 	3.21E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	SMARCC1	transcription regulator	 	 	 	 	 	3.37E-02	EBF1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	Interferon alpha	group	 	 	 	 	 	3.38E-02	CASP8,TAP2,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	ELF5	transcription regulator	 	 	 	 	 	3.52E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	L-tryptophan	chemical - endogenous mammalian	 	 	 	 	 	3.52E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	topotecan	chemical drug	 	 	 	 	 	3.57E-02	JMJD1C,PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TP53	transcription regulator	 	 	 	 	 	3.63E-02	ACTN1,CASP8,H2AFY2,JMJD1C,RUNX1,TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	E. coli serotype 0127B8 lipopolysaccharide	chemical - endogenous non-mammalian	 	 	 	 	 	3.68E-02	CASP8,TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	9Z,11E-octadecadienoic acid	chemical - endogenous non-mammalian	 	 	 	 	 	3.68E-02	EBF1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	PDGF-DD	complex	 	 	 	 	 	3.68E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TRPS1	transcription regulator	 	 	 	 	 	3.68E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	zidovudine	chemical drug	 	 	 	 	 	3.68E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	MYOD1	transcription regulator	 	 	 	 	 	3.79E-02	PRKAR2B,RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	MAP3K3	kinase	 	 	 	 	 	3.84E-02	STEAP4	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CDC73	other	 	 	 	 	 	4.00E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	IL-1R	group	 	 	 	 	 	4.15E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	PEBP1	other	 	 	 	 	 	4.15E-02	PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	tetrodotoxin	chemical drug	 	 	 	 	 	4.15E-02	TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CTSS	peptidase	 	 	 	 	 	4.31E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	SLC9A3	ion channel	 	 	 	 	 	4.31E-02	TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	SMAD5	transcription regulator	 	 	 	 	 	4.31E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	PRKAR1A	kinase	 	 	 	 	 	4.46E-02	PRKAR2B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	TAB1	enzyme	 	 	 	 	 	4.46E-02	TNFSF13B	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CHADL	other	 	 	 	 	 	4.62E-02	STEAP4	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	SND1	enzyme	 	 	 	 	 	4.62E-02	PTPRN2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	VEGFB	growth factor	 	 	 	 	 	4.78E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	daunorubicin	chemical drug	 	 	 	 	 	4.78E-02	TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	ETS1	transcription regulator	 	 	 	 	 	4.86E-02	PTPRN2,RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	NKX2-3	transcription regulator	 	 	 	 	 	4.90E-02	RPS23,TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CNOT7	transcription regulator	 	 	 	 	 	4.93E-02	TAP2	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	LCK	kinase	 	 	 	 	 	4.93E-02	RUNX1	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	MTDH	transcription regulator	 	 	 	 	 	4.93E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	hymecromone	chemical drug	 	 	 	 	 	4.93E-02	CASP8	 	
+Newborns-Combined - 2017-12-07 12:37 PM	 	CD40	transmembrane receptor	 	 	 	 	 	4.94E-02	TAP2,TNFSF13B	 	
+
+Causal Networks for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+
+Diseases and Bio Functions for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+Categories	Functions	Diseases or Functions Annotation	p-Value	Predicted Activation State	Activation z-score	Notes	Bias-corrected z-score	Molecules	# Molecules	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Arrest in differentiation of leukocytes	7.39E-06	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Tissue Development	differentiation	Arrest in differentiation of myeloid cells	1.47E-05	 	 	 	 	RUNX1,CASP8	2	
+Cancer, Cellular Development, Organismal Injury and Abnormalities, Tumor Morphology	differentiation	Arrest in differentiation of leukemia cells	2.45E-05	 	 	 	 	RUNX1,CASP8	2	
+Cell Death and Survival, Organismal Injury and Abnormalities	anoikis	Anoikis of endothelial cells	3.68E-05	 	 	 	 	CASP8,RDX	2	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of pre-B lymphocytes	8.65E-05	 	 	 	 	TNFSF13B,EBF1,RUNX1	3	
+Connective Tissue Development and Function, Tissue Morphology	quantity	Quantity of adipose tissue	2.00E-04	 	 	 	 	C6orf15,PRKAR2B,EBF1,STEAP4,CASP8	5	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	apoptosis	Apoptosis of leukemia cells	3.81E-04	 	 	 	 	TNFSF13B,RUNX1,CASP8	3	
+Cell Death and Survival	apoptosis	Apoptosis of lymphoma cell lines	3.85E-04	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Gene Expression	transcription	Transcription	4.28E-04	 	 	 	 	TNFSF13B,PRKAR2B,SUB1,CXXC1,H2AFY2,DUSP22,RDX,HIST1H1D,EBF1,RUNX1,ZFP57,CASP8,JMJD1C	13	
+Organismal Survival	viability	Viability	5.06E-04	 	 	 	 	RUNX1,CXXC1,CASP8	3	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Lymphoid Tissue Structure and Development	expansion	Expansion of leukocytes	5.20E-04	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Cellular Growth and Proliferation, Lymphoid Tissue Structure and Development	expansion	Expansion of lymphatic system cells	5.20E-04	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of pre-B lymphocytes	6.64E-04	 	 	 	 	TNFSF13B,EBF1	2	
+Gene Expression	expression	Expression of RNA	8.34E-04	 	 	 	 	PRKAR2B,SUB1,CXXC1,H2AFY2,DUSP22,RDX,HIST1H1D,EBF1,RUNX1,RPS23,ZFP57,CASP8,JMJD1C	13	
+Immunological Disease	systemic autoimmune syndrome	Systemic autoimmune syndrome	8.36E-04	 	 	 	 	TNFSF13B,C6orf15,ADAMTS6,TAP2,ZFP57,PTPRN2,STEAP4,CASP8,JMJD1C	9	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of hematopoietic cells	9.12E-04	 	 	 	 	TNFSF13B,EBF1,RUNX1	3	
+Cardiovascular Disease, Organismal Injury and Abnormalities	hemopericardium	Hemopericardium	9.72E-04	 	 	 	 	RUNX1,CASP8	2	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of B lymphocytes	1.01E-03	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Lymphoid Tissue Structure and Development	frequency	Frequency of B lymphocytes	1.04E-03	 	 	 	 	TNFSF13B,RUNX1	2	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of pro-B lymphocytes	1.34E-03	 	 	 	 	EBF1,RUNX1	2	
+Immunological Disease	immunodeficiency	Immunodeficiency	1.54E-03	 	 	 	 	TNFSF13B,TAP2,RUNX1,CASP8	4	
+Tissue Development	activation	Activation of colonic epithelium	1.59E-03	 	 	 	 	NLRP6	1	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	acute myelomonocytic leukemia - eosinophilic variant	Acute myelomonocytic leukemia - eosinophilic variant	1.59E-03	 	 	 	 	RUNX1	1	
+Connective Tissue Development and Function	adiposity	Adiposity of bone marrow	1.59E-03	 	 	 	 	EBF1	1	
+Cardiovascular System Development and Function, Embryonic Development, Organismal Development, Tissue Development	angiogenesis	Angiogenesis of para-aortic splanchnopleural region	1.59E-03	 	 	 	 	RUNX1	1	
+Cell Death and Survival, Organismal Injury and Abnormalities, Respiratory Disease	apoptosis	Apoptosis of bronchiolar cell	1.59E-03	 	 	 	 	CASP8	1	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	apoptosis	Apoptosis of chronic myeloid leukemia in blast crisis cells	1.59E-03	 	 	 	 	CASP8	1	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	apoptosis	Apoptosis of precursor B cell acute lymphoblastic leukemia cells	1.59E-03	 	 	 	 	CASP8	1	
+Cell Cycle, Embryonic Development	cell cycle progression	Arrest in cell cycle progression of mesenchymal stem cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Arrest in differentiation of macrophages	1.59E-03	 	 	 	 	CASP8	1	
+Cancer, Cellular Development, Organismal Injury and Abnormalities, Tumor Morphology	differentiation	Arrest in differentiation of myelomonocytic cells	1.59E-03	 	 	 	 	CASP8	1	
+Cellular Function and Maintenance	function	Arrest in function of multipotential hemopoietic progenitor cells	1.59E-03	 	 	 	 	CASP8	1	
+Cellular Development, Cellular Growth and Proliferation	growth	Arrest in growth of macrophage cancer cell lines	1.59E-03	 	 	 	 	RUNX1	1	
+Connective Tissue Disorders, Immunological Disease, Inflammatory Disease, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	autoantibody-positive systemic lupus erythematosus	Autoantibody-positive systemic lupus erythematosus	1.59E-03	 	 	 	 	TNFSF13B	1	
+Developmental Disorder, Hematological Disease, Hereditary Disorder, Immunological Disease, Organismal Injury and Abnormalities	autoimmune lymphoproliferative syndrome type 2B	Autoimmune lymphoproliferative syndrome type 2B	1.59E-03	 	 	 	 	CASP8	1	
+Developmental Disorder, Hereditary Disorder, Neurological Disease, Organismal Injury and Abnormalities	autosomal recessive mental retardation type 39	Autosomal recessive mental retardation type 39	1.59E-03	 	 	 	 	TTI2	1	
+Cell Death and Survival	cell death	Cell death of branchial motor neurons	1.59E-03	 	 	 	 	RUNX1	1	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	cell death	Cell death of myelomonocytic cells	1.59E-03	 	 	 	 	CASP8	1	
+Cell Death and Survival	cell death	Cell death of visceral motor neurons	1.59E-03	 	 	 	 	RUNX1	1	
+Cell Death and Survival, Hematological System Development and Function	cell survival	Cell survival of peripheral B lymphocytes	1.59E-03	 	 	 	 	TNFSF13B	1	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	chronic myeloid leukemia acute transformation	Chronic myeloid leukemia acute transformation	1.59E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Hematological System Development and Function, Hematopoiesis	commitment	Commitment of lymphohematopoietic progenitor cells	1.59E-03	 	 	 	 	EBF1	1	
+Cancer, Cell Cycle, Cellular Movement, Organismal Injury and Abnormalities	cytokinesis	Cytokinesis of B cell lymphoma cells	1.59E-03	 	 	 	 	CASP8	1	
+Cell-To-Cell Signaling and Interaction, Cellular Compromise	degeneration	Degeneration of stereocilia	1.59E-03	 	 	 	 	RDX	1	
+Connective Tissue Development and Function, Tissue Development	deposition	Deposition of white adipose tissue	1.59E-03	 	 	 	 	EBF1	1	
+Gastrointestinal Disease, Organ Morphology, Organismal Injury and Abnormalities	destruction	Destruction of submandibular gland	1.59E-03	 	 	 	 	TNFSF13B	1	
+Cellular Development, Nervous System Development and Function, Tissue Development	differentiation	Differentiation of branchial motor neurons	1.59E-03	 	 	 	 	RUNX1	1	
+Cancer, Cellular Development, Organismal Injury and Abnormalities	differentiation	Differentiation of rhabdomyosarcoma cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of transitional type 2 B lymphocytes	1.59E-03	 	 	 	 	TNFSF13B	1	
+Cardiovascular System Development and Function, Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	erythropoiesis	Erythropoiesis of induced pluripotent stem cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Inflammatory Response, Lymphoid Tissue Structure and Development	expansion	Expansion of colony-forming unit macrophages	1.59E-03	 	 	 	 	RUNX1	1	
+Cell Cycle	G0/G1 phase transition	G0/G1 phase transition of bulge cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cell Cycle	G1/S phase transition	G1/S phase transition of bulge cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	generation	Generation of pre-pro-B lymphocytes	1.59E-03	 	 	 	 	EBF1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	granulopoiesis	Granulopoiesis of colony-forming units granulocytes	1.59E-03	 	 	 	 	RUNX1	1	
+Cardiovascular System Development and Function, Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	hematopoiesis	Hematopoiesis of colony-forming erythroid cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	hematopoiesis	Hematopoiesis of para-aortic splanchnopleural cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cell-mediated Immune Response, Cellular Function and Maintenance, Hematological System Development and Function	homeostasis	Homeostasis of peripheral T lymphocyte	1.59E-03	 	 	 	 	CASP8	1	
+Hematological Disease, Metabolic Disease	hypotriglyceridemia	Hypotriglyceridemia	1.59E-03	 	 	 	 	EBF1	1	
+Cellular Development, Connective Tissue Development and Function, Tissue Development	differentiation	Initiation of differentiation of adipocytes	1.59E-03	 	 	 	 	EBF1	1	
+Cellular Development, Connective Tissue Development and Function	differentiation	Initiation of differentiation of fibroblast cell lines	1.59E-03	 	 	 	 	EBF1	1	
+Cell Death and Survival	loss	Loss of bone marrow-derived dendritic cells	1.59E-03	 	 	 	 	CASP8	1	
+Cellular Development, Hematological System Development and Function, Hematopoiesis, Tissue Development	maturation	Maturation of granulocyte-macrophage progenitor cells	1.59E-03	 	 	 	 	RUNX1	1	
+Cellular Movement	migration	Migration by dopaminergic neurons	1.59E-03	 	 	 	 	EBF1	1	
+Cell Death and Survival	necroptosis	Necroptosis of T lymphocytes	1.59E-03	 	 	 	 	CASP8	1	
+Organismal Injury and Abnormalities	pedal edema	Pedal edema	1.59E-03	 	 	 	 	CASP8	1	
+Cellular Compromise	permeability transition	Permeability transition of breast cancer cell lines	1.59E-03	 	 	 	 	CASP8	1	
+Hematological Disease, Hereditary Disorder, Organismal Injury and Abnormalities	platelet-type bleeding disorder type 15	Platelet-type bleeding disorder type 15	1.59E-03	 	 	 	 	ACTN1	1	
+Cell Cycle	quiescence	Quiescence of ovarian cancer cell lines	1.59E-03	 	 	 	 	PRKAR2B	1	
+Cell Cycle	S phase	Re-entry into S phase of leukocyte cell lines	1.59E-03	 	 	 	 	RUNX1	1	
+Hematological Disease, Organismal Injury and Abnormalities	reactive thrombocytosis	Reactive thrombocytosis	1.59E-03	 	 	 	 	RUNX1	1	
+Organ Morphology, Tissue Development, Tissue Morphology	regeneration	Regeneration of colonic mucosa	1.59E-03	 	 	 	 	NLRP6	1	
+Cardiovascular Disease, Connective Tissue Disorders, Hematological Disease, Organismal Injury and Abnormalities	secondary erythrocytosis	Secondary erythrocytosis	1.59E-03	 	 	 	 	RUNX1	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of transitional type 2 B lymphocytes	1.59E-03	 	 	 	 	TNFSF13B	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of transitional type 3 B lymphocytes	1.59E-03	 	 	 	 	TNFSF13B	1	
+Connective Tissue Development and Function, Tissue Morphology	quantity	Quantity of connective tissue	1.77E-03	 	 	 	 	C6orf15,PRKAR2B,EBF1,RUNX1,STEAP4,CASP8	6	
+Gastrointestinal Disease, Immunological Disease, Ophthalmic Disease, Organismal Injury and Abnormalities	primary Sjögren syndrome	Primary Sjögren syndrome	1.85E-03	 	 	 	 	TNFSF13B,TAP2	2	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Humoral Immune Response, Immune Cell Trafficking, Inflammatory Response	activation	Activation of B lymphocytes	1.87E-03	 	 	 	 	TNFSF13B,EBF1,CASP8	3	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of neutrophils	1.94E-03	 	 	 	 	DHRS7B,RUNX1	2	
+Connective Tissue Disorders, Inflammatory Disease, Inflammatory Response, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	inflammation	Inflammation of joint	1.98E-03	 	 	 	 	TNFSF13B,C6orf15,ADAMTS6,TAP2,PTPRN2,STEAP4,CASP8,JMJD1C	8	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of phagocytes	1.99E-03	 	 	 	 	DHRS7B,EBF1,RUNX1,CASP8	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development	expansion	Expansion of B lymphocytes	2.04E-03	 	 	 	 	TNFSF13B,EBF1	2	
+Gene Expression	transcription	Transcription of RNA	2.08E-03	 	 	 	 	HIST1H1D,PRKAR2B,EBF1,RUNX1,SUB1,CXXC1,H2AFY2,ZFP57,DUSP22,CASP8,JMJD1C	11	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of thymus gland	2.08E-03	 	 	 	 	HIST1H1D,RUNX1,CASP8	3	
+Endocrine System Development and Function	glucose tolerance	Glucose tolerance	2.21E-03	 	 	 	 	PRKAR2B,PTPRN2,STEAP4,CASP8	4	
+Cardiovascular Disease, Organismal Injury and Abnormalities	peripheral arterial disease	Advanced stage peripheral arterial disease	2.27E-03	 	 	 	 	SUB1,RUNX1,CASP8	3	
+Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of myeloid progenitor cells	2.33E-03	 	 	 	 	RUNX1,CASP8	2	
+Endocrine System Disorders, Gastrointestinal Disease, Immunological Disease, Metabolic Disease, Organismal Injury and Abnormalities	insulin-dependent diabetes mellitus	Insulin-dependent diabetes mellitus	2.35E-03	 	 	 	 	TNFSF13B,C6orf15,ADAMTS6,TAP2,ZFP57	5	
+Embryonic Development, Tissue Morphology	remodeling	Remodeling of vitelline vessel	2.44E-03	 	 	 	 	RUNX1,CASP8	2	
+Cardiovascular System Development and Function, Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	thrombopoiesis	Thrombopoiesis	2.44E-03	 	 	 	 	ACTN1,CASP8	2	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of lymphocytes	2.60E-03	 	 	 	 	TNFSF13B,EBF1,RUNX1,DUSP22,CASP8	5	
+Cardiovascular Disease, Organismal Injury and Abnormalities	peripheral arterial disease	Intermediate disease stage peripheral arterial disease	2.64E-03	 	 	 	 	SUB1,RUNX1,CASP8	3	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Arrest in differentiation of B lymphocytes	2.65E-03	 	 	 	 	TNFSF13B,EBF1	2	
+Cell Death and Survival	cell viability	Cell viability of blood cells	2.83E-03	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Connective Tissue Disorders, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	non-traumatic arthropathy	Non-traumatic arthropathy	2.91E-03	 	 	 	 	TNFSF13B,C6orf15,ADAMTS6,TAP2,PTPRN2,STEAP4,JMJD1C	7	
+Cell Death and Survival, Organismal Injury and Abnormalities	anoikis	Anoikis of vascular endothelial cells	3.18E-03	 	 	 	 	RDX	1	
+Cellular Development	differentiation	Arrest in differentiation of lymphoma cell lines	3.18E-03	 	 	 	 	RUNX1	1	
+Cell Cycle, Gene Expression	binding	Binding of AML1 binding site	3.18E-03	 	 	 	 	RUNX1	1	
+Gastrointestinal Disease, Organ Morphology, Organismal Injury and Abnormalities	destruction	Destruction of intestinal villus	3.18E-03	 	 	 	 	CASP8	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	development	Development of transitional type 1 B lymphocytes	3.18E-03	 	 	 	 	TNFSF13B	1	
+Cellular Development, Tissue Development, Visual System Development and Function	differentiation	Differentiation of horizontal cells	3.18E-03	 	 	 	 	EBF1	1	
+Cardiovascular System Development and Function, Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	expansion	Expansion of erythroid cells	3.18E-03	 	 	 	 	RUNX1	1	
+Cancer, Hematological Disease, Hereditary Disorder, Immunological Disease, Organismal Injury and Abnormalities	familial acute myeloid leukemia	Familial acute myeloid leukemia	3.18E-03	 	 	 	 	RUNX1	1	
+Small Molecule Biochemistry	excretion	Increased excretion of bilirubin	3.18E-03	 	 	 	 	RDX	1	
+Cardiovascular System Development and Function, Organismal Development	network formation	Network formation of endothelial progenitor cells	3.18E-03	 	 	 	 	RUNX1	1	
+Skeletal and Muscular System Development and Function	ossification	Ossification by calvarial cells	3.18E-03	 	 	 	 	EBF1	1	
+Cellular Assembly and Organization, Cellular Development, Cellular Growth and Proliferation, Nervous System Development and Function, Tissue Development	outgrowth	Outgrowth of growth cone	3.18E-03	 	 	 	 	TNFSF13B	1	
+Hematological System Development and Function, Tissue Morphology	quantity	Quantity of colony forming unit myeloid cell	3.18E-03	 	 	 	 	RUNX1	1	
+Cellular Assembly and Organization, Cellular Function and Maintenance, Nervous System Development and Function, Tissue Morphology	quantity	Quantity of radial cellular projections	3.18E-03	 	 	 	 	RDX	1	
+Inflammatory Disease, Inflammatory Response, Skeletal and Muscular Disorders	myositis	Refractory myositis	3.18E-03	 	 	 	 	TNFSF13B	1	
+Hematological System Development and Function, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Tissue Morphology	size	Size of marginal zone of spleen	3.18E-03	 	 	 	 	TNFSF13B	1	
+Cell Morphology, Embryonic Development	surface area	Surface area of embryonic cell lines	3.18E-03	 	 	 	 	CLNS1A	1	
+Cell Morphology, Hair and Skin Development and Function	surface area	Surface area of epithelial cell lines	3.18E-03	 	 	 	 	CLNS1A	1	
+Cell Morphology, Renal and Urological System Development and Function	surface area	Surface area of kidney cell lines	3.18E-03	 	 	 	 	CLNS1A	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of plasmablasts	3.18E-03	 	 	 	 	TNFSF13B	1	
+Cell Death and Survival	cell death	Cell death of macrophage cancer cell lines	3.22E-03	 	 	 	 	RUNX1,CASP8	2	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Organismal Development, Tissue Development	hematopoiesis	Hematopoiesis in embryo	3.98E-03	 	 	 	 	RUNX1,CASP8	2	
+Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of bone marrow cells	4.08E-03	 	 	 	 	EBF1,RUNX1,CASP8	3	
+Cell Death and Survival	cell death	Cell death of leukemia cell lines	4.18E-03	 	 	 	 	TNFSF13B,RUNX1,RDX,CASP8	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Lymphoid Tissue Structure and Development	expansion	Expansion of lymphocytes	4.54E-03	 	 	 	 	TNFSF13B,EBF1,CASP8	3	
+Cell-To-Cell Signaling and Interaction, Connective Tissue Development and Function, Skeletal and Muscular System Development and Function, Tissue Development	activation	Activation of osteoclasts	4.66E-03	 	 	 	 	EBF1,RUNX1	2	
+Nervous System Development and Function, Neurological Disease, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of ventral striatum	4.77E-03	 	 	 	 	EBF1	1	
+Tissue Development	accumulation	Accumulation of multilineage progenitor cells	4.77E-03	 	 	 	 	RUNX1	1	
+Cell Death and Survival	anoikis	Anoikis of stomach cancer cell lines	4.77E-03	 	 	 	 	CASP8	1	
+Cell Death and Survival	apoptosis	Apoptosis of B-1 lymphocytes	4.77E-03	 	 	 	 	TNFSF13B	1	
+Cellular Development	differentiation	Arrest in differentiation of bone marrow cell lines	4.77E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Arrest in differentiation of granulocytes	4.77E-03	 	 	 	 	RUNX1	1	
+Cellular Development	differentiation	Arrest in differentiation of hematopoietic cell lines	4.77E-03	 	 	 	 	RUNX1	1	
+Developmental Disorder, Hereditary Disorder, Immunological Disease, Metabolic Disease, Organismal Injury and Abnormalities	bare lymphocyte syndrome, type i	Bare lymphocyte syndrome, type i	4.77E-03	 	 	 	 	TAP2	1	
+Cell Cycle, Gene Expression	binding	Binding of CBFb binding site	4.77E-03	 	 	 	 	RUNX1	1	
+Cell Death and Survival	cell death	Cell death of endothelioma cell lines	4.77E-03	 	 	 	 	CASP8	1	
+Carbohydrate Metabolism, Lipid Metabolism, Small Molecule Biochemistry	dephosphorylation	Dephosphorylation of phosphtidylinositol 5-phosphate	4.77E-03	 	 	 	 	PTPRN2	1	
+Cellular Development, Tissue Development, Visual System Development and Function	differentiation	Differentiation of retinal progenitor cells	4.77E-03	 	 	 	 	EBF1	1	
+Cellular Development, Embryonic Development, Nervous System Development and Function, Organ Development, Organismal Development, Tissue Development, Visual System Development and Function	differentiation	Differentiation of type 2 OFF-cone bipolar cells	4.77E-03	 	 	 	 	EBF1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	expansion	Expansion of short-term hematopoietic stem cells	4.77E-03	 	 	 	 	RUNX1	1	
+Hematopoiesis, Lymphoid Tissue Structure and Development	frequency	Frequency of pro-B lymphocytes	4.77E-03	 	 	 	 	RUNX1	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	grade I astrocytoma	Grade I astrocytoma	4.77E-03	 	 	 	 	ACTN1	1	
+Cellular Assembly and Organization	linkage	Linkage of actin cytoskeleton	4.77E-03	 	 	 	 	RDX	1	
+Cellular Movement, Nervous System Development and Function	migration	Migration of facial branchiomotor neurons	4.77E-03	 	 	 	 	EBF1	1	
+Digestive System Development and Function, Organismal Development	production	Production of saliva	4.77E-03	 	 	 	 	TNFSF13B	1	
+Hematological System Development and Function, Hematopoiesis, Inflammatory Response, Tissue Morphology	quantity	Quantity of promonocytes	4.77E-03	 	 	 	 	RUNX1	1	
+Tissue Morphology	quantity	Quantity of stem cell lines	4.77E-03	 	 	 	 	RUNX1	1	
+Cardiovascular Disease, Organismal Injury and Abnormalities, Reproductive System Disease	early-onset preeclampsia	Severe early-onset preeclampsia	4.77E-03	 	 	 	 	CASP8	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of marginal-zone B lymphocytes	4.77E-03	 	 	 	 	TNFSF13B	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of transitional B lymphocytes	4.77E-03	 	 	 	 	TNFSF13B	1	
+Cancer, Developmental Disorder, Hematological Disease, Organismal Injury and Abnormalities	transient myeloproliferative disorder of Down syndrome	Transient myeloproliferative disorder of Down syndrome	4.77E-03	 	 	 	 	RUNX1	1	
+Hematological Disease, Hereditary Disorder, Organismal Injury and Abnormalities	hereditary bleeding disorder	Hereditary bleeding disorder	4.81E-03	 	 	 	 	RUNX1,ACTN1	2	
+Connective Tissue Development and Function, Tissue Morphology	quantity	Quantity of subcutaneous fat	5.25E-03	 	 	 	 	EBF1,STEAP4	2	
+Cell Death and Survival	cell death	Cell death of motor neurons	5.55E-03	 	 	 	 	RUNX1,CASP8	2	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Tissue Development	differentiation	Differentiation of hematopoietic progenitor cells	5.69E-03	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Cell Death and Survival, Hematological System Development and Function	cell viability	Cell viability of lymphocytes	6.05E-03	 	 	 	 	TNFSF13B,EBF1,CASP8	3	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of thymus lobule	6.35E-03	 	 	 	 	RUNX1	1	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	apoptosis	Apoptosis of follicular B-cell lymphoma cells	6.35E-03	 	 	 	 	CASP8	1	
+Cell Death and Survival, Skeletal and Muscular Disorders	apoptosis	Apoptosis of microvascular smooth muscle cells	6.35E-03	 	 	 	 	CASP8	1	
+Cancer, Cellular Development, Organismal Injury and Abnormalities, Tumor Morphology	differentiation	Arrest in differentiation of acute leukemia cells	6.35E-03	 	 	 	 	RUNX1	1	
+Respiratory Disease	clearance	Clearance of alveolar fluid	6.35E-03	 	 	 	 	CASP8	1	
+Cellular Compromise	degeneration	Degeneration of nervous tissue cell lines	6.35E-03	 	 	 	 	CASP8	1	
+Carbohydrate Metabolism, Lipid Metabolism, Small Molecule Biochemistry	dephosphorylation	Dephosphorylation of phosphatidylinositol 3,5-diphosphate	6.35E-03	 	 	 	 	PTPRN2	1	
+Carbohydrate Metabolism, Lipid Metabolism, Small Molecule Biochemistry	dephosphorylation	Dephosphorylation of phosphatidylinositol 4-phosphate	6.35E-03	 	 	 	 	PTPRN2	1	
+Cellular Development, Nervous System Development and Function, Tissue Development	differentiation	Differentiation of visceral motor neurons	6.35E-03	 	 	 	 	RUNX1	1	
+Drug Metabolism, Molecular Transport, Small Molecule Biochemistry	efflux	Efflux of vinblastine	6.35E-03	 	 	 	 	RDX	1	
+Cell-mediated Immune Response, Cellular Movement, Hematological System Development and Function, Hematopoiesis, Immune Cell Trafficking	emigration	Emigration of thymocytes	6.35E-03	 	 	 	 	RUNX1	1	
+Drug Metabolism, Molecular Transport, Small Molecule Biochemistry	excretion	Excretion of epinephrine	6.35E-03	 	 	 	 	PTPRN2	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	expansion	Expansion of granulocyte-macrophage progenitor cells	6.35E-03	 	 	 	 	RUNX1	1	
+Cancer, Hematological Disease, Hereditary Disorder, Organismal Injury and Abnormalities	familial platelet disorder with predisposition to acute myelogenous leukemia	Familial platelet disorder with predisposition to acute myelogenous leukemia	6.35E-03	 	 	 	 	RUNX1	1	
+Lymphoid Tissue Structure and Development	frequency	Frequency of memory B cells	6.35E-03	 	 	 	 	TNFSF13B	1	
+Cell Death and Survival, Nervous System Development and Function, Tissue Morphology	loss	Loss of mesencephalic neurons	6.35E-03	 	 	 	 	CASP8	1	
+Cancer, Organismal Injury and Abnormalities	malignancy	Malignancy of acute leukemia cells	6.35E-03	 	 	 	 	RUNX1	1	
+Cancer, Organismal Injury and Abnormalities	metastasis	Metastasis of neuroblastoma cell lines	6.35E-03	 	 	 	 	CASP8	1	
+Cellular Movement, Hematological System Development and Function, Humoral Immune Response, Immune Cell Trafficking	migration	Migration of plasma cells	6.35E-03	 	 	 	 	TNFSF13B	1	
+Cell Cycle	mitogenesis	Mitogenesis of pancreatic cancer cell lines	6.35E-03	 	 	 	 	PTPRN2	1	
+Cellular Function and Maintenance, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	production	Production of myeloid progenitor cells	6.35E-03	 	 	 	 	RUNX1	1	
+Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of B lymphoblasts	6.35E-03	 	 	 	 	TNFSF13B	1	
+Hematological System Development and Function, Hematopoiesis, Tissue Morphology	quantity	Quantity of granulocyte progenitors	6.35E-03	 	 	 	 	RUNX1	1	
+Hematological System Development and Function, Hematopoiesis, Tissue Morphology	quantity	Quantity of short-term hematopoietic stem cells	6.35E-03	 	 	 	 	RUNX1	1	
+Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of transitional type 3 B lymphocytes	6.35E-03	 	 	 	 	TNFSF13B	1	
+Cellular Assembly and Organization, Cellular Compromise	retraction	Retraction of lamellipodia	6.35E-03	 	 	 	 	RDX	1	
+Endocrine System Disorders, Gastrointestinal Disease, Hereditary Disorder, Metabolic Disease, Organismal Injury and Abnormalities	transitory neonatal diabetes	Transitory neonatal diabetes	6.35E-03	 	 	 	 	ZFP57	1	
+Gene Expression	transcription	Transcription of DNA	6.48E-03	 	 	 	 	HIST1H1D,EBF1,RUNX1,SUB1,CXXC1,H2AFY2,ZFP57,DUSP22,JMJD1C	9	
+Connective Tissue Disorders, Immunological Disease, Inflammatory Disease, Inflammatory Response, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	rheumatoid arthritis	Rheumatoid arthritis	6.75E-03	 	 	 	 	TNFSF13B,C6orf15,TAP2,PTPRN2,STEAP4,JMJD1C	6	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of lymphoid organ	7.00E-03	 	 	 	 	HIST1H1D,TNFSF13B,RUNX1,CASP8	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of antigen presenting cells	7.58E-03	 	 	 	 	EBF1,RUNX1,CASP8	3	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	expansion	Expansion of hematopoietic progenitor cells	7.90E-03	 	 	 	 	EBF1,RUNX1	2	
+Hematological System Development and Function, Hematopoiesis, Tissue Development	accumulation	Accumulation of red blood cells	7.94E-03	 	 	 	 	CASP8	1	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	apoptosis	Apoptosis of Hodgkin and Reed-Sternberg cells	7.94E-03	 	 	 	 	CASP8	1	
+Cancer, Organismal Injury and Abnormalities, Respiratory Disease	atypical adenomatous lung hyperplasia	Atypical adenomatous lung hyperplasia	7.94E-03	 	 	 	 	CASP8	1	
+Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Hematological System Development and Function, Humoral Immune Response	co-stimulation	Co-stimulation of B lymphocytes	7.94E-03	 	 	 	 	TNFSF13B	1	
+Cell Death and Survival	apoptosis	Delay in apoptosis of lymphoma cell lines	7.94E-03	 	 	 	 	RUNX1	1	
+Carbohydrate Metabolism, Lipid Metabolism, Small Molecule Biochemistry	dephosphorylation	Dephosphorylation of phosphatidylinositol 3,4-diphosphate	7.94E-03	 	 	 	 	PTPRN2	1	
+Carbohydrate Metabolism, Lipid Metabolism, Small Molecule Biochemistry	dephosphorylation	Dephosphorylation of phosphatidylinositol 4,5-diphosphate	7.94E-03	 	 	 	 	PTPRN2	1	
+Cell Morphology, Cellular Compromise, DNA Replication, Recombination, and Repair	mutagenesis	Mutagenesis of fibroblast cell lines	7.94E-03	 	 	 	 	CASP8	1	
+Organismal Functions	oxygenation	Oxygenation	7.94E-03	 	 	 	 	CASP8	1	
+Behavior	Pavlovian learning	Pavlovian learning	7.94E-03	 	 	 	 	PTPRN2	1	
+Neurological Disease, Organismal Injury and Abnormalities	pharmacologically induced seizure	Pharmacologically induced seizure	7.94E-03	 	 	 	 	PTPRN2	1	
+Embryonic Development	survival	Survival of embryo	7.94E-03	 	 	 	 	CLNS1A	1	
+Inflammatory Response	T-cell-independent type-2 extrafollicular antibody response	T-cell-independent type-2 extrafollicular antibody response	7.94E-03	 	 	 	 	TNFSF13B	1	
+Cellular Development, Cellular Growth and Proliferation	proliferation	Proliferation of leukemia cell lines	7.99E-03	 	 	 	 	PRKAR2B,RUNX1,CASP8	3	
+Cell Death and Survival	cell viability	Cell viability of leukemia cell lines	8.09E-03	 	 	 	 	TNFSF13B,JMJD1C	2	
+Cell Death and Survival	apoptosis	Apoptosis of myeloma cell lines	8.46E-03	 	 	 	 	TNFSF13B,CASP8	2	
+DNA Replication, Recombination, and Repair	damage	DNA damage	8.51E-03	 	 	 	 	EBF1,RUNX1,CASP8	3	
+Carbohydrate Metabolism, Molecular Transport, Small Molecule Biochemistry	uptake	Uptake of D-glucose	8.51E-03	 	 	 	 	TNFSF13B,EBF1,STEAP4	3	
+Cardiovascular System Development and Function, Embryonic Development, Organ Development, Organismal Development, Tissue Development	formation	Formation of coronary vessel	8.64E-03	 	 	 	 	ADAMTS6,RUNX1	2	
+Cell Signaling, Post-Translational Modification, Protein Synthesis	assembly	Assembly of protein-protein complex	8.69E-03	 	 	 	 	SPP2,TAP2,RDX	3	
+DNA Replication, Recombination, and Repair, Nucleic Acid Metabolism, Small Molecule Biochemistry	incorporation	Incorporation of thymidine	9.03E-03	 	 	 	 	TNFSF13B,PRKAR2B	2	
+Cell Death and Survival	killing	Killing of cells	9.05E-03	 	 	 	 	TNFSF13B,RUNX1,CASP8	3	
+Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of marginal-zone B lymphocytes	9.42E-03	 	 	 	 	TNFSF13B,CASP8	2	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of enlarged cervical lymph node	9.52E-03	 	 	 	 	CASP8	1	
+Cellular Growth and Proliferation, Reproductive System Development and Function	colony formation	Colony formation of gonadal cell lines	9.52E-03	 	 	 	 	RUNX1	1	
+Cellular Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response	commitment	Commitment of B lymphocytes	9.52E-03	 	 	 	 	EBF1	1	
+Cell-To-Cell Signaling and Interaction, Drug Metabolism, Molecular Transport, Small Molecule Biochemistry	excretion	Excretion of norepinephrine	9.52E-03	 	 	 	 	PTPRN2	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	expansion	Expansion of LSK cells	9.52E-03	 	 	 	 	RUNX1	1	
+Molecular Transport	import	Import of Cu2+	9.52E-03	 	 	 	 	STEAP4	1	
+DNA Replication, Recombination, and Repair	incorporation	Incorporation of DNA	9.52E-03	 	 	 	 	PRKAR2B	1	
+Cell Death and Survival	necrosis	Necrosis of bone marrow-derived macrophages	9.52E-03	 	 	 	 	CASP8	1	
+Connective Tissue Disorders, Organismal Injury and Abnormalities, Skeletal and Muscular Disorders	osteopenia	Osteopenia of tibia	9.52E-03	 	 	 	 	EBF1	1	
+Infectious Diseases	plague	Plague	9.52E-03	 	 	 	 	CASP8	1	
+Dermatological Diseases and Conditions, Organismal Injury and Abnormalities	spongiosis	Spongiosis	9.52E-03	 	 	 	 	CASP8	1	
+Metabolic Disease	glucose metabolism disorder	Glucose metabolism disorder	9.65E-03	 	 	 	 	TNFSF13B,C6orf15,ADAMTS6,TAP2,EBF1,ZFP57,STEAP4,CASP8	8	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of enlarged lymph node	1.08E-02	 	 	 	 	TNFSF13B,CASP8	2	
+Cell Death and Survival	cell viability	Cell viability	1.09E-02	 	 	 	 	TNFSF13B,EBF1,RUNX1,CLNS1A,PTPRN2,DUSP22,CASP8,JMJD1C	8	
+DNA Replication, Recombination, and Repair	condensation	Condensation of DNA	1.11E-02	 	 	 	 	CASP8	1	
+Auditory Disease, Organismal Injury and Abnormalities	edema	Edema of ear	1.11E-02	 	 	 	 	CASP8	1	
+Cell Cycle, Hematological System Development and Function, Humoral Immune Response	cell cycle progression	Entry into cell cycle progression of B lymphocytes	1.11E-02	 	 	 	 	TNFSF13B	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	malignant glioma	Grade 3 malignant glioma	1.11E-02	 	 	 	 	ACTN1	1	
+Cellular Assembly and Organization	movement	Movement of filopodia	1.11E-02	 	 	 	 	RDX	1	
+Cellular Compromise	permeability transition	Permeability transition of mitochondrial membrane	1.11E-02	 	 	 	 	CASP8	1	
+Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of promegakaryocytes	1.11E-02	 	 	 	 	RUNX1	1	
+Cellular Function and Maintenance	regulation	Regulation of hematopoietic progenitor cells	1.11E-02	 	 	 	 	RUNX1	1	
+Organismal Development	size	Size of body	1.16E-02	 	 	 	 	HIST1H1D,C6orf15,PRKAR2B,EBF1,RUNX1,H2AFY2	6	
+Cell Death and Survival	killing	Killing of tumor cell lines	1.26E-02	 	 	 	 	RUNX1,CASP8	2	
+Nervous System Development and Function, Neurological Disease, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of lateral ganglionic eminences	1.27E-02	 	 	 	 	EBF1	1	
+Cell-To-Cell Signaling and Interaction	adhesion	Adhesion of neuroblastoma cell lines	1.27E-02	 	 	 	 	CASP8	1	
+Cellular Growth and Proliferation	growth	Arrest in growth of bone marrow cell lines	1.27E-02	 	 	 	 	RUNX1	1	
+Cell Death and Survival, Embryonic Development	cell death	Cell death of embryo	1.27E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival, Embryonic Development	cell viability	Cell viability of embryonic stem cell lines	1.27E-02	 	 	 	 	CLNS1A	1	
+Cellular Development, Embryonic Development, Organismal Development	differentiation	Differentiation of embryoid body cells	1.27E-02	 	 	 	 	RUNX1	1	
+Hematological Disease	exhaustion	Exhaustion of hematopoietic progenitor cells	1.27E-02	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development	expansion	Expansion of pre-B lymphocytes	1.27E-02	 	 	 	 	EBF1	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	high grade glioma	Grade 4 high grade glioma	1.27E-02	 	 	 	 	ACTN1	1	
+Connective Tissue Disorders, Organismal Injury and Abnormalities	hemoperitoneum	Hemoperitoneum	1.27E-02	 	 	 	 	RUNX1	1	
+Neurological Disease	amyotrophic lateral sclerosis	Preclinical stage amyotrophic lateral sclerosis	1.27E-02	 	 	 	 	CASP8	1	
+Cancer, Organismal Injury and Abnormalities, Tissue Morphology	quantity	Quantity of sarcoma	1.27E-02	 	 	 	 	RUNX1	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of CD8+ T lymphocyte	1.27E-02	 	 	 	 	CASP8	1	
+Developmental Disorder	dysmorphogenesis	Dysmorphogenesis	1.28E-02	 	 	 	 	HIST1H1D,CXXC1	2	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	precursor B-cell acute lymphoblastic leukemia	Precursor B-cell acute lymphoblastic leukemia	1.37E-02	 	 	 	 	EBF1,RUNX1	2	
+Developmental Disorder, Embryonic Development, Tissue Morphology	abnormal morphology	Abnormal morphology of yolk sac	1.39E-02	 	 	 	 	HIST1H1D,CASP8	2	
+Cell Death and Survival, Organismal Injury and Abnormalities	apoptosis	Apoptosis of vascular endothelial cells	1.39E-02	 	 	 	 	RDX,CASP8	2	
+Cellular Assembly and Organization, Cellular Function and Maintenance	organization	Organization of actin filaments	1.39E-02	 	 	 	 	ACTN1,RDX	2	
+Cancer, Gastrointestinal Disease, Organismal Injury and Abnormalities	oral tumor	Oral tumor	1.41E-02	 	 	 	 	ATP13A3,ADAMTS6,EBF1,WDR20,DUSP22,STEAP4,CASP8	7	
+Gastrointestinal Disease, Organismal Injury and Abnormalities	bleeding	Bleeding of rectum	1.42E-02	 	 	 	 	NLRP6	1	
+Neurological Disease, Ophthalmic Disease, Organismal Injury and Abnormalities, Tissue Morphology	degeneration	Degeneration of retinal pigment epithelium	1.42E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival	killing	Killing of Streptococcus pneumoniae	1.42E-02	 	 	 	 	TNFSF13B	1	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	leukemic transformation of myelofibrosis	Leukemic transformation of myelofibrosis	1.42E-02	 	 	 	 	RUNX1	1	
+Nervous System Development and Function, Organ Morphology, Organismal Development	size	Size of striatum	1.42E-02	 	 	 	 	EBF1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Tissue Development	development	Development of hematopoietic progenitor cells	1.43E-02	 	 	 	 	TNFSF13B,EBF1,RUNX1	3	
+Hematological System Development and Function, Hematopoiesis, Tissue Morphology	quantity	Quantity of hematopoietic progenitor cells	1.48E-02	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	proliferation	Proliferation of hematopoietic progenitor cells	1.52E-02	 	 	 	 	EBF1,RUNX1,JMJD1C	3	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	quantity	Quantity of sphingolipid	1.56E-02	 	 	 	 	RUNX1,CASP8	2	
+Cell Signaling, Post-Translational Modification, Protein Synthesis	actin capping	Actin capping of filament barbed ends	1.58E-02	 	 	 	 	RDX	1	
+Cellular Assembly and Organization	clustering	Clustering of membrane rafts	1.58E-02	 	 	 	 	CASP8	1	
+Gastrointestinal Disease, Organismal Injury and Abnormalities	edema	Edema of intestine	1.58E-02	 	 	 	 	NLRP6	1	
+Cell Morphology, Hematological Disease, Humoral Immune Response, Immunological Disease, Lymphoid Tissue Structure and Development	lack	Lack of B-1 lymphocytes	1.58E-02	 	 	 	 	EBF1	1	
+Ophthalmic Disease, Organismal Injury and Abnormalities	nonexudative age-related macular degeneration	Nonexudative age-related macular degeneration	1.58E-02	 	 	 	 	CASP8	1	
+Cellular Assembly and Organization, DNA Replication, Recombination, and Repair	positioning	Positioning of nucleosomes	1.58E-02	 	 	 	 	HIST1H1D	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of myeloid leukocytes	1.61E-02	 	 	 	 	DHRS7B,RUNX1,CASP8	3	
+Cancer, Gastrointestinal Disease, Organismal Injury and Abnormalities	cecum adenocarcinoma	Cecum adenocarcinoma	1.66E-02	 	 	 	 	ATP13A3,TAP2,MXRA8,STEAP4	4	
+Cellular Development, Embryonic Development, Organismal Development	differentiation	Differentiation of embryonic stem cells	1.71E-02	 	 	 	 	RUNX1,H2AFY2	2	
+Nervous System Development and Function, Neurological Disease, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of internal capsule	1.74E-02	 	 	 	 	EBF1	1	
+Cancer, Cell-To-Cell Signaling and Interaction, Organismal Injury and Abnormalities	activation	Activation of chronic lymphocytic leukemia cells	1.74E-02	 	 	 	 	TNFSF13B	1	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	apoptosis	Apoptosis of chronic lymphocytic leukemia B cells	1.74E-02	 	 	 	 	TNFSF13B	1	
+Cell Death and Survival	cell death	Cell death of hair cells	1.74E-02	 	 	 	 	CASP8	1	
+Cell-mediated Immune Response, Cellular Development, Cellular Function and Maintenance, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	commitment	Commitment of T lymphocytes	1.74E-02	 	 	 	 	EBF1	1	
+Cardiovascular Disease, Organismal Injury and Abnormalities	degeneration	Degeneration of vasculature	1.74E-02	 	 	 	 	CASP8	1	
+Cellular Assembly and Organization, Cellular Function and Maintenance	formation	Formation of pore	1.74E-02	 	 	 	 	CASP8	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	astrocytoma	Grade 3 astrocytoma	1.74E-02	 	 	 	 	ACTN1	1	
+Connective Tissue Development and Function, Lipid Metabolism, Small Molecule Biochemistry, Tissue Morphology	lipolysis	Lipolysis of white adipose tissue	1.74E-02	 	 	 	 	PRKAR2B	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of CD4+ T-lymphocytes	1.74E-02	 	 	 	 	CASP8	1	
+Metabolic Disease	DNA repair-deficiency disorder	DNA repair-deficiency disorder	1.82E-02	 	 	 	 	TAP2,RUNX1	2	
+Developmental Disorder, Embryonic Development, Organismal Development, Tissue Morphology	abnormal morphology	Abnormal morphology of vitelline vessel	1.84E-02	 	 	 	 	HIST1H1D,CASP8	2	
+Cell Cycle, Gene Expression	binding	Binding of protein binding site	1.88E-02	 	 	 	 	EBF1,RUNX1,SUB1	3	
+Cell Death and Survival	apoptosis	Apoptosis of leukemia cell lines	1.89E-02	 	 	 	 	TNFSF13B,RUNX1,CASP8	3	
+Cardiovascular System Development and Function, Organ Development	activation	Activation of heart	1.89E-02	 	 	 	 	CASP8	1	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of plasmacytoid dendritic cells	1.89E-02	 	 	 	 	CASP8	1	
+Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	colony formation	Colony formation of erythroid cells	1.89E-02	 	 	 	 	RUNX1	1	
+Cell Cycle, Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation	contact growth inhibition	Contact growth inhibition of leukemia cell lines	1.89E-02	 	 	 	 	PRKAR2B	1	
+Endocrine System Disorders, Organismal Injury and Abnormalities, Reproductive System Disease	diminished ovarian reserve	Diminished ovarian reserve	1.89E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival	necroptosis	Necroptosis of fibroblasts	1.89E-02	 	 	 	 	CASP8	1	
+Gene Expression	activation	Activation of DNA endogenous promoter	1.90E-02	 	 	 	 	HIST1H1D,EBF1,RUNX1,SUB1,H2AFY2,ZFP57,DUSP22	7	
+Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of pre-B lymphocytes	1.95E-02	 	 	 	 	TNFSF13B,EBF1	2	
+Organismal Survival	organismal death	Organismal death	2.02E-02	 	 	 	 	HIST1H1D,TNFSF13B,EBF1,RUNX1,CLNS1A,CXXC1,NLRP6,H2AFY2,ZFP57,PTPRN2,CASP8	11	
+Cell Death and Survival	apoptosis	Apoptosis of plasmacytoid dendritic cells	2.05E-02	 	 	 	 	CASP8	1	
+Cellular Development, Nervous System Development and Function, Tissue Development, Visual System Development and Function	differentiation	Differentiation of amacrine cells	2.05E-02	 	 	 	 	EBF1	1	
+Connective Tissue Development and Function, Embryonic Development, Organ Development, Organismal Development, Skeletal and Muscular System Development and Function, Tissue Development	formation	Formation of tibia	2.05E-02	 	 	 	 	EBF1	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	malignant glioma	Grade 4 malignant glioma	2.05E-02	 	 	 	 	ACTN1	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	grade II astrocytoma	Grade II astrocytoma	2.05E-02	 	 	 	 	ACTN1	1	
+Lipid Metabolism, Small Molecule Biochemistry	hydrolysis	Hydrolysis of ceramide	2.05E-02	 	 	 	 	CASP8	1	
+Tissue Morphology	quantity	Quantity of bone marrow cell lines	2.05E-02	 	 	 	 	RUNX1	1	
+Hematological System Development and Function, Hematopoiesis, Tissue Morphology	quantity	Quantity of long-term hematopoietic stem cells	2.05E-02	 	 	 	 	RUNX1	1	
+Protein Synthesis	quantity	Quantity of leptin in blood	2.06E-02	 	 	 	 	PRKAR2B,STEAP4	2	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development	proliferation	Proliferation of B lymphocytes	2.13E-02	 	 	 	 	TNFSF13B,EBF1,CASP8	3	
+Post-Translational Modification	dephosphorylation	Dephosphorylation of protein	2.20E-02	 	 	 	 	PTPRN2,DUSP22	2	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of lymph node b cell domain	2.21E-02	 	 	 	 	TNFSF13B	1	
+Cellular Development, Connective Tissue Development and Function, Embryonic Development	adipogenesis	Adipogenesis of embryonic cell lines	2.21E-02	 	 	 	 	EBF1	1	
+Neurological Disease	catalepsy	Catalepsy	2.21E-02	 	 	 	 	PRKAR2B	1	
+Embryonic Development, Organ Development, Organismal Development, Reproductive System Development and Function, Tissue Development	formation	Formation of corpus luteum	2.21E-02	 	 	 	 	PTPRN2	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	lymphopoiesis	Lymphopoiesis of B lymphocytes	2.21E-02	 	 	 	 	EBF1	1	
+Cell Morphology, Nervous System Development and Function, Tissue Morphology	size	Size of growth cone	2.21E-02	 	 	 	 	RDX	1	
+Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Skeletal and Muscular System Development and Function, Tissue Development	formation	Formation of osteoclasts	2.23E-02	 	 	 	 	EBF1,RUNX1	2	
+Cellular Development, Hematological System Development and Function, Lymphoid Tissue Structure and Development	maturation	Maturation of lymphocytes	2.29E-02	 	 	 	 	TNFSF13B,RUNX1	2	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of axillary lymph node	2.36E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival	apoptosis	Apoptosis of adipocytes	2.36E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival	apoptosis	Apoptosis of testicular cells	2.36E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival, Organismal Injury and Abnormalities	cell death	Cell death of RPE cells	2.36E-02	 	 	 	 	CASP8	1	
+Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis	colony formation	Colony formation of colony-forming erythroid cells	2.36E-02	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	development	Development of common lymphoid progenitor cells	2.36E-02	 	 	 	 	EBF1	1	
+Dermatological Diseases and Conditions, Organismal Injury and Abnormalities	dryness	Dryness of skin	2.36E-02	 	 	 	 	CASP8	1	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	post-myeloproliferative neoplasm-acute myeloid leukemia	Post-myeloproliferative neoplasm-acute myeloid leukemia	2.36E-02	 	 	 	 	RUNX1	1	
+Reproductive System Development and Function	premature senescence	Premature senescence of reproductive system	2.36E-02	 	 	 	 	JMJD1C	1	
+Cellular Function and Maintenance, Cellular Growth and Proliferation, Hematological System Development and Function, Humoral Immune Response	production	Production of B lymphocytes	2.36E-02	 	 	 	 	RUNX1	1	
+Cardiovascular Disease, Connective Tissue Disorders, Hematological Disease, Organismal Injury and Abnormalities	thrombocytopenia	Severe thrombocytopenia	2.36E-02	 	 	 	 	RUNX1	1	
+Cell Death and Survival	apoptosis	Apoptosis of thymocytes	2.37E-02	 	 	 	 	RUNX1,CASP8	2	
+Gastrointestinal Disease, Hepatic System Disease, Metabolic Disease, Organismal Injury and Abnormalities	hepatic steatosis	Hepatic steatosis	2.40E-02	 	 	 	 	PRKAR2B,EBF1,STEAP4	3	
+Cell Death and Survival	apoptosis	Apoptosis of B lymphocytes	2.40E-02	 	 	 	 	TNFSF13B,CASP8	2	
+Cell Cycle, Gene Expression	binding	Binding of DNA	2.50E-02	 	 	 	 	TNFSF13B,EBF1,RUNX1,SUB1	4	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	expansion	Expansion of myeloid progenitor cells	2.52E-02	 	 	 	 	RUNX1	1	
+Cellular Assembly and Organization, Cellular Function and Maintenance	localization	Localization of mitochondria	2.52E-02	 	 	 	 	CASP8	1	
+Lipid Metabolism, Small Molecule Biochemistry	synthesis	Synthesis of 12-hydroxyeicosatetraenoic acid	2.52E-02	 	 	 	 	RUNX1	1	
+Cellular Function and Maintenance	vesiculation	Vesiculation	2.52E-02	 	 	 	 	CASP8	1	
+Cardiovascular System Development and Function, Cell Morphology, Embryonic Development	branching morphogenesis	Branching morphogenesis of vasculature	2.67E-02	 	 	 	 	RUNX1	1	
+Cellular Compromise	depletion	Depletion of B lymphocytes	2.67E-02	 	 	 	 	TNFSF13B	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	development	Development of B-1 lymphocytes	2.67E-02	 	 	 	 	EBF1	1	
+Cancer, Neurological Disease, Organismal Injury and Abnormalities	astrocytoma	Grade 4 astrocytoma	2.67E-02	 	 	 	 	ACTN1	1	
+Lipid Metabolism, Small Molecule Biochemistry	hydrolysis	Hydrolysis of sphingomyelin	2.67E-02	 	 	 	 	CASP8	1	
+Gastrointestinal Disease, Inflammatory Disease, Organismal Injury and Abnormalities	periodontitis	Periodontitis	2.67E-02	 	 	 	 	TNFSF13B	1	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	quantity	Quantity of C24:1-ceramide	2.67E-02	 	 	 	 	RUNX1	1	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	quantity	Quantity of D-erythro-C16-ceramide	2.67E-02	 	 	 	 	RUNX1	1	
+Amino Acid Metabolism, Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	secretion	Secretion of GABA	2.67E-02	 	 	 	 	PTPRN2	1	
+Cell Death and Survival, Hematological System Development and Function	survival	Survival of pro-B lymphocytes	2.67E-02	 	 	 	 	EBF1	1	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	acute leukemia	Acute leukemia	2.67E-02	 	 	 	 	ALPK1,TAP2,EBF1,RUNX1,ACSM3,RPS23,STEAP4	7	
+Cardiovascular System Development and Function, Organismal Development	development	Development of artery	2.68E-02	 	 	 	 	ADAMTS6,RUNX1	2	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	differentiation	Differentiation of macrophages	2.68E-02	 	 	 	 	RUNX1,CASP8	2	
+Cellular Development	commitment	Commitment of cells	2.80E-02	 	 	 	 	EBF1,RUNX1	2	
+Inflammatory Disease, Ophthalmic Disease, Organismal Injury and Abnormalities	blepharitis	Blepharitis	2.83E-02	 	 	 	 	H2AFY2	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Lymphoid Tissue Structure and Development	expansion	Expansion of Th17 cells	2.83E-02	 	 	 	 	TNFSF13B	1	
+Cancer, Cellular Development, Organismal Injury and Abnormalities	immortalization	Immortalization of hematopoietic progenitor cells	2.83E-02	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Humoral Immune Response, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	development	Development of B lymphocytes	2.96E-02	 	 	 	 	TNFSF13B,EBF1	2	
+Cellular Growth and Proliferation	growth	Arrest in growth of hematopoietic cell lines	2.98E-02	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation	proliferation	Arrest in proliferation of leukemia cell lines	2.98E-02	 	 	 	 	RUNX1	1	
+DNA Replication, Recombination, and Repair, Gene Expression	bending	Bending of DNA	2.98E-02	 	 	 	 	SUB1	1	
+Cardiovascular Disease, Connective Tissue Disorders, Developmental Disorder, Hematological Disease, Hereditary Disorder, Organismal Injury and Abnormalities	congenital thrombocytopenia	Congenital thrombocytopenia	2.98E-02	 	 	 	 	RUNX1	1	
+Cell-mediated Immune Response, Cellular Function and Maintenance, Hematological System Development and Function	homeostasis	T cell homeostasis	3.08E-02	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8	4	
+Organismal Functions	energy expenditure	Abnormal energy expenditure	3.14E-02	 	 	 	 	PRKAR2B	1	
+Cell Morphology, Endocrine System Disorders, Organ Morphology, Organismal Injury and Abnormalities, Reproductive System Development and Function, Reproductive System Disease	abnormal morphology	Abnormal morphology of spermatogonia	3.14E-02	 	 	 	 	JMJD1C	1	
+Connective Tissue Disorders, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of white adipose tissue	3.14E-02	 	 	 	 	STEAP4	1	
+Cell Cycle, Gene Expression	binding	Binding of p53 consensus binding site	3.14E-02	 	 	 	 	SUB1	1	
+Cell Morphology, Cellular Movement	cell spreading	Cell spreading of leukemia cell lines	3.14E-02	 	 	 	 	RUNX1	1	
+Cellular Growth and Proliferation	colony formation	Colony formation of ovarian cancer cell lines	3.14E-02	 	 	 	 	HIST1H1D	1	
+Cardiovascular System Development and Function, Cell Morphology, Cell-To-Cell Signaling and Interaction, Cellular Assembly and Organization, Tissue Morphology	electrical resistance	Electrical resistance of endothelial cells	3.14E-02	 	 	 	 	ACTN1	1	
+Organismal Injury and Abnormalities, Tissue Morphology	loss	Loss of epithelial tissue	3.14E-02	 	 	 	 	CASP8	1	
+Cell Morphology, Embryonic Development	modification	Modification of embryonic cell lines	3.14E-02	 	 	 	 	CASP8	1	
+Drug Metabolism, Endocrine System Development and Function, Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	secretion	Secretion of progesterone	3.14E-02	 	 	 	 	RUNX1	1	
+Immunological Disease	primary immunodeficiency disorder	Primary immunodeficiency disorder	3.16E-02	 	 	 	 	TAP2,CASP8	2	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Lymphoid Tissue Structure and Development	expansion	Expansion of T lymphocytes	3.19E-02	 	 	 	 	TNFSF13B,CASP8	2	
+Cancer, Organismal Injury and Abnormalities	pelvic cancer	Pelvic cancer	3.21E-02	 	 	 	 	DHRS7B,ALPK1,TNFSF13B,MXRA8,CWF19L2,CXXC1,ACTN1,RDX,HIST1H1D,ATP13A3,C6orf15,TEX26,EBF1,RUNX1,ACSM3,ZFP57,PTPRN2,STEAP4,CASP8,JMJD1C	20	
+Cellular Movement	cell movement	Cell movement of leukemia cell lines	3.26E-02	 	 	 	 	RUNX1,ACTN1	2	
+Cell Death and Survival	cell death	Cell death of endometrial cancer cell lines	3.29E-02	 	 	 	 	CASP8	1	
+Cellular Compromise, DNA Replication, Recombination, and Repair	instability	Instability of genomes	3.29E-02	 	 	 	 	RUNX1	1	
+Cellular Movement	migration	Migration of neuroblastoma cell lines	3.29E-02	 	 	 	 	CASP8	1	
+Metabolic Disease, Organismal Injury and Abnormalities, Respiratory Disease	pulmonary alveolar proteinosis	Pulmonary alveolar proteinosis	3.29E-02	 	 	 	 	RUNX1	1	
+Cell Death and Survival	apoptosis	Apoptosis of lymphocytes	3.39E-02	 	 	 	 	TNFSF13B,RUNX1,CASP8	3	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	cell viability	Cell viability of chronic lymphocytic leukemia cells	3.45E-02	 	 	 	 	TNFSF13B	1	
+Cancer, Gastrointestinal Disease, Inflammatory Disease, Inflammatory Response, Organismal Injury and Abnormalities	colitis-associated cancer	Colitis-associated cancer	3.45E-02	 	 	 	 	NLRP6	1	
+Hair and Skin Development and Function, Organ Morphology	color	Color of fur	3.45E-02	 	 	 	 	H2AFY2	1	
+Organ Development	function	Function of skin	3.45E-02	 	 	 	 	CASP8	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Tissue Development	leukopoiesis	Leukopoiesis	3.50E-02	 	 	 	 	DHRS7B,TNFSF13B,EBF1,RUNX1,CASP8	5	
+Cell-To-Cell Signaling and Interaction, Hematological System Development and Function, Immune Cell Trafficking, Inflammatory Response	activation	Activation of T lymphocytes	3.59E-02	 	 	 	 	RUNX1,DUSP22,CASP8	3	
+Cellular Development	differentiation	Differentiation of leukemia cell lines	3.60E-02	 	 	 	 	PRKAR2B,RUNX1	2	
+Ophthalmic Disease, Organismal Development, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of eyelid aperture	3.60E-02	 	 	 	 	H2AFY2	1	
+Cell Death and Survival, Organismal Injury and Abnormalities, Renal and Urological Disease	apoptosis	Apoptosis of mesangial cells	3.60E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival, Developmental Disorder, Embryonic Development	necrosis	Necrosis of embryonic tissue	3.60E-02	 	 	 	 	RUNX1	1	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	concentration	Concentration of lipid	3.63E-02	 	 	 	 	PRKAR2B,RUNX1,PTPRN2,STEAP4,CASP8	5	
+Hematological System Development and Function, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of CD4+ T-lymphocytes	3.70E-02	 	 	 	 	RUNX1,CASP8	2	
+Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hair and Skin Development and Function, Organ Development, Tissue Development	proliferation	Proliferation of keratinocytes	3.74E-02	 	 	 	 	RUNX1,STEAP4	2	
+Developmental Disorder, Embryonic Development, Organismal Development, Tissue Morphology	abnormal morphology	Abnormal morphology of blood island	3.75E-02	 	 	 	 	CASP8	1	
+Behavior	addiction behavior	Addiction behavior	3.75E-02	 	 	 	 	PRKAR2B	1	
+Cell Death and Survival	apoptosis	Apoptosis of monocytes	3.75E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival	necrosis	Necrosis of microglia	3.75E-02	 	 	 	 	CASP8	1	
+Tissue Morphology	quantity	Quantity of hematopoietic cell lines	3.75E-02	 	 	 	 	RUNX1	1	
+Molecular Transport	transport	Transport of peptide	3.75E-02	 	 	 	 	TAP2	1	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	type M2 acute myeloid leukemia	Type M2 acute myeloid leukemia	3.75E-02	 	 	 	 	RUNX1	1	
+Cancer, Organismal Injury and Abnormalities	cancer	Cancer	3.76E-02	 	 	 	 	ALPK1,PRKAR2B,MXRA8,CXXC1,WDR20,GPATCH2,HIST1H1D,ATP13A3,C6orf15,ADAMTS6,TEX26,RUNX1,ACSM3,TTI2,ZFP57,PTPRN2,STEAP4,JMJD1C,DHRS7B,SPP2,ATXN7L3B,TNFSF13B,CWF19L2,CLNS1A,ACTN1,DUSP22,RDX,TAP2,EBF1,RPS23,NLRP6,CASP8	32	
+Endocrine System Disorders, Gastrointestinal Disease, Metabolic Disease, Organismal Injury and Abnormalities	diabetes mellitus	Diabetes mellitus	3.77E-02	 	 	 	 	TNFSF13B,C6orf15,ADAMTS6,TAP2,ZFP57,CASP8	6	
+Hematological System Development and Function, Humoral Immune Response, Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of B lymphocytes	3.81E-02	 	 	 	 	TNFSF13B,EBF1,CASP8	3	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of enlarged spleen	3.84E-02	 	 	 	 	TNFSF13B,CASP8	2	
+Developmental Disorder, Embryonic Development, Organismal Development, Tissue Morphology	abnormal morphology	Abnormal morphology of ectoplacental cone	3.91E-02	 	 	 	 	CXXC1	1	
+Hematological System Development and Function, Immunological Disease, Lymphoid Tissue Structure and Development, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities, Tissue Morphology	abnormal morphology	Abnormal morphology of enlarged thymus gland	3.91E-02	 	 	 	 	CASP8	1	
+Endocrine System Disorders, Organ Morphology, Organismal Injury and Abnormalities, Reproductive System Development and Function, Reproductive System Disease, Tissue Morphology	abnormal morphology	Abnormal morphology of seminiferous epithelium	3.91E-02	 	 	 	 	JMJD1C	1	
+Cell Death and Survival	apoptosis	Apoptosis of mesothelioma cell lines	3.91E-02	 	 	 	 	CASP8	1	
+Cell Cycle, Hematological System Development and Function	cell division	Cell division of T lymphocytes	3.91E-02	 	 	 	 	TNFSF13B	1	
+Cell Morphology, Cellular Assembly and Organization, Cellular Function and Maintenance	formation	Formation of microvilli	3.91E-02	 	 	 	 	RDX	1	
+Cancer, Immunological Disease, Organismal Injury and Abnormalities	hyperplasia	Hyperplasia of lymph node	3.91E-02	 	 	 	 	CASP8	1	
+Cellular Development, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development	maturation	Maturation of thymocytes	3.91E-02	 	 	 	 	RUNX1	1	
+Cell Morphology, Cell-To-Cell Signaling and Interaction, Cellular Assembly and Organization	size	Size of focal adhesions	3.91E-02	 	 	 	 	ACTN1	1	
+Cell Death and Survival, Nervous System Development and Function, Tissue Morphology	loss	Loss of neurons	3.95E-02	 	 	 	 	RUNX1,CASP8	2	
+Lipid Metabolism, Small Molecule Biochemistry	metabolism	Fatty acid metabolism	3.97E-02	 	 	 	 	PRKAR2B,RUNX1,ACSM3,CASP8	4	
+Cell Death and Survival	cell viability	Cell viability of tumor cell lines	4.06E-02	 	 	 	 	TNFSF13B,PTPRN2,DUSP22,CASP8,JMJD1C	5	
+Nervous System Development and Function, Neurological Disease, Organ Morphology, Organismal Development, Organismal Injury and Abnormalities	abnormal morphology	Abnormal morphology of striatum	4.06E-02	 	 	 	 	EBF1	1	
+Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	abnormal quantity	Abnormal quantity of cholesterol	4.06E-02	 	 	 	 	STEAP4	1	
+Neurological Disease, Organismal Injury and Abnormalities, Psychological Disorders	intraventricular hemorrhage	Intraventricular hemorrhage	4.06E-02	 	 	 	 	RUNX1	1	
+Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function, Lymphoid Tissue Structure and Development, Nervous System Development and Function	proliferation	Proliferation of microglia	4.06E-02	 	 	 	 	RUNX1	1	
+Cell Death and Survival	apoptosis	Apoptosis of gonadal cells	4.21E-02	 	 	 	 	CASP8,JMJD1C	2	
+Cell Signaling	I-kappaB kinase/NF-kappaB cascade	I-kappaB kinase/NF-kappaB cascade	4.21E-02	 	 	 	 	NLRP6,CASP8	2	
+Cellular Development, Connective Tissue Development and Function, Skeletal and Muscular System Development and Function, Tissue Development	differentiation	Differentiation of myofibroblasts	4.21E-02	 	 	 	 	RUNX1	1	
+Connective Tissue Development and Function, Skeletal and Muscular System Development and Function, Tissue Development	formation	Formation of trabecular bone	4.21E-02	 	 	 	 	EBF1	1	
+Gastrointestinal Disease, Inflammatory Response, Organismal Injury and Abnormalities	inflammation	Inflammation of salivary gland	4.21E-02	 	 	 	 	TNFSF13B	1	
+Cancer, Organismal Injury and Abnormalities	genitourinary carcinoma	Genitourinary carcinoma	4.28E-02	 	 	 	 	DHRS7B,ALPK1,TNFSF13B,CWF19L2,CXXC1,ACTN1,RDX,HIST1H1D,ATP13A3,C6orf15,TEX26,EBF1,RUNX1,ACSM3,ZFP57,PTPRN2,STEAP4,CASP8,JMJD1C	19	
+Cellular Development, Cellular Growth and Proliferation	proliferation	Proliferation of blood cells	4.36E-02	 	 	 	 	TNFSF13B,EBF1,RUNX1,CASP8,JMJD1C	5	
+Cancer, Cell Death and Survival, Neurological Disease, Organismal Injury and Abnormalities, Tumor Morphology	apoptosis	Apoptosis of glioma cells	4.37E-02	 	 	 	 	CASP8	1	
+Cellular Growth and Proliferation, Hair and Skin Development and Function	colony formation	Colony formation of epithelial cell lines	4.37E-02	 	 	 	 	RUNX1	1	
+Cell Morphology	permeabilization	Permeabilization of mitochondrial membrane	4.37E-02	 	 	 	 	CASP8	1	
+Carbohydrate Metabolism, Lipid Metabolism, Molecular Transport, Small Molecule Biochemistry	quantity	Quantity of phosphatidylinositol 4,5-diphosphate	4.37E-02	 	 	 	 	PTPRN2	1	
+Lymphoid Tissue Structure and Development, Tissue Morphology	quantity	Quantity of lymphoid tissue	4.38E-02	 	 	 	 	TNFSF13B,RUNX1,CASP8	3	
+Cell Death and Survival	apoptosis	Apoptosis of leukocyte cell lines	4.39E-02	 	 	 	 	RUNX1,CASP8	2	
+Tissue Morphology	abnormal morphology	Abnormal morphology of membrane tissue	4.43E-02	 	 	 	 	HIST1H1D,NLRP6	2	
+Organismal Injury and Abnormalities	formation	Formation of ulcer	4.52E-02	 	 	 	 	NLRP6	1	
+Cell Death and Survival	killing	Killing of leukemia cell lines	4.52E-02	 	 	 	 	CASP8	1	
+Infectious Diseases, Inflammatory Disease	systemic inflammatory response syndrome	Systemic inflammatory response syndrome	4.52E-02	 	 	 	 	RUNX1	1	
+Cancer, Organismal Injury and Abnormalities, Reproductive System Disease	genital tract cancer	Genital tract cancer	4.59E-02	 	 	 	 	DHRS7B,ALPK1,TNFSF13B,MXRA8,CWF19L2,CXXC1,ACTN1,RDX,HIST1H1D,C6orf15,TEX26,EBF1,RUNX1,ACSM3,ZFP57,PTPRN2,STEAP4,CASP8,JMJD1C	19	
+Cell Death and Survival	apoptosis	Apoptosis of prostate cancer cell lines	4.66E-02	 	 	 	 	PRKAR2B,CASP8	2	
+Gene Expression	repression	Repression of RNA	4.66E-02	 	 	 	 	SUB1,RUNX1	2	
+Cell Death and Survival	apoptosis	Apoptosis of macrophage cancer cell lines	4.67E-02	 	 	 	 	CASP8	1	
+Cell Death and Survival	cell death	Cell death of enterocytes	4.67E-02	 	 	 	 	CASP8	1	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	early precursor T-cell acute lymphoblastic leukemia	Early precursor T-cell acute lymphoblastic leukemia	4.67E-02	 	 	 	 	RUNX1	1	
+Digestive System Development and Function, Organ Development	function	Function of intestine	4.67E-02	 	 	 	 	NLRP6	1	
+Cancer, Hematological Disease, Organismal Injury and Abnormalities	leukemogenesis	Leukemogenesis	4.67E-02	 	 	 	 	RUNX1	1	
+Lipid Metabolism, Small Molecule Biochemistry	synthesis	Synthesis of ether lipid	4.67E-02	 	 	 	 	DHRS7B	1	
+Cell-mediated Immune Response, Cellular Development, Cellular Function and Maintenance, Cellular Growth and Proliferation, Embryonic Development, Hematological System Development and Function, Hematopoiesis, Lymphoid Tissue Structure and Development, Organ Development, Organismal Development, Tissue Development	differentiation	Differentiation of T lymphocytes	4.71E-02	 	 	 	 	TNFSF13B,EBF1,RUNX1	3	
+Cancer, Hematological Disease, Immunological Disease, Organismal Injury and Abnormalities	acute myeloid leukemia	Acute myeloid leukemia	4.75E-02	 	 	 	 	ALPK1,TAP2,RUNX1,ACSM3,RPS23,STEAP4	6	
+Cellular Development, Cellular Growth and Proliferation	cell proliferation	Cell proliferation of lymphoma cell lines	4.78E-02	 	 	 	 	RUNX1,CASP8	2	
+Cell Death and Survival	apoptosis	Apoptosis of T-cell hybrid cells	4.97E-02	 	 	 	 	RUNX1	1	
+Cancer, Cell Death and Survival, Organismal Injury and Abnormalities, Tumor Morphology	cell death	Cell death of neuroblastoma cells	4.97E-02	 	 	 	 	CASP8	1	
+Cancer, Organismal Injury and Abnormalities, Reproductive System Disease	luminal breast cancer	Luminal breast carcinoma	4.97E-02	 	 	 	 	RUNX1	1	
+Cell Morphology	morphology	Morphology of colorectal cancer cell lines	4.97E-02	 	 	 	 	CASP8	1	
+Cellular Development, Cellular Growth and Proliferation, Connective Tissue Development and Function, Hematological System Development and Function, Lymphoid Tissue Structure and Development, Tissue Development	proliferation	Proliferation of peripheral blood lymphocytes	4.97E-02	 	 	 	 	TNFSF13B	1	
+
+Tox Functions for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+Categories	Functions	Diseases or Functions Annotation	p-Value	Predicted Activation State	Activation z-score	Notes	Bias-corrected z-score	Molecules	# Molecules	
+Increased Levels of Bilirubin	excretion	Increased excretion of bilirubin	3.18E-03	 	 	 	 	RDX	1	
+Liver Steatosis	hepatic steatosis	Hepatic steatosis	2.40E-02	 	 	 	 	PRKAR2B,EBF1,STEAP4	3	
+Glomerular Injury, Renal Necrosis/Cell Death	apoptosis	Apoptosis of mesangial cells	3.60E-02	 	 	 	 	CASP8	1	
+Cardiac Dysfunction	systolic dysfunction	Systolic dysfunction	6.18E-02	 	 	 	 	CASP8	1	
+Liver Cholestasis	progressive familial intrahepatic cholestasis type 1	Progressive familial intrahepatic cholestasis type 1	8.98E-02	 	 	 	 	TAP2	1	
+Liver Damage	injury	Injury of liver	9.47E-02	 	 	 	 	RDX,CASP8	2	
+Liver Regeneration	regeneration	Regeneration of liver	1.25E-01	 	 	 	 	CASP8	1	
+Liver Hyperplasia/Hyperproliferation	liver carcinoma	Liver carcinoma	1.66E-01	 	 	 	 	DHRS7B,ATXN7L3B,ALPK1,PRKAR2B,CWF19L2,ACTN1,GPATCH2,ADAMTS6,ACSM3,PTPRN2,STEAP4,CASP8,JMJD1C	13	
+Liver Necrosis/Cell Death	apoptosis	Apoptosis of hepatocytes	2.21E-01	 	 	 	 	CASP8	1	
+Hepatocellular Carcinoma, Liver Hyperplasia/Hyperproliferation	hepatocellular carcinoma	Hepatocellular carcinoma	2.42E-01	 	 	 	 	ACSM3,STEAP4,CASP8	3	
+Renal Inflammation, Renal Nephritis	lupus nephritis	Lupus nephritis	2.45E-01	 	 	 	 	TNFSF13B	1	
+Cardiac Necrosis/Cell Death	apoptosis	Apoptosis of cardiomyocytes	3.04E-01	 	 	 	 	CASP8	1	
+Renal Necrosis/Cell Death	apoptosis	Apoptosis of kidney cell lines	3.81E-01	 	 	 	 	CASP8	1	
+Cardiac Dilation	dilated cardiomyopathy	Dilated cardiomyopathy	3.81E-01	 	 	 	 	CASP8	1	
+Heart Failure	failure	Failure of heart	4.32E-01	 	 	 	 	CASP8	1	
+
+Regulator Effects for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+
+Networks for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+ID	Analysis	Molecules in Network	Score	Focus Molecules	Top Diseases and Functions	
+1	Newborns-Combined - 2017-12-07 12:37 PM	ACTN1,ALK3-BMPR2,ANGPTL1,ATP8A2,Akt,CASP8,CYP4Z1,Cgm4/Psg16,EBF1,ERK,ERK1/2,FCRLA,GAPT,GFRA4,Ggta1,IgG,Igl,Igm,IkB-NfkB,Interferon alpha,Lh,NFkB (complex),P38 MAPK,PI3K (complex),PRKAR2B,PTPRN2,Prl4a1,RDX,RPS23,RUNX1,TAP2,TCR,TNFSF13B,WDR20,Ybx1-ps3	24	11	Cellular Development, Cellular Growth and Proliferation, Hematological System Development and Function	
+2	Newborns-Combined - 2017-12-07 12:37 PM	ACSM3,ADGRG6,ATP13A3,Anti-inflammatory Cytokine,CHI3L2,CLNS1A,CWF19L2,DFF,FETUB,FGF2,GMPR,Gsk3,H2AFY2,HIST1H1D,HISTONE,JMJD1C,KHDC3L,KLF4,LILRA2,LILRA4,Mbl1,Msx3,OLFML2A,OSM,PLEK2,POU5F1,SLC5A2,STEAP4,Sprr2b,Sprr2g,TGFB1,TNF,ZFP57,ZNF330,ZNF467	19	9	Cell-To-Cell Signaling and Interaction, Cellular Growth and Proliferation, Connective Tissue Development and Function	
+3	Newborns-Combined - 2017-12-07 12:37 PM	ADAM11,ADAM18,ADAM20,ADAM29,ADAMTS6,ADAMTS8,ALPK1,ATXN7L3B,Adam24,Adam26a/Adam26b,CMTM8,CXXC1,DHRS7B,DNAH7,DNAJC27,DNAJC4,DUSP22,Dcc dimer,EGFR,GPATCH2,Gma3,HSP90AA1,HSPA12B,KCTD8,KIRREL3,MAPK1,MMP21,Metalloprotease,RWDD1,RXFP3,SCD5,SUB1,TM4SF5,TTI2,XPO1	19	9	Cancer, Gastrointestinal Disease, Organismal Injury and Abnormalities	
+4	Newborns-Combined - 2017-12-07 12:37 PM	ESR1,LOC391322	3	1	Cancer, Cell Death and Survival, Cell Morphology	
+5	Newborns-Combined - 2017-12-07 12:37 PM	C6orf15,MGEA5	3	1	Cardiovascular System Development and Function, Carbohydrate Metabolism, Post-Translational Modification	
+6	Newborns-Combined - 2017-12-07 12:37 PM	FAM20C,LHX1,SPP2	2	1	Cell Death and Survival, Cellular Movement, Nervous System Development and Function	
+7	Newborns-Combined - 2017-12-07 12:37 PM	EGR3,MXRA8,TWIST1	2	1	Cancer, Cell Death and Survival, Cell-To-Cell Signaling and Interaction	
+8	Newborns-Combined - 2017-12-07 12:37 PM	IL22RA2,NALP,NLR,NLRP6	2	1	Organ Morphology, Tissue Development, Tissue Morphology	
+
+My Lists for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+My Lists	 -log(p-value)	Ratio	Molecules 
+
+Tox Lists for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+Ingenuity Toxicity Lists	 -log(p-value)	Ratio	Molecules 
+Reversible Glomerulonephritis Biomarker Panel (Rat)	3.07E00	7.41E-02	TAP2,ACSM3
+Increases Cardiac Dilation	1.22E00	2.56E-02	CASP8
+Pro-Apoptosis	1.19E00	2.38E-02	CASP8
+NF-κB Signaling	1.16E00	7.41E-03	TNFSF13B,CASP8
+Increases Cardiac Dysfunction	1.14E00	2.13E-02	CASP8
+Increases Renal Nephritis	1.05E00	1.72E-02	TNFSF13B
+PXR/RXR Activation	1.01E00	1.54E-02	PRKAR2B
+Increases Glomerular Injury	9.06E-01	1.2E-02	CASP8
+Mechanism of Gene Regulation by Peroxisome Proliferators via PPARα	8.52E-01	1.05E-02	PRKAR2B
+Increases Liver Steatosis	8.31E-01	1E-02	PRKAR2B
+Decreases Transmembrane Potential of Mitochondria and Mitochondrial Membrane	7.42E-01	8E-03	CASP8
+Increases Liver Damage	7.12E-01	7.41E-03	CASP8
+Hepatic Cholestasis	6.39E-01	6.13E-03	PRKAR2B
+Mitochondrial Dysfunction	6.1E-01	5.68E-03	CASP8
+PPARα/RXRα Activation	5.95E-01	5.46E-03	PRKAR2B
+RAR Activation	5.81E-01	5.26E-03	PRKAR2B
+Cardiac Necrosis/Cell Death	4.32E-01	3.47E-03	CASP8
+Liver Necrosis/Cell Death	4.13E-01	3.29E-03	CASP8
+Renal Necrosis/Cell Death	2.32E-01	1.83E-03	CASP8
+
+My Pathways for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+My Pathways	 -log(p-value)	Ratio	Molecules 
+
+Analysis Ready Molecules for My Projects->IPA-Sarah->Newborns-Combined - 2017-12-07 12:37 PM
+ID	Symbol
+ACSM3	ACSM3
+ACTN1	ACTN1
+ADAMTS6	ADAMTS6
+ALPK1	ALPK1
+ATP13A3	ATP13A3
+ATXN7L3B	ATXN7L3B
+C6orf15	C6orf15
+CASP8	CASP8
+CLNS1A	CLNS1A
+CWF19L2	CWF19L2
+CXXC1	CXXC1
+DHRS7B	DHRS7B
+DUSP22	DUSP22
+EBF1	EBF1
+GPATCH2	GPATCH2
+H2AFY2	H2AFY2
+HIST1H1D	HIST1H1D
+JMJD1C	JMJD1C
+LINC01135	LINC01135
+LOC100506844	LOC100506844
+LOC105274304	LOC105274304
+LOC391322	LOC391322
+AK091866	LUCAT1
+MXRA8	MXRA8
+NLRP6	NLRP6
+PCAT1	PCAT1
+PRKAR2B	PRKAR2B
+PTPRN2	PTPRN2
+RDX	RDX
+RPS23	RPS23
+RUNX1	RUNX1
+SNORD66	SNORD66
+SPP2	SPP2
+STEAP4	STEAP4
+SUB1	SUB1
+TAP2	TAP2
+TEX26	TEX26
+TNFSF13B	TNFSF13B
+TTI2	TTI2
+WDR20	WDR20
+ZFP57	ZFP57
+

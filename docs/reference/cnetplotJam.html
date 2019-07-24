@@ -31,6 +31,8 @@
 
 
 <meta property="og:title" content="Create a cnetplot igraph object — cnetplotJam" />
+
+<meta property="og:description" content="Create a cnetplot igraph object" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -61,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -75,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -106,7 +120,9 @@
     </div>
 
     <div class="ref-description">
-
+    
+    <p>Create a cnetplot igraph object</p>
+    
     </div>
 
     <pre class="usage"><span class='fu'>cnetplotJam</span>(<span class='no'>x</span>, <span class='kw'>showCategory</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>categorySize</span> <span class='kw'>=</span> <span class='st'>"geneNum"</span>,
@@ -130,26 +146,26 @@ resulting Cnet plot.</p></td>
     <tr>
       <th>categorySize</th>
       <td><p>character value indicating how to size the pathway
-nodes, where `"geneNum"` sizes nodes by the number of genes in that
-pathway, and `"pvalue"` sizes nodes by the enrichment P-value using
-the format `-log10(pvalue)`.</p></td>
+nodes, where <code>"geneNum"</code> sizes nodes by the number of genes in that
+pathway, and <code>"pvalue"</code> sizes nodes by the enrichment P-value using
+the format <code>-log10(pvalue)</code>.</p></td>
     </tr>
     <tr>
       <th>nodeLabel</th>
       <td><p>character value indicating which colname in
-`as.data.frame(x)` to use as a node label. Depending upon the source
+<code><a href='https://www.rdocumentation.org/packages/base/topics/as.data.frame'>as.data.frame(x)</a></code> to use as a node label. Depending upon the source
 of data, there may be alternative colnames that are more suitable
 as node labels.</p></td>
     </tr>
     <tr>
       <th>foldChange</th>
       <td><p>numeric vector named by gene, or NULL. When supplied,
-the vector names must use the same nomenclature as the `x` input
-object, which can be inspected with `print(head(x@gene))`.</p></td>
+the vector names must use the same nomenclature as the <code>x</code> input
+object, which can be inspected with <code><a href='https://www.rdocumentation.org/packages/base/topics/print'>print(head(x@gene))</a></code>.</p></td>
     </tr>
     <tr>
       <th>fixed</th>
-      <td><p>optional argument passed to `netplot`.</p></td>
+      <td><p>optional argument passed to <code>netplot</code>.</p></td>
     </tr>
     <tr>
       <th>doPlot</th>
@@ -175,11 +191,34 @@ object, and is applied directly to the igraph object.</p></td>
     <tr>
       <th>colorSub</th>
       <td><p>character vector of valid R colors, whose names
-are compared to node names, for example `V(g)$name <!-- %in% names(colorSub)`.} --></p>
-<p>verboselogical indicating whether to print verbose output.</p>
-<p>...additional arguments are ignored.</p></td>
+are compared to node names, for example <code>V(g)$name %in% names(colorSub)</code>.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>logical indicating whether to print verbose output.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>additional arguments are ignored.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The purpose of this function is to mimic the steps in <code>DOSE:::cnetplot()</code>
+except not plot the output, and provide some customizations.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other jam igraph functions: <code><a href='cnet2df.html'>cnet2df</a></code>,
+  <code><a href='cnet2im.html'>cnet2im</a></code>,
+  <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a></code>,
+  <code><a href='drawEllipse.html'>drawEllipse</a></code>, <code><a href='igraph2pieGraph.html'>igraph2pieGraph</a></code>,
+  <code><a href='layout_with_qfr.html'>layout_with_qfr</a></code>,
+  <code><a href='rectifyPiegraph.html'>rectifyPiegraph</a></code>,
+  <code><a href='removeIgraphBlanks.html'>removeIgraphBlanks</a></code>,
+  <code><a href='shape.coloredrectangle.plot.html'>shape.coloredrectangle.plot</a></code>,
+  <code><a href='shape.ellipse.plot.html'>shape.ellipse.plot</a></code>, <code><a href='xyAngle.html'>xyAngle</a></code></p></div>
     
 
   </div>
@@ -187,7 +226,11 @@ are compared to node names, for example `V(g)$name <!-- %in% names(colorSub)`.} 
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

@@ -1,3 +1,36 @@
+# multienrichjam version 0.0.6.900
+
+## new functions
+
+* `importIPAenrichment()` imports Ingenuity IPA enrichment results,
+by default splitting each enrichment table into its own `data.frame`.
+It curates colnames to be consistent with downstream analyses.
+* `curateIPAcolnames()` will curate the colnames of IPA data,
+and ensures the values in the gene column are consistently delimited.
+* `gsubs()` is similar to `base::gsub()` except that it applies
+a vector of pattern-replacement operations in order. This function
+may be moved to the `"jamba"` package.
+* `find_colname()` is a helper function to find a colname given
+a vector of expected values, which is matched directly, then
+case-insensitively, then as a vector of patterns to match the
+start, end, then any part of the colnames. By default the first
+matching value from the first successful method is returned.
+Good for matching c("P-Value", "pvalue", "Pval")
+
+# multienrichjam version 0.0.5.900
+
+## changes
+
+* `list2imSigned()` is no longer dependent upon the input list `x`
+having names, nor having unique names.
+
+## enhancements
+
+* `isColorBlank()` now handles list input, which is helpful when
+applied to igraph objects where `"pie"` colors are accessed as a list.
+* `removeIgraphBlanks()` was updated to use vectorized logic for `"pie"`
+vertex attributes.
+
 # multienrichjam version 0.0.4.900
 
 ## bug fixed

@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -77,6 +77,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -143,14 +155,14 @@ which are nodes that have no remaining edges.</p></td>
       <th>minSetDegree</th>
       <td><p>integer value indicating the minimum number
 of edges each Set node must have to be retained in the resulting
-igraph. Use `minSetDegree=2` to retain only Set nodes that
+igraph. Use <code>minSetDegree=2</code> to retain only Set nodes that
 have multiple connected Gene nodes.</p></td>
     </tr>
     <tr>
       <th>minGeneDegree</th>
       <td><p>integer value indicating the minimum number
 of edges each Gene node must have to be retained in the resulting
-igraph. Use `minGeneDegree=2` to retain only Gene nodes that
+igraph. Use <code>minGeneDegree=2</code> to retain only Gene nodes that
 connect to multiple Set nodes.</p></td>
     </tr>
     <tr>
@@ -165,20 +177,20 @@ connect to multiple Set nodes.</p></td>
 set names or gene names. This function is intended to be a convenient
 method of filtering a Cnet igraph to a pre-defined set of "Set"
 names.</p>
-<p>The function assumes graph nodes have an attribute `"nodeType"` with
-values either `"Set"` or `"Gene"` to indicate the type of node.</p>
-<p>When `includeSets` is supplied, the graph is subsetted to include
-only nodes with `nodeType="Set"` with matching `V(gCnet)$name` or
-`V(gCnet)$label`. Then only neighboring nodes are retained, thus
-removing any nodes with `nodeType="Gene"` that do not connect to
+<p>The function assumes graph nodes have an attribute <code>"nodeType"</code> with
+values either <code>"Set"</code> or <code>"Gene"</code> to indicate the type of node.</p>
+<p>When <code>includeSets</code> is supplied, the graph is subsetted to include
+only nodes with <code>nodeType="Set"</code> with matching <code>V(gCnet)$name</code> or
+<code>V(gCnet)$label</code>. Then only neighboring nodes are retained, thus
+removing any nodes with <code>nodeType="Gene"</code> that do not connect to
 any of the given Set nodes.
 The result is a proper Cnet igraph that only contains
 Gene nodes connected to the subset of Set nodes.</p>
-<p>If `includeGenes` is supplied, the graph is subsetted to include
-only nodes with `nodeType="Gene"` with matching `V(gCnet)$name` or
-`V(gCnet)$label`.</p>
-<p>When `removeSinglets=TRUE` then any nodes that have no remaining
-edges are removed. Especially when supplying `includeGenes`, this
+<p>If <code>includeGenes</code> is supplied, the graph is subsetted to include
+only nodes with <code>nodeType="Gene"</code> with matching <code>V(gCnet)$name</code> or
+<code>V(gCnet)$label</code>.</p>
+<p>When <code>removeSinglets=TRUE</code> then any nodes that have no remaining
+edges are removed. Especially when supplying <code>includeGenes</code>, this
 option is useful to hide any Set nodes that have no connected Gene
 nodes.</p>
     

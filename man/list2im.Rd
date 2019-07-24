@@ -10,7 +10,7 @@ list2im(x, makeUnique = TRUE, keepCounts = TRUE, verbose = FALSE,
 \arguments{
 \item{x}{list of vectors}
 
-\item{makeUnique}{boolean indicating whether to enforce uniqueness on each
+\item{makeUnique}{logical indicating whether to enforce uniqueness on each
 vector in the list. For an extremely long list, the uniqueness step can
 become the rate-limiting step, and yet the function used to coerce list
 to matrix requires each vector have a unique set of items. When
@@ -36,8 +36,8 @@ convert list to incidence matrix
 \details{
 This function converts a list of vectors into an incidence matrix, where
 the rows are the vector items and the columns are the list names.
-It uses an object from the \code{\line{arules}} package called
-\code{\link[arules]{transactions}} which offers highly efficient methods
+It uses an object from the \code{arules} package called
+\code{arules::transactions} which offers highly efficient methods
 for interconverting from list to matrix. The
 \code{\link[arules]{transactions}} class is itself an enhanced data matrix,
 which stores data using sparse matrix object type from the

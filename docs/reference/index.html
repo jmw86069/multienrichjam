@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
       </span>
     </div>
 
@@ -74,6 +74,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -120,6 +132,18 @@
       <tr>
         
         <td>
+          <p><code><a href="cnet2df.html">cnet2df()</a></code> </p>
+        </td>
+        <td><p>Summarize Cnet igraph as a data.frame</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cnet2im.html">cnet2im()</a></code> </p>
+        </td>
+        <td><p>Convert Cnet igraph to incidence matrix</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="cnetplotJam.html">cnetplotJam()</a></code> </p>
         </td>
         <td><p>Create a cnetplot igraph object</p></td>
@@ -129,6 +153,18 @@
           <p><code><a href="cnetplot_internalJam.html">cnetplot_internalJam()</a></code> </p>
         </td>
         <td><p>cnetplot internal function</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="curateIPAcolnames.html">curateIPAcolnames()</a></code> </p>
+        </td>
+        <td><p>Curate Ingenuity IPA colnames</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="drawEllipse.html">drawEllipse()</a></code> </p>
+        </td>
+        <td><p>Draw ellipse</p></td>
       </tr><tr>
         
         <td>
@@ -156,15 +192,33 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="find_colname.html">find_colname()</a></code> </p>
+        </td>
+        <td><p>Find colname by character string or pattern matching</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="fixSetLabels.html">fixSetLabels()</a></code> </p>
         </td>
         <td><p>Fix Set labels for legibility</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="gsubs.html">gsubs()</a></code> </p>
+        </td>
+        <td><p>Pattern replacement with multiple patterns</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="igraph2pieGraph.html">igraph2pieGraph()</a></code> </p>
         </td>
         <td><p>Convert igraph to use pie node shapes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="importIPAenrichment.html">importIPAenrichment()</a></code> </p>
+        </td>
+        <td><p>Import Ingenuity IPA enrichment results</p></td>
       </tr><tr>
         
         <td>
@@ -186,6 +240,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="list2concordance.html">list2concordance()</a></code> </p>
+        </td>
+        <td><p>Convert list to concordance matrix</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="list2im.html">list2im()</a></code> </p>
         </td>
         <td><p>convert list to incidence matrix</p></td>
@@ -194,13 +254,7 @@
         <td>
           <p><code><a href="list2imSigned.html">list2imSigned()</a></code> </p>
         </td>
-        <td><p>convert list to directional incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mergeAllXY.html">mergeAllXY()</a></code> </p>
-        </td>
-        <td><p>Merge a list of data.frames keeping all rows</p></td>
+        <td><p>convert list to signeddirectional incidence matrix</p></td>
       </tr><tr>
         
         <td>
@@ -210,9 +264,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="rectifyPiegraph.html">rectifyPiegraph()</a></code> </p>
+        </td>
+        <td><p>Convert pie igraph node shapes to coloredrectangle</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code> </p>
         </td>
         <td><p>Remove igraph blank wedges</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code> </p>
+        </td>
+        <td><p>Re-order igraph nodes</p></td>
       </tr><tr>
         
         <td>
@@ -222,15 +288,33 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code> </p>
+        </td>
+        <td><p>plot function for igraph vertex shape ellipse</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="subsetCnetIgraph.html">subsetCnetIgraph()</a></code> </p>
         </td>
         <td><p>Subset Cnet igraph</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="unnestList.html">unnestList()</a></code> </p>
+          <p><code><a href="topEnrichBySource.html">topEnrichBySource()</a></code> </p>
         </td>
-        <td><p>Un-nest a nested list into a simple list</p></td>
+        <td><p>Subset enrichList for top enrichment results by source</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="topEnrichListBySource.html">topEnrichListBySource()</a></code> </p>
+        </td>
+        <td><p>Subset enrichList for top enrichment results by source</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="xyAngle.html">xyAngle()</a></code> </p>
+        </td>
+        <td><p>Get angle from origin to vector of x,y coordinates</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -251,12 +335,6 @@
           <p><code><a href="enrichList2IM.html">enrichList2IM()</a></code> </p>
         </td>
         <td><p>Convert enrichList to IM incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="multiEnrichMap.html">multiEnrichMap()</a></code> </p>
-        </td>
-        <td><p>Prepare MultiEnrichMap data from enrichList</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -268,9 +346,33 @@
       <tr>
         
         <td>
+          <p><code><a href="cnet2df.html">cnet2df()</a></code> </p>
+        </td>
+        <td><p>Summarize Cnet igraph as a data.frame</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cnet2im.html">cnet2im()</a></code> </p>
+        </td>
+        <td><p>Convert Cnet igraph to incidence matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cnetplotJam.html">cnetplotJam()</a></code> </p>
+        </td>
+        <td><p>Create a cnetplot igraph object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="cnetplot_internalJam.html">cnetplot_internalJam()</a></code> </p>
         </td>
         <td><p>cnetplot internal function</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="drawEllipse.html">drawEllipse()</a></code> </p>
+        </td>
+        <td><p>Draw ellipse</p></td>
       </tr><tr>
         
         <td>
@@ -286,9 +388,33 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="rectifyPiegraph.html">rectifyPiegraph()</a></code> </p>
+        </td>
+        <td><p>Convert pie igraph node shapes to coloredrectangle</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code> </p>
+        </td>
+        <td><p>Remove igraph blank wedges</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> </p>
         </td>
         <td><p>plot function for igraph vertex shape coloredrectangle</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code> </p>
+        </td>
+        <td><p>plot function for igraph vertex shape ellipse</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="xyAngle.html">xyAngle()</a></code> </p>
+        </td>
+        <td><p>Get angle from origin to vector of x,y coordinates</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -300,15 +426,189 @@
       <tr>
         
         <td>
-          <p><code><a href="mergeAllXY.html">mergeAllXY()</a></code> </p>
+          <p><code><a href="cnet2df.html">cnet2df()</a></code> </p>
         </td>
-        <td><p>Merge a list of data.frames keeping all rows</p></td>
+        <td><p>Summarize Cnet igraph as a data.frame</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="unnestList.html">unnestList()</a></code> </p>
+          <p><code><a href="cnet2im.html">cnet2im()</a></code> </p>
         </td>
-        <td><p>Un-nest a nested list into a simple list</p></td>
+        <td><p>Convert Cnet igraph to incidence matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cnetplotJam.html">cnetplotJam()</a></code> </p>
+        </td>
+        <td><p>Create a cnetplot igraph object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cnetplot_internalJam.html">cnetplot_internalJam()</a></code> </p>
+        </td>
+        <td><p>cnetplot internal function</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="curateIPAcolnames.html">curateIPAcolnames()</a></code> </p>
+        </td>
+        <td><p>Curate Ingenuity IPA colnames</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="drawEllipse.html">drawEllipse()</a></code> </p>
+        </td>
+        <td><p>Draw ellipse</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code> </p>
+        </td>
+        <td><p>Convert data.frame to enrichResult</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="enrichList2IM.html">enrichList2IM()</a></code> </p>
+        </td>
+        <td><p>Convert enrichList to IM incidence matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="enrichList2df.html">enrichList2df()</a></code> </p>
+        </td>
+        <td><p>Convert enrichList to data.frame</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="enrichMapJam.html">enrichMapJam()</a></code> </p>
+        </td>
+        <td><p>Create enrichMap igraph object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="find_colname.html">find_colname()</a></code> </p>
+        </td>
+        <td><p>Find colname by character string or pattern matching</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fixSetLabels.html">fixSetLabels()</a></code> </p>
+        </td>
+        <td><p>Fix Set labels for legibility</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gsubs.html">gsubs()</a></code> </p>
+        </td>
+        <td><p>Pattern replacement with multiple patterns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="igraph2pieGraph.html">igraph2pieGraph()</a></code> </p>
+        </td>
+        <td><p>Convert igraph to use pie node shapes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="importIPAenrichment.html">importIPAenrichment()</a></code> </p>
+        </td>
+        <td><p>Import Ingenuity IPA enrichment results</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="isColorBlank.html">isColorBlank()</a></code> </p>
+        </td>
+        <td><p>Determine if colors are blank colors</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="layout_with_qfr.html">layout_with_qfr()</a></code> </p>
+        </td>
+        <td><p>igraph layout using qgraph Fruchterman-Reingold</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="layout_with_qfrf.html">layout_with_qfrf()</a></code> </p>
+        </td>
+        <td><p>igraph layout function using qgraph Fruchterman-Reingold</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="list2concordance.html">list2concordance()</a></code> </p>
+        </td>
+        <td><p>Convert list to concordance matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="list2im.html">list2im()</a></code> </p>
+        </td>
+        <td><p>convert list to incidence matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="list2imSigned.html">list2imSigned()</a></code> </p>
+        </td>
+        <td><p>convert list to signeddirectional incidence matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="multiEnrichMap.html">multiEnrichMap()</a></code> </p>
+        </td>
+        <td><p>Prepare MultiEnrichMap data from enrichList</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rectifyPiegraph.html">rectifyPiegraph()</a></code> </p>
+        </td>
+        <td><p>Convert pie igraph node shapes to coloredrectangle</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code> </p>
+        </td>
+        <td><p>Remove igraph blank wedges</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code> </p>
+        </td>
+        <td><p>Re-order igraph nodes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> </p>
+        </td>
+        <td><p>plot function for igraph vertex shape coloredrectangle</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code> </p>
+        </td>
+        <td><p>plot function for igraph vertex shape ellipse</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="subsetCnetIgraph.html">subsetCnetIgraph()</a></code> </p>
+        </td>
+        <td><p>Subset Cnet igraph</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="topEnrichBySource.html">topEnrichBySource()</a></code> </p>
+        </td>
+        <td><p>Subset enrichList for top enrichment results by source</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="topEnrichListBySource.html">topEnrichListBySource()</a></code> </p>
+        </td>
+        <td><p>Subset enrichList for top enrichment results by source</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="xyAngle.html">xyAngle()</a></code> </p>
+        </td>
+        <td><p>Get angle from origin to vector of x,y coordinates</p></td>
       </tr>
     </tbody>
     </table>

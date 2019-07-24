@@ -19,6 +19,8 @@ Other jam igraph functions: \code{\link{cnet2df}},
   \code{\link{cnetplot_internalJam}},
   \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
   \code{\link{layout_with_qfr}},
+  \code{\link{rectifyPiegraph}},
+  \code{\link{removeIgraphBlanks}},
   \code{\link{shape.coloredrectangle.plot}},
   \code{\link{xyAngle}}
 }
