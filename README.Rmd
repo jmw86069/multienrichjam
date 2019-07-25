@@ -1,5 +1,4 @@
 ---
-title: multienrichjam for multiple gene set enrichment analysis and visualization
 output: github_document
 ---
 

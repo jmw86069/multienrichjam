@@ -1,5 +1,3 @@
-multienrichjam for multiple gene set enrichment analysis and visualization
-================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 multienrichjam
