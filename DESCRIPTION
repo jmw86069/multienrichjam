@@ -10,6 +10,7 @@ Description: Methods to analyze multiple gene set enrichment results,
     functions specifically to explore and compare multiple enrichment
     results. New igraph node shape "coloredrectangle".
 Depends: R (>= 3.5.0)
+biocViews:
 Imports: jamba (>= 0.0.32.900),
     colorjam (>= 0.0.8.900),
     igraph,
