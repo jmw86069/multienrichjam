@@ -264,6 +264,128 @@ enrichDF2enrichResult <- function
 #'
 #' Prepare MultiEnrichMap data from enrichList
 #'
+#' This function performs most of the work of comparing multiple
+#' enrichment results. It takes a list of `enrichResult` objects,
+#' generates an overall pathway-gene incidence matrix, assembles
+#' a pathway-to-Pvalue matrix, creates EnrichMap `igraph` network
+#' objects, and CnetPlot `igraph` network objects. It also applies
+#' node shapes and colors consistent with the colors used for
+#' each enrichment result.
+#'
+#' By default, each enrichment result table is subsetted for the
+#' top `n=20` pathways sorted by pathway source, defined by
+#' colnames `c("Source", "Category")`. For data without a source
+#' column, the overall enrichment results are sorted to take the
+#' top 20. Once the top 20 from each enrichment table are selected,
+#' the overall set of pathways are used to retain these pathways
+#' from all enrichment tables. In this way, a significant enrichment
+#' result from one table will still be compared to a non-significant
+#' result from another table.
+#'
+#' The default values for `topEnrichN` and related arguments
+#' are intended when using enrichment results from `MSigDB`,
+#' which has colnames `c("Source","Category")` and represents
+#' 100 or more combinations of sources and categories. The
+#' default values will select the top 20 entries from the
+#' canonical pathways, after curating the canonical pathway
+#' categories to one `"CP"` source value.
+#'
+#' To disable the top pathway filtering, set `topEnrichN=0`.
+#'
+#' Colors can be defined for each enrichment result using the
+#' argument `colorV`, otherwise colors are assigned using
+#' `colorjam::rainbowJam()`.
+#'
+#' @return `list` object containing various result formats:
+#' * colorV: named vector of colors assigned to each enrichment,
+#' where names match the names of each enrichment in `enrichList`.
+#'
+#' @param enrichList `list` of `enrichResult` objects, whose
+#'    names are used in subsequent derived results.
+#' @param geneHitList `list` of character vectors, or `NULL`. When
+#'    `NULL` the gene hit list for each enrichment result is inferred
+#'    from the enrichment results themselves. Therefore, if a gene
+#'    does not appear in any enrichment result, it will not be
+#'    used in this function.
+#' @param colorV vector of colors, length equal to `length(enrichList)`,
+#'    used to assign specific colors to each enrichment result.
+#' @param nrow,ncol,byrow optional arguments used to customize
+#'    `igraph` node shape `"coloredrectangle"`, useful when the
+#'    number of `enrichList` results is larger than around 4. It
+#'    defines the number of columns and rows used for each node,
+#'    to display enrichment result colors, and whether to fill
+#'    colors by row when `byrow=TRUE`, or by column when `byrow=FALSE`.
+#' @param enrichLabels character vector of enrichment labels to use,
+#'    as an optional alternative to `names(enrichList)`.
+#' @param subsetSets character vector of optional set names to
+#'    use in the analysis, useful to analyze only a specific subset
+#'    of known pathways.
+#' @param overlapThreshold numeric value between 0 and 1, indicating
+#'    the Jaccard overlap score above which two pathways will be linked
+#'    in the EnrichMap `igraph` network. By default, pathways whose
+#'    genes overlap more than `0.1` will be connected, which is roughly
+#'    equivalent to about a 10% overlap. Note that the Jaccard coefficient
+#'    is adversely affected when pathway sets differ in size by more than
+#'    about 5-fold.
+#' @param cutoffRowMinP numeric value between 0 and 1, indicating the
+#'    enrichment P-value required by at least one enrichment result, to
+#'    be retained in downstream analyses. This P-value can be confirmed
+#'    in the returned list element `"enrichIM"`, which is a matrix of
+#'    P-values by pathway and enrichment.
+#' @param enrichBaseline numeric value indicating the `-log10(P-value)`
+#'    at which colors are defined as non-blank in color gradients.
+#'    This value is typically derived from `cutoffRowMinP` to ensure
+#'    that colors are only applied when a pathway meets this significance
+#'    threshold.
+#' @param enrichLens numeric value indicating the "lens" to apply to
+#'    color gradients, where numbers above 0 make the color ramp more
+#'    compressed, so colors are more vivid at lower numeric values.
+#' @param enrichNumLimit numeric value indicating the `-log10(P-value)`
+#'    above which each color gradient is considered the maximum color,
+#'    useful to apply a fixed threshold for each color gradient.
+#' @param nEM integer number, to define the maximum number of pathway
+#'    nodes to include in the EnrichMap `igraph` network. This argument
+#'    is passed to `enrichMapJam()`.
+#' @param topEnrichN integer value with the maximum rows to retain
+#'    from each `enrichList` table, by source. Set `topEnrichN=0` or
+#'    `topEnrichN=NULL` to disable subsetting for the top rows.
+#' @param topEnrichSources,topEnrichCurateFrom,topEnrichCurateTo,topEnrichSourceSubset,topEnrichDescriptionGrep,topEnrichNameGrep
+#'    arguments passed to `topEnrichListBySource()` when `topEnrichN`
+#'    is greater than `0`.
+#' @param keyColname,nameColname,geneColname,pvalueColname,descriptionColname
+#'    character vectors indicating the colname or colname pattern to
+#'    use for the `key`, `name`, `gene`, `pvalue`, and `description`,
+#'    respectively. Each vector is passed to `find_colname()` to determine
+#'    the first suitable matching colname for each `data.frame` in
+#'    `enrichList`.
+#' @param descriptionCurateFrom,descriptionCurateTo character vectors
+#'    with patterns and replacements, passed to `gsubs()`, intended to
+#'    help curate common descriptions to shorter, perhaps more
+#'    user-friendly labels. One example is removing the prefix
+#'    `"Genes annotated by the GO term "` from Gene Ontology pathways.
+#'    These label can be manually curated later, but it is often
+#'    more convenient to curate them upfront in order to keep the
+#'    different result objects consistent.
+#' @param pathGenes,geneHits character values indicating the colnames
+#'    that contain the number of pathway genes, and the number of gene
+#'    hits, respectively.
+#' @param geneDelim character pattern used with `strsplit()` to
+#'    split multiple gene values into a list of vectors. The default
+#'    for `enrichResult` objects is `"/"`, but the default for other
+#'    sources is often `","`. The default pattern `"[,/ ]+"` splits
+#'    by either `"/"`, `","`, or whitespace `" "`.
+#' @param GmtTname,msigdbGmtT optional objects used to define the
+#'    full pathway universe tested. When not supplied, these values
+#'    are inferred from the input `enrichList`. The `msigdbGmtT`
+#'    object is used to determine the full set of genes contained
+#'    in each pathway.
+#' @param verbose logical indicating whether to print verbose output.
+#' @param ... additional arguments are passed to various internal
+#'    functions.
+#'
+#' @examples
+#' ## See the Vignette for a full walkthrough example
+#'
 #' @family jam enrichment functions
 #'
 #' @export
@@ -282,7 +404,7 @@ multiEnrichMap <- function
  enrichLens=0,
  enrichNumLimit=4,
  nEM=500,
- topEnrichN=15,
+ topEnrichN=20,
  topEnrichSources=c("Category", "Source"),
  topEnrichCurateFrom=c("CP:.*"),
  topEnrichCurateTo=c("CP"),
@@ -495,7 +617,8 @@ multiEnrichMap <- function
          curateTo=topEnrichCurateTo,
          sourceSubset=topEnrichSourceSubset,
          descriptionGrep=topEnrichDescriptionGrep,
-         nameGrep=topEnrichNameGrep);
+         nameGrep=topEnrichNameGrep,
+         verbose=verbose);
       if (1 == 2) {
          enrichList <- lapply(enrichList, function(iDF){
             iDFtop <- topEnrichBySource(iDF,
@@ -962,6 +1085,8 @@ enrichList2IM <- function
 #'
 #' Convert enrichList to data.frame
 #'
+#' @family jam conversion functions
+#'
 #' @export
 enrichList2df <- function
 (enrichList,
@@ -1197,6 +1322,9 @@ enrichList2df <- function
 #'
 #' Create enrichMap igraph object
 #'
+#' @family jam conversion functions
+#' @family jam igraph functions
+#'
 #' @export
 enrichMapJam <- function
 (x,
@@ -1422,6 +1550,8 @@ verbose=FALSE,
 #' option is useful to hide any Set nodes that have no connected Gene
 #' nodes.
 #'
+#' @family jam igraph functions
+#'
 #' @param gCnet igraph object representing Cnet concept network data
 #' @param includeSets character vector, or NULL, containing the set
 #'    names or labels to retain.
@@ -1586,6 +1716,8 @@ subsetCnetIgraph <- function
 #' color saturation is extremely low. Similarly, colors with
 #' extremely high alpha transparency may be considered "blank".
 #'
+#' @family jam utility functions
+#'
 #' @param x character vector of R colors.
 #' @param c_max maximum chroma as determined by HCL color space, in
 #'    range of no color 0 to maximum color 100.
@@ -1677,6 +1809,8 @@ isColorBlank <- function
 #' operates on either a character vector, or an igraph object.
 #'
 #' @return vector or igraph object, to match the input `x`.
+#'
+#' @family jam igraph functions
 #'
 #' @param x character vector, or `igraph` object. When an `igraph`
 #'    object is supplied, the `V(g)$name` attribute is used as the
@@ -1878,7 +2012,7 @@ topEnrichBySource <- function
 (enrichDF,
  n=15,
  sourceColnames=c("Category","Source"),
- sortColname=c("P-value", "-geneHits"),
+ sortColname=c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
  newColname="EnrichGroup",
  curateFrom=c("CP:.*"),
  curateTo=c("CP"),
@@ -1941,9 +2075,28 @@ topEnrichBySource <- function
    sourceColnames <- find_colname(sourceColnames, enrichDF);
    descriptionColname <- find_colname(descriptionColname, enrichDF);
    nameColname <- find_colname(nameColname, enrichDF);
+   if (verbose) {
+      printDebug("topEnrichBySource(): ",
+         "sourceColnames:", sourceColnames);
+      printDebug("topEnrichBySource(): ",
+         "descriptionColname:", descriptionColname);
+      printDebug("topEnrichBySource(): ",
+         "nameColname:", nameColname);
+      printDebug("topEnrichBySource(): ",
+         "sortColname:", sortColname);
+   }
 
    ## Optionally determine column sort order
    if (length(sortColname) > 0) {
+      if (!any(sortColname %in% colnames(enrichDF)) &&
+            !any(gsub("^-", "", sortColname) %in% colnames(enrichDF))) {
+         printDebug("topEnrichBySource(): ",
+            "Warning: sortColname does not match colnames(enrichDF).");
+         printDebug("topEnrichBySource(): ",
+            "sortColname:", sortColname);
+         printDebug("topEnrichBySource(): ",
+            "colnames(enrichDF):", colnames(enrichDF));
+      }
       enrichDF <- mixedSortDF(enrichDF,
          byCols=sortColname,
          ...);
@@ -2051,6 +2204,8 @@ topEnrichBySource <- function
 #' comparison of enrichment results when a pathway meets the
 #' filter criteria in any one entry in `enrichList`.
 #'
+#' @family jam enrichment functions
+#'
 #' @param enrichList `list` of `enrichDF` entries, each passed
 #'    to `topEnrichBySource()`.
 #' @inheritParams topEnrichBySource
@@ -2060,7 +2215,7 @@ topEnrichListBySource <- function
 (enrichList,
  n=15,
  sourceColnames=c("Category","Source"),
- sortColname=c("P-value", "-geneHits"),
+ sortColname=c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
  newColname="EnrichGroup",
  curateFrom=c("CP:.*"),
  curateTo=c("CP"),
@@ -2070,7 +2225,7 @@ topEnrichListBySource <- function
  nameColname=c("ID", "Name"),
  descriptionGrep=NULL,
  nameGrep=NULL,
- verbose=TRUE,
+ verbose=FALSE,
  ...)
 {
    ## Purpose is to extend topEnrichBySource() in an important way when

@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
       </span>
     </div>
 
@@ -126,11 +126,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>topEnrichBySource</span>(<span class='no'>enrichDF</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>sourceColnames</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Category"</span>,
-  <span class='st'>"Source"</span>), <span class='kw'>sortColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"P-value"</span>, <span class='st'>"-geneHits"</span>),
-  <span class='kw'>newColname</span> <span class='kw'>=</span> <span class='st'>"EnrichGroup"</span>, <span class='kw'>curateFrom</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"CP:.*"</span>),
-  <span class='kw'>curateTo</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"CP"</span>), <span class='kw'>sourceSubset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceSep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
-  <span class='kw'>descriptionColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Description"</span>, <span class='st'>"Name"</span>, <span class='st'>"Pathway"</span>),
-  <span class='kw'>nameColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"ID"</span>, <span class='st'>"Name"</span>), <span class='kw'>descriptionGrep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='st'>"Source"</span>), <span class='kw'>sortColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"P-value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"padjust"</span>,
+  <span class='st'>"-GeneRatio"</span>, <span class='st'>"-geneHits"</span>), <span class='kw'>newColname</span> <span class='kw'>=</span> <span class='st'>"EnrichGroup"</span>,
+  <span class='kw'>curateFrom</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"CP:.*"</span>), <span class='kw'>curateTo</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"CP"</span>), <span class='kw'>sourceSubset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sourceSep</span> <span class='kw'>=</span> <span class='st'>"_"</span>, <span class='kw'>descriptionColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Description"</span>, <span class='st'>"Name"</span>,
+  <span class='st'>"Pathway"</span>), <span class='kw'>nameColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"ID"</span>, <span class='st'>"Name"</span>), <span class='kw'>descriptionGrep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>nameGrep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -229,7 +229,8 @@ gene sets.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other jam enrichment functions: <code><a href='multiEnrichMap.html'>multiEnrichMap</a></code></p></div>
+    <div class='dont-index'><p>Other jam enrichment functions: <code><a href='multiEnrichMap.html'>multiEnrichMap</a></code>,
+  <code><a href='topEnrichListBySource.html'>topEnrichListBySource</a></code></p></div>
     
 
   </div>

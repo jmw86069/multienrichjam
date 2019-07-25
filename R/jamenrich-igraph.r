@@ -26,7 +26,7 @@
 #'    nodes which should not be modified, and NA values for nodes where
 #'    the position can be modified.
 #' @param ... other arguments are sent to
-#'    \code{\link{qgraph::qgraph.layout.fruchtermanreingold}}.
+#'    `qgraph::qgraph.layout.fruchtermanreingold()`
 #'
 #' @return two-column numeric matrix with coordinates for each vertex.
 #'
@@ -83,9 +83,25 @@ layout_with_qfr <- function
 #'
 #' igraph layout function using qgraph Fruchterman-Reingold
 #'
+#' This function returns a layout function, which can be convenient
+#' when calling `igraph::plot.igraph()`, in order to set
+#' layout parameters in the same call.
+#'
+#' @return function used to calculate layout coordinates of
+#'    an `igraph` object.
+#'
+#' @family jam igraph functions
+#'
+#' @param repulse numeric value typically between 3 and 5, passed
+#'    to `layout_with_qfr()`, which in turn is passed to
+#'    `qgraph::qgraph.layout.fruchtermanreingold()`.
+#' @param seed numeric value used to set the R random seed, in order
+#'    to make layouts consistent.
+#' @param ... additional arguments are passed to `layout_with_qfr()`.
+#'
 #' @export
 layout_with_qfrf <- function
-(repulse=3.1,
+(repulse=3.5,
  seed=123,
  ...)
 {
@@ -279,7 +295,10 @@ verbose=FALSE,
       catSize <- sqrt(degreeCat/pi);
       V(g)[iWhichCat]$size <- catSize;
       if (geneSize > median(catSize)) {
-         printDebug("Shrinking gene nodes to median category node size.");
+         if (verbose) {
+            printDebug("cnetplotJam(): ",
+               "Shrinking gene nodes to median category node size.");
+         }
          geneSize <- median(catSize);
          V(g)[iWhichGene]$size <- geneSize;
       }
@@ -958,7 +977,7 @@ shape.ellipse.plot <- function
 #'    of each segment.
 #' @param ... additional arguments are ignored.
 #'
-#' @family jam igraph functions
+#' @family jam utility functions
 #'
 #' @examples
 #' # by default output is in degrees
@@ -973,12 +992,12 @@ shape.ellipse.plot <- function
 #' @export
 xyAngle <- function
 (x,
-   y=NULL,
-   directed=FALSE,
-   deg=TRUE,
-   origin.x=0,
-   origin.y=0,
-   ...)
+ y=NULL,
+ directed=FALSE,
+ deg=TRUE,
+ origin.x=0,
+ origin.y=0,
+ ...)
 {
    ## Get angle from zero to given x,y coordinates
    if (length(y) == 0) {
@@ -1112,6 +1131,7 @@ drawEllipse <- function
 #'    of neighboring nodes.
 #'
 #' @family jam igraph functions
+#' @family jam conversion functions
 #'
 #' @param g igraph object containing Cnet data, specifically vertex
 #'    attribute name "nodeType" with values "Set" and "Gene", and
@@ -1171,6 +1191,7 @@ cnet2df <- function
 #'    names, and rownames defined by `"Gene"` node names.
 #'
 #' @family jam igraph functions
+#' @family jam conversion functions
 #'
 #' @param g igraph object containing Cnet data, specifically vertex
 #'    attribute name "nodeType" with values "Set" and "Gene", and
@@ -1744,6 +1765,8 @@ rectifyPiegraph <- function
 #' `V(g)$y`. When there are not multiple nodes sharing
 #' the same neighbors, the original igraph object is
 #' returned, with the addition of layout coordinates.
+#'
+#' @family jam igraph functions
 #'
 #' @param g igraph object
 #' @param sortAttributes character vector of node attribute

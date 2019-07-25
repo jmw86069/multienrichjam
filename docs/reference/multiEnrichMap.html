@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@
   <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>enrichLabels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>subsetSets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overlapThreshold</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>cutoffRowMinP</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
   <span class='kw'>enrichBaseline</span> <span class='kw'>=</span> -<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log10</a></span>(<span class='no'>cutoffRowMinP</span>), <span class='kw'>enrichLens</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>enrichNumLimit</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>nEM</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>topEnrichN</span> <span class='kw'>=</span> <span class='fl'>15</span>,
+  <span class='kw'>enrichNumLimit</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>nEM</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>topEnrichN</span> <span class='kw'>=</span> <span class='fl'>20</span>,
   <span class='kw'>topEnrichSources</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Category"</span>, <span class='st'>"Source"</span>),
   <span class='kw'>topEnrichCurateFrom</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"CP:.*"</span>), <span class='kw'>topEnrichCurateTo</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"CP"</span>),
   <span class='kw'>topEnrichSourceSubset</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"C2_CP"</span>, <span class='st'>"C5_BP"</span>, <span class='st'>"C5_CC"</span>, <span class='st'>"C5_MF"</span>),
@@ -142,19 +142,217 @@
   <span class='kw'>descriptionCurateTo</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>""</span>), <span class='kw'>pathGenes</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"setSize"</span>, <span class='st'>"pathGenes"</span>),
   <span class='kw'>geneHits</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Count"</span>, <span class='st'>"geneHits"</span>), <span class='kw'>geneDelim</span> <span class='kw'>=</span> <span class='st'>"[,/ ]+"</span>,
   <span class='kw'>GmtTname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>msigdbGmtT</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
-        
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>enrichList</th>
+      <td><p><code>list</code> of <code>enrichResult</code> objects, whose
+names are used in subsequent derived results.</p></td>
+    </tr>
+    <tr>
+      <th>geneHitList</th>
+      <td><p><code>list</code> of character vectors, or <code>NULL</code>. When
+<code>NULL</code> the gene hit list for each enrichment result is inferred
+from the enrichment results themselves. Therefore, if a gene
+does not appear in any enrichment result, it will not be
+used in this function.</p></td>
+    </tr>
+    <tr>
+      <th>colorV</th>
+      <td><p>vector of colors, length equal to <code><a href='https://www.rdocumentation.org/packages/base/topics/length'>length(enrichList)</a></code>,
+used to assign specific colors to each enrichment result.</p></td>
+    </tr>
+    <tr>
+      <th>nrow, ncol, byrow</th>
+      <td><p>optional arguments used to customize
+<code>igraph</code> node shape <code>"coloredrectangle"</code>, useful when the
+number of <code>enrichList</code> results is larger than around 4. It
+defines the number of columns and rows used for each node,
+to display enrichment result colors, and whether to fill
+colors by row when <code>byrow=TRUE</code>, or by column when <code>byrow=FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>enrichLabels</th>
+      <td><p>character vector of enrichment labels to use,
+as an optional alternative to <code><a href='https://www.rdocumentation.org/packages/base/topics/names'>names(enrichList)</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>subsetSets</th>
+      <td><p>character vector of optional set names to
+use in the analysis, useful to analyze only a specific subset
+of known pathways.</p></td>
+    </tr>
+    <tr>
+      <th>overlapThreshold</th>
+      <td><p>numeric value between 0 and 1, indicating
+the Jaccard overlap score above which two pathways will be linked
+in the EnrichMap <code>igraph</code> network. By default, pathways whose
+genes overlap more than <code>0.1</code> will be connected, which is roughly
+equivalent to about a 10<!-- % overlap. Note that the Jaccard coefficient -->
+is adversely affected when pathway sets differ in size by more than
+about 5-fold.</p></td>
+    </tr>
+    <tr>
+      <th>cutoffRowMinP</th>
+      <td><p>numeric value between 0 and 1, indicating the
+enrichment P-value required by at least one enrichment result, to
+be retained in downstream analyses. This P-value can be confirmed
+in the returned list element <code>"enrichIM"</code>, which is a matrix of
+P-values by pathway and enrichment.</p></td>
+    </tr>
+    <tr>
+      <th>enrichBaseline</th>
+      <td><p>numeric value indicating the <code>-log10(P-value)</code>
+at which colors are defined as non-blank in color gradients.
+This value is typically derived from <code>cutoffRowMinP</code> to ensure
+that colors are only applied when a pathway meets this significance
+threshold.</p></td>
+    </tr>
+    <tr>
+      <th>enrichLens</th>
+      <td><p>numeric value indicating the "lens" to apply to
+color gradients, where numbers above 0 make the color ramp more
+compressed, so colors are more vivid at lower numeric values.</p></td>
+    </tr>
+    <tr>
+      <th>enrichNumLimit</th>
+      <td><p>numeric value indicating the <code>-log10(P-value)</code>
+above which each color gradient is considered the maximum color,
+useful to apply a fixed threshold for each color gradient.</p></td>
+    </tr>
+    <tr>
+      <th>nEM</th>
+      <td><p>integer number, to define the maximum number of pathway
+nodes to include in the EnrichMap <code>igraph</code> network. This argument
+is passed to <code><a href='enrichMapJam.html'>enrichMapJam()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>topEnrichN</th>
+      <td><p>integer value with the maximum rows to retain
+from each <code>enrichList</code> table, by source. Set <code>topEnrichN=0</code> or
+<code>topEnrichN=NULL</code> to disable subsetting for the top rows.</p></td>
+    </tr>
+    <tr>
+      <th>topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep</th>
+      <td><p>arguments passed to <code><a href='topEnrichListBySource.html'>topEnrichListBySource()</a></code> when <code>topEnrichN</code>
+is greater than <code>0</code>.</p></td>
+    </tr>
+    <tr>
+      <th>keyColname, nameColname, geneColname, pvalueColname, descriptionColname</th>
+      <td><p>character vectors indicating the colname or colname pattern to
+use for the <code>key</code>, <code>name</code>, <code>gene</code>, <code>pvalue</code>, and <code>description</code>,
+respectively. Each vector is passed to <code><a href='find_colname.html'>find_colname()</a></code> to determine
+the first suitable matching colname for each <code>data.frame</code> in
+<code>enrichList</code>.</p></td>
+    </tr>
+    <tr>
+      <th>descriptionCurateFrom, descriptionCurateTo</th>
+      <td><p>character vectors
+with patterns and replacements, passed to <code><a href='gsubs.html'>gsubs()</a></code>, intended to
+help curate common descriptions to shorter, perhaps more
+user-friendly labels. One example is removing the prefix
+<code>"Genes annotated by the GO term "</code> from Gene Ontology pathways.
+These label can be manually curated later, but it is often
+more convenient to curate them upfront in order to keep the
+different result objects consistent.</p></td>
+    </tr>
+    <tr>
+      <th>pathGenes, geneHits</th>
+      <td><p>character values indicating the colnames
+that contain the number of pathway genes, and the number of gene
+hits, respectively.</p></td>
+    </tr>
+    <tr>
+      <th>geneDelim</th>
+      <td><p>character pattern used with <code><a href='https://www.rdocumentation.org/packages/base/topics/strsplit'>strsplit()</a></code> to
+split multiple gene values into a list of vectors. The default
+for <code>enrichResult</code> objects is <code>"/"</code>, but the default for other
+sources is often <code>","</code>. The default pattern <code>"[,/ ]+"</code> splits
+by either <code>"/"</code>, <code>","</code>, or whitespace <code>" "</code>.</p></td>
+    </tr>
+    <tr>
+      <th>GmtTname, msigdbGmtT</th>
+      <td><p>optional objects used to define the
+full pathway universe tested. When not supplied, these values
+are inferred from the input <code>enrichList</code>. The <code>msigdbGmtT</code>
+object is used to determine the full set of genes contained
+in each pathway.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>logical indicating whether to print verbose output.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>additional arguments are passed to various internal
+functions.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>list</code> object containing various result formats:</p><ul>
+<li><p>colorV: named vector of colors assigned to each enrichment,
+where names match the names of each enrichment in <code>enrichList</code>.</p></li>
+</ul>
+
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function performs most of the work of comparing multiple
+enrichment results. It takes a list of <code>enrichResult</code> objects,
+generates an overall pathway-gene incidence matrix, assembles
+a pathway-to-Pvalue matrix, creates EnrichMap <code>igraph</code> network
+objects, and CnetPlot <code>igraph</code> network objects. It also applies
+node shapes and colors consistent with the colors used for
+each enrichment result.</p>
+<p>By default, each enrichment result table is subsetted for the
+top <code>n=20</code> pathways sorted by pathway source, defined by
+colnames <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Source", "Category")</a></code>. For data without a source
+column, the overall enrichment results are sorted to take the
+top 20. Once the top 20 from each enrichment table are selected,
+the overall set of pathways are used to retain these pathways
+from all enrichment tables. In this way, a significant enrichment
+result from one table will still be compared to a non-significant
+result from another table.</p>
+<p>The default values for <code>topEnrichN</code> and related arguments
+are intended when using enrichment results from <code>MSigDB</code>,
+which has colnames <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Source","Category")</a></code> and represents
+100 or more combinations of sources and categories. The
+default values will select the top 20 entries from the
+canonical pathways, after curating the canonical pathway
+categories to one <code>"CP"</code> source value.</p>
+<p>To disable the top pathway filtering, set <code>topEnrichN=0</code>.</p>
+<p>Colors can be defined for each enrichment result using the
+argument <code>colorV</code>, otherwise colors are assigned using
+<code><a href='https://www.rdocumentation.org/packages/colorjam/topics/rainbowJam'>colorjam::rainbowJam()</a></code>.</p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other jam enrichment functions: <code><a href='topEnrichBySource.html'>topEnrichBySource</a></code></p></div>
+    <div class='dont-index'><p>Other jam enrichment functions: <code><a href='topEnrichBySource.html'>topEnrichBySource</a></code>,
+  <code><a href='topEnrichListBySource.html'>topEnrichListBySource</a></code></p></div>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>## See the Vignette for a full walkthrough example
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

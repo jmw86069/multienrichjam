@@ -8,7 +8,7 @@ multiEnrichMap(enrichList, geneHitList = NULL, colorV = NULL,
   nrow = NULL, ncol = NULL, byrow = FALSE, enrichLabels = NULL,
   subsetSets = NULL, overlapThreshold = 0.1, cutoffRowMinP = 0.05,
   enrichBaseline = -log10(cutoffRowMinP), enrichLens = 0,
-  enrichNumLimit = 4, nEM = 500, topEnrichN = 15,
+  enrichNumLimit = 4, nEM = 500, topEnrichN = 20,
   topEnrichSources = c("Category", "Source"),
   topEnrichCurateFrom = c("CP:.*"), topEnrichCurateTo = c("CP"),
   topEnrichSourceSubset = c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
@@ -22,10 +22,157 @@ multiEnrichMap(enrichList, geneHitList = NULL, colorV = NULL,
   geneHits = c("Count", "geneHits"), geneDelim = "[,/ ]+",
   GmtTname = NULL, msigdbGmtT = NULL, verbose = FALSE, ...)
 }
+\arguments{
+\item{enrichList}{\code{list} of \code{enrichResult} objects, whose
+names are used in subsequent derived results.}
+
+\item{geneHitList}{\code{list} of character vectors, or \code{NULL}. When
+\code{NULL} the gene hit list for each enrichment result is inferred
+from the enrichment results themselves. Therefore, if a gene
+does not appear in any enrichment result, it will not be
+used in this function.}
+
+\item{colorV}{vector of colors, length equal to \code{length(enrichList)},
+used to assign specific colors to each enrichment result.}
+
+\item{nrow, ncol, byrow}{optional arguments used to customize
+\code{igraph} node shape \code{"coloredrectangle"}, useful when the
+number of \code{enrichList} results is larger than around 4. It
+defines the number of columns and rows used for each node,
+to display enrichment result colors, and whether to fill
+colors by row when \code{byrow=TRUE}, or by column when \code{byrow=FALSE}.}
+
+\item{enrichLabels}{character vector of enrichment labels to use,
+as an optional alternative to \code{names(enrichList)}.}
+
+\item{subsetSets}{character vector of optional set names to
+use in the analysis, useful to analyze only a specific subset
+of known pathways.}
+
+\item{overlapThreshold}{numeric value between 0 and 1, indicating
+the Jaccard overlap score above which two pathways will be linked
+in the EnrichMap \code{igraph} network. By default, pathways whose
+genes overlap more than \code{0.1} will be connected, which is roughly
+equivalent to about a 10% overlap. Note that the Jaccard coefficient
+is adversely affected when pathway sets differ in size by more than
+about 5-fold.}
+
+\item{cutoffRowMinP}{numeric value between 0 and 1, indicating the
+enrichment P-value required by at least one enrichment result, to
+be retained in downstream analyses. This P-value can be confirmed
+in the returned list element \code{"enrichIM"}, which is a matrix of
+P-values by pathway and enrichment.}
+
+\item{enrichBaseline}{numeric value indicating the \code{-log10(P-value)}
+at which colors are defined as non-blank in color gradients.
+This value is typically derived from \code{cutoffRowMinP} to ensure
+that colors are only applied when a pathway meets this significance
+threshold.}
+
+\item{enrichLens}{numeric value indicating the "lens" to apply to
+color gradients, where numbers above 0 make the color ramp more
+compressed, so colors are more vivid at lower numeric values.}
+
+\item{enrichNumLimit}{numeric value indicating the \code{-log10(P-value)}
+above which each color gradient is considered the maximum color,
+useful to apply a fixed threshold for each color gradient.}
+
+\item{nEM}{integer number, to define the maximum number of pathway
+nodes to include in the EnrichMap \code{igraph} network. This argument
+is passed to \code{enrichMapJam()}.}
+
+\item{topEnrichN}{integer value with the maximum rows to retain
+from each \code{enrichList} table, by source. Set \code{topEnrichN=0} or
+\code{topEnrichN=NULL} to disable subsetting for the top rows.}
+
+\item{topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep}{arguments passed to \code{topEnrichListBySource()} when \code{topEnrichN}
+is greater than \code{0}.}
+
+\item{keyColname, nameColname, geneColname, pvalueColname, descriptionColname}{character vectors indicating the colname or colname pattern to
+use for the \code{key}, \code{name}, \code{gene}, \code{pvalue}, and \code{description},
+respectively. Each vector is passed to \code{find_colname()} to determine
+the first suitable matching colname for each \code{data.frame} in
+\code{enrichList}.}
+
+\item{descriptionCurateFrom, descriptionCurateTo}{character vectors
+with patterns and replacements, passed to \code{gsubs()}, intended to
+help curate common descriptions to shorter, perhaps more
+user-friendly labels. One example is removing the prefix
+\code{"Genes annotated by the GO term "} from Gene Ontology pathways.
+These label can be manually curated later, but it is often
+more convenient to curate them upfront in order to keep the
+different result objects consistent.}
+
+\item{pathGenes, geneHits}{character values indicating the colnames
+that contain the number of pathway genes, and the number of gene
+hits, respectively.}
+
+\item{geneDelim}{character pattern used with \code{strsplit()} to
+split multiple gene values into a list of vectors. The default
+for \code{enrichResult} objects is \code{"/"}, but the default for other
+sources is often \code{","}. The default pattern \code{"[,/ ]+"} splits
+by either \code{"/"}, \code{","}, or whitespace \code{" "}.}
+
+\item{GmtTname, msigdbGmtT}{optional objects used to define the
+full pathway universe tested. When not supplied, these values
+are inferred from the input \code{enrichList}. The \code{msigdbGmtT}
+object is used to determine the full set of genes contained
+in each pathway.}
+
+\item{verbose}{logical indicating whether to print verbose output.}
+
+\item{...}{additional arguments are passed to various internal
+functions.}
+}
+\value{
+\code{list} object containing various result formats:
+\itemize{
+\item colorV: named vector of colors assigned to each enrichment,
+where names match the names of each enrichment in \code{enrichList}.
+}
+}
 \description{
 Prepare MultiEnrichMap data from enrichList
 }
+\details{
+This function performs most of the work of comparing multiple
+enrichment results. It takes a list of \code{enrichResult} objects,
+generates an overall pathway-gene incidence matrix, assembles
+a pathway-to-Pvalue matrix, creates EnrichMap \code{igraph} network
+objects, and CnetPlot \code{igraph} network objects. It also applies
+node shapes and colors consistent with the colors used for
+each enrichment result.
+
+By default, each enrichment result table is subsetted for the
+top \code{n=20} pathways sorted by pathway source, defined by
+colnames \code{c("Source", "Category")}. For data without a source
+column, the overall enrichment results are sorted to take the
+top 20. Once the top 20 from each enrichment table are selected,
+the overall set of pathways are used to retain these pathways
+from all enrichment tables. In this way, a significant enrichment
+result from one table will still be compared to a non-significant
+result from another table.
+
+The default values for \code{topEnrichN} and related arguments
+are intended when using enrichment results from \code{MSigDB},
+which has colnames \code{c("Source","Category")} and represents
+100 or more combinations of sources and categories. The
+default values will select the top 20 entries from the
+canonical pathways, after curating the canonical pathway
+categories to one \code{"CP"} source value.
+
+To disable the top pathway filtering, set \code{topEnrichN=0}.
+
+Colors can be defined for each enrichment result using the
+argument \code{colorV}, otherwise colors are assigned using
+\code{colorjam::rainbowJam()}.
+}
+\examples{
+## See the Vignette for a full walkthrough example
+
+}
 \seealso{
-Other jam enrichment functions: \code{\link{topEnrichBySource}}
+Other jam enrichment functions: \code{\link{topEnrichBySource}},
+  \code{\link{topEnrichListBySource}}
 }
 \concept{jam enrichment functions}

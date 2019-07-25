@@ -53,3 +53,8 @@ The results from the first successful operation is returned.
 When there are duplicate \code{colnames(x)} only the first
 unique name is returned.
 }
+\seealso{
+Other jam utility functions: \code{\link{gsubs}},
+  \code{\link{isColorBlank}}, \code{\link{xyAngle}}
+}
+\concept{jam utility functions}

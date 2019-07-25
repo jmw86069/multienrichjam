@@ -35,11 +35,22 @@ node names.
 Other jam igraph functions: \code{\link{cnet2df}},
   \code{\link{cnetplotJam}},
   \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
+  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
+  \code{\link{fixSetLabels}},
+  \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfrf}},
   \code{\link{layout_with_qfr}},
   \code{\link{rectifyPiegraph}},
   \code{\link{removeIgraphBlanks}},
+  \code{\link{reorderIgraphNodes}},
   \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
+  \code{\link{shape.ellipse.plot}},
+  \code{\link{subsetCnetIgraph}}
+
+Other jam conversion functions: \code{\link{cnet2df}},
+  \code{\link{enrichDF2enrichResult}},
+  \code{\link{enrichList2IM}}, \code{\link{enrichList2df}},
+  \code{\link{enrichMapJam}}
 }
+\concept{jam conversion functions}
 \concept{jam igraph functions}

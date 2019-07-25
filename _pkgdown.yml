@@ -2,12 +2,12 @@ template:
   params:
     bootswatch: cosmo
 reference:
-- title: MultiEnrichMap functions
-  desc: Functions for the MultiEnrichMap workflow
+- title: Enrichment functions
+  desc: Functions that manipulate enrichment or multiple enrichment results.
   contents:
-  - has_concept("jam MultiEnrichMap functions")
-- title: conversion functions
-  desc: Functions that convert data types
+  - has_concept("jam enrichment functions")
+- title: Conversion functions
+  desc: Functions to convert data types
   contents:
   - has_concept("jam conversion functions")
 - title: igraph-related functions
@@ -18,3 +18,11 @@ reference:
   desc: Functions that operate on list objects
   contents:
   - has_concept("jam list functions")
+- title: Utility functions
+  desc: Functions used by other multienrichjam functions
+  contents:
+  - has_concept("jam utility functions")
+- title: Import functions
+  desc: Functions to import enrichment data
+  contents:
+  - has_concept("jam import functions")

@@ -406,6 +406,8 @@ importIPAenrichment <- function
 #' by disease category and storing the range of enrichment
 #' P-values.
 #'
+#' @family jam import functions
+#'
 #' @param jDF data.frame from one Ingenuity IPA enrichment test.
 #' @param ipaNameGrep vector of regular expression patterns
 #'    used to recognize the name of the enriched entity,
@@ -534,6 +536,8 @@ curateIPAcolnames <- function
 #' combinations. It applies each pattern match and replacement
 #' in order and is therefore not vectorized.
 #'
+#' @family jam utility functions
+#'
 #' @param pattern character vector of patterns
 #' @param replacement character vector of replacements
 #' @param x character vector with input data to be curated
@@ -630,6 +634,8 @@ gsubs <- function
 #'
 #' When there are duplicate `colnames(x)` only the first
 #' unique name is returned.
+#'
+#' @family jam utility functions
 #'
 #' @return character vector with length `max`, or if no pattern
 #'    match is found it returns `NULL`. Also if there are no

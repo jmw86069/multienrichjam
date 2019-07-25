@@ -64,3 +64,7 @@ Ingenuity IPA, after collating individual pathways
 by disease category and storing the range of enrichment
 P-values.
 }
+\seealso{
+Other jam import functions: \code{\link{importIPAenrichment}}
+}
+\concept{jam import functions}

@@ -46,14 +46,7 @@ xyAngle(1, 1, origin.x=1, origin.y=0);
 
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}}
+Other jam utility functions: \code{\link{find_colname}},
+  \code{\link{gsubs}}, \code{\link{isColorBlank}}
 }
-\concept{jam igraph functions}
+\concept{jam utility functions}

@@ -20,6 +20,8 @@
 #' but also that the resulting matrix was substantially smaller (5-20 times)
 #' then comparable methods producing a data matrix.
 #'
+#' @family jam list functions
+#'
 #' @param x list of vectors
 #' @param makeUnique logical indicating whether to enforce uniqueness on each
 #'    vector in the list. For an extremely long list, the uniqueness step can
@@ -156,6 +158,8 @@ list2im <- function
 #' package like `data.table` or `dplyr` to apply a function to
 #' combine values.
 #'
+#' @family jam list functions
+#'
 #' @return numeric matrix with rownames defined by vector names from
 #'    each vector in the input list. The colnames are defined by
 #'    names of the input list if they exist.
@@ -256,6 +260,8 @@ list2imSigned <- function
 #' This function calls `list2imSigned()` to produce a signed
 #' incidence matrix, which is then used with `base::crossprod()`
 #' to calculate the full matrix of values.
+#'
+#' @family jam list functions
 #'
 #' @param x `list` of named numerical vectors, where the sign (positive
 #'    or negative sign) indicates directionality, and is used to calculate

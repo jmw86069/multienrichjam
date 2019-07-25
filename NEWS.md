@@ -1,3 +1,18 @@
+# multienrichjam version 0.0.7.900
+
+## bug fixes
+
+* `topEnrichListBySource()` and `topEnrichBySource()` were updated
+to handle more default colnames for P-values, now including the
+default colnames for `enrichResult` objects `c("pvalue","padjust")`.
+When no sort columns are found, a warning message is printed.
+
+## changes
+
+* Added documentation for `multiEnrichMap()` and other functions.
+* Added vignette describing the workflow starting with Ingenuity
+IPA enrichment results.
+
 # multienrichjam version 0.0.6.900
 
 ## new functions
@@ -16,6 +31,10 @@ case-insensitively, then as a vector of patterns to match the
 start, end, then any part of the colnames. By default the first
 matching value from the first successful method is returned.
 Good for matching c("P-Value", "pvalue", "Pval")
+* `topEnrichBySource()` and `topEnrichListBySource()` subset the
+input pathway enrichment results by taking the top `n` result,
+then making sure the overall selected pathways are retained for
+all enrichment tables.
 
 # multienrichjam version 0.0.5.900
 

@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
       </span>
     </div>
 
@@ -256,17 +256,11 @@ er_canonical &lt;-<span class="st"> </span><span class="kw"><a href="https://www
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mem_canonical &lt;-<span class="st"> </span><span class="kw"><a href="../reference/multiEnrichMap.html">multiEnrichMap</a></span>(er_canonical,
    <span class="dt">enrichBaseline=</span><span class="dv">1</span>,
    <span class="dt">cutoffRowMinP=</span><span class="fl">0.05</span>,
+   <span class="dt">colorV=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"purple"</span>, <span class="st">"orange"</span>),
    <span class="dt">topEnrichN=</span><span class="dv">20</span>)
 <span class="co">#&gt; Warning: package 'DOSE' was built under R version 3.5.2</span>
-<span class="co">#&gt; Warning: package 'colorspace' was built under R version 3.5.2</span>
 <span class="co">#&gt; Warning in all(topEnrichN): coercing argument of type 'double' to logical</span>
-<span class="co">#&gt; ##  (17:48:06) 24Jul2019:  topEnrichListBySource(): iName:Newborns </span>
-<span class="co">#&gt; ##  (17:48:06) 24Jul2019:  topEnrichListBySource(): iName:OlderChildren </span>
-<span class="co">#&gt; ##  (17:48:06) 24Jul2019:  topEnrichListBySource(): length(enrichNames):32 </span>
-<span class="co">#&gt; ##  (17:48:06) 24Jul2019:  topEnrichListBySource(): iName:Newborns </span>
-<span class="co">#&gt; ##  (17:48:06) 24Jul2019:  topEnrichListBySource(): iName:OlderChildren</span>
-<span class="co">#&gt; Warning: package 'arules' was built under R version 3.5.2</span>
-<span class="co">#&gt; ##  (17:48:06) 24Jul2019:  Shrinking gene nodes to median category node size.</span></code></pre></div>
+<span class="co">#&gt; Warning: package 'arules' was built under R version 3.5.2</span></code></pre></div>
 <p>The output <code>mem_canonical</code> is a list containing various results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/jamba/topics/sdim">sdim</a></span>(mem_canonical);
 <span class="co">#&gt;                   rows cols        class</span>
@@ -275,19 +269,19 @@ er_canonical &lt;-<span class="st"> </span><span class="kw"><a href="https://www
 <span class="co">#&gt; geneHitList          2              list</span>
 <span class="co">#&gt; geneIM              68    2       matrix</span>
 <span class="co">#&gt; geneIMcolors        68    2       matrix</span>
-<span class="co">#&gt; enrichIMgeneCount   32    2       matrix</span>
+<span class="co">#&gt; enrichIMgeneCount   40    2       matrix</span>
 <span class="co">#&gt; enrichList           2              list</span>
-<span class="co">#&gt; enrichIM             2    2       matrix</span>
-<span class="co">#&gt; enrichIMcolors       2    2       matrix</span>
-<span class="co">#&gt; multiEnrichDF        2   12   data.frame</span>
-<span class="co">#&gt; multiEnrichResult    2   13 enrichResult</span>
-<span class="co">#&gt; memIM               11    2       matrix</span>
-<span class="co">#&gt; multiEnrichMap       2    1       igraph</span>
-<span class="co">#&gt; multiEnrichMap2      2    1       igraph</span>
-<span class="co">#&gt; multiCnetPlot       13   13       igraph</span>
-<span class="co">#&gt; multiCnetPlot1      13   13       igraph</span>
-<span class="co">#&gt; multiCnetPlot1b     13   13       igraph</span>
-<span class="co">#&gt; multiCnetPlot2      13   13       igraph</span>
+<span class="co">#&gt; enrichIM            30    2       matrix</span>
+<span class="co">#&gt; enrichIMcolors      30    2       matrix</span>
+<span class="co">#&gt; multiEnrichDF       30   12   data.frame</span>
+<span class="co">#&gt; multiEnrichResult   30   13 enrichResult</span>
+<span class="co">#&gt; memIM               34   30       matrix</span>
+<span class="co">#&gt; multiEnrichMap      30  220       igraph</span>
+<span class="co">#&gt; multiEnrichMap2     30  220       igraph</span>
+<span class="co">#&gt; multiCnetPlot       64  110       igraph</span>
+<span class="co">#&gt; multiCnetPlot1      64  110       igraph</span>
+<span class="co">#&gt; multiCnetPlot1b     64  110       igraph</span>
+<span class="co">#&gt; multiCnetPlot2      64  110       igraph</span>
 <span class="co">#&gt; colnames             5              list</span></code></pre></div>
 </div>
 <div id="plot-the-multienrichmap-network" class="section level4">
@@ -295,12 +289,12 @@ er_canonical &lt;-<span class="st"> </span><span class="kw"><a href="https://www
 <a href="#plot-the-multienrichmap-network" class="anchor"></a>Plot the MultiEnrichMap network</h4>
 <p>For example, we can view the “Multi Enrichment Map” itself. This network connects pathways when they meet a Jaccard overlap coefficient threshold based upon the shared genes between the pathways. The cutoff is defined in <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> with argument <code>overlapThreshold=0.1</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mem_canonical<span class="op">$</span>multiEnrichMap2,
-<span class="co">#   vertex.shape="pie",</span>
-<span class="co">#   vertex.size=(normScale(V(mem_canonical$multiEnrichMap2)$size)+0.3)*8,</span>
    <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">3.3</span>))
 <span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
 <span class="co">#&gt; multiple of vector length (arg 2)</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_plot_1-1.png" width="960" style="display: block; margin: auto;"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#   vertex.shape="pie",</span>
+<span class="co">#   vertex.size=(normScale(V(mem_canonical$multiEnrichMap2)$size)+0.3)*8,</span></code></pre></div>
 <p>An example of some basic operations to customize the igraph plot is included below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span>mem_canonical<span class="op">$</span>multiEnrichMap2;
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks</a></span>(g),
@@ -308,7 +302,8 @@ er_canonical &lt;-<span class="st"> </span><span class="kw"><a href="https://www
    <span class="dt">vertex.size=</span><span class="kw">V</span>(g)<span class="op">$</span>size<span class="op">*</span><span class="dv">2</span>,
    <span class="dt">vertex.label.cex=</span><span class="fl">0.7</span>,
    <span class="dt">edge.width=</span><span class="kw">E</span>(g)<span class="op">$</span>width <span class="op">/</span><span class="st"> </span><span class="dv">2</span>,
-   <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">3.3</span>))</code></pre></div>
+   <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">3.3</span>))
+<span class="co">#&gt; Warning: package 'colorspace' was built under R version 3.5.2</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_plot_1_custom-1.png" width="960" style="display: block; margin: auto;"></p>
 <p>Notice there are distinct, independent subnetworks. We can extract the largest connected subnetwork to plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g &lt;-<span class="st"> </span>mem_canonical<span class="op">$</span>multiEnrichMap2;
@@ -320,9 +315,9 @@ g_sub &lt;-<span class="st"> </span><span class="kw">subgraph</span>(g, <span cl
 <span class="co">#&gt; structural_properties.c:1984 :igraph_subgraph is deprecated from igraph</span>
 <span class="co">#&gt; 0.6, use igraph_induced_subgraph instead</span>
 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(g_sub,
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks</a></span>(g_sub),
 <span class="co">#   vertex.size2=(normScale(V(g_sub)$size2)+1)*2,</span>
-   <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="dv">4</span>))
+   <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">3.5</span>))
 <span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
 <span class="co">#&gt; multiple of vector length (arg 2)</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_plot_2-1.png" width="960" style="display: block; margin: auto;"></p>
@@ -344,7 +339,25 @@ g_sub &lt;-<span class="st"> </span><span class="kw">subgraph</span>(g, <span cl
 <p>Alternatively you can use the ComplexHeatmap package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ComplexHeatmap<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ComplexHeatmap/topics/Heatmap">Heatmap</a></span>(<span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log10</a></span>(mem_canonical<span class="op">$</span>enrichIM),
    <span class="dt">border=</span><span class="ot">TRUE</span>,
-   <span class="dt">col=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jamba/topics/getColorRamp">getColorRamp</a></span>(<span class="st">"Reds"</span>, <span class="dt">n=</span><span class="dv">51</span>))</code></pre></div>
+   <span class="dt">col=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jamba/topics/getColorRamp">getColorRamp</a></span>(<span class="st">"Reds"</span>, <span class="dt">n=</span><span class="dv">51</span>))
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'α-Adrenergic Signaling' in 'mbcsToSbcs': dot</span>
+<span class="co">#&gt; substituted for &lt;ce&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'α-Adrenergic Signaling' in 'mbcsToSbcs': dot</span>
+<span class="co">#&gt; substituted for &lt;b1&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'NF-κB Signaling' in 'mbcsToSbcs': dot substituted</span>
+<span class="co">#&gt; for &lt;ce&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'NF-κB Signaling' in 'mbcsToSbcs': dot substituted</span>
+<span class="co">#&gt; for &lt;ba&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'Fcγ Receptor-mediated Phagocytosis in Macrophages</span>
+<span class="co">#&gt; and Monocytes' in 'mbcsToSbcs': dot substituted for &lt;ce&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'Fcγ Receptor-mediated Phagocytosis in Macrophages</span>
+<span class="co">#&gt; and Monocytes' in 'mbcsToSbcs': dot substituted for &lt;b3&gt;</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/enrich_chm-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div id="plot-the-pathway-gene-incidence-matrix" class="section level4">
@@ -359,8 +372,27 @@ g_sub &lt;-<span class="st"> </span><span class="kw">subgraph</span>(g, <span cl
    <span class="dt">col=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jamba/topics/getColorRamp">getColorRamp</a></span>(<span class="st">"Reds"</span>),
    <span class="dt">left_annotation=</span>ComplexHeatmap<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ComplexHeatmap/topics/HeatmapAnnotation">HeatmapAnnotation</a></span>(<span class="dt">which=</span><span class="st">"row"</span>,
       <span class="dt">gp=</span><span class="kw">gpar</span>(<span class="dt">col=</span><span class="st">"black"</span>),
-      <span class="dt">Genes=</span>mem_canonical<span class="op">$</span>geneIM[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">rownames</a></span>(mem_canonical<span class="op">$</span>memIM),])
-)</code></pre></div>
+      <span class="dt">Genes=</span>mem_canonical<span class="op">$</span>geneIM[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">rownames</a></span>(mem_canonical<span class="op">$</span>memIM),]),
+   <span class="dt">row_names_gp=</span><span class="kw">gpar</span>(<span class="dt">fontsize=</span><span class="dv">8</span>)
+)
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'Fcγ Receptor-mediated Phagocytosis in Macrophages</span>
+<span class="co">#&gt; and Monocytes' in 'mbcsToSbcs': dot substituted for &lt;ce&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'Fcγ Receptor-mediated Phagocytosis in Macrophages</span>
+<span class="co">#&gt; and Monocytes' in 'mbcsToSbcs': dot substituted for &lt;b3&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'NF-κB Signaling' in 'mbcsToSbcs': dot substituted</span>
+<span class="co">#&gt; for &lt;ce&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'NF-κB Signaling' in 'mbcsToSbcs': dot substituted</span>
+<span class="co">#&gt; for &lt;ba&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'α-Adrenergic Signaling' in 'mbcsToSbcs': dot</span>
+<span class="co">#&gt; substituted for &lt;ce&gt;</span>
+<span class="co">#&gt; Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, :</span>
+<span class="co">#&gt; conversion failure on 'α-Adrenergic Signaling' in 'mbcsToSbcs': dot</span>
+<span class="co">#&gt; substituted for &lt;b1&gt;</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_hm-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -369,49 +401,80 @@ g_sub &lt;-<span class="st"> </span><span class="kw">subgraph</span>(g, <span cl
 <a href="#plot-the-pathway-gene-concept-network-cnet-plot" class="anchor"></a>Plot the Pathway-Gene Concept network (Cnet plot)</h3>
 <p>We can view the Cnet plot (concept network plot) which shows the pathway-gene relationship.</p>
 <p>When viewing extremely large networks, they may take a very long time to render. For that reason, we usually recommend subsetting the pathways after reviewing the pathway-gene incidence matrix heatmap.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mem_canonical<span class="op">$</span>multiCnetPlot2,
-   <span class="dt">vertex.shape=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw">V</span>(mem_canonical<span class="op">$</span>multiCnetPlot2)<span class="op">$</span>nodeType <span class="op">%in%</span><span class="st"> "Set"</span>,
-      <span class="st">"pie"</span>, <span class="st">"coloredrectangle"</span>),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnet &lt;-<span class="st"> </span>mem_canonical<span class="op">$</span>multiCnetPlot2;
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(cnet,
+<span class="co">#   vertex.shape=ifelse(V(cnet)$nodeType %in% "Set",</span>
+<span class="co">#      "pie", "coloredrectangle"),</span>
    <span class="dt">vertex.size=</span><span class="dv">15</span>,
    <span class="dt">vertex.size2=</span><span class="dv">2</span>,
    <span class="dt">vertex.label.cex=</span><span class="fl">0.7</span>,
    <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">3.8</span>)
 )
 <span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
-<span class="co">#&gt; multiple of vector length (arg 2)</span>
-
-<span class="co">#&gt; Warning in cbind(rankOverall, rankX): number of rows of result is not a</span>
 <span class="co">#&gt; multiple of vector length (arg 2)</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/cnet_plot_1-1.png" width="960" style="display: block; margin: auto;"></p>
+<div id="customizing-the-cnet-plot" class="section level4">
+<h4 class="hasAnchor">
+<a href="#customizing-the-cnet-plot" class="anchor"></a>Customizing the Cnet plot</h4>
+<p>These steps may become the default in future, but for now they can be applied one by one.</p>
+<ul>
+<li>
+<code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code> removes any blank colors from each node, which has the effect of making colors easier to see.</li>
+<li>
+<code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code> applies word-wrapping to node labels, and enforces mixed-case characters. Note that gene symbols like <code>"GAPDH"</code> will become <code>"Gapdh"</code>.</li>
+<li>
+<code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> re-positions nodes based upon their node color, which helps visually see the groups of colors in a network graph. Note that this step requires a fixed layout, so <code><a href="../reference/layout_with_qfrf.html">layout_with_qfrf()</a></code> is used.</li>
+<li>
+<code><a href="../reference/layout_with_qfrf.html">layout_with_qfrf()</a></code> and <code><a href="../reference/layout_with_qfr.html">layout_with_qfr()</a></code> are functions that apply the Fruchterman-Reingold layout algorithm, using the implementation in the <code>"qgraph"</code> package since that package enables several custom options not available from the <code>"igraph"</code> package. The <code><a href="../reference/layout_with_qfr.html">layout_with_qfr()</a></code> function returns the layout coordinates, and <code><a href="../reference/layout_with_qfrf.html">layout_with_qfrf()</a></code> returns a function that applies layout coordinates.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnet &lt;-<span class="st"> </span>mem_canonical<span class="op">$</span>multiCnetPlot2;
+
+## removeIgraphBlanks() reduces multi-color nodes to one color,
+##    by removing the blank color
+cnet &lt;-<span class="st"> </span><span class="kw"><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks</a></span>(cnet);
+## fixSetLabels() applies word-wrap to pathway names, also
+##    applies mixed-case text
+cnet &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fixSetLabels.html">fixSetLabels</a></span>(cnet);</code></pre></div>
+<p>Single-color nodes are changed to shape <code>"circle"</code> because the shape <code>"pie"</code> always displays a small wedge at the top of each node. We then apply the <code>"pie.color"</code> value to the <code>"color"</code> of each node. Lastly, we make the colors more visibly distinct, using <code><a href="https://www.rdocumentation.org/packages/jamba/topics/makeColorDarker">jamba::makeColorDarker()</a></code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## single-color nodes are changed to "circle" shape
+<span class="kw">V</span>(cnet)<span class="op">$</span>shape &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lengths">lengths</a></span>(<span class="kw">V</span>(cnet)<span class="op">$</span>pie.color) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"pie"</span>, <span class="st">"circle"</span>);
+
+## single-color nodes take the color from the pie wedge
+<span class="kw">V</span>(cnet)<span class="op">$</span>color &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lengths">lengths</a></span>(<span class="kw">V</span>(cnet)<span class="op">$</span>pie.color) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>,
+   <span class="kw">V</span>(cnet)<span class="op">$</span>color,
+   <span class="kw"><a href="https://www.rdocumentation.org/packages/jamba/topics/cPaste">cPaste</a></span>(<span class="kw">V</span>(cnet)<span class="op">$</span>pie.color));
+
+## Optionally make the node colors more distinctive
+<span class="kw">V</span>(cnet)<span class="op">$</span>color &lt;-<span class="st"> </span>jamba<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jamba/topics/makeColorDarker">makeColorDarker</a></span>(<span class="kw">V</span>(cnet)<span class="op">$</span>color,
+   <span class="dt">darkFactor=</span><span class="dv">1</span>, <span class="dt">sFactor=</span><span class="dv">3</span>);</code></pre></div>
+<p>The <code>igraph</code> plot function places node labels centered on the node itself, but you can change the placement of labels by setting two parameters:</p>
+<ul>
+<li>
+<code>label.dist</code>: the distance to place a node label away from the center of each node, measured roughly in units of text line height.</li>
+<li>
+<code>label.degree</code> - the angle (in radians) to place node labels, measured from the center of each node, where <code>0</code> degrees points right, <code>90</code> degrees points down, <code>270</code> points up. We use the helper function <code><a href="https://www.rdocumentation.org/packages/jamba/topics/deg2rad">deg2rad()</a></code> to convert degrees to radians.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## offset labels 270 degrees (up). Note 0 degrees is right.
+<span class="kw">V</span>(cnet)<span class="op">$</span>label.degree &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/jamba/topics/deg2rad">deg2rad</a></span>(<span class="dv">270</span>);
+
+## offset labels 0.5 full-size text lines.
+<span class="kw">V</span>(cnet)<span class="op">$</span>label.dist &lt;-<span class="st"> </span><span class="fl">0.5</span>;</code></pre></div>
+<p>Finally, nodes are resized so pathway nodes are a fixed-size, larger than gene nodes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## resize Set nodes to size=5, all other nodes size=2
+<span class="kw">V</span>(cnet)<span class="op">$</span>size &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw">V</span>(cnet)<span class="op">$</span>nodeType <span class="op">%in%</span><span class="st"> "Set"</span>,
+   <span class="dv">5</span>,
+   <span class="dv">2</span>);
+
+## plot the Cnet graph
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="st">"mar"</span>=<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>));
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes</a></span>(cnet,
+      <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">3.6</span>)),
+   <span class="dt">vertex.label.cex=</span><span class="fl">0.4</span>
+)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/title">title</a></span>(<span class="dt">main=</span><span class="st">"Concept network plot</span><span class="ch">\n</span><span class="st">Pathways-Genes"</span>);</code></pre></div>
+<p><img src="importIPA_files/figure-html/cnet_plot_1_custom3-1.png" width="960" style="display: block; margin: auto;"></p>
 <p>You can extract the largest connected subnetwork to plot, as before.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g2 &lt;-<span class="st"> </span>mem_canonical<span class="op">$</span>multiCnetPlot2;
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">g2 &lt;-<span class="st"> </span>cnet;
 gc2 &lt;-<span class="st"> </span><span class="kw">components</span>(g2);
 g2_sub &lt;-<span class="st"> </span><span class="kw">subgraph</span>(g2, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(gc2<span class="op">$</span>membership <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which.min">which.max</a></span>(gc2<span class="op">$</span>csize)));
 <span class="co">#&gt; Warning in subgraph(g2, which(gc2$membership %in% which.max(gc2$csize))):</span>
@@ -422,10 +485,51 @@ g2_sub &lt;-<span class="st"> </span><span class="kw">subgraph</span>(g2, <span 
    <span class="dt">vertex.shape=</span><span class="st">"pie"</span>,
    <span class="dt">vertex.size=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw">V</span>(g2_sub)<span class="op">$</span>nodeType <span class="op">%in%</span><span class="st"> "Set"</span>,
       <span class="dv">10</span>,<span class="dv">5</span>),
-   <span class="dt">vertex.label.cex=</span><span class="fl">0.7</span>,
+   <span class="dt">vertex.label.cex=</span><span class="fl">0.3</span>,
    <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="dv">4</span>)
 )</code></pre></div>
 <p><img src="importIPA_files/figure-html/cnet_plot_2-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div id="subset-the-pathway-gene-concept-network" class="section level4">
+<h4 class="hasAnchor">
+<a href="#subset-the-pathway-gene-concept-network" class="anchor"></a>Subset the Pathway-Gene concept network</h4>
+<p>The function <code><a href="../reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code> is used to subset the Cnet graph by various criteria.</p>
+<p>Below pathways are subsetted to require at least 5 genes, using the argument <code>minSetDegree</code>, which can be useful to help simplify the graph structure.</p>
+<p>Similarly, the <code>minGeneDegree=2</code> argument can be used to display only genes present in 2 or more pathways.</p>
+<p>This function is also used to select a specific subset of pathways by name, with the argument <code>includeSets</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnet3 &lt;-<span class="st"> </span>multienrichjam<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/multienrichjam/topics/subsetCnetIgraph">subsetCnetIgraph</a></span>(cnet,
+   <span class="dt">minSetDegree=</span><span class="dv">5</span>,
+   <span class="dt">minGeneDegree=</span><span class="dv">1</span>);
+<span class="co">#&gt; Warning in any(iDegree): coercing argument of type 'double' to logical</span>
+<span class="co">#&gt; Warning in igraph::subgraph(gCnet, which(!dropSetNodes)): At</span>
+<span class="co">#&gt; structural_properties.c:1984 :igraph_subgraph is deprecated from igraph</span>
+<span class="co">#&gt; 0.6, use igraph_induced_subgraph instead</span>
+<span class="co">#&gt; Warning in igraph::subgraph(gCnet, which(!dropGeneNodes)): At</span>
+<span class="co">#&gt; structural_properties.c:1984 :igraph_subgraph is deprecated from igraph</span>
+<span class="co">#&gt; 0.6, use igraph_induced_subgraph instead</span>
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes</a></span>(cnet3,
+      <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">4.5</span>)),
+   <span class="dt">vertex.label.cex=</span><span class="fl">0.5</span>);</code></pre></div>
+<p><img src="importIPA_files/figure-html/subnet-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
+<div id="add-a-color-legend" class="section level4">
+<h4 class="hasAnchor">
+<a href="#add-a-color-legend" class="anchor"></a>Add a color legend</h4>
+<p>A color legend can be added to the corner of the plot, using the colors defined in the <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> output.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes</a></span>(cnet3,
+      <span class="dt">layout=</span><span class="kw"><a href="../reference/layout_with_qfrf.html">layout_with_qfrf</a></span>(<span class="dt">repulse=</span><span class="fl">4.5</span>)),
+   <span class="dt">vertex.label.cex=</span><span class="fl">0.5</span>);
+
+## add a color legend
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"bottomleft"</span>,
+   <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(mem_canonical<span class="op">$</span>colorV),
+   <span class="dt">pch=</span><span class="dv">21</span>,
+   <span class="dt">pt.cex=</span><span class="fl">1.5</span>,
+   <span class="dt">col=</span><span class="st">"grey40"</span>,
+   <span class="dt">pt.bg=</span>mem_canonical<span class="op">$</span>colorV);</code></pre></div>
+<p><img src="importIPA_files/figure-html/subnet2-1.png" width="960" style="display: block; margin: auto;"></p>
+</div>
 </div>
 </div>
   </div>

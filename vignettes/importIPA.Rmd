@@ -134,6 +134,7 @@ run `multiEnrichMap()`:
 mem_canonical <- multiEnrichMap(er_canonical,
    enrichBaseline=1,
    cutoffRowMinP=0.05,
+   colorV=c("purple", "orange"),
    topEnrichN=20)
 ```
 
@@ -154,9 +155,9 @@ between the pathways. The cutoff is defined in
 
 ```{r, mem_plot_1}
 plot(mem_canonical$multiEnrichMap2,
+   layout=layout_with_qfrf(repulse=3.3))
 #   vertex.shape="pie",
 #   vertex.size=(normScale(V(mem_canonical$multiEnrichMap2)$size)+0.3)*8,
-   layout=layout_with_qfrf(repulse=3.3))
 ```
 
 An example of some basic operations to customize the
@@ -183,9 +184,9 @@ gc <- components(g);
 ## You can alternatively pull out any other component
 g_sub <- subgraph(g, which(gc$membership %in% which.max(gc$csize)));
 
-plot(g_sub,
+plot(removeIgraphBlanks(g_sub),
 #   vertex.size2=(normScale(V(g_sub)$size2)+1)*2,
-   layout=layout_with_qfrf(repulse=4))
+   layout=layout_with_qfrf(repulse=3.5))
 ```
 
 We can polish the node labels with `fixSetLabels()`.
@@ -227,7 +228,8 @@ ComplexHeatmap::Heatmap(mem_canonical$memIM,
    col=getColorRamp("Reds"),
    left_annotation=ComplexHeatmap::HeatmapAnnotation(which="row",
       gp=gpar(col="black"),
-      Genes=mem_canonical$geneIM[rownames(mem_canonical$memIM),])
+      Genes=mem_canonical$geneIM[rownames(mem_canonical$memIM),]),
+   row_names_gp=gpar(fontsize=8)
 )
 ```
 
@@ -242,9 +244,10 @@ recommend subsetting the pathways after reviewing the
 pathway-gene incidence matrix heatmap.
 
 ```{r, cnet_plot_1}
-plot(mem_canonical$multiCnetPlot2,
-   vertex.shape=ifelse(V(mem_canonical$multiCnetPlot2)$nodeType %in% "Set",
-      "pie", "coloredrectangle"),
+cnet <- mem_canonical$multiCnetPlot2;
+plot(cnet,
+#   vertex.shape=ifelse(V(cnet)$nodeType %in% "Set",
+#      "pie", "coloredrectangle"),
    vertex.size=15,
    vertex.size2=2,
    vertex.label.cex=0.7,
@@ -252,10 +255,101 @@ plot(mem_canonical$multiCnetPlot2,
 )
 ```
 
+#### Customizing the Cnet plot
+
+These steps may become the default in future, but for now they
+can be applied one by one.
+
+* `removeIgraphBlanks()` removes any blank colors from each node,
+which has the effect of making colors easier to see.
+* `fixSetLabels()` applies word-wrapping to node labels, and
+enforces mixed-case characters. Note that gene symbols like
+`"GAPDH"` will become `"Gapdh"`.
+* `reorderIgraphNodes()` re-positions nodes based upon their
+node color, which helps visually see the groups of colors
+in a network graph. Note that this step requires a fixed
+layout, so `layout_with_qfrf()` is used.
+* `layout_with_qfrf()` and `layout_with_qfr()` are functions
+that apply the Fruchterman-Reingold layout algorithm, using
+the implementation in the `"qgraph"` package since that package
+enables several custom options not available from the `"igraph"`
+package. The `layout_with_qfr()` function returns the layout
+coordinates, and `layout_with_qfrf()` returns a function that
+applies layout coordinates.
+
+```{r, cnet_plot_1_custom}
+cnet <- mem_canonical$multiCnetPlot2;
+
+## removeIgraphBlanks() reduces multi-color nodes to one color,
+##    by removing the blank color
+cnet <- removeIgraphBlanks(cnet);
+## fixSetLabels() applies word-wrap to pathway names, also
+##    applies mixed-case text
+cnet <- fixSetLabels(cnet);
+```
+
+Single-color nodes are changed to shape `"circle"` because
+the shape `"pie"` always displays a small wedge at the top
+of each node. We then apply the `"pie.color"` value to the
+`"color"` of each node. Lastly, we make the colors more
+visibly distinct, using `jamba::makeColorDarker()`.
+
+```{r, cnet_plot_1_custom1a}
+## single-color nodes are changed to "circle" shape
+V(cnet)$shape <- ifelse(lengths(V(cnet)$pie.color) > 1, "pie", "circle");
+
+## single-color nodes take the color from the pie wedge
+V(cnet)$color <- ifelse(lengths(V(cnet)$pie.color) > 1,
+   V(cnet)$color,
+   cPaste(V(cnet)$pie.color));
+
+## Optionally make the node colors more distinctive
+V(cnet)$color <- jamba::makeColorDarker(V(cnet)$color,
+   darkFactor=1, sFactor=3);
+```
+
+The `igraph` plot function places node labels centered on the
+node itself, but you can change the placement of labels by
+setting two parameters:
+
+* `label.dist`: the distance to place a node label away from
+the center of each node, measured roughly in units of text line
+height.
+* `label.degree` - the angle (in radians) to place node labels,
+measured from the center of each node, where `0` degrees points
+right, `90` degrees points down, `270` points up. We use the
+helper function `deg2rad()` to convert degrees to radians.
+
+```{r, cnet_plot_1_custom2}
+## offset labels 270 degrees (up). Note 0 degrees is right.
+V(cnet)$label.degree <- deg2rad(270);
+
+## offset labels 0.5 full-size text lines.
+V(cnet)$label.dist <- 0.5;
+```
+
+Finally, nodes are resized so pathway nodes are a fixed-size,
+larger than gene nodes.
+
+```{r, cnet_plot_1_custom3}
+## resize Set nodes to size=5, all other nodes size=2
+V(cnet)$size <- ifelse(V(cnet)$nodeType %in% "Set",
+   5,
+   2);
+
+## plot the Cnet graph
+par("mar"=c(5,4,4,2));
+plot(reorderIgraphNodes(cnet,
+      layout=layout_with_qfrf(repulse=3.6)),
+   vertex.label.cex=0.4
+)
+title(main="Concept network plot\nPathways-Genes");
+```
+
 You can extract the largest connected subnetwork to plot, as before.
 
 ```{r, cnet_plot_2}
-g2 <- mem_canonical$multiCnetPlot2;
+g2 <- cnet;
 gc2 <- components(g2);
 g2_sub <- subgraph(g2, which(gc2$membership %in% which.max(gc2$csize)));
 
@@ -263,8 +357,56 @@ plot(removeIgraphBlanks(g2_sub),
    vertex.shape="pie",
    vertex.size=ifelse(V(g2_sub)$nodeType %in% "Set",
       10,5),
-   vertex.label.cex=0.7,
+   vertex.label.cex=0.3,
    layout=layout_with_qfrf(repulse=4)
 )
 ```
+
+#### Subset the Pathway-Gene concept network
+
+The function `subsetCnetIgraph()` is used to subset the
+Cnet graph by various criteria.
+
+Below pathways are subsetted to require at least 5 genes,
+using the argument `minSetDegree`,
+which can be useful to help simplify the graph structure.
+
+Similarly, the `minGeneDegree=2` argument can be used to
+display only genes present in 2 or more pathways.
+
+This function is also used to select a specific subset
+of pathways by name, with the argument `includeSets`.
+
+
+```{r, subnet}
+cnet3 <- multienrichjam::subsetCnetIgraph(cnet,
+   minSetDegree=5,
+   minGeneDegree=1);
+
+plot(reorderIgraphNodes(cnet3,
+      layout=layout_with_qfrf(repulse=4.5)),
+   vertex.label.cex=0.5);
+
+```
+
+#### Add a color legend
+
+A color legend can be added to the corner of the plot,
+using the colors defined in the `multiEnrichMap()`
+output.
+
+```{r, subnet2}
+plot(reorderIgraphNodes(cnet3,
+      layout=layout_with_qfrf(repulse=4.5)),
+   vertex.label.cex=0.5);
+
+## add a color legend
+legend("bottomleft",
+   legend=names(mem_canonical$colorV),
+   pch=21,
+   pt.cex=1.5,
+   col="grey40",
+   pt.bg=mem_canonical$colorV);
+```
+
 

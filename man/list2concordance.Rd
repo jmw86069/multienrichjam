@@ -61,3 +61,8 @@ list2concordance(l123);
 list2imSigned(l123);
 
 }
+\seealso{
+Other jam list functions: \code{\link{list2imSigned}},
+  \code{\link{list2im}}
+}
+\concept{jam list functions}

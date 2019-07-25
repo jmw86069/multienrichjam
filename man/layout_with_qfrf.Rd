@@ -4,8 +4,43 @@
 \alias{layout_with_qfrf}
 \title{igraph layout function using qgraph Fruchterman-Reingold}
 \usage{
-layout_with_qfrf(repulse = 3.1, seed = 123, ...)
+layout_with_qfrf(repulse = 3.5, seed = 123, ...)
+}
+\arguments{
+\item{repulse}{numeric value typically between 3 and 5, passed
+to \code{layout_with_qfr()}, which in turn is passed to
+\code{qgraph::qgraph.layout.fruchtermanreingold()}.}
+
+\item{seed}{numeric value used to set the R random seed, in order
+to make layouts consistent.}
+
+\item{...}{additional arguments are passed to \code{layout_with_qfr()}.}
+}
+\value{
+function used to calculate layout coordinates of
+an \code{igraph} object.
 }
 \description{
 igraph layout function using qgraph Fruchterman-Reingold
 }
+\details{
+This function returns a layout function, which can be convenient
+when calling \code{igraph::plot.igraph()}, in order to set
+layout parameters in the same call.
+}
+\seealso{
+Other jam igraph functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
+  \code{\link{cnetplot_internalJam}},
+  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
+  \code{\link{fixSetLabels}},
+  \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfr}},
+  \code{\link{rectifyPiegraph}},
+  \code{\link{removeIgraphBlanks}},
+  \code{\link{reorderIgraphNodes}},
+  \code{\link{shape.coloredrectangle.plot}},
+  \code{\link{shape.ellipse.plot}},
+  \code{\link{subsetCnetIgraph}}
+}
+\concept{jam igraph functions}

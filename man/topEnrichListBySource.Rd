@@ -6,11 +6,12 @@
 \usage{
 topEnrichListBySource(enrichList, n = 15,
   sourceColnames = c("Category", "Source"), sortColname = c("P-value",
-  "-geneHits"), newColname = "EnrichGroup", curateFrom = c("CP:.*"),
+  "pvalue", "padjust", "-GeneRatio", "-geneHits"),
+  newColname = "EnrichGroup", curateFrom = c("CP:.*"),
   curateTo = c("CP"), sourceSubset = NULL, sourceSep = "_",
   descriptionColname = c("Description", "Name", "Pathway"),
   nameColname = c("ID", "Name"), descriptionGrep = NULL,
-  nameGrep = NULL, verbose = TRUE, ...)
+  nameGrep = NULL, verbose = FALSE, ...)
 }
 \arguments{
 \item{enrichList}{\code{list} of \code{enrichDF} entries, each passed
@@ -100,3 +101,8 @@ not significant in \code{enrichList[[2]]}. The purpose is to allow
 comparison of enrichment results when a pathway meets the
 filter criteria in any one entry in \code{enrichList}.
 }
+\seealso{
+Other jam enrichment functions: \code{\link{multiEnrichMap}},
+  \code{\link{topEnrichBySource}}
+}
+\concept{jam enrichment functions}

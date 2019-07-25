@@ -66,3 +66,8 @@ list2im(L1, makeUnique=FALSE);
 list2im(L1, makeUnique=FALSE, keepCounts=FALSE);
 
 }
+\seealso{
+Other jam list functions: \code{\link{list2concordance}},
+  \code{\link{list2imSigned}}
+}
+\concept{jam list functions}

@@ -28,7 +28,7 @@ nodes which should not be modified, and NA values for nodes where
 the position can be modified.}
 
 \item{...}{other arguments are sent to
-\code{\link{qgraph::qgraph.layout.fruchtermanreingold}}.}
+\code{qgraph::qgraph.layout.fruchtermanreingold()}}
 }
 \value{
 two-column numeric matrix with coordinates for each vertex.
@@ -69,10 +69,15 @@ plot(g, main="layout_with_qfr, repulse=6\\n(qgraph custom)",
 Other jam igraph functions: \code{\link{cnet2df}},
   \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
   \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
+  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
+  \code{\link{fixSetLabels}},
+  \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfrf}},
   \code{\link{rectifyPiegraph}},
   \code{\link{removeIgraphBlanks}},
+  \code{\link{reorderIgraphNodes}},
   \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
+  \code{\link{shape.ellipse.plot}},
+  \code{\link{subsetCnetIgraph}}
 }
 \concept{jam igraph functions}

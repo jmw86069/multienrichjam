@@ -55,10 +55,15 @@ define the size of coloredrectangle nodes.
 Other jam igraph functions: \code{\link{cnet2df}},
   \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
   \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{igraph2pieGraph}},
+  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
+  \code{\link{fixSetLabels}},
+  \code{\link{igraph2pieGraph}},
+  \code{\link{layout_with_qfrf}},
   \code{\link{layout_with_qfr}},
   \code{\link{removeIgraphBlanks}},
+  \code{\link{reorderIgraphNodes}},
   \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}}, \code{\link{xyAngle}}
+  \code{\link{shape.ellipse.plot}},
+  \code{\link{subsetCnetIgraph}}
 }
 \concept{jam igraph functions}

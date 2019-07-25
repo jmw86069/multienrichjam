@@ -114,4 +114,7 @@ column headers. This function is intended to separate the
 enrichment tables into a list of \code{data.frame} objects, and
 retain the descriptive text as names of the list.
 }
+\seealso{
+Other jam import functions: \code{\link{curateIPAcolnames}}
+}
 \concept{jam import functions}

@@ -12,6 +12,9 @@ enrichList2IM(enrichList, GmtT = NULL, addAnnotations = TRUE,
 Convert enrichList to IM incidence matrix
 }
 \seealso{
-Other jam conversion functions: \code{\link{enrichDF2enrichResult}}
+Other jam conversion functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}},
+  \code{\link{enrichDF2enrichResult}},
+  \code{\link{enrichList2df}}, \code{\link{enrichMapJam}}
 }
 \concept{jam conversion functions}

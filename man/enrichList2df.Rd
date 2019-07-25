@@ -13,3 +13,10 @@ enrichList2df(enrichList, keyColname = c("itemsetID", "ID", "Name"),
 \description{
 Convert enrichList to data.frame
 }
+\seealso{
+Other jam conversion functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}},
+  \code{\link{enrichDF2enrichResult}},
+  \code{\link{enrichList2IM}}, \code{\link{enrichMapJam}}
+}
+\concept{jam conversion functions}

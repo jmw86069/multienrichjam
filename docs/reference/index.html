@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
       </span>
     </div>
 
@@ -125,8 +125,34 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-multienrichmap-functions" class="hasAnchor"><a href="#section-multienrichmap-functions" class="anchor"></a>MultiEnrichMap functions</h2>
-          <p class="section-desc"><p>Functions for the MultiEnrichMap workflow</p></p>
+          <h2 id="section-enrichment-functions" class="hasAnchor"><a href="#section-enrichment-functions" class="anchor"></a>Enrichment functions</h2>
+          <p class="section-desc"><p>Functions that manipulate enrichment or multiple enrichment results.</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="multiEnrichMap.html">multiEnrichMap()</a></code> </p>
+        </td>
+        <td><p>Prepare MultiEnrichMap data from enrichList</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="topEnrichBySource.html">topEnrichBySource()</a></code> </p>
+        </td>
+        <td><p>Subset enrichList for top enrichment results by source</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="topEnrichListBySource.html">topEnrichListBySource()</a></code> </p>
+        </td>
+        <td><p>Subset enrichList for top enrichment results by source</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-conversion-functions" class="hasAnchor"><a href="#section-conversion-functions" class="anchor"></a>Conversion functions</h2>
+          <p class="section-desc"><p>Functions to convert data types</p></p>
         </th>
       </tr>
       <tr>
@@ -141,30 +167,6 @@
           <p><code><a href="cnet2im.html">cnet2im()</a></code> </p>
         </td>
         <td><p>Convert Cnet igraph to incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cnetplotJam.html">cnetplotJam()</a></code> </p>
-        </td>
-        <td><p>Create a cnetplot igraph object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cnetplot_internalJam.html">cnetplot_internalJam()</a></code> </p>
-        </td>
-        <td><p>cnetplot internal function</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="curateIPAcolnames.html">curateIPAcolnames()</a></code> </p>
-        </td>
-        <td><p>Curate Ingenuity IPA colnames</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="drawEllipse.html">drawEllipse()</a></code> </p>
-        </td>
-        <td><p>Draw ellipse</p></td>
       </tr><tr>
         
         <td>
@@ -189,152 +191,6 @@
           <p><code><a href="enrichMapJam.html">enrichMapJam()</a></code> </p>
         </td>
         <td><p>Create enrichMap igraph object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="find_colname.html">find_colname()</a></code> </p>
-        </td>
-        <td><p>Find colname by character string or pattern matching</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fixSetLabels.html">fixSetLabels()</a></code> </p>
-        </td>
-        <td><p>Fix Set labels for legibility</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="gsubs.html">gsubs()</a></code> </p>
-        </td>
-        <td><p>Pattern replacement with multiple patterns</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="igraph2pieGraph.html">igraph2pieGraph()</a></code> </p>
-        </td>
-        <td><p>Convert igraph to use pie node shapes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="importIPAenrichment.html">importIPAenrichment()</a></code> </p>
-        </td>
-        <td><p>Import Ingenuity IPA enrichment results</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="isColorBlank.html">isColorBlank()</a></code> </p>
-        </td>
-        <td><p>Determine if colors are blank colors</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="layout_with_qfr.html">layout_with_qfr()</a></code> </p>
-        </td>
-        <td><p>igraph layout using qgraph Fruchterman-Reingold</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="layout_with_qfrf.html">layout_with_qfrf()</a></code> </p>
-        </td>
-        <td><p>igraph layout function using qgraph Fruchterman-Reingold</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="list2concordance.html">list2concordance()</a></code> </p>
-        </td>
-        <td><p>Convert list to concordance matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="list2im.html">list2im()</a></code> </p>
-        </td>
-        <td><p>convert list to incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="list2imSigned.html">list2imSigned()</a></code> </p>
-        </td>
-        <td><p>convert list to signeddirectional incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="multiEnrichMap.html">multiEnrichMap()</a></code> </p>
-        </td>
-        <td><p>Prepare MultiEnrichMap data from enrichList</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rectifyPiegraph.html">rectifyPiegraph()</a></code> </p>
-        </td>
-        <td><p>Convert pie igraph node shapes to coloredrectangle</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code> </p>
-        </td>
-        <td><p>Remove igraph blank wedges</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code> </p>
-        </td>
-        <td><p>Re-order igraph nodes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> </p>
-        </td>
-        <td><p>plot function for igraph vertex shape coloredrectangle</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code> </p>
-        </td>
-        <td><p>plot function for igraph vertex shape ellipse</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="subsetCnetIgraph.html">subsetCnetIgraph()</a></code> </p>
-        </td>
-        <td><p>Subset Cnet igraph</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="topEnrichBySource.html">topEnrichBySource()</a></code> </p>
-        </td>
-        <td><p>Subset enrichList for top enrichment results by source</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="topEnrichListBySource.html">topEnrichListBySource()</a></code> </p>
-        </td>
-        <td><p>Subset enrichList for top enrichment results by source</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="xyAngle.html">xyAngle()</a></code> </p>
-        </td>
-        <td><p>Get angle from origin to vector of x,y coordinates</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-conversion-functions" class="hasAnchor"><a href="#section-conversion-functions" class="anchor"></a>conversion functions</h2>
-          <p class="section-desc"><p>Functions that convert data types</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code> </p>
-        </td>
-        <td><p>Convert data.frame to enrichResult</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="enrichList2IM.html">enrichList2IM()</a></code> </p>
-        </td>
-        <td><p>Convert enrichList to IM incidence matrix</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -376,119 +232,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="igraph2pieGraph.html">igraph2pieGraph()</a></code> </p>
-        </td>
-        <td><p>Convert igraph to use pie node shapes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="layout_with_qfr.html">layout_with_qfr()</a></code> </p>
-        </td>
-        <td><p>igraph layout using qgraph Fruchterman-Reingold</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rectifyPiegraph.html">rectifyPiegraph()</a></code> </p>
-        </td>
-        <td><p>Convert pie igraph node shapes to coloredrectangle</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code> </p>
-        </td>
-        <td><p>Remove igraph blank wedges</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> </p>
-        </td>
-        <td><p>plot function for igraph vertex shape coloredrectangle</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code> </p>
-        </td>
-        <td><p>plot function for igraph vertex shape ellipse</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="xyAngle.html">xyAngle()</a></code> </p>
-        </td>
-        <td><p>Get angle from origin to vector of x,y coordinates</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-list-functions" class="hasAnchor"><a href="#section-list-functions" class="anchor"></a>list functions</h2>
-          <p class="section-desc"><p>Functions that operate on list objects</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="cnet2df.html">cnet2df()</a></code> </p>
-        </td>
-        <td><p>Summarize Cnet igraph as a data.frame</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cnet2im.html">cnet2im()</a></code> </p>
-        </td>
-        <td><p>Convert Cnet igraph to incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cnetplotJam.html">cnetplotJam()</a></code> </p>
-        </td>
-        <td><p>Create a cnetplot igraph object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cnetplot_internalJam.html">cnetplot_internalJam()</a></code> </p>
-        </td>
-        <td><p>cnetplot internal function</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="curateIPAcolnames.html">curateIPAcolnames()</a></code> </p>
-        </td>
-        <td><p>Curate Ingenuity IPA colnames</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="drawEllipse.html">drawEllipse()</a></code> </p>
-        </td>
-        <td><p>Draw ellipse</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code> </p>
-        </td>
-        <td><p>Convert data.frame to enrichResult</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="enrichList2IM.html">enrichList2IM()</a></code> </p>
-        </td>
-        <td><p>Convert enrichList to IM incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="enrichList2df.html">enrichList2df()</a></code> </p>
-        </td>
-        <td><p>Convert enrichList to data.frame</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="enrichMapJam.html">enrichMapJam()</a></code> </p>
         </td>
         <td><p>Create enrichMap igraph object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="find_colname.html">find_colname()</a></code> </p>
-        </td>
-        <td><p>Find colname by character string or pattern matching</p></td>
       </tr><tr>
         
         <td>
@@ -498,27 +244,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="gsubs.html">gsubs()</a></code> </p>
-        </td>
-        <td><p>Pattern replacement with multiple patterns</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="igraph2pieGraph.html">igraph2pieGraph()</a></code> </p>
         </td>
         <td><p>Convert igraph to use pie node shapes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="importIPAenrichment.html">importIPAenrichment()</a></code> </p>
-        </td>
-        <td><p>Import Ingenuity IPA enrichment results</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="isColorBlank.html">isColorBlank()</a></code> </p>
-        </td>
-        <td><p>Determine if colors are blank colors</p></td>
       </tr><tr>
         
         <td>
@@ -531,30 +259,6 @@
           <p><code><a href="layout_with_qfrf.html">layout_with_qfrf()</a></code> </p>
         </td>
         <td><p>igraph layout function using qgraph Fruchterman-Reingold</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="list2concordance.html">list2concordance()</a></code> </p>
-        </td>
-        <td><p>Convert list to concordance matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="list2im.html">list2im()</a></code> </p>
-        </td>
-        <td><p>convert list to incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="list2imSigned.html">list2imSigned()</a></code> </p>
-        </td>
-        <td><p>convert list to signeddirectional incidence matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="multiEnrichMap.html">multiEnrichMap()</a></code> </p>
-        </td>
-        <td><p>Prepare MultiEnrichMap data from enrichList</p></td>
       </tr><tr>
         
         <td>
@@ -591,24 +295,84 @@
           <p><code><a href="subsetCnetIgraph.html">subsetCnetIgraph()</a></code> </p>
         </td>
         <td><p>Subset Cnet igraph</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-list-functions" class="hasAnchor"><a href="#section-list-functions" class="anchor"></a>list functions</h2>
+          <p class="section-desc"><p>Functions that operate on list objects</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="list2concordance.html">list2concordance()</a></code> </p>
+        </td>
+        <td><p>Convert list to concordance matrix</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="topEnrichBySource.html">topEnrichBySource()</a></code> </p>
+          <p><code><a href="list2im.html">list2im()</a></code> </p>
         </td>
-        <td><p>Subset enrichList for top enrichment results by source</p></td>
+        <td><p>convert list to incidence matrix</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="topEnrichListBySource.html">topEnrichListBySource()</a></code> </p>
+          <p><code><a href="list2imSigned.html">list2imSigned()</a></code> </p>
         </td>
-        <td><p>Subset enrichList for top enrichment results by source</p></td>
+        <td><p>convert list to signeddirectional incidence matrix</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-utility-functions" class="hasAnchor"><a href="#section-utility-functions" class="anchor"></a>Utility functions</h2>
+          <p class="section-desc"><p>Functions used by other multienrichjam functions</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="find_colname.html">find_colname()</a></code> </p>
+        </td>
+        <td><p>Find colname by character string or pattern matching</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gsubs.html">gsubs()</a></code> </p>
+        </td>
+        <td><p>Pattern replacement with multiple patterns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="isColorBlank.html">isColorBlank()</a></code> </p>
+        </td>
+        <td><p>Determine if colors are blank colors</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="xyAngle.html">xyAngle()</a></code> </p>
         </td>
         <td><p>Get angle from origin to vector of x,y coordinates</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-import-functions" class="hasAnchor"><a href="#section-import-functions" class="anchor"></a>Import functions</h2>
+          <p class="section-desc"><p>Functions to import enrichment data</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="curateIPAcolnames.html">curateIPAcolnames()</a></code> </p>
+        </td>
+        <td><p>Curate Ingenuity IPA colnames</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="importIPAenrichment.html">importIPAenrichment()</a></code> </p>
+        </td>
+        <td><p>Import Ingenuity IPA enrichment results</p></td>
       </tr>
     </tbody>
     </table>
@@ -617,10 +381,12 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-multienrichmap-functions">MultiEnrichMap functions</a></li>
-      <li><a href="#section-conversion-functions">conversion functions</a></li>
+      <li><a href="#section-enrichment-functions">Enrichment functions</a></li>
+      <li><a href="#section-conversion-functions">Conversion functions</a></li>
       <li><a href="#section-igraph-related-functions">igraph-related functions</a></li>
       <li><a href="#section-list-functions">list functions</a></li>
+      <li><a href="#section-utility-functions">Utility functions</a></li>
+      <li><a href="#section-import-functions">Import functions</a></li>
     </ul>
   </div>
 </div>

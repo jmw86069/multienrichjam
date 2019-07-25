@@ -37,3 +37,8 @@ when considering a series of pattern-replacement
 combinations. It applies each pattern match and replacement
 in order and is therefore not vectorized.
 }
+\seealso{
+Other jam utility functions: \code{\link{find_colname}},
+  \code{\link{isColorBlank}}, \code{\link{xyAngle}}
+}
+\concept{jam utility functions}

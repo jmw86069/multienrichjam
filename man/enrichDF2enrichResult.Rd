@@ -67,6 +67,8 @@ compatible with methods provided by the \code{clusterProfiler}
 package.
 }
 \seealso{
-Other jam conversion functions: \code{\link{enrichList2IM}}
+Other jam conversion functions: \code{\link{cnet2df}},
+  \code{\link{cnet2im}}, \code{\link{enrichList2IM}},
+  \code{\link{enrichList2df}}, \code{\link{enrichMapJam}}
 }
 \concept{jam conversion functions}

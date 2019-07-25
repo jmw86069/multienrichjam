@@ -39,3 +39,8 @@ colors from \code{colorjam::vals2colorLevels()} may be considered "blank" if the
 color saturation is extremely low. Similarly, colors with
 extremely high alpha transparency may be considered "blank".
 }
+\seealso{
+Other jam utility functions: \code{\link{find_colname}},
+  \code{\link{gsubs}}, \code{\link{xyAngle}}
+}
+\concept{jam utility functions}
