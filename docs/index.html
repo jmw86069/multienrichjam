@@ -21,7 +21,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -81,11 +81,44 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
-Methods to analyze multiple gene set enrichment results,
-    extending EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu)
-    functions specifically to explore and compare multiple enrichment
-    results. New igraph node shape "coloredrectangle".
+  <div class="col-md-9 contents">
+    
+
+    
+    
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+<div id="multienrichjam" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#multienrichjam" class="anchor"></a>multienrichjam</h1></div>
+<p>The goal of multienrichjam is to implement MultiEnrichMap, an extension to EnrichMap and Enrichment Map, originally envisioned and implemented as a Cytoscape plugin by the lab of Dr. Gary Bader</p>
+<ul>
+<li>Bader lab <a href="https://www.baderlab.org/Software/EnrichmentMap">EnrichmentMap</a>, and</li>
+<li>reference: <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0013984">Merico,et al, PLoS One, 2010</a>),</li>
+</ul>
+<p>and re-implemented into a larger analysis workflow in R by Dr. Guangchuang Yu in the R packages:</p>
+<ul>
+<li>
+<a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html">clusterProfiler</a>, and</li>
+<li>
+<a href="https://bioconductor.org/packages/release/bioc/html/enrichplot.html">enrichplot</a>.</li>
+</ul>
+<p>The MultiEnrichMap extension is a relatively straightforward set of functions to help enable comparison of enrichment results from multiple gene set enrichment tests.</p>
+<div id="package-reference" class="section level2">
+<h2 class="hasAnchor">
+<a href="#package-reference" class="anchor"></a>Package Reference</h2>
+<p>A full online function reference is available via the pkgdown documentation:</p>
+<p><a href="https://jmw86069.github.io/multienrichjam">Full multienrichjam command reference</a></p>
+</div>
+<div id="how-to-install" class="section level2">
+<h2 class="hasAnchor">
+<a href="#how-to-install" class="anchor"></a>How to install</h2>
+<p>Install using the R package <code>devtools</code> and this command:</p>
+<pre><code><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">devtools::install_github("jmw86069/multienrichjam",
+   dependencies=TRUE);</a></code></pre>
+<p>If you do not have the <code>devtools</code> package, you can install it from CRAN:</p>
+<pre><code><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages("devtools");</a></code></pre>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -111,8 +144,10 @@ Methods to analyze multiple gene set enrichment results,
 </ul>
 </div>
 
-  </div>
+      </div>
+
 </div>
+
 
       <footer><div class="copyright">
   <p>Developed by James M. Ward.</p>
