@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.900</span>
       </span>
     </div>
 
@@ -205,10 +205,43 @@ combine values.</p>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>123</span>);
 <span class='no'>L2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='no'>L1</span>, <span class='kw'>function</span>(<span class='no'>i</span>){
    <span class='no'>i</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/unique'>unique</a></span>(<span class='no'>i</span>);
-   <span class='fu'>nameVector</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(-<span class='fl'>1</span>,<span class='fl'>1</span>), <span class='kw'>size</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>i</span>), <span class='kw'>replace</span><span class='kw'>=</span><span class='fl'>TRUE</span>), <span class='no'>i</span>);
-});</div><div class='output co'>#&gt; <span class='error'>Error in nameVector(sample(c(-1, 1), size = length(i), replace = TRUE),     i): could not find function "nameVector"</span></div><div class='input'><span class='no'>L2</span>;</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'L2' not found</span></div><div class='input'>
+   <span class='kw pkg'>jamba</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/jamba/topics/nameVector'>nameVector</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(-<span class='fl'>1</span>,<span class='fl'>1</span>), <span class='kw'>size</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>i</span>), <span class='kw'>replace</span><span class='kw'>=</span><span class='fl'>TRUE</span>), <span class='no'>i</span>);
+});
+<span class='no'>L2</span>;</div><div class='output co'>#&gt; $A
+#&gt;  C  A  B 
+#&gt; -1  1 -1 
+#&gt; 
+#&gt; $D
+#&gt;  D  E  F 
+#&gt;  1  1 -1 
+#&gt; 
+#&gt; $A123
+#&gt;  1  2  3  4  5  6  7  8 
+#&gt;  1  1  1 -1  1 -1  1  1 
+#&gt; 
+#&gt; $T
+#&gt;  G  H  I 
+#&gt; -1  1 -1 
+#&gt; </div><div class='input'>
 <span class='co'># Convert to signed incidence matrix</span>
-<span class='fu'>list2imSigned</span>(<span class='no'>L2</span>);</div><div class='output co'>#&gt; <span class='error'>Error in jamba::igrepHas("list", class(x)): object 'L2' not found</span></div><div class='input'>
+<span class='fu'>list2imSigned</span>(<span class='no'>L2</span>);</div><div class='output co'>#&gt;    A  D A123  T
+#&gt; 1  0  0    1  0
+#&gt; 2  0  0    1  0
+#&gt; 3  0  0    1  0
+#&gt; 4  0  0   -1  0
+#&gt; 5  0  0    1  0
+#&gt; 6  0  0   -1  0
+#&gt; 7  0  0    1  0
+#&gt; 8  0  0    1  0
+#&gt; A  1  0    0  0
+#&gt; B -1  0    0  0
+#&gt; C -1  0    0  0
+#&gt; D  0  1    0  0
+#&gt; E  0  1    0  0
+#&gt; F  0 -1    0  0
+#&gt; G  0  0    0 -1
+#&gt; H  0  0    0  1
+#&gt; I  0  0    0 -1</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

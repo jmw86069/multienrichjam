@@ -8,8 +8,9 @@ enrichMapJam(x, n = 50, fixed = TRUE, vertex.label.font = 1,
   vertex.label.cex = 1, nodeLabel = c("Name", "Description", "ID"),
   descriptionColname = "Description", keyColname = "ID",
   nodeLabelFunc = function(i) {     paste(collapse = "\\n", strwrap(width
-  = 30, ucfirst(tolower(gsub("_", " ", i))))) }, overlapThreshold = 0.2,
-  msigdbGmtT = NULL, method = 2, verbose = FALSE, ...)
+  = 30, jamba::ucfirst(tolower(gsub("_", " ", i))))) },
+  overlapThreshold = 0.2, msigdbGmtT = NULL, method = 2,
+  verbose = FALSE, ...)
 }
 \description{
 Create enrichMap igraph object

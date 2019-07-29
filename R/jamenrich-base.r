@@ -89,7 +89,7 @@ enrichDF2enrichResult <- function
    geneRatioColname <- find_colname(geneRatioColname, enrichDF);
    pvalueColname <- find_colname(pvalueColname, enrichDF);
    if (verbose) {
-      printDebug("enrichDF2enrichResult(): ",
+      jamba::printDebug("enrichDF2enrichResult(): ",
          "Colnames matched in the input data:",
          "\nkeyColname:", keyColname,
          "\npathGenes:", pathGenes,
@@ -122,7 +122,7 @@ enrichDF2enrichResult <- function
 
    if (length(geneRatioColname) > 0) {
       if (length(geneHits) > 0 && geneHits == geneRatioColname) {
-         if (igrepHas("/", enrichDF2[[geneRatioColname]])) {
+         if (jamba::igrepHas("/", enrichDF2[[geneRatioColname]])) {
             if (verbose) {
                jamba::printDebug("enrichDF2enrichResult(): ",
                   "deriving ",
@@ -146,7 +146,10 @@ enrichDF2enrichResult <- function
                "geneID");
          }
          geneHits <- "geneHits";
-         enrichDF2[[geneHits]] <- lengths(strsplit(enrichDF2[["geneID"]], "/"));
+         enrichDF2[[geneHits]] <- lengths(
+            strsplit(
+               as.character(enrichDF2[["geneID"]]),
+               "/"));
       }
       if (length(pathGenes) == 0) {
          pathGenes <- "pathGenes";
@@ -158,10 +161,10 @@ enrichDF2enrichResult <- function
                   " from gene ratio ",
                   geneRatioColname);
             }
-            if (igrepHas("/", enrichDF2[[geneRatioColname]])) {
+            if (jamba::igrepHas("/", enrichDF2[[geneRatioColname]])) {
                enrichDF2[[pathGenes]] <- as.numeric(gsub("^.*[/]", "",
                   enrichDF2[[geneRatioColname]]));
-            } else if (all(rmNA(enrichDF2[[geneRatioColname]]) <= 1)) {
+            } else if (all(jamba::rmNA(enrichDF2[[geneRatioColname]]) <= 1)) {
                enrichDF2[[pathGenes]] <- enrichDF2[[geneHits]] /
                   enrichDF2[[geneRatioColname]];
             } else {
@@ -200,21 +203,22 @@ enrichDF2enrichResult <- function
 
    ## Re-order columns so "ID" is the first column
    if (verbose) {
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "colnames(enrichDF2):", colnames(enrichDF2));
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "class(enrichDF2):", class(enrichDF2));
    }
    enrichDF2a <- dplyr::select(enrichDF2,
       dplyr::matches("^ID$"), tidyselect::everything());
    enrichDF2 <- enrichDF2a;
    if (verbose) {
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "Done.");
    }
 
    gene <- jamba::mixedSort(unique(unlist(
-      strsplit(enrichDF2[,"geneID"],
+      strsplit(
+         as.character(enrichDF2[,"geneID"]),
          "[/]+"))));
    if (verbose) {
       jamba::printDebug("enrichDF2enrichResult(): ",
@@ -233,13 +237,14 @@ enrichDF2enrichResult <- function
    if (1 == 2 && !is.null(msigdbGmtT)) {
       geneSets <- as(msigdbGmtT[enrichDF2[,"ID"],], "list");
       names(geneSets) <- enrichDF2[,"ID"];
-      universe <- mixedSort(msigdbGmtT@itemInfo[,1]);
+      universe <- jamba::mixedSort(msigdbGmtT@itemInfo[,1]);
    } else {
       if (verbose) {
-         printDebug("enrichDF2enrichResult(): ",
+         jamba::printDebug("enrichDF2enrichResult(): ",
             "Defined geneSets from delimited gene values.");
       }
-      geneSets <- strsplit(enrichDF2[,"geneID"],
+      geneSets <- strsplit(
+         as.character(enrichDF2[["geneID"]]),
          "[/]");
       names(geneSets) <- enrichDF2[,"ID"];
       universe <- gene;
@@ -513,21 +518,21 @@ multiEnrichMap <- function
    descriptionColname <- find_colname(descriptionColname, iDF1);
    nameColname <- find_colname(nameColname, iDF1);
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "keyColname:", keyColname);
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "nameColname:", nameColname);
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "geneColname:", geneColname);
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "pvalueColname:", pvalueColname);
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "descriptionColname:", descriptionColname);
    }
 
    ## Add some basic information
    if (length(enrichLabels) == 0) {
-      enrichLabels <- nameVector(names(enrichList));
+      enrichLabels <- jamba::nameVector(names(enrichList));
    } else if (length(names(enrichLabels)) == 0) {
       names(enrichLabels) <- names(enrichList);
    }
@@ -571,7 +576,7 @@ multiEnrichMap <- function
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "dim for each enrichList entry:");
-      print(sdim(enrichList));
+      print(jamba::sdim(enrichList));
    }
 
    #####################################################################
@@ -588,11 +593,17 @@ multiEnrichMap <- function
       geneHitList <- lapply(enrichList, function(iDF){
          ## Split text field of delimited genes into proper vector
          if (!jamba::igrepHas("data.frame", class(iDF))) {
-            jamba::mixedSort(unique(unlist(strsplit(
-               as.data.frame(iDF)[[geneColname]], geneDelim))));
+            jamba::mixedSort(unique(unlist(
+               strsplit(
+                  as.character(
+                     as.data.frame(iDF)[[geneColname]]),
+                  geneDelim))));
          } else {
-            jamba::mixedSort(unique(unlist(strsplit(
-               iDF[[geneColname]], geneDelim))));
+            jamba::mixedSort(unique(unlist(
+               strsplit(
+                  as.character(
+                     iDF[[geneColname]]),
+                  geneDelim))));
          }
       });
       if (verbose) {
@@ -607,7 +618,7 @@ multiEnrichMap <- function
    ## Optionally run topEnrichBySource()
    if (length(topEnrichN) > 0 && all(topEnrichN) > 0) {
       if (verbose) {
-         printDebug("multiEnrichMap(): ",
+         jamba::printDebug("multiEnrichMap(): ",
             "running topEnrichBySource().");
       }
       enrichList <- topEnrichListBySource(enrichList,
@@ -639,7 +650,7 @@ multiEnrichMap <- function
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "dims after topEnrichBySource():");
-         print(sdim(enrichList));
+         print(jamba::sdim(enrichList));
       }
    }
 
@@ -682,10 +693,10 @@ multiEnrichMap <- function
       }
    })));
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "enrichIM <- enrichList2IM() with    pvalueColname:",
          pvalueColname);
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichList[[1]]):");
       print(head(enrichList[[1]]));
    }
@@ -711,7 +722,7 @@ multiEnrichMap <- function
 
    enrichIMM <- as.matrix(enrichIM[,names(enrichList),drop=FALSE]);
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIM):");
       print(head(enrichIM));
       #printDebug("multiEnrichMap(): ",
@@ -731,11 +742,11 @@ multiEnrichMap <- function
       "^geneHits",
       "geneCount",
       "GeneRatio");
-   if (!igrepHas("data.frame", class(enrichList[[1]]))) {
-      geneCountColname <- head(provigrep(geneCountsGrep,
+   if (!jamba::igrepHas("data.frame", class(enrichList[[1]]))) {
+      geneCountColname <- head(jamba::provigrep(geneCountsGrep,
          colnames(as.data.frame(enrichList[[1]]))), 1);
    } else {
-      geneCountColname <- head(provigrep(geneCountsGrep,
+      geneCountColname <- head(jamba::provigrep(geneCountsGrep,
          colnames(enrichList[[1]])), 1);
    }
    if (length(geneCountColname) == 0) {
@@ -743,7 +754,7 @@ multiEnrichMap <- function
          geneHits));
    }
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "enrichIM <- enrichList2IM() with geneCountColname:",
          geneCountColname);
    }
@@ -759,12 +770,12 @@ multiEnrichMap <- function
    #####################################################################
    ## enrichIM colors
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "enrichIMcolors <- matrix2heatColors(enrichIMM)");
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "colorV:", colorV,
          fgText=list("orange", "dodgerblue", colorV));
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIMM):");
       print(head(enrichIMM));
    }
@@ -776,7 +787,7 @@ multiEnrichMap <- function
       numLimit=enrichNumLimit,
       baseline=enrichBaseline);
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIMcolors)");
       print(head(enrichIMcolors));
    }
@@ -785,11 +796,11 @@ multiEnrichMap <- function
    ## Subset for at least one significant enrichment P-value
    i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols], na.rm=TRUE) <= cutoffRowMinP)];
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "nrow(enrichIM):",
-         formatInt(nrow(enrichIM)),
+         jamba::formatInt(nrow(enrichIM)),
          ", nrow(filtered for minimum P-value):",
-         formatInt(length(i1use)));
+         jamba::formatInt(length(i1use)));
       #ch(head(enrichIMM));
    }
 
@@ -797,20 +808,20 @@ multiEnrichMap <- function
    ## Now make sure enrichList only contains these sets
    if (nrow(enrichIM) > length(i1use)) {
       if (verbose) {
-         printDebug("multiEnrichMap(): ",
+         jamba::printDebug("multiEnrichMap(): ",
             "dims before filtering minimum P-value():");
-         print(sdim(enrichList));
+         print(jamba::sdim(enrichList));
       }
       enrichList <- lapply(enrichList, function(iDF){
-         if (!igrepHas("data.frame", class(iDF))) {
+         if (!jamba::igrepHas("data.frame", class(iDF))) {
             iDF <- as.data.frame(iDF);
          }
          subset(iDF, iDF[[nameColname]] %in% i1use);
       });
       if (verbose) {
-         printDebug("multiEnrichMap(): ",
+         jamba::printDebug("multiEnrichMap(): ",
             "dims after filtering minimum P-value():");
-         print(sdim(enrichList));
+         print(jamba::sdim(enrichList));
       }
       ## Now circle back and subset the enrichIM and enrichIMcolors rows
       enrichIM <- enrichIM[i1use,,drop=FALSE];
@@ -824,11 +835,11 @@ multiEnrichMap <- function
    #####################################################################
    ## Create one enrichment data.frame from the list
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "enrichDF <- enrichList2df(enrichList[c(",
          useCols,
          ")])");
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "geneCountColname:",
          geneCountColname);
    }
@@ -845,7 +856,7 @@ multiEnrichMap <- function
    if (length(descriptionColname) == 1 &&
          descriptionColname %in% colnames(enrichDF)) {
       if (verbose) {
-         printDebug("multiEnrichMap(): ",
+         jamba::printDebug("multiEnrichMap(): ",
             "cleaning Description column:",
             descriptionColname);
          #print(lengths(enrichList[useCols]));
@@ -861,10 +872,10 @@ multiEnrichMap <- function
    #####################################################################
    ## Convert the combined enrichDF to enrichResult
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichDF):");
       print(head(as.data.frame(enrichDF)));
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "enrichER <- enrichDF2enrichResult(), keyColname:",
          keyColname);
    }
@@ -880,7 +891,7 @@ multiEnrichMap <- function
       verbose=verbose);
 
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichER):");
       print(head(as.data.frame(enrichER)));
    }
@@ -893,7 +904,8 @@ multiEnrichMap <- function
    ## Incidence matrix of genes and pathways
    memIM <- list2im(
       strsplit(
-         nameVector(mem$multiEnrichDF[,c(geneColname,nameColname)]),
+         as.character(
+            jamba::nameVector(mem$multiEnrichDF[,c(geneColname,nameColname)])),
          geneDelim));
    mem$memIM <- memIM;
 
@@ -901,7 +913,7 @@ multiEnrichMap <- function
    #####################################################################
    ## Convert enrichResult to enrichMap igraph network
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "converting enrichER to igraph enrichMap with enrichMapJam().");
    }
    enrichEM <- multienrichjam::enrichMapJam(enrichER,
@@ -919,9 +931,9 @@ multiEnrichMap <- function
 
    ## Convert EnrichMap to piegraph
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "running igraph2pieGraph() on enrichMap.");
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIMcolors)");
       print(head(enrichIMcolors));
    }
@@ -932,7 +944,7 @@ multiEnrichMap <- function
 
    ## Use colored rectangles
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "running rectifyPiegraph() on enrichMap.");
    }
    enrichEMpieUseSub2 <- rectifyPiegraph(enrichEMpieUse,
@@ -950,7 +962,7 @@ multiEnrichMap <- function
    ## genes.
    gCt <- nrow(enrichER);
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "creating cnetPlot with cnetplotJam().");
    }
    gCnet <- cnetplotJam(enrichER,
@@ -968,7 +980,7 @@ multiEnrichMap <- function
    V(gCnet)[seq_len(gCt)]$name <- toupper(V(gCnet)[seq_len(gCt)]$name);
    ## Enrichment IM colors
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "running igraph2pieGraph(",
          "enrichIMcolors",
          ") on Cnet Plot.");
@@ -980,7 +992,7 @@ multiEnrichMap <- function
    mem$multiCnetPlot1 <- gCnetPie1;
    ## Gene IM colors
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "running igraph2pieGraph(",
          "geneIMcolors",
          ").");
@@ -994,7 +1006,7 @@ multiEnrichMap <- function
    #######################################################
    ## Now convert CnetPlot to use coloredrectangle
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "running rectifyPiegraph() on Cnet Plot.");
    }
    gCnetPie2 <- rectifyPiegraph(gCnetPie,
@@ -1050,19 +1062,19 @@ enrichList2IM <- function
       }
       ## If "GeneRatio" then parse out the geneCount value
       if (verbose) {
-         printDebug("enrichList2IM(): ",
+         jamba::printDebug("enrichList2IM(): ",
             "keyColname:", keyColname);
-         printDebug("enrichList2IM(): ",
+         jamba::printDebug("enrichList2IM(): ",
             "valueColname:", valueColname);
       }
-      if (igrepHas("GeneRatio", valueColname)) {
+      if (jamba::igrepHas("GeneRatio", valueColname)) {
          iDF[,valueColname] <- gsub("[/].*$", "", iDF[,valueColname]);
          if (length(grep("^[0-9]*$", iDF[,valueColname])) == nrow(iDF)) {
             iDF[,valueColname] <- as.numeric(iDF[,valueColname]);
          }
       }
       if (verbose) {
-         printDebug("enrichList2IM(): ",
+         jamba::printDebug("enrichList2IM(): ",
             "head(iDF)");
          print(head(iDF));
       }
@@ -1110,19 +1122,19 @@ enrichList2df <- function
    geneCountColname <- find_colname(geneCountColname, iDF1);
    pvalueColname <- find_colname(pvalueColname, iDF1);
    if (verbose) {
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "colnames(iDF1):",
          colnames(iDF1));
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "keyColname:",
          keyColname);
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "geneColname:",
          geneColname);
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "geneCountColname:",
          geneCountColname);
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "pvalueColname:",
          pvalueColname);
    }
@@ -1136,17 +1148,17 @@ enrichList2df <- function
    enrichCols <- enrichCols[unique(names(enrichCols))];
 
    ## Get first non-NULL data.frame from enrichList
-   if (!igrepHas("data.frame", class(head(rmNULL(enrichList), 1)))) {
+   if (!jamba::igrepHas("data.frame", class(head(rmNULL(enrichList), 1)))) {
       iDF <- as.data.frame(rmNULL(enrichList)[[1]]);
    } else {
       iDF <- rmNULL(enrichList)[[1]];
    }
 
    if (verbose) {
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "enrichCols (before):");
       print(enrichCols);
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "colnames(iDF):", colnames(iDF));
    }
    enrichCols <- enrichCols[names(enrichCols) %in% colnames(iDF)];
@@ -1154,34 +1166,34 @@ enrichList2df <- function
    #c("pathGenes","geneHits");
    enrichColsLo <- names(enrichCols)[enrichCols %in% "lo"];
    #enrichColsLo <- c("P-value");
-   keepCols <- setdiff(unvigrep("gene", colnames(iDF)),
+   keepCols <- setdiff(jamba::unvigrep("gene", colnames(iDF)),
       c(enrichColsHi, enrichColsLo, keyColname, geneColname));
 
    ## Create a P-value incidence matrix
    if (verbose) {
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "enrichCols (after):");
       print(enrichCols);
-      printDebug("enrichList2df(): ",
-         "sdim(enrichL):");
-      print(sdim(enrichList));
+      jamba::printDebug("enrichList2df(): ",
+         "jamba::sdim(enrichL):");
+      print(jamba::sdim(enrichList));
    }
-   enrichValuesM <- do.call(cbind, lapply(nameVector(names(enrichCols)), function(iCol){
+   enrichValuesM <- do.call(cbind, lapply(jamba::nameVector(names(enrichCols)), function(iCol){
       useType <- enrichCols[iCol];
       enrichIMP <- list2imSigned(lapply(enrichList, function(iDF){
-         if (!igrepHas("data.frame", class(iDF))) {
+         if (!jamba::igrepHas("data.frame", class(iDF))) {
             iDF <- as.data.frame(iDF);
          }
          if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
-            printDebug("Some ", iCol, " values are less than ",
+            jamba::printDebug("Some ", iCol, " values are less than ",
                "pvalueFloor:",
                pvalueFloor);
             print(table(iDF[,iCol] <= pvalueFloor));
             iDF[iDF[,iCol] <= pvalueFloor, iCol] <- pvalueFloor;
-         } else if (igrepHas("[/]", iDF[,iCol])) {
+         } else if (jamba::igrepHas("[/]", iDF[,iCol])) {
             iDF[,iCol] <- as.numeric(gsub("[/].*$", "", iDF[,iCol]));
          }
-         if (length(tcount(iDF[[keyColname]], minCount=2)) > 0) {
+         if (length(jamba::tcount(iDF[[keyColname]], minCount=2)) > 0) {
             stop("enrichList2df(): There are duplicate values in iDF[[keyColname]], please resolve.");
          }
          if (verbose) {
@@ -1189,17 +1201,17 @@ enrichList2df <- function
                "head(iDF):");
             print(head(iDF));
          }
-         nameVector(iDF[,c(iCol,keyColname)]);
+         jamba::nameVector(iDF[,c(iCol,keyColname)]);
       }));
       if (useType %in% "lo") {
          enrichIMP[enrichIMP == 0] <- 1;
-         nameVector(matrixStats::rowMins(enrichIMP), rownames(enrichIMP));
+         jamba::nameVector(matrixStats::rowMins(enrichIMP), rownames(enrichIMP));
       } else if (useType %in% "hi") {
-         nameVector(matrixStats::rowMaxs(enrichIMP), rownames(enrichIMP));
+         jamba::nameVector(matrixStats::rowMaxs(enrichIMP), rownames(enrichIMP));
       }
    }));
    if (verbose) {
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "dim(enrichValuesM):",
          dim(enrichValuesM));
       print(head(enrichValuesM));
@@ -1211,26 +1223,30 @@ enrichList2df <- function
    }
 
    ## Generate list with genes per pathway
-   allGenes <- mixedSort(unique(unlist(lapply(enrichList, function(iDF){
-      if (!igrepHas("data.frame", class(iDF))) {
+   allGenes <- jamba::mixedSort(unique(unlist(lapply(enrichList, function(iDF){
+      if (!jamba::igrepHas("data.frame", class(iDF))) {
          iDF <- as.data.frame(iDF);
       }
-      unlist(strsplit(iDF[,geneColname], ","));
+      unlist(
+         strsplit(
+            as.character(iDF[,geneColname]),
+            ","));
    }))));
 
    ## If GmtT is supplied, use it to determine genes per pathway
    if (length(msigdbGmtT) > 0) {
-      enrichGeneL <- as(msigdbGmtT[match(rownames(enrichValuesM), msigdbGmtT@itemsetInfo[,keyColname]),
-         rmNA(match(allGenes, msigdbGmtT@itemInfo[,1]))], "list");
+      enrichGeneL <- as(msigdbGmtT[
+         match(rownames(enrichValuesM), msigdbGmtT@itemsetInfo[,keyColname]),
+         jamba::rmNA(match(allGenes, msigdbGmtT@itemInfo[,1]))], "list");
       names(enrichGeneL) <- rownames(enrichValuesM);
-      enrichGeneVL <- list(cPaste(enrichGeneL, doSort=FALSE));
+      enrichGeneVL <- list(jamba::cPaste(enrichGeneL, doSort=FALSE));
       names(enrichGeneVL) <- geneColname;
       enrichGeneLen <- lengths(enrichGeneL);
    } else {
       ## if GmtT is not supplied, use the pathway enrichment data as a substitute
-      enrichL1L1 <- lapply(nameVectorN(enrichList), function(iName){
+      enrichL1L1 <- lapply(jamba::nameVectorN(enrichList), function(iName){
          iDF <- enrichList[[iName]];
-         if (!igrepHas("data.frame", class(iDF))) {
+         if (!jamba::igrepHas("data.frame", class(iDF))) {
             iDF <- as.data.frame(iDF);
          }
          iDF <- renameColumn(iDF,
@@ -1239,12 +1255,19 @@ enrichList2df <- function
          iDF[,c(keyColname,iName)];
       });
       enrichL1L <- mergeAllXY(enrichL1L1);
-      enrichL1V <- nameVector(gsub("^[,]+|[,]+$", "",
-         pasteByRow(enrichL1L[,-match(keyColname, colnames(enrichL1L)),drop=FALSE],
-            sep=",")),
-         enrichL1L[,keyColname]);
-      enrichGeneL <- as.list(unique(CharacterList(strsplit(enrichL1V, "[,]+"))));
-      enrichGeneVL <- list(cPaste(enrichGeneL, doSort=FALSE));
+      enrichL1V <- jamba::nameVector(
+         gsub("^[,]+|[,]+$",
+            "",
+            pasteByRow(
+               enrichL1L[,-match(keyColname, colnames(enrichL1L)),drop=FALSE],
+               sep=",")),
+         enrichL1L[[keyColname]]);
+      enrichGeneL <- as.list(unique(
+         CharacterList(
+            strsplit(
+               enrichL1V,
+               "[,]+"))));
+      enrichGeneVL <- list(jamba::cPaste(enrichGeneL, doSort=FALSE));
       names(enrichGeneVL) <- geneColname;
       enrichGeneLen <- lengths(enrichGeneL);
    }
@@ -1260,10 +1283,10 @@ enrichList2df <- function
    ## Create data.frame with annotation columns, only keep the first
    ## occurrence of any non-NA value
    if (verbose) {
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "head(enrichL1L):");
       print(str(head(enrichL1L)));
-      printDebug("enrichList2df(): ",
+      jamba::printDebug("enrichList2df(): ",
          "dim(enrichValuesM):",
          dim(enrichValuesM));
    }
@@ -1275,18 +1298,18 @@ enrichList2df <- function
    for (iName in names(enrichList)) {
       iDF <- enrichList[[iName]];
       if (verbose) {
-         printDebug("iName:", iName);
-         printDebug("dim(iDF):", dim(iDF));
+         jamba::printDebug("iName:", iName);
+         jamba::printDebug("dim(iDF):", dim(iDF));
       }
       keyVals <- iDF[,keyColname];
-      keyValsUse <- setdiff(keyVals, rmNA(keepColDF[,keyColname]));
+      keyValsUse <- setdiff(keyVals, jamba::rmNA(keepColDF[,keyColname]));
       if (verbose) {
-         printDebug("iName:", iName,
+         jamba::printDebug("iName:", iName,
             ", length(keyVals):", length(keyVals),
             ", length(keyValsUse):", length(keyValsUse));
-         printDebug("head(iDF):");
+         jamba::printDebug("head(iDF):");
          print(head(iDF));
-         printDebug("head(keepColDF):");
+         jamba::printDebug("head(keepColDF):");
          print(head(keepColDF));
       }
       if (length(keyValsUse) > 0) {
@@ -1335,7 +1358,7 @@ vertex.label.cex=1,
 nodeLabel=c("Name","Description","ID"),
 descriptionColname="Description",
 keyColname="ID",
-nodeLabelFunc=function(i){paste(collapse="\n",strwrap(width=30, ucfirst(tolower(gsub("_", " ", i)))))},
+nodeLabelFunc=function(i){paste(collapse="\n",strwrap(width=30, jamba::ucfirst(tolower(gsub("_", " ", i)))))},
 overlapThreshold=0.2,
 msigdbGmtT=NULL,
 method=2,
@@ -1356,10 +1379,10 @@ verbose=FALSE,
    }
    if (is.null(nodeLabelFunc)) {
       nodeLabelFunc <- function(i){
-         paste(collapse="\n",strwrap(width=30, ucfirst(gsub("_", " ", tolower(i)))));
+         paste(collapse="\n",strwrap(width=30, jamba::ucfirst(gsub("_", " ", tolower(i)))));
       }
    }
-   if (igrepHas("data.*frame", class(x))) {
+   if (jamba::igrepHas("data.*frame", class(x))) {
       if (verbose) {
          jamba::printDebug("enrichMapJam(): ",
             "calling enrichDF2enrichResult()");
@@ -1467,7 +1490,7 @@ verbose=FALSE,
       }
       if (!any(is.na(iMatch))) {
          #printDebug("match() worked with enrichResult data.frame Name colname.");
-         iColnames <- unvigrep("^name$", colnames(y));
+         iColnames <- jamba::unvigrep("^name$", colnames(y));
          for (iY in iColnames) {
             g <- g %>% set_vertex_attr(iY, value=y[iMatch,,drop=FALSE][[iY]]);
          }
@@ -1605,15 +1628,15 @@ subsetCnetIgraph <- function
       })));
       includeVall <- sort(unique(c(includeV, includeV2)));
       if (verbose) {
-         printDebug("subsetCnetIgraph(): ",
+         jamba::printDebug("subsetCnetIgraph(): ",
             "Filtered ",
-            formatInt(sum(V(gCnet)$nodeType %in% "Set")),
+            jamba::formatInt(sum(V(gCnet)$nodeType %in% "Set")),
             " Set nodes using ",
-            formatInt(length(includeSets)),
+            jamba::formatInt(length(includeSets)),
             " includeSets down to ",
-            formatInt(length(includeV)),
+            jamba::formatInt(length(includeV)),
             " sets and ",
-            formatInt(length(includeV2)),
+            jamba::formatInt(length(includeV2)),
             " genes in the Cnet igraph object.");
          whichNodeSets <- which(V(gCnet)$nodeType %in% "Set");
       }
@@ -1639,13 +1662,13 @@ subsetCnetIgraph <- function
       }
       keepNodes <- sort(unique(c(keepSetNodes, keepGeneNodes)));
       if (verbose) {
-         printDebug("subsetCnetIgraph(): ",
+         jamba::printDebug("subsetCnetIgraph(): ",
             "Filtered ",
-            formatInt(length(includeSets)),
+            jamba::formatInt(length(includeSets)),
             " includeGenes down to ",
-            formatInt(length(keepGeneNodes)),
+            jamba::formatInt(length(keepGeneNodes)),
             " genes and ",
-            formatInt(length(keepSetNodes)),
+            jamba::formatInt(length(keepSetNodes)),
             " sets in the Cnet igraph object.");
       }
       gCnet <- igraph::subgraph(gCnet,
@@ -1658,11 +1681,11 @@ subsetCnetIgraph <- function
    if (removeSinglets) {
       if (any(iDegree) == 0) {
          if (verbose) {
-            printDebug("subsetCnetIgraph(): ",
+            jamba::printDebug("subsetCnetIgraph(): ",
                "Filtered ",
-               formatInt(length(iDegree)),
+               jamba::formatInt(length(iDegree)),
                " nodes to remove ",
-               formatInt(sum(iDegree == 0)),
+               jamba::formatInt(sum(iDegree == 0)),
                " nodes with no connections.");
          }
          gCnet <- igraph::subgraph(gCnet,
@@ -1678,7 +1701,7 @@ subsetCnetIgraph <- function
          if (verbose) {
             jamba::printDebug("subsetCnetIgraph(): ",
                "Dropping ",
-               formatInt(sum(dropSetNodes)),
+               jamba::formatInt(sum(dropSetNodes)),
                " set nodes with less than degree:",
                minSetDegree);
          }
@@ -1693,7 +1716,7 @@ subsetCnetIgraph <- function
          if (verbose) {
             jamba::printDebug("subsetCnetIgraph(): ",
                "Dropping ",
-               formatInt(sum(dropGeneNodes)),
+               jamba::formatInt(sum(dropGeneNodes)),
                " gene nodes with less than degree:",
                minGeneDegree);
          }
@@ -1852,7 +1875,8 @@ isColorBlank <- function
 #' fixSetLabels(x);
 #'
 #' jamba::nullPlot();
-#' jamba::drawLabels(x, preset=c("top", "center", "bottom"));
+#' jamba::drawLabels(txt=x,
+#'    preset=c("top", "center", "bottom"));
 #'
 #' @export
 fixSetLabels <- function
@@ -1874,7 +1898,7 @@ fixSetLabels <- function
     "scRNA", "lincRNA"),
  ...)
 {
-   if (igrepHas("igraph", class(x))) {
+   if (jamba::igrepHas("igraph", class(x))) {
       xPrep <- gsub("_", " ",
          gsub(removeGrep,
             "",
@@ -1916,7 +1940,7 @@ fixSetLabels <- function
    }
    ## Optionally apply word wrap
    if (wrap) {
-      xNew <- cPaste(sep="\n",
+      xNew <- jamba::cPaste(sep="\n",
          doSort=FALSE,
          lapply(xPrep, function(i){
             strwrap(i, width=width);
@@ -1925,13 +1949,13 @@ fixSetLabels <- function
       xNew <- xPrep;
    }
    ## Update the proper data to return
-   if (igrepHas("igraph", class(x))) {
+   if (jamba::igrepHas("igraph", class(x))) {
       if (length(nodeType) > 0 &&
             !"any" %in% nodeType &&
             "nodeType" %in% list.vertex.attributes(x)) {
          xUpdate <- which(V(x)$nodeType %in% nodeType);
       } else {
-         xUpdate <- seq_len(vcount(x));
+         xUpdate <- seq_len(igraph::vcount(x));
       }
       if (length(xUpdate) > 0) {
          V(x)[xUpdate]$label <- xNew;
@@ -2064,7 +2088,7 @@ topEnrichBySource <- function
    ##
 
    ## First convert enrichResult class to data.frame if needed
-   if (igrepHas("enrichResult", class(enrichDF))) {
+   if (jamba::igrepHas("enrichResult", class(enrichDF))) {
       enrichDF <- enrichDF@result;
       if (!"Name" %in% colnames(enrichDF)) {
          enrichDF[,"Name"] <- enrichDF[,"ID"];
@@ -2076,13 +2100,13 @@ topEnrichBySource <- function
    descriptionColname <- find_colname(descriptionColname, enrichDF);
    nameColname <- find_colname(nameColname, enrichDF);
    if (verbose) {
-      printDebug("topEnrichBySource(): ",
+      jamba::printDebug("topEnrichBySource(): ",
          "sourceColnames:", sourceColnames);
-      printDebug("topEnrichBySource(): ",
+      jamba::printDebug("topEnrichBySource(): ",
          "descriptionColname:", descriptionColname);
-      printDebug("topEnrichBySource(): ",
+      jamba::printDebug("topEnrichBySource(): ",
          "nameColname:", nameColname);
-      printDebug("topEnrichBySource(): ",
+      jamba::printDebug("topEnrichBySource(): ",
          "sortColname:", sortColname);
    }
 
@@ -2090,14 +2114,14 @@ topEnrichBySource <- function
    if (length(sortColname) > 0) {
       if (!any(sortColname %in% colnames(enrichDF)) &&
             !any(gsub("^-", "", sortColname) %in% colnames(enrichDF))) {
-         printDebug("topEnrichBySource(): ",
+         jamba::printDebug("topEnrichBySource(): ",
             "Warning: sortColname does not match colnames(enrichDF).");
-         printDebug("topEnrichBySource(): ",
+         jamba::printDebug("topEnrichBySource(): ",
             "sortColname:", sortColname);
-         printDebug("topEnrichBySource(): ",
+         jamba::printDebug("topEnrichBySource(): ",
             "colnames(enrichDF):", colnames(enrichDF));
       }
-      enrichDF <- mixedSortDF(enrichDF,
+      enrichDF <- jamba::mixedSortDF(enrichDF,
          byCols=sortColname,
          ...);
    }
@@ -2153,7 +2177,7 @@ topEnrichBySource <- function
    iDFtopL <- lapply(jamba::nameVectorN(iDFsplitL), function(iSubset){
       iDFsub <- iDFsplitL[[iSubset]];
       if (length(descriptionColname) > 0 && length(descriptionGrep) > 0 && nrow(iDFsub) > 0) {
-         descr_keep_vals <- provigrep(descriptionGrep,
+         descr_keep_vals <- jamba::provigrep(descriptionGrep,
             iDFsub[[descriptionColname]]);
          if (length(descr_keep_vals) > 0) {
             descr_keep <- (iDFsub[[descriptionColname]] %in% descr_keep_vals);
@@ -2164,7 +2188,7 @@ topEnrichBySource <- function
          descr_keep <- rep(TRUE, nrow(iDFsub))
       }
       if (length(nameColname) > 0 && length(nameGrep) > 0 && nrow(iDFsub) > 0) {
-         name_keep_vals <- provigrep(nameGrep,
+         name_keep_vals <- jamba::provigrep(nameGrep,
             iDFsub[[nameColname]]);
          if (length(descr_keep_vals) > 0) {
             name_keep <- (iDFsub[[nameColname]] %in% name_keep_vals);
@@ -2181,7 +2205,7 @@ topEnrichBySource <- function
       iDFtop <- head(iDFsub, n);
       iDFtop;
    });
-   data.frame(rbindList(iDFtopL),
+   data.frame(jamba::rbindList(iDFtopL),
       check.names=FALSE,
       stringsAsFactors=FALSE);
 }
@@ -2235,9 +2259,9 @@ topEnrichListBySource <- function
    ## consistent set of pathways.
 
    ## First create the subset for each enrichment result individually
-   enrichLsub <- lapply(nameVectorN(enrichList), function(iName){
+   enrichLsub <- lapply(jamba::nameVectorN(enrichList), function(iName){
       if (verbose) {
-         printDebug("topEnrichListBySource(): ",
+         jamba::printDebug("topEnrichListBySource(): ",
             "iName:",
             iName);
       }
@@ -2261,20 +2285,20 @@ topEnrichListBySource <- function
    });
    enrichNames <- unique(unlist(enrichLsub));
    if (verbose) {
-      printDebug("topEnrichListBySource(): ",
+      jamba::printDebug("topEnrichListBySource(): ",
          "length(enrichNames):",
-         formatInt(length(enrichNames)));
+         jamba::formatInt(length(enrichNames)));
    }
 
    ## Step two, combine
-   enrichLsubL <- lapply(nameVectorN(enrichList), function(iName){
+   enrichLsubL <- lapply(jamba::nameVectorN(enrichList), function(iName){
       if (verbose) {
-         printDebug("topEnrichListBySource(): ",
+         jamba::printDebug("topEnrichListBySource(): ",
             "iName:",
             iName);
       }
       iDF <- enrichList[[iName]];
-      if (igrepHas("enrichResult", class(iDF))) {
+      if (jamba::igrepHas("enrichResult", class(iDF))) {
          iDF <- iDF@result;
          if (!"Name" %in% colnames(iDF)) {
             iDF[,"Name"] <- iDF[,"ID"];

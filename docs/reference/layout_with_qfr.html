@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.900</span>
       </span>
     </div>
 
@@ -199,18 +199,24 @@ vertices, and lower values allows greater spacing between vertices.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>g</span>  <span class='kw'>&lt;-</span> <span class='fu'>make_graph</span>( ~ <span class='no'>A</span>-<span class='no'>B</span>-<span class='no'>C</span>-<span class='no'>D</span>-<span class='no'>A</span>, <span class='no'>E</span>-<span class='no'>A</span>:<span class='no'>B</span>:<span class='no'>C</span>:<span class='no'>D</span>,
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/message'>suppressPackageStartupMessages</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='no'>igraph</span>))) {
+<span class='no'>g</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/make_graph'>make_graph</a></span>( ~ <span class='no'>A</span>-<span class='no'>B</span>-<span class='no'>C</span>-<span class='no'>D</span>-<span class='no'>A</span>, <span class='no'>E</span>-<span class='no'>A</span>:<span class='no'>B</span>:<span class='no'>C</span>:<span class='no'>D</span>,
    <span class='no'>F</span>-<span class='no'>G</span>-<span class='no'>H</span>-<span class='no'>I</span>-<span class='no'>F</span>, <span class='no'>J</span>-<span class='no'>F</span>:<span class='no'>G</span>:<span class='no'>H</span>:<span class='no'>I</span>,
    <span class='no'>K</span>-<span class='no'>L</span>-<span class='no'>M</span>-<span class='no'>N</span>-<span class='no'>K</span>, <span class='no'>O</span>-<span class='no'>K</span>:<span class='no'>L</span>:<span class='no'>M</span>:<span class='no'>N</span>,
    <span class='no'>P</span>-<span class='no'>Q</span>-<span class='no'>R</span>-<span class='no'>S</span>-<span class='no'>P</span>, <span class='no'>T</span>-<span class='no'>P</span>:<span class='no'>Q</span>:<span class='no'>R</span>:<span class='no'>S</span>,
    <span class='no'>B</span>-<span class='no'>F</span>, <span class='no'>E</span>-<span class='no'>J</span>, <span class='no'>C</span>-<span class='no'>I</span>, <span class='no'>L</span>-<span class='no'>T</span>, <span class='no'>O</span>-<span class='no'>T</span>, <span class='no'>M</span>-<span class='no'>S</span>,
-   <span class='no'>C</span>-<span class='no'>P</span>, <span class='no'>C</span>-<span class='no'>L</span>, <span class='no'>I</span>-<span class='no'>L</span>, <span class='no'>I</span>-<span class='no'>P</span>)</div><div class='output co'>#&gt; <span class='error'>Error in make_graph(~A - B - C - D - A, E - A:B:C:D, F - G - H - I - F,     J - F:G:H:I, K - L - M - N - K, O - K:L:M:N, P - Q - R -         S - P, T - P:Q:R:S, B - F, E - J, C - I, L - T, O - T,     M - S, C - P, C - L, I - L, I - P): could not find function "make_graph"</span></div><div class='input'>
+   <span class='no'>C</span>-<span class='no'>P</span>, <span class='no'>C</span>-<span class='no'>L</span>, <span class='no'>I</span>-<span class='no'>L</span>, <span class='no'>I</span>-<span class='no'>P</span>)
+
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"default layout\n(igraph)"</span>);</div><div class='output co'>#&gt; <span class='error'>Error in plot(g, main = "default layout\n(igraph)"): object 'g' not found</span></div><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_fr\n(igraph)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_fr</span>);</div><div class='output co'>#&gt; <span class='error'>Error in plot(g, main = "layout_with_fr\n(igraph)", layout = layout_with_fr): object 'g' not found</span></div><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_qfr\n(qgraph default)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_qfr</span>);</div><div class='output co'>#&gt; <span class='error'>Error in plot(g, main = "layout_with_qfr\n(qgraph default)", layout = layout_with_qfr): object 'g' not found</span></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"default layout\n(igraph)"</span>);
+
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_fr\n(igraph)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_fr</span>);
+
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_qfr\n(qgraph default)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_qfr</span>);
+
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_qfr, repulse=6\n(qgraph custom)"</span>,
-   <span class='kw'>layout</span><span class='kw'>=</span><span class='kw'>function</span>(<span class='no'>g</span>)<span class='fu'>layout_with_qfr</span>(<span class='no'>g</span>, <span class='kw'>repulse</span><span class='kw'>=</span><span class='fl'>6</span>));</div><div class='output co'>#&gt; <span class='error'>Error in plot(g, main = "layout_with_qfr, repulse=6\n(qgraph custom)",     layout = function(g) layout_with_qfr(g, repulse = 6)): object 'g' not found</span></div><div class='input'>
+   <span class='kw'>layout</span><span class='kw'>=</span><span class='kw'>function</span>(<span class='no'>g</span>)<span class='fu'>layout_with_qfr</span>(<span class='no'>g</span>, <span class='kw'>repulse</span><span class='kw'>=</span><span class='fl'>6</span>));
+}</div><div class='img'><img src='layout_with_qfr-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -121,7 +121,7 @@ importIPAenrichment <- function
    ##
    ## xlsxMultiSheet=FALSE is intended for Excel import of IPA data where
    ## the Excel table contains all summary tables appended one after another.
-   if (igrepHas("[.]xlsx$", ipaFile)) {
+   if (jamba::igrepHas("[.]xlsx$", ipaFile)) {
       if (suppressPackageStartupMessages(!require(openxlsx))) {
          stop("importIPAenrichment() requires the openxlsx package for Excel import.");
       }
@@ -130,12 +130,12 @@ importIPAenrichment <- function
       stop("importIPAenrichment() requires the jamba package, devtools::install_github('jmw86069/jamba')");
    }
 
-   if (igrepHas("list", class(ipaFile)) &&
-         igrepHas("data.frame|tibbletbl|matrix|dataframe", class(ipaFile[[1]]))) {
+   if (jamba::igrepHas("list", class(ipaFile)) &&
+         jamba::igrepHas("data.frame|tibbletbl|matrix|dataframe", class(ipaFile[[1]]))) {
       ## Process list of data.frames as input
-      ipaDFL <- lapply(nameVectorN(ipaFile), function(iSheet){
+      ipaDFL <- lapply(jamba::nameVectorN(ipaFile), function(iSheet){
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "from data.frame list name:", iSheet);
          }
          iDF <- ipaFile[[iSheet]];
@@ -147,7 +147,7 @@ importIPAenrichment <- function
             verbose=verbose);
          jDF;
       });
-   } else if (igrepHas("[.]xlsx$", ipaFile) && length(ipaFile) > 1) {
+   } else if (jamba::igrepHas("[.]xlsx$", ipaFile) && length(ipaFile) > 1) {
       ## Process multiple files by calling this function on each file
       ipaDFLL <- lapply(ipaFile, function(ipaFile_i){
          jDF <- importIPAenrichment(ipaFile=ipaFile_i,
@@ -164,22 +164,22 @@ importIPAenrichment <- function
             ...);
       });
       return(ipaDFLL);
-   } else if (igrepHas("[.]xlsx$", ipaFile) && xlsxMultiSheet) {
+   } else if (jamba::igrepHas("[.]xlsx$", ipaFile) && xlsxMultiSheet) {
       ## Import IPA data from Excel xlsx file, multiple worksheets
       ## Process Excel import instead of CSV
       sheetNames <- openxlsx::getSheetNames(ipaFile);
-      sheetNamesUse <- nameVector(sheet, sheetNames[sheet]);
+      sheetNamesUse <- jamba::nameVector(sheet, sheetNames[sheet]);
       if (verbose) {
-         printDebug("importIPAenrichment(): ",
+         jamba::printDebug("importIPAenrichment(): ",
             "importing xlsx as from multiple worksheets:",
             ipaFile);
-         printDebug("importIPAenrichment(): ",
+         jamba::printDebug("importIPAenrichment(): ",
             "sheetNamesUse:");
          print(sheetNamesUse);
       }
       ipaDFL <- lapply(sheetNamesUse, function(iSheet){
          if (verbose) {
-            printDebug("   importIPAenrichment(): ",
+            jamba::printDebug("   importIPAenrichment(): ",
                "iSheet:", iSheet);
          }
          if (1 == 2) {
@@ -210,23 +210,24 @@ importIPAenrichment <- function
       ipaDFL <- unlist(recursive=FALSE, unname(ipaDFL));
    } else {
       ## Import IPA data from Excel xlsx or txt file, single worksheet
-      if (igrepHas("[.]xlsx$", ipaFile) && !xlsxMultiSheet) {
+      if (jamba::igrepHas("[.]xlsx$", ipaFile) && !xlsxMultiSheet) {
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "importing xlsx as a single worksheet:",
                ipaFile);
          }
          iDF <- openxlsx::read.xlsx(ipaFile,
             sheet=1,
             colNames=FALSE);
-         i <- gsub("\t+$", "",
+         i <- gsub("\t+$",
+            "",
             pasteByRow(iDF,
                sep="\t",
                condenseBlanks=FALSE));
-         #i <- vigrep("\t.*\t", i);
+         #i <- jamba::vigrep("\t.*\t", i);
       } else {
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "importing text using grep from ipaFile:",
                ipaFile);
          }
@@ -235,7 +236,9 @@ importIPAenrichment <- function
          i <- system(intern=TRUE,
             paste0("grep '.*' ", ipaFile));
          ## Clean up trailing newlines
-         i <- gsub("[\r\n]+$", "", i);
+         i <- gsub("[\r\n]+$",
+            "",
+            i);
          i;
       }
       ## Often IPA output has descriptor lines with 'for ... ->' in them
@@ -248,28 +251,30 @@ importIPAenrichment <- function
 
       ## Infer which columns area headers, then set up
       ## ranges of rows to be assigned to each header.
-      i1 <- igrep(headerGrep, i);
+      i1 <- jamba::igrep(headerGrep, i);
       if (length(i1) == 0) {
          stop("The worksheet does not have rows matching headerGrep.");
       }
       i2 <- c(tail(i1, -1) - 1, length(i));
       i12 <- cbind(i1, i2);
       if (verbose) {
-         printDebug("importIPAenrichment(): ",
+         jamba::printDebug("importIPAenrichment(): ",
             "i1:", i1);
-         printDebug("importIPAenrichment(): ",
+         jamba::printDebug("importIPAenrichment(): ",
             "i2:", i2);
       }
 
       ## Pull out reasonable rownames based upon IPA naming conventions
       i12prevRow <- (i1-1);
       i12prevRowText <- i[i1-1];
-      i12names1 <- makeNames(
+      i12names1 <- jamba::makeNames(
          sapply(i[i1], function(ix){
-            head(provigrep(ipaNameGrep, unlist(strsplit(ix, sep))), 1);
+            head(jamba::provigrep(
+               ipaNameGrep,
+               unlist(strsplit(ix, sep))), 1);
          })
       );
-      i12names2 <- makeNames(gsub(
+      i12names2 <- jamba::makeNames(gsub(
          paste0(".*(^|", sep, ")",
             "([^", sep, "]*",
             "(Pathways|Regulator[s]*|Diseases|Lists|Consistency.Score|Symbol)",
@@ -284,9 +289,9 @@ importIPAenrichment <- function
       }
       if (verbose) {
          print(head(as.data.frame(do.call(cbind, list(i12names1=i12names1, i12names2=i12names2))), Inf));
-         printDebug("i12names1:");
+         jamba::printDebug("i12names1:");
          print(i12names1);
-         printDebug("i12names2:");
+         jamba::printDebug("i12names2:");
          print(i12names2);
       }
       rownames(i12) <- i12names1;
@@ -295,7 +300,7 @@ importIPAenrichment <- function
       i12 <- i12[which(i1 != i2),,drop=FALSE];
 
       if (verbose) {
-         printDebug("importIPAenrichment(): ",
+         jamba::printDebug("importIPAenrichment(): ",
             "detected these ranges of rows to import:");
          print(i12);
       }
@@ -304,9 +309,9 @@ importIPAenrichment <- function
       ## Iterate each set of results and create a data.frame.
       ## Note that each type of result has its own number of columns,
       ## and unique colnames.
-      ipaDFL <- lapply(nameVector(rownames(i12)), function(j){
+      ipaDFL <- lapply(jamba::nameVector(rownames(i12)), function(j){
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "creating data.frame:",
                j);
          }
@@ -320,7 +325,7 @@ importIPAenrichment <- function
          ## as alpha, beta characters in some pathway names from IPA.
          if (method == 1) {
             if (verbose) {
-               printDebug("importIPAenrichment(): ",
+               jamba::printDebug("importIPAenrichment(): ",
                   "using read.table().");
             }
             jDF <- read.table(
@@ -343,7 +348,7 @@ importIPAenrichment <- function
                stop("importIPAenrichment() requires the readr package.");
             }
             if (verbose) {
-               printDebug("importIPAenrichment(): ",
+               jamba::printDebug("importIPAenrichment(): ",
                   "using readr::read_tsv().");
             }
             jDF <- readr::read_tsv(
@@ -447,20 +452,20 @@ curateIPAcolnames <- function
       #   from=nameCol,
       #   to="Name");
       if (verbose) {
-         printDebug("importIPAenrichment(): ",
+         jamba::printDebug("importIPAenrichment(): ",
             "created Name column from:",
             nameCol);
       }
    }
 
    ## Determine which column contains the genes of interest
-   geneCol <- head(provigrep(geneGrep, colnames(jDF)), 1);
+   geneCol <- head(jamba::provigrep(geneGrep, colnames(jDF)), 1);
    if (length(geneCol) == 1) {
       jDF <- renameColumn(jDF,
          from=geneCol,
          to="geneNames");
       if (verbose) {
-         printDebug("importIPAenrichment(): ",
+         jamba::printDebug("importIPAenrichment(): ",
             "created ", "'geneNames'", " column from:",
             geneCol);
       }
@@ -472,18 +477,18 @@ curateIPAcolnames <- function
 
    ## Convert -log(p-value) columns to P-value for compatibility
    ## with the enrichResult object class.
-   logpCol <- head(vigrep("-log.*p.value", colnames(jDF)), 1);
+   logpCol <- head(jamba::vigrep("-log.*p.value", colnames(jDF)), 1);
    if (length(logpCol) == 1) {
       if ("p-value" %in% tolower(colnames(jDF))) {
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "Used existing P-value column, left existing column as-is:",
                logpCol);
             #print(head(jDF[,c("P-value",logpCol),drop=FALSE]));
          }
       } else {
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "Created P-value column from:",
                logpCol);
             #print(head(jDF[,logpCol,drop=FALSE]));
@@ -491,35 +496,37 @@ curateIPAcolnames <- function
          jDF[["P-value"]] <- 10^(-as.numeric(jDF[[logpCol]]));
       }
    }
-   pCol <- head(setdiff(vigrep("^p.value", colnames(jDF)), "P-value"), 1);
+   pCol <- head(setdiff(jamba::vigrep("^p.value", colnames(jDF)), "P-value"), 1);
    if (length(pCol) == 1) {
       if (length(logpCol) != 1) {
          jDF <- renameColumn(jDF,
             from=pCol,
             to="P-value");
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "Renamed P-value column from:",
                pCol);
          }
       } else {
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "Did not rename P-value column from:",
                pCol);
          }
       }
       ## Check for multiple P-values
-      if (igrepHas("-[0-9]+-", head(jDF[,"P-value"], 20))) {
+      if (jamba::igrepHas("-[0-9]+-", head(jDF[["P-value"]], 20))) {
          if (verbose) {
-            printDebug("importIPAenrichment(): ",
+            jamba::printDebug("importIPAenrichment(): ",
                "Splitting P-value range");
          }
-         pvals <- gsub("([0-9]+)-([0-9]+)", "\\1!\\2", jDF[,"P-value"]);
-         pvalsM1 <- rbindList(strsplit(pvals, "!"));
+         pvals <- gsub("([0-9]+)-([0-9]+)",
+            "\\1!\\2",
+            jDF[["P-value"]]);
+         pvalsM1 <- jamba::rbindList(strsplit(pvals, "!"));
          pvalsM <- matrix(as.numeric(pvalsM1),
             ncol=ncol(pvalsM1));
-         maxPcolnames <- makeNames(rep("max P-value", ncol(pvalsM)-1));
+         maxPcolnames <- jamba::makeNames(rep("max P-value", ncol(pvalsM)-1));
          colnames(pvalsM) <- c("P-value", maxPcolnames);
          jDF[,colnames(pvalsM)] <- pvalsM;
       }
@@ -673,23 +680,23 @@ find_colname <- function
    if (any(pattern %in% x_colnames)) {
       ## 1. max exact colname
       if (verbose) {
-         printDebug("find_colname(): ",
+         jamba::printDebug("find_colname(): ",
             "Returning exact match.");
       }
       x_vals <- intersect(pattern, x_colnames);
    } else if (any(tolower(pattern) %in% tolower(x_colnames))) {
       ## 2. max exact colname
       if (verbose) {
-         printDebug("find_colname(): ",
+         jamba::printDebug("find_colname(): ",
             "Returning exact case-insensitive match.");
       }
-      x_match <- rmNA(match(tolower(pattern), tolower(x_colnames)));
+      x_match <- jamba::rmNA(match(tolower(pattern), tolower(x_colnames)));
       x_vals <- x_colnames[x_match];
       return(head(x_vals, max));
    } else if (jamba::igrepHas(paste(collapse="|", start_pattern), x_colnames)) {
       ## 3. match start of each colname
       if (verbose) {
-         printDebug("find_colname(): ",
+         jamba::printDebug("find_colname(): ",
             "Returning match to colname start.");
       }
       x_vals <- unique(jamba::provigrep(start_pattern, x_colnames));
@@ -697,7 +704,7 @@ find_colname <- function
    } else if (jamba::igrepHas(paste(collapse="|", end_pattern), x_colnames)) {
       ## 4. match end of each colname
       if (verbose) {
-         printDebug("find_colname(): ",
+         jamba::printDebug("find_colname(): ",
             "Returning match to colname end.");
       }
       x_vals <- unique(jamba::provigrep(end_pattern, x_colnames));
@@ -705,14 +712,14 @@ find_colname <- function
    } else if (jamba::igrepHas(paste(collapse="|", pattern), x_colnames)) {
       ## 5. match any part of each colname
       if (verbose) {
-         printDebug("find_colname(): ",
+         jamba::printDebug("find_colname(): ",
             "Returning match to part of colname.");
       }
       x_vals <- unique(jamba::provigrep(pattern, x_colnames));
       return(head(x_vals, max));
    } else {
       if (verbose) {
-         printDebug("find_colname(): ",
+         jamba::printDebug("find_colname(): ",
             "No match found.");
       }
       x_vals <- NULL;

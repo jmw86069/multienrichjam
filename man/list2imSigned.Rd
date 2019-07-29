@@ -61,7 +61,7 @@ L1;
 set.seed(123);
 L2 <- lapply(L1, function(i){
    i <- unique(i);
-   nameVector(sample(c(-1,1), size=length(i), replace=TRUE), i);
+   jamba::nameVector(sample(c(-1,1), size=length(i), replace=TRUE), i);
 });
 L2;
 

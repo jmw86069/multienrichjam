@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.900</span>
       </span>
     </div>
 
@@ -232,8 +232,10 @@ operates on either a character vector, or an igraph object.</p>
     <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"KEGG_INSULIN_SIGNALING_PATHWAY"</span>,
    <span class='st'>"KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY"</span>,
    <span class='st'>"KEGG_NEUROTROPHIN_SIGNALING_PATHWAY"</span>);
-<span class='fu'>fixSetLabels</span>(<span class='no'>x</span>);</div><div class='output co'>#&gt; <span class='error'>Error in igrepHas("igraph", class(x)): could not find function "igrepHas"</span></div><div class='input'>
-<span class='kw pkg'>jamba</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/jamba/topics/nullPlot'>nullPlot</a></span>();</div><div class='img'><img src='fixSetLabels-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw pkg'>jamba</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/jamba/topics/drawLabels'>drawLabels</a></span>(<span class='no'>x</span>, <span class='kw'>preset</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"top"</span>, <span class='st'>"center"</span>, <span class='st'>"bottom"</span>));</div><div class='output co'>#&gt; <span class='error'>Error: $ operator is invalid for atomic vectors</span></div><div class='input'>
+<span class='fu'>fixSetLabels</span>(<span class='no'>x</span>);</div><div class='output co'>#&gt; [1] "Insulin Signaling\nPathway"         "T Cell Receptor\nSignaling Pathway"
+#&gt; [3] "Neurotrophin Signaling\nPathway"   </div><div class='input'>
+<span class='kw pkg'>jamba</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/jamba/topics/nullPlot'>nullPlot</a></span>();</div><div class='input'><span class='kw pkg'>jamba</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/jamba/topics/drawLabels'>drawLabels</a></span>(<span class='kw'>txt</span><span class='kw'>=</span><span class='no'>x</span>,
+   <span class='kw'>preset</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"top"</span>, <span class='st'>"center"</span>, <span class='st'>"bottom"</span>));</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘colorspace’ was built under R version 3.5.2</span></div><div class='img'><img src='fixSetLabels-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

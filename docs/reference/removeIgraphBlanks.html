@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.900</span>
       </span>
     </div>
 
@@ -232,18 +232,8 @@ make the remaining colors more visibly distinct.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>igraph</span>);</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘igraph’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:S4Vectors’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    union</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:BiocGenerics’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    normalize, path, union</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:arules’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    union</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    decompose, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    union</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>multienrichjam</span>);
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>igraph</span>);
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>multienrichjam</span>);
 <span class='no'>g</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/make_full_graph'>graph.full</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>3</span>);
 <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>name</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"nodeA"</span>, <span class='st'>"nodeB"</span>, <span class='st'>"nodeC"</span>);
 <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>shape</span> <span class='kw'>&lt;-</span> <span class='st'>"coloredrectangle"</span>;
@@ -258,7 +248,7 @@ make the remaining colors more visibly distinct.</p>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>size2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>20</span>,<span class='fl'>30</span>,<span class='fl'>20</span>);
 
 <span class='no'>color_v</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='st'>"white"</span>, <span class='fl'>21</span>);
-<span class='no'>color_v</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>7</span>,<span class='fl'>9</span>,<span class='fl'>15</span>,<span class='fl'>19</span>,<span class='fl'>20</span>,<span class='fl'>21</span>)] <span class='kw'>&lt;-</span> <span class='kw pkg'>colorjam</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/colorjam/topics/rainbowJam'>rainbowJam</a></span>(<span class='fl'>5</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘colorspace’ was built under R version 3.5.2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: number of items to replace is not a multiple of replacement length</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>coloredrect.color</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/split'>split</a></span>(
+<span class='no'>color_v</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>7</span>,<span class='fl'>9</span>,<span class='fl'>15</span>,<span class='fl'>19</span>,<span class='fl'>20</span>,<span class='fl'>21</span>)] <span class='kw'>&lt;-</span> <span class='kw pkg'>colorjam</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/colorjam/topics/rainbowJam'>rainbowJam</a></span>(<span class='fl'>5</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: number of items to replace is not a multiple of replacement length</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>coloredrect.color</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/split'>split</a></span>(
    <span class='no'>color_v</span>,
    <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>g</span>)$<span class='no'>name</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>2</span>)*<span class='fl'>3</span>));
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));

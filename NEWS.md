@@ -1,3 +1,15 @@
+# multienrichjam version 0.0.8.900
+
+## bug fixes
+
+* Fixed several calls to `strsplit()` that failed when sent factors,
+which only happens when R `options("stringsAsFactors"=TRUE)` which
+is the default in base R. Now all calls to `strsplit()` enforce
+`as.character()` unless character type has already been enforced.
+* Added numerous package prefixes to functions, to avoid importing
+all package dependencies.
+
+
 # multienrichjam version 0.0.7.900
 
 ## bug fixes

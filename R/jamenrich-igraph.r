@@ -35,6 +35,7 @@
 #' @family jam igraph functions
 #'
 #' @examples
+#' if (suppressPackageStartupMessages(require(igraph))) {
 #' g  <- make_graph( ~ A-B-C-D-A, E-A:B:C:D,
 #'    F-G-H-I-F, J-F:G:H:I,
 #'    K-L-M-N-K, O-K:L:M:N,
@@ -51,6 +52,7 @@
 #'
 #' plot(g, main="layout_with_qfr, repulse=6\n(qgraph custom)",
 #'    layout=function(g)layout_with_qfr(g, repulse=6));
+#' }
 #'
 #' @export
 layout_with_qfr <- function
@@ -191,7 +193,7 @@ verbose=FALSE,
    nodeLabel <- intersect(nodeLabel, colnames(y));
    dColname <- head(nodeLabel, 1);
    if (verbose) {
-      printDebug("cnetplotJam(): ",
+      jamba::printDebug("cnetplotJam(): ",
          "dColname:",
          dColname);
    }
@@ -201,7 +203,7 @@ verbose=FALSE,
       gc <- DOSE::geneInCategory(x);
       names(gc) <- y[[dColname]];
       if (verbose) {
-         printDebug("cnetplotJam(): ",
+         jamba::printDebug("cnetplotJam(): ",
             "assigned gc <- DOSE::geneInCategory(x), length(gc):",
             length(gc),
             ", head(gc, 2):");
@@ -211,7 +213,7 @@ verbose=FALSE,
       stop("x should be an 'enrichResult' or 'gseaResult' object...")
    }
    if (verbose) {
-      printDebug("cnetplotJam(): ",
+      jamba::printDebug("cnetplotJam(): ",
          "keepColnames:",
          keepColnames);
    }
@@ -296,7 +298,7 @@ verbose=FALSE,
       V(g)[iWhichCat]$size <- catSize;
       if (geneSize > median(catSize)) {
          if (verbose) {
-            printDebug("cnetplotJam(): ",
+            jamba::printDebug("cnetplotJam(): ",
                "Shrinking gene nodes to median category node size.");
          }
          geneSize <- median(catSize);
@@ -475,13 +477,13 @@ igraph2pieGraph <- function
    iNodes <- which(toupper(V(g)$name) %in% toupper(rownames(valueIMcolors)));
    if (length(iNodes) == 0) {
       if (verbose) {
-         printDebug("igraph2pieGraph(): ",
+         jamba::printDebug("igraph2pieGraph(): ",
             "No nodes were changed, returning input graph.");
       }
       return(g);
    }
    if (verbose) {
-      printDebug("igraph2pieGraph(): ",
+      jamba::printDebug("igraph2pieGraph(): ",
          "found ", format(length(iNodes), big.mark=","),
          " matching nodes, head(iNodes):",
          head(iNodes, 10));
@@ -495,7 +497,7 @@ igraph2pieGraph <- function
    ## Change above logic to use lapply() then try to assign to igraph
    ## in batch steps
    if (verbose) {
-      printDebug("igraph2pieGraph(): ",
+      jamba::printDebug("igraph2pieGraph(): ",
          "iNodeParamsL");
    }
    iNodeParamsL <- lapply(iNodes, function(i){
@@ -537,7 +539,7 @@ igraph2pieGraph <- function
    ## Define stable layout
    if (defineLayout) {
       if (verbose) {
-         printDebug("igraph2pieGraph(): ",
+         jamba::printDebug("igraph2pieGraph(): ",
             "layout_with_qfr(g, repulse=",
             repulse,
             ")");
@@ -551,7 +553,7 @@ igraph2pieGraph <- function
    ## Optionally update labels for maximum characters
    if (updateLabels) {
       if (verbose) {
-         printDebug("igraph2pieGraph(): ",
+         jamba::printDebug("igraph2pieGraph(): ",
             "Updating node labels.");
       }
       if (is.null(V(g)$label)) {
@@ -560,7 +562,7 @@ igraph2pieGraph <- function
       if (!is.null(maxNchar)) {
          V(g)$label <- substr(V(g)$label, 1, maxNchar);
       }
-      V(g)$label <- ucfirst(tolower(V(g)$label));
+      V(g)$label <- jamba::ucfirst(tolower(V(g)$label));
    }
    return(g);
 }
@@ -822,7 +824,7 @@ shape.coloredrectangle.plot <- function
          ltyk <- rep(lty[[k]], length.out=length(colk));
          lwdk <- rep(lwd[[k]], length.out=length(colk));
          if (length(getOption("debug"))>0) {
-            printDebug("k:", k,
+            jamba::printDebug("k:", k,
                ", numk:", numk,
                ", byrowk:", byrowk,
                ", ncolk:", ncolk,
@@ -1158,7 +1160,7 @@ cnet2df <- function
       degree=degree(g),
       membership=components(g)$membership);
    if (getNeighbors || checkSubsets) {
-      df$neighbors <- cPaste(lapply(seq_len(vcount(g)), function(i){
+      df$neighbors <- jamba::cPaste(lapply(seq_len(vcount(g)), function(i){
          neighbors(g, i)$name;
       }));
    }
@@ -1214,8 +1216,10 @@ cnet2im <- function
          getNeighbors=TRUE,
          checkSubsets=FALSE);
    }
-   dfV <- nameVector(subset(df, nodeType %in% "Set")[,c("neighbors","name")]);
-   dfL <- strsplit(dfV, ",");
+   dfV <- jamba::nameVector(subset(df, nodeType %in% "Set")[,c("neighbors","name")]);
+   dfL <- strsplit(
+      as.character(dfV),
+      ",");
    im <- list2im(dfL);
    im;
 }
@@ -1345,7 +1349,7 @@ removeIgraphBlanks <- function
 
    if ("coloredrect.color" %in% list.vertex.attributes(g)) {
       if (verbose) {
-         printDebug("removeIgraphBlanks(): ",
+         jamba::printDebug("removeIgraphBlanks(): ",
             "Adjusting coloredrect nodes.");
       }
       ## Rewrote code to use vectorized logic.
@@ -1586,7 +1590,7 @@ removeIgraphBlanks <- function
       ## its expected node size
       if (resizeNodes) {
          if (verbose) {
-            printDebug("removeIgraphBlanks(): ",
+            jamba::printDebug("removeIgraphBlanks(): ",
                "Resizing coloredrect nodes.");
          }
          ## Make multi-segment gene nodes wider
@@ -1619,7 +1623,7 @@ removeIgraphBlanks <- function
 
       if ("pie.color" %in% pieAttrs) {
          if (verbose) {
-            printDebug("removeIgraphBlanks(): ",
+            jamba::printDebug("removeIgraphBlanks(): ",
                "Iterating pie nodes.");
          }
 
@@ -1716,7 +1720,7 @@ rectifyPiegraph <- function
    ##
    ## whichNodes is an integer vector of nodes to use, which is
    ## further filtered for only nodes with V(g)$shape == "pie"
-   if (!igrepHas("igraph", class(g))) {
+   if (!jamba::igrepHas("igraph", class(g))) {
       stop("Input g must be an igraph object.");
    }
    whichPie <- intersect(whichNodes,
@@ -1810,12 +1814,12 @@ reorderIgraphNodes <- function
          V(g)$x <- layoutG[,1];
          V(g)$y <- layoutG[,2];
       }
-   } else if (igrepHas("function", class(layout))) {
+   } else if (jamba::igrepHas("function", class(layout))) {
       layoutG <- layout(g);
       rownames(layoutG) <- V(g)$name;
       V(g)$x <- layoutG[,1];
       V(g)$y <- layoutG[,2];
-   } else if (igrepHas("data.*frame|matrix", class(layout))) {
+   } else if (jamba::igrepHas("data.*frame|matrix", class(layout))) {
       if (all(c("x","y") %in% colnames(layout))) {
          V(g)$x <- layout[,"x"];
          V(g)$y <- layout[,"y"];
@@ -1829,15 +1833,15 @@ reorderIgraphNodes <- function
 
 
    ## comma-delimited neighboring nodes for each node
-   neighborG <- cPaste(lapply(seq_len(vcount(g)), function(v){
+   neighborG <- jamba::cPaste(lapply(seq_len(vcount(g)), function(v){
       neighbors(g, v, mode="all");
    }));
    names(neighborG) <- V(g)$name;
    ## Determine which edge groups are present multiple times
-   neighborGct <- tcount(neighborG, minCount=2);
+   neighborGct <- jamba::tcount(neighborG, minCount=2);
    if (length(neighborGct) == 0) {
       if (verbose) {
-         printDebug("reorderIgraphNodes(): ",
+         jamba::printDebug("reorderIgraphNodes(): ",
             "found no edge groups, returning input graph unchanged.");
       }
       return(g);
@@ -1847,7 +1851,7 @@ reorderIgraphNodes <- function
    sortAttributes <- intersect(sortAttributes, vertex_attr_names(g));
    if (length(sortAttributes) == 0) {
       if (verbose) {
-         printDebug("reorderIgraphNodes(): ",
+         jamba::printDebug("reorderIgraphNodes(): ",
             "did not find any matching sortAttributes in the igraph object.");
       }
       return(g);
@@ -1881,15 +1885,15 @@ reorderIgraphNodes <- function
             });
             names(jString) <- V(g)$name;
             if (verbose) {
-               printDebug("reorderIgraphNodes(): ",
+               jamba::printDebug("reorderIgraphNodes(): ",
                   "head(jString):",
                   head(jString));
             }
             jString;
          } else {
-            if (igrepHas("list", class(j))) {
-               cPaste2(j);
-            } else if (igrepHas("numeric|integer|float", class(j))) {
+            if (jamba::igrepHas("list", class(j))) {
+               jamba::cPaste(j);
+            } else if (jamba::igrepHas("numeric|integer|float", class(j))) {
                round(j, digits=2);
             } else {
                j;
@@ -1907,7 +1911,7 @@ reorderIgraphNodes <- function
 
    if (verbose) {
       if (verbose) {
-         printDebug("reorderIgraphNodes(): ",
+         jamba::printDebug("reorderIgraphNodes(): ",
             "head(neighborDF):");
       }
       ch(head(neighborDF));
@@ -1919,23 +1923,23 @@ reorderIgraphNodes <- function
    ## left-to-right logic, but then assign those coordinates
    ## top-to-bottom.
    if (verbose) {
-      printDebug("reorderIgraphNodes(): ",
+      jamba::printDebug("reorderIgraphNodes(): ",
          "nodeSortBy:",
          nodeSortBy);
    }
-   newDF <- rbindList(lapply(names(neighborGct), function(Gname){
+   newDF <- jamba::rbindList(lapply(names(neighborGct), function(Gname){
       iDF <- subset(neighborDF, edgeGroup %in% Gname);
-      xyOrder <- mixedSortDF(iDF,
+      xyOrder <- jamba::mixedSortDF(iDF,
          byCols=match(nodeSortBy, colnames(iDF)));
 
-      nodeOrder <- mixedSortDF(iDF,
+      nodeOrder <- jamba::mixedSortDF(iDF,
          byCols=match(c("sortAttribute","vertex"), colnames(iDF)));
 
       nodeOrder[,c("x","y")] <- xyOrder[,c("x","y")];
       ## If there are repeated sortAttributes, we use them to place subsets
       ## of nodes top to bottom within each group of coordinates
-      if (length(tcount(nodeOrder[,"sortAttribute"], minCount=2)) > 0) {
-         nodeOrder <- rbindList(lapply(split(nodeOrder, nodeOrder[,"sortAttribute"]), function(jDF){
+      if (length(jamba::tcount(nodeOrder[,"sortAttribute"], minCount=2)) > 0) {
+         nodeOrder <- jamba::rbindList(lapply(split(nodeOrder, nodeOrder[,"sortAttribute"]), function(jDF){
             if (nrow(jDF) > 1) {
                byCols <- match(rev(nodeSortBy), colnames(jDF));
                if (nodeSortBy[2] %in% "y") {
@@ -1944,7 +1948,7 @@ reorderIgraphNodes <- function
                } else {
                   byCols <- byCols * c(1,1);
                }
-               jDFcoord <- mixedSortDF(jDF,
+               jDFcoord <- jamba::mixedSortDF(jDF,
                   byCols=byCols);
                jDF[,c("x","y")] <- jDFcoord[,c("x","y")];
             }

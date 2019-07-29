@@ -118,7 +118,7 @@ list2im <- function
    }
    if (keepCounts) {
       if (verbose) {
-         printDebug("list2im(): ",
+         jamba::printDebug("list2im(): ",
             "Applying item counts to the incidence matrix ",
             format(big.mark=",", length(xCt)),
             " items.");
@@ -183,7 +183,7 @@ list2im <- function
 #' set.seed(123);
 #' L2 <- lapply(L1, function(i){
 #'    i <- unique(i);
-#'    nameVector(sample(c(-1,1), size=length(i), replace=TRUE), i);
+#'    jamba::nameVector(sample(c(-1,1), size=length(i), replace=TRUE), i);
 #' });
 #' L2;
 #'

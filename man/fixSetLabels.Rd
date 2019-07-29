@@ -74,7 +74,8 @@ x <- c("KEGG_INSULIN_SIGNALING_PATHWAY",
 fixSetLabels(x);
 
 jamba::nullPlot();
-jamba::drawLabels(x, preset=c("top", "center", "bottom"));
+jamba::drawLabels(txt=x,
+   preset=c("top", "center", "bottom"));
 
 }
 \seealso{

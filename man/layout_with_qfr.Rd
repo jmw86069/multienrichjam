@@ -45,6 +45,7 @@ spacing of vertices, where higher values cause tighter packing of
 vertices, and lower values allows greater spacing between vertices.
 }
 \examples{
+if (suppressPackageStartupMessages(require(igraph))) {
 g  <- make_graph( ~ A-B-C-D-A, E-A:B:C:D,
    F-G-H-I-F, J-F:G:H:I,
    K-L-M-N-K, O-K:L:M:N,
@@ -61,6 +62,7 @@ plot(g, main="layout_with_qfr\\n(qgraph default)", layout=layout_with_qfr);
 
 plot(g, main="layout_with_qfr, repulse=6\\n(qgraph custom)",
    layout=function(g)layout_with_qfr(g, repulse=6));
+}
 
 }
 \seealso{
