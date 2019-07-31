@@ -1160,9 +1160,12 @@ cnet2df <- function
       degree=degree(g),
       membership=components(g)$membership);
    if (getNeighbors || checkSubsets) {
-      df$neighbors <- jamba::cPaste(lapply(seq_len(vcount(g)), function(i){
-         neighbors(g, i)$name;
-      }));
+      df$neighbors <- jamba::cPaste(
+         lapply(seq_len(vcount(g)), function(i){
+            neighbors(g, i)$name;
+         }),
+         doSort=TRUE,
+         makeUnique=TRUE);
    }
    if (checkSubsets) {
       im <- cnet2im(df=df)
@@ -1833,9 +1836,12 @@ reorderIgraphNodes <- function
 
 
    ## comma-delimited neighboring nodes for each node
-   neighborG <- jamba::cPaste(lapply(seq_len(vcount(g)), function(v){
-      neighbors(g, v, mode="all");
-   }));
+   neighborG <- jamba::cPaste(
+      lapply(seq_len(vcount(g)), function(v){
+         neighbors(g, v, mode="all");
+      }),
+      doSort=TRUE,
+      makeUnique=FALSE);
    names(neighborG) <- V(g)$name;
    ## Determine which edge groups are present multiple times
    neighborGct <- jamba::tcount(neighborG, minCount=2);
