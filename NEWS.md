@@ -1,3 +1,11 @@
+# multienrichjam version 0.0.9.900
+
+## bug fixes
+
+* `importIPAenrichment()` no longer calls commandline `grep`
+to remove blank rows, for now it uses `readLines()` and
+`jamba::vigrep()` to select rows with at least one character.
+
 # multienrichjam version 0.0.8.900
 
 ## bug fixes

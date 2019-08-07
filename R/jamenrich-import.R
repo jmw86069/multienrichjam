@@ -233,8 +233,9 @@ importIPAenrichment <- function
          }
          #i <- system(intern=TRUE,
          #      paste0("grep '\t.*\t' ", ipaFile));
-         i <- system(intern=TRUE,
-            paste0("grep '.*' ", ipaFile));
+         i <- vigrep(".", readLines(ipaFile));
+         #i <- system(intern=TRUE,
+         #   paste0("grep '.*' ", ipaFile));
          ## Clean up trailing newlines
          i <- gsub("[\r\n]+$",
             "",
