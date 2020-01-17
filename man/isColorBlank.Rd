@@ -4,8 +4,14 @@
 \alias{isColorBlank}
 \title{Determine if colors are blank colors}
 \usage{
-isColorBlank(x, c_max = 7, l_min = 95, alpha_max = 0.1,
-  blankColor = c("#FFFFFF", "#FFFFFFFF", "transparent"), ...)
+isColorBlank(
+  x,
+  c_max = 7,
+  l_min = 95,
+  alpha_max = 0.1,
+  blankColor = c("#FFFFFF", "#FFFFFFFF", "transparent"),
+  ...
+)
 }
 \arguments{
 \item{x}{character vector of R colors.}
@@ -40,7 +46,9 @@ color saturation is extremely low. Similarly, colors with
 extremely high alpha transparency may be considered "blank".
 }
 \seealso{
-Other jam utility functions: \code{\link{find_colname}},
-  \code{\link{gsubs}}, \code{\link{xyAngle}}
+Other jam utility functions: 
+\code{\link{find_colname}()},
+\code{\link{gsubs}()},
+\code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

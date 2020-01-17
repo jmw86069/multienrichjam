@@ -4,13 +4,23 @@
 \alias{topEnrichBySource}
 \title{Subset enrichList for top enrichment results by source}
 \usage{
-topEnrichBySource(enrichDF, n = 15, sourceColnames = c("Category",
-  "Source"), sortColname = c("P-value", "pvalue", "padjust",
-  "-GeneRatio", "-geneHits"), newColname = "EnrichGroup",
-  curateFrom = c("CP:.*"), curateTo = c("CP"), sourceSubset = NULL,
-  sourceSep = "_", descriptionColname = c("Description", "Name",
-  "Pathway"), nameColname = c("ID", "Name"), descriptionGrep = NULL,
-  nameGrep = NULL, verbose = FALSE, ...)
+topEnrichBySource(
+  enrichDF,
+  n = 15,
+  sourceColnames = c("Category", "Source"),
+  sortColname = c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
+  newColname = "EnrichGroup",
+  curateFrom = c("CP:.*"),
+  curateTo = c("CP"),
+  sourceSubset = NULL,
+  sourceSep = "_",
+  descriptionColname = c("Description", "Name", "Pathway"),
+  nameColname = c("ID", "Name"),
+  descriptionGrep = NULL,
+  nameGrep = NULL,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{enrichDF}{\code{data.frame} containing enrichment results.}
@@ -85,7 +95,8 @@ range than other sources which provide much larger
 gene sets.
 }
 \seealso{
-Other jam enrichment functions: \code{\link{multiEnrichMap}},
-  \code{\link{topEnrichListBySource}}
+Other jam enrichment functions: 
+\code{\link{multiEnrichMap}()},
+\code{\link{topEnrichListBySource}()}
 }
 \concept{jam enrichment functions}

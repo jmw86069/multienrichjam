@@ -4,11 +4,19 @@
 \alias{removeIgraphBlanks}
 \title{Remove igraph blank wedges}
 \usage{
-removeIgraphBlanks(g, blankColor = c("#FFFFFF", "#FFFFFFFF",
-  "transparent"), c_max = 7, l_min = 95, alpha_max = 0.1,
-  constrain = c("nrow", "ncol", "none"), resizeNodes = TRUE,
-  applyToPie = TRUE, pieAttrs = c("pie", "pie.value", "pie.names",
-  "pie.color"), verbose = FALSE, ...)
+removeIgraphBlanks(
+  g,
+  blankColor = c("#FFFFFF", "#FFFFFFFF", "transparent"),
+  c_max = 7,
+  l_min = 95,
+  alpha_max = 0.1,
+  constrain = c("nrow", "ncol", "none"),
+  resizeNodes = TRUE,
+  applyToPie = TRUE,
+  pieAttrs = c("pie", "pie.value", "pie.names", "pie.color"),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{g}{igraph object containing one or more attributes from
@@ -59,8 +67,8 @@ This function is intended to affect nodes with shapes \code{"pie"} or
 \code{"coloredrectangle"}, and evaluates the vertex attributes
 \code{"coloredrect.color"} and \code{"pie.color"}. For each node, any colors
 considered blank are removed, along with corresponding values in
-related vertex attributes, including \code{"pie","pie.value","pie.names"},
-\code{"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"}.
+related vertex attributes, including \verb{"pie","pie.value","pie.names"},
+\verb{"coloredrect.names","coloredrect.nrow","coloredrect.ncol","coloredrect.byrow"}.
 
 This function calls \code{isColorBlank()} to determine which colors are
 blank.
@@ -124,18 +132,22 @@ plot(g7, layout=lg7, vertex.size2=V(g7)$coloredrect.nrow*10);
 
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
-  \code{\link{fixSetLabels}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

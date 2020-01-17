@@ -4,8 +4,15 @@
 \alias{xyAngle}
 \title{Get angle from origin to vector of x,y coordinates}
 \usage{
-xyAngle(x, y = NULL, directed = FALSE, deg = TRUE, origin.x = 0,
-  origin.y = 0, ...)
+xyAngle(
+  x,
+  y = NULL,
+  directed = FALSE,
+  deg = TRUE,
+  origin.x = 0,
+  origin.y = 0,
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector or two-column matrix with columns
@@ -46,7 +53,9 @@ xyAngle(1, 1, origin.x=1, origin.y=0);
 
 }
 \seealso{
-Other jam utility functions: \code{\link{find_colname}},
-  \code{\link{gsubs}}, \code{\link{isColorBlank}}
+Other jam utility functions: 
+\code{\link{find_colname}()},
+\code{\link{gsubs}()},
+\code{\link{isColorBlank}()}
 }
 \concept{jam utility functions}

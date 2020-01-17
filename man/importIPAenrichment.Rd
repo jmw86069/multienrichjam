@@ -4,15 +4,24 @@
 \alias{importIPAenrichment}
 \title{Import Ingenuity IPA enrichment results}
 \usage{
-importIPAenrichment(ipaFile,
-  headerGrep = "(^|\\t)((expr.|-log.|)p-value|Pvalue|Score\\t|Symbol\\t|Ratio\\t|Consistency.Score|Master.Regulator\\t)",
-  ipaNameGrep = c("Pathway", "Regulator$", "Regulators", "Regulator",
-  "Disease", "Toxicity", "Category", "Categories", "Function", "Symbol$",
-  "^ID$", "My.(Lists|Pathways)"), geneGrep = c("Molecules in Network",
-  "Molecules"), geneCurateFrom = c("^[,]+|[,]+$"),
-  geneCurateTo = c(""), method = 1, sheet = 1, sep = "\\t",
-  xlsxMultiSheet = TRUE, useXlsxSheetNames = FALSE, verbose = FALSE,
-  ...)
+importIPAenrichment(
+  ipaFile,
+ 
+    headerGrep = "(^|\\t)((expr.|-log.|)p-value|Pvalue|Score\\t|Symbol\\t|Ratio\\t|Consistency.Score|Master.Regulator\\t)",
+  ipaNameGrep = c("Pathway", "Regulator$", "Regulators", "Regulator", "Disease",
+    "Toxicity", "Category", "Categories", "Function", "Symbol$", "^ID$",
+    "My.(Lists|Pathways)"),
+  geneGrep = c("Molecules in Network", "Molecules"),
+  geneCurateFrom = c(" [(](complex|includes others)[)]", "^[,]+|[,]+$"),
+  geneCurateTo = c("", ""),
+  method = 1,
+  sheet = 1,
+  sep = "\\t",
+  xlsxMultiSheet = TRUE,
+  useXlsxSheetNames = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{ipaFile}{one of the four input types described above:
@@ -115,6 +124,7 @@ enrichment tables into a list of \code{data.frame} objects, and
 retain the descriptive text as names of the list.
 }
 \seealso{
-Other jam import functions: \code{\link{curateIPAcolnames}}
+Other jam import functions: 
+\code{\link{curateIPAcolnames}()}
 }
 \concept{jam import functions}

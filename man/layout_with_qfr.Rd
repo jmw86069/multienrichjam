@@ -4,9 +4,15 @@
 \alias{layout_with_qfr}
 \title{igraph layout using qgraph Fruchterman-Reingold}
 \usage{
-layout_with_qfr(g, repulse = 3.1, area = 8 * (vcount(g)^2),
-  repulse.rad = (vcount(g)^repulse), constraints = NULL, seed = 123,
-  ...)
+layout_with_qfr(
+  g,
+  repulse = 3.1,
+  area = 8 * (vcount(g)^2),
+  repulse.rad = (vcount(g)^repulse),
+  constraints = NULL,
+  seed = 123,
+  ...
+)
 }
 \arguments{
 \item{g}{igraph object}
@@ -54,13 +60,13 @@ g  <- make_graph( ~ A-B-C-D-A, E-A:B:C:D,
    C-P, C-L, I-L, I-P)
 
 par("mfrow"=c(2,2));
-plot(g, main="default layout\\n(igraph)");
+plot(g, main="default layout\n(igraph)");
 
-plot(g, main="layout_with_fr\\n(igraph)", layout=layout_with_fr);
+plot(g, main="layout_with_fr\n(igraph)", layout=layout_with_fr);
 
-plot(g, main="layout_with_qfr\\n(qgraph default)", layout=layout_with_qfr);
+plot(g, main="layout_with_qfr\n(qgraph default)", layout=layout_with_qfr);
 
-plot(g, main="layout_with_qfr, repulse=6\\n(qgraph custom)",
+plot(g, main="layout_with_qfr, repulse=6\n(qgraph custom)",
    layout=function(g)layout_with_qfr(g, repulse=6));
 }
 
@@ -68,18 +74,22 @@ plot(g, main="layout_with_qfr, repulse=6\\n(qgraph custom)",
 \seealso{
 \code{qgraph::qgraph.layout.fruchtermanreingold()}
 
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
-  \code{\link{fixSetLabels}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

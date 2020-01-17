@@ -4,8 +4,17 @@
 \alias{curateIPAcolnames}
 \title{Curate Ingenuity IPA colnames}
 \usage{
-curateIPAcolnames(jDF, ipaNameGrep, geneGrep, geneCurateFrom, geneCurateTo,
-  verbose = TRUE, ...)
+curateIPAcolnames(
+  jDF,
+  ipaNameGrep = c("^Name$", "^ID$", "Canonical Pathways", "Upstream Regulator",
+    "Diseases or Functions Annotation", "Diseases . Functions", "My Lists",
+    "Ingenuity Toxicity Lists", "My Pathways"),
+  geneGrep = c("Molecules in Network", "Target molecules", "Molecules"),
+  geneCurateFrom = c(" [(](complex|includes others)[)]", "^[,]+|[,]+$"),
+  geneCurateTo = c("", ""),
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{jDF}{data.frame from one Ingenuity IPA enrichment test.}
@@ -43,7 +52,7 @@ This function will rename the first recognized gene colname
 to \code{"geneNames"} for consistency with downstream analyses.
 
 The values in the recognized gene colname are curated
-using \code{geneCurateFrom,geneCurateTo} for multiple
+using \verb{geneCurateFrom,geneCurateTo} for multiple
 pattern-replacement substitutions. This mechanism is
 used to ensure consistent delimiters and values used
 for each enrichment table.
@@ -65,6 +74,7 @@ by disease category and storing the range of enrichment
 P-values.
 }
 \seealso{
-Other jam import functions: \code{\link{importIPAenrichment}}
+Other jam import functions: 
+\code{\link{importIPAenrichment}()}
 }
 \concept{jam import functions}

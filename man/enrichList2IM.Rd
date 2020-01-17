@@ -4,17 +4,26 @@
 \alias{enrichList2IM}
 \title{Convert enrichList to IM incidence matrix}
 \usage{
-enrichList2IM(enrichList, GmtT = NULL, addAnnotations = TRUE,
-  keyColname = "Name", valueColname = "P-value", emptyValue = 1,
-  verbose = FALSE, ...)
+enrichList2IM(
+  enrichList,
+  GmtT = NULL,
+  addAnnotations = TRUE,
+  keyColname = "Name",
+  valueColname = "P-value",
+  emptyValue = 1,
+  verbose = FALSE,
+  ...
+)
 }
 \description{
 Convert enrichList to IM incidence matrix
 }
 \seealso{
-Other jam conversion functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}},
-  \code{\link{enrichDF2enrichResult}},
-  \code{\link{enrichList2df}}, \code{\link{enrichMapJam}}
+Other jam conversion functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{enrichDF2enrichResult}()},
+\code{\link{enrichList2df}()},
+\code{\link{enrichMapJam}()}
 }
 \concept{jam conversion functions}

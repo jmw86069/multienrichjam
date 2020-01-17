@@ -4,8 +4,14 @@
 \alias{gsubs}
 \title{Pattern replacement with multiple patterns}
 \usage{
-gsubs(pattern, replacement, x, ignore.case = TRUE,
-  replaceMultiple = rep(TRUE, length(pattern)), ...)
+gsubs(
+  pattern,
+  replacement,
+  x,
+  ignore.case = TRUE,
+  replaceMultiple = rep(TRUE, length(pattern)),
+  ...
+)
 }
 \arguments{
 \item{pattern}{character vector of patterns}
@@ -38,7 +44,9 @@ combinations. It applies each pattern match and replacement
 in order and is therefore not vectorized.
 }
 \seealso{
-Other jam utility functions: \code{\link{find_colname}},
-  \code{\link{isColorBlank}}, \code{\link{xyAngle}}
+Other jam utility functions: 
+\code{\link{find_colname}()},
+\code{\link{isColorBlank}()},
+\code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

@@ -69,7 +69,7 @@ enrichDF2enrichResult <- function
  pathGenes="pathGenes",
  geneColname=c("geneNames", "geneID", "Gene", "Genes"),
  geneHits="geneHits",
- geneRatioColname=c("GeneRatio", "Ratio"),
+ geneRatioColname=c("GeneRatio", "^Ratio"),
  geneDelim="[,/ ]+",
  pvalueColname=c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
  verbose=FALSE,
@@ -178,8 +178,17 @@ enrichDF2enrichResult <- function
          }
       }
    } else {
-      if (length(geneHits) == 0 || length(pathGenes) == 0) {
-         stop("enrichDF2enrichResult() must have geneHits,pathGenes or geneRatioColname defined.");
+      if (length(geneHits) == 0) {
+         enrichDF2[["geneHits"]] <- lengths(strsplit(enrichDF2[["geneID"]], "/"));
+         geneHits <- "geneHits";
+      }
+      if (length(pathGenes) == 0) {
+         if (verbose) {
+            jamba::printDebug("enrichDF2enrichResult(): ",
+               "Assigning pathGenes == geneHits since no other information is available.");
+         }
+         enrichDF2[["pathGenes"]] <- enrichDF2[["geneHits"]];
+         pathGenes <- "pathGenes";
       }
       if (verbose) {
          jamba::printDebug("enrichDF2enrichResult(): ",
@@ -197,9 +206,10 @@ enrichDF2enrichResult <- function
       from=c(geneRatioColname, pathGenes, geneHits),
       to=c("GeneRatio", "setSize", "Count"));
       #to=c("BgRatio", "setSize", "Count"));
-
-   #enrichDF2[,"setSize"] <- enrichDF2[,pathGenes];
-   #enrichDF2[,"Count"] <- enrichDF2[,geneHits];
+   ## Make sure setSize contains integer values, in case we inferred the value
+   if ("setSize" %in% colnames(enrichDF2)) {
+      enrichDF2$setSize <- round(enrichDF2$setSize);
+   }
 
    ## Re-order columns so "ID" is the first column
    if (verbose) {
@@ -416,7 +426,7 @@ multiEnrichMap <- function
  topEnrichSourceSubset=c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
  topEnrichDescriptionGrep=NULL,
  topEnrichNameGrep=NULL,
- keyColname=c("ID", "itemsetID"),
+ keyColname=c("ID", "Name", "itemsetID"),
  nameColname=c("ID", "Name", "itemsetID"),
  geneColname=c("geneID", "geneNames", "Genes"),
  pvalueColname=c("P-value", "pvalue", "Pval"),
@@ -511,7 +521,7 @@ multiEnrichMap <- function
    ## Define some default colnames
    #nameColname <- "Name";
    #geneColname <- "geneNames";
-   iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
+   iDF1 <- head(as.data.frame(enrichList[[1]]), 30);
    keyColname <- find_colname(keyColname, iDF1);
    geneColname <- find_colname(geneColname, iDF1);
    pvalueColname <- find_colname(pvalueColname, iDF1);
@@ -706,6 +716,12 @@ multiEnrichMap <- function
       #keyColname=keyColname,
       verbose=verbose,
       GmtT=msigdbGmtT)[enrichLsetNames,,drop=FALSE];
+   if (all(is.na(enrichIM))) {
+      printDebug("all enrichIM is NA.");
+      printDebug("pvalueColname:", pvalueColname);
+      printDebug("nameColname:", nameColname);
+      stop("enrichIM is entirely NA.");
+   }
 
    ## Clean the rownames consistent with descriptionColname
    ## used in igraphs later on
@@ -776,17 +792,21 @@ multiEnrichMap <- function
          "colorV:", colorV,
          fgText=list("orange", "dodgerblue", colorV));
       jamba::printDebug("multiEnrichMap(): ",
+         "head(enrichIM):");
+      print(head(enrichIM));
+      jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIMM):");
       print(head(enrichIMM));
    }
    enrichIMcolors <- matrix2heatColors(x=-log10(enrichIMM),
       colorV=colorV,
-      #lens=colLensFactorEnrich,
       lens=enrichLens,
-      #numLimit=4,
       numLimit=enrichNumLimit,
-      baseline=enrichBaseline);
+      baseline=enrichBaseline,
+      trimRamp=c(2, 2));
    if (verbose) {
+      jamba::printDebug("multiEnrichMap(): ",
+         "enrichBaseline:", enrichBaseline, ", colorV:", colorV);
       jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIMcolors)");
       print(head(enrichIMcolors));
@@ -904,8 +924,9 @@ multiEnrichMap <- function
    ## Incidence matrix of genes and pathways
    memIM <- list2im(
       strsplit(
-         as.character(
-            jamba::nameVector(mem$multiEnrichDF[,c(geneColname,nameColname)])),
+         jamba::nameVector(
+            as.character(mem$multiEnrichDF[[geneColname]]),
+            mem$multiEnrichDF[[nameColname]]),
          geneDelim));
    mem$memIM <- memIM;
 
@@ -1465,9 +1486,18 @@ verbose=FALSE,
          ## 1-dist(method="binary")
          wIM <- list2im(geneSets);
          w <- 1-as.matrix(dist(t(wIM), method="binary"));
+         ## overlap counts
+         wct <- t(sign(wIM)) %*% sign(wIM);
+         ## min counts per cell
+         wctmin <- wct;
+         wctmin[] <- pmin(rep(diag(wct), ncol(wct)), rep(diag(wct), each=ncol(wct)));
+         ## highest pct overlap
+         wctmaxpct <- wct / wctmin;
          colnames(w) <- rownames(w) <- y[[nodeLabel]][match(colnames(w), y$ID)];
       }
       wd <- reshape2::melt(w);
+      wctd <- reshape2::melt(wct);
+      wctmaxpctd <- reshape2::melt(wctmaxpct);
 
       if (method == 1) {
          wd <- wd[wd[, 1] != wd[, 2], ];
@@ -1475,11 +1505,17 @@ verbose=FALSE,
       } else {
          wd1 <- match(wd[,1], colnames(w));
          wd2 <- match(wd[,2], colnames(w));
-         wd <- wd[wd1 > wd2,,drop=FALSE];
+         w_keep <- (wd1 > wd2);
+         wd <- wd[w_keep,,drop=FALSE];
+         wctd <- wctd[w_keep,,drop=FALSE];
+         wctmaxpctd <- wctmaxpctd[w_keep,,drop=FALSE];
       }
 
       g <- igraph::graph.data.frame(wd[, -3], directed=FALSE);
       igraph::E(g)$width <- sqrt(wd[, 3] * 20);
+      igraph::E(g)$overlap <- wd[,3];
+      igraph::E(g)$overlap_count <- wctd[, 3];
+      igraph::E(g)$overlap_max_pct <- wctmaxpctd[, 3];
       igraph::V(g)$pvalue <- pvalue[V(g)$name];
 
       ## Attempt to merge annotations from the enrichResult object
@@ -1509,7 +1545,6 @@ verbose=FALSE,
       }
 
       ## Delete edges where overlap is below a threshold
-      E(g)$overlap <- wd[,3];
       g <- delete.edges(g, E(g)[E(g)$overlap < overlapThreshold]);
 
       pvalue <- V(g)$pvalue;

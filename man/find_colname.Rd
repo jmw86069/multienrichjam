@@ -4,8 +4,15 @@
 \alias{find_colname}
 \title{Find colname by character string or pattern matching}
 \usage{
-find_colname(pattern, x, max = 1, index = FALSE, verbose = FALSE,
-  ...)
+find_colname(
+  pattern,
+  x,
+  max = 1,
+  index = FALSE,
+  require_non_na = TRUE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{pattern}{character vector containing text strings or
@@ -20,6 +27,13 @@ contains colnames.}
 index as an integer vector. When \code{index=FALSE} it returns
 the matching \code{colnames(x)}; when \code{index=TRUE} it returns
 the matching column numbers as an integer vector.}
+
+\item{require_non_na}{logical indicating whether to require the
+column to contain non-NA values, default is TRUE. The intent
+of this function is to find colnames whose data will match
+expectations, and when require_non_na is TRUE, this
+function will continue until it finds a column with non-NA
+values.}
 
 \item{...}{additional arguments are passed to \code{jamba::provigrep()}.}
 }
@@ -54,7 +68,9 @@ When there are duplicate \code{colnames(x)} only the first
 unique name is returned.
 }
 \seealso{
-Other jam utility functions: \code{\link{gsubs}},
-  \code{\link{isColorBlank}}, \code{\link{xyAngle}}
+Other jam utility functions: 
+\code{\link{gsubs}()},
+\code{\link{isColorBlank}()},
+\code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

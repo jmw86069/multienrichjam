@@ -4,9 +4,23 @@
 \alias{drawEllipse}
 \title{Draw ellipse}
 \usage{
-drawEllipse(x, y, a = 1, b = 1, angle = 0, segment = NULL,
-  arc.only = TRUE, nv = 100, deg = TRUE, border = NULL, col = NA,
-  lty = 1, lwd = 1, draw = TRUE, ...)
+drawEllipse(
+  x,
+  y,
+  a = 1,
+  b = 1,
+  angle = 0,
+  segment = NULL,
+  arc.only = TRUE,
+  nv = 100,
+  deg = TRUE,
+  border = NULL,
+  col = NA,
+  lty = 1,
+  lwd = 1,
+  draw = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x, y}{numeric coordinates, where x can be a two-column numeric
@@ -49,18 +63,22 @@ rotated the given degrees relative to the center point, with give
 x- and y-axis radius values.
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{enrichMapJam}}, \code{\link{fixSetLabels}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

@@ -96,8 +96,10 @@ importIPAenrichment <- function
     "Function", "Symbol$",
     "^ID$", "My.(Lists|Pathways)"),
  geneGrep=c("Molecules in Network", "Molecules"),
- geneCurateFrom=c("^[,]+|[,]+$"),
- geneCurateTo=c(""),
+ geneCurateFrom=c(" [(](complex|includes others)[)]",
+    "^[,]+|[,]+$"),
+ geneCurateTo=c("",
+     ""),
  method=1,
  sheet=1,
  sep="\t",
@@ -433,10 +435,22 @@ importIPAenrichment <- function
 #' @export
 curateIPAcolnames <- function
 (jDF,
- ipaNameGrep,
- geneGrep,
- geneCurateFrom,
- geneCurateTo,
+ ipaNameGrep=c("^Name$",
+    "^ID$",
+    "Canonical Pathways",
+    "Upstream Regulator",
+    "Diseases or Functions Annotation",
+    "Diseases . Functions",
+    "My Lists",
+    "Ingenuity Toxicity Lists",
+    "My Pathways"),
+ geneGrep=c("Molecules in Network",
+    "Target molecules",
+    "Molecules"),
+ geneCurateFrom=c(" [(](complex|includes others)[)]",
+    "^[,]+|[,]+$"),
+ geneCurateTo=c("",
+    ""),
  verbose=TRUE,
  ...)
 {
@@ -658,6 +672,12 @@ gsubs <- function
 #'    index as an integer vector. When `index=FALSE` it returns
 #'    the matching `colnames(x)`; when `index=TRUE` it returns
 #'    the matching column numbers as an integer vector.
+#' @param require_non_na logical indicating whether to require the
+#'    column to contain non-NA values, default is TRUE. The intent
+#'    of this function is to find colnames whose data will match
+#'    expectations, and when require_non_na is TRUE, this
+#'    function will continue until it finds a column with non-NA
+#'    values.
 #' @param ... additional arguments are passed to `jamba::provigrep()`.
 #'
 #' @export
@@ -666,11 +686,19 @@ find_colname <- function
  x,
  max=1,
  index=FALSE,
+ require_non_na=TRUE,
  verbose=FALSE,
  ...)
 {
    ##
    x_colnames <- colnames(x);
+   ## require_non_na
+   if (require_non_na) {
+      x_colnames <- x_colnames[sapply(x_colnames, function(icol){
+         any(!is.na(x[[icol]]))
+      })]
+   }
+   ## if no colnames remain, return NULL
    if (length(x_colnames) == 0) {
       return(x_colnames);
    }

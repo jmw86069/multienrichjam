@@ -4,36 +4,52 @@
 \alias{enrichMapJam}
 \title{Create enrichMap igraph object}
 \usage{
-enrichMapJam(x, n = 50, fixed = TRUE, vertex.label.font = 1,
-  vertex.label.cex = 1, nodeLabel = c("Name", "Description", "ID"),
-  descriptionColname = "Description", keyColname = "ID",
-  nodeLabelFunc = function(i) {     paste(collapse = "\\n", strwrap(width
-  = 30, jamba::ucfirst(tolower(gsub("_", " ", i))))) },
-  overlapThreshold = 0.2, msigdbGmtT = NULL, method = 2,
-  verbose = FALSE, ...)
+enrichMapJam(
+  x,
+  n = 50,
+  fixed = TRUE,
+  vertex.label.font = 1,
+  vertex.label.cex = 1,
+  nodeLabel = c("Name", "Description", "ID"),
+  descriptionColname = "Description",
+  keyColname = "ID",
+  nodeLabelFunc = function(i) {     paste(collapse = "\\n", strwrap(width = 30,
+    jamba::ucfirst(tolower(gsub("_", " ", i))))) },
+  overlapThreshold = 0.2,
+  msigdbGmtT = NULL,
+  method = 2,
+  verbose = FALSE,
+  ...
+)
 }
 \description{
 Create enrichMap igraph object
 }
 \seealso{
-Other jam conversion functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}},
-  \code{\link{enrichDF2enrichResult}},
-  \code{\link{enrichList2IM}}, \code{\link{enrichList2df}}
+Other jam conversion functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{enrichDF2enrichResult}()},
+\code{\link{enrichList2IM}()},
+\code{\link{enrichList2df}()}
 
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{fixSetLabels}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam conversion functions}
 \concept{jam igraph functions}

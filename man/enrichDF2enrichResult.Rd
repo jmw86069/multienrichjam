@@ -4,14 +4,21 @@
 \alias{enrichDF2enrichResult}
 \title{Convert data.frame to enrichResult}
 \usage{
-enrichDF2enrichResult(enrichDF = NULL, msigdbGmtT = NULL,
-  pvalueCutoff = 0.15, pAdjustMethod = "none",
+enrichDF2enrichResult(
+  enrichDF = NULL,
+  msigdbGmtT = NULL,
+  pvalueCutoff = 0.15,
+  pAdjustMethod = "none",
   keyColname = c("itemsetID", "ID", "Name", "Pathway"),
-  pathGenes = "pathGenes", geneColname = c("geneNames", "geneID",
-  "Gene", "Genes"), geneHits = "geneHits",
-  geneRatioColname = c("GeneRatio", "Ratio"), geneDelim = "[,/ ]+",
+  pathGenes = "pathGenes",
+  geneColname = c("geneNames", "geneID", "Gene", "Genes"),
+  geneHits = "geneHits",
+  geneRatioColname = c("GeneRatio", "^Ratio"),
+  geneDelim = "[,/ ]+",
   pvalueColname = c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
-  verbose = FALSE, ...)
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{enrichDF}{data.frame representing gene set enrichment
@@ -67,8 +74,11 @@ compatible with methods provided by the \code{clusterProfiler}
 package.
 }
 \seealso{
-Other jam conversion functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{enrichList2IM}},
-  \code{\link{enrichList2df}}, \code{\link{enrichMapJam}}
+Other jam conversion functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{enrichList2IM}()},
+\code{\link{enrichList2df}()},
+\code{\link{enrichMapJam}()}
 }
 \concept{jam conversion functions}

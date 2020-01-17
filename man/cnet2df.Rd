@@ -42,25 +42,30 @@ for the connected component containing a node of interest, or
 filter for \code{"Set"} nodes with more than one \code{"Gene"}.
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2im}},
-  \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
-  \code{\link{fixSetLabels}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 
-Other jam conversion functions: \code{\link{cnet2im}},
-  \code{\link{enrichDF2enrichResult}},
-  \code{\link{enrichList2IM}}, \code{\link{enrichList2df}},
-  \code{\link{enrichMapJam}}
+Other jam conversion functions: 
+\code{\link{cnet2im}()},
+\code{\link{enrichDF2enrichResult}()},
+\code{\link{enrichList2IM}()},
+\code{\link{enrichList2df}()},
+\code{\link{enrichMapJam}()}
 }
 \concept{jam conversion functions}
 \concept{jam igraph functions}

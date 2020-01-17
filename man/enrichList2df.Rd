@@ -4,19 +4,28 @@
 \alias{enrichList2df}
 \title{Convert enrichList to data.frame}
 \usage{
-enrichList2df(enrichList, keyColname = c("itemsetID", "ID", "Name"),
+enrichList2df(
+  enrichList,
+  keyColname = c("itemsetID", "ID", "Name"),
   geneColname = c("geneNames", "Genes"),
   geneCountColname = c("geneCount", "geneHits", "Count"),
-  pvalueColname = c("P-value", "pvalue", "Pval"), pvalueFloor = 1e-200,
-  msigdbGmtT = NULL, verbose = FALSE, debug = 0, ...)
+  pvalueColname = c("P-value", "pvalue", "Pval"),
+  pvalueFloor = 1e-200,
+  msigdbGmtT = NULL,
+  verbose = FALSE,
+  debug = 0,
+  ...
+)
 }
 \description{
 Convert enrichList to data.frame
 }
 \seealso{
-Other jam conversion functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}},
-  \code{\link{enrichDF2enrichResult}},
-  \code{\link{enrichList2IM}}, \code{\link{enrichMapJam}}
+Other jam conversion functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{enrichDF2enrichResult}()},
+\code{\link{enrichList2IM}()},
+\code{\link{enrichMapJam}()}
 }
 \concept{jam conversion functions}

@@ -4,14 +4,21 @@
 \alias{fixSetLabels}
 \title{Fix Set labels for legibility}
 \usage{
-fixSetLabels(x, wrap = TRUE, width = 25, maxNchar = Inf,
-  suffix = "...", nodeType = c("Set", "Gene", "any"),
+fixSetLabels(
+  x,
+  wrap = TRUE,
+  width = 25,
+  maxNchar = Inf,
+  suffix = "...",
+  nodeType = c("Set", "Gene", "any"),
   adjustCase = TRUE,
   removeGrep = "^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]",
-  words_from = c("als", "ii", "iii", "iv", "v", "tgf", "nfkb", "trna",
-  "rrna", "mirna", "mrna", "snrna", "snorna", "scrna", "lincrna"),
-  words_to = c("ALS", "II", "III", "IV", "V", "TGF", "NFKB", "tRNA",
-  "rRNA", "miRNA", "mRNA", "snRNA", "snoRNA", "scRNA", "lincRNA"), ...)
+  words_from = c("als", "ii", "iii", "iv", "v", "tgf", "nfkb", "trna", "rrna", "mirna",
+    "mrna", "snrna", "snorna", "scrna", "lincrna"),
+  words_to = c("ALS", "II", "III", "IV", "V", "TGF", "NFKB", "tRNA", "rRNA", "miRNA",
+    "mRNA", "snRNA", "snoRNA", "scRNA", "lincRNA"),
+  ...
+)
 }
 \arguments{
 \item{x}{character vector, or \code{igraph} object. When an \code{igraph}
@@ -50,7 +57,7 @@ indicating the source of each pathway.}
 \item{words_from, words_to}{character vectors of words to match
 in case-insensitive manner, to be replaced with fixed-case
 alternatives. It uses perl-based regular expression matching
-in \code{base::gsub()}, and the \code{\\b} expression to enforce a
+in \code{base::gsub()}, and the \verb{\\\\b} expression to enforce a
 word boundary, either via delimiter, whitespace, or the end
 of the string.}
 
@@ -79,18 +86,22 @@ jamba::drawLabels(txt=x,
 
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

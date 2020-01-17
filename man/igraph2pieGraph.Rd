@@ -4,11 +4,22 @@
 \alias{igraph2pieGraph}
 \title{Convert igraph to use pie node shapes}
 \usage{
-igraph2pieGraph(g, valueIM = NULL, valueIMcolors = NULL,
-  colorV = NULL, updateLabels = FALSE, maxNchar = 62,
-  backgroundColor = "white", seed = 123, defineLayout = FALSE,
-  repulse = 3.6, removeNA = FALSE, NAvalues = c(NA, "transparent"),
-  verbose = FALSE, ...)
+igraph2pieGraph(
+  g,
+  valueIM = NULL,
+  valueIMcolors = NULL,
+  colorV = NULL,
+  updateLabels = FALSE,
+  maxNchar = 62,
+  backgroundColor = "white",
+  seed = 123,
+  defineLayout = FALSE,
+  repulse = 3.6,
+  removeNA = FALSE,
+  NAvalues = c(NA, "transparent"),
+  verbose = FALSE,
+  ...
+)
 }
 \description{
 Convert igraph to use pie node shapes
@@ -33,18 +44,22 @@ used for numeric values in each column, and other options are passed
 to \code{colorjam::matrix2heatColors()} via \code{...} arguments.
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
-  \code{\link{fixSetLabels}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

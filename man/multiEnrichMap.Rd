@@ -4,23 +4,43 @@
 \alias{multiEnrichMap}
 \title{Prepare MultiEnrichMap data from enrichList}
 \usage{
-multiEnrichMap(enrichList, geneHitList = NULL, colorV = NULL,
-  nrow = NULL, ncol = NULL, byrow = FALSE, enrichLabels = NULL,
-  subsetSets = NULL, overlapThreshold = 0.1, cutoffRowMinP = 0.05,
-  enrichBaseline = -log10(cutoffRowMinP), enrichLens = 0,
-  enrichNumLimit = 4, nEM = 500, topEnrichN = 20,
+multiEnrichMap(
+  enrichList,
+  geneHitList = NULL,
+  colorV = NULL,
+  nrow = NULL,
+  ncol = NULL,
+  byrow = FALSE,
+  enrichLabels = NULL,
+  subsetSets = NULL,
+  overlapThreshold = 0.1,
+  cutoffRowMinP = 0.05,
+  enrichBaseline = -log10(cutoffRowMinP),
+  enrichLens = 0,
+  enrichNumLimit = 4,
+  nEM = 500,
+  topEnrichN = 20,
   topEnrichSources = c("Category", "Source"),
-  topEnrichCurateFrom = c("CP:.*"), topEnrichCurateTo = c("CP"),
+  topEnrichCurateFrom = c("CP:.*"),
+  topEnrichCurateTo = c("CP"),
   topEnrichSourceSubset = c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
-  topEnrichDescriptionGrep = NULL, topEnrichNameGrep = NULL,
-  keyColname = c("ID", "itemsetID"), nameColname = c("ID", "Name",
-  "itemsetID"), geneColname = c("geneID", "geneNames", "Genes"),
+  topEnrichDescriptionGrep = NULL,
+  topEnrichNameGrep = NULL,
+  keyColname = c("ID", "Name", "itemsetID"),
+  nameColname = c("ID", "Name", "itemsetID"),
+  geneColname = c("geneID", "geneNames", "Genes"),
   pvalueColname = c("P-value", "pvalue", "Pval"),
   descriptionColname = c("Description", "Name", "Pathway"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
-  descriptionCurateTo = c(""), pathGenes = c("setSize", "pathGenes"),
-  geneHits = c("Count", "geneHits"), geneDelim = "[,/ ]+",
-  GmtTname = NULL, msigdbGmtT = NULL, verbose = FALSE, ...)
+  descriptionCurateTo = c(""),
+  pathGenes = c("setSize", "pathGenes"),
+  geneHits = c("Count", "geneHits"),
+  geneDelim = "[,/ ]+",
+  GmtTname = NULL,
+  msigdbGmtT = NULL,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{enrichList}{\code{list} of \code{enrichResult} objects, whose
@@ -53,7 +73,7 @@ of known pathways.}
 the Jaccard overlap score above which two pathways will be linked
 in the EnrichMap \code{igraph} network. By default, pathways whose
 genes overlap more than \code{0.1} will be connected, which is roughly
-equivalent to about a 10% overlap. Note that the Jaccard coefficient
+equivalent to about a 10\% overlap. Note that the Jaccard coefficient
 is adversely affected when pathway sets differ in size by more than
 about 5-fold.}
 
@@ -172,7 +192,8 @@ argument \code{colorV}, otherwise colors are assigned using
 
 }
 \seealso{
-Other jam enrichment functions: \code{\link{topEnrichBySource}},
-  \code{\link{topEnrichListBySource}}
+Other jam enrichment functions: 
+\code{\link{topEnrichBySource}()},
+\code{\link{topEnrichListBySource}()}
 }
 \concept{jam enrichment functions}

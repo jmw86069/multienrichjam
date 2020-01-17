@@ -4,8 +4,7 @@
 \alias{list2im}
 \title{convert list to incidence matrix}
 \usage{
-list2im(x, makeUnique = TRUE, keepCounts = TRUE, verbose = FALSE,
-  ...)
+list2im(x, makeUnique = TRUE, keepCounts = TRUE, verbose = FALSE, ...)
 }
 \arguments{
 \item{x}{list of vectors}
@@ -67,7 +66,8 @@ list2im(L1, makeUnique=FALSE, keepCounts=FALSE);
 
 }
 \seealso{
-Other jam list functions: \code{\link{list2concordance}},
-  \code{\link{list2imSigned}}
+Other jam list functions: 
+\code{\link{list2concordance}()},
+\code{\link{list2imSigned}()}
 }
 \concept{jam list functions}

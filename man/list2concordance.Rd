@@ -4,8 +4,7 @@
 \alias{list2concordance}
 \title{Convert list to concordance matrix}
 \usage{
-list2concordance(x, naValue = NA, makeSigned = TRUE, verbose = FALSE,
-  ...)
+list2concordance(x, naValue = NA, makeSigned = TRUE, verbose = FALSE, ...)
 }
 \arguments{
 \item{x}{\code{list} of named numerical vectors, where the sign (positive
@@ -62,7 +61,8 @@ list2imSigned(l123);
 
 }
 \seealso{
-Other jam list functions: \code{\link{list2imSigned}},
-  \code{\link{list2im}}
+Other jam list functions: 
+\code{\link{list2imSigned}()},
+\code{\link{list2im}()}
 }
 \concept{jam list functions}

@@ -4,9 +4,14 @@
 \alias{reorderIgraphNodes}
 \title{Re-order igraph nodes}
 \usage{
-reorderIgraphNodes(g, sortAttributes = c("color", "coloredrect.color"),
-  nodeSortBy = c("x", "y"), layout = function(...) layout_with_qfr(...,
-  repulse = 3.5), verbose = FALSE, ...)
+reorderIgraphNodes(
+  g,
+  sortAttributes = c("color", "coloredrect.color"),
+  nodeSortBy = c("x", "y"),
+  layout = function(...) layout_with_qfr(..., repulse = 3.5),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{g}{igraph object}
@@ -59,18 +64,22 @@ to the same pathways. When this happens, the genes
 are sorted to group the colors.
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{cnetplot_internalJam}},
-  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
-  \code{\link{fixSetLabels}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

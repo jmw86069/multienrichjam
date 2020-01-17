@@ -1,3 +1,43 @@
+# multienrichjam version 0.0.10.900
+
+## New functions
+
+* `mem_gene_pathway_heatmap()` is a wrapper to `ComplexHeatmap::Heatmap()`
+which takes output from `multiEnrichMap()` and produces a
+heatmap styled similar to a pathway-gene incidence matrix. It includes
+row and column annotations to help interpret the results.
+* `mem_enrichment_heatmap()` produces a heatmap of the pathways
+and enrichment P-values for each comparison.
+* `spread_igraph_labels()` is a general use function for igraph
+objects, it takes an igraph network and associated layout, and
+arranges igraph nodes at an angel opposite the majority of edges
+from each node. The result arranges labels around the outside of
+the network, and typically away from other nodes. It isn't perfect,
+but is visually a big step in the right direction.
+* `removeIgraphSinglets()` is a simple function that removes nodes that
+have no edges. I found myself doing it manually enough times I wanted
+something quick and easy.
+
+## enhancements
+
+* `multiEnrichMap()` now includes two new edge attributes on MultiEnrichMap
+igraphs: overlap_count which contains the number of shared genes
+between two sets, and overlap_max_pct which contains the max percent
+overlap between two sets -- based upon the # overlapped divided
+by the smaller of the two sets. The overlap_count is useful as
+an optional edge label, to show how many genes are involved.
+* `enrichDF2enrichResult()` now forces `"setSize"` to contain integer
+values, useful when pathway size is inferred from something like
+gene ratio.
+
+## Bug fixes
+
+* `multiEnrichMap()` was not properly assigning `colnames(memIM)`,
+although they were inferred from the `rownames(enrichIM)`. The bug
+was because `as.character()` removes names from a character vector,
+and the conversion was done to enforce proper handling by `strsplit()`
+which gives unexpected results when the list may contain a factor.
+
 # multienrichjam version 0.0.9.900
 
 ## bug fixes

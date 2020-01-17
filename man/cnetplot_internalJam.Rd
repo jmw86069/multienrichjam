@@ -4,10 +4,19 @@
 \alias{cnetplot_internalJam}
 \title{cnetplot internal function}
 \usage{
-cnetplot_internalJam(inputList, categorySize = "geneNum",
-  showCategory = 5, pvalue = NULL, foldChange = NULL, fixed = TRUE,
-  DE.foldChange = NULL, categoryColor = "#E5C494",
-  geneColor = "#B3B3B3", colorRamp = "RdBu_r", ...)
+cnetplot_internalJam(
+  inputList,
+  categorySize = "geneNum",
+  showCategory = 5,
+  pvalue = NULL,
+  foldChange = NULL,
+  fixed = TRUE,
+  DE.foldChange = NULL,
+  categoryColor = "#E5C494",
+  geneColor = "#B3B3B3",
+  colorRamp = "RdBu_r",
+  ...
+)
 }
 \description{
 cnetplot internal function
@@ -19,18 +28,22 @@ not plotting the output, and including additional custom igraph
 attributes.
 }
 \seealso{
-Other jam igraph functions: \code{\link{cnet2df}},
-  \code{\link{cnet2im}}, \code{\link{cnetplotJam}},
-  \code{\link{drawEllipse}}, \code{\link{enrichMapJam}},
-  \code{\link{fixSetLabels}},
-  \code{\link{igraph2pieGraph}},
-  \code{\link{layout_with_qfrf}},
-  \code{\link{layout_with_qfr}},
-  \code{\link{rectifyPiegraph}},
-  \code{\link{removeIgraphBlanks}},
-  \code{\link{reorderIgraphNodes}},
-  \code{\link{shape.coloredrectangle.plot}},
-  \code{\link{shape.ellipse.plot}},
-  \code{\link{subsetCnetIgraph}}
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

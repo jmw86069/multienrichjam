@@ -6,6 +6,10 @@ reference:
   desc: Functions that manipulate enrichment or multiple enrichment results.
   contents:
   - has_concept("jam enrichment functions")
+- title: Plot functions
+  desc: Functions to plot MultiEnrichment results
+  contents:
+  - has_concept("jam plot functions")
 - title: Conversion functions
   desc: Functions to convert data types
   contents:
