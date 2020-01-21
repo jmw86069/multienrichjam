@@ -47,6 +47,8 @@ extremely high alpha transparency may be considered "blank".
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{avg_angles}()},
+\code{\link{avg_colors_by_list}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
 \code{\link{xyAngle}()}

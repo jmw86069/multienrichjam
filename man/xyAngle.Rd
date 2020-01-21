@@ -54,6 +54,8 @@ xyAngle(1, 1, origin.x=1, origin.y=0);
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{avg_angles}()},
+\code{\link{avg_colors_by_list}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
 \code{\link{isColorBlank}()}

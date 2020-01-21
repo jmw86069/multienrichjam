@@ -84,6 +84,7 @@ Other jam igraph functions:
 \code{\link{fixSetLabels}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{layout_with_qfrf}()},
+\code{\link{memIM2cnet}()},
 \code{\link{rectifyPiegraph}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},

@@ -73,6 +73,7 @@ Other jam igraph functions:
 \code{\link{igraph2pieGraph}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{layout_with_qfr}()},
+\code{\link{memIM2cnet}()},
 \code{\link{rectifyPiegraph}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},

@@ -1394,9 +1394,12 @@ removeIgraphBlanks <- function
          }
       } else {
          ##
-         nrowV <- get.vertex.attribute(g, "coloredrect.nrow");
-         ncolV <- get.vertex.attribute(g, "coloredrect.ncol");
-         byrowV <- get.vertex.attribute(g, "coloredrect.byrow")*1;
+         nrowV <- rmNULL(get.vertex.attribute(g, "coloredrect.nrow"),
+            nullValue=1);
+         ncolV <- rmNULL(get.vertex.attribute(g, "coloredrect.ncol"),
+            nullValue=1);
+         byrowV <- rmNULL(get.vertex.attribute(g, "coloredrect.byrow")*1,
+            nullValue=TRUE);
          nprodV <- nrowV * ncolV;
          if (any(crLengths != nprodV)) {
             if (verbose) {
@@ -2121,5 +2124,183 @@ spread_igraph_labels <- function
       V(g)$label.dist <- pmax(V(g)$label.dist, label_min_dist);
    }
    g;
+}
+
+#' Convert MultiEnrichment incidence matrix to Cnet plot
+#'
+#' Convert MultiEnrichment incidence matrix to Cnet plot
+#'
+#' @family jam igraph functions
+#'
+#' @export
+memIM2cnet <- function
+(memIM,
+ categoryShape=c("pie","coloredrectangle", "circle", "ellipse"),
+ geneShape=c("pie","coloredrectangle", "circle", "ellipse"),
+ categoryColor="#E5C494",
+ geneColor="#B3B3B3",
+ categoryLabelColor=c("blue3"),
+ geneLabelColor="grey40",
+ categorySize=5,
+ geneSize=2.5,
+ categoryCex=0.9,
+ geneCex=0.7,
+ frame_darkFactor=1.4,
+ geneIM=NULL,
+ geneIMcolors=NULL,
+ enrichIM=NULL,
+ enrichIMcolors=NULL,
+ coloredrect_nrow=1,
+ coloredrect_ncol=NULL,
+ coloredrect_byrow=TRUE,
+ ...)
+{
+   categoryShape <- match.arg(categoryShape);
+   geneShape <- match.arg(geneShape);
+   geneLabelColor <- head(geneLabelColor, 1);
+   categoryLabelColor <- head(categoryLabelColor, 1);
+
+   ## Accept memIM as list mem output from multiEnrichMap()
+   if (is.list(memIM) &&
+         all(c("memIM", "enrichIM", "geneIM", "geneIMcolors", "enrichIMcolors") %in% names(memIM))) {
+      if (length(geneIM) == 0) {
+         geneIM <- memIM[["geneIM"]];
+      }
+      if (length(geneIMcolors) == 0) {
+         geneIMcolors <- memIM[["geneIMcolors"]];
+      }
+      if (length(enrichIM) == 0) {
+         enrichIM <- memIM[["enrichIM"]];
+      }
+      if (length(enrichIMcolors) == 0) {
+         enrichIMcolors <- memIM[["enrichIMcolors"]];
+      }
+      memIM <- memIM[["memIM"]];
+   }
+
+   ## Convert to igraph
+   g <- igraph::graph_from_incidence_matrix(memIM != 0);
+
+   ## Adjust aesthetics
+   V(g)$nodeType <- "Set";
+   V(g)$nodeType[match(rownames(memIM), V(g)$name)] <- "Gene";
+   table(V(g)$nodeType);
+   isset <- V(g)$nodeType %in% "Set";
+   V(g)$size <- ifelse(isset, categorySize, geneSize);
+   V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
+   V(g)$label.color <- ifelse(isset, categoryLabelColor, geneLabelColor);
+   V(g)$color <- ifelse(isset, categoryColor, geneColor);
+   V(g)$frame.color <- jamba::makeColorDarker(V(g)$color,
+      darkFactor=frame_darkFactor,
+      ...);
+
+   ## Optionally apply gene node coloring
+   if (length(geneIM) > 0 && length(geneIMcolors) > 0) {
+      geneIM <- subset(geneIM, rownames(geneIM) %in% V(g)$name[!isset]);
+      gene_match <- match(rownames(geneIM),
+         V(g)$name[!isset]);
+      gene_which <- which(!isset)[gene_match];
+      for (j in c("pie", "pie.value", "pie.color", "pie.names",
+         "coloredrect.color", "coloredrect.nrow",
+         "coloredrect.byrow", "coloredrect.value",
+         "coloredrect.names")) {
+         if (!j %in% list.vertex.attributes(g)) {
+            if (igrepHas("color$", j)) {
+               vertex_attr(g, j) <- as.list(V(g)$color);
+            } else if (igrepHas("byrow", j)) {
+               vertex_attr(g, j) <- rep(unlist(coloredrect_byrow), length.out=vcount(g));
+            } else if (igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
+               vertex_attr(g, j) <- rep(unlist(coloredrect_ncol), length.out=vcount(g));
+            } else if (igrepHas("nrow", j) && length(coloredrect_nrow) > 0) {
+               vertex_attr(g, j) <- rep(unlist(coloredrect_nrow), length.out=vcount(g));
+            } else {
+               vertex_attr(g, j) <- as.list(rep(1, vcount(g)));
+            }
+         }
+      }
+      V(g)$pie[gene_which] <- lapply(gene_which, function(i){
+         rep(1, ncol(geneIM))
+      });
+      V(g)$pie.value[gene_which] <- lapply(nameVector(rownames(geneIM)), function(i){
+         geneIM[i,,drop=FALSE]
+      });
+      V(g)$pie.color[gene_which] <- lapply(nameVector(rownames(geneIM)), function(i){
+         geneIMcolors[i,]
+      });
+      V(g)$pie.names[gene_which] <- lapply(nameVector(rownames(geneIM)), function(i){
+         colnames(geneIM);
+      });
+      ## Now do the same for coloredrectangle node shapes
+      V(g)$coloredrect.color[gene_which] <- lapply(nameVector(rownames(geneIM)), function(i){
+         geneIMcolors[i,]
+      });
+      V(g)$coloredrect.value[gene_which] <- lapply(nameVector(rownames(geneIM)), function(i){
+         geneIM[i,,drop=FALSE]
+      });
+      if (length(coloredrect_byrow) > 0) {
+         V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_byrow, length.out=length(gene_which));
+      }
+      if (length(coloredrect_nrow) > 0) {
+         V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_nrow, length.out=length(gene_which));
+      }
+      if (length(coloredrect_ncol) > 0) {
+         V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_ncol, length.out=length(gene_which));
+      }
+      V(g)$coloredrect.names[gene_which] <- lapply(nameVector(rownames(geneIM)), function(i){
+         colnames(geneIM);
+      });
+      V(g)$shape[gene_which] <- geneShape;
+   }
+   ## Optionally apply category/set node coloring
+   if (length(enrichIM) > 0 && length(enrichIMcolors) > 0) {
+      enrichIM <- subset(enrichIM, rownames(enrichIM) %in% V(g)$name[isset]);
+      enrich_match <- match(rownames(enrichIM),
+         V(g)$name[isset]);
+      enrich_which <- which(isset)[enrich_match];
+      for (j in c("pie", "pie.value", "pie.color",
+         "coloredrect.color", "coloredrect.nrow",
+         "coloredrect.byrow", "coloredrect.value")) {
+         if (!j %in% list.vertex.attributes(g)) {
+            if (igrepHas("color$", j)) {
+               vertex_attr(g, j) <- as.list(V(g)$color);
+            } else if (igrepHas("byrow", j)) {
+               vertex_attr(g, j) <- as.list(rep(coloredrect_byrow, length.out=vcount(g)));
+            } else if (igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
+               vertex_attr(g, j) <- as.list(rep(coloredrect_ncol, length.out=vcount(g)));
+            } else if (igrepHas("nrow", j) && length(coloredrect_nrow) > 0) {
+               vertex_attr(g, j) <- as.list(rep(coloredrect_nrow, length.out=vcount(g)));
+            } else {
+               vertex_attr(g, j) <- as.list(rep(1, vcount(g)));
+            }
+         }
+      }
+      V(g)$pie[enrich_which] <- lapply(enrich_which, function(i){
+         rep(1, ncol(enrichIM))
+      });
+      V(g)$pie.value[enrich_which] <- lapply(nameVector(rownames(enrichIM)), function(i){
+         enrichIM[i,,drop=FALSE]
+      });
+      V(g)$pie.color[enrich_which] <- lapply(nameVector(rownames(enrichIM)), function(i){
+         enrichIMcolors[i,]
+      });
+      ## Now do the same for coloredrectangle node shapes
+      V(g)$coloredrect.color[enrich_which] <- lapply(nameVector(rownames(enrichIM)), function(i){
+         enrichIMcolors[i,]
+      });
+      V(g)$coloredrect.value[enrich_which] <- lapply(nameVector(rownames(enrichIM)), function(i){
+         enrichIM[i,,drop=FALSE]
+      });
+      if (length(coloredrect_byrow) > 0) {
+         V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_byrow, length.out=length(enrich_which));
+      }
+      if (length(coloredrect_nrow) > 0) {
+         V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_nrow, length.out=length(enrich_which));
+      }
+      if (length(coloredrect_ncol) > 0) {
+         V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_ncol, length.out=length(enrich_which));
+      }
+      V(g)$shape[enrich_which] <- categoryShape;
+   }
+   return(g);
 }
 

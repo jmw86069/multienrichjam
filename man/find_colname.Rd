@@ -69,6 +69,8 @@ unique name is returned.
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{avg_angles}()},
+\code{\link{avg_colors_by_list}()},
 \code{\link{gsubs}()},
 \code{\link{isColorBlank}()},
 \code{\link{xyAngle}()}

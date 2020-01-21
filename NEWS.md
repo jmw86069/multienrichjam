@@ -1,3 +1,15 @@
+# multienrichjam version 0.0.13.900
+
+## New functions
+
+* `memIM2cnet()` takes the pathway-gene incidence matrix and
+produces a Cnet plot `igraph` object. If given the output from
+`multiEnrichMap()` it will also color nodes using the gene
+and enrichment incidence matrix colors.
+* `avg_colors_by_list()` and `avg_angles()` are intended for very
+rapid color blending.
+
+
 # multienrichjam version 0.0.11.900
 
 ## Bug fixed

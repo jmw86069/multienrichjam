@@ -45,6 +45,8 @@ in order and is therefore not vectorized.
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{avg_angles}()},
+\code{\link{avg_colors_by_list}()},
 \code{\link{find_colname}()},
 \code{\link{isColorBlank}()},
 \code{\link{xyAngle}()}
