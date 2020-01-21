@@ -1656,10 +1656,11 @@ subsetCnetIgraph <- function
                ));
       }
       includeV2 <- unique(unlist(lapply(includeV, function(v){
-         as.numeric(
-            neighbors(gCnet,
-               v=v,
-               mode="all"));
+         which(V(gCnet)$nodeType %in% "Gene" &
+               V(gCnet)$name %in%
+               names(neighbors(gCnet,
+                  v=v,
+                  mode="all")));
       })));
       includeVall <- sort(unique(c(includeV, includeV2)));
       if (verbose) {

@@ -1,3 +1,12 @@
+# multienrichjam version 0.0.11.900
+
+## Bug fixed
+
+* `subsetCnetGraph()` was fixed to handle rare cases where
+pathway set name is identical to one or more genes, which
+happens with IPA pathway analysis, in the "Upstream Regulators"
+output.
+
 # multienrichjam version 0.0.10.900
 
 ## New functions

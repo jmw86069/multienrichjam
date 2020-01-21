@@ -48,6 +48,7 @@ Other jam igraph functions:
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
+\code{\link{spread_igraph_labels}()},
 \code{\link{subsetCnetIgraph}()}
 
 Other jam conversion functions: 

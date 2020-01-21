@@ -106,6 +106,7 @@ Other jam igraph functions:
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.ellipse.plot}()},
+\code{\link{spread_igraph_labels}()},
 \code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

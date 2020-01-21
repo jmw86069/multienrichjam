@@ -30,6 +30,7 @@ Other jam igraph functions:
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
+\code{\link{spread_igraph_labels}()},
 \code{\link{subsetCnetIgraph}()}
 }
 \concept{jam igraph functions}

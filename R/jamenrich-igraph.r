@@ -2021,7 +2021,7 @@ removeIgraphSinglets <- function
 #' see any of these changes. If `label_distance=0` then the label
 #' will be centered on top of each igraph node.
 #'
-#' @jam igraph functions
+#' @family jam igraph functions
 #'
 #' @param g igraph object
 #' @param layout numeric matrix representing the x and y

@@ -80,3 +80,24 @@ attribute \code{"label.distance"}, which is required in order to
 see any of these changes. If \code{label_distance=0} then the label
 will be centered on top of each igraph node.
 }
+\seealso{
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{subsetCnetIgraph}()}
+}
+\concept{jam igraph functions}

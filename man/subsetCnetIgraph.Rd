@@ -85,6 +85,7 @@ Other jam igraph functions:
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
-\code{\link{shape.ellipse.plot}()}
+\code{\link{shape.ellipse.plot}()},
+\code{\link{spread_igraph_labels}()}
 }
 \concept{jam igraph functions}
