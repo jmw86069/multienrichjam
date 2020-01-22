@@ -7,12 +7,13 @@
 spread_igraph_labels(
   g,
   layout = NULL,
-  y_bias = 3,
+  y_bias = 1,
   update_g_coords = TRUE,
   do_reorder = TRUE,
   sortAttributes = c("pie.color", "coloredrect.color", "color"),
   nodeSortBy = c("x", "y"),
   repulse = 3.5,
+  force_relayout = FALSE,
   label_min_dist = 0.5,
   verbose = FALSE,
   ...
@@ -25,7 +26,8 @@ spread_igraph_labels(
 coordinates of each node in \code{g}, in the same order as \code{V(g)}.
 When \code{layout} is not supplied, nodes are checked for
 attributes \code{c("x", "y")} which define a fixed internal
-layout. If that is not supplied, then \code{layout_with_qfr()}
+layout. When \code{force_layout=TRUE} these coordinates are ignored.
+If that is not supplied, then \code{layout_with_qfr()}
 is called along with the \code{repulse} argument. Subsequent
 coordinates are stored in \code{V(g)$x} and \code{V(g)$y} when
 argument \code{update_g_coords=TRUE}.}
@@ -49,6 +51,11 @@ node if both nodes have identical edges.}
 \item{repulse}{argument passed to \code{layout_with_qfr()} only
 when \code{layout} is not supplied, and the layout is not stored
 in \code{c(V(g)$x, V(g)$y)}.}
+
+\item{force_relayout}{logical indicating whether the \code{igraph} layout
+should be recalculated, in order to override coordinates that
+may be previously stored in the \code{igraph} object itself.
+Note that when \code{layout} is supplied, it is always used.}
 
 \item{label_min_dist}{numeric value used to ensure all labels are
 at least some distance from the center. These units are defined
@@ -75,10 +82,11 @@ of edges from each network node. Typically the side of a node
 with the fewest edges has the most space to place a label.
 No further checks are performed for overlapping labels.
 
-Note that this function does not modify the other important
-attribute \code{"label.distance"}, which is required in order to
-see any of these changes. If \code{label_distance=0} then the label
-will be centered on top of each igraph node.
+Note that this function only modifies the other important
+attribute \code{"label.dist"} when `label_min_dist`` is defined,
+in order to enforce a minimum label distance from the center
+of each node. There is no other logic to position small or
+large labels to avoid overlapping labels.
 }
 \seealso{
 Other jam igraph functions: 
@@ -90,15 +98,18 @@ Other jam igraph functions:
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
 \code{\link{igraph2pieGraph}()},
+\code{\link{jam_igraph}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{layout_with_qfr}()},
 \code{\link{memIM2cnet}()},
+\code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
-\code{\link{subsetCnetIgraph}()}
+\code{\link{subsetCnetIgraph}()},
+\code{\link{subset_igraph_components}()}
 }
 \concept{jam igraph functions}

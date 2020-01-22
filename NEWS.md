@@ -1,7 +1,22 @@
 # multienrichjam version 0.0.13.900
 
-## New functions
+## New plotting functions
 
+* `mem_multienrichplot()` allows customized enrichMap-style plotting
+of igraph objects. Notably, you can filter by Jaccard overlap,
+or by overlap count -- the number of genes involved in the overlap.
+There are otherwise a lot of overlaps that involve only one gene,
+which is not the best way to build this type of network.
+* `relayout_with_qfr()` is a light extension of `layout_with_qfr()`,
+but adds default calls to `removeIgraphBlanks()`,
+and `spread_igraph_labels()` to help things look pretty.
+* `mem_legend()` draws a color legend in the corner of a figure,
+using the colors defined in the `multiEnrichMap()` output.
+
+## Other new functions
+
+* `subset_igraph_components()` subsets an igraph based upon
+connected components -- i.e. distinct subclusters.
 * `memIM2cnet()` takes the pathway-gene incidence matrix and
 produces a Cnet plot `igraph` object. If given the output from
 `multiEnrichMap()` it will also color nodes using the gene

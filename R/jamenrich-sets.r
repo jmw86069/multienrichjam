@@ -98,7 +98,7 @@ list2im <- function
             keepCounts <- FALSE;
          }
       } else {
-         x <- makeListUnique(x,
+         x <- jamba::uniques(x,
             verbose=verbose);
       }
    } else {
@@ -123,7 +123,8 @@ list2im <- function
             format(big.mark=",", length(xCt)),
             " items.");
       }
-      for (i in seq_along(xCt)) {
+      for (i in names(xCt)) {
+         #xM[names(xCt),,drop=FALSE]
          xM[names(xCt[[i]]),i] <- xCt[[i]];
       }
    }

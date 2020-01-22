@@ -250,3 +250,289 @@ mem_enrichment_heatmap <- function
       return(hm);
    }
 }
+
+#' MultiEnrichMap plot
+#'
+#' MultiEnrichMap plot
+#'
+#' This function takes output from `multiEnrichMap()` and produces
+#' customized "multiple enrichMap" plots using an igraph network.
+#' It differs from the data provided from `multiEnrichMap()` mostly
+#' by enabling different overlap filters, and by automating
+#' several steps that help with network layout, and node label
+#' placement.
+#'
+#' For the most flexible exploration of data, run `multiEnrichMap()`
+#' using a lenient `overlapThreshold`, for example `overlapThreshold=0.1`.
+#' Then call this function with increasing `overlap` until the
+#' visualization has insightful structure.
+#'
+#' @return invisibly returns the `igraph` object used for plotting,
+#'    a by-product of this function when `do_plot=TRUE` is that
+#'    the igraph object is also visualized. All custom plot elements
+#'    are updated in the `igraph` object, so in principle a
+#'    simple call to `plot(...)` should suffice.
+#'
+#' @family jam igraph functions
+#' @family jam plot functions
+#'
+#' @param mem `list` object output from `multiEnrichMap()`, specifically
+#'    containing elements `"multiEnrichMap","multiEnrichMap2"` which
+#'    are expected to be `igraph` objects.
+#' @param overlap numeric value between 0 and 1, indicating the Jaccard
+#'    overlap filter to use for edge nodes. The value is used to
+#'    delete edges whose values `E(g)$overlap` are below this threshold.
+#' @param overlap_count numeric value indicating the minimum overlap count
+#'    below which edges are removed. The value `E(g)$overlap_count` is
+#'    used for this filter.
+#' @param do_plot logical indicating whether to plot the final result.
+#' @param remove_blanks logical indicating whether to call
+#'    `removeIgraphBlanks()` which removes blank/empty colors in
+#'    igraph nodes.
+#' @param remove_singlets logical indicating whether to remove singlet
+#'    nodes, which are nodes that have no connections to other nodes.
+#'    By default, singlets are removed, in order to help visualize the
+#'    node connections that remain after filtering by `overlap`.
+#' @param spread_labels logical indicating whether to call
+#'    `spread_igraph_labels()`, which places node labels at an angle offset
+#'    from the node, in order to improve default label positions.
+#' @param y_bias numeric value passed to `spread_igraph_labels()` when
+#'    `spread_labels=TRUE`.
+#' @param repulse numeric value used for network layout when
+#'    `layout_with_qfrf()` is used.
+#' @param sets optional character vector of enriched sets to include,
+#'    all other sets will be excluded. These values are matched with
+#'    `V(g)$name`.
+#' @param rescale logical indicating whether the `igraph` layout
+#'    coordinates are scaled to range `c(-1, 1)` before plotting.
+#'    In practice, when `rescale=FALSE` the function `jam_igraph()`
+#'    is called because it does much better at properly handling
+#'    other settings during the change. The effect is mainly to keep
+#'    layout aspect intact, in cases where the x- and y-axis ranges
+#'    are not roughly the same size, for example a short-wide
+#'    layout.
+#' @param main character string used as the title when `do_plot=TRUE`.
+#'    This character string is passed to `glue::glue()` in order to
+#'    include certain argument values such as `overlap`.
+#' @param ... additional arguments are passed to `removeIgraphBlanks()`,
+#'    `removeIgraphSinglets()`, and `spread_igraph_labels()` as needed.
+#'
+#' @export
+mem_multienrichplot <- function
+(mem,
+ overlap=0.1,
+ overlap_count=2,
+ do_plot=TRUE,
+ remove_blanks=TRUE,
+ remove_singlets=TRUE,
+ spread_labels=TRUE,
+ y_bias=1,
+ label_edges=c("overlap_count","count","overlap","label","none"),
+ edge_cex=1,
+ node_cex=0.8,
+ node_size=5,
+ edge_color="#55555588",
+ frame_color="#55555500",
+ shape="pie",
+ repulse=3.7,
+ sets=NULL,
+ rescale=TRUE,
+ main="MultiEnrichMap\noverlap >= {overlap}, overlap_count >= {overlap_count}",
+ ...)
+{
+   ##
+   if (!is.list(mem) || !"multiEnrichMap2" %in% names(mem)) {
+      stop("Input mem must be a list with element 'multiEnrichMap2'.");
+   }
+   g <- mem$multiEnrichMap2;
+
+   ## Optionally filter for specific sets
+   if (length(sets) > 0) {
+      keep_nodes <- which(V(g)$name %in% sets);
+      if (length(keep_nodes) == 0) {
+         stop("No sets remain after filtering V(g)$name for sets.");
+      }
+      g <- subgraph(g, v=keep_nodes);
+   }
+
+   ## Filter to remove nodes as needed
+   if (length(overlap) > 0 && overlap > 0) {
+      delete_edges <- which(E(g)$overlap < overlap);
+      if (length(delete_edges) > 0) {
+         g <- igraph::delete.edges(g, delete_edges);
+      }
+   }
+   if (length(overlap_count) > 0 && "overlap_count" %in% list.edge.attributes(g)) {
+      delete_edges <- which(E(g)$overlap_count < overlap_count);
+      if (length(delete_edges) > 0) {
+         g <- igraph::delete.edges(g, delete_edges);
+      }
+   }
+   if (remove_blanks) {
+      g <- removeIgraphBlanks(g, ...);
+   }
+   if (remove_singlets) {
+      g <- removeIgraphSinglets(g, ...);
+   }
+   if (spread_labels) {
+      g <- spread_igraph_labels(g,
+         do_reorder=FALSE,
+         y_bias=y_bias,
+         repulse=repulse,
+         ...);
+   }
+   ## Optionally label edges
+   label_edges <- head(intersect(label_edges, list.edge.attributes(g)), 1);
+   if (length(label_edges) > 0) {
+      if (!"label" %in% label_edges) {
+         edge_text <- edge_attr(g, label_edges);
+         if (is.numeric(edge_text)) {
+            edge_text <- format(edge_text,
+               trim=TRUE,
+               digits=2);
+         }
+         E(g)$label <- edge_text;
+      }
+   }
+   if (length(edge_cex) > 0) {
+      E(g)$label.cex <- edge_cex;
+   }
+   if (length(edge_color) > 0) {
+      E(g)$color <- edge_color;
+   }
+   if (length(shape) > 0) {
+      V(g)$shape <- shape;
+   }
+   if (length(node_size) > 0) {
+      V(g)$size <- node_size;
+   }
+   if (length(node_cex) > 0) {
+      V(g)$label.cex <- node_cex;
+   }
+   if (length(frame_color) > 0) {
+      V(g)$frame.color <- frame_color;
+   }
+   if (length(main) > 0) {
+      main <- glue::glue(main);
+   }
+   if (do_plot) {
+      if (rescale) {
+         plot(g,
+            main=main,
+            rescale=rescale,
+            ...);
+      } else {
+         jam_igraph(g,
+            main=main,
+            rescale=rescale,
+            ...);
+      }
+   }
+   invisible(g);
+}
+
+#' MultiEnrichMap color legend
+#'
+#' MultiEnrichMap color legend
+#'
+#' This function is a simple wrapper around `legend()` to add
+#' a color key to a plot, typically for `igraph` plots.
+#'
+#' @family jam plot functions
+#'
+#' @param mem `list` object output from `multiEnrichMap()`, specifically
+#'    expected to contain element `"colorV"`.
+#' @param x,y,bg,box.col,title,cex,ncol,pch,pt.cex arguments passed
+#'    to `legend()`.
+#' @param ... additional arguments are passed to `legend()`.
+#'
+#' @export
+mem_legend <- function
+(mem,
+ x="bottomleft",
+ y=NULL,
+ bg="#FFFFFF99",
+ box.col="transparent",
+ title="Color Key",
+ cex=0.8,
+ ncol=1,
+ pch=21,
+ pt.cex=2,
+ ...)
+{
+   ##
+   if (!is.list(mem) || !"colorV" %in% names(mem)) {
+      stop("Input mem must be a list with element 'colorV'");
+   }
+   colorV <- mem[["colorV"]];
+   colorVb <- makeColorDarker(colorV, darkFactor=1.5);
+
+   legend(x=x,
+      y=y,
+      title=title,
+      ncol=ncol,
+      legend=names(colorV),
+      pch=pch,
+      pt.cex=pt.cex,
+      pt.bg=colorV,
+      col=colorVb,
+      bg=bg,
+      box.col=box.col,
+      cex=cex,
+      ...);
+}
+
+#' Jam wrapper to plot igraph
+#'
+#' Jam wrapper to plot igraph
+#'
+#' This function is a lightweight wrapper around `igraph::plot.igraph()`
+#' intended to handle `rescale=FALSE` properly, which is not done
+#' in the former function (as of January 2020). The desired outcome
+#' is for the `xlim` and `ylim` defaults to be scaled according to the
+#' `igraph` layout. Similarly, the `vertex.size` and `vertex.label.dist`
+#' parameters should also be scaled proportionally.
+#'
+#' @family jam igraph functions
+#' @family jam plot functions
+#'
+#' @param x `igraph` object to be plotted
+#' @param ... additional arguments are passed to `igraph::plot.igraph()`
+#' @param xlim,ylim default x and y axis limits
+#' @param expand numeric value used to expand the x and y axis ranges,
+#'    where `0.03` expands each size `3%`.
+#' @param rescale logical indicating whether to rescale the layout
+#'    coordinates to `c(-1, 1)`. When `rescale=FALSE` the original
+#'    layout coordinates are used as-is without change.
+#'
+#' @export
+jam_igraph <- function
+(x,
+ ...,
+ xlim=c(-1,1),
+ ylim=c(-1,1),
+ expand=0.03,
+ rescale=FALSE)
+{
+   ##
+   params <- igraph:::i.parse.plot.params(x, list(...));
+   layout <- params("plot", "layout");
+   vertex.size <- params("vertex", "size");
+   label.dist <- params("vertex", "label.dist");
+   if (!rescale) {
+      xlim <- range(layout[,1]);
+      vertex.size <- vertex.size * diff(xlim) / 2;
+      label.dist <- label.dist * diff(xlim) / 2;
+      xlim <- xlim + diff(xlim) * c(-1,1) * expand;
+      ylim <- range(layout[,2]);
+      ylim <- ylim + diff(ylim) * c(-1,1) * expand;
+   }
+   plot(x=x,
+      ...,
+      rescale=rescale,
+      vertex.size=vertex.size,
+      vertex.label.dist=label.dist,
+      xlim=xlim,
+      ylim=ylim);
+}
+

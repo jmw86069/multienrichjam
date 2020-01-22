@@ -139,3 +139,72 @@ avg_colors_by_list <- function
    x_new <- unlist(unname(x));
    return(x_new);
 }
+
+#' Find best overlap threshold for EnrichMap
+#'
+#' Find best overlap threshold for EnrichMap
+#'
+#' This function implements a straightforward approach to determine
+#' a reasonable Jaccard overlap threshold for EnrichMap data.
+#' It finds the overlap threshold at which the first connected
+#' component is no more than `max_cutoff` fraction of the whole
+#' network. This fraction is defined as the number of nodes in the
+#' largest connected component, divided by the total number of
+#' non-singlet nodes. When all nodes are connected, this fraction == 1.
+#'
+#' We found empirically that a `max_cutoff=0.4`, the point at which the
+#' largest connected component contains no more than 40% of all nodes,
+#' seems to be a reasonably good place to start.
+#'
+#' @param mem `list` output from `multiEnrichMap()`
+#' @param overlap_range numeric range of Jaccard overlap values
+#' @param overlap_count numeric value passed to `mem_multienrichplot()`
+#'    which is used to filter the multienrichmap by Jaccard overlap
+#'    and by overlap_count.
+#' @param max_cutoff numeric value between 0 and 1, to define the
+#'    maximum fraction of nodes in the largest connected component,
+#'    compared to the total number of non-singlet nodes.
+#' @param debug logical indicating whether to return full debug
+#'    data, which is used internally to determine the best overlap
+#'    cutoff to use.
+#'
+#' @export
+mem_find_overlap <- function
+(mem,
+ overlap_range=c(0.1,0.99),
+ overlap_count=2,
+ max_cutoff=0.4,
+ debug=FALSE,
+ ...)
+{
+   overlap_range <- range(overlap_range);
+   oseq <- seq(from=overlap_range[1],
+      to=overlap_range[2],
+      by=0.01);
+   odata <- lapply(nameVector(oseq), function(i){
+      g <- mem_multienrichplot(mem,
+         overlap=i,
+         remove_blanks=FALSE,
+         remove_singlets=TRUE,
+         spread_labels=FALSE,
+         do_plot=FALSE);
+      if (vcount(g) <= 1) {
+         return(NULL);
+      }
+      gc <- components(g);
+      k <- rev(sort(gc$csize));
+      c(k, frac_max=k[1] / sum(k));
+   });
+   if (length(debug) > 0 && debug) {
+      return(odata);
+   }
+   ## Remove empty entries
+   odata <- jamba::rmNULL(odata);
+   if (length(odata) == 0) {
+      return(0);
+   }
+   omet <- sapply(odata, function(i){
+      unname(i["frac_max"] <= max_cutoff);
+   });
+   return(as.numeric(names(head(omet[omet], 1))));
+}

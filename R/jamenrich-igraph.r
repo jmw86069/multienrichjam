@@ -57,11 +57,21 @@
 #' @export
 layout_with_qfr <- function
 (g,
- repulse=3.1,
+ repulse=3.5,
  area=8*(vcount(g)^2),
  repulse.rad=(vcount(g)^repulse),
  constraints=NULL,
  seed=123,
+ weights=NULL,
+ niter=NULL,
+ max.delta=NULL,
+ cool.exp=NULL,
+ init=NULL,
+ groups=NULL,
+ rotation=NULL,
+ layout.control=0.5,
+ round=TRUE,
+ digits=NULL,
  ...)
 {
    ## Purpose is to apply Fruchterman-Reingold layout from the qgraph
@@ -77,7 +87,16 @@ layout_with_qfr <- function
       area=area,
       repulse.rad=repulse.rad,
       constraints=constraints,
-      ...);
+      weights=weights,
+      niter=niter,
+      max.delta=max.delta,
+      cool.exp=cool.exp,
+      init=init,
+      groups=groups,
+      rotation=rotation,
+      layout.control=layout.control,
+      round=round,
+      digits=digits);
    frL;
 }
 
@@ -116,6 +135,55 @@ layout_with_qfrf <- function
          ...);
       l;
    }
+}
+
+#' igraph re-layout using qgraph Fruchterman-Reingold
+#'
+#' igraph re-layout using qgraph Fruchterman-Reingold
+#'
+#' This function extends `layout_with_qfr()` by applying the layout
+#' to the `igraph` object itself, while also calling
+#' `spread_igraph_labels()` to adjust label positions accordingly.
+#'
+#' The main benefit to using this function is to update the layout
+#' and node label positions in one step,
+#' while also returning the `igraph` object ready to be plotted as-is.
+#'
+#' @return `igraph` object, with layout coordinates stored in
+#'    `V(g)$x` and `V(g)$y`. When `spread_labels=TRUE`,
+#'    `V(g)$label.degree` and `V(g)$label.dist` are updated
+#'    by calling `spread_igraph_labels()`.
+#'
+#'
+#' @param g `igraph` object
+#' @param repulse exponent power used to scale the radius effect around
+#'    each vertex. The default is slightly higher than the cube of
+#'    the number of vertices, but as the number of vertices increases,
+#'    values from 3.5 to 4 and higher are more effective for layout.
+#' @param spread_labels logical indicating whether to call
+#'    `spread_igraph_labels()`, which places node labels at an angle offset
+#'    from the node, in order to improve default label positions.
+#' @param ... additional arguments are passed to `layout_with_qfr()` and
+#'    `spread_igraph_labels()` as needed.
+#'
+#' @export
+relayout_with_qfr <- function
+(g,
+ repulse=3.5,
+ spread_labels=TRUE,
+ ...)
+{
+   layout_xy <- layout_with_qfr(g=g,
+      repulse=repulse,
+      ...);
+   V(g)$x <- layout_xy[,1];
+   V(g)$y <- layout_xy[,2];
+   if (spread_labels) {
+      g <- spread_igraph_labels(g,
+         layout=layout_xy,
+         ...);
+   }
+   return(g);
 }
 
 #' Create a cnetplot igraph object
@@ -1359,6 +1427,9 @@ removeIgraphBlanks <- function
 
       ## Determine the coloredrect.ncol to use in resizing
       ncolVbefore <- get.vertex.attribute(g, "coloredrect.ncol");
+      if (length(ncolVbefore) == 0) {
+         ncolVbefore <- lengths(get.vertex.attribute(g, "coloredrect.color"));
+      }
       nrowVbefore <- get.vertex.attribute(g, "coloredrect.nrow");
 
       ## Determine which pie wedges are blank
@@ -1367,10 +1438,16 @@ removeIgraphBlanks <- function
          blankColor=blankColor,
          c_max=c_max,
          l_min=l_min,
-         alpha_max=alpha_max,
-         ...);
+         alpha_max=alpha_max);
+
+      ## Check for all blanks
+      all_blank <- lapply(crBlanksL, all);
+      if (any(all_blank)) {
+         #
+      }
+
       crLengths <- lengths(iCrColorL);
-      crSplitV <- rep(seq_len(vcount(g)), crLengths);
+      crSplitV <- rep(factor(seq_len(vcount(g))), crLengths);
       ## Vector of TRUE,FALSE
       crBlanksV <- unlist(unname(crBlanksL));
       ## Iterate each attribute
@@ -1387,8 +1464,8 @@ removeIgraphBlanks <- function
          # not in sync with "coloredrect.color"
          if (verbose) {
             jamba::printDebug("removeIgraphBlanks(): ",
-               "Skipped pie attribute '",
-               pieAttr,
+               "Skipped crAttr attribute '",
+               crAttr,
                "' because its lengths() were not consistent with ",
                "'pie.color'");
          }
@@ -2019,10 +2096,11 @@ removeIgraphSinglets <- function
 #' with the fewest edges has the most space to place a label.
 #' No further checks are performed for overlapping labels.
 #'
-#' Note that this function does not modify the other important
-#' attribute `"label.distance"`, which is required in order to
-#' see any of these changes. If `label_distance=0` then the label
-#' will be centered on top of each igraph node.
+#' Note that this function only modifies the other important
+#' attribute `"label.dist"` when `label_min_dist`` is defined,
+#' in order to enforce a minimum label distance from the center
+#' of each node. There is no other logic to position small or
+#' large labels to avoid overlapping labels.
 #'
 #' @family jam igraph functions
 #'
@@ -2031,7 +2109,8 @@ removeIgraphSinglets <- function
 #'    coordinates of each node in `g`, in the same order as `V(g)`.
 #'    When `layout` is not supplied, nodes are checked for
 #'    attributes `c("x", "y")` which define a fixed internal
-#'    layout. If that is not supplied, then `layout_with_qfr()`
+#'    layout. When `force_layout=TRUE` these coordinates are ignored.
+#'    If that is not supplied, then `layout_with_qfr()`
 #'    is called along with the `repulse` argument. Subsequent
 #'    coordinates are stored in `V(g)$x` and `V(g)$y` when
 #'    argument `update_g_coords=TRUE`.
@@ -2050,6 +2129,10 @@ removeIgraphSinglets <- function
 #' @param repulse argument passed to `layout_with_qfr()` only
 #'    when `layout` is not supplied, and the layout is not stored
 #'    in `c(V(g)$x, V(g)$y)`.
+#' @param force_relayout logical indicating whether the `igraph` layout
+#'    should be recalculated, in order to override coordinates that
+#'    may be previously stored in the `igraph` object itself.
+#'    Note that when `layout` is supplied, it is always used.
 #' @param label_min_dist numeric value used to ensure all labels are
 #'    at least some distance from the center. These units are defined
 #'    by igraph, and are roughly in units of one line height of text.
@@ -2060,19 +2143,20 @@ removeIgraphSinglets <- function
 spread_igraph_labels <- function
 (g,
  layout=NULL,
- y_bias=3,
+ y_bias=1,
  update_g_coords=TRUE,
  do_reorder=TRUE,
  sortAttributes=c("pie.color", "coloredrect.color", "color"),
  nodeSortBy=c("x","y"),
  repulse=3.5,
+ force_relayout=FALSE,
  label_min_dist=0.5,
  verbose=FALSE,
  ...)
 {
    ##
    if (length(layout) == 0) {
-      if (all(c("x", "y") %in% list.vertex.attributes(g))) {
+      if (!force_relayout && all(c("x", "y") %in% list.vertex.attributes(g))) {
          layout <- cbind(x=V(g)$x, y=V(g)$y);
       } else {
          layout <- layout_with_qfr(g,
@@ -2304,3 +2388,63 @@ memIM2cnet <- function
    return(g);
 }
 
+#' Subset igraph by connected components
+#'
+#' Subset igraph by connected components
+#'
+#' This function is intended to help drill down into an igraph
+#' object that contains multiple connected components.
+#'
+#' By default, it sorts the components from largest number of nodes,
+#' to smallest, which helps choose the largest connected component,
+#' or subsequent components in size order.
+#'
+#' The components can also be filtered to require a minimum number
+#' of connected nodes.
+#'
+#' At its core, this function is a wrapper to `igraph::components()`
+#' and `igraph::subgraph()`.
+#'
+#' @family jam igraph functions
+#'
+#' @param g igraph object
+#' @param keep numeric vector indicating which component or components
+#'    to keep in the final output. When `order_by_size=TRUE`, components
+#'    are ordered by size, from largest to smallest, in that case
+#'    `keep=1` will return only the one largest connected subgraph.
+#' @param min_size numeric value indicating the number of nodes required
+#'    in all connected components returned. This filter is applied after
+#'    the `keep` argument.
+#' @param order_by_size logical indicating whether the connected components
+#'    are sorted by size, largest to smallest, and therefore re-numbered.
+#'    Otherwise, the components are somewhat randomly labeled based
+#'    upon the output of `igraph::components()`.
+#' @param ... additional arguments are passed to `igraph::components()`.
+#'
+#' @export
+subset_igraph_components <- function
+(g,
+ keep=NULL,
+ min_size=1,
+ order_by_size=TRUE,
+ ...)
+{
+   gc <- igraph::components(g,
+      ...);
+   vnum <- seq_len(vcount(g));
+   gc_list <- split(vnum, membership(gc));
+   if (order_by_size) {
+      gc_order <- names(rev(sort(lengths(gc_list))));
+      gc_list <- gc_list[gc_order];
+      names(gc_list) <- seq_along(gc_list);
+   }
+   if (length(keep) > 0) {
+      gc_list <- gc_list[names(gc_list) %in% as.character(keep)];
+   }
+   if (length(min_size) > 0) {
+      gc_list <- gc_list[lengths(gc_list) >= min_size];
+   }
+   g <- igraph::subgraph(g,
+      v=sort(unlist(gc_list)));
+   return(g);
+}

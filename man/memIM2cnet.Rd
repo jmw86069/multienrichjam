@@ -40,8 +40,10 @@ Other jam igraph functions:
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
 \code{\link{igraph2pieGraph}()},
+\code{\link{jam_igraph}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{layout_with_qfr}()},
+\code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
@@ -49,6 +51,7 @@ Other jam igraph functions:
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
-\code{\link{subsetCnetIgraph}()}
+\code{\link{subsetCnetIgraph}()},
+\code{\link{subset_igraph_components}()}
 }
 \concept{jam igraph functions}

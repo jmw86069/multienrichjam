@@ -6,11 +6,21 @@
 \usage{
 layout_with_qfr(
   g,
-  repulse = 3.1,
+  repulse = 3.5,
   area = 8 * (vcount(g)^2),
   repulse.rad = (vcount(g)^repulse),
   constraints = NULL,
   seed = 123,
+  weights = NULL,
+  niter = NULL,
+  max.delta = NULL,
+  cool.exp = NULL,
+  init = NULL,
+  groups = NULL,
+  rotation = NULL,
+  layout.control = 0.5,
+  round = TRUE,
+  digits = NULL,
   ...
 )
 }
@@ -83,8 +93,10 @@ Other jam igraph functions:
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
 \code{\link{igraph2pieGraph}()},
+\code{\link{jam_igraph}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{memIM2cnet}()},
+\code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
@@ -92,6 +104,7 @@ Other jam igraph functions:
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
-\code{\link{subsetCnetIgraph}()}
+\code{\link{subsetCnetIgraph}()},
+\code{\link{subset_igraph_components}()}
 }
 \concept{jam igraph functions}

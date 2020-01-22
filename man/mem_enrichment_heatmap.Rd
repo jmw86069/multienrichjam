@@ -80,4 +80,10 @@ enrichment results. The P-value threshold is used to colorize
 every cell whose P-value meets the threshold, while all other
 cells are therefore white.
 }
+\seealso{
+Other jam plot functions: 
+\code{\link{jam_igraph}()},
+\code{\link{mem_legend}()},
+\code{\link{mem_multienrichplot}()}
+}
 \concept{jam plot functions}
