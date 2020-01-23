@@ -4,22 +4,13 @@
 \alias{list2im}
 \title{convert list to incidence matrix}
 \usage{
-list2im(x, makeUnique = TRUE, keepCounts = TRUE, verbose = FALSE, ...)
+list2im(x, keepCounts = FALSE, verbose = FALSE, ...)
 }
 \arguments{
 \item{x}{list of vectors}
 
-\item{makeUnique}{logical indicating whether to enforce uniqueness on each
-vector in the list. For an extremely long list, the uniqueness step can
-become the rate-limiting step, and yet the function used to coerce list
-to matrix requires each vector have a unique set of items. When
-\code{makeUnique=FALSE]} the value returned depends upon
-\code{keepCounts} which optionally reports the frequency of each
-item.}
-
 \item{keepCounts}{boolean indicating whether to return values indicating
-the number of occurrences of each item, only useful when
-\code{makeUnique=FALSE}.}
+the number of occurrences of each item.}
 
 \item{verbose}{boolean indicating whether to print verbose output.}
 
@@ -40,13 +31,17 @@ It uses an object from the \code{arules} package called
 for interconverting from list to matrix. The
 \code{\link[arules]{transactions}} class is itself an enhanced data matrix,
 which stores data using sparse matrix object type from the
-\code{\link{Matrix}} package, but also associates a data.frame to both
+\code{\link{Matrix}} package, but also associates a \code{data.frame} to both
 the rows and columns of the matrix to offer additional row and column
 annotation, as needed.
 
 Performance benchmarks showed high speed of converting a list to a matrix,
 but also that the resulting matrix was substantially smaller (5-20 times)
 then comparable methods producing a data matrix.
+
+When argument \code{keepCounts=TRUE}, the method of applying counts only
+updates entries with multiple instances, which helps make this step
+relatively fast.
 }
 \examples{
 L1 <- list(A=c("C","A","B","A"),
@@ -56,13 +51,8 @@ L1 <- list(A=c("C","A","B","A"),
 # Default behavior is to make items unique
 list2im(L1);
 
-# When not using unique entries, by default it reports the counts
-list2im(L1, makeUnique=FALSE);
-
-# The highest efficiency is seen when makeUnique=FALSE, keepCounts=FALSE,
-# however the difference is seen typically only with lists longer
-# than 10,000.
-list2im(L1, makeUnique=FALSE, keepCounts=FALSE);
+# Option to report the counts
+list2im(L1, keepCounts=TRUE);
 
 }
 \seealso{

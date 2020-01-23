@@ -21,6 +21,7 @@ layout_with_qfr(
   layout.control = 0.5,
   round = TRUE,
   digits = NULL,
+  verbose = FALSE,
   ...
 )
 }

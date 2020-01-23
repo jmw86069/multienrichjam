@@ -4,7 +4,14 @@
 \alias{relayout_with_qfr}
 \title{igraph re-layout using qgraph Fruchterman-Reingold}
 \usage{
-relayout_with_qfr(g, repulse = 3.5, spread_labels = TRUE, ...)
+relayout_with_qfr(
+  g,
+  repulse = 3.5,
+  spread_labels = TRUE,
+  seed = 123,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{g}{\code{igraph} object}

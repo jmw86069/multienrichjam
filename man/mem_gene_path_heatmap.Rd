@@ -8,8 +8,8 @@ mem_gene_path_heatmap(
   mem,
   genes = NULL,
   sets = NULL,
-  min_gene_ct = 1,
-  min_set_ct = 1,
+  min_gene_ct = 2,
+  min_set_ct = 3,
   column_fontsize = 6,
   row_fontsize = 8,
   row_method = "spearman",
@@ -18,7 +18,11 @@ mem_gene_path_heatmap(
   cluster_rows = NULL,
   name = "gene_ct",
   p_cutoff = 0.05,
+  row_split = NULL,
+  column_split = NULL,
+  auto_split = TRUE,
   column_title = NULL,
+  verbose = FALSE,
   ...
 )
 }
