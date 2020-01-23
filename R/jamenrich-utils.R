@@ -208,3 +208,45 @@ mem_find_overlap <- function
    });
    return(as.numeric(names(head(omet[omet], 1))));
 }
+
+#' Extract gene hit list from list of enrichResult
+#'
+#' Extract gene hit list from list of enrichResult
+#'
+#' This function is mainly for internal use in multienrichjam,
+#' it takes a list of `enrichResult` objects, and determines
+#' the full set of genes involved in each `enrichResult`.
+#'
+#' @return `list` of character vectors, containing the unique
+#' set of genes involved in each enrichment.
+#'
+#' @export
+enrichList2geneHitList <- function
+(enrichList,
+ geneColname,
+ geneDelim,
+ make_unique=TRUE,
+ ...)
+{
+   geneHitList <- lapply(enrichList, function(iDF){
+      ## Split text field of delimited genes into proper vector
+      if (!jamba::igrepHas("data.frame", class(iDF))) {
+         k <- jamba::mixedSort(unlist(
+            strsplit(
+               as.character(
+                  as.data.frame(iDF)[[geneColname]]),
+               geneDelim)));
+      } else {
+         k <- jamba::mixedSort(unlist(
+            strsplit(
+               as.character(
+                  iDF[[geneColname]]),
+               geneDelim)));
+      }
+      if (make_unique) {
+         k <- unique(k);
+      }
+      k;
+   });
+   return(geneHitList);
+}

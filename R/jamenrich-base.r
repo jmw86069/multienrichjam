@@ -600,28 +600,26 @@ multiEnrichMap <- function
          jamba::printDebug("multiEnrichMap(): ",
             "creating geneHitList from enrichList.");
       }
-      geneHitList <- lapply(enrichList, function(iDF){
-         ## Split text field of delimited genes into proper vector
-         if (!jamba::igrepHas("data.frame", class(iDF))) {
-            jamba::mixedSort(unique(unlist(
-               strsplit(
-                  as.character(
-                     as.data.frame(iDF)[[geneColname]]),
-                  geneDelim))));
-         } else {
-            jamba::mixedSort(unique(unlist(
-               strsplit(
-                  as.character(
-                     iDF[[geneColname]]),
-                  geneDelim))));
-         }
-      });
+      geneHitList <- enrichList2geneHitList(enrichList,
+         geneColname=geneColname,
+         geneDelim=geneDelim);
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
-            "lengths(geneHitList): ",
-            lengths(geneHitList));
-         #print(lengths(geneHitList));
+            "sdim(geneHitList): ");
+         print(jamba::sdim(geneHitList));
       }
+   }
+
+   #####################################################################
+   ## gene IM
+   if (verbose) {
+      jamba::printDebug("multiEnrichMap(): ",
+         "geneIM <- list2im(geneHitList)");
+   }
+   geneIM <- list2im(geneHitList)[,,drop=FALSE];
+   if (verbose) {
+      jamba::printDebug("multiEnrichMap(): ",
+         "geneIMcolors <- matrix2heatColors(geneIM)");
    }
 
    #####################################################################
@@ -640,40 +638,50 @@ multiEnrichMap <- function
          descriptionGrep=topEnrichDescriptionGrep,
          nameGrep=topEnrichNameGrep,
          verbose=verbose);
-      if (1 == 2) {
-         enrichList <- lapply(enrichList, function(iDF){
-            iDFtop <- topEnrichBySource(iDF,
-               n=topEnrichN,
-               sourceColnames=topEnrichSources,
-               sortColname=c(pvalueColname, paste0("-", geneHits)),
-               curateFrom=topEnrichCurateFrom,
-               curateTo=topEnrichCurateTo,
-               sourceSubset=topEnrichSourceSubset,
-               descriptionColname=descriptionColname,
-               nameColname=nameColname,
-               descriptionGrep=topEnrichDescriptionGrep,
-               nameGrep=topEnrichNameGrep,
-               verbose=verbose);
-            iDFtop;
-         });
-      }
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
-            "dims after topEnrichBySource():");
+            "sdim after topEnrichBySource():");
          print(jamba::sdim(enrichList));
       }
-   }
-
-   #####################################################################
-   ## gene IM
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "geneIM <- list2im(geneHitList)");
-   }
-   geneIM <- list2im(geneHitList)[,,drop=FALSE];
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "geneIMcolors <- matrix2heatColors(geneIM)");
+      ## Now we subset geneIM to the filtered genes
+      origGenes <- jamba::mixedSort(unique(unlist(geneHitList)));
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "lengths(geneHitList) before:",
+            lengths(geneHitList));
+         jamba::printDebug("multiEnrichMap(): ",
+            "length(origGenes):",
+            length(origGenes));
+      }
+      geneHitListNew <- enrichList2geneHitList(enrichList,
+         geneColname=geneColname,
+         geneDelim=geneDelim);
+      newGenes <- jamba::mixedSort(unique(unlist(geneHitListNew)));
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "length(newGenes):",
+            length(newGenes));
+         jamba::printDebug("multiEnrichMap(): ",
+            "nrow(geneIM) before:",
+            nrow(geneIM));
+      }
+      geneIM <- geneIM[rownames(geneIM) %in% newGenes,,drop=FALSE];
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "nrow(geneIM) after:",
+            nrow(geneIM));
+         jamba::printDebug("multiEnrichMap(): ",
+            "lengths(geneHitListNew):",
+            lengths(geneHitListNew));
+      }
+      geneHitList <- lapply(geneHitList, function(i){
+         intersect(i, newGenes)
+      });
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "lengths(geneHitList) after:",
+            lengths(geneHitList));
+      }
    }
 
    #####################################################################
@@ -682,14 +690,11 @@ multiEnrichMap <- function
       transformFunc=c,
       colorV=colorV,
       shareNumLimit=FALSE,
-      numLimit=2);
+      numLimit=1,
+      trimRamp=c(4,3));
    mem$geneHitList <- geneHitList;
    mem$geneIM <- geneIM;
    mem$geneIMcolors <- geneIMcolors;
-   if (verbose && 1 == 2) {
-      print(head(geneIM, 10));
-      print(head(geneIMcolors, 10));
-   }
 
    #####################################################################
    ## enrichIM incidence matrix using -log10(P-value)
@@ -923,6 +928,7 @@ multiEnrichMap <- function
    #####################################################################
    ## Incidence matrix of genes and pathways
    memIM <- list2im(
+      keepCounts=TRUE,
       strsplit(
          jamba::nameVector(
             as.character(mem$multiEnrichDF[[geneColname]]),
@@ -946,7 +952,9 @@ multiEnrichMap <- function
       nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
       vertex.label.cex=0.5,
       verbose=verbose);
-   V(enrichEM)$size <- (normScale(V(enrichEM)$size) + 0.3) * 8;
+   ## normScale(..., low=0) scales range 0 to maximum, into 0 to 1
+   ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
+   V(enrichEM)$size <- (normScale(V(enrichEM)$size, low=0) + 0.3) * 8;
 
    mem$multiEnrichMap <- enrichEM;
 
@@ -973,6 +981,7 @@ multiEnrichMap <- function
       ncol=ncol,
       byrow=byrow);
    V(enrichEMpieUseSub2)$size <- (normScale(V(enrichEMpieUseSub2)$size) + 0.3) * 6;
+   V(enrichEMpieUseSub2)$size2 <- V(enrichEMpieUseSub2)$size2 / 2;
    mem$multiEnrichMap2 <- enrichEMpieUseSub2;
 
    #######################################################

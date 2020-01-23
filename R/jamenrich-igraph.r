@@ -72,6 +72,7 @@ layout_with_qfr <- function
  layout.control=0.5,
  round=TRUE,
  digits=NULL,
+ verbose=FALSE,
  ...)
 {
    ## Purpose is to apply Fruchterman-Reingold layout from the qgraph
@@ -82,6 +83,16 @@ layout_with_qfr <- function
    ## edgelist instead of numeric edgelist
    e <- igraph::get.edgelist(g, names=FALSE);
    set.seed(seed);
+
+   ## Handle weights from E(g)$weight if supplied
+   if (length(weights) == 0 && "weight" %in% list.edge.attributes(g)) {
+      if (verbose) {
+         jamba::printDebug("layout_with_qfr(): ",
+            "Using E(g)$weight to define weights during layout.");
+      }
+      weights <- E(g)$weight;
+   }
+
    frL <- qgraph::qgraph.layout.fruchtermanreingold(e,
       vcount=vcount(g),
       area=area,
@@ -171,16 +182,25 @@ relayout_with_qfr <- function
 (g,
  repulse=3.5,
  spread_labels=TRUE,
+ seed=123,
+ verbose=FALSE,
  ...)
 {
    layout_xy <- layout_with_qfr(g=g,
       repulse=repulse,
+      seed=seed,
       ...);
+   if (verbose) {
+      jamba::printDebug("relayout_with_qfr(): ",
+         "head(layout_xy):");
+      print(head(layout_xy));
+   }
    V(g)$x <- layout_xy[,1];
    V(g)$y <- layout_xy[,2];
    if (spread_labels) {
       g <- spread_igraph_labels(g,
-         layout=layout_xy,
+         #layout=layout_xy,
+         verbose=verbose,
          ...);
    }
    return(g);
@@ -2157,13 +2177,25 @@ spread_igraph_labels <- function
    ##
    if (length(layout) == 0) {
       if (!force_relayout && all(c("x", "y") %in% list.vertex.attributes(g))) {
+         if (verbose) {
+            jamba::printDebug("spread_igraph_labels(): ",
+               "Re-using existing node coordinates.");
+         }
          layout <- cbind(x=V(g)$x, y=V(g)$y);
       } else {
+         if (verbose) {
+            jamba::printDebug("spread_igraph_labels(): ",
+               "Calling layout_with_qfr() for node coordinates.");
+         }
          layout <- layout_with_qfr(g,
             repulse=repulse,
             ...);
       }
    } else if (is.function(layout)) {
+      if (verbose) {
+         jamba::printDebug("spread_igraph_labels(): ",
+            "Calling layout() for node coordinates.");
+      }
       layout <- layout(g);
    }
    if (length(rownames(layout)) == 0) {

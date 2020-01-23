@@ -12,7 +12,7 @@
 #' for interconverting from list to matrix. The
 #' \code{\link[arules]{transactions}} class is itself an enhanced data matrix,
 #' which stores data using sparse matrix object type from the
-#' \code{\link{Matrix}} package, but also associates a data.frame to both
+#' \code{\link{Matrix}} package, but also associates a `data.frame` to both
 #' the rows and columns of the matrix to offer additional row and column
 #' annotation, as needed.
 #'
@@ -20,19 +20,15 @@
 #' but also that the resulting matrix was substantially smaller (5-20 times)
 #' then comparable methods producing a data matrix.
 #'
+#' When argument `keepCounts=TRUE`, the method of applying counts only
+#' updates entries with multiple instances, which helps make this step
+#' relatively fast.
+#'
 #' @family jam list functions
 #'
 #' @param x list of vectors
-#' @param makeUnique logical indicating whether to enforce uniqueness on each
-#'    vector in the list. For an extremely long list, the uniqueness step can
-#'    become the rate-limiting step, and yet the function used to coerce list
-#'    to matrix requires each vector have a unique set of items. When
-#'    \code{makeUnique=FALSE]} the value returned depends upon
-#'    \code{keepCounts} which optionally reports the frequency of each
-#'    item.
 #' @param keepCounts boolean indicating whether to return values indicating
-#'    the number of occurrences of each item, only useful when
-#'    \code{makeUnique=FALSE}.
+#'    the number of occurrences of each item.
 #' @param verbose boolean indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -47,19 +43,13 @@
 #' # Default behavior is to make items unique
 #' list2im(L1);
 #'
-#' # When not using unique entries, by default it reports the counts
-#' list2im(L1, makeUnique=FALSE);
-#'
-#' # The highest efficiency is seen when makeUnique=FALSE, keepCounts=FALSE,
-#' # however the difference is seen typically only with lists longer
-#' # than 10,000.
-#' list2im(L1, makeUnique=FALSE, keepCounts=FALSE);
+#' # Option to report the counts
+#' list2im(L1, keepCounts=TRUE);
 #'
 #' @export
 list2im <- function
 (x,
- makeUnique=TRUE,
- keepCounts=TRUE,
+ keepCounts=FALSE,
  verbose=FALSE,
  ...)
 {
@@ -68,53 +58,30 @@ list2im <- function
    if (!suppressPackageStartupMessages(require(arules))) {
       stop("list2im() requires the arules package.");
    }
-   makeListUnique <- function
-   (x,
-    verbose=FALSE,
-    ...) {
-      if (suppressPackageStartupMessages(require(S4Vectors))) {
+   if (keepCounts) {
+      xCt <- rmNULL(lapply(x, jamba::tcount, minCount=2));
+      if (length(xCt) == 0) {
          if (verbose) {
-            jamba::printDebug("makeListUnique():",
-               "Calling as.list(unique(S4Vectors::SimpleList(x)))");
+            jamba::printDebug("list2im():",
+               "No duplicate values observed.");
          }
-         x <- as.list(unique(SimpleList(x)));
-      } else {
-         if (verbose) {
-            jamba::printDebug("makeListUnique():",
-               "Calling lapply(x, unique)");
-         }
-         x <- lapply(x, unique);
+         keepCounts <- FALSE;
       }
-      return(x);
-   }
-   if (makeUnique) {
-      if (keepCounts) {
-         xCt <- rmNULL(lapply(x, jamba::tcount, minCount=2));
-         if (length(xCt) == 0) {
-            if (verbose) {
-               jamba::printDebug("list2im():",
-                  "No duplicate values observed.");
-            }
-            keepCounts <- FALSE;
-         }
-      } else {
-         x <- jamba::uniques(x,
-            verbose=verbose);
-      }
-   } else {
-      keepCounts <- FALSE;
    }
 
    ## Convert to transactions
    xT <- as(x, "transactions");
 
    ## Extract the matrix
-   xM <- as.matrix(xT@data*1);
-   if (ncol(xT@itemsetInfo) > 0) {
-      colnames(xM) <- xT@itemsetInfo[,1];
-   }
-   if (ncol(xT@itemInfo) > 0) {
-      rownames(xM) <- xT@itemInfo[,1];
+   xM <- t(as(xT, "matrix")*1);
+   if (1 == 2) {
+      xM <- as.matrix(xT@data*1);
+      if (ncol(xT@itemsetInfo) > 0) {
+         colnames(xM) <- xT@itemsetInfo[,1];
+      }
+      if (ncol(xT@itemInfo) > 0) {
+         rownames(xM) <- xT@itemInfo[,1];
+      }
    }
    if (keepCounts) {
       if (verbose) {

@@ -1,3 +1,25 @@
+# multienrichjam version 0.0.14.900
+
+## Changes to existing functions
+
+* `list2im()` removed argument `makeUnique` because the
+underlying conversion to matrix no longer requires that step,
+and it was a performance hit for extremely large lists.
+The argument `keepCounts` is the only requirement to
+maintain the count of each entry per list.
+* `multiEnrichMap()` now subsets the `geneIM` gene incidence
+matrix to match the genes after `topEnrichN` filtering is
+applied.
+* `layout_with_qfr()` now by default will use edge attribute
+`"weight"` as the `weights` argument when calling
+`qgraph::qgraph.layout.fruchtermanreingold()`.
+
+## New functions
+
+* `enrichList2geneHitList()` takes a list of `enrichResult`
+and returns the list of genes represented in each `enrichResult`.
+Intended mainly for internal use by `multiEnrichMap()`.
+
 # multienrichjam version 0.0.13.900
 
 ## New plotting functions

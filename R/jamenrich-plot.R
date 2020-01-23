@@ -36,8 +36,8 @@ mem_gene_path_heatmap <- function
 (mem,
  genes=NULL,
  sets=NULL,
- min_gene_ct=1,
- min_set_ct=1,
+ min_gene_ct=2,
+ min_set_ct=3,
  column_fontsize=6,
  row_fontsize=8,
  row_method="spearman",
@@ -46,7 +46,11 @@ mem_gene_path_heatmap <- function
  cluster_rows=NULL,
  name="gene_ct",
  p_cutoff=0.05,
+ row_split=NULL,
+ column_split=NULL,
+ auto_split=TRUE,
  column_title=NULL,
+ verbose=FALSE,
  ...)
 {
    #
@@ -71,13 +75,29 @@ mem_gene_path_heatmap <- function
    if (any(dim(memIM) == 0)) {
       stop("No remaining data after filtering.");
    }
+   ## Optional automatic row and column split
+   if (auto_split) {
+      if (length(row_split) == 0) {
+         row_split <- floor(nrow(memIM)^(1/4));
+      }
+      if (length(column_split) == 0) {
+         column_split <- floor(ncol(memIM)^(1/4));
+      }
+      if (verbose) {
+         printDebug("mem_gene_path_heatmap(): ",
+            "auto_split row_split:", row_split,
+            ", column_split:", column_split);
+      }
+   }
+
+   ## Apply colors to outside annotations
    col_iml1 <- lapply(nameVectorN(mem$colorV), function(i){
-      j <- colorV[[i]];
+      j <- mem$colorV[[i]];
       circlize::colorRamp2(breaks=c(0,1),
          colors=jamba::getColorRamp(j, n=3)[1:2])
    });
    col_iml4 <- lapply(nameVectorN(mem$colorV), function(i){
-      j <- colorV[[i]];
+      j <- mem$colorV[[i]];
       circlize::colorRamp2(
          #breaks=c(0,4),
          breaks=c(-log10(p_cutoff+1e-5), -log10(p_cutoff), 4, 6),
@@ -127,6 +147,8 @@ mem_gene_path_heatmap <- function
       column_names_gp=gpar(fontsize=column_fontsize),
       column_names_rot=90,
       column_title=column_title,
+      row_split=row_split,
+      column_split=column_split,
       ...)
 }
 
