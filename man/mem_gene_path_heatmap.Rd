@@ -10,10 +10,10 @@ mem_gene_path_heatmap(
   sets = NULL,
   min_gene_ct = 2,
   min_set_ct = 3,
-  column_fontsize = 6,
-  row_fontsize = 8,
-  row_method = "spearman",
-  column_method = "spearman",
+  column_fontsize = NULL,
+  row_fontsize = NULL,
+  row_method = "binary",
+  column_method = "binary",
   cluster_columns = NULL,
   cluster_rows = NULL,
   name = "gene_ct",
@@ -22,6 +22,8 @@ mem_gene_path_heatmap(
   column_split = NULL,
   auto_split = TRUE,
   column_title = NULL,
+  row_title = NULL,
+  row_title_rot = 90,
   verbose = FALSE,
   ...
 )

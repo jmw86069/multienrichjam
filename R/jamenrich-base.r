@@ -63,7 +63,7 @@
 enrichDF2enrichResult <- function
 (enrichDF=NULL,
  msigdbGmtT=NULL,#msigdbGmtTv50mouse,
- pvalueCutoff=0.15,
+ pvalueCutoff=1,
  pAdjustMethod="none",
  keyColname=c("itemsetID", "ID", "Name", "Pathway"),
  pathGenes="pathGenes",
@@ -664,6 +664,9 @@ multiEnrichMap <- function
          jamba::printDebug("multiEnrichMap(): ",
             "nrow(geneIM) before:",
             nrow(geneIM));
+         printDebug("setdiff(rownames(geneIM), newGenes):", setdiff(rownames(geneIM), newGenes));
+         printDebug("setdiff(newGenes, rownames(geneIM)):", setdiff(newGenes, rownames(geneIM)));
+         printDebug("setdiff(newGenes, origGenes):", setdiff(newGenes, origGenes));
       }
       geneIM <- geneIM[rownames(geneIM) %in% newGenes,,drop=FALSE];
       if (verbose) {
@@ -803,7 +806,7 @@ multiEnrichMap <- function
          "head(enrichIMM):");
       print(head(enrichIMM));
    }
-   enrichIMcolors <- matrix2heatColors(x=-log10(enrichIMM),
+   enrichIMcolors <- colorjam::matrix2heatColors(x=-log10(enrichIMM),
       colorV=colorV,
       lens=enrichLens,
       numLimit=enrichNumLimit,
@@ -874,6 +877,7 @@ multiEnrichMap <- function
       geneColname=geneColname,
       geneCountColname=geneCountColname,
       pvalueColname=pvalueColname,
+      geneDelim=geneDelim,
       verbose=verbose);
 
    #####################################################################
@@ -1138,6 +1142,7 @@ enrichList2df <- function
  pvalueColname=c("P-value", "pvalue", "Pval"),
  pvalueFloor=1e-200,
  msigdbGmtT=NULL,
+ geneDelim="[,/ ]",
  verbose=FALSE,
  debug=0,
 ...)
@@ -1260,7 +1265,7 @@ enrichList2df <- function
       unlist(
          strsplit(
             as.character(iDF[,geneColname]),
-            ","));
+            geneDelim));
    }))));
 
    ## If GmtT is supplied, use it to determine genes per pathway
@@ -1286,17 +1291,20 @@ enrichList2df <- function
       });
       enrichL1L <- mergeAllXY(enrichL1L1);
       enrichL1V <- jamba::nameVector(
-         gsub("^[,]+|[,]+$",
+         gsub("^[,/ ]+|[,/ ]+$",
             "",
             pasteByRow(
                enrichL1L[,-match(keyColname, colnames(enrichL1L)),drop=FALSE],
                sep=",")),
          enrichL1L[[keyColname]]);
-      enrichGeneL <- as.list(unique(
-         CharacterList(
-            strsplit(
-               enrichL1V,
-               "[,]+"))));
+      #enrichGeneL <- as.list(unique(
+      #   CharacterList(
+      #      strsplit(
+      #         enrichL1V,
+      #         geneDelim))));
+      enrichGeneL <- strsplit(
+         enrichL1V,
+         geneDelim);
       enrichGeneVL <- list(jamba::cPaste(enrichGeneL, doSort=FALSE));
       names(enrichGeneVL) <- geneColname;
       enrichGeneLen <- lengths(enrichGeneL);
@@ -1943,13 +1951,20 @@ fixSetLabels <- function
     "scRNA", "lincRNA"),
  ...)
 {
+   nodeType <- match.arg(nodeType);
    if (jamba::igrepHas("igraph", class(x))) {
+      if ("any" %in% nodeType) {
+         which_nodes <- seq_len(vcount(x));
+      } else {
+         which_nodes <- which(V(x)$nodeType %in% nodeType);
+      }
       xPrep <- gsub("_", " ",
          gsub(removeGrep,
             "",
             ignore.case=TRUE,
-            V(x)$name));
+            V(x)$name[which_nodes]));
    } else {
+      which_nodes <- seq_along(x);
       xPrep <- gsub("_", " ",
          gsub(removeGrep,
             "",
@@ -1995,16 +2010,10 @@ fixSetLabels <- function
    }
    ## Update the proper data to return
    if (jamba::igrepHas("igraph", class(x))) {
-      if (length(nodeType) > 0 &&
-            !"any" %in% nodeType &&
-            "nodeType" %in% list.vertex.attributes(x)) {
-         xUpdate <- which(V(x)$nodeType %in% nodeType);
-      } else {
-         xUpdate <- seq_len(igraph::vcount(x));
+      if (!"label" %in% list.vertex.attributes(x)) {
+         V(x)$label <- V(x)$name;
       }
-      if (length(xUpdate) > 0) {
-         V(x)[xUpdate]$label <- xNew;
-      }
+      V(x)[which_nodes]$label <- xNew;
    } else {
       x <- xNew;
    }

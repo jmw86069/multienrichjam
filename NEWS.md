@@ -1,3 +1,18 @@
+# multienrichjam version 0.0.15.900
+
+## Changes to existing functions
+
+* `multiEnrichMap()` several updates to improve robustness
+in the overall workflow.
+
+## new functions
+
+* `heatmap_row_order()` and `heatmap_column_order()` provide enhanced
+output from `ComplexHeatmap::row_order()`, mainly that they return
+the actual rownames and colnames of data in the heatmap. Very useful
+when the data used for the heatmap has been filtered internal
+to the function.
+
 # multienrichjam version 0.0.14.900
 
 ## Changes to existing functions
@@ -13,6 +28,10 @@ applied.
 * `layout_with_qfr()` now by default will use edge attribute
 `"weight"` as the `weights` argument when calling
 `qgraph::qgraph.layout.fruchtermanreingold()`.
+* `importIPAenrichment()` was enhanced for more robust import
+conditions, specifically for different variations of missing
+IPA enrichment results. Also, empty colnames are removed, to
+help recognize the proper identifier in each scenario.
 
 ## New functions
 

@@ -38,10 +38,10 @@ mem_gene_path_heatmap <- function
  sets=NULL,
  min_gene_ct=2,
  min_set_ct=3,
- column_fontsize=6,
- row_fontsize=8,
- row_method="spearman",
- column_method="spearman",
+ column_fontsize=NULL,
+ row_fontsize=NULL,
+ row_method="binary",
+ column_method="binary",
  cluster_columns=NULL,
  cluster_rows=NULL,
  name="gene_ct",
@@ -50,6 +50,8 @@ mem_gene_path_heatmap <- function
  column_split=NULL,
  auto_split=TRUE,
  column_title=NULL,
+ row_title=NULL,
+ row_title_rot=90,
  verbose=FALSE,
  ...)
 {
@@ -77,17 +79,42 @@ mem_gene_path_heatmap <- function
    }
    ## Optional automatic row and column split
    if (auto_split) {
-      if (length(row_split) == 0) {
-         row_split <- floor(nrow(memIM)^(1/4));
+      if (nrow(memIM) < 5) {
+         row_split <- NULL;
+      } else if (length(row_split) == 0) {
+         row_split <- noiseFloor(floor(nrow(memIM)^(1/2.5)), ceiling=12);
+         if (length(row_title) == 0) {
+            row_title <- letters[seq_len(row_split)];
+            row_title_rot <- 0;
+         }
       }
-      if (length(column_split) == 0) {
-         column_split <- floor(ncol(memIM)^(1/4));
+      if (ncol(memIM) < 5) {
+         column_split <- NULL;
+      } else if (length(column_split) == 0) {
+         column_split <- noiseFloor(floor(ncol(memIM)^(1/2.5)), ceiling=12);
+         if (length(column_title) == 0) {
+            column_title <- LETTERS[seq_len(column_split)];
+         }
       }
       if (verbose) {
          printDebug("mem_gene_path_heatmap(): ",
             "auto_split row_split:", row_split,
             ", column_split:", column_split);
       }
+   }
+   if (length(column_split) > 0 && is.numeric(column_split) && length(column_title) == 0) {
+      column_title <- LETTERS[seq_len(column_split)];
+   }
+   if (length(row_split) > 0 && is.numeric(row_split) && length(row_title) == 0) {
+      row_title <- LETTERS[seq_len(row_split)];
+   }
+
+   ## Automatic fontsize
+   if (length(column_fontsize) == 0) {
+      row_fontsize <- 60/(nrow(memIM))^(1/2);
+   }
+   if (length(column_fontsize) == 0) {
+      column_fontsize <- 60/(ncol(memIM))^(1/2);
    }
 
    ## Apply colors to outside annotations
@@ -134,19 +161,21 @@ mem_gene_path_heatmap <- function
       top_annotation=ComplexHeatmap::HeatmapAnnotation(
          which="column",
          border=TRUE,
-         #gp=gpar(col="black"),
+         #gp=grid::gpar(col="black"),
          col=col_iml4,
          df=-log10(mem$enrichIM[sets,,drop=FALSE])),
       col=getColorRamp("Reds", lens=2),
       left_annotation=ComplexHeatmap::HeatmapAnnotation(which="row",
          border=TRUE,
          col=col_iml1,
-         #gp=gpar(col="black"),
+         #gp=grid::gpar(col="black"),
          df=mem$geneIM[genes,,drop=FALSE]),
-      row_names_gp=gpar(fontsize=row_fontsize),
-      column_names_gp=gpar(fontsize=column_fontsize),
+      row_names_gp=grid::gpar(fontsize=row_fontsize),
+      column_names_gp=grid::gpar(fontsize=column_fontsize),
       column_names_rot=90,
       column_title=column_title,
+      row_title=row_title,
+      row_title_rot=row_title_rot,
       row_split=row_split,
       column_split=column_split,
       ...)
@@ -247,15 +276,15 @@ mem_enrichment_heatmap <- function
       cluster_rows=er_hc2,
       row_dend_reorder=row_dend_reorder,
       border=TRUE,
-      row_names_gp=gpar(fontsize=row_fontsize),
-      column_names_gp=gpar(fontsize=column_fontsize),
+      row_names_gp=grid::gpar(fontsize=row_fontsize),
+      column_names_gp=grid::gpar(fontsize=column_fontsize),
       cluster_columns=cluster_columns,
       row_dend_width=grid::unit(30, "mm"),
       row_names_max_width=grid::unit(8, "cm"),
       column_title=column_title,
       ...);
    if (color_by_column) {
-      hm_sets <- rownames(mem$enrichIM)[row_order(hm)];
+      hm_sets <- rownames(mem$enrichIM)[ComplexHeatmap::row_order(hm)];
       jamba::imageByColors(mem$enrichIMcolors[hm_sets,],
          cellnote=sapply(mem$enrichIM[hm_sets,],
             format.pval,
@@ -308,6 +337,9 @@ mem_enrichment_heatmap <- function
 #'    below which edges are removed. The value `E(g)$overlap_count` is
 #'    used for this filter.
 #' @param do_plot logical indicating whether to plot the final result.
+#' @param do_legend logical indicating whether to print a color legend,
+#'    valid when `do_plot=TRUE`. Arguments `...` are also passed to
+#'    `mem_legend()`, for example `x="bottomleft"` can be overriden.
 #' @param remove_blanks logical indicating whether to call
 #'    `removeIgraphBlanks()` which removes blank/empty colors in
 #'    igraph nodes.
@@ -345,6 +377,7 @@ mem_multienrichplot <- function
  overlap=0.1,
  overlap_count=2,
  do_plot=TRUE,
+ do_legend=TRUE,
  remove_blanks=TRUE,
  remove_singlets=TRUE,
  spread_labels=TRUE,
@@ -447,6 +480,10 @@ mem_multienrichplot <- function
          jam_igraph(g,
             main=main,
             rescale=rescale,
+            ...);
+      }
+      if (do_legend) {
+         mem_legend(mem,
             ...);
       }
    }

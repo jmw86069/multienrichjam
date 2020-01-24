@@ -9,6 +9,7 @@ mem_multienrichplot(
   overlap = 0.1,
   overlap_count = 2,
   do_plot = TRUE,
+  do_legend = TRUE,
   remove_blanks = TRUE,
   remove_singlets = TRUE,
   spread_labels = TRUE,
@@ -41,6 +42,10 @@ below which edges are removed. The value \code{E(g)$overlap_count} is
 used for this filter.}
 
 \item{do_plot}{logical indicating whether to plot the final result.}
+
+\item{do_legend}{logical indicating whether to print a color legend,
+valid when \code{do_plot=TRUE}. Arguments \code{...} are also passed to
+\code{mem_legend()}, for example \code{x="bottomleft"} can be overriden.}
 
 \item{remove_blanks}{logical indicating whether to call
 \code{removeIgraphBlanks()} which removes blank/empty colors in

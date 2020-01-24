@@ -7,7 +7,7 @@
 enrichDF2enrichResult(
   enrichDF = NULL,
   msigdbGmtT = NULL,
-  pvalueCutoff = 0.15,
+  pvalueCutoff = 1,
   pAdjustMethod = "none",
   keyColname = c("itemsetID", "ID", "Name", "Pathway"),
   pathGenes = "pathGenes",

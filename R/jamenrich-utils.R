@@ -250,3 +250,39 @@ enrichList2geneHitList <- function
    });
    return(geneHitList);
 }
+
+#' Return Heatmap row order
+#'
+#' @jam utility functions
+#'
+#' @export
+heatmap_row_order <- function
+(hm)
+{
+   ##
+   x <- lapply(ComplexHeatmap::row_order(hm), function(i){
+      hm@row_names_param$labels[i]
+   });
+   if (length(hm@row_title) == length(x)) {
+      names(x) <- hm@row_title;
+   }
+   x;
+}
+
+#' Return Heatmap column order
+#'
+#' @jam utility functions
+#'
+#' @export
+heatmap_column_order <- function
+(hm)
+{
+   ##
+   x <- lapply(ComplexHeatmap::column_order(hm), function(i){
+      hm@column_names_param$labels[i]
+   });
+   if (length(hm@column_title) == length(x)) {
+      names(x) <- hm@column_title;
+   }
+   x;
+}

@@ -242,87 +242,60 @@ importIPAenrichment <- function
          i <- gsub("[\r\n]+$",
             "",
             i);
-         i;
+         #i;
       }
       ## Often IPA output has descriptor lines with 'for ... ->' in them
       ## which indicates a header for each subtable. We will parse
       ## that header for their correct table name where possible.
-      descLines <- grep("( for ).*(->)", i);
-      if (length(descLines) > 0) {
-         iDesc <- gsub("( for |->).*$", "", i[descLines]);
-      }
+      is_desc <- grep("( for ).*(->)", i);
 
       ## Infer which columns area headers, then set up
       ## ranges of rows to be assigned to each header.
-      i1 <- jamba::igrep(headerGrep, i);
-      if (length(i1) == 0) {
-         stop("The worksheet does not have rows matching headerGrep.");
-      }
-      i2 <- c(tail(i1, -1) - 1, length(i));
-      i12 <- cbind(i1, i2);
-      if (verbose) {
-         jamba::printDebug("importIPAenrichment(): ",
-            "i1:", i1);
-         jamba::printDebug("importIPAenrichment(): ",
-            "i2:", i2);
-      }
+      #i1 <- jamba::igrep(headerGrep, i);
+      is_header <- jamba::igrep(headerGrep, i);
+      is_footer <- c(tail(is_header, -1) - 2, length(i));
 
-      ## Pull out reasonable rownames based upon IPA naming conventions
-      i12prevRow <- (i1-1);
-      i12prevRowText <- i[i1-1];
-      i12names1 <- jamba::makeNames(
-         sapply(i[i1], function(ix){
-            head(jamba::provigrep(
-               ipaNameGrep,
-               unlist(strsplit(ix, sep))), 1);
-         })
-      );
-      i12names2 <- jamba::makeNames(gsub(
-         paste0(".*(^|", sep, ")",
-            "([^", sep, "]*",
-            "(Pathways|Regulator[s]*|Diseases|Lists|Consistency.Score|Symbol)",
-            "[^", sep, "]*)",
-            "($|", sep, ").*"),
-         "\\2",
-         i[i12[,1]]));
-      if (any(i12prevRow %in% descLines)) {
-         iWhich <- which(i12prevRow %in% descLines);
-         iWhichMatch <- match(i12prevRow[iWhich], descLines);
-         i12names1[iWhich] <- iDesc[iWhichMatch];
-      }
-      if (verbose) {
-         print(head(as.data.frame(do.call(cbind, list(i12names1=i12names1, i12names2=i12names2))), Inf));
-         jamba::printDebug("i12names1:");
-         print(i12names1);
-         jamba::printDebug("i12names2:");
-         print(i12names2);
-      }
-      rownames(i12) <- i12names1;
-      i12;
-      ## Remove any headers which have no rows of results
-      i12 <- i12[which(i1 != i2),,drop=FALSE];
-
+      ## Note that a "valid" condition must have
+      ## - descLines one row above i1
+      ## - i1 must be contained in (descLines + 1)
+      ## - descLines must not be contained in (descLines + 2)
+      valid_desc <- ((is_desc + 1) %in% is_header & !(is_desc + 2) %in% is_desc);
+      i_desc <- gsub("( for |->).*$", "", i[is_desc]);
+      valid_df <- data.frame(is_desc,
+         is_header=is_header[match(is_desc, is_header - 1)],
+         is_footer=is_footer[match(is_desc, is_header - 1)],
+         i_desc,
+         valid_desc);
+      rownames(valid_df) <- jamba::makeNames(i_desc);
+      use_df <- valid_df[valid_desc,,drop=FALSE];
       if (verbose) {
          jamba::printDebug("importIPAenrichment(): ",
-            "detected these ranges of rows to import:");
-         print(i12);
+            "summary of IPA row validation:");
+         print(valid_df);
+         jamba::printDebug("importIPAenrichment(): ",
+            "Rows used during import:");
+         print(use_df);
       }
 
 
       ## Iterate each set of results and create a data.frame.
       ## Note that each type of result has its own number of columns,
       ## and unique colnames.
-      ipaDFL <- lapply(jamba::nameVector(rownames(i12)), function(j){
+      ipaDFL <- lapply(jamba::nameVector(rownames(use_df)), function(j){
+         j1 <- use_df[j,"is_header"];
+         j2 <- use_df[j,"is_footer"];
          if (verbose) {
             jamba::printDebug("importIPAenrichment(): ",
                "creating data.frame:",
-               j);
+               j,
+               ", j1:", j1, ", j2:", j2);
          }
-         j1 <- i12[j,1];
-         j2 <- i12[j,2];
          ## Create a sequence that removes the descLines as relevant
-         jseq <- setdiff(seq(from=j1, to=j2, by=1),
-            descLines);
+         jseq <- seq(from=j1, to=j2, by=1);
+         if (any(jseq %in% is_desc)) {
+            j2 <- min(intersect(jseq, is_desc)) - 1;
+            jseq <- seq(from=j1, to=j2, by=1);
+         }
          ## Note it is very important to use textConnection() here
          ## because it properly preserves character encodings, such
          ## as alpha, beta characters in some pathway names from IPA.
@@ -332,8 +305,6 @@ importIPAenrichment <- function
                   "using read.table().");
             }
             jDF <- read.table(
-               #textConnection(gsub("\t+$", "", i[j1:j2])),
-               #textConnection(gsub("\t+$", "", i[jseq])),
                textConnection(gsub(paste0(sep, "+$"),
                   "",
                   i[jseq])),
@@ -365,7 +336,13 @@ importIPAenrichment <- function
                #encoding="UTF-8",
                comment="");
          }
+         ## Remove empty colnames
+         non_na_cols <- sapply(colnames(jDF), function(j){
+            !all(jDF[[j]] %in% c(NA, ""))
+         });
+         jDF <- jDF[,non_na_cols,drop=FALSE];
 
+         ## Curate IPA colnames
          jDF <- curateIPAcolnames(jDF,
             ipaNameGrep=ipaNameGrep,
             geneGrep=geneGrep,

@@ -12,6 +12,7 @@ enrichList2df(
   pvalueColname = c("P-value", "pvalue", "Pval"),
   pvalueFloor = 1e-200,
   msigdbGmtT = NULL,
+  geneDelim = "[,/ ]",
   verbose = FALSE,
   debug = 0,
   ...
