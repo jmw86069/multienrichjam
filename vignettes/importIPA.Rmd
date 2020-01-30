@@ -390,5 +390,21 @@ these changes:
 the edges of each node.
 
 ```{r, jam_igraph_1, fig.height=10, fig.width=10}
-jam_igraph(cnet3, node_factor=2, label_factor=1.2, label_dist_factor=3);
+jam_igraph(cnet3,
+   edge_factor=2,
+   node_factor=2, 
+   label_factor=1.2, 
+   label_dist_factor=3);
+```
+
+One more fancy alternative, you can colorize the edges based
+upon the node colors, a great idea inspired by the Gephi
+netowrk visualization tool.
+
+```{r, jam_igraph_2, fig.height=10, fig.width=10}
+jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
+   edge_factor=2,
+   node_factor=2, 
+   label_factor=1.2, 
+   label_dist_factor=3);
 ```

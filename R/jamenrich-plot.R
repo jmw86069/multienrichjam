@@ -568,6 +568,12 @@ mem_legend <- function
 #' `igraph` layout. Similarly, the `vertex.size` and `vertex.label.dist`
 #' parameters should also be scaled proportionally.
 #'
+#' You can use argument `label_factor_l=list(nodeType=c(Gene=0.01, Set=1))`
+#' to hide labels for Gene nodes, and display labels for Set nodes.
+#' Note that due to a quirk in `igraph`, setting `label.cex=0`
+#' will revert the font to default size, and will not hide the
+#' label.
+#'
 #' @family jam igraph functions
 #' @family jam plot functions
 #'
@@ -579,6 +585,38 @@ mem_legend <- function
 #' @param rescale logical indicating whether to rescale the layout
 #'    coordinates to `c(-1, 1)`. When `rescale=FALSE` the original
 #'    layout coordinates are used as-is without change.
+#' @param node_factor numeric value multiplied by `V(x)$size` to adjust
+#'    the relative size of all nodes by a common numeric scalar value.
+#' @param edge_factor numeric value multiplied by `E(x)$width` to adjust
+#'    the relative width of all edges by a common numeric scalar value.
+#' @param label_factor numeric value multiplied by `V(x)$label.cex`
+#'    and `E(x)$label.cex` to adjust the relative size of all labels on
+#'    nodes and edges by a common numeric scalar value.
+#' @param label_dist_factor numeric value multiplied by `V(x)$label.dist`
+#'    to adjust the relative distance of all nodes labels from the node center
+#'    by a common numeric scalar value.
+#' @param node_factor_l,label_factor_l,label_dist_factor_l `list`
+#'    of vectors, where the names of the `list` are attribute
+#'    names, and the names of each vector are attributes values.
+#'    The vector values are used as scalar multipliers, analogous to
+#'    `node_factor`. The purpose is to apply scalar values to different
+#'    subsets of nodes. For example, consider:
+#'    `node_factor_l=list(nodeType=c(Gene=1, Set=2)`. The list name
+#'    `"nodeType"` says to look at `vertex_attr(x, "nodeType")`. Nodes
+#'    where `nodeType="Gene"` will use `1`, and where `nodeType="Set"`
+#'    will use `2` as the scalar value.
+#'
+#' @examples
+#' ## example showing how to use the list form
+#' ## This form resizes nodes where V(g)$nodeType %in% "Gene" by 2x,
+#' ## and resizes nodes where V(g)$nodeType %in% "Set" by 3x.
+#' node_factor_l <- list(nodeType=c(Gene=2, Set=3));
+#'
+#' ## This form multiplies label.dist for nodeType="Gene" nodes by 1,
+#' ## and multiplies label.dist for nodeType="Set" nodes by 0.5
+#' label_dist_factor_l <- list(nodeType=c(Gene=1, Set=0.5))
+#'
+#' # jam_igraph(g, node_factor_l=node_factor_l, label_dist_factor_l=label_dist_factor_l);
 #'
 #' @export
 jam_igraph <- function
@@ -586,25 +624,37 @@ jam_igraph <- function
  ...,
  xlim=c(-1,1),
  ylim=c(-1,1),
+ expand=0.03,
+ rescale=FALSE,
  node_factor=1,
+ node_factor_l=NULL,
  edge_factor=1,
  label_factor=1,
+ label_factor_l=NULL,
  label_dist_factor=1,
- expand=0.03,
- rescale=FALSE)
+ label_dist_factor_l=1,
+ verbose=FALSE)
 {
    ##
    params <- igraph:::i.parse.plot.params(x, list(...));
    layout <- params("plot", "layout");
    vertex.size <- params("vertex", "size");
    vertex.size2 <- params("vertex", "size2");
-   label.dist <- params("vertex", "label.dist") * label_dist_factor;
+   vertex.label.dist <- params("vertex", "label.dist") * label_dist_factor;
    edge.width <- params("edge", "width") * edge_factor;
 
    if (is.function(label_factor)) {
+      if (verbose) {
+         jamba::printDebug("jam_igraph(): ",
+            "Applying ", "label_factor(label.cex)");
+      }
       vertex.label.cex <- label_factor(params("vertex", "label.cex"));
       edge.label.cex <- label_factor(params("edge", "label.cex"));
    } else {
+      if (verbose) {
+         jamba::printDebug("jam_igraph(): ",
+            "Applying ", "label.cex * label_factor");
+      }
       vertex.label.cex <- params("vertex", "label.cex") * label_factor;
       edge.label.cex <- params("edge", "label.cex") * label_factor;
    }
@@ -615,11 +665,56 @@ jam_igraph <- function
       vertex.size <- vertex.size * node_factor;
       vertex.size2 <- vertex.size2 * node_factor;
    }
+
+   ## Handle input as list type
+   handle_factor_list <- function(x, attr, factor_l, i_values) {
+      if (length(factor_l) > 0 && is.numeric(factor_l)) {
+         if (verbose) {
+            jamba::printDebug("jam_igraph(): ",
+               "Applying ['", attr, "'] * factor");
+         }
+         i_values <- factor_l * i_values;
+      } else if (length(factor_l) > 0 && is.function(factor_l)) {
+         if (verbose) {
+            jamba::printDebug("jam_igraph(): ",
+               "Applying factor(", attr, ")");
+         }
+         i_values <- factor_l(i_values);
+      } else if (length(factor_l) > 0 && is.list(factor_l)) {
+         for (i in names(factor_l)) {
+            j <- factor_l[[i]];
+            for (k in names(j)) {
+               x_factor <- factor_l[[i]][[k]];
+               if (i %in% list.vertex.attributes(x)) {
+                  i_nodes <- (vertex_attr(x, i) %in% k);
+                  if (any(i_nodes)) {
+                     if (verbose) {
+                        jamba::printDebug(sep="",
+                           c("jam_igraph(): ",
+                              "Applying ",
+                              " factor_l[['",i,"']][['",k,"']] to ",
+                              jamba::formatInt(sum(i_nodes)),
+                              " nodes: ['", attr, "'] * (", x_factor, ")"));
+                     }
+                     #vertex.label.cex[i_nodes] <- vertex.label.cex[i_nodes] * x_factor;
+                     i_values[i_nodes] <- i_values[i_nodes] * x_factor;
+                  }
+               }
+            }
+         }
+      }
+      return(i_values);
+   }
+   ## label_factor_l=list(nodeType=c(Gene=1, Set=2))
+   vertex.label.cex <- handle_factor_list(x, attr="label.cex", label_factor_l, i_values=vertex.label.cex);
+   vertex.label.dist <- handle_factor_list(x, attr="label.dist", label_dist_factor_l, i_values=vertex.label.dist);
+   vertex.size <- handle_factor_list(x, attr="size", node_factor_l, i_values=vertex.size);
+
    if (!rescale) {
       xlim <- range(layout[,1]);
       vertex.size <- vertex.size * diff(xlim) / 2;
       vertex.size2 <- vertex.size2 * diff(xlim) / 2;
-      label.dist <- label.dist * diff(xlim) / 2;
+      vertex.label.dist <- vertex.label.dist * diff(xlim) / 2;
       xlim <- xlim + diff(xlim) * c(-1,1) * expand;
       ylim <- range(layout[,2]);
       ylim <- ylim + diff(ylim) * c(-1,1) * expand;
@@ -629,7 +724,7 @@ jam_igraph <- function
       rescale=rescale,
       vertex.size=vertex.size,
       vertex.size2=vertex.size2,
-      vertex.label.dist=label.dist,
+      vertex.label.dist=vertex.label.dist,
       vertex.label.cex=vertex.label.cex,
       edge.label.cex=edge.label.cex,
       edge.width=edge.width,

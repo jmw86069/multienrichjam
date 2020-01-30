@@ -9,12 +9,16 @@ jam_igraph(
   ...,
   xlim = c(-1, 1),
   ylim = c(-1, 1),
+  expand = 0.03,
+  rescale = FALSE,
   node_factor = 1,
+  node_factor_l = NULL,
   edge_factor = 1,
   label_factor = 1,
+  label_factor_l = NULL,
   label_dist_factor = 1,
-  expand = 0.03,
-  rescale = FALSE
+  label_dist_factor_l = 1,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -30,6 +34,31 @@ where \code{0.03} expands each size \verb{3\%}.}
 \item{rescale}{logical indicating whether to rescale the layout
 coordinates to \code{c(-1, 1)}. When \code{rescale=FALSE} the original
 layout coordinates are used as-is without change.}
+
+\item{node_factor}{numeric value multiplied by \code{V(x)$size} to adjust
+the relative size of all nodes by a common numeric scalar value.}
+
+\item{node_factor_l, label_factor_l, label_dist_factor_l}{\code{list}
+of vectors, where the names of the \code{list} are attribute
+names, and the names of each vector are attributes values.
+The vector values are used as scalar multipliers, analogous to
+\code{node_factor}. The purpose is to apply scalar values to different
+subsets of nodes. For example, consider:
+\verb{node_factor_l=list(nodeType=c(Gene=1, Set=2)}. The list name
+\code{"nodeType"} says to look at \code{vertex_attr(x, "nodeType")}. Nodes
+where \code{nodeType="Gene"} will use \code{1}, and where \code{nodeType="Set"}
+will use \code{2} as the scalar value.}
+
+\item{edge_factor}{numeric value multiplied by \code{E(x)$width} to adjust
+the relative width of all edges by a common numeric scalar value.}
+
+\item{label_factor}{numeric value multiplied by \code{V(x)$label.cex}
+and \code{E(x)$label.cex} to adjust the relative size of all labels on
+nodes and edges by a common numeric scalar value.}
+
+\item{label_dist_factor}{numeric value multiplied by \code{V(x)$label.dist}
+to adjust the relative distance of all nodes labels from the node center
+by a common numeric scalar value.}
 }
 \description{
 Jam wrapper to plot igraph
@@ -41,6 +70,25 @@ in the former function (as of January 2020). The desired outcome
 is for the \code{xlim} and \code{ylim} defaults to be scaled according to the
 \code{igraph} layout. Similarly, the \code{vertex.size} and \code{vertex.label.dist}
 parameters should also be scaled proportionally.
+
+You can use argument \code{label_factor_l=list(nodeType=c(Gene=0.01, Set=1))}
+to hide labels for Gene nodes, and display labels for Set nodes.
+Note that due to a quirk in \code{igraph}, setting \code{label.cex=0}
+will revert the font to default size, and will not hide the
+label.
+}
+\examples{
+## example showing how to use the list form
+## This form resizes nodes where V(g)$nodeType \%in\% "Gene" by 2x,
+## and resizes nodes where V(g)$nodeType \%in\% "Set" by 3x.
+node_factor_l <- list(nodeType=c(Gene=2, Set=3));
+
+## This form multiplies label.dist for nodeType="Gene" nodes by 1,
+## and multiplies label.dist for nodeType="Set" nodes by 0.5
+label_dist_factor_l <- list(nodeType=c(Gene=1, Set=0.5))
+
+# jam_igraph(g, node_factor_l=node_factor_l, label_dist_factor_l=label_dist_factor_l);
+
 }
 \seealso{
 Other jam igraph functions: 

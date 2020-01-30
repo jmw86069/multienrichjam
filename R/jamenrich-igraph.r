@@ -802,7 +802,7 @@ shape.coloredrectangle.plot <- function
       print(vertex.coloredrect.color);
    }
 
-   vertex.coloredrect.byrow <- getparam("coloredrect.byrow");
+   vertex.coloredrect.byrow <- getparam("coloredrect.byrow") > 0;
    if (length(vertex.coloredrect.byrow) == 0) {
       vertex.coloredrect.byrow <- TRUE;
    }
@@ -826,10 +826,11 @@ shape.coloredrectangle.plot <- function
       vertex.coloredrect.lwd <- 1;
    }
 
-   vertex.size1 <- getparam("size2");
    vertex.size2 <- getparam("size");
-   #printDebug("vertex.size1:", head(vertex.size1, 10),
-   #   ", vertex.size2:", head(vertex.size2, 10));
+   vertex.size1 <- getparam("size2");
+   if (any(is.na(vertex.size1))) {
+      vertex.size1[is.na(vertex.size1)] <- vertex.size2[is.na(vertex.size1)] / 2;
+   }
    vertex.size1 <- rep(1/200 * vertex.size1, length.out=nrow(coords));
    vertex.size2 <- rep(1/200 * vertex.size2, length.out=nrow(coords));
 
@@ -850,8 +851,6 @@ shape.coloredrectangle.plot <- function
          ", vertex.coloredrect.ncol:", vertex.coloredrect.ncol);
    }
 
-   #printDebug("vertex.size1:", head(vertex.size1, 10),
-   #   ", vertex.size2:", head(vertex.size2, 10));
    vertex.size <- cbind(vertex.size1, vertex.size2);
 
    ## Define custom function to help vectorize drawing, by creating a
@@ -890,8 +889,8 @@ shape.coloredrectangle.plot <- function
          yk <- y[[k]];
          size1k <- size1[[k]];
          size2k <- size2[[k]];
-         nrowk <- nrow[[k]];
-         ncolk <- ncol[[k]];
+         nrowk <- jamba::rmNULL(nullValue=1, nrow[[k]]);
+         ncolk <- jamba::rmNULL(nullValue=1, ncol[[k]]);
          byrowk <- byrow[[k]];
          ## Individual rectangles
          x01 <- seq(from=xk-(size1k/2),
@@ -961,7 +960,8 @@ shape.coloredrectangle.plot <- function
             "names(rectDFL):", names(rectDFL));
       }
 
-      for (rectDFi in rev(rectDFL)) {
+      rect_order <- provigrep(c("frame", "square", "."), names(rectDFL));
+      for (rectDFi in rectDFL[rect_order]) {
          symbols(x=rectDFi$x,
             y=rectDFi$y,
             bg=rectDFi$bg,
@@ -2617,4 +2617,52 @@ subgraph_jam <- function
       graph <- igraph::set_graph_attr(graph, "layout", g_layout_new);
    }
    return(graph);
+}
+
+#' Color igraph edges using node colors
+#'
+#' Color igraph edges using node colors
+#'
+#' This function uses the average color for the two nodes
+#' involved in each edge, and applies that as the new edge color.
+#'
+#' The color for each node depends upon the node shape, where
+#' shape `"pie"` uses the average color from `"pie.color"`, and
+#' shape `"coloredrectangle"` uses the avereage color from
+#' `"coloredrect.color"`. Everything else uses `"color"`.
+#'
+#' This function relies upon `avg_colors_by_list()` to
+#' blend multiple colors together.
+#'
+#' @param g `igraph` object
+#' @param alpha `NULL` or numeric vector with value between 0 and 1,
+#'    where 0 is transparent and 1 is non-transparent. When supplied,
+#'    this value is passed to `jamba::alpha2col()` to apply alpha
+#'    transparency to each edge color.
+#' @param ... additional arguments are ignored.
+#'
+#' @export
+color_edges_by_nodes <- function
+(g,
+ alpha=NULL,
+ ...)
+{
+   edge_m <- as_edgelist(g, names=FALSE);
+   g_colors <- ifelse(V(g)$shape %in% "circle",
+      V(g)$color,
+      ifelse(V(g)$shape %in% "pie",
+         V(g)$pie.color,
+         ifelse(V(g)$shape %in% "coloredrectangle",
+            V(g)$coloredrect.color,
+            "#FFFFFF00")));
+   g_color <- avg_colors_by_list(g_colors);
+   edge_m[] <- g_color[edge_m];
+   edge_l <- as.list(data.frame(t(edge_m)));
+   edge_colors <- avg_colors_by_list(edge_l);
+   if (length(alpha) > 0) {
+      edge_colors <- alpha2col(edge_colors,
+         alpha=alpha);
+   }
+   E(g)$color <- unname(edge_colors);
+   return(g);
 }

@@ -1,3 +1,27 @@
+# multienrichjam version 0.0.17.900
+
+## New functions
+
+* `color_edges_by_nodes()` takes an igraph, determines a
+color for each node based upon the shape (using `avg_colors_from_list()`
+for shape `"pie"` and `"coloredrectangle"`), then creates an
+average color between two nodes, and uses that as the edge color.
+
+## Changes to existing functions
+
+* `jam_igraph()` has more configurable arguments, in the form
+of named lists. The driving example is
+`label_factor_l=list(nodeType=c(Gene=0.01, Set=1))`, that
+will apply `label.cex*0.01` to "Gene" nodes,
+and `label.cex*1.5` to "Set" nodes. Similar arguments:
+`node_factor_l` to apply to node size, and
+`label_dist_factor_l` to apply to label distance from node center.
+* `shape.coloredrectangle.plot()` was updated to fix a small bug
+in order of rendering colored rectangles, it was somehow drawing the
+frame after the fill colors, which caused the frames to overlap
+each other and appear transparent.
+
+
 # multienrichjam version 0.0.16.900
 
 The vignette was updated to use the new functions, for
