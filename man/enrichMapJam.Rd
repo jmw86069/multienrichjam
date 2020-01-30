@@ -7,23 +7,74 @@
 enrichMapJam(
   x,
   n = 50,
-  fixed = TRUE,
   vertex.label.font = 1,
   vertex.label.cex = 1,
+  keyColname = "ID",
   nodeLabel = c("Name", "Description", "ID"),
   descriptionColname = "Description",
-  keyColname = "ID",
-  nodeLabelFunc = function(i) {     paste(collapse = "\\n", strwrap(width = 30,
-    jamba::ucfirst(tolower(gsub("_", " ", i))))) },
+  nodeLabelFunc = NULL,
   overlapThreshold = 0.2,
   msigdbGmtT = NULL,
-  method = 2,
   verbose = FALSE,
   ...
 )
 }
+\arguments{
+\item{x}{either \code{enrichResult} or \code{data.frame} containing
+enrichment results, specifically expecting colnames to
+contain one of \code{c("ID","Description","Name")}
+to represent the node name, and \code{c("Description")} to represent
+the description, if present.}
+
+\item{n}{numeric value indicating the maximum number of nodes to
+include in the final network.}
+
+\item{vertex.label.font, vertex.label.cex}{attributes to define the
+default node label font and size.}
+
+\item{keyColname, nodeLabel, descriptionColname}{character vectors
+indicating the colname to use for the node name and label.}
+
+\item{nodeLabelFunc}{optional function to apply to \code{V(g)$name} in
+order to create \code{V(g)$label}. One suggestion is \code{fixSetLabels()}
+which applies word wrap, and optional max character length.}
+
+\item{overlapThreshold}{numeric value indicating the minimum
+Jaccard overlap, where edges with lower values are deleted from
+the \code{igraph} object.}
+
+\item{...}{additional arguments are passed to \code{enrichDF2enrichResult()}
+when the input \code{x} is a \code{data.frame}.}
+}
+\value{
+\code{igraph} object, whose nodes represent each enriched pathway,
+and are sized based upon the number of genes involved in the
+enrichment, and are colored based upon the \code{log10(Pvalue)}
+using \code{colorjam::vals2colorLevels()}, a function that applies
+a color gradient to a numeric range.
+Each edge has attributes: \code{overlap} containing Jaccard overlap,
+\code{overlap_count} with the number of genes in common between
+the two nodes, and \code{overlap_max_pct} with the maximum percent
+overlap between two nodes (overlap count)/(smaller node size).
+}
 \description{
 Create enrichMap igraph object
+}
+\details{
+This function is a minor extension to the original function
+DOSE::enrichMap() which is now rewritten in the source package
+to \code{enrichplot::emapplot()}. The major differences:
+\itemize{
+\item This function returns an \code{igraph} object, which can be manipulated
+using network-related functions.
+\item This function calculates overlap using \code{dist(...,method="binary")}
+which is a much faster method for calculating the Jaccard overlap.
+\item This function also calculates the overlap count, another helpful
+measure for filtering network connections, for example to remove
+links with only one gene, even if they overlap is above the
+required threshold. Many spurious network connections are removed
+with this filter, and it appears to be a helpful option.
+}
 }
 \seealso{
 Other jam conversion functions: 
@@ -47,14 +98,17 @@ Other jam igraph functions:
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 }
 \concept{jam conversion functions}
 \concept{jam igraph functions}

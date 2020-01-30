@@ -9,6 +9,8 @@ avg_colors_by_list(
   useWeightedHue = TRUE,
   Cmethod = c("mean", "max", "min"),
   Lmethod = c("mean", "max", "min"),
+  c_min = 4,
+  grey_hue = 359,
   ...
 )
 }
@@ -41,6 +43,10 @@ C and L values to determine the new color. It is deliberately intended
 to ignore muddiness when averaging multiple colors.
 
 Colors are only modified for elements with 2 or more entries.
+
+This method also only operates on the unique set of colors,
+so it should be substantially more efficient on large lists that
+contain only a few unique subsets of colors.
 }
 \examples{
 x <- list(input1=c(red="red", blue="blue"),
@@ -63,10 +69,18 @@ jamba::showColors(list(
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{apply_color_cap}()},
 \code{\link{avg_angles}()},
+\code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
+\code{\link{heatmap_column_order}()},
+\code{\link{heatmap_row_order}()},
 \code{\link{isColorBlank}()},
+\code{\link{mem_find_overlap}()},
+\code{\link{order_colors}()},
+\code{\link{sort_colors}()},
+\code{\link{subgraph_jam}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

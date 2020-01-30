@@ -72,13 +72,16 @@ Other jam igraph functions:
 \code{\link{layout_with_qfr}()},
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 }
 \concept{jam igraph functions}

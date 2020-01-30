@@ -8,9 +8,15 @@ subsetCnetIgraph(
   gCnet,
   includeSets = NULL,
   includeGenes = NULL,
-  removeSinglets = TRUE,
+  remove_singlets = TRUE,
   minSetDegree = 1,
   minGeneDegree = 1,
+  remove_blanks = FALSE,
+  spread_labels = TRUE,
+  force_relayout = TRUE,
+  do_reorder = TRUE,
+  repulse = 4,
+  layout = NULL,
   verbose = FALSE,
   ...
 )
@@ -24,8 +30,10 @@ names or labels to retain.}
 \item{includeGenes}{character vector, or NULL, containing the gene
 names or labels to retain.}
 
-\item{removeSinglets}{logical whether to remove singlet graph nodes,
-which are nodes that have no remaining edges.}
+\item{remove_singlets}{logical whether to remove singlet graph nodes,
+which are nodes that have no remaining edges. Note that
+argument \code{"removeSinglets"} is deprecated but will be recognized
+with preference, support will be removed in future versions.}
 
 \item{minSetDegree}{integer value indicating the minimum number
 of edges each Set node must have to be retained in the resulting
@@ -36,6 +44,33 @@ have multiple connected Gene nodes.}
 of edges each Gene node must have to be retained in the resulting
 igraph. Use \code{minGeneDegree=2} to retain only Gene nodes that
 connect to multiple Set nodes.}
+
+\item{remove_blanks}{logical indicating whether to call
+\code{removeIgraphBlanks()}, which removes blank colors from
+\code{"pie.color"} and \code{"coloredrect.color"} attributes.}
+
+\item{spread_labels}{logical indicating whether to call
+\code{spread_igraph_labels()}, which re-orients the node labels
+after the \code{igraph} object has been subsetted. When \code{TRUE},
+the arguments \code{force_relayout}, and \code{do_reorder} are passed
+to that function.}
+
+\item{force_relayout}{logical indicating whether to re-apply
+the \code{igraph} layout function.}
+
+\item{do_reorder}{logical indicating whether to call
+\code{reorderIgraphNodes()}, which sorts equivalent nodes by
+color then label, intended when there are large numbers of
+nodes with the same edges, typically most common in a cnet
+plot where many gene nodes may be connected to the same
+pathway set nodes.}
+
+\item{layout}{function that takes \code{igraph} object and returns a
+numeric matrix of node coordinates. This function is only
+called when \code{force_relayout=TRUE}, and must be supplied as
+a function in order to be applied properly to the subset
+Cnet \code{igraph}. To apply layout before the subset operation,
+do so with \code{set_graph_attr(g, "layout", layout)}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 }
@@ -84,12 +119,15 @@ Other jam igraph functions:
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subgraph_jam}()},
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 }
 \concept{jam igraph functions}

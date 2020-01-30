@@ -124,18 +124,22 @@ Other jam igraph functions:
 \code{\link{layout_with_qfr}()},
 \code{\link{memIM2cnet}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 
 Other jam plot functions: 
 \code{\link{jam_igraph}()},
 \code{\link{mem_enrichment_heatmap}()},
+\code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()}
 }
 \concept{jam igraph functions}

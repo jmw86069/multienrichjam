@@ -1,3 +1,53 @@
+# multienrichjam version 0.0.16.900
+
+The vignette was updated to use the new functions, for
+a much cleaner overall workflow.
+
+## Changes to existing functions
+
+* `reorderIgraphNodes()` uses new function `avg_colors_by_list()`
+to create one color to represent each node, then `sort_colors()`
+to sort nodes by color hue, instead of previous behavior which sorted
+by the hex color string. This change affects attributes `"pie.color"`,
+`"coloredrect.color"` and `"color"`. Recall that this function
+`reorderIgraphNodes()` is intended to help visually organize
+groups of nodes by their colors, to make it easier to tell how
+many nodes are each color.
+* `avg_colors_by_list()` now uses `weighted.mean()` based upon the
+`"c"` channel (chroma, color saturation) in order to down-weight
+the effect of grey colors, which really should have no hue. The default
+weight for grey is 0.1, while the maximum value for fully saturated
+colors is 100. Blending `"green"` with `"grey30"` yields slightly less
+saturated green, as expected.
+* `subsetCnetIgraph()` now includes convenience calls to
+`removeIgraphBlanks()`, `spread_igraph_labels()`, `reorderIgraphNodes()`,
+and `relayout_with_qfr()`. In almost all cases, creating a subset of
+a Cnet necessitates a new layout, which therefore requires new
+node ordering (sorting groups of equivalent nodes by color), and
+then label orientation (the angle used to offset the node label from
+the center of each node).
+
+## New functions
+
+* `sort_colors()` and `order_colors()` uses the `farver::encode_colour()`
+function to convert colors to HCL, then sorts by hue, and returns the
+original sorted vector or corresponding order, respectively. For
+sorting colors inside a `data.frame`, convert colors to a factor
+whose levels are `sort_colors(unique(colors))`, in order to maintain
+ties during multi-column sorting.
+* `apply_color_cap()` imposes a numeric range onto a color channel
+for a vector or list of colors, using `jamba::noiseFloor()`. Values
+outside the allowed range are forced to the range.
+* `subgraph_jam()` is a custom version of `igraph::induced_subgraph()`,
+that correctly handles subsetting the graph layout when the graph itself
+is subsetted.
+* `jam_igraph()` is a custom `igraph::plot()` with proper sizing when
+`rescale=FALSE`, allowing better aspect ratios for certain network
+layout coordinates.
+* `with_qfr()` is a wrapper to `layout_with_qfr()` that returns
+a layout specification object, for use with `igraph::add_layout_()`
+in a more confusing workflow pattern than I expected.
+
 # multienrichjam version 0.0.15.900
 
 ## Changes to existing functions

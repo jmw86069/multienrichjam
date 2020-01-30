@@ -30,7 +30,9 @@ from the node, in order to improve default label positions.}
 }
 \value{
 \code{igraph} object, with layout coordinates stored in
-\code{V(g)$x} and \code{V(g)$y}. When \code{spread_labels=TRUE},
+graph attribute \code{"layout"}, accessible for example with
+\code{graph$layout} or \code{graph_attr(graph, "layout")}.
+When \code{spread_labels=TRUE},
 \code{V(g)$label.degree} and \code{V(g)$label.dist} are updated
 by calling \code{spread_igraph_labels()}.
 }
@@ -46,3 +48,31 @@ The main benefit to using this function is to update the layout
 and node label positions in one step,
 while also returning the \code{igraph} object ready to be plotted as-is.
 }
+\seealso{
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{jam_igraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{memIM2cnet}()},
+\code{\link{mem_multienrichplot}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
+\code{\link{subsetCnetIgraph}()},
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
+}
+\concept{jam igraph functions}

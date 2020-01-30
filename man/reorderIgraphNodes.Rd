@@ -6,9 +6,9 @@
 \usage{
 reorderIgraphNodes(
   g,
-  sortAttributes = c("color", "coloredrect.color"),
+  sortAttributes = c("pie.color", "coloredrect.color", "color", "label", "name"),
   nodeSortBy = c("x", "y"),
-  layout = function(...) layout_with_qfr(..., repulse = 3.5),
+  layout = NULL,
   verbose = FALSE,
   ...
 )
@@ -24,9 +24,9 @@ names, to be applied in order when sorting nodes.}
 
 \item{layout}{numeric matrix of node coordinates, or
 function used to produce layout coordinates. When layout
-is \code{NULL}, this function tries to use node attributes
-\code{"x"} and \code{"y"}. If those attributes do not exist,
-the \code{layout_with_qfr()} is used with default \code{repulse=3.5}.}
+is \code{NULL}, this function tries to use graph attribute
+\code{"layout"}, otherwise
+the \code{relayout_with_qfr} is called.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 
@@ -35,8 +35,9 @@ the \code{layout_with_qfr()} is used with default \code{repulse=3.5}.}
 \value{
 igraph with nodes positioned to order
 nodes by color. The layout coordinates are stored in
-the node attributes, accessible with \code{V(g)$x} and
-\code{V(g)$y}. When there are not multiple nodes sharing
+the graph attribute \code{"layout"}, accessible with
+\code{g$layout} or \code{graph_attr(g, "layout")}.
+When there are not multiple nodes sharing
 the same neighbors, the original igraph object is
 returned, with the addition of layout coordinates.
 }
@@ -79,12 +80,15 @@ Other jam igraph functions:
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 }
 \concept{jam igraph functions}

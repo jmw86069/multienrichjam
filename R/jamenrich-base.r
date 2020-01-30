@@ -958,7 +958,9 @@ multiEnrichMap <- function
       verbose=verbose);
    ## normScale(..., low=0) scales range 0 to maximum, into 0 to 1
    ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
+   V(enrichEM)$size_orig <- V(enrichEM)$size;
    V(enrichEM)$size <- (normScale(V(enrichEM)$size, low=0) + 0.3) * 8;
+   E(enrichEM)$color <- "#99999977";
 
    mem$multiEnrichMap <- enrichEM;
 
@@ -1353,7 +1355,10 @@ enrichList2df <- function
       if (length(keyValsUse) > 0) {
          keepColDF[keyValsUse,keyColname] <- keyValsUse;
          for (keepCol in keepCols) {
-            keepColDF[keyValsUse,keepCol] <- iDF[match(keyValsUse, iDF[,keyColname]),keepCol];
+            keyNew <- iDF[match(keyValsUse, iDF[,keyColname]),keepCol];
+            if (length(keyNew) > 0) {
+               keepColDF[keyValsUse,keepCol] <- keyNew;
+            }
          }
       }
       rm(iDF);
@@ -1366,7 +1371,10 @@ enrichList2df <- function
          enrichGeneL=enrichGeneL,
          keepColDF=keepColDF));
    }
-
+   if (verbose) {
+      printDebug("multiEnrichMap(): ",
+         "Creating enrichDF.");
+   }
    enrichDF <- data.frame(check.names=FALSE,
       stringsAsFactors=FALSE,
       enrichValuesM,
@@ -1383,25 +1391,67 @@ enrichList2df <- function
 #'
 #' Create enrichMap igraph object
 #'
+#' This function is a minor extension to the original function
+#' DOSE::enrichMap() which is now rewritten in the source package
+#' to `enrichplot::emapplot()`. The major differences:
+#'
+#' * This function returns an `igraph` object, which can be manipulated
+#' using network-related functions.
+#' * This function calculates overlap using `dist(...,method="binary")`
+#' which is a much faster method for calculating the Jaccard overlap.
+#' * This function also calculates the overlap count, another helpful
+#' measure for filtering network connections, for example to remove
+#' links with only one gene, even if they overlap is above the
+#' required threshold. Many spurious network connections are removed
+#' with this filter, and it appears to be a helpful option.
+#'
+#' @return `igraph` object, whose nodes represent each enriched pathway,
+#'    and are sized based upon the number of genes involved in the
+#'    enrichment, and are colored based upon the `log10(Pvalue)`
+#'    using `colorjam::vals2colorLevels()`, a function that applies
+#'    a color gradient to a numeric range.
+#'    Each edge has attributes: `overlap` containing Jaccard overlap,
+#'    `overlap_count` with the number of genes in common between
+#'    the two nodes, and `overlap_max_pct` with the maximum percent
+#'    overlap between two nodes (overlap count)/(smaller node size).
+#'
+#' @param x either `enrichResult` or `data.frame` containing
+#'    enrichment results, specifically expecting colnames to
+#'    contain one of `c("ID","Description","Name")`
+#'    to represent the node name, and `c("Description")` to represent
+#'    the description, if present.
+#' @param n numeric value indicating the maximum number of nodes to
+#'    include in the final network.
+#' @param vertex.label.font,vertex.label.cex attributes to define the
+#'    default node label font and size.
+#' @param keyColname,nodeLabel,descriptionColname character vectors
+#'    indicating the colname to use for the node name and label.
+#' @param nodeLabelFunc optional function to apply to `V(g)$name` in
+#'    order to create `V(g)$label`. One suggestion is `fixSetLabels()`
+#'    which applies word wrap, and optional max character length.
+#' @param overlapThreshold numeric value indicating the minimum
+#'    Jaccard overlap, where edges with lower values are deleted from
+#'    the `igraph` object.
+#' @param ... additional arguments are passed to `enrichDF2enrichResult()`
+#'    when the input `x` is a `data.frame`.
+#'
 #' @family jam conversion functions
 #' @family jam igraph functions
 #'
 #' @export
 enrichMapJam <- function
 (x,
-n=50,
-fixed=TRUE,
-vertex.label.font=1,
-vertex.label.cex=1,
-nodeLabel=c("Name","Description","ID"),
-descriptionColname="Description",
-keyColname="ID",
-nodeLabelFunc=function(i){paste(collapse="\n",strwrap(width=30, jamba::ucfirst(tolower(gsub("_", " ", i)))))},
-overlapThreshold=0.2,
-msigdbGmtT=NULL,
-method=2,
-verbose=FALSE,
-...)
+ n=50,
+ vertex.label.font=1,
+ vertex.label.cex=1,
+ keyColname="ID",
+ nodeLabel=c("Name","Description","ID"),
+ descriptionColname="Description",
+ nodeLabelFunc=NULL,
+ overlapThreshold=0.2,
+ msigdbGmtT=NULL,
+ verbose=FALSE,
+ ...)
 {
    ## Purpose is to customize enrichMap() to work with data
    ## generated outside clusterProfiler
@@ -1427,7 +1477,8 @@ verbose=FALSE,
       }
       x <- enrichDF2enrichResult(x,
          msigdbGmtT=msigdbGmtT,
-         verbose=verbose);
+         verbose=verbose,
+         ...);
    }
    if (is(x, "gseaResult")) {
       geneSets <- x@geneSets;
@@ -1456,7 +1507,7 @@ verbose=FALSE,
    if (nrow(y) < n) {
       n <- nrow(y);
    } else {
-      y <- y[1:n,,drop=FALSE];
+      y <- head(y, n);
    }
    if (verbose) {
       jamba::printDebug("enrichMapJam(): ",
@@ -1488,45 +1539,29 @@ verbose=FALSE,
       geneSets <- geneSets[id];
       n <- nrow(y)
 
-      if (method == 1) {
-         ## Manual all-by-all overlap_ratio() method
-         w <- matrix(NA, nrow = n, ncol = n)
-         colnames(w) <- rownames(w) <- y[[nodeLabel]];
-         for (i in 1:n) {
-            for (j in i:n) {
-               #return(list(x=x, y=y, geneSets=geneSets, id=id, i=i, j=j));
-               w[i, j] = enrichplot:::overlap_ratio(geneSets[id[i]], geneSets[id[j]])
-            }
-         }
-      } else {
-         ## Jaccard coefficient is given as output from
-         ## 1-dist(method="binary")
-         wIM <- list2im(geneSets);
-         w <- 1-as.matrix(dist(t(wIM), method="binary"));
-         ## overlap counts
-         wct <- t(sign(wIM)) %*% sign(wIM);
-         ## min counts per cell
-         wctmin <- wct;
-         wctmin[] <- pmin(rep(diag(wct), ncol(wct)), rep(diag(wct), each=ncol(wct)));
-         ## highest pct overlap
-         wctmaxpct <- wct / wctmin;
-         colnames(w) <- rownames(w) <- y[[nodeLabel]][match(colnames(w), y$ID)];
-      }
+      ## Jaccard coefficient is given as output from
+      ## 1-dist(method="binary")
+      wIM <- list2im(geneSets);
+      w <- 1-as.matrix(dist(t(wIM), method="binary"));
+      ## overlap counts, use sign() to count each gene only once
+      wct <- t(sign(wIM)) %*% sign(wIM);
+      ## min counts per cell
+      wctmin <- wct;
+      wctmin[] <- pmin(rep(diag(wct), ncol(wct)), rep(diag(wct), each=ncol(wct)));
+      ## highest pct overlap
+      wctmaxpct <- wct / wctmin;
+      colnames(w) <- rownames(w) <- y[[nodeLabel]][match(colnames(w), y$ID)];
+
       wd <- reshape2::melt(w);
       wctd <- reshape2::melt(wct);
       wctmaxpctd <- reshape2::melt(wctmaxpct);
 
-      if (method == 1) {
-         wd <- wd[wd[, 1] != wd[, 2], ];
-         wd <- wd[!is.na(wd[, 3]), ];
-      } else {
-         wd1 <- match(wd[,1], colnames(w));
-         wd2 <- match(wd[,2], colnames(w));
-         w_keep <- (wd1 > wd2);
-         wd <- wd[w_keep,,drop=FALSE];
-         wctd <- wctd[w_keep,,drop=FALSE];
-         wctmaxpctd <- wctmaxpctd[w_keep,,drop=FALSE];
-      }
+      wd1 <- match(wd[,1], colnames(w));
+      wd2 <- match(wd[,2], colnames(w));
+      w_keep <- (wd1 > wd2);
+      wd <- wd[w_keep,,drop=FALSE];
+      wctd <- wctd[w_keep,,drop=FALSE];
+      wctmaxpctd <- wctmaxpctd[w_keep,,drop=FALSE];
 
       g <- igraph::graph.data.frame(wd[, -3], directed=FALSE);
       igraph::E(g)$width <- sqrt(wd[, 3] * 20);
@@ -1536,7 +1571,7 @@ verbose=FALSE,
       igraph::V(g)$pvalue <- pvalue[V(g)$name];
 
       ## Attempt to merge annotations from the enrichResult object
-      iMatch <- match(V(g)$name, y[[nodeLabel]]);
+      iMatch <- match(igraph::V(g)$name, y[[nodeLabel]]);
       if (verbose) {
          jamba::printDebug("enrichMapJam(): ",
             "merging annotations from enrichResult objects");
@@ -1545,13 +1580,13 @@ verbose=FALSE,
          #printDebug("match() worked with enrichResult data.frame Name colname.");
          iColnames <- jamba::unvigrep("^name$", colnames(y));
          for (iY in iColnames) {
-            g <- g %>% set_vertex_attr(iY, value=y[iMatch,,drop=FALSE][[iY]]);
+            g <- g %>% igraph::set_vertex_attr(iY, value=y[iMatch,,drop=FALSE][[iY]]);
          }
       } else {
          ## Attempt to merge additional pathway annotation from GmtT
          #printDebug("match() worked with enrichResult data.frame Name colname.");
          if (length(msigdbGmtT) > 0) {
-            iMatch <- match(V(g)$name, msigdbGmtT@itemsetInfo$Name);
+            iMatch <- match(igraph::V(g)$name, msigdbGmtT@itemsetInfo$Name);
             iMatchWhich <- which(!is.na(iMatch));
             if (length(iMatchWhich) > 0) {
                for (iCol1 in setdiff(colnames(msigdbGmtT@itemsetInfo), "Name")) {
@@ -1561,37 +1596,46 @@ verbose=FALSE,
          }
       }
 
+      ## Apply optional node attributes
+      if (length(vertex.label.font) > 0) {
+         igraph::V(g)$label.font <- vertex.label.font;
+      }
+      if (length(vertex.label.cex) > 0) {
+         igraph::V(g)$label.cex <- vertex.label.cex;
+      }
+
       ## Delete edges where overlap is below a threshold
       g <- delete.edges(g, E(g)[E(g)$overlap < overlapThreshold]);
 
-      pvalue <- V(g)$pvalue;
+      pvalue <- igraph::V(g)$pvalue;
 
-      if (method == 1) {
-         ## where is color_scale?
-         cols <- color_scale("red", "#E5C494");
-         V(g)$color <- cols[sapply(pvalue, getIdx, min(pvalue), max(pvalue))];
-      } else {
-         #nodeColor <- customNumColors(-log10(pvalue), col="Reds",
-         #   colLensFactor=5);
-         nodeColor <- colorjam::vals2colorLevels(-log10(pvalue),
-            col="Reds",
-            numLimit=4,
-            baseline=0,
-            lens=2);
-         V(g)$color <- nodeColor;
-         #nodeColor <- customNumColors(rank(-pvalue), col="Reds", colLensFactor=5);
-      }
+      nodeColor <- colorjam::vals2colorLevels(-log10(pvalue),
+         col="Reds",
+         numLimit=4,
+         baseline=0,
+         lens=2);
+      igraph::V(g)$color <- nodeColor;
+
       if (is(x, "gseaResult")) {
-         cnt <- y$setSize/10
+         cnt <- jamba::nameVector(y$setSize, y[[nodeLabel]]);
       } else if (is(x, "enrichResult")) {
-         cnt <- jamba::nameVector(y$Count, y[[nodeLabel]]);
+         if ("allGeneHits" %in% colnames(y)) {
+            cnt <- jamba::nameVector(y$allGeneHits, y[[nodeLabel]]);
+         } else {
+            cnt <- jamba::nameVector(y$Count, y[[nodeLabel]]);
+         }
       }
-      cnt2 <- cnt[V(g)$name]
-      V(g)$size <- log10(cnt2) * 10;
+      cnt2 <- cnt[igraph::V(g)$name];
+      ## Scale between 0 and 1, add 0.2 then multiply by 10
+      ## largest node size will be 12 (1.2*10)
+      ## smallest node size will be 2 dependent upon the difference between
+      ##   largest and smallest gene count
+      node_size <- (jamba::normScale(log10(cnt2+1) * 10, low=0) + 0.2) * 10;
+      igraph::V(g)$size <- node_size;
 
-      #if (!nodeLabelFunc %in% c(FALSE)) {
-      V(g)$label <- sapply(V(g)$name, nodeLabelFunc);
-      #}
+      if (length(nodeLabelFunc) > 0 && is.function(nodeLabelFunc)) {
+         igraph::V(g)$label <- sapply(V(g)$name, nodeLabelFunc);
+      }
    }
    invisible(g);
 }
@@ -1632,8 +1676,10 @@ verbose=FALSE,
 #'    names or labels to retain.
 #' @param includeGenes character vector, or NULL, containing the gene
 #'    names or labels to retain.
-#' @param removeSinglets logical whether to remove singlet graph nodes,
-#'    which are nodes that have no remaining edges.
+#' @param remove_singlets logical whether to remove singlet graph nodes,
+#'    which are nodes that have no remaining edges. Note that
+#'    argument `"removeSinglets"` is deprecated but will be recognized
+#'    with preference, support will be removed in future versions.
 #' @param minSetDegree integer value indicating the minimum number
 #'    of edges each Set node must have to be retained in the resulting
 #'    igraph. Use `minSetDegree=2` to retain only Set nodes that
@@ -1642,6 +1688,28 @@ verbose=FALSE,
 #'    of edges each Gene node must have to be retained in the resulting
 #'    igraph. Use `minGeneDegree=2` to retain only Gene nodes that
 #'    connect to multiple Set nodes.
+#' @param remove_blanks logical indicating whether to call
+#'    `removeIgraphBlanks()`, which removes blank colors from
+#'    `"pie.color"` and `"coloredrect.color"` attributes.
+#' @param spread_labels logical indicating whether to call
+#'    `spread_igraph_labels()`, which re-orients the node labels
+#'    after the `igraph` object has been subsetted. When `TRUE`,
+#'    the arguments `force_relayout`, and `do_reorder` are passed
+#'    to that function.
+#' @param force_relayout logical indicating whether to re-apply
+#'    the `igraph` layout function.
+#' @param do_reorder logical indicating whether to call
+#'    `reorderIgraphNodes()`, which sorts equivalent nodes by
+#'    color then label, intended when there are large numbers of
+#'    nodes with the same edges, typically most common in a cnet
+#'    plot where many gene nodes may be connected to the same
+#'    pathway set nodes.
+#' @param layout function that takes `igraph` object and returns a
+#'    numeric matrix of node coordinates. This function is only
+#'    called when `force_relayout=TRUE`, and must be supplied as
+#'    a function in order to be applied properly to the subset
+#'    Cnet `igraph`. To apply layout before the subset operation,
+#'    do so with `set_graph_attr(g, "layout", layout)`.
 #' @param verbose logical indicating whether to print verbose output.
 #'
 #' @export
@@ -1649,14 +1717,35 @@ subsetCnetIgraph <- function
 (gCnet,
  includeSets=NULL,
  includeGenes=NULL,
- removeSinglets=TRUE,
+ remove_singlets=TRUE,
  minSetDegree=1,
  minGeneDegree=1,
+ remove_blanks=FALSE,
+ spread_labels=TRUE,
+ force_relayout=TRUE,
+ do_reorder=TRUE,
+ repulse=4,
+ layout=NULL,
  verbose=FALSE,
  ...)
 {
    ## Purpose is to take an Cnet igraph object and subset
    ## by set name or gene symbol
+   ##########################################
+   ## Check for deprecated arguments
+   dots <- list(...);
+   if (length(dots) > 0) {
+      dep_args <- c(removeSinglets="remove_singlets");
+      for (i in names(dep_args)) {
+         if (i %in% names(dots)) {
+            jamba::printDebug("subsetCnetIgraph(): ",
+               "Deprecated argument '", i,
+               "', please use '", dep_args[i], "'");
+            assign(dep_args[i],
+               dots[[i]]);
+         }
+      }
+   }
    ##########################################
    ## Optionally subset for certain pathways
    if (length(includeSets) > 0) {
@@ -1693,7 +1782,7 @@ subsetCnetIgraph <- function
             " genes in the Cnet igraph object.");
          whichNodeSets <- which(V(gCnet)$nodeType %in% "Set");
       }
-      gCnet <- igraph::subgraph(gCnet,
+      gCnet <- subgraph_jam(gCnet,
          includeVall);
    }
 
@@ -1724,57 +1813,83 @@ subsetCnetIgraph <- function
             jamba::formatInt(length(keepSetNodes)),
             " sets in the Cnet igraph object.");
       }
-      gCnet <- igraph::subgraph(gCnet,
+      gCnet <- subgraph_jam(gCnet,
          keepNodes);
    }
 
-   #####################################################
-   ## Polish the igraph by removing nodes with no edges
-   iDegree <- degree(gCnet);
-   if (removeSinglets) {
-      if (any(iDegree) == 0) {
-         if (verbose) {
-            jamba::printDebug("subsetCnetIgraph(): ",
-               "Filtered ",
-               jamba::formatInt(length(iDegree)),
-               " nodes to remove ",
-               jamba::formatInt(sum(iDegree == 0)),
-               " nodes with no connections.");
-         }
-         gCnet <- igraph::subgraph(gCnet,
-            which(iDegree > 0));
-      }
-   }
    #####################################################
    ## Optionally subset by degree of Set and Gene nodes
    if (length(minSetDegree) > 0) {
       dropSetNodes <- (V(gCnet)$nodeType %in% "Set" &
             degree(gCnet) < minSetDegree);
-      if (any(dropSetNodes)) {
-         if (verbose) {
-            jamba::printDebug("subsetCnetIgraph(): ",
-               "Dropping ",
-               jamba::formatInt(sum(dropSetNodes)),
-               " set nodes with less than degree:",
-               minSetDegree);
-         }
-         gCnet <- igraph::subgraph(gCnet,
-            which(!dropSetNodes));
-      }
+   } else {
+      dropSetNodes <- rep(FALSE, vcount(gCnet));
    }
    if (length(minGeneDegree) > 0) {
       dropGeneNodes <- (V(gCnet)$nodeType %in% "Gene" &
             degree(gCnet) < minGeneDegree);
-      if (any(dropGeneNodes)) {
-         if (verbose) {
-            jamba::printDebug("subsetCnetIgraph(): ",
-               "Dropping ",
-               jamba::formatInt(sum(dropGeneNodes)),
-               " gene nodes with less than degree:",
-               minGeneDegree);
+   } else {
+      dropGeneNodes <- rep(FALSE, vcount(gCnet));
+   }
+   dropNodes <- (dropSetNodes | dropGeneNodes);
+   if (any(dropNodes)) {
+      if (verbose) {
+         jamba::printDebug("subsetCnetIgraph(): ",
+            "Dropping ",
+            jamba::formatInt(sum(dropSetNodes)),
+            " sets with fewer than ",
+            minSetDegree,
+            " connected genes, and ",
+            jamba::formatInt(sum(dropGeneNodes)),
+            " gene nodes with fewer than ",
+            minGeneDegree,
+            " connected sets.");
+      }
+      gCnet <- subgraph_jam(gCnet,
+         which(!dropNodes));
+   }
+
+   #####################################################
+   ## Polish the igraph by removing nodes with no edges
+   if (remove_singlets) {
+      #iDegree <- degree(gCnet);
+      gCnet <- removeIgraphSinglets(gCnet,
+         min_degree=1,
+         verbose=verbose);
+   }
+
+   #####################################################
+   ## Optionally apply layout-related functions
+   if (remove_blanks) {
+      gCnet <- removeIgraphBlanks(gCnet,
+         ...);
+   }
+   if (spread_labels) {
+      gCnet <- spread_igraph_labels(gCnet,
+         force_relayout=force_relayout,
+         do_reorder=do_reorder,
+         repulse=repulse,
+         verbose=verbose,
+         ...);
+   } else {
+      if (force_relayout) {
+         if (is.function(layout)) {
+            layout <- layout(gCnet);
+         } else {
+            layout <- layout[!dropNodes,,drop=FALSE];
          }
-         gCnet <- igraph::subgraph(gCnet,
-            which(!dropGeneNodes));
+         if (nrow(layout) != vcount(gCnet)) {
+            stop("layout dimensions do not match the subset cnet igraph.");
+         }
+         gCnet <- set_graph_attr(gCnet,
+            "layout",
+            layout);
+      }
+      if (do_reorder) {
+         gCnet <- reorderIgraphNodes(gCnet,
+            layout=NULL,
+            verbose=verbose,
+            ...);
       }
    }
 

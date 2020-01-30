@@ -38,6 +38,7 @@ a color key to a plot, typically for \code{igraph} plots.
 Other jam plot functions: 
 \code{\link{jam_igraph}()},
 \code{\link{mem_enrichment_heatmap}()},
+\code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_multienrichplot}()}
 }
 \concept{jam plot functions}

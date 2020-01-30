@@ -9,6 +9,10 @@ jam_igraph(
   ...,
   xlim = c(-1, 1),
   ylim = c(-1, 1),
+  node_factor = 1,
+  edge_factor = 1,
+  label_factor = 1,
+  label_dist_factor = 1,
   expand = 0.03,
   rescale = FALSE
 )
@@ -53,17 +57,21 @@ Other jam igraph functions:
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 
 Other jam plot functions: 
 \code{\link{mem_enrichment_heatmap}()},
+\code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()},
 \code{\link{mem_multienrichplot}()}
 }

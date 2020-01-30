@@ -83,6 +83,7 @@ cells are therefore white.
 \seealso{
 Other jam plot functions: 
 \code{\link{jam_igraph}()},
+\code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()},
 \code{\link{mem_multienrichplot}()}
 }

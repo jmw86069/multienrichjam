@@ -8,21 +8,25 @@
 
 <title>igraph layout using qgraph Fruchterman-Reingold — layout_with_qfr • multienrichjam</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,10 +34,11 @@
 
 
 
-<meta property="og:title" content="igraph layout using qgraph Fruchterman-Reingold — layout_with_qfr" />
 
+<meta property="og:title" content="igraph layout using qgraph Fruchterman-Reingold — layout_with_qfr" />
 <meta property="og:description" content="igraph layout using qgraph Fruchterman-Reingold" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -45,6 +50,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -63,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16.900</span>
       </span>
     </div>
 
@@ -71,7 +77,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,11 +100,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jmw86069/multienrichjam">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -109,6 +114,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -120,15 +126,30 @@
     </div>
 
     <div class="ref-description">
-    
     <p>igraph layout using qgraph Fruchterman-Reingold</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>layout_with_qfr</span>(<span class='no'>g</span>, <span class='kw'>repulse</span> <span class='kw'>=</span> <span class='fl'>3.1</span>, <span class='kw'>area</span> <span class='kw'>=</span> <span class='fl'>8</span> * (<span class='fu'>vcount</span>(<span class='no'>g</span>)^<span class='fl'>2</span>),
-  <span class='kw'>repulse.rad</span> <span class='kw'>=</span> (<span class='fu'>vcount</span>(<span class='no'>g</span>)^<span class='no'>repulse</span>), <span class='kw'>constraints</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>123</span>,
-  <span class='no'>...</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>layout_with_qfr</span>(
+  <span class='no'>g</span>,
+  <span class='kw'>repulse</span> <span class='kw'>=</span> <span class='fl'>3.5</span>,
+  <span class='kw'>area</span> <span class='kw'>=</span> <span class='fl'>8</span> * (<span class='fu'>vcount</span>(<span class='no'>g</span>)^<span class='fl'>2</span>),
+  <span class='kw'>repulse.rad</span> <span class='kw'>=</span> (<span class='fu'>vcount</span>(<span class='no'>g</span>)^<span class='no'>repulse</span>),
+  <span class='kw'>constraints</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>123</span>,
+  <span class='kw'>weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>niter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>max.delta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cool.exp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>init</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>rotation</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>layout.control</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>round</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -163,14 +184,13 @@ the position can be modified.</p></td>
     <tr>
       <th>...</th>
       <td><p>other arguments are sent to
-<code><a href='https://www.rdocumentation.org/packages/qgraph/topics/qgraph.layout.fruchtermanreingold'>qgraph::qgraph.layout.fruchtermanreingold()</a></code></p></td>
+<code><a href='https://rdrr.io/pkg/qgraph/man/qgraph.layout.fruchtermanreingold.html'>qgraph::qgraph.layout.fruchtermanreingold()</a></code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>two-column numeric matrix with coordinates for each vertex.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function provides Fruchterman-Reingold layout for an igraph
@@ -179,62 +199,72 @@ important configuration options deprecated in the igraph implementation.
 Notably, the repulse.rad parameter is helpful in adjusting the relative
 spacing of vertices, where higher values cause tighter packing of
 vertices, and lower values allows greater spacing between vertices.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://www.rdocumentation.org/packages/qgraph/topics/qgraph.layout.fruchtermanreingold'>qgraph::qgraph.layout.fruchtermanreingold()</a></code></p>
-<p>Other jam igraph functions: <code><a href='cnet2df.html'>cnet2df</a></code>,
-  <code><a href='cnet2im.html'>cnet2im</a></code>, <code><a href='cnetplotJam.html'>cnetplotJam</a></code>,
-  <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a></code>,
-  <code><a href='drawEllipse.html'>drawEllipse</a></code>, <code><a href='enrichMapJam.html'>enrichMapJam</a></code>,
-  <code><a href='fixSetLabels.html'>fixSetLabels</a></code>,
-  <code><a href='igraph2pieGraph.html'>igraph2pieGraph</a></code>,
-  <code><a href='layout_with_qfrf.html'>layout_with_qfrf</a></code>,
-  <code><a href='rectifyPiegraph.html'>rectifyPiegraph</a></code>,
-  <code><a href='removeIgraphBlanks.html'>removeIgraphBlanks</a></code>,
-  <code><a href='reorderIgraphNodes.html'>reorderIgraphNodes</a></code>,
-  <code><a href='shape.coloredrectangle.plot.html'>shape.coloredrectangle.plot</a></code>,
-  <code><a href='shape.ellipse.plot.html'>shape.ellipse.plot</a></code>,
-  <code><a href='subsetCnetIgraph.html'>subsetCnetIgraph</a></code></p></div>
-    
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/qgraph/man/qgraph.layout.fruchtermanreingold.html'>qgraph::qgraph.layout.fruchtermanreingold()</a></code></p>
+<p>Other jam igraph functions: 
+<code><a href='cnet2df.html'>cnet2df</a>()</code>,
+<code><a href='cnet2im.html'>cnet2im</a>()</code>,
+<code><a href='cnetplotJam.html'>cnetplotJam</a>()</code>,
+<code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a>()</code>,
+<code><a href='drawEllipse.html'>drawEllipse</a>()</code>,
+<code><a href='enrichMapJam.html'>enrichMapJam</a>()</code>,
+<code><a href='fixSetLabels.html'>fixSetLabels</a>()</code>,
+<code><a href='igraph2pieGraph.html'>igraph2pieGraph</a>()</code>,
+<code><a href='jam_igraph.html'>jam_igraph</a>()</code>,
+<code><a href='layout_with_qfrf.html'>layout_with_qfrf</a>()</code>,
+<code><a href='memIM2cnet.html'>memIM2cnet</a>()</code>,
+<code><a href='mem_multienrichplot.html'>mem_multienrichplot</a>()</code>,
+<code><a href='rectifyPiegraph.html'>rectifyPiegraph</a>()</code>,
+<code><a href='relayout_with_qfr.html'>relayout_with_qfr</a>()</code>,
+<code><a href='removeIgraphBlanks.html'>removeIgraphBlanks</a>()</code>,
+<code><a href='removeIgraphSinglets.html'>removeIgraphSinglets</a>()</code>,
+<code><a href='reorderIgraphNodes.html'>reorderIgraphNodes</a>()</code>,
+<code><a href='shape.coloredrectangle.plot.html'>shape.coloredrectangle.plot</a>()</code>,
+<code><a href='shape.ellipse.plot.html'>shape.ellipse.plot</a>()</code>,
+<code><a href='spread_igraph_labels.html'>spread_igraph_labels</a>()</code>,
+<code>subgraph_jam()</code>,
+<code><a href='subsetCnetIgraph.html'>subsetCnetIgraph</a>()</code>,
+<code><a href='subset_igraph_components.html'>subset_igraph_components</a>()</code>,
+<code>with_qfr()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/message'>suppressPackageStartupMessages</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='no'>igraph</span>))) {
-<span class='no'>g</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/igraph/topics/make_graph'>make_graph</a></span>( ~ <span class='no'>A</span>-<span class='no'>B</span>-<span class='no'>C</span>-<span class='no'>D</span>-<span class='no'>A</span>, <span class='no'>E</span>-<span class='no'>A</span>:<span class='no'>B</span>:<span class='no'>C</span>:<span class='no'>D</span>,
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/message.html'>suppressPackageStartupMessages</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>igraph</span>))) {
+<span class='no'>g</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/make_graph.html'>make_graph</a></span>( ~ <span class='no'>A</span>-<span class='no'>B</span>-<span class='no'>C</span>-<span class='no'>D</span>-<span class='no'>A</span>, <span class='no'>E</span>-<span class='no'>A</span>:<span class='no'>B</span>:<span class='no'>C</span>:<span class='no'>D</span>,
    <span class='no'>F</span>-<span class='no'>G</span>-<span class='no'>H</span>-<span class='no'>I</span>-<span class='no'>F</span>, <span class='no'>J</span>-<span class='no'>F</span>:<span class='no'>G</span>:<span class='no'>H</span>:<span class='no'>I</span>,
    <span class='no'>K</span>-<span class='no'>L</span>-<span class='no'>M</span>-<span class='no'>N</span>-<span class='no'>K</span>, <span class='no'>O</span>-<span class='no'>K</span>:<span class='no'>L</span>:<span class='no'>M</span>:<span class='no'>N</span>,
    <span class='no'>P</span>-<span class='no'>Q</span>-<span class='no'>R</span>-<span class='no'>S</span>-<span class='no'>P</span>, <span class='no'>T</span>-<span class='no'>P</span>:<span class='no'>Q</span>:<span class='no'>R</span>:<span class='no'>S</span>,
    <span class='no'>B</span>-<span class='no'>F</span>, <span class='no'>E</span>-<span class='no'>J</span>, <span class='no'>C</span>-<span class='no'>I</span>, <span class='no'>L</span>-<span class='no'>T</span>, <span class='no'>O</span>-<span class='no'>T</span>, <span class='no'>M</span>-<span class='no'>S</span>,
    <span class='no'>C</span>-<span class='no'>P</span>, <span class='no'>C</span>-<span class='no'>L</span>, <span class='no'>I</span>-<span class='no'>L</span>, <span class='no'>I</span>-<span class='no'>P</span>)
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"default layout\n(igraph)"</span>);
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"default layout\n(igraph)"</span>);
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_fr\n(igraph)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_fr</span>);
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_fr\n(igraph)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_fr</span>);
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_qfr\n(qgraph default)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_qfr</span>);
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_qfr\n(qgraph default)"</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>layout_with_qfr</span>);
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_qfr, repulse=6\n(qgraph custom)"</span>,
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"layout_with_qfr, repulse=6\n(qgraph custom)"</span>,
    <span class='kw'>layout</span><span class='kw'>=</span><span class='kw'>function</span>(<span class='no'>g</span>)<span class='fu'>layout_with_qfr</span>(<span class='no'>g</span>, <span class='kw'>repulse</span><span class='kw'>=</span><span class='fl'>6</span>));
-}</div><div class='img'><img src='layout_with_qfr-1.png' alt='' width='700' height='433' /></div><div class='input'>
+}</div><div class='output co'>#&gt; <span class='message'>Registered S3 methods overwritten by 'huge':</span>
+#&gt; <span class='message'>  method    from   </span>
+#&gt; <span class='message'>  plot.sim  BDgraph</span>
+#&gt; <span class='message'>  print.sim BDgraph</span></div><div class='img'><img src='layout_with_qfr-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -242,13 +272,16 @@ vertices, and lower values allows greater spacing between vertices.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

@@ -27,8 +27,22 @@ memIM2cnet(
   ...
 )
 }
+\value{
+\code{igraph} object with Concept network data, containing
+pathways connected to genes. Each node has attribute \code{"nodeType"}
+of either \code{"Set"} or \code{"Gene"}.
+}
 \description{
 Convert MultiEnrichment incidence matrix to Cnet plot
+}
+\details{
+This function takes \code{list} output from \code{multiEnrichMap()}
+and uses three elements to create a Cnet plot:
+\enumerate{
+\item \code{"memIM"} gene-pathway incidence matrix
+\item \code{"geneIM"} the gene incidence matrix
+\item \code{"enrichIM"} the pathway enrichment matrix
+}
 }
 \seealso{
 Other jam igraph functions: 
@@ -45,13 +59,16 @@ Other jam igraph functions:
 \code{\link{layout_with_qfr}()},
 \code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 }
 \concept{jam igraph functions}

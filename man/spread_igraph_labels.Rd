@@ -10,7 +10,7 @@ spread_igraph_labels(
   y_bias = 1,
   update_g_coords = TRUE,
   do_reorder = TRUE,
-  sortAttributes = c("pie.color", "coloredrect.color", "color"),
+  sortAttributes = c("pie.color", "coloredrect.color", "color", "label", "name"),
   nodeSortBy = c("x", "y"),
   repulse = 3.5,
   force_relayout = FALSE,
@@ -104,12 +104,15 @@ Other jam igraph functions:
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 }
 \concept{jam igraph functions}

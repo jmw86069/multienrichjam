@@ -161,10 +161,13 @@ layout_with_qfrf <- function
 #' while also returning the `igraph` object ready to be plotted as-is.
 #'
 #' @return `igraph` object, with layout coordinates stored in
-#'    `V(g)$x` and `V(g)$y`. When `spread_labels=TRUE`,
+#'    graph attribute `"layout"`, accessible for example with
+#'    `graph$layout` or `graph_attr(graph, "layout")`.
+#'    When `spread_labels=TRUE`,
 #'    `V(g)$label.degree` and `V(g)$label.dist` are updated
 #'    by calling `spread_igraph_labels()`.
 #'
+#' @family jam igraph functions
 #'
 #' @param g `igraph` object
 #' @param repulse exponent power used to scale the radius effect around
@@ -189,14 +192,16 @@ relayout_with_qfr <- function
    layout_xy <- layout_with_qfr(g=g,
       repulse=repulse,
       seed=seed,
+      verbose=verbose,
       ...);
    if (verbose) {
       jamba::printDebug("relayout_with_qfr(): ",
          "head(layout_xy):");
       print(head(layout_xy));
    }
-   V(g)$x <- layout_xy[,1];
-   V(g)$y <- layout_xy[,2];
+   g <- set_graph_attr(g,
+      "layout",
+      layout_xy);
    if (spread_labels) {
       g <- spread_igraph_labels(g,
          #layout=layout_xy,
@@ -633,9 +638,12 @@ igraph2pieGraph <- function
             ")");
       }
       set.seed(seed);
-      layoutG <- layout_with_qfr(g, repulse=repulse);
-      V(g)$x <- layoutG[,1];
-      V(g)$y <- layoutG[,2];
+      g <- relayout_with_qfr(g,
+         repulse=repulse,
+         ...);
+      #layoutG <- layout_with_qfr(g, repulse=repulse);
+      #V(g)$x <- layoutG[,1];
+      #V(g)$y <- layoutG[,2];
    }
 
    ## Optionally update labels for maximum characters
@@ -1350,6 +1358,9 @@ cnet2im <- function
 #'    colored wedges.
 #' @param applyToPie logical indicating whether to apply the logic to
 #'    nodes with shape `"pie"`.
+#' @param pie_to_circle logical indicating whether node shapes for
+#'    single-color nodes should be changed from `"pie"` to `"circle"`
+#'    in order to remove the small wedge line in each pie node.
 #' @param pieAttrs character vector of `vertex.attributes` from `g`
 #'    to be adjusted when `applyToPie=TRUE`. Note that `"pie.color"`
 #'    is required, and other attributes are only adjusted when
@@ -1418,6 +1429,7 @@ removeIgraphBlanks <- function
  constrain=c("nrow","ncol","none"),
  resizeNodes=TRUE,
  applyToPie=TRUE,
+ pie_to_circle=TRUE,
  pieAttrs=c("pie", "pie.value", "pie.names", "pie.color"),
  verbose=FALSE,
  ...)
@@ -1766,6 +1778,18 @@ removeIgraphBlanks <- function
          }
       }
    }
+   if (pie_to_circle) {
+      is_pie <- V(g)$shape %in% "pie";
+      if (any(is_pie)) {
+         is_single_color <- lengths(V(g)[is_pie]$pie.color) == 1;
+         if (any(is_single_color)) {
+            switch_nodes <- which(is_pie)[is_single_color];
+            i_colors <- unname(unlist(V(g)[switch_nodes]$pie.color));
+            V(g)[switch_nodes]$color <- i_colors;
+            V(g)[switch_nodes]$shape <- "circle";
+         }
+      }
+   }
 
    return(g);
 }
@@ -1868,8 +1892,9 @@ rectifyPiegraph <- function
 #'
 #' @return igraph with nodes positioned to order
 #' nodes by color. The layout coordinates are stored in
-#' the node attributes, accessible with `V(g)$x` and
-#' `V(g)$y`. When there are not multiple nodes sharing
+#' the graph attribute `"layout"`, accessible with
+#' `g$layout` or `graph_attr(g, "layout")`.
+#' When there are not multiple nodes sharing
 #' the same neighbors, the original igraph object is
 #' returned, with the addition of layout coordinates.
 #'
@@ -1882,18 +1907,18 @@ rectifyPiegraph <- function
 #'    `"y"` indicating the primary axis used to sort nodes.
 #' @param layout numeric matrix of node coordinates, or
 #'    function used to produce layout coordinates. When layout
-#'    is `NULL`, this function tries to use node attributes
-#'    `"x"` and `"y"`. If those attributes do not exist,
-#'    the `layout_with_qfr()` is used with default `repulse=3.5`.
+#'    is `NULL`, this function tries to use graph attribute
+#'    `"layout"`, otherwise
+#'    the `relayout_with_qfr` is called.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
 #' @export
 reorderIgraphNodes <- function
 (g,
- sortAttributes=c("color","coloredrect.color"),
+ sortAttributes=c("pie.color","coloredrect.color", "color", "label", "name"),
  nodeSortBy=c("x","y"),
- layout=function(...)layout_with_qfr(...,repulse=3.5),
+ layout=NULL,
  verbose=FALSE,
  ...)
 {
@@ -1911,29 +1936,26 @@ reorderIgraphNodes <- function
    ## red or blue, they should be visibly grouped together by that color.
    ##
    if (length(layout) == 0) {
-      if (!all(c("x","y") %in% vertex_attr_names(g))) {
-         layoutG <- layout_with_qfr(g, repulse=3.5);
-         rownames(layoutG) <- V(g)$name;
-         V(g)$x <- layoutG[,1];
-         V(g)$y <- layoutG[,2];
+      if (!"layout" %in% list.graph.attributes(g)) {
+         if (all(c("x","y") %in% vertex_attr_names(g))) {
+            layout <- cbind(V(g)$x, V(g)$y);
+            g <- set_graph_attr(g, "layout", layout)
+         } else {
+            g <- relayout_with_qfr(g, ...);
+         }
       }
-   } else if (jamba::igrepHas("function", class(layout))) {
-      layoutG <- layout(g);
-      rownames(layoutG) <- V(g)$name;
-      V(g)$x <- layoutG[,1];
-      V(g)$y <- layoutG[,2];
-   } else if (jamba::igrepHas("data.*frame|matrix", class(layout))) {
-      if (all(c("x","y") %in% colnames(layout))) {
-         V(g)$x <- layout[,"x"];
-         V(g)$y <- layout[,"y"];
+   } else if (is.function(layout)) {
+      g2 <- layout(g);
+      if ("igraph" %in% class(g2)) {
+         g <- g2;
       } else {
-         V(g)$x <- layout[,1];
-         V(g)$y <- layout[,2];
+         g <- set_graph_attr(g, "layout", g2);
       }
+   } else if (jamba::igrepHas("data.*frame|matrix", class(layout))) {
+      g <- set_graph_attr(g, "layout", layout);
    } else {
       stop("reorderIgraphNodes() could not determine the layout from the given input.");
    }
-
 
    ## comma-delimited neighboring nodes for each node
    neighborG <- jamba::cPaste(
@@ -1942,7 +1964,8 @@ reorderIgraphNodes <- function
       }),
       doSort=TRUE,
       makeUnique=FALSE);
-   names(neighborG) <- V(g)$name;
+   names(neighborG) <- seq_len(vcount(g));
+
    ## Determine which edge groups are present multiple times
    neighborGct <- jamba::tcount(neighborG, minCount=2);
    if (length(neighborGct) == 0) {
@@ -1965,31 +1988,56 @@ reorderIgraphNodes <- function
    neighborA <- pasteByRow(do.call(cbind, lapply(sortAttributes,
       function(sortAttribute){
          j <- (get.vertex.attribute(g, sortAttribute));
-         names(j) <- V(g)$name;
+         names(j) <- seq_len(vcount(g));
 
-         if (sortAttribute %in% "coloredrect.color") {
-            jString <- sapply(seq_along(j), function(j1){
-               j2 <- matrix(
-                  data=j[[j1]],
-                  nrow=V(g)[j1]$coloredrect.nrow,
-                  byrow=V(g)[j1]$coloredrect.byrow);
-               j3 <- matrix(
-                  data=1*(!j2 %in% c("white","#FFFFFF","transparent")),
-                  nrow=V(g)[j1]$coloredrect.nrow,
-                  byrow=V(g)[j1]$coloredrect.byrow);
-               j3blendByRow <- tryCatch({
-                  apply(j3, 1, blendColors);
-               }, error=function(e) {
-                  ""
+         if (sortAttribute %in% c("coloredrect.color","pie.color","color")) {
+            j_colors <- vertex_attr(g, sortAttribute);
+            j_colors_v <- avg_colors_by_list(j_colors);
+            j_sorted <- sort_colors(j_colors_v);
+            j_rank <- match(j_colors_v, unique(j_sorted));
+            jString <- factor(j_sorted,
+               levels=unique(j_sorted));
+            if (1 == 1) {
+               jString <- sapply(seq_along(j), function(j1){
+                  if ("coloredrect.nrow" %in% list.vertex.attributes(g)) {
+                     cnrow <- V(g)[j1]$coloredrect.nrow;
+                     cbyrow <- jamba::rmNA(rmNULL=TRUE,
+                        naValue=TRUE,
+                        nullValue=TRUE,
+                        V(g)[j1]$coloredrect.byrow);
+                  } else {
+                     cnrow <- 1;
+                     cbyrow <- TRUE;
+                  }
+                  j2 <- matrix(
+                     data=j[[j1]],
+                     nrow=cnrow,
+                     byrow=cbyrow);
+                  j3 <- matrix(
+                     data=1*(!isColorBlank(j2, ...)),
+                     nrow=cnrow,
+                     byrow=cbyrow);
+                  j3blendByRow <- tryCatch({
+                     apply(j2, 1, function(i){avg_colors_by_list(list(i))});
+                  }, error=function(e) {
+                     ""
+                  });
+                  if (verbose && j1 == 1) {
+                     jamba::printDebug("head(rowSums(j3)):");print(head(rowSums(j3), 10));
+                     jamba::printDebug("head(j3blendByRow):");print(head(j3blendByRow, 10));
+                     jamba::printDebug("head(j2):");print(head(j2, 10));
+                     jamba::printDebug("head(j3):");print(head(j3, 10));
+                  }
+                  paste(c(
+                     j_rank[j1],
+                     -rowSums(j3),
+                     j3blendByRow,
+                     pasteByRow(j3, sep=""),
+                     pasteByRow(j2)),
+                     collapse="_")
                });
-               paste(c(
-                  rowSums(j3),
-                  j3blendByRow,
-                  pasteByRow(j3, sep=""),
-                  pasteByRow(j2)),
-                  collapse="_")
-            });
-            names(jString) <- V(g)$name;
+            }
+            names(jString) <- seq_len(vcount(g));
             if (verbose) {
                jamba::printDebug("reorderIgraphNodes(): ",
                   "head(jString):",
@@ -1998,29 +2046,39 @@ reorderIgraphNodes <- function
             jString;
          } else {
             if (jamba::igrepHas("list", class(j))) {
-               jamba::cPaste(j);
+               jString <- jamba::cPaste(j);
             } else if (jamba::igrepHas("numeric|integer|float", class(j))) {
-               round(j, digits=2);
+               jString <- round(j, digits=2);
             } else {
-               j;
+               jString <- j;
             }
+            names(jString) <- seq_len(vcount(g));
+            jString;
          }
       }
    )), sep="_");
+   if (verbose) {
+      jamba::printDebug("reorderIgraphNodes(): ",
+         "head(neighborA):");
+      print(head(neighborA));
+      jamba::printDebug("reorderIgraphNodes(): ",
+         "head(names(neighborG)):");
+      print(head(names(neighborG)));
+   }
 
    ## data.frame with the attribute sort, and the node sort
-   neighborDF <- data.frame(vertex=names(neighborG),
+   neighborDF <- data.frame(
+      vertex=names(neighborG),
+      #vertex=names(neighborG),
       edgeGroup=neighborG,
       sortAttribute=neighborA[names(neighborG)],
-      x=V(g)$x,
-      y=V(g)$y);
+      x=g$layout[,1],
+      y=g$layout[,2]);
 
    if (verbose) {
-      if (verbose) {
-         jamba::printDebug("reorderIgraphNodes(): ",
-            "head(neighborDF):");
-      }
-      ch(head(neighborDF));
+      jamba::printDebug("reorderIgraphNodes(): ",
+         "head(neighborDF):");
+      print(head(neighborDF));
    }
 
    ## The following code iterates each edge group and reassigns
@@ -2036,7 +2094,7 @@ reorderIgraphNodes <- function
    newDF <- jamba::rbindList(lapply(names(neighborGct), function(Gname){
       iDF <- subset(neighborDF, edgeGroup %in% Gname);
       xyOrder <- jamba::mixedSortDF(iDF,
-         byCols=match(nodeSortBy, colnames(iDF)));
+         byCols=nodeSortBy);
 
       nodeOrder <- jamba::mixedSortDF(iDF,
          byCols=match(c("sortAttribute","vertex"), colnames(iDF)));
@@ -2064,9 +2122,11 @@ reorderIgraphNodes <- function
       }
       nodeOrder;
    }));
-   iMatch <- match(newDF$vertex, V(g)$name);
-   V(g)[iMatch]$x <- newDF$x;
-   V(g)[iMatch]$y <- newDF$y;
+   iMatch <- match(newDF$vertex, neighborDF$vertex);
+   neighborDF[iMatch,c("x","y")] <- newDF[,c("x","y")];
+   subDF <- subset(neighborDF, edgeGroup %in% neighborDF[1,"edgeGroup"]);
+   new_layout <- as.matrix(neighborDF[,c("x","y"),drop=FALSE]);
+   g <- set_graph_attr(g, "layout", new_layout);
    return(g);
 }
 
@@ -2093,7 +2153,7 @@ removeIgraphSinglets <- function
  ...)
 {
    keep_nodes <- (degree(g) >= min_degree);
-   g_new <- igraph::subgraph(g,
+   g_new <- subgraph_jam(g,
       which(keep_nodes));
    return(g_new);
 }
@@ -2166,7 +2226,7 @@ spread_igraph_labels <- function
  y_bias=1,
  update_g_coords=TRUE,
  do_reorder=TRUE,
- sortAttributes=c("pie.color", "coloredrect.color", "color"),
+ sortAttributes=c("pie.color", "coloredrect.color", "color", "label", "name"),
  nodeSortBy=c("x","y"),
  repulse=3.5,
  force_relayout=FALSE,
@@ -2176,53 +2236,68 @@ spread_igraph_labels <- function
 {
    ##
    if (length(layout) == 0) {
-      if (!force_relayout && all(c("x", "y") %in% list.vertex.attributes(g))) {
-         if (verbose) {
-            jamba::printDebug("spread_igraph_labels(): ",
-               "Re-using existing node coordinates.");
+      if (!force_relayout) {
+         if ("layout" %in% list.graph.attributes(g)) {
+            if (verbose) {
+               jamba::printDebug("spread_igraph_labels(): ",
+                  "Using ","layout"," from graph attributes.");
+            }
+            layout <- g$layout;
+         } else if (all(c("x", "y") %in% list.vertex.attributes(g))) {
+            if (verbose) {
+               jamba::printDebug("spread_igraph_labels(): ",
+                  "Using ","x,y"," from vertex attributes.");
+            }
+            layout <- cbind(x=V(g)$x, y=V(g)$y);
+         } else {
+            layout <- layout_with_qfr(g,
+               repulse=repulse,
+               ...);
          }
-         layout <- cbind(x=V(g)$x, y=V(g)$y);
       } else {
          if (verbose) {
             jamba::printDebug("spread_igraph_labels(): ",
-               "Calling layout_with_qfr() for node coordinates.");
+               "Calling ","layout_with_qfr()"," for node coordinates.");
          }
          layout <- layout_with_qfr(g,
             repulse=repulse,
+            verbose=verbose,
             ...);
       }
    } else if (is.function(layout)) {
       if (verbose) {
          jamba::printDebug("spread_igraph_labels(): ",
-            "Calling layout() for node coordinates.");
+            "Calling ","layout()"," for node coordinates.");
       }
       layout <- layout(g);
    }
+
    if (length(rownames(layout)) == 0) {
       rownames(layout) <- V(g)$name;
    }
    if (do_reorder) {
       if (verbose) {
-         printDebug("spread_igraph_labels(): ",
+         jamba::printDebug("spread_igraph_labels(): ",
             "Calling multienrichjam::reorderIgraphNodes()");
-         printDebug("spread_igraph_labels(): ",
+         jamba::printDebug("spread_igraph_labels(): ",
             "head(layout) before:");
          print(head(layout));
       }
-      g <- multienrichjam::reorderIgraphNodes(g,
+      g <- reorderIgraphNodes(g,
          layout=layout,
-         nodeSortBy=c("x","y"),
-         sortAttributes=sortAttributes);
-      layout <- cbind(V(g)$x, V(g)$y);
+         nodeSortBy=nodeSortBy,
+         sortAttributes=sortAttributes,
+         verbose=verbose);
+      layout <- g$layout;
       if (verbose) {
-         printDebug("spread_igraph_labels(): ",
+         jamba::printDebug("spread_igraph_labels(): ",
             "head(layout) after:");
          print(head(layout));
       }
    }
-   g_angle <- nameVector(sapply(seq_len(vcount(g)), function(i){
-      xy1 <- layout[i,,drop=FALSE];
-      xy2 <- layout[as.numeric(ego(g, nodes=i, mindist=1)[[1]]),,drop=FALSE];
+   g_angle <- jamba::nameVector(sapply(seq_len(vcount(g)), function(i){
+      xy1 <- layout[i,1:2,drop=FALSE];
+      xy2 <- layout[as.numeric(ego(g, nodes=i, mindist=1)[[1]]),1:2,drop=FALSE];
       if (length(xy2) == 0) {
          xy2 <- matrix(ncol=2, c(0,0));
       }
@@ -2230,8 +2305,7 @@ spread_igraph_labels <- function
       -(xyAngle(xymean[1], xymean[2]*y_bias, directed=TRUE) + 0) %% 360
    }), V(g)$name);
    if (update_g_coords) {
-      V(g)$x <- layout[,1];
-      V(g)$y <- layout[,2];
+      g <- set_graph_attr(g, "layout", layout);
    }
    V(g)$label.degree <- deg2rad(g_angle);
    if (!"label.dist" %in% list.vertex.attributes(g)) {
@@ -2245,6 +2319,17 @@ spread_igraph_labels <- function
 #' Convert MultiEnrichment incidence matrix to Cnet plot
 #'
 #' Convert MultiEnrichment incidence matrix to Cnet plot
+#'
+#' This function takes `list` output from `multiEnrichMap()`
+#' and uses three elements to create a Cnet plot:
+#'
+#' 1. `"memIM"` gene-pathway incidence matrix
+#' 2. `"geneIM"` the gene incidence matrix
+#' 3. `"enrichIM"` the pathway enrichment matrix
+#'
+#' @return `igraph` object with Concept network data, containing
+#'    pathways connected to genes. Each node has attribute `"nodeType"`
+#'    of either `"Set"` or `"Gene"`.
 #'
 #' @family jam igraph functions
 #'
@@ -2476,7 +2561,60 @@ subset_igraph_components <- function
    if (length(min_size) > 0) {
       gc_list <- gc_list[lengths(gc_list) >= min_size];
    }
-   g <- igraph::subgraph(g,
+   g <- subgraph_jam(g,
       v=sort(unlist(gc_list)));
    return(g);
+}
+
+#' Layout specification for Qgraph Fruchterman-Reingold
+#'
+#' @family jam igraph functions
+#'
+#' @export
+with_qfr <- function (...,repulse=4) {
+   layout_qfr <- function(graph,...){layout_with_qfr(graph,repulse=repulse,...)}
+   igraph:::layout_spec(layout_qfr, ...)
+}
+
+#' Subgraph using Jam extended logic
+#'
+#' Subgraph using Jam extended logic
+#'
+#' This function extends the `igraph::subgraph()` function
+#' to include proper subset of the graph attribute `"layout"`,
+#' which for some unknown reason does not subset the layout
+#' matrix consistent with the subset of `igraph` nodes.
+#'
+#' @family jam utility functions
+#' @family jam igraph functions
+#'
+#' @param graph `igraph` object
+#' @param v integer or logical vector indicating the nodes to
+#'    retain in the final `igraph` object.
+#'
+#' @export
+subgraph_jam <- function
+(graph,
+ v)
+{
+   if ("layout" %in% igraph::list.graph.attributes(graph)) {
+      g_layout <- igraph::graph_attr(graph, "layout");
+      if (any(c("numeric","matrix") %in% class(g_layout))) {
+         if (ncol(g_layout) == 2) {
+            g_layout_new <- g_layout[v,,drop=FALSE];
+         } else if (ncol(g_layout) == 3) {
+            g_layout_new <- g_layout[v,,,drop=FALSE];
+         } else {
+            stop("The layout matrix cannot contain more than 3 dimensions.");
+         }
+      } else {
+         stop("The layout must be numeric matrix.");
+      }
+   }
+   graph <- igraph::induced_subgraph(graph=graph,
+      vids=v);
+   if ("layout" %in% igraph::list.graph.attributes(graph)) {
+      graph <- igraph::set_graph_attr(graph, "layout", g_layout_new);
+   }
+   return(graph);
 }

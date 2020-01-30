@@ -13,6 +13,7 @@ removeIgraphBlanks(
   constrain = c("nrow", "ncol", "none"),
   resizeNodes = TRUE,
   applyToPie = TRUE,
+  pie_to_circle = TRUE,
   pieAttrs = c("pie", "pie.value", "pie.names", "pie.color"),
   verbose = FALSE,
   ...
@@ -49,6 +50,10 @@ colored wedges.}
 
 \item{applyToPie}{logical indicating whether to apply the logic to
 nodes with shape \code{"pie"}.}
+
+\item{pie_to_circle}{logical indicating whether node shapes for
+single-color nodes should be changed from \code{"pie"} to \code{"circle"}
+in order to remove the small wedge line in each pie node.}
 
 \item{pieAttrs}{character vector of \code{vertex.attributes} from \code{g}
 to be adjusted when \code{applyToPie=TRUE}. Note that \code{"pie.color"}
@@ -147,12 +152,15 @@ Other jam igraph functions:
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
 \code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{shape.coloredrectangle.plot}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
 }
 \concept{jam igraph functions}

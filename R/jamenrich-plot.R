@@ -3,6 +3,22 @@
 #'
 #' MultiEnrichment Heatmap of Genes and Pathways
 #'
+#' This function takes the `mem` list output from
+#' `multiEnrichMap()` and creates a gene-by-pathway incidence
+#' matrix heatmap, using `ComplexHeatmap::Heatmap()`.
+#' It uses three basic sources of data to annotate the heatmap:
+#'
+#' 1. `mem$memIM` the gene-set incidence matrix
+#' 2. `mem$geneIM` the gene incidence matrix by dataset
+#' 3. `mem$enrichIM` the pathway enrichment P-value matrix by dataset
+#'
+#' It will try to estimate a reasonable number of column and row
+#' splits in the dendrogram, based solely upon the number of
+#' columns and rows. These guesses can be controlled with argument
+#' `column_split` and `row_split`, respectively.
+#'
+#' @family jam plot functions
+#'
 #' @param mem `list` object created by `multiEnrichMap()`. Specifically
 #'    the object is expected to contain `colorV`, `enrichIM`,
 #'    `memIM`, `geneIM`.
@@ -570,6 +586,10 @@ jam_igraph <- function
  ...,
  xlim=c(-1,1),
  ylim=c(-1,1),
+ node_factor=1,
+ edge_factor=1,
+ label_factor=1,
+ label_dist_factor=1,
  expand=0.03,
  rescale=FALSE)
 {
@@ -577,10 +597,28 @@ jam_igraph <- function
    params <- igraph:::i.parse.plot.params(x, list(...));
    layout <- params("plot", "layout");
    vertex.size <- params("vertex", "size");
-   label.dist <- params("vertex", "label.dist");
+   vertex.size2 <- params("vertex", "size2");
+   label.dist <- params("vertex", "label.dist") * label_dist_factor;
+   edge.width <- params("edge", "width") * edge_factor;
+
+   if (is.function(label_factor)) {
+      vertex.label.cex <- label_factor(params("vertex", "label.cex"));
+      edge.label.cex <- label_factor(params("edge", "label.cex"));
+   } else {
+      vertex.label.cex <- params("vertex", "label.cex") * label_factor;
+      edge.label.cex <- params("edge", "label.cex") * label_factor;
+   }
+   if (is.function(node_factor)) {
+      vertex.size <- node_factor(vertex.size);
+      vertex.size2 <- node_factor(vertex.size2);
+   } else {
+      vertex.size <- vertex.size * node_factor;
+      vertex.size2 <- vertex.size2 * node_factor;
+   }
    if (!rescale) {
       xlim <- range(layout[,1]);
       vertex.size <- vertex.size * diff(xlim) / 2;
+      vertex.size2 <- vertex.size2 * diff(xlim) / 2;
       label.dist <- label.dist * diff(xlim) / 2;
       xlim <- xlim + diff(xlim) * c(-1,1) * expand;
       ylim <- range(layout[,2]);
@@ -590,7 +628,11 @@ jam_igraph <- function
       ...,
       rescale=rescale,
       vertex.size=vertex.size,
+      vertex.size2=vertex.size2,
       vertex.label.dist=label.dist,
+      vertex.label.cex=vertex.label.cex,
+      edge.label.cex=edge.label.cex,
+      edge.width=edge.width,
       xlim=xlim,
       ylim=ylim);
 }

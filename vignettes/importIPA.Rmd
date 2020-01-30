@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 library(multienrichjam);
 library(jamba);
 library(colorjam);
-library(ComplexHeatmap);
-options("stringsAsFactors"=FALSE);
+suppressPackageStartupMessages(library(ComplexHeatmap));
+options("stringsAsFactors"=FALSE, "warn"=-1);
 knitr::opts_chunk$set(
    fig.height=10,
    fig.width=10,
@@ -153,84 +153,125 @@ overlap coefficient threshold based upon the shared genes
 between the pathways. The cutoff is defined in 
 `multiEnrichMap()` with argument `overlapThreshold=0.1`.
 
+The `mem_canonical` object contains the igraph objects
+as `"multiEnrichMap"` for circular nodes, and `"multiEnrichMap2"`
+for coloredrectangle, or pie nodes. However, the helper
+function `mem_multienrichplot()` is used because it
+allows more customization, and prints a color legend by default.
+
 ```{r, mem_plot_1}
-plot(mem_canonical$multiEnrichMap2,
-   layout=layout_with_qfrf(repulse=3.3))
-#   vertex.shape="pie",
-#   vertex.size=(normScale(V(mem_canonical$multiEnrichMap2)$size)+0.3)*8,
+g <- mem_multienrichplot(mem_canonical, repulse=3.5)
 ```
 
-An example of some basic operations to customize the
-igraph plot is included below.
+You can custom filter the Jaccard overlap, or try the
+helper function `mem_find_overlap()` which does pretty
+well at guessing the best overlap threshold to use, by
+optimizing the cluster size and total nodes involved.
 
-```{r, mem_plot_1_custom}
-g <- mem_canonical$multiEnrichMap2;
-plot(removeIgraphBlanks(g),
-   vertex.shape="pie",
-   vertex.size=V(g)$size*2,
-   vertex.label.cex=0.7,
-   edge.width=E(g)$width / 2,
-   layout=layout_with_qfrf(repulse=3.3))
+```{r, mem_plot_1b}
+g <- mem_multienrichplot(mem_canonical,
+   overlap=mem_find_overlap(mem_canonical),
+   repulse=3.5)
 ```
 
+Notice there are distinct subnetworks, called "components",
+which are not connected to each other. A useful follow-up
+technique is to graph one component at a time, which we do
+using the helper function `subset_igraph_components()`.
+Components are ordered by size, largest to smallest,
+so you can keep the largest using argument `keep=1`,
+or the second largest with `keep=2`, and so on.
 
-Notice there are distinct, independent subnetworks.
-We can extract the largest connected subnetwork to plot.
+We also call two other helper functions:
+
+1. `removeIgraphBlanks()` removes blank colors from multi-color
+nodes, such as pie nodes, or colored rectangle nodes. It helps
+show only the remaining colors without the whitespace.
+2. `relayout_with_qfr()` applies Fruchterman-Reingold layout
+to an `igraph` object. It's convenient to adjust `repulse` here,
+which is the recommended method for adjusting the spacing
+between nodes. This function also updates other useful
+attributes such as the node label angle, which makes labels
+appear offset away from the majority of edges. (It helps
+more with Cnet plots below.)
 
 ```{r, mem_plot_2}
-g <- mem_canonical$multiEnrichMap2;
-gc <- components(g);
-## Component sizes are stored in gc$csize
 ## You can alternatively pull out any other component
-g_sub <- subgraph(g, which(gc$membership %in% which.max(gc$csize)));
+g_sub <- subset_igraph_components(g, keep=1);
 
-plot(removeIgraphBlanks(g_sub),
-#   vertex.size2=(normScale(V(g_sub)$size2)+1)*2,
-   layout=layout_with_qfrf(repulse=3.5))
+## Re-apply network layout, and remove blank colors
+g_sub <- relayout_with_qfr(repulse=3.5,
+      removeIgraphBlanks(g_sub))
+
+## Plot
+plot(g_sub, vertex.size=15)
 ```
 
-We can polish the node labels with `fixSetLabels()`.
-
-```{r, mem_plot_3}
-plot(fixSetLabels(g_sub),
-   layout=layout_with_qfrf(repulse=4))
-```
 
 
 #### Plot the enrichment P-value matrix
 
-View the combined enrichment P-value matrix:
+A useful overview of the enrichment results, including
+the overlaps across datasets, is shown in a heatmap
+of `-log10(Pvalue)`. The helper function
+`mem_enrichment_heatmap()` is used here.
+
+The argument `p_cutoff` is used to set the Pvalue
+below which cells are colorized -- every P-value above
+this threshold is not colored, and displayed as white,
+even when the P-value is less than 1.
 
 ```{r, enrich_hm, fig.height=10, fig.width=10}
-par("mar"=c(7,20,4,2));
-imageByColors(mem_canonical$enrichIMcolors,
-   cellnote=format(trim=TRUE, mem_canonical$enrichIM, digits=2));
+mem_enrichment_heatmap(mem_canonical, p_cutoff=0.05);
 ```
 
-Alternatively you can use the ComplexHeatmap package:
+The argument `color_by_column=TRUE` will optionally apply
+a color gradient to each column, using the same P-value
+threshold defined by `p_cutoff`. In this case, cells are
+labeled to indicate the actual enrichment P-value.
 
-```{r, enrich_chm, fig.height=10, fig.width=10}
-ComplexHeatmap::Heatmap(-log10(mem_canonical$enrichIM),
-   border=TRUE,
-   col=getColorRamp("Reds", n=51))
+```{r, enrich_hm_2, fig.height=10, fig.width=10}
+mem_enrichment_heatmap(mem_canonical, color_by_column=TRUE);
 ```
+
 
 #### Plot the pathway-gene incidence matrix
 
-We can view the pathway-gene matrix:
+We can view the pathway-gene matrix using the function
+`mem_gene_path_heatmap()`. This function uses data in the
+`mem` object: `"memIM"` which contains the gene-pathway
+incidence matrix, `"geneIM"` which contains the gene-dataset
+incidence matrix, and `"enrichIM"` which contains the
+pathway-dataset matrix.
 
-```{r, mem_hm}
-ComplexHeatmap::Heatmap(mem_canonical$memIM,
-   border=TRUE,
-   top_annotation=ComplexHeatmap::HeatmapAnnotation(which="column",
-      gp=gpar(col="black"),
-      Pathways=-log10(mem_canonical$enrichIM)),
-   col=getColorRamp("Reds"),
-   left_annotation=ComplexHeatmap::HeatmapAnnotation(which="row",
-      gp=gpar(col="black"),
-      Genes=mem_canonical$geneIM[rownames(mem_canonical$memIM),]),
-   row_names_gp=gpar(fontsize=8)
-)
+This function attempts to "guess" a reasonable number
+of column and row splits -- which breaks the column and
+row dendrograms into separate sub-clusters. These
+breaks are visual only, but can be useful in follow-up
+analyses shown later. You can override these numbers
+with arguments `column_split` and `row_split`.
+
+Also, the colors used across the top of the heatmap indicate
+the enrichment P-value, and are intentionally scaled so all
+P-values above the P-value threshold are not colored, and
+are therefore white.
+
+This function uses the amazing `ComplexHeatmap::Heatmap()`
+function, which enables many awesome customizable features.
+The `...` argument is passed to `ComplexHeatmap::Heatmap()`,
+so you can use those features as needed.
+
+```{r, mem_hm, fig.height=10, fig.width=10}
+hm <- mem_gene_path_heatmap(mem_canonical);
+hm;
+```
+
+As a follow-up analysis, you can pull out each pathway
+cluster from the heatmap itself, using `heatmap_column_order()`:
+
+```{r, mem_hm_sets}
+hm_sets <- heatmap_column_order(hm);
+hm_sets;
 ```
 
 ### Plot the Pathway-Gene Concept network (Cnet plot)
@@ -238,175 +279,116 @@ ComplexHeatmap::Heatmap(mem_canonical$memIM,
 We can view the Cnet plot (concept network plot) which
 shows the pathway-gene relationship.
 
-When viewing extremely large networks, they may take a
-very long time to render. For that reason, we usually
-recommend subsetting the pathways after reviewing the
-pathway-gene incidence matrix heatmap.
+The helper function `memIM2cnet()` creates a Cnet plot
+from the `mem_canonical` output. Here, we also pipe the
+result through other helper functions:
 
-```{r, cnet_plot_1}
-cnet <- mem_canonical$multiCnetPlot2;
-plot(cnet,
-#   vertex.shape=ifelse(V(cnet)$nodeType %in% "Set",
-#      "pie", "coloredrectangle"),
-   vertex.size=15,
-   vertex.size2=2,
-   vertex.label.cex=0.7,
-   layout=layout_with_qfrf(repulse=3.8)
-)
-```
+* `fixSetLabels()` applies pathway label word wrap
+* `relayout_with_qfr()` applies network layout and adjusts node labels
+* `removeIgraphBlanks()` removes blank colors from the `igraph` nodes
 
-#### Customizing the Cnet plot
-
-These steps may become the default in future, but for now they
-can be applied one by one.
-
-* `removeIgraphBlanks()` removes any blank colors from each node,
-which has the effect of making colors easier to see.
-* `fixSetLabels()` applies word-wrapping to node labels, and
-enforces mixed-case characters. Note that gene symbols like
-`"GAPDH"` will become `"Gapdh"`.
-* `reorderIgraphNodes()` re-positions nodes based upon their
-node color, which helps visually see the groups of colors
-in a network graph. Note that this step requires a fixed
-layout, so `layout_with_qfrf()` is used.
-* `layout_with_qfrf()` and `layout_with_qfr()` are functions
-that apply the Fruchterman-Reingold layout algorithm, using
-the implementation in the `"qgraph"` package since that package
-enables several custom options not available from the `"igraph"`
-package. The `layout_with_qfr()` function returns the layout
-coordinates, and `layout_with_qfrf()` returns a function that
-applies layout coordinates.
-
-```{r, cnet_plot_1_custom}
-cnet <- mem_canonical$multiCnetPlot2;
-
-## removeIgraphBlanks() reduces multi-color nodes to one color,
-##    by removing the blank color
-cnet <- removeIgraphBlanks(cnet);
-## fixSetLabels() applies word-wrap to pathway names, also
-##    applies mixed-case text
-cnet <- fixSetLabels(cnet);
-```
-
-Single-color nodes are changed to shape `"circle"` because
-the shape `"pie"` always displays a small wedge at the top
-of each node. We then apply the `"pie.color"` value to the
-`"color"` of each node. Lastly, we make the colors more
-visibly distinct, using `jamba::makeColorDarker()`.
-
-```{r, cnet_plot_1_custom1a}
-## single-color nodes are changed to "circle" shape
-V(cnet)$shape <- ifelse(lengths(V(cnet)$pie.color) > 1, "pie", "circle");
-
-## single-color nodes take the color from the pie wedge
-V(cnet)$color <- ifelse(lengths(V(cnet)$pie.color) > 1,
-   V(cnet)$color,
-   cPaste(V(cnet)$pie.color));
-
-## Optionally make the node colors more distinctive
-V(cnet)$color <- jamba::makeColorDarker(V(cnet)$color,
-   darkFactor=1, sFactor=3);
-```
-
-The `igraph` plot function places node labels centered on the
-node itself, but you can change the placement of labels by
-setting two parameters:
-
-* `label.dist`: the distance to place a node label away from
-the center of each node, measured roughly in units of text line
-height.
-* `label.degree` - the angle (in radians) to place node labels,
-measured from the center of each node, where `0` degrees points
-right, `90` degrees points down, `270` points up. We use the
-helper function `deg2rad()` to convert degrees to radians.
-
-```{r, cnet_plot_1_custom2}
-## offset labels 270 degrees (up). Note 0 degrees is right.
-V(cnet)$label.degree <- deg2rad(270);
-
-## offset labels 0.5 full-size text lines.
-V(cnet)$label.dist <- 0.5;
-```
-
-Finally, nodes are resized so pathway nodes are a fixed-size,
-larger than gene nodes.
-
-```{r, cnet_plot_1_custom3}
-## resize Set nodes to size=5, all other nodes size=2
-V(cnet)$size <- ifelse(V(cnet)$nodeType %in% "Set",
-   5,
-   2);
-
-## plot the Cnet graph
-par("mar"=c(5,4,4,2));
-plot(reorderIgraphNodes(cnet,
-      layout=layout_with_qfrf(repulse=3.6)),
-   vertex.label.cex=0.4
-)
-title(main="Concept network plot\nPathways-Genes");
+```{r, cnet_plot_1, fig.height=10, fig.width=10}
+#cnet <- mem_canonical$multiCnetPlot1b;
+cnet <- mem_canonical %>% 
+   memIM2cnet() %>%
+   fixSetLabels() %>%
+   removeIgraphBlanks() %>%
+   relayout_with_qfr(repulse=4);
+plot(cnet, vertex.label.cex=0.6);
+mem_legend(mem_canonical);
 ```
 
 You can extract the largest connected subnetwork to plot, as before.
 
-```{r, cnet_plot_2}
+```{r, cnet_plot_2, fig.height=10, fig.width=10}
 g2 <- cnet;
-gc2 <- components(g2);
-g2_sub <- subgraph(g2, which(gc2$membership %in% which.max(gc2$csize)));
+g2_sub <- subset_igraph_components(cnet, keep=1)
 
-plot(removeIgraphBlanks(g2_sub),
-   vertex.shape="pie",
-   vertex.size=ifelse(V(g2_sub)$nodeType %in% "Set",
-      10,5),
-   vertex.label.cex=0.3,
-   layout=layout_with_qfrf(repulse=4)
-)
+plot(g2_sub);
 ```
 
-#### Subset the Pathway-Gene concept network
+#### Customizing the Cnet plot
 
-The function `subsetCnetIgraph()` is used to subset the
-Cnet graph by various criteria.
+The most useful customization is to subset the pathway
+nodes.
 
-Below pathways are subsetted to require at least 5 genes,
+One useful method to choose a subset of pathways 
+is to view one heatmap cluster at a time. Here
+we will use `hm_sets` made previously.
+
+```{r, cnet_plot_1_custom, fig.height=10, fig.width=10}
+cnet_sub <- subsetCnetIgraph(cnet,
+   repulse=3.5,
+   includeSets=unlist(hm_sets[c("A")]));
+jam_igraph(cnet_sub,
+   node_factor=2,
+   label_dist_factor=3,
+   label_factor=1.3);
+mem_legend(mem_canonical);
+```
+
+
+#### Subset the Pathway-Gene Cnet plot
+
+You can also subset the Pathway-Gene Cnet plot using
+specific names, or by some network criteria, using
+the function `subsetCnetIgraph()`.
+
+Pathways are subsetted to require at least 6 genes,
 using the argument `minSetDegree`,
 which can be useful to help simplify the graph structure.
 
 Similarly, the `minGeneDegree=2` argument can be used to
-display only genes present in 2 or more pathways.
+display only genes present in 2 or more pathways, but for
+now we will not use that argument.
 
-This function is also used to select a specific subset
-of pathways by name, with the argument `includeSets`.
+During the subset operation, some convenient default operations
+are also performed, controlled by function arguments:
 
+* singlet nodes (with no connection to any other) are removed,
+`remove_singlets=TRUE`
+* the layout is re-calculated, `force_relayout=TRUE`
+* nodes are re-ordered by color, `do_reorder=TRUE`
+* labels are re-positioned to have proper angle offset away
+from the edges entering each node, `spread_labels=TRUE`
+* blank colors are not removed from pie and colored rectangle
+nodes, `remove_blanks=FALSE`, but can be during this step by
+`remove_blanks=TRUE`.
 
-```{r, subnet}
+```{r, subnet, fig.height=10, fig.width=10}
 cnet3 <- multienrichjam::subsetCnetIgraph(cnet,
-   minSetDegree=5,
+   repulse=5,
+   minSetDegree=6,
    minGeneDegree=1);
-
-plot(reorderIgraphNodes(cnet3,
-      layout=layout_with_qfrf(repulse=4.5)),
-   vertex.label.cex=0.5);
-
+plot(cnet3);
+mem_legend(mem_canonical);
 ```
 
-#### Add a color legend
+#### Custom igraph plot function jam_igraph()
 
-A color legend can be added to the corner of the plot,
-using the colors defined in the `multiEnrichMap()`
-output.
+The `jam_igraph()` function is a custom version of `igraph::plot()`
+intended to enhance the base function in a few ways:
 
-```{r, subnet2}
-plot(reorderIgraphNodes(cnet3,
-      layout=layout_with_qfrf(repulse=4.5)),
-   vertex.label.cex=0.5);
+* argument `rescale=FALSE` will keep the network layout aspect
+ratio 1:1, instead of scaling the coordinates to fit the size
+of the plot window. It also properly scales the node and edge sizes,
+unlike the base `igraph::plot()` function.
+* new arguments to help resize existing values:
 
-## add a color legend
-legend("bottomleft",
-   legend=names(mem_canonical$colorV),
-   pch=21,
-   pt.cex=1.5,
-   col="grey40",
-   pt.bg=mem_canonical$colorV);
+   * `label_factor` re-scales the `label.cex` values by a multiplier
+   * `node_factor`, `edge_factor` re-scales the `node.size` and `edge.width`
+   by a multiplier
+   * `label_dist_factor` re-scales the `label.dist` values by a multiplier
+   
+The function below replicates the previous Cnet plot, with
+these changes:
+
+* `node_factor=2` makes the nodes 2x larger
+* `label_factor=1.2` makes the `label.cex` values 1.2x larger
+* `label_dist_factor=3` makes the label distance from the node center
+3x larger, which emphasizes the label placement at an angle away from
+the edges of each node.
+
+```{r, jam_igraph_1, fig.height=10, fig.width=10}
+jam_igraph(cnet3, node_factor=2, label_factor=1.2, label_dist_factor=3);
 ```
-
-

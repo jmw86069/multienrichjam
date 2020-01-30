@@ -70,3 +70,27 @@ for customization.}
 \description{
 MultiEnrichment Heatmap of Genes and Pathways
 }
+\details{
+This function takes the \code{mem} list output from
+\code{multiEnrichMap()} and creates a gene-by-pathway incidence
+matrix heatmap, using \code{ComplexHeatmap::Heatmap()}.
+It uses three basic sources of data to annotate the heatmap:
+\enumerate{
+\item \code{mem$memIM} the gene-set incidence matrix
+\item \code{mem$geneIM} the gene incidence matrix by dataset
+\item \code{mem$enrichIM} the pathway enrichment P-value matrix by dataset
+}
+
+It will try to estimate a reasonable number of column and row
+splits in the dendrogram, based solely upon the number of
+columns and rows. These guesses can be controlled with argument
+\code{column_split} and \code{row_split}, respectively.
+}
+\seealso{
+Other jam plot functions: 
+\code{\link{jam_igraph}()},
+\code{\link{mem_enrichment_heatmap}()},
+\code{\link{mem_legend}()},
+\code{\link{mem_multienrichplot}()}
+}
+\concept{jam plot functions}

@@ -47,10 +47,18 @@ extremely high alpha transparency may be considered "blank".
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{apply_color_cap}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
+\code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
+\code{\link{heatmap_column_order}()},
+\code{\link{heatmap_row_order}()},
+\code{\link{mem_find_overlap}()},
+\code{\link{order_colors}()},
+\code{\link{sort_colors}()},
+\code{\link{subgraph_jam}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

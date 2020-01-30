@@ -8,6 +8,7 @@ mem_find_overlap(
   mem,
   overlap_range = c(0.1, 0.99),
   overlap_count = 2,
+  node_fraction = 0.5,
   max_cutoff = 0.4,
   debug = FALSE,
   ...
@@ -46,3 +47,20 @@ We found empirically that a \code{max_cutoff=0.4}, the point at which the
 largest connected component contains no more than 40\% of all nodes,
 seems to be a reasonably good place to start.
 }
+\seealso{
+Other jam utility functions: 
+\code{\link{apply_color_cap}()},
+\code{\link{avg_angles}()},
+\code{\link{avg_colors_by_list}()},
+\code{\link{enrichList2geneHitList}()},
+\code{\link{find_colname}()},
+\code{\link{gsubs}()},
+\code{\link{heatmap_column_order}()},
+\code{\link{heatmap_row_order}()},
+\code{\link{isColorBlank}()},
+\code{\link{order_colors}()},
+\code{\link{sort_colors}()},
+\code{\link{subgraph_jam}()},
+\code{\link{xyAngle}()}
+}
+\concept{jam utility functions}
