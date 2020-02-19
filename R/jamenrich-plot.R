@@ -90,9 +90,14 @@ mem_gene_path_heatmap <- function
    memIMsetct <- colSums(memIM > 0);
    sets <- colnames(memIM)[memIMsetct >= min_set_ct];
    memIM <- memIM[genes,sets,drop=FALSE];
+   ## Additional step to ensure columns and rows are not empty
+   memIM <- memIM[,colSums(memIM > 0) > 0,drop=FALSE];
+   memIM <- memIM[rowSums(memIM > 0) > 0,,drop=FALSE];
    if (any(dim(memIM) == 0)) {
       stop("No remaining data after filtering.");
    }
+   genes <- rownames(memIM);
+   sets <- colnames(memIM);
    ## Optional automatic row and column split
    if (auto_split) {
       if (nrow(memIM) < 5) {

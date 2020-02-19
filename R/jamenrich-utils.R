@@ -479,3 +479,116 @@ apply_color_cap <- function
    names(x_new) <- names(x);
    return(x_new);
 }
+
+#' Rank Multienrichment clusters
+#'
+#' Rank Multienrichment clusters
+#'
+#' This function takes `list` output from `multiEnrichMap()`, and
+#' a `list` of clusters, and returns a `data.frame` that contains
+#' several rank order metrics. It is intended to be used with
+#' column clusters following `mem_gene_pathway_heatmap()`,
+#' see examples.
+#'
+#' The argument `per_cluster` is intended to make it convenient
+#' to pick the top exemplar pathways, especially when argument
+#' `byCols` is defined so that it sorts by the rank columns.
+#'
+#' The argument `choose` is intended to make it easy to retrieve
+#' pathways from specific clusters.
+#'
+#' @return `data.frame` sorted by the criteria defined by `byCols`,
+#'    with colname `"set"` to indicate the pathway/set name.
+#'
+#' @family jam utility functions
+#'
+#' @param mem `list` object output from `multiEnrichMap()`
+#' @param clusters `list` containing set names, that must match
+#'    `colnames(mem$memIM)` and `rownames(mem$enrichIM)`.
+#' @param choose optional vector indicating which clusters to
+#'    return. If an integer vector, it refers to the elements
+#'    in the input `clusters`. If a character vector, it must
+#'    contain values in `names(clusters)`. When `choose` is `NULL`,
+#'    all clusters are returned.
+#' @param per_cluster integer vector with the number of entries
+#'    to return for each cluster. Values will be recycled to the
+#'    length of the clusters to be returned, defined by `choose`
+#'    or by `length(clusters)` when `choose` is `NULL`.
+#' @param byCols character vector used to sort the resulting
+#'    `data.frame` within each cluster. This argument is passed
+#'    directly to `jamba::mixedSortDF()`.
+#' @param verbose logical indicating whether to print verbose output.
+#' @param ... additional arguments are ignored.
+#'
+#' @examples
+#' ## Start with mem
+#' # mem <- multiEnrichMap(...);
+#' # gp_hm <- mem_gene_pathway_heatmap(mem, column_split=4);
+#' ## Retrieve clusters from the Heatmap output, there should be 4 clusters
+#' # clusters <- heatmap_column_order(gp_hm)
+#' # clusters_df <- rank_mem_clusters(mem, clusters)
+#'
+#' @export
+rank_mem_clusters <- function
+(mem,
+ clusters,
+ choose=NULL,
+ per_cluster=Inf,
+ byCols=c("composite_rank", "minP_rank", "gene_count_rank"),
+ verbose=FALSE,
+ ...)
+{
+   if (!all(c("memIM") %in% names(mem))) {
+      stop("mem must be a list with components: 'memIM'");
+   }
+   if (length(names(clusters)) == 0) {
+      if (verbose) {
+         jamba::printDebug("rank_mem_clusters(): ",
+            "Assigning names(clusters) using ",
+            "jamba::colNum2excelName");
+      }
+      names(clusters) <- jamba::colNum2excelName(seq_along(clusters));
+   }
+   if (length(choose) == 0) {
+      choose <- seq_along(clusters);
+   }
+   clusters <- jamba::rmNULL(clusters[choose]);
+   if (length(names(clusters)) == 0) {
+      stop("No clusters remained after subsetting with argument 'choose'.");
+   }
+   if (length(per_cluster) == 0) {
+      per_cluster <- Inf;
+   }
+   per_cluster <- rep(per_cluster, length.out=length(clusters))
+   names(per_cluster) <- names(clusters);
+   clusters_dfs <- lapply(names(clusters), function(iname){
+      i <- clusters[[iname]];
+      j <- mem$memIM[,i,drop=FALSE];
+      minP <- jamba::rmNA(naValue=1,
+         apply(mem$enrichIM[i,,drop=FALSE], 1, min, na.rm=TRUE));
+      names(minP) <- i;
+      gene_count <- colSums(j);
+      minP_rank <- order(do.call(order, list(minP, -gene_count)));
+      gene_count_rank <- order(do.call(order, list(-gene_count, minP)));
+      composite_rank <- order(do.call(order,
+         list(
+            rank(floor(log10(minP))),
+            gene_count_rank)));
+      ijdf <- data.frame(cluster=iname,
+         set=i,
+         gene_count=gene_count,
+         minP=minP,
+         gene_count_rank=gene_count_rank,
+         minP_rank=minP_rank,
+         composite_rank=composite_rank);
+      if (length(byCols) > 0) {
+         ijdf <- mixedSortDF(ijdf,
+            byCols=byCols);
+      }
+      ijdf$cluster_rank <- paste0(iname, "_", seq_len(nrow(ijdf)));
+      rownames(ijdf) <- ijdf$cluster_rank;
+      head(ijdf, per_cluster[[iname]]);
+   });
+   clusters_df <- jamba::rbindList(clusters_dfs);
+   return(clusters_df);
+}

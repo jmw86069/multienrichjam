@@ -1,3 +1,21 @@
+# multienrichjam version 0.0.18.900
+
+## New functions
+
+* `rank_mem_clusters()` is a convenience function which ranks
+pathways/sets within clusters, useful with a list of clusters
+following `mem_gene_pathway_heatmap()`. It makes it easier to
+rank pathways within a cluster, potentially choosing one exemplar
+pathway to represent each cluster. This function is part of more
+effort to streamline the overall analysis workflow.
+
+## Bug fixes
+
+* Fixed small issue with `mem_gene_path_heatmap()` which was
+properly applying `min_gene_ct` and `min_path_ct` however it
+did not check the resulting data to remove empty columns and
+rows. This change has been made.
+
 # multienrichjam version 0.0.17.900
 
 ## New functions
