@@ -534,7 +534,7 @@ rank_mem_clusters <- function
  clusters,
  choose=NULL,
  per_cluster=Inf,
- byCols=c("composite_rank", "minP_rank", "gene_count_rank"),
+ byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
  verbose=FALSE,
  ...)
 {
@@ -564,22 +564,25 @@ rank_mem_clusters <- function
    clusters_dfs <- lapply(names(clusters), function(iname){
       i <- clusters[[iname]];
       j <- mem$memIM[,i,drop=FALSE];
-      minP <- jamba::rmNA(naValue=1,
+      pval_m <- mem$enrichIM[i,,drop=FALSE];
+      colnames(pval_m) <- paste0("P_", colnames(pval_m));
+      minp <- jamba::rmNA(naValue=1,
          apply(mem$enrichIM[i,,drop=FALSE], 1, min, na.rm=TRUE));
-      names(minP) <- i;
+      names(minp) <- i;
       gene_count <- colSums(j);
-      minP_rank <- order(do.call(order, list(minP, -gene_count)));
-      gene_count_rank <- order(do.call(order, list(-gene_count, minP)));
+      minp_rank <- order(do.call(order, list(minp, -gene_count)));
+      gene_count_rank <- order(do.call(order, list(-gene_count, minp)));
       composite_rank <- order(do.call(order,
          list(
-            rank(floor(log10(minP))),
+            rank(floor(log10(minp))),
             gene_count_rank)));
       ijdf <- data.frame(cluster=iname,
          set=i,
          gene_count=gene_count,
-         minP=minP,
+         pval_m,
+         minp=minp,
          gene_count_rank=gene_count_rank,
-         minP_rank=minP_rank,
+         minp_rank=minp_rank,
          composite_rank=composite_rank);
       if (length(byCols) > 0) {
          ijdf <- mixedSortDF(ijdf,
@@ -591,4 +594,117 @@ rank_mem_clusters <- function
    });
    clusters_df <- jamba::rbindList(clusters_dfs);
    return(clusters_df);
+}
+
+
+#' Collapse Multienrichment clusters
+#'
+#' Collapse Multienrichment clusters
+#'
+#' This function is similar to `rank_mem_clusters()` in that it
+#' starts with `mem` results from `multiEnrichMap()` and a list
+#' of `clusters` of pathways/sets. Instead of ranking and choosing
+#' exemplars from each clusters, it simply collapses each cluster
+#' into one super-set that contains union of all genes.
+#'
+#' It does also run `rank_mem_clusters()` in the event one would
+#' want to collapse only the top `per_cluster` entries for each
+#' cluster, but the default is to include them all.
+#'
+#' @return By default `return_type="cnet"` and this function returns
+#'    an augmented Cnet plot. The labels of each cluster are defined
+#'    by the input `names(clusters)`, however an `igraph` attribute
+#'    `"set_labels"` includes an abbreviated label of the top ranked
+#'    sets for each cluster. This label is probably the closest thing
+#'    to summarizing the composition of each cluster.
+#'
+#' @family jam utility functions
+#'
+#' @export
+collapse_mem_clusters <- function
+(mem,
+ clusters,
+ choose=NULL,
+ per_cluster=Inf,
+ byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
+ return_type=c("cnet", "mem"),
+ max_labels=4,
+ max_nchar_labels=25,
+ verbose=FALSE,
+ ...)
+{
+   #
+   return_type <- match.arg(return_type);
+   ##
+   clusters_df <- rank_mem_clusters(mem=mem,
+      clusters=clusters,
+      choose=choose,
+      per_cluster=per_cluster,
+      byCols=byCols,
+      verbose=verbose);
+   cluster_sets_l <- split(clusters_df$set, clusters_df$cluster);
+   cluster_sets <- cPaste(cluster_sets_l);
+   cluster_labels <- cPaste(sep=";\n",
+      lapply(cluster_sets_l, function(i){
+         if (length(i) > max_labels) {
+            more <- paste0("(", length(i) - max_labels, " more)");
+         } else {
+            more <- NULL;
+         }
+         c(head(ifelse(nchar(i) <= max_nchar_labels,
+            i,
+            paste0(substr(i, 1, max_nchar_labels-2), "..")), max_labels), more);
+      }));
+   #for (j in cluster_labels){cat("\n");cat(j, "\n\n");}
+
+   clusters_df$cluster <- factor(clusters_df$cluster,
+      levels=unique(clusters_df$cluster));
+   cluster_memIM <- do.call(cbind, lapply(split(clusters_df, clusters_df$cluster), function(idf){
+      im1 <- subset(mem$memIM[,idf$set,drop=FALSE]);
+      iv <- rowMaxs(im1);
+      names(iv) <- rownames(im1);
+      iv;
+   }));
+   cluster_enrichIMgeneCount <- do.call(cbind, lapply(nameVector(colnames(mem$geneIM)), function(i){
+      xgenes <- rownames(mem$geneIM)[mem$geneIM[,i] > 0];
+      colSums(cluster_memIM[xgenes,,drop=FALSE] > 0);
+   }));
+   cluster_enrichIM <- rbindList(lapply(split(clusters_df, clusters_df$cluster), function(idf){
+      im1 <- subset(mem$enrichIM[idf$set,,drop=FALSE]);
+      10^colMeans(log10(im1))
+   }));
+   cluster_enrichIMcolors <- do.call(cbind, lapply(nameVector(colnames(mem$enrichIMcolors)), function(i){
+      avg_colors_by_list(split(mem$enrichIMcolors[clusters_df$set,i], clusters_df$cluster))
+   }))
+   ## avg_colors_by_list
+   cluster_mem <- mem;
+   cluster_mem$memIM <- cluster_memIM;
+   cluster_mem$enrichIM <- cluster_enrichIM;
+   cluster_mem$enrichIMcolors <- cluster_enrichIMcolors;
+   cluster_mem$enrichIMgeneCount <- cluster_enrichIMgeneCount;
+
+   ## For now remove some difficult-to-update objects
+   cluster_mem$multiEnrichDF <- NULL;
+   cluster_mem$multiEnrichResult <- NULL;
+   cluster_mem$multiEnrichMap <- NULL;
+   cluster_mem$multiEnrichMap2 <- NULL;
+   cluster_mem$multiCnetPlot <- NULL;
+   cluster_mem$multiCnetPlot1 <- NULL;
+   cluster_mem$multiCnetPlot1b <- NULL;
+   cluster_mem$multiCnetPlot2 <- NULL;
+
+   ## Make Cnet plot
+   cnet <- memIM2cnet(cluster_mem,
+      ...);
+   set_match <- match(names(cluster_sets), V(cnet)$name)
+   V(cnet)$set_names <- "";
+   V(cnet)$set_names[set_match] <- cluster_sets;
+   V(cnet)$set_labels <- "";
+   V(cnet)$set_labels[set_match] <- cluster_labels;
+   cluster_mem$multiCnetPlot <- cnet;
+
+   if ("cnet" %in% return_type) {
+      return(cnet);
+   }
+   return(cluster_mem);
 }

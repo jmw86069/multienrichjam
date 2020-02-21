@@ -36,6 +36,7 @@ in order to make all colors brighter.
 Other jam utility functions: 
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
+\code{\link{collapse_mem_clusters}()},
 \code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},

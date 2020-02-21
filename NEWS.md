@@ -1,3 +1,16 @@
+# multienrichjam version 0.0.19.900
+
+## New functions
+
+* `collapse_mem_clusters()` is an intriguing new method of simplifying
+the numerous pathways, by using each pathway cluster from
+`mem_gene_pathway_heatmap()`. Each cluster is condensed to one
+result, combining all genes in each cluster. The results are
+surprisingly insightful, especially when numerous pathways
+are present per cluster. This function also calls
+`rank_mem_clusters()`, so it's possible to pick a handful of the
+top pathways per cluster, as relevant.
+
 # multienrichjam version 0.0.18.900
 
 ## New functions
