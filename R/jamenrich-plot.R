@@ -869,13 +869,18 @@ mem_plot_folio <- function
    });
    cnet_collapsed <- cnet_collapsed %>%
       subsetCnetIgraph(remove_blanks=TRUE);
-   ## Draw Cnet collapsed
-   jam_igraph(cnet_collapsed);
-   mem_legend(mem);
-   title(sub="Cnet plot using collapsed clusters",
-      main=main,
-      cex.main=cex.main,
-      cex.sub=cex.sub);
+   plot_num <- plot_num + 1;
+   if (length(do_which) > 0 && !plot_num %in% do_which) {
+      # skip
+   } else {
+      ## Draw Cnet collapsed
+      jam_igraph(cnet_collapsed);
+      mem_legend(mem);
+      title(sub="Cnet plot using collapsed clusters",
+         main=main,
+         cex.main=cex.main,
+         cex.sub=cex.sub);
+   }
    ## Draw Cnet collapsed with top n labels
    #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
    if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
