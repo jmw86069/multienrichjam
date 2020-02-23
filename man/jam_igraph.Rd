@@ -121,7 +121,8 @@ Other jam plot functions:
 \code{\link{mem_enrichment_heatmap}()},
 \code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()},
-\code{\link{mem_multienrichplot}()}
+\code{\link{mem_multienrichplot}()},
+\code{\link{mem_plot_folio}()}
 }
 \concept{jam igraph functions}
 \concept{jam plot functions}

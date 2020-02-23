@@ -1,3 +1,25 @@
+# multienrichjam version 0.0.20.900
+
+## New functions
+
+* `mem_plot_folio()` is a new function that creates the current
+recommended folio of multienrichment plots:
+
+1. Enrichment P-value heatmap
+2. Gene-pathway heatmap -- importantly with pathway clustering
+3. Cnet using the pathway clusters, collapsed by cluster
+4. Cnet using the pathway clusters, exemplar pathways per cluster
+5. Cnet using each individual pathway cluster
+
+## Changes to existing functions
+
+* `multiEnrichMap()` now includes `p_cutoff` in the output,
+which represents the enrichment P-value threshold used for
+the analysis. This cutoff is useful in making other color
+gradients respect the same threshold required for significant
+enrichment results, so P-values that do not meet this threshold
+can be colored white (or the background color.)
+
 # multienrichjam version 0.0.19.900
 
 ## New functions

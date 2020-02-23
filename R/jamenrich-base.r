@@ -1061,6 +1061,9 @@ multiEnrichMap <- function
       pvalueColname=pvalueColname);
    mem$colnames <- colnamesL;
 
+   ## Add p_cutoff to output
+   mem$p_cutoff <- cutoffRowMinP;
+
    return(mem);
 }
 
