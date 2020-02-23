@@ -835,6 +835,7 @@ mem_plot_folio <- function
    jamba::printDebug("mem_plot_folio(): ",
       "Gene-pathway heatmap");
    gp_hm <- mem_gene_path_heatmap(mem,
+      p_cutoff=p_cutoff,
       row_method=row_method,
       column_method=column_method,
       use_raster=use_raster,
