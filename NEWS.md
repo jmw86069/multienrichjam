@@ -19,6 +19,8 @@ the analysis. This cutoff is useful in making other color
 gradients respect the same threshold required for significant
 enrichment results, so P-values that do not meet this threshold
 can be colored white (or the background color.)
+* `mem_plot_folio()` new argument (minor release) `do_which` to
+help produce selected plot pages from a folio of plots.
 
 # multienrichjam version 0.0.19.900
 

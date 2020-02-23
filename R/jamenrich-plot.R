@@ -780,6 +780,10 @@ jam_igraph <- function
 #'    exemplar plots, using this many exemplars per cluster.
 #' @param cex.main,cex.sub numeric values passed to `title()` which
 #'    size the default title and sub-title in Cnet plots.
+#' @param do_which integer vector of plots to produce. When `do_which`
+#'    is `NULL`, then all plots are produced. This argument is intended
+#'    to help produce one plot from a folio, therefore each plot is referred
+#'    by the number of the plot, in order.
 #' @param ... additional arguments are passed to downstream functions.
 #'
 #' @export
@@ -796,6 +800,7 @@ mem_plot_folio <- function
  exemplar_range=c(1, 2, 3),
  cex.main=2,
  cex.sub=1.5,
+ do_which=NULL,
  ...)
 {
    if (length(p_cutoff) == 0) {
@@ -806,6 +811,8 @@ mem_plot_folio <- function
       }
    }
    ret_vals <- list();
+   plot_num <- 0;
+
 
    #############################################################
    ## Enrichment P-value heatmap
@@ -814,8 +821,13 @@ mem_plot_folio <- function
    mem_hm <- mem_enrichment_heatmap(mem,
       p_cutoff=p_cutoff,
       ...);
-   draw(mem_hm);
-   ret_vals$mem_hm <- mem_hm;
+   plot_num <- plot_num + 1;
+   if (length(do_which) > 0 && !plot_num %in% do_which) {
+      # skip
+   } else {
+      draw(mem_hm);
+      ret_vals$mem_hm <- mem_hm;
+   }
 
 
    #############################################################
@@ -829,8 +841,13 @@ mem_plot_folio <- function
       min_gene_ct=min_gene_ct,
       min_set_ct=min_set_ct,
       ...);
-   draw(gp_hm);
-   ret_vals$gp_hm <- gp_hm;
+   plot_num <- plot_num + 1;
+   if (length(do_which) > 0 && !plot_num %in% do_which) {
+      # skip
+   } else {
+      draw(gp_hm);
+      ret_vals$gp_hm <- gp_hm;
+   }
 
 
    ## Obtain heatmap pathway clusters
@@ -866,14 +883,18 @@ mem_plot_folio <- function
          V(cnet_collapsed)$set_labels,
          V(cnet_collapsed)$name);
    }
-   jam_igraph(cnet_collapsed);
-   mem_legend(mem);
-   title(sub="Cnet plot using collapsed clusters\nlabeled by set",
-      main=main,
-      cex.main=cex.main,
-      cex.sub=cex.sub);
-   ret_vals$cnet_collapsed <- cnet_collapsed;
-
+   plot_num <- plot_num + 1;
+   if (length(do_which) > 0 && !plot_num %in% do_which) {
+      # skip
+   } else {
+      jam_igraph(cnet_collapsed);
+      mem_legend(mem);
+      title(sub="Cnet plot using collapsed clusters\nlabeled by set",
+         main=main,
+         cex.main=cex.main,
+         cex.sub=cex.sub);
+      ret_vals$cnet_collapsed <- cnet_collapsed;
+   }
 
    #############################################################
    ## Prepare for Cnet plots
@@ -908,28 +929,27 @@ mem_plot_folio <- function
       cnet_exemplar <- cnet %>%
          subsetCnetIgraph(includeSets=clusters_mem_n$set,
             ...);
-      if (1 == 2) {
-         cnet <- cnet %>%
-            fixSetLabels(maxNchar=750,
-               width=26,
-               ...);
+      plot_num <- plot_num + 1;
+      if (length(do_which) > 0 && !plot_num %in% do_which) {
+         # skip
+      } else {
+         ## Draw Cnet exemplar
+         jam_igraph(cnet_exemplar);
+         title(
+            sub=paste0("Cnet plot using ",
+               exemplar_n,
+               " exemplar",
+               pluralized,
+               " per cluster"),
+            main=main,
+            cex.main=cex.main,
+            cex.sub=cex.sub);
+         mem_legend(mem);
+         ## Add to return list
+         cnet_exemplars <- c(cnet_exemplars,
+            list(cnet_exemplar));
+         names(cnet_exemplars)[length(cnet_exemplars)] <- exemplar_n;
       }
-      ## Draw Cnet exemplar
-      jam_igraph(cnet_exemplar);
-      title(
-         sub=paste0("Cnet plot using ",
-            exemplar_n,
-            " exemplar",
-            pluralized,
-            " per cluster"),
-         main=main,
-         cex.main=cex.main,
-         cex.sub=cex.sub);
-      mem_legend(mem);
-      ## Add to return list
-      cnet_exemplars <- c(cnet_exemplars,
-         list(cnet_exemplar));
-      names(cnet_exemplars)[length(cnet_exemplars)] <- exemplar_n;
    }
    ret_vals$cnet_exemplars <- cnet_exemplars;
 
@@ -945,18 +965,23 @@ mem_plot_folio <- function
       cnet_cluster <- cnet %>%
          subsetCnetIgraph(includeSets=cluster_sets,
             ...);
-      ## Draw Cnet cluster
-      jam_igraph(cnet_cluster);
-      title(sub=paste0("Cnet plot for cluster ",
-         cluster_name),
-         main=main,
-         cex.main=cex.main,
-         cex.sub=cex.sub);
-      mem_legend(mem);
-      ## Add to return list
-      cnet_clusters <- c(cnet_clusters,
-         list(cnet_cluster));
-      names(cnet_clusters)[length(cnet_clusters)] <- cluster_name;
+      plot_num <- plot_num + 1;
+      if (length(do_which) > 0 && !plot_num %in% do_which) {
+         # skip
+      } else {
+         ## Draw Cnet cluster
+         jam_igraph(cnet_cluster);
+         title(sub=paste0("Cnet plot for cluster ",
+            cluster_name),
+            main=main,
+            cex.main=cex.main,
+            cex.sub=cex.sub);
+         mem_legend(mem);
+         ## Add to return list
+         cnet_clusters <- c(cnet_clusters,
+            list(cnet_cluster));
+         names(cnet_clusters)[length(cnet_clusters)] <- cluster_name;
+      }
    }
    ret_vals$cnet_clusters <- cnet_clusters;
 

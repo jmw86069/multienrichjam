@@ -17,6 +17,7 @@ mem_plot_folio(
   exemplar_range = c(1, 2, 3),
   cex.main = 2,
   cex.sub = 1.5,
+  do_which = NULL,
   ...
 )
 }
@@ -51,6 +52,11 @@ exemplar plots, using this many exemplars per cluster.}
 
 \item{cex.main, cex.sub}{numeric values passed to \code{title()} which
 size the default title and sub-title in Cnet plots.}
+
+\item{do_which}{integer vector of plots to produce. When \code{do_which}
+is \code{NULL}, then all plots are produced. This argument is intended
+to help produce one plot from a folio, therefore each plot is referred
+by the number of the plot, in order.}
 
 \item{...}{additional arguments are passed to downstream functions.}
 }
