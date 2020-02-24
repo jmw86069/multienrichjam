@@ -18,6 +18,7 @@ jam_igraph(
   label_factor_l = NULL,
   label_dist_factor = 1,
   label_dist_factor_l = 1,
+  plot_function = jam_plot_igraph,
   verbose = FALSE
 )
 }
@@ -100,6 +101,7 @@ Other jam igraph functions:
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
 \code{\link{igraph2pieGraph}()},
+\code{\link{jam_plot_igraph}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{layout_with_qfr}()},
 \code{\link{memIM2cnet}()},
@@ -109,8 +111,6 @@ Other jam igraph functions:
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
-\code{\link{shape.coloredrectangle.plot}()},
-\code{\link{shape.ellipse.plot}()},
 \code{\link{spread_igraph_labels}()},
 \code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},

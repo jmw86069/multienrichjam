@@ -1,3 +1,30 @@
+# multienrichjam version 0.0.22.900
+
+## New functions
+
+* `shape.jampie.plot()` provides a new `igraph` vertex shape
+`"jampie"`. It is a complete clone to the default `igraph`
+shape `"pie"` except that it offers vectorized plotting, which
+can be substantially faster for large `igraph` objects that
+use `"pie"` nodes.
+* `jam_plot_igraph()` is a similar clone to `igraph::plot.igraph()`
+except that it uses vectorized plotting specifically when there
+are multiple shapes in the same `igraph` object. Formerly, each
+node is drawn individually which is substantially slower, especially
+for `igraph` objects with more than 100 nodes. It also by default
+converts shape `"pie"` to `"jampie"` in order to use vectorized
+plotting via `shape.jampie.plot()` above.
+
+## Changes to existing functions
+
+* `jam_igraph()` new argument `plot_function` allows use of
+custom plot function, specifically to use `jam_plot_igraph()`.
+
+## Other changes
+
+* Functions for igraph vertex shapes were moved into a new .R file,
+and into a new function family `"jam igraph shapes"`.
+
 # multienrichjam version 0.0.21.900
 
 ## New functions

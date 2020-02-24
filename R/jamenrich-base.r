@@ -13,6 +13,11 @@
    igraph::add_shape("ellipse",
       clip=igraph::shape_noclip,
       plot=shape.ellipse.plot);
+
+   ## define new igraph vertex shape "jampie"
+   igraph::add_shape("jampie",
+      clip=get("pie", envir=igraph:::.igraph.shapes)$clip,
+      plot=shape.jampie.plot);
 }
 
 

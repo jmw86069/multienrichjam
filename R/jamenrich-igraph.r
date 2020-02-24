@@ -663,396 +663,6 @@ igraph2pieGraph <- function
    return(g);
 }
 
-#' plot function for igraph vertex shape coloredrectangle
-#'
-#' plot function for igraph vertex shape coloredrectangle
-#'
-#' This function defines the plotting function for custom igraph vertex
-#' shape coloredrectangle. The coloredrectangle shape is described as:
-#'
-#' \itemize{
-#'    \item{a vertex drawn as a rectangle, filled with squares which are
-#'   each individually colored.}
-#'   \item{the squares are arrayed into a number of columns and rows,
-#'   which are defined for each vertex using `coloredrect.ncol` and
-#'   `coloredrect.nrow`, respectively.}
-#'   \item{the vector of colors is arrayed as values of a matrix, therefore
-#'   `coloredrect.byrow` is logical to indicate whether colors should fill
-#'   the matrix by row, similar to how `byrow=TRUE` is used.}
-#'   \item{the colors for each vertex are defined by
-#'   `coloredrect.color`. When this value does not exist, this function
-#'   will attempt to use values from `pie.color` if they exist.}
-#'   \item{the size of the rectangle is defined by `size2`, which is
-#'   typically the height of a `rectangle` node. The intent was to use
-#'   a size parameter which is already convenient, but which does not
-#'   conflict with the size used for vertex shapes such as `"circle"`.}
-#'   \item{when a vertex has 3 columns, and 2 rows, and only 5 colors,
-#'   the colors are not cycled to fill the complete node. Instead, the
-#'   last color is `"transparent"` to render no color in that square.}
-#'   \item{the frame around each node is described with `frame.color` and
-#'   `frame.lwd` which draws one rectangular border around the full
-#'   vertex. The border around all coloredrect vertices is drawn before the
-#'   squares are drawn for all coloredrect vertices, so that the border will
-#'   not overlap the squares. It has the visible effect of showing vertex
-#'   borders behind the vertex colors, while allowing for vectorized drawing,
-#'   which is substantially more efficient than per-vertex rendering.
-#'   The `graphics::symbols()` function is used to render rectangles,
-#'   it accepts only one value for `lwd` and `lty`, so rectangles
-#'   are split by `lwd` and `lty` and rendered in order. As a
-#'   result, if each vertex frame had a different lwd,lty combination, the
-#'   rendering would effectively be non-vectorized. For large numbers of
-#'   vertices and distinct lwd values, it would be preferred to reduce the
-#'   lwd values to limited significant digits (e.g. with
-#'   `signif(...,digits=2)`). That said, line width is not an optimal
-#'   way to convey a quantitative measurement.}
-#'   \item{a colored border can be drawn around each square in the vertex,
-#'   defined by `coloredrect.border` and `coloredrect.lwd`,
-#'   however it is recommended to use
-#'   this color only as a visible break, for example the default is
-#'   `"grey30"` which draws a simple border. Note that squares are
-#'   rendered after the vertex frame color, so each square color border will
-#'   be drawn over (on top of) the frame border.}
-#'   \item{when `coloredrect.ncol` does not exist, it will attempt
-#'   to use two rows of colors if `coloredrect.color` contains
-#'   two or more values.}
-#'   \item{when `coloredrect.nrow` does not exist, it will use a value
-#'   based upon `coloredrect.ncol` and the length of
-#'   `coloredrect.color`.}
-#' }
-#'
-#' Currently, the plotting of coloredrectangle vertices does not define
-#' clipping, which means edges are drawn to the center of each vertex,
-#' and the coloredrectangle vertex shapes are drawn on top of the edges.
-#' Transparent nodes will therefore show edges beneath them.
-#'
-#' @return invisible `list` of `data.frame` objects which were
-#'    used to draw the rectangle objects.
-#'    However the purpose of this function is the by-product that it
-#'    draws rectangles onto an igraph graph.
-#'
-#' @seealso `igraph::shapes()`
-#'
-#' @family jam igraph functions
-#'
-#' @param coords two-column numeric matrix with x- and y-coordinates,
-#'    respectively.
-#' @param v optional ids of the vertices to plot. It should match
-#'    the number of rows in the `coords` argument.
-#' @param params a function object that can be called to query
-#'    vertex/edge/plot graphical parameters. The first argument of
-#'    the function is `'vertex'`, `'edge'` or `'plot'` to decide
-#'    the type of the parameter, the second is a character string
-#'    giving the name of the parameter.
-#'
-#' @export
-shape.coloredrectangle.plot <- function
-(coords,
- v=NULL,
- params)
-{
-   ## Purpose is to extend igraph:::.igraph.shape.rectangle.plot
-   ## to handle the custom colored rectangle node type.
-   ## Shape "coloredrectangle" has these features for each vertex:
-   ## * the vertex is a rectangle filled with squares, where each
-   ##   square has its own assigned color.
-   ## * the squares are arrayed into a number of columns defined
-   ##   by "coloredrect.ncol", and a number of rows defined by
-   ##   "coloredrect.nrow". Each vertex can have its own number
-   ##   of columns and rows, and its own number of colors.
-   ## * the size of the overall rectangle is defined by "size2",
-   ##   which is normally the height of a rectangle shape. The
-   ##   intention was to allow using "size" for shapes such as
-   ##   "circle" but "size2" for
-   ##
-   ## This function combines some logic from
-   ## igraph:::.igraph.shape.pie.plot() as well.
-
-   verbose <- getOption("verbose");
-   getparam <- function(pname) {
-      p <- params("vertex", pname)
-      if (length(p) != 1 && !is.null(v)) {
-         p <- p[v]
-      }
-      p;
-   }
-   vertex.color <- getparam("color");
-
-   vertex.frame.color <- getparam("frame.color");
-   if (length(vertex.frame.color) == 0) {
-      vertex.frame.color <- "grey30";
-   }
-   vertex.frame.lwd <- getparam("frame.lwd");
-   if (length(vertex.frame.lwd) == 0) {
-      vertex.frame.lwd <- 1;
-   }
-
-   vertex.coloredrect.color <- getparam("coloredrect.color");
-   if (length(vertex.coloredrect.color) == 0) {
-      vertex.coloredrect.color <- getparam("pie.color");
-   }
-
-   vertex.coloredrect.border <- getparam("coloredrect.border");
-   if (length(vertex.coloredrect.border) == 0) {
-      vertex.coloredrect.border <- "grey30";
-      #vertex.coloredrect.border <- vertex.frame.color;
-   }
-   if (verbose) {
-      jamba::printDebug("shape.coloredrectangle.plot(): ",
-         "vertex.coloredrect.color:");
-      print(vertex.coloredrect.color);
-   }
-
-   vertex.coloredrect.byrow <- getparam("coloredrect.byrow") > 0;
-   if (length(vertex.coloredrect.byrow) == 0) {
-      vertex.coloredrect.byrow <- TRUE;
-   }
-
-   vertex.coloredrect.ncol <- getparam("coloredrect.ncol");
-   if (length(vertex.coloredrect.ncol) == 0) {
-      vertex.coloredrect.ncol <- ceiling(length(vertex.coloredrect)/2);
-   }
-   vertex.coloredrect.nrow <- getparam("coloredrect.nrow");
-   if (length(vertex.coloredrect.nrow) == 0) {
-      vertex.coloredrect.nrow <- ceiling(
-         length(vertex.coloredrect) /
-            vertex.coloredrect.ncol);
-   }
-   vertex.coloredrect.lty <- getparam("coloredrect.lty");
-   if (length(vertex.coloredrect.lty) == 0) {
-      vertex.coloredrect.lty <- 1;
-   }
-   vertex.coloredrect.lwd <- getparam("coloredrect.lwd");
-   if (length(vertex.coloredrect.lwd) == 0) {
-      vertex.coloredrect.lwd <- 1;
-   }
-
-   vertex.size2 <- getparam("size");
-   vertex.size1 <- getparam("size2");
-   if (any(is.na(vertex.size1))) {
-      vertex.size1[is.na(vertex.size1)] <- vertex.size2[is.na(vertex.size1)] / 2;
-   }
-   vertex.size1 <- rep(1/200 * vertex.size1, length.out=nrow(coords));
-   vertex.size2 <- rep(1/200 * vertex.size2, length.out=nrow(coords));
-
-   ## Use size1 (height) to define the size of each square, then apply that
-   ## to calculate size2 (width)
-   #vertex.size1 <- vertex.size1 * 5 / vertex.coloredrect.nrow;
-   vertex.size1 <- vertex.size1 * 5 * pmax(vertex.coloredrect.nrow,
-      vertex.coloredrect.ncol) / vertex.coloredrect.nrow;
-   vertex.size2 <- (vertex.size1 *
-         (vertex.coloredrect.nrow) / vertex.coloredrect.ncol);
-
-   if (verbose) {
-      jamba::printDebug("shape.coloredrectangle.plot(): ",
-         "vertex.size1:", vertex.size1,
-         ", vertex.coloredrect.nrow:", vertex.coloredrect.nrow);
-      jamba::printDebug("shape.coloredrectangle.plot(): ",
-         "vertex.size2:", vertex.size2,
-         ", vertex.coloredrect.ncol:", vertex.coloredrect.ncol);
-   }
-
-   vertex.size <- cbind(vertex.size1, vertex.size2);
-
-   ## Define custom function to help vectorize drawing, by creating a
-   ## data.frame of coordinates for each square and rectangle
-   mycoloredrectangle <- function
-   (x,
-    y,
-    size1,
-    size2,
-    col,
-    ncol,
-    nrow,
-    border,
-    lty,
-    lwd=1,
-    frame.lwd=0.5,
-    frame.color="grey30",
-    byrow=TRUE,
-    ...)
-   {
-      ## Purpose is to draw a rectangle filles with multi-color squares
-      nrow <- rep(nrow, length.out=length(x));
-      ncol <- rep(ncol, length.out=length(x));
-      border <- rep(border, length.out=length(x));
-      lty <- rep(lty, length.out=length(x));
-      lwd <- rep(lwd, length.out=length(x));
-      frame.lwd <- rep(frame.lwd, length.out=length(x));
-      frame.color <- rep(frame.color, length.out=length(x));
-      byrow <- rep(byrow, length.out=length(x));
-
-      ## Iterate each vertex, create a data.frame describing
-      ## frame and square colors, then combine into one large
-      ## data.frame for vectorized drawing.
-      rectDF <- jamba::rbindList(lapply(seq_along(x), function(k){
-         xk <- x[[k]];
-         yk <- y[[k]];
-         size1k <- size1[[k]];
-         size2k <- size2[[k]];
-         nrowk <- jamba::rmNULL(nullValue=1, nrow[[k]]);
-         ncolk <- jamba::rmNULL(nullValue=1, ncol[[k]]);
-         byrowk <- byrow[[k]];
-         ## Individual rectangles
-         x01 <- seq(from=xk-(size1k/2),
-            to=xk+(size1k/2),
-            length.out=ncolk+1);
-         y01 <- seq(from=yk-(size2k/2),
-            to=yk+(size2k/2),
-            length.out=nrowk+1);
-
-         numk <- ncolk * nrowk;
-         size1v <- rep(min(diff(x01)), numk);
-         size2v <- rep(min(diff(y01)), numk);
-         if (byrowk) {
-            x01v <- rep(head(x01, -1), nrowk)+(size1v/2);
-            y01v <- rep(rev(tail(y01, -1)), each=ncolk)-(size2v/2);
-         } else {
-            x01v <- rep(head(x01, -1), each=nrowk)+(size1v/2);
-            y01v <- rep(rev(tail(y01, -1)), ncolk)-(size2v/2);
-         }
-         ## Make one large rectangle border
-         x01all <- mean(x01v);
-         y01all <- mean(y01v);
-         ##
-         colk <- rep(col[[k]], length.out=length(x01v));
-         borderk <- rep(border[[k]], length.out=length(colk));
-         ltyk <- rep(lty[[k]], length.out=length(colk));
-         lwdk <- rep(lwd[[k]], length.out=length(colk));
-         if (length(getOption("debug"))>0) {
-            jamba::printDebug("k:", k,
-               ", numk:", numk,
-               ", byrowk:", byrowk,
-               ", ncolk:", ncolk,
-               ", nrowk:", nrowk,
-               ", xk:", xk,
-               ", x01v:", signif(digits=3, x01v),
-               ", x01:", signif(digits=3, x01),
-               ", yk:", yk,
-               ", y01v:", signif(digits=3, y01v),
-               ", y01:", signif(digits=3, y01),
-               ", colk:", colk,
-               ", size1v:", signif(digits=3, size1v),
-               ", size2v:", signif(digits=3, size2v)
-            );
-         }
-         kDF <- data.frame(x=c(xk, x01v),
-            y=c(yk, y01v),
-            bg=c("transparent", colk),
-            fg=c(head(frame.color[[k]],1),
-               borderk),
-            rectx=c(head(size1v,1)*ncolk, size1v),
-            recty=c(head(size2v,1)*nrowk, size2v),
-            lty=c(head(ltyk,1), ltyk),
-            lwd=c(head(frame.lwd[[k]],1)*2.5,
-               lwdk/4),
-            rect_type=rep(factor(c("frame","square")),
-               c(1,length(borderk)))
-         );
-         kDF;
-      }));
-
-      ## Split into a list of data.frames, because symbols()
-      ## can only use one value for lwd and lty.
-      rectDFL <- split(rectDF,
-         jamba::pasteByRowOrdered(rectDF[,c("rect_type","lwd","lty")]));
-      if (verbose) {
-         jamba::printDebug("shape.coloredrectangle.plot(): ",
-            "names(rectDFL):", names(rectDFL));
-      }
-
-      rect_order <- provigrep(c("frame", "square", "."), names(rectDFL));
-      for (rectDFi in rectDFL[rect_order]) {
-         symbols(x=rectDFi$x,
-            y=rectDFi$y,
-            bg=rectDFi$bg,
-            fg=rectDFi$fg,
-            rectangles=as.matrix(rectDFi[,c("rectx","recty")]),
-            add=TRUE,
-            inches=FALSE,
-            lty=rectDFi$lty,
-            lwd=rectDFi$lwd);
-      }
-      return(rectDFL);
-   }
-
-   ## For reference, the code below draws a single rectangle
-   if (1 == 2) {
-      symbols(x=coords[, 1],
-         y=coords[, 2],
-         bg=vertex.color,
-         fg=vertex.frame.color,
-         rectangles=2*vertex.size,
-         add=TRUE,
-         inches=FALSE);
-   }
-
-   mcr <- mycoloredrectangle(x=coords[,1],
-      y=coords[,2],
-      size1=vertex.size1,
-      size2=vertex.size2,
-      col=vertex.coloredrect.color,
-      ncol=vertex.coloredrect.ncol,
-      nrow=vertex.coloredrect.nrow,
-      border=vertex.coloredrect.border,
-      lty=vertex.coloredrect.lty,
-      lwd=vertex.coloredrect.lwd,
-      frame.lwd=vertex.frame.lwd,
-      frame.color=vertex.frame.color,
-      byrow=vertex.coloredrect.byrow);
-
-}
-
-#' plot function for igraph vertex shape ellipse
-#'
-#' plot function for igraph vertex shape ellipse
-#'
-#' This function defines the plotting function for custom igraph vertex
-#' shape ellipse.
-#'
-#' @family jam igraph functions
-#'
-#' @export
-shape.ellipse.plot <- function
-(coords,
- v=NULL,
- params)
-{
-   vertex.color <- params("vertex", "color");
-   if (length(vertex.color) != 1 && !is.null(v)) {
-      vertex.color <- vertex.color[v];
-   }
-   vertex.frame.color <- params("vertex", "frame.color");
-   if (length(vertex.frame.color) != 1 && !is.null(v)) {
-      vertex.frame.color <- vertex.frame.color[v];
-   }
-   vertex.frame.width <- params("vertex", "frame.width");
-   if (length(vertex.frame.width) == 0) {
-      vertex.frame.width <- 1;
-   }
-   if (length(vertex.frame.width) != 1 && !is.null(v)) {
-      vertex.frame.width <- vertex.frame.width[v];
-   }
-   vertex.size <- 1/200 * params("vertex", "size");
-   if (length(vertex.size) != 1 && !is.null(v)) {
-      vertex.size <- vertex.size[v];
-   }
-   vertex.ellipse.ratio <- params("vertex", "ellipse.ratio");
-   if (length(vertex.ellipse.ratio) == 0) {
-      vertex.ellipse.ratio <- 2;
-   }
-   if (length(vertex.ellipse.ratio) != 1 && !is.null(v)) {
-      vertex.ellipse.ratio <- vertex.ellipse.ratio[v];
-   }
-
-   drawEllipse(x=coords[,1],
-      y=coords[,2],
-      a=vertex.size,
-      b=vertex.size/vertex.ellipse.ratio,
-      col=vertex.color,
-      border=vertex.frame.color,
-      lwd=vertex.frame.width,
-      draw=TRUE);
-}
 
 #' Get angle from origin to vector of x,y coordinates
 #'
@@ -2666,3 +2276,556 @@ color_edges_by_nodes <- function
    E(g)$color <- unname(edge_colors);
    return(g);
 }
+
+#' Jam igraph vectorized plot function
+#'
+#' Jam igraph vectorized plot function
+#'
+#' This function is a complete copy of `igraph:::plot.igraph()` with
+#' two changes to enable vectorized plotting in these situations:
+#'
+#' 1. When there are multiple vertex `"shape"` attributes, the
+#' base plot function draws each individual `igraph` vertex one by one.
+#' The `jam_plot_igraph()` plots nodes of each shape in a group. For
+#' fairly large `igraph` objects (about 1000 nodes), this change
+#' is substantially faster.
+#' 2. When there are multiple font families, the default plot function
+#' draws each label one by one. The `jam_plot_igraph()` draws
+#' labels in groups of font family. This situation is very rare, however
+#' when used the speed improvement is substantial.
+#'
+#' Note that this function is not called by default, and is only called
+#' by `multienrichjam::jam_igraph()`.
+#'
+#' Smaller changes: `mark.col` and `mark.border` default colors
+#' now call `colorjam::rainbowJam()` instead of `grDevices::rainbow()`.
+#'
+#' All arguments are documented in `igraph::plot.igraph()`.
+#'
+#' @family jam igraph functions
+#'
+#' @inheritParams igraph::plot.igraph
+#' @param pie_to_jampie logical indicating whether to convert
+#'    vertex shape `"pie"` to `"jampie"` in order to use vectorized
+#'    plotting.
+#'
+#' @export
+jam_plot_igraph <- function
+(x,
+ axes = FALSE,
+ add = FALSE,
+ xlim = c(-1, 1),
+ ylim = c(-1, 1),
+ mark.groups = list(),
+ mark.shape = 1/2,
+ mark.col = colorjam::rainbowJam(length(mark.groups), alpha = 0.3),
+ mark.border = colorjam::rainbowJam(length(mark.groups), alpha = 1),
+ mark.expand = 15,
+ pie_to_jampie=TRUE,
+...)
+{
+   graph <- x
+   if (!igraph::is_igraph(graph)) {
+      stop("Not a graph object")
+   }
+   params <- igraph:::i.parse.plot.params(graph, list(...))
+   vertex.size <- 1/200 * params("vertex", "size")
+   label.family <- params("vertex", "label.family")
+   label.font <- params("vertex", "label.font")
+   label.cex <- params("vertex", "label.cex")
+   label.degree <- params("vertex", "label.degree")
+   label.color <- params("vertex", "label.color")
+   label.dist <- params("vertex", "label.dist")
+   labels <- params("vertex", "label")
+
+   shape <- igraph:::igraph.check.shapes(params("vertex", "shape"));
+   ## Optionally convert shape "pie" to "jampie" for vectorized plotting
+   if (pie_to_jampie) {
+      shape <- ifelse(shape %in% "pie",
+         "jampie",
+         shape);
+   }
+
+   edge.color <- params("edge", "color")
+   edge.width <- params("edge", "width")
+   edge.lty <- params("edge", "lty")
+   arrow.mode <- params("edge", "arrow.mode")
+   edge.labels <- params("edge", "label")
+   loop.angle <- params("edge", "loop.angle")
+   edge.label.font <- params("edge", "label.font")
+   edge.label.family <- params("edge", "label.family")
+   edge.label.cex <- params("edge", "label.cex")
+   edge.label.color <- params("edge", "label.color")
+   elab.x <- params("edge", "label.x")
+   elab.y <- params("edge", "label.y")
+   arrow.size <- params("edge", "arrow.size")[1]
+   arrow.width <- params("edge", "arrow.width")[1]
+   curved <- params("edge", "curved")
+   if (is.function(curved)) {
+      curved <- curved(graph)
+   }
+   layout <- params("plot", "layout")
+   margin <- params("plot", "margin")
+   margin <- rep(margin, length = 4)
+   rescale <- params("plot", "rescale")
+   asp <- params("plot", "asp")
+   frame <- params("plot", "frame")
+   main <- params("plot", "main")
+   sub <- params("plot", "sub")
+   xlab <- params("plot", "xlab")
+   ylab <- params("plot", "ylab")
+   palette <- params("plot", "palette")
+   if (!is.null(palette)) {
+      old_palette <- palette(palette)
+      on.exit(palette(old_palette), add = TRUE)
+   }
+   arrow.mode <- igraph:::i.get.arrow.mode(graph, arrow.mode)
+   maxv <- max(vertex.size)
+   if (rescale) {
+      layout <- igraph::norm_coords(layout, -1, 1, -1, 1)
+      xlim <- c(xlim[1] - margin[2] - maxv,
+         xlim[2] + margin[4] + maxv);
+      ylim <- c(ylim[1] - margin[1] - maxv,
+         ylim[2] + margin[3] + maxv)
+   }
+   if (!add) {
+      plot(0,
+         0,
+         type = "n",
+         xlab = xlab,
+         ylab = ylab,
+         xlim = xlim,
+         ylim = ylim,
+         axes = axes,
+         frame = frame,
+         asp = asp,
+         main = main,
+         sub = sub)
+   }
+   if (!is.list(mark.groups) && is.numeric(mark.groups)) {
+      mark.groups <- list(mark.groups)
+   }
+   mark.shape <- rep(mark.shape, length = length(mark.groups))
+   mark.border <- rep(mark.border, length = length(mark.groups))
+   mark.col <- rep(mark.col, length = length(mark.groups))
+   mark.expand <- rep(mark.expand, length = length(mark.groups))
+   for (g in seq_along(mark.groups)) {
+      v <- igraph::V(graph)[mark.groups[[g]]]
+      if (length(vertex.size) == 1) {
+         vs <- vertex.size
+      } else {
+         vs <- rep(vertex.size, length = igraph::vcount(graph))[v]
+      }
+      igraph:::igraph.polygon(layout[v, , drop = FALSE],
+         vertex.size = vs,
+         expand.by = mark.expand[g]/200,
+         shape = mark.shape[g],
+         col = mark.col[g],
+         border = mark.border[g])
+   }
+   el <- igraph::as_edgelist(graph, names = FALSE)
+   loops.e <- which(el[, 1] == el[, 2])
+   nonloops.e <- which(el[, 1] != el[, 2])
+   loops.v <- el[, 1][loops.e]
+   loop.labels <- edge.labels[loops.e]
+   loop.labx <- if (is.null(elab.x)) {
+      rep(NA, length(loops.e))
+   } else {
+      elab.x[loops.e]
+   }
+   loop.laby <- if (is.null(elab.y)) {
+      rep(NA, length(loops.e))
+   } else {
+      elab.y[loops.e]
+   }
+   edge.labels <- edge.labels[nonloops.e]
+   elab.x <- if (is.null(elab.x)) {
+      NULL
+   } else {
+      elab.x[nonloops.e]
+   }
+   elab.y <- if (is.null(elab.y)){
+      NULL
+   } else {
+      elab.y[nonloops.e]
+   }
+   el <- el[nonloops.e, , drop = FALSE]
+   edge.coords <- matrix(0, nrow = nrow(el), ncol = 4)
+   edge.coords[, 1] <- layout[, 1][el[, 1]]
+   edge.coords[, 2] <- layout[, 2][el[, 1]]
+   edge.coords[, 3] <- layout[, 1][el[, 2]]
+   edge.coords[, 4] <- layout[, 2][el[, 2]]
+   if (length(unique(shape)) == 1) {
+      ec <- igraph:::.igraph.shapes[[shape[1]]]$clip(edge.coords,
+         el,
+         params = params,
+         end = "both")
+   } else {
+      shape <- rep(shape, length = vcount(graph))
+      ec <- edge.coords
+      ec[, 1:2] <- t(sapply(seq(length = nrow(el)), function(x) {
+         igraph:::.igraph.shapes[[shape[el[x, 1]]]]$clip(
+            edge.coords[x, , drop = FALSE],
+            el[x, , drop = FALSE],
+            params = params,
+            end = "from")
+      }))
+      ec[, 3:4] <- t(sapply(seq(length = nrow(el)), function(x) {
+         igraph:::.igraph.shapes[[shape[el[x, 2]]]]$clip(
+            edge.coords[x, , drop = FALSE],
+            el[x, , drop = FALSE],
+            params = params,
+            end = "to")
+      }))
+   }
+   x0 <- ec[, 1]
+   y0 <- ec[, 2]
+   x1 <- ec[, 3]
+   y1 <- ec[, 4]
+   if (length(loops.e) > 0) {
+      ec <- edge.color
+      if (length(ec) > 1) {
+         ec <- ec[loops.e]
+      }
+      point.on.cubic.bezier <- function(cp, t) {
+         c <- 3 * (cp[2, ] - cp[1, ])
+         b <- 3 * (cp[3, ] - cp[2, ]) - c
+         a <- cp[4, ] - cp[1, ] - c - b
+         t2 <- t * t
+         t3 <- t * t * t
+         a * t3 + b * t2 + c * t + cp[1, ]
+      }
+      compute.bezier <- function(cp, points) {
+         dt <- seq(0, 1, by = 1/(points - 1))
+         sapply(dt, function(t) {
+            point.on.cubic.bezier(cp, t)
+         })
+      }
+      plot.bezier <- function
+      (cp,
+         points,
+         color,
+         width,
+         arr,
+         lty,
+         arrow.size,
+         arr.w)
+      {
+         p <- compute.bezier(cp, points)
+         polygon(p[1, ],
+            p[2, ],
+            border = color,
+            lwd = width,
+            lty = lty)
+         if (arr == 1 || arr == 3) {
+            igraph:::igraph.Arrows(p[1, ncol(p) - 1],
+               p[2, ncol(p) - 1],
+               p[1, ncol(p)],
+               p[2, ncol(p)],
+               sh.col = color,
+               h.col = color,
+               size = arrow.size,
+               sh.lwd = width,
+               h.lwd = width,
+               open = FALSE,
+               code = 2,
+               width = arr.w)
+         }
+         if (arr == 2 || arr == 3) {
+            igraph:::igraph.Arrows(p[1, 2],
+               p[2, 2],
+               p[1, 1], p[2, 1],
+               sh.col = color,
+               h.col = color,
+               size = arrow.size,
+               sh.lwd = width,
+               h.lwd = width,
+               open = FALSE,
+               code = 2,
+               width = arr.w)
+         }
+      }
+      loop <- function
+      (x0,
+         y0,
+         cx = x0,
+         cy = y0,
+         color,
+         angle = 0,
+         label = NA,
+         width = 1,
+         arr = 2,
+         lty = 1,
+         arrow.size = arrow.size,
+         arr.w = arr.w,
+         lab.x, lab.y)
+      {
+         rad <- angle
+         center <- c(cx, cy)
+         cp <- matrix(
+            c(x0,
+               y0,
+               x0 + 0.4,
+               y0 + 0.2,
+               x0 + 0.4,
+               y0 - 0.2,
+               x0,
+               y0),
+            ncol = 2,
+            byrow = TRUE)
+         phi <- atan2(cp[, 2] - center[2],
+            cp[, 1] - center[1])
+         r <- sqrt((cp[, 1] - center[1])^2 + (cp[, 2] - center[2])^2)
+         phi <- phi + rad
+         cp[, 1] <- cx + r * cos(phi)
+         cp[, 2] <- cy + r * sin(phi)
+         plot.bezier(cp,
+            50,
+            color,
+            width,
+            arr = arr,
+            lty = lty,
+            arrow.size = arrow.size,
+            arr.w = arr.w)
+         if (is.language(label) || !is.na(label)) {
+            lx <- x0 + 0.3
+            ly <- y0
+            phi <- atan2(ly - center[2],
+               lx - center[1])
+            r <- sqrt((lx - center[1])^2 + (ly - center[2])^2)
+            phi <- phi + rad
+            lx <- cx + r * cos(phi)
+            ly <- cy + r * sin(phi)
+            if (!is.na(lab.x)) {
+               lx <- lab.x
+            }
+            if (!is.na(lab.y)) {
+               ly <- lab.y
+            }
+            text(lx,
+               ly,
+               label,
+               col = edge.label.color,
+               font = edge.label.font,
+               family = edge.label.family,
+               cex = edge.label.cex)
+         }
+      }
+      ec <- edge.color
+      if (length(ec) > 1) {
+         ec <- ec[loops.e]
+      }
+      vs <- vertex.size
+      if (length(vertex.size) > 1) {
+         vs <- vs[loops.v]
+      }
+      ew <- edge.width
+      if (length(edge.width) > 1) {
+         ew <- ew[loops.e]
+      }
+      la <- loop.angle
+      if (length(loop.angle) > 1) {
+         la <- la[loops.e]
+      }
+      lty <- edge.lty
+      if (length(edge.lty) > 1) {
+         lty <- lty[loops.e]
+      }
+      arr <- arrow.mode
+      if (length(arrow.mode) > 1) {
+         arr <- arrow.mode[loops.e]
+      }
+      asize <- arrow.size
+      if (length(arrow.size) > 1) {
+         asize <- arrow.size[loops.e]
+      }
+      xx0 <- layout[loops.v, 1] + cos(la) * vs
+      yy0 <- layout[loops.v, 2] - sin(la) * vs
+      mapply(loop,
+         xx0,
+         yy0,
+         color = ec,
+         angle = -la,
+         label = loop.labels,
+         lty = lty,
+         width = ew,
+         arr = arr,
+         arrow.size = asize,
+         arr.w = arrow.width,
+         lab.x = loop.labx,
+         lab.y = loop.laby)
+   }
+   if (length(x0) != 0) {
+      if (length(edge.color) > 1) {
+         edge.color <- edge.color[nonloops.e]
+      }
+      if (length(edge.width) > 1) {
+         edge.width <- edge.width[nonloops.e]
+      }
+      if (length(edge.lty) > 1) {
+         edge.lty <- edge.lty[nonloops.e]
+      }
+      if (length(arrow.mode) > 1) {
+         arrow.mode <- arrow.mode[nonloops.e]
+      }
+      if (length(arrow.size) > 1) {
+         arrow.size <- arrow.size[nonloops.e]
+      }
+      if (length(curved) > 1) {
+         curved <- curved[nonloops.e]
+      }
+      if (length(unique(arrow.mode)) == 1) {
+         lc <- igraph:::igraph.Arrows(x0,
+            y0,
+            x1,
+            y1,
+            h.col = edge.color,
+            sh.col = edge.color,
+            sh.lwd = edge.width,
+            h.lwd = 1,
+            open = FALSE,
+            code = arrow.mode[1],
+            sh.lty = edge.lty,
+            h.lty = 1,
+            size = arrow.size,
+            width = arrow.width,
+            curved = curved)
+         lc.x <- lc$lab.x
+         lc.y <- lc$lab.y
+      } else {
+         curved <- rep(curved, length = ecount(graph))[nonloops.e]
+         lc.x <- lc.y <- numeric(length(curved))
+         for (code in 0:3) {
+            valid <- arrow.mode == code
+            if (!any(valid)) {
+               next
+            }
+            ec <- edge.color
+            if (length(ec) > 1) {
+               ec <- ec[valid]
+            }
+            ew <- edge.width
+            if (length(ew) > 1) {
+               ew <- ew[valid]
+            }
+            el <- edge.lty
+            if (length(el) > 1) {
+               el <- el[valid]
+            }
+            lc <- igraph:::igraph.Arrows(x0[valid],
+               y0[valid],
+               x1[valid],
+               y1[valid],
+               code = code,
+               sh.col = ec,
+               h.col = ec,
+               sh.lwd = ew,
+               h.lwd = 1,
+               h.lty = 1,
+               sh.lty = el,
+               open = FALSE,
+               size = arrow.size,
+               width = arrow.width,
+               curved = curved[valid])
+            lc.x[valid] <- lc$lab.x
+            lc.y[valid] <- lc$lab.y
+         }
+      }
+      if (!is.null(elab.x)) {
+         lc.x <- ifelse(is.na(elab.x),
+            lc.x,
+            elab.x)
+      }
+      if (!is.null(elab.y)) {
+         lc.y <- ifelse(is.na(elab.y),
+            lc.y,
+            elab.y)
+      }
+      text(lc.x,
+         lc.y,
+         labels = edge.labels,
+         col = edge.label.color,
+         family = edge.label.family,
+         font = edge.label.font,
+         cex = edge.label.cex)
+   }
+   rm(x0, y0, x1, y1)
+   if (length(unique(shape)) == 1) {
+      igraph:::.igraph.shapes[[shape[1]]]$plot(
+         layout,
+         params = params)
+   } else {
+      ## Loop each unique shape here instead of individual nodes
+      unique_shapes <- unique(shape);
+      nodes_by_shape <- split(seq_len(vcount(graph)), shape);
+      if (1 == 1) {
+         sapply(nodes_by_shape, function(x){
+            shape1 <- shape[x[1]];
+            igraph:::.igraph.shapes[[shape1]]$plot(
+               layout[x, , drop = FALSE],
+               v = x,
+               params = params)
+         })
+      } else {
+         sapply(seq(length = vcount(graph)), function(x) {
+            igraph:::.igraph.shapes[[shape[x]]]$plot(
+               layout[x, , drop = FALSE],
+               v = x,
+               params = params)
+         })
+      }
+   }
+   par(xpd = TRUE)
+   x <- layout[, 1] +
+      (label.dist *
+            cos(-label.degree) *
+            (vertex.size + 6 * 8 * log10(2))/200);
+   y <- layout[, 2] +
+      (label.dist *
+            sin(-label.degree) *
+            (vertex.size + 6 * 8 * log10(2))/200);
+   if (length(label.family) == 1) {
+      text(x,
+         y,
+         labels = labels,
+         col = label.color,
+         family = label.family,
+         font = label.font,
+         cex = label.cex)
+   } else {
+      if1 <- function(vect, idx) if (length(vect) == 1) {
+         vect
+      } else {
+         vect[idx]
+      }
+      ## Also loop through each family here instead of each node
+      unique_family <- unique(label.family);
+      label.family <- rep(label.family, length.out=vcount(graph));
+      nodes_by_family <- split(seq_len(vcount(graph)), label.family);
+      if (1 == 1) {
+         sapply(nodes_by_family, function(v){
+            family1 <- label.family[v[1]];
+            text(x[v],
+               y[v],
+               labels = if1(labels, v),
+               col = if1(label.color, v),
+               family = family1,
+               font = if1(label.font, v),
+               cex = if1(label.cex, v))
+         })
+      } else {
+         sapply(seq_len(vcount(graph)), function(v) {
+            text(x[v],
+               y[v],
+               labels = if1(labels, v),
+               col = if1(label.color, v),
+               family = if1(label.family, v),
+               font = if1(label.font, v),
+               cex = if1(label.cex, v))
+         })
+      }
+   }
+   rm(x, y)
+   invisible(NULL)
+}
+

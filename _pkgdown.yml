@@ -18,6 +18,10 @@ reference:
   desc: Functions that extend or customize igraph-related features
   contents:
   - has_concept("jam igraph functions")
+- title: igraph vertex shapes
+  desc: Functions that provide custom igraph vertex shapes
+  contents:
+  - has_concept("jam igraph shapes")
 - title: list functions
   desc: Functions that operate on list objects
   contents:

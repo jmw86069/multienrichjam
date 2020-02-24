@@ -638,6 +638,7 @@ jam_igraph <- function
  label_factor_l=NULL,
  label_dist_factor=1,
  label_dist_factor_l=1,
+ plot_function=jam_plot_igraph,
  verbose=FALSE)
 {
    ##
@@ -724,7 +725,7 @@ jam_igraph <- function
       ylim <- range(layout[,2]);
       ylim <- ylim + diff(ylim) * c(-1,1) * expand;
    }
-   plot(x=x,
+   plot_function(x=x,
       ...,
       rescale=rescale,
       vertex.size=vertex.size,
@@ -825,7 +826,15 @@ mem_plot_folio <- function
    if (length(do_which) > 0 && !plot_num %in% do_which) {
       # skip
    } else {
-      draw(mem_hm);
+      caption <- paste0("Hierarchical clustering: distance metric '",
+         column_method, "'\n",
+         "Data filtering: enrichment P-value <= ", p_cutoff,
+         "; genes per set >= ", min_gene_ct,
+         "; sets per gene >= ", min_set_ct);
+      grid_with_title(mem_hm,
+         title=main,
+         caption=caption);
+      #draw(mem_hm);
       ret_vals$mem_hm <- mem_hm;
    }
 
@@ -867,6 +876,12 @@ mem_plot_folio <- function
          mem$colorV[names(i)],
          i);
    });
+   V(cnet_collapsed)$coloredrect.color <- lapply(V(cnet_collapsed)$coloredrect.color, function(i){
+      j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+         mem$colorV[names(i)],
+         i);
+   });
+
    cnet_collapsed <- cnet_collapsed %>%
       subsetCnetIgraph(remove_blanks=TRUE);
    plot_num <- plot_num + 1;
@@ -907,11 +922,16 @@ mem_plot_folio <- function
    cnet <- memIM2cnet(mem,
       ...);
    V(cnet)$pie.color <- lapply(V(cnet)$pie.color, function(i){
-      i <- i[!isColorBlank(i)]
-      j <- ifelse(names(i) %in% names(mem$colorV),
+      j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
          mem$colorV[names(i)],
          i);
    });
+   V(cnet)$coloredrect.color <- lapply(V(cnet)$coloredrect.color, function(i){
+      j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+         mem$colorV[names(i)],
+         i);
+   });
+
    cnet <- cnet %>%
       removeIgraphBlanks();
 
