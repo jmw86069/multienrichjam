@@ -36,6 +36,7 @@ a color key to a plot, typically for \code{igraph} plots.
 }
 \seealso{
 Other jam plot functions: 
+\code{\link{grid_with_title}()},
 \code{\link{jam_igraph}()},
 \code{\link{mem_enrichment_heatmap}()},
 \code{\link{mem_gene_path_heatmap}()},

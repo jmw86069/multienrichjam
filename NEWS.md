@@ -1,3 +1,12 @@
+# multienrichjam version 0.0.21.900
+
+## New functions
+
+* `grid_with_title()` draws a grid object with title and optional
+subtitle, allowing for grid objects such as `ComplexHeatmap::Heatmap`
+objects, or even multiple heatmaps. That said, any grid `"gTree"`
+object should work.
+
 # multienrichjam version 0.0.20.900
 
 ## New functions

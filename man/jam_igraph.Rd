@@ -118,6 +118,7 @@ Other jam igraph functions:
 \code{\link{with_qfr}()}
 
 Other jam plot functions: 
+\code{\link{grid_with_title}()},
 \code{\link{mem_enrichment_heatmap}()},
 \code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()},

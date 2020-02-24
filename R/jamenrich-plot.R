@@ -993,3 +993,144 @@ mem_plot_folio <- function
 
    invisible(ret_vals);
 }
+
+#' Draw Heatmap with title and subtitle using grid viewports
+#'
+#' This function is intended to help make it easier to wrap a
+#' heatmap from `ComplexHeatmap::Heatmap()` inside the relevant
+#' grid viewports in order to display one large title at the
+#' top of the resulting visualization, and optionally one
+#' subtitle at the bottom of the visualization.
+#'
+#' The input can be one heatmap (`Heatmap` object),
+#' or object of class `"gTree"`, or any object with a method
+#' `draw()` associated with it, detected by
+#' `methods::hasMethod("draw", class(object))`.
+#'
+#' A good example of `"gTree"` object is the result of
+#' calling `draw()` inside `grid::grid.grabExpr()`, for example:
+#'
+#' `grid::grid.grabExpr(ComplexHeatmap::draw(...))`
+#'
+#' The `ComplexHeatmap::draw()` function has extended capability
+#' for arranging one or more heatmaps and associated annotations.
+#'
+#' @family jam plot functions
+#'
+#' @return The byproduct of this function is to draw a grid visualization
+#'    that includes a title and subtitle, then the `object` in the center.
+#'
+#' @param object an object with class `"Heatmap"`, `"gTree"`, or
+#'    any object where `methods::hasMethod("draw", class(object))`
+#'    is `TRUE`.
+#' @param title character string used as title. When `NULL` or
+#'    `nchar(title)==0` then no title is displayed.
+#' @param title_fontsize numeric value indicating the font size,
+#'    with units `"points"`.
+#' @param title_just character string indicating the justification
+#'    (alignment) of the title.
+#' @param caption,caption_fontsize,caption_just arguments equivalent
+#'    to the title_* arguments.
+#' @param caption_x numeric value in grid units specifying where to
+#'    position the caption text. By default when `caption_just` is `"left"`
+#'    the `caption_x` is defined by `grid::unit(0.2, "npc")`, which
+#'    positions the caption at the left side (20% from the left edge)
+#'    of the plot, with text proceeding to the right of that point.
+#' @param ... additional arguments are ignored.
+#'
+#' @export
+grid_with_title <- function
+(object,
+ title=NULL,
+ title_fontsize=18,
+ title_just="centre",
+ caption=NULL,
+ caption_fontsize=12,
+ caption_just="left",
+ caption_x=NULL,
+ ...)
+{
+   ## This function requires grid, need to verify function prefixing
+   ##
+   if (!any(c("gTree", "Heatmap") %in% class(object))) {
+      if (!methods::hasMethod("draw", class(object))) {
+         stop(paste0("Input object must have class 'Heatmap' or 'gTree', ",
+            "or have method draw() detected by hasMethod('draw', class(object))"));
+      }
+   }
+   title_nlines <- NULL;
+   title_units <- NULL;
+   caption_row <- 2;
+   hm_row <- 1;
+   if (length(title) > 0 && nchar(title) > 0) {
+      title_nlines <- length(unlist(
+         strsplit(title, "\n"))) * (title_fontsize / 10);
+      title_units <- "lines";
+      hm_row <- 2;
+      caption_row <- 3;
+   }
+   caption_nlines <- NULL;
+   caption_units <- NULL;
+   if (length(caption) > 0 && nchar(caption) > 0) {
+      caption_nlines <- length(unlist(
+         strsplit(caption, "\n"))) * (caption_fontsize / 10);
+      caption_units <- "lines";
+   }
+   panel_units <- c(title_units,
+      "null",
+      caption_units);
+   panel_heights <- c(title_nlines,
+      1,
+      caption_nlines);
+   ## Create grid layout object
+   l <- grid::grid.layout(nrow=length(panel_heights),
+      ncol=1,
+      heights=grid::unit(panel_heights,
+         panel_units));
+
+   ## Create the combined plot
+   vp <- grid::viewport(width=1,
+      height=1,
+      layout=l);
+
+   grid::grid.newpage();
+   grid::pushViewport(vp);
+
+   grid::pushViewport(
+      grid::viewport(
+         layout.pos.row=hm_row));
+   if ("gTree" %in% class(object)) {
+      grid::grid.draw(object);
+   } else {
+      grid::grid.draw(
+         grid::grid.grabExpr(
+            draw(object)));
+   }
+   grid::popViewport();
+
+   if (length(title_nlines) > 0) {
+      grid::grid.text(title,
+         just=title_just,
+         gp=grid::gpar(fontsize=title_fontsize),
+         vp=grid::viewport(layout.pos.row=1,
+            layout.pos.col=1));
+   }
+   if (length(caption_nlines) > 0) {
+      if (length(caption_x) == 0) {
+         if ("left" %in% caption_just) {
+            caption_x <- grid::unit(0.2, "npc");
+         } else {
+            caption_x <- grid::unit(0.5, "npc");
+         }
+      }
+      grid::grid.text(caption,
+         just=caption_just,
+         x=caption_x,
+         gp=grid::gpar(fontsize=caption_fontsize),
+         vp=grid::viewport(
+            layout.pos.row=caption_row,
+            layout.pos.col=1));
+   }
+   grid::popViewport();
+}
+
