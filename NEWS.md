@@ -1,3 +1,28 @@
+# multienrichjam version 0.0.23.900
+
+## Changes to existing functions
+
+* Several functions have additional `jamba::printDebug()` output
+when `verbose=TRUE`.
+* `jam_plot_igraph()` and `jam_igraph()` new argument
+`use_shadowText=TRUE` will enable `jamba::shadowText()` to replace
+`graphics::text()` for igraph text, which affects node and edge
+labels. The goal is to make labels more widely legible when they
+are placed on top of light and dark colors, common when using dark
+colored nodes on a white background.
+* `jam_igraph()` now tries harder to respect a pre-defined xlim and ylim,
+before using the range of layout coordinates
+* `mem_gene_path_heatmap()` slightly adjusted the number of pathway
+clusters to use based upon the number of columns in the gene-pathway
+matrix, slightly increasing the number for low number of columns.
+* `mem_plot_folio()` new argument pathway_column_split allows setting
+a specific number of pathway clusters.
+* `mem_plot_folio()` argument `do_which` allows creating only
+the requested plots from the full sequence of plots. This function
+is likely to become the core part of the analysis workflow:
+ 
+> gene-pathway heatmap -> pathway clusters -> Cnet using pathway clusters
+
 # multienrichjam version 0.0.22.900
 
 ## New functions

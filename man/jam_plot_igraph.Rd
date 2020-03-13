@@ -12,10 +12,15 @@ jam_plot_igraph(
   ylim = c(-1, 1),
   mark.groups = list(),
   mark.shape = 1/2,
-  mark.col = colorjam::rainbowJam(length(mark.groups), alpha = 0.3),
-  mark.border = colorjam::rainbowJam(length(mark.groups), alpha = 1),
+  mark.col = head(colorjam::rainbowJam(max(c(1, length(mark.groups))), alpha = 0.3),
+    length(mark.groups)),
+  mark.border = head(colorjam::rainbowJam(max(c(1, length(mark.groups))), alpha = 1),
+    length(mark.groups)),
   mark.expand = 15,
   pie_to_jampie = TRUE,
+  use_shadowText = FALSE,
+  verbose = FALSE,
+  debug = NULL,
   ...
 )
 }

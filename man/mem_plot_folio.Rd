@@ -15,9 +15,11 @@ mem_plot_folio(
   column_method = "euclidean",
   row_method = "euclidean",
   exemplar_range = c(1, 2, 3),
+  pathway_column_split = NULL,
   cex.main = 2,
   cex.sub = 1.5,
   do_which = NULL,
+  verbose = TRUE,
   ...
 )
 }
@@ -49,6 +51,10 @@ to cluster columns and rows, respectively.}
 
 \item{exemplar_range}{integer vector (or \code{NULL}) used to create Cnet
 exemplar plots, using this many exemplars per cluster.}
+
+\item{pathway_column_split}{integer value passed as \code{column_split}
+to \code{mem_gene_path_heatmap()}, indicating the number of pathway
+clusters to create in the gene-pathway heatmap.}
 
 \item{cex.main, cex.sub}{numeric values passed to \code{title()} which
 size the default title and sub-title in Cnet plots.}

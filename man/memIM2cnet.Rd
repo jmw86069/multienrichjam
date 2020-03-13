@@ -24,6 +24,7 @@ memIM2cnet(
   coloredrect_nrow = 1,
   coloredrect_ncol = NULL,
   coloredrect_byrow = TRUE,
+  verbose = FALSE,
   ...
 )
 }

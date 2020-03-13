@@ -18,8 +18,10 @@ jam_igraph(
   label_factor_l = NULL,
   label_dist_factor = 1,
   label_dist_factor_l = 1,
+  use_shadowText = FALSE,
   plot_function = jam_plot_igraph,
-  verbose = FALSE
+  verbose = FALSE,
+  debug = NULL
 )
 }
 \arguments{

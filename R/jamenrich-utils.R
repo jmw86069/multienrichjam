@@ -665,8 +665,15 @@ collapse_mem_clusters <- function
       names(iv) <- rownames(im1);
       iv;
    }));
+
    cluster_enrichIMgeneCount <- do.call(cbind, lapply(nameVector(colnames(mem$geneIM)), function(i){
-      xgenes <- rownames(mem$geneIM)[mem$geneIM[,i] > 0];
+      xgenes <- intersect(rownames(mem$geneIM)[mem$geneIM[,i] > 0],
+         rownames(cluster_memIM));
+      if (verbose) {
+         printDebug("length(xgenes):", length(xgenes));
+         printDebug("head(xgenes, 30):");
+         print(head(xgenes, 30));
+      }
       colSums(cluster_memIM[xgenes,,drop=FALSE] > 0);
    }));
    cluster_enrichIM <- rbindList(lapply(split(clusters_df, clusters_df$cluster), function(idf){
@@ -694,7 +701,12 @@ collapse_mem_clusters <- function
    cluster_mem$multiCnetPlot2 <- NULL;
 
    ## Make Cnet plot
+   if (verbose) {
+      printDebug("collapse_mem_clusters(): ",
+         "Calling memIM2cnet()");
+   }
    cnet <- memIM2cnet(cluster_mem,
+      verbose=verbose,
       ...);
    set_match <- match(names(cluster_sets), V(cnet)$name)
    V(cnet)$set_names <- "";

@@ -112,7 +112,8 @@ mem_gene_path_heatmap <- function
       if (ncol(memIM) < 5) {
          column_split <- NULL;
       } else if (length(column_split) == 0) {
-         column_split <- noiseFloor(floor(ncol(memIM)^(1/2.5)), ceiling=12);
+         ncol_x <- (5 + ncol(memIM)/1.5) ^ (1/2);
+         column_split <- jamba::noiseFloor(floor(ncol_x), ceiling=10);
          if (length(column_title) == 0) {
             column_title <- LETTERS[seq_len(column_split)];
          }
@@ -638,8 +639,10 @@ jam_igraph <- function
  label_factor_l=NULL,
  label_dist_factor=1,
  label_dist_factor_l=1,
+ use_shadowText=FALSE,
  plot_function=jam_plot_igraph,
- verbose=FALSE)
+ verbose=FALSE,
+ debug=NULL)
 {
    ##
    params <- igraph:::i.parse.plot.params(x, list(...));
@@ -717,13 +720,45 @@ jam_igraph <- function
    vertex.size <- handle_factor_list(x, attr="size", node_factor_l, i_values=vertex.size);
 
    if (!rescale) {
-      xlim <- range(layout[,1]);
+      dist_factor <- 4;
+      if (min(xlim) <= min(layout[,1]) && max(xlim) >= max(layout[,1])) {
+         xlim_asis <- TRUE;
+      } else {
+         xlim <- range(layout[,1]);
+         xlim_asis <- FALSE;
+      }
+      if (length(debug) > 0 && any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
+         jamba::printDebug("jam_igraph(): ",
+            "xlim before:",
+            xlim);
+         jamba::printDebug("jam_igraph(): ",
+            "head(vertex.size, 20) before:",
+            head(vertex.size, 20));
+      }
       vertex.size <- vertex.size * diff(xlim) / 2;
       vertex.size2 <- vertex.size2 * diff(xlim) / 2;
-      vertex.label.dist <- vertex.label.dist * diff(xlim) / 2;
-      xlim <- xlim + diff(xlim) * c(-1,1) * expand;
-      ylim <- range(layout[,2]);
-      ylim <- ylim + diff(ylim) * c(-1,1) * expand;
+      vertex.label.dist <- vertex.label.dist * diff(xlim) / dist_factor;
+      if (!xlim_asis) {
+         xlim <- xlim + diff(xlim) * c(-1,1) * expand;
+      }
+      if (min(ylim) <= min(layout[,2]) && max(ylim) >= max(layout[,2])) {
+         ylim_asis <- TRUE;
+      } else {
+         ylim <- range(layout[,2]);
+         ylim_asis <- FALSE;
+         ylim <- ylim + diff(ylim) * c(-1,1) * expand;
+      }
+   }
+   if (length(debug) > 0 && any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
+      jamba::printDebug("jam_igraph(): ",
+         "xlim after:",
+         xlim);
+      jamba::printDebug("jam_igraph(): ",
+         "head(vertex.label.dist, 20):",
+         head(vertex.label.dist, 20));
+      jamba::printDebug("jam_igraph(): ",
+         "head(vertex.size, 20) after:",
+         head(vertex.size, 20));
    }
    plot_function(x=x,
       ...,
@@ -734,8 +769,10 @@ jam_igraph <- function
       vertex.label.cex=vertex.label.cex,
       edge.label.cex=edge.label.cex,
       edge.width=edge.width,
+      use_shadowText=use_shadowText,
       xlim=xlim,
-      ylim=ylim);
+      ylim=ylim,
+      debug=debug);
 }
 
 #' Multienrichment folio of summary plots
@@ -779,6 +816,9 @@ jam_igraph <- function
 #'    to cluster columns and rows, respectively.
 #' @param exemplar_range integer vector (or `NULL`) used to create Cnet
 #'    exemplar plots, using this many exemplars per cluster.
+#' @param pathway_column_split integer value passed as `column_split`
+#'    to `mem_gene_path_heatmap()`, indicating the number of pathway
+#'    clusters to create in the gene-pathway heatmap.
 #' @param cex.main,cex.sub numeric values passed to `title()` which
 #'    size the default title and sub-title in Cnet plots.
 #' @param do_which integer vector of plots to produce. When `do_which`
@@ -799,9 +839,11 @@ mem_plot_folio <- function
  column_method="euclidean",
  row_method="euclidean",
  exemplar_range=c(1, 2, 3),
+ pathway_column_split=NULL,
  cex.main=2,
  cex.sub=1.5,
  do_which=NULL,
+ verbose=TRUE,
  ...)
 {
    if (length(p_cutoff) == 0) {
@@ -819,197 +861,280 @@ mem_plot_folio <- function
    ## Enrichment P-value heatmap
    jamba::printDebug("mem_plot_folio(): ",
       "Enrichment P-value heatmap");
-   mem_hm <- mem_enrichment_heatmap(mem,
-      p_cutoff=p_cutoff,
-      ...);
    plot_num <- plot_num + 1;
-   if (length(do_which) > 0 && !plot_num %in% do_which) {
-      # skip
-   } else {
-      caption <- paste0("Hierarchical clustering: distance metric '",
-         column_method, "'\n",
-         "Data filtering: enrichment P-value <= ", p_cutoff,
-         "; genes per set >= ", min_gene_ct,
-         "; sets per gene >= ", min_set_ct);
+   if (length(do_which) == 0 || plot_num %in% do_which) {
+      if (verbose) {
+         jamba::printDebug("mem_plot_folio(): ",
+            c("plot_num ", plot_num, ": "),
+            c("Enrichment P-value Heatmap"),
+            sep="");
+      }
+      mem_hm <- mem_enrichment_heatmap(mem,
+         p_cutoff=p_cutoff,
+         ...);
       grid_with_title(mem_hm,
-         title=main,
-         caption=caption);
-      #draw(mem_hm);
-      ret_vals$mem_hm <- mem_hm;
+         title=main);
+      ret_vals$enrichment_hm <- mem_hm;
    }
 
 
    #############################################################
    ## Gene-Pathway Heatmap
+   if (length(do_which) > 0 && !any(do_which > plot_num)) {
+      return(invisible(ret_vals));
+   }
+   ## All subsequent plots depend upon mem_gene_path_heatmap()
    jamba::printDebug("mem_plot_folio(): ",
       "Gene-pathway heatmap");
    gp_hm <- mem_gene_path_heatmap(mem,
       p_cutoff=p_cutoff,
       row_method=row_method,
+      column_split=pathway_column_split,
       column_method=column_method,
       use_raster=use_raster,
       min_gene_ct=min_gene_ct,
       min_set_ct=min_set_ct,
       ...);
+   ## Obtain heatmap pathway clusters
+   clusters_mem <- heatmap_column_order(gp_hm);
+   ## Get number of pathway clusters
+   pathway_clusters_n <- length(clusters_mem);
+   if (verbose) {
+      jamba::printDebug("mem_plot_folio(): ",
+         c("Defined ", pathway_clusters_n, " pathway clusters."),
+         sep="");
+   }
+
    plot_num <- plot_num + 1;
-   if (length(do_which) > 0 && !plot_num %in% do_which) {
-      # skip
-   } else {
-      draw(gp_hm);
+   if (length(do_which) == 0 || plot_num %in% do_which) {
+      if (verbose) {
+         jamba::printDebug("mem_plot_folio(): ",
+            c("plot_num ", plot_num, ": "),
+            c("Gene-Pathway Heatmap"),
+            sep="");
+      }
+      caption <- paste0("Hierarchical clustering: distance metric '",
+         column_method, "'\n",
+         "Data filtering: enrichment P-value <= ", p_cutoff,
+         "; genes per set >= ", min_gene_ct,
+         "; sets per gene >= ", min_set_ct);
+      grid_with_title(gp_hm,
+         title=main,
+         caption=caption);
       ret_vals$gp_hm <- gp_hm;
    }
 
 
-   ## Obtain heatmap pathway clusters
-   clusters_mem <- heatmap_column_order(gp_hm);
 
 
    #############################################################
    ## Cnet collapsed
-   jamba::printDebug("mem_plot_folio(): ",
-      "Cnet collapsed");
-   cnet_collapsed <- collapse_mem_clusters(mem,
-      clusters_mem,
-      return_type="cnet");
-   V(cnet_collapsed)$pie.color <- lapply(V(cnet_collapsed)$pie.color, function(i){
-      j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-         mem$colorV[names(i)],
-         i);
-   });
-   V(cnet_collapsed)$coloredrect.color <- lapply(V(cnet_collapsed)$coloredrect.color, function(i){
-      j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-         mem$colorV[names(i)],
-         i);
-   });
+   if (any(plot_num + c(1, 2, 3) %in% do_which)) {
+      jamba::printDebug("mem_plot_folio(): ",
+         "Preparing Cnet collapsed");
+      cnet_collapsed <- tryCatch({
+         collapse_mem_clusters(mem,
+            clusters_mem,
+            verbose=verbose>1,
+            return_type="cnet");
+      }, error=function(e){
+         NULL
+      });
+      if (length(cnet_collapsed) == 0) {
+         return(list(mem=mem, clusters_mem=clusters_mem, ret_vals=ret_vals))
+      }
+      V(cnet_collapsed)$pie.color <- lapply(V(cnet_collapsed)$pie.color, function(i){
+         j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+            mem$colorV[names(i)],
+            i);
+      });
+      V(cnet_collapsed)$coloredrect.color <- lapply(V(cnet_collapsed)$coloredrect.color, function(i){
+         j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+            mem$colorV[names(i)],
+            i);
+      });
 
-   cnet_collapsed <- cnet_collapsed %>%
-      subsetCnetIgraph(remove_blanks=TRUE);
-   plot_num <- plot_num + 1;
-   if (length(do_which) > 0 && !plot_num %in% do_which) {
-      # skip
+      if (verbose) {
+         jamba::printDebug("mem_plot_folio(): ",
+            "subsetCnetIgraph()");
+      }
+      cnet_collapsed <- cnet_collapsed %>%
+         subsetCnetIgraph(remove_blanks=TRUE,
+            verbose=verbose>1);
+      plot_num <- plot_num + 1;
+      if (length(do_which) == 0 || plot_num %in% do_which) {
+         ret_vals$cnet_collapsed <- cnet_collapsed;
+         if (verbose) {
+            jamba::printDebug("mem_plot_folio(): ",
+               c("plot_num ", plot_num, ": "),
+               c("Cnet collapsed ", "with gene and cluster labels"),
+               sep="");
+         }
+         ## Draw Cnet collapsed
+         jam_igraph(cnet_collapsed);
+         mem_legend(mem);
+         title(sub="Cnet plot using collapsed clusters",
+            main=main,
+            cex.main=cex.main,
+            cex.sub=cex.sub);
+      }
+      ## Draw Cnet collapsed with top n labels
+      #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
+      if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
+         V(cnet_collapsed)$label <- ifelse(
+            nchar(rmNA(naValue="", igraph:::V(cnet_collapsed)$set_labels)) > 0,
+            V(cnet_collapsed)$set_labels,
+            V(cnet_collapsed)$name);
+      }
+      plot_num <- plot_num + 1;
+      if (length(do_which) == 0 || plot_num %in% do_which) {
+         if (verbose) {
+            jamba::printDebug("mem_plot_folio(): ",
+               c("plot_num ", plot_num, ": "),
+               c("Cnet collapsed ", "with gene and set labels"),
+               sep="");
+         }
+         ret_vals$cnet_collapsed_set <- cnet_collapsed;
+         jam_igraph(cnet_collapsed);
+         mem_legend(mem);
+         title(sub="Cnet plot using collapsed clusters\nlabeled by set",
+            main=main,
+            cex.main=cex.main,
+            cex.sub=cex.sub);
+      }
+      plot_num <- plot_num + 1;
+      if (length(do_which) == 0 || plot_num %in% do_which) {
+         if (verbose) {
+            jamba::printDebug("mem_plot_folio(): ",
+               c("plot_num ", plot_num, ": "),
+               c("Cnet collapsed ", "with set labels, without gene labels"),
+               sep="");
+         }
+         V(cnet_collapsed)$label <- ifelse(V(cnet_collapsed)$nodeType %in% "Gene",
+            "",
+            V(cnet_collapsed)$label);
+         ret_vals$cnet_collapsed_set2 <- cnet_collapsed;
+         jam_igraph(cnet_collapsed);
+         mem_legend(mem);
+         title(sub="Cnet plot using collapsed clusters\nlabeled by set\ngene labels hidden",
+            main=main,
+            cex.main=cex.main,
+            cex.sub=cex.sub);
+      }
    } else {
-      ## Draw Cnet collapsed
-      jam_igraph(cnet_collapsed);
-      mem_legend(mem);
-      title(sub="Cnet plot using collapsed clusters",
-         main=main,
-         cex.main=cex.main,
-         cex.sub=cex.sub);
-   }
-   ## Draw Cnet collapsed with top n labels
-   #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
-   if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
-      V(cnet_collapsed)$label <- ifelse(
-         nchar(rmNA(naValue="", igraph:::V(cnet_collapsed)$set_labels)) > 0,
-         V(cnet_collapsed)$set_labels,
-         V(cnet_collapsed)$name);
-   }
-   plot_num <- plot_num + 1;
-   if (length(do_which) > 0 && !plot_num %in% do_which) {
-      # skip
-   } else {
-      jam_igraph(cnet_collapsed);
-      mem_legend(mem);
-      title(sub="Cnet plot using collapsed clusters\nlabeled by set",
-         main=main,
-         cex.main=cex.main,
-         cex.sub=cex.sub);
-      ret_vals$cnet_collapsed <- cnet_collapsed;
+      plot_num <- plot_num + 3;
    }
 
    #############################################################
    ## Prepare for Cnet plots
-   cnet <- memIM2cnet(mem,
-      ...);
-   V(cnet)$pie.color <- lapply(V(cnet)$pie.color, function(i){
-      j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-         mem$colorV[names(i)],
-         i);
-   });
-   V(cnet)$coloredrect.color <- lapply(V(cnet)$coloredrect.color, function(i){
-      j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-         mem$colorV[names(i)],
-         i);
-   });
-
-   cnet <- cnet %>%
-      removeIgraphBlanks();
-
+   cnet_range <- seq_len(length(exemplar_range) + pathway_clusters_n);
+   if (any(plot_num + cnet_range %in% do_which)) {
+      if (verbose) {
+         jamba::printDebug("mem_plot_folio(): ",
+            "Preparing cnet for subsetting.");
+      }
+      cnet <- memIM2cnet(mem,
+         ...);
+      ## Freshen pie.color by using the original colorV value by name
+      V(cnet)$pie.color <- lapply(V(cnet)$pie.color, function(i){
+         j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+            mem$colorV[names(i)],
+            i);
+      });
+      ## Freshen coloredrect.color by using the original colorV value by name
+      V(cnet)$coloredrect.color <- lapply(V(cnet)$coloredrect.color, function(i){
+         j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+            mem$colorV[names(i)],
+            i);
+      });
+      cnet <- cnet %>%
+         removeIgraphBlanks();
+   }
 
    #############################################################
    ## Cnet exemplars
-   cnet_exemplars <- list();
-   for (exemplar_n in exemplar_range) {
-      pluralized <- "";
-      if (exemplar_n > 1) {
-         pluralized <- "s";
-      }
-      jamba::printDebug("mem_plot_folio(): ",
-         c("Cnet with ", exemplar_n,
-            paste0(" exemplar", pluralized)),
-         sep="");
-      clusters_mem_n <- rank_mem_clusters(mem,
-         clusters_mem,
-         per_cluster=exemplar_n,
-         ...);
-      cnet_exemplar <- cnet %>%
-         subsetCnetIgraph(includeSets=clusters_mem_n$set,
+   if (any((plot_num + seq_along(exemplar_range)) %in% do_which)) {
+      cnet_exemplars <- list();
+      for (exemplar_n in exemplar_range) {
+         pluralized <- "";
+         if (exemplar_n > 1) {
+            pluralized <- "s";
+         }
+         clusters_mem_n <- rank_mem_clusters(mem,
+            clusters_mem,
+            per_cluster=exemplar_n,
             ...);
-      plot_num <- plot_num + 1;
-      if (length(do_which) > 0 && !plot_num %in% do_which) {
-         # skip
-      } else {
-         ## Draw Cnet exemplar
-         jam_igraph(cnet_exemplar);
-         title(
-            sub=paste0("Cnet plot using ",
-               exemplar_n,
-               " exemplar",
-               pluralized,
-               " per cluster"),
-            main=main,
-            cex.main=cex.main,
-            cex.sub=cex.sub);
-         mem_legend(mem);
-         ## Add to return list
-         cnet_exemplars <- c(cnet_exemplars,
-            list(cnet_exemplar));
-         names(cnet_exemplars)[length(cnet_exemplars)] <- exemplar_n;
+         cnet_exemplar <- cnet %>%
+            subsetCnetIgraph(includeSets=clusters_mem_n$set,
+               ...);
+         plot_num <- plot_num + 1;
+         if (length(do_which) == 0 || plot_num %in% do_which) {
+            if (verbose) {
+               jamba::printDebug("mem_plot_folio(): ",
+                  c("plot_num ", plot_num, ": "),
+                  c("Cnet with ", exemplar_n,
+                     paste0(" exemplar", pluralized)),
+                  sep="");
+            }
+            ## Draw Cnet exemplar
+            jam_igraph(cnet_exemplar);
+            title(
+               sub=paste0("Cnet plot using ",
+                  exemplar_n,
+                  " exemplar",
+                  pluralized,
+                  " per cluster"),
+               main=main,
+               cex.main=cex.main,
+               cex.sub=cex.sub);
+            mem_legend(mem);
+            ## Add to return list
+            cnet_exemplars <- c(cnet_exemplars,
+               list(cnet_exemplar));
+            names(cnet_exemplars)[length(cnet_exemplars)] <- exemplar_n;
+         }
       }
+      ret_vals$cnet_exemplars <- cnet_exemplars;
+   } else {
+      plot_num <- plot_num + length(exemplar_range);
    }
-   ret_vals$cnet_exemplars <- cnet_exemplars;
 
 
    #############################################################
    ## Cnet each cluster
-   cnet_clusters <- list();
-   for (cluster_name in names(clusters_mem)) {
-      jamba::printDebug("mem_plot_folio(): ",
-         c("Cnet cluster ", cluster_name),
-         sep="");
-      cluster_sets <- unique(unlist(clusters_mem[[cluster_name]]));
-      cnet_cluster <- cnet %>%
-         subsetCnetIgraph(includeSets=cluster_sets,
-            ...);
-      plot_num <- plot_num + 1;
-      if (length(do_which) > 0 && !plot_num %in% do_which) {
-         # skip
-      } else {
-         ## Draw Cnet cluster
-         jam_igraph(cnet_cluster);
-         title(sub=paste0("Cnet plot for cluster ",
-            cluster_name),
-            main=main,
-            cex.main=cex.main,
-            cex.sub=cex.sub);
-         mem_legend(mem);
-         ## Add to return list
-         cnet_clusters <- c(cnet_clusters,
-            list(cnet_cluster));
-         names(cnet_clusters)[length(cnet_clusters)] <- cluster_name;
+   if (length(do_which) == 0 || any(plot_num + seq_len(pathway_clusters_n) %in% do_which)) {
+      cnet_clusters <- list();
+      for (cluster_name in names(clusters_mem)) {
+         plot_num <- plot_num + 1;
+         if (length(do_which) == 0 || plot_num %in% do_which) {
+            if (verbose) {
+               jamba::printDebug("mem_plot_folio(): ",
+                  c("plot_num ", plot_num, ": "),
+                  c("Cnet cluster ", cluster_name),
+                  sep="");
+            }
+            cluster_sets <- unique(unlist(clusters_mem[[cluster_name]]));
+            cnet_cluster <- cnet %>%
+               subsetCnetIgraph(includeSets=cluster_sets,
+                  ...);
+            ## Draw Cnet cluster
+            jam_igraph(cnet_cluster);
+            title(sub=paste0("Cnet plot for cluster ",
+               cluster_name),
+               main=main,
+               cex.main=cex.main,
+               cex.sub=cex.sub);
+            mem_legend(mem);
+            ## Add to return list
+            cnet_clusters <- c(cnet_clusters,
+               list(cnet_cluster));
+            names(cnet_clusters)[length(cnet_clusters)] <- cluster_name;
+         }
       }
+      ret_vals$cnet_clusters <- cnet_clusters;
+   } else {
+      plot_num <- plot_num + pathway_clusters_n;
    }
-   ret_vals$cnet_clusters <- cnet_clusters;
 
    invisible(ret_vals);
 }
