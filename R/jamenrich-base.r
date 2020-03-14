@@ -553,6 +553,10 @@ multiEnrichMap <- function
    }
    mem$enrichLabels <- enrichLabels;
 
+   ## Ensure that enrichBaseline is not greater than enrichNumLimit
+   if (enrichBaseline >= enrichNumLimit) {
+      enrichNumLimit <- enrichBaseline + 5;
+   }
    #####################################################################
    ## Define valid nrow and ncol for coloredrectangle igraph nodes
    if (length(nrow) == 0) {
@@ -827,7 +831,7 @@ multiEnrichMap <- function
 
    #####################################################################
    ## Subset for at least one significant enrichment P-value
-   i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols], na.rm=TRUE) <= cutoffRowMinP)];
+   i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols,drop=FALSE], na.rm=TRUE) <= cutoffRowMinP)];
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "nrow(enrichIM):",
@@ -1122,7 +1126,7 @@ enrichList2IM <- function
             "head(iDF)");
          print(head(iDF));
       }
-      jamba::nameVector(iDF[,c(valueColname,keyColname)]);
+      jamba::nameVector(iDF[,c(valueColname,keyColname),drop=FALSE]);
    })));
    ## Empty values should be 1 instead of 0
    if (emptyValue != 0) {
@@ -1230,10 +1234,13 @@ enrichList2df <- function
             iDF <- as.data.frame(iDF);
          }
          if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
-            jamba::printDebug("Some ", iCol, " values are less than ",
-               "pvalueFloor:",
-               pvalueFloor);
-            print(table(iDF[,iCol] <= pvalueFloor));
+            if (verbose) {
+               jamba::printDebug("enrichList2df(): ",
+                  "Some ", iCol, " values are less than ",
+                  "pvalueFloor:",
+                  pvalueFloor);
+               print(table(iDF[,iCol] <= pvalueFloor));
+            }
             iDF[iDF[,iCol] <= pvalueFloor, iCol] <- pvalueFloor;
          } else if (jamba::igrepHas("[/]", iDF[,iCol])) {
             iDF[,iCol] <- as.numeric(gsub("[/].*$", "", iDF[,iCol]));

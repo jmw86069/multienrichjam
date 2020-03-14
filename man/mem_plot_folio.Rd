@@ -16,6 +16,8 @@ mem_plot_folio(
   row_method = "euclidean",
   exemplar_range = c(1, 2, 3),
   pathway_column_split = NULL,
+  pathway_row_split = NULL,
+  edge_color = NULL,
   cex.main = 2,
   cex.sub = 1.5,
   do_which = NULL,

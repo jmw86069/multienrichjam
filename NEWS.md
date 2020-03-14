@@ -1,3 +1,11 @@
+# multienrichjam version 0.0.24.900
+
+## Changes to existing functions
+
+* `multiEnrichMap()` was updated to enable analysis with only one
+enrichment result. Testing whether the downstream capabilities are
+useful in the context of one enrichment result.
+
 # multienrichjam version 0.0.23.900
 
 ## Changes to existing functions

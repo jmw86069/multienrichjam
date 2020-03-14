@@ -103,7 +103,8 @@ mem_gene_path_heatmap <- function
       if (nrow(memIM) < 5) {
          row_split <- NULL;
       } else if (length(row_split) == 0) {
-         row_split <- noiseFloor(floor(nrow(memIM)^(1/2.5)), ceiling=12);
+         row_split <- jamba::noiseFloor(floor(nrow(memIM)^(1/2.5)),
+            ceiling=12);
          if (length(row_title) == 0) {
             row_title <- letters[seq_len(row_split)];
             row_title_rot <- 0;
@@ -143,21 +144,30 @@ mem_gene_path_heatmap <- function
    col_iml1 <- lapply(nameVectorN(mem$colorV), function(i){
       j <- mem$colorV[[i]];
       circlize::colorRamp2(breaks=c(0,1),
-         colors=jamba::getColorRamp(j, n=3)[1:2])
+         colors=jamba::fixYellow(Hrange=c(60,100), fixup=TRUE,
+            jamba::getColorRamp(j, n=3)[1:2]))
    });
    col_iml4 <- lapply(nameVectorN(mem$colorV), function(i){
       j <- mem$colorV[[i]];
       circlize::colorRamp2(
          #breaks=c(0,4),
          breaks=c(-log10(p_cutoff+1e-5), -log10(p_cutoff), 4, 6),
-         colors=c("white", jamba::getColorRamp(j, trimRamp=c(4,2), n=3, lens=3)))
+         colors=c("white",
+            jamba::fixYellow(Hrange=c(60,100), fixup=TRUE,
+               jamba::getColorRamp(j,
+                  trimRamp=c(4,2),
+                  n=3,
+                  lens=3)
+            )
+         )
+      )
    });
    ## Cluster columns and rows
    if (length(cluster_columns) == 0) {
       cluster_columns <- amap::hcluster(
          link="ward",
          cbind(
-            noiseFloor(
+            jamba::noiseFloor(
                -log10(mem$enrichIM[sets,,drop=FALSE]),
                minimum=-log10(p_cutoff+1e-5),
                newValue=0,
@@ -173,7 +183,7 @@ mem_gene_path_heatmap <- function
             (mem$memIM[genes,sets,drop=FALSE])),
          method=row_method);
    }
-   ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
+   hm <- ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
       border=TRUE,
       name=name,
       cluster_columns=cluster_columns,
@@ -200,7 +210,8 @@ mem_gene_path_heatmap <- function
       row_title_rot=row_title_rot,
       row_split=row_split,
       column_split=column_split,
-      ...)
+      ...);
+   return(hm);
 }
 
 #' MultiEnrichment Heatmap of enrichment P-values
@@ -840,6 +851,8 @@ mem_plot_folio <- function
  row_method="euclidean",
  exemplar_range=c(1, 2, 3),
  pathway_column_split=NULL,
+ pathway_row_split=NULL,
+ edge_color=NULL,
  cex.main=2,
  cex.sub=1.5,
  do_which=NULL,
@@ -890,6 +903,7 @@ mem_plot_folio <- function
       p_cutoff=p_cutoff,
       row_method=row_method,
       column_split=pathway_column_split,
+      row_split=pathway_row_split,
       column_method=column_method,
       use_raster=use_raster,
       min_gene_ct=min_gene_ct,
@@ -929,7 +943,7 @@ mem_plot_folio <- function
 
    #############################################################
    ## Cnet collapsed
-   if (any(plot_num + c(1, 2, 3) %in% do_which)) {
+   if (any(c(plot_num + c(1, 2, 3)) %in% do_which)) {
       jamba::printDebug("mem_plot_folio(): ",
          "Preparing Cnet collapsed");
       cnet_collapsed <- tryCatch({
@@ -961,6 +975,9 @@ mem_plot_folio <- function
       cnet_collapsed <- cnet_collapsed %>%
          subsetCnetIgraph(remove_blanks=TRUE,
             verbose=verbose>1);
+      if (length(edge_color) > 0) {
+         E(cnet_collapsed)$color <- edge_color;
+      }
       plot_num <- plot_num + 1;
       if (length(do_which) == 0 || plot_num %in% do_which) {
          ret_vals$cnet_collapsed <- cnet_collapsed;
@@ -1028,7 +1045,7 @@ mem_plot_folio <- function
    #############################################################
    ## Prepare for Cnet plots
    cnet_range <- seq_len(length(exemplar_range) + pathway_clusters_n);
-   if (any(plot_num + cnet_range %in% do_which)) {
+   if (any(c(plot_num + cnet_range) %in% do_which)) {
       if (verbose) {
          jamba::printDebug("mem_plot_folio(): ",
             "Preparing cnet for subsetting.");
