@@ -31,3 +31,31 @@ shape \code{"coloredrectangle"} uses the avereage color from
 This function relies upon \code{avg_colors_by_list()} to
 blend multiple colors together.
 }
+\seealso{
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{drawEllipse}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{jam_igraph}()},
+\code{\link{jam_plot_igraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{memIM2cnet}()},
+\code{\link{mem_multienrichplot}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
+\code{\link{subsetCnetIgraph}()},
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
+}
+\concept{jam igraph functions}

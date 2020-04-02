@@ -1,3 +1,21 @@
+# multienrichjam version 0.0.25.900
+
+## Changes to existing functions
+
+* Thanks to `simang5c` the function calls to `renameColumn()` were
+corrected to `jamba::renameColumn()`, to resolve issue #1. Also fixed
+several other references to `jamba` functions: `nameVector()`, `nameVectorN()`,
+`makeNames()`, `printDebug()`, `mixedSortDF()`, `cPaste()`,
+`igrepHas()`, `provigrep()`, `vigrep()`, `unvigrep()`, `rbindList()`,
+`noiseFloor()`, `rmNA()`, `rmNULL()`, `normScale()`, `getColorRamp()`,
+`deg2rad()`. Omg! There were so many more cases than I thought!
+(Package-building options to import functions from packages seem
+to go too far, the imported functions appear to be contained
+in the new package which seems misleading... Ah well.)
+* Also made several small changes to handle single-enrichment
+input to multiEnrichMap(). It still provides some useful graphical
+benefits even with only one enrichment input.
+
 # multienrichjam version 0.0.24.900
 
 ## Changes to existing functions

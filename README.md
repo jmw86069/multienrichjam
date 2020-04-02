@@ -1,35 +1,49 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-multienrichjam
-==============
 
-The goal of multienrichjam is to implement MultiEnrichMap, an extension to EnrichMap and Enrichment Map, originally envisioned and implemented as a Cytoscape plugin by the lab of Dr. Gary Bader
+# multienrichjam
 
--   Bader lab [EnrichmentMap](https://www.baderlab.org/Software/EnrichmentMap), and
--   reference: [Merico,et al, PLoS One, 2010](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0013984)),
+The goal of multienrichjam is to implement MultiEnrichMap, an extension
+to EnrichMap and Enrichment Map, originally envisioned and implemented
+as a Cytoscape plugin by the lab of Dr. Gary Bader
 
-and re-implemented into a larger analysis workflow in R by Dr. Guangchuang Yu in the R packages:
+  - Bader lab
+    [EnrichmentMap](https://www.baderlab.org/Software/EnrichmentMap),
+    and
+  - reference: [Merico,et al, PLoS
+    One, 2010](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0013984)),
 
--   [clusterProfiler](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html), and
--   [enrichplot](https://bioconductor.org/packages/release/bioc/html/enrichplot.html).
+and re-implemented into a larger analysis workflow in R by
+Dr. Guangchuang Yu in the R
+    packages:
 
-The MultiEnrichMap extension is a relatively straightforward set of functions to help enable comparison of enrichment results from multiple gene set enrichment tests.
+  - [clusterProfiler](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html),
+    and
+  - [enrichplot](https://bioconductor.org/packages/release/bioc/html/enrichplot.html).
 
-Package Reference
------------------
+The MultiEnrichMap extension is a relatively straightforward set of
+functions to help enable comparison of enrichment results from multiple
+gene set enrichment tests.
 
-A full online function reference is available via the pkgdown documentation:
+## Package Reference
 
-[Full multienrichjam command reference](https://jmw86069.github.io/multienrichjam)
+A full online function reference is available via the pkgdown
+documentation:
 
-How to install
---------------
+[Full multienrichjam command
+reference](https://jmw86069.github.io/multienrichjam)
 
-Install using the R package `devtools` and this command:
+## How to install
 
-    devtools::install_github("jmw86069/multienrichjam",
+Install using the R package `remotes` and this command:
+
+    remotes::install_github("jmw86069/multienrichjam",
        dependencies=TRUE);
 
-If you do not have the `devtools` package, you can install it from CRAN:
+If you do not have the `remotes` package, you can install it from CRAN:
 
-    install.packages("devtools");
+    install.packages("remotes");
+
+Note that we changed the recommended installation from using `devtools`
+to using `remotes` because the `remotes` package is much smaller with
+fewer dependencies.

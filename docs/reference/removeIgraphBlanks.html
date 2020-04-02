@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.25.900</span>
       </span>
     </div>
 
@@ -239,11 +239,13 @@ make the remaining colors more visibly distinct.</p>
 <code><a href='cnet2im.html'>cnet2im</a>()</code>,
 <code><a href='cnetplotJam.html'>cnetplotJam</a>()</code>,
 <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a>()</code>,
+<code><a href='color_edges_by_nodes.html'>color_edges_by_nodes</a>()</code>,
 <code><a href='drawEllipse.html'>drawEllipse</a>()</code>,
 <code><a href='enrichMapJam.html'>enrichMapJam</a>()</code>,
 <code><a href='fixSetLabels.html'>fixSetLabels</a>()</code>,
 <code><a href='igraph2pieGraph.html'>igraph2pieGraph</a>()</code>,
 <code><a href='jam_igraph.html'>jam_igraph</a>()</code>,
+<code><a href='jam_plot_igraph.html'>jam_plot_igraph</a>()</code>,
 <code><a href='layout_with_qfrf.html'>layout_with_qfrf</a>()</code>,
 <code><a href='layout_with_qfr.html'>layout_with_qfr</a>()</code>,
 <code><a href='memIM2cnet.html'>memIM2cnet</a>()</code>,
@@ -252,13 +254,11 @@ make the remaining colors more visibly distinct.</p>
 <code><a href='relayout_with_qfr.html'>relayout_with_qfr</a>()</code>,
 <code><a href='removeIgraphSinglets.html'>removeIgraphSinglets</a>()</code>,
 <code><a href='reorderIgraphNodes.html'>reorderIgraphNodes</a>()</code>,
-<code><a href='shape.coloredrectangle.plot.html'>shape.coloredrectangle.plot</a>()</code>,
-<code><a href='shape.ellipse.plot.html'>shape.ellipse.plot</a>()</code>,
 <code><a href='spread_igraph_labels.html'>spread_igraph_labels</a>()</code>,
-<code><a href='https://rdrr.io/pkg/multienrichjam/man/subgraph_jam.html'>subgraph_jam</a>()</code>,
+<code><a href='subgraph_jam.html'>subgraph_jam</a>()</code>,
 <code><a href='subsetCnetIgraph.html'>subsetCnetIgraph</a>()</code>,
 <code><a href='subset_igraph_components.html'>subset_igraph_components</a>()</code>,
-<code><a href='https://rdrr.io/pkg/multienrichjam/man/with_qfr.html'>with_qfr</a>()</code></p></div>
+<code><a href='with_qfr.html'>with_qfr</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>igraph</span>);
@@ -284,9 +284,12 @@ make the remaining colors more visibly distinct.</p>
 <span class='no'>lg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/layout_nicely.html'>layout_nicely</a></span>(<span class='no'>g</span>);
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>);
 
-<span class='no'>g2</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"none"</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: coercing argument of type 'list' to logical</span></div><div class='output co'>#&gt; <span class='error'>Error in rmNULL(get.vertex.attribute(g, "coloredrect.nrow"), nullValue = 1): could not find function "rmNULL"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>size2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>size2</span> / <span class='fl'>3</span>;</div><div class='output co'>#&gt; <span class='error'>Error in "igraph" %in% class(graph): object 'g2' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g2</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='none'"</span>);</div><div class='output co'>#&gt; <span class='error'>Error in plot(g2, layout = lg, main = "constrain='none'"): object 'g2' not found</span></div><div class='input'>
-<span class='no'>g3</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"nrow"</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: coercing argument of type 'list' to logical</span></div><div class='output co'>#&gt; <span class='error'>Error in rmNULL(get.vertex.attribute(g, "coloredrect.nrow"), nullValue = 1): could not find function "rmNULL"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g3</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='nrow'"</span>);</div><div class='output co'>#&gt; <span class='error'>Error in plot(g3, layout = lg, main = "constrain='nrow'"): object 'g3' not found</span></div><div class='input'>
-<span class='no'>g4</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"ncol"</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: coercing argument of type 'list' to logical</span></div><div class='output co'>#&gt; <span class='error'>Error in rmNULL(get.vertex.attribute(g, "coloredrect.nrow"), nullValue = 1): could not find function "rmNULL"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g4</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='ncol'"</span>);</div><div class='output co'>#&gt; <span class='error'>Error in plot(g4, layout = lg, main = "constrain='ncol'"): object 'g4' not found</span></div><div class='input'>
+<span class='no'>g2</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"none"</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: coercing argument of type 'list' to logical</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>size2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>size2</span> / <span class='fl'>3</span>;
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g2</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='none'"</span>);
+
+<span class='no'>g3</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"nrow"</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: coercing argument of type 'list' to logical</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g3</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='nrow'"</span>);
+
+<span class='no'>g4</span> <span class='kw'>&lt;-</span> <span class='fu'>removeIgraphBlanks</span>(<span class='no'>g</span>, <span class='kw'>constrain</span><span class='kw'>=</span><span class='st'>"ncol"</span>);</div><div class='output co'>#&gt; <span class='warning'>Warning: coercing argument of type 'list' to logical</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g4</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"constrain='ncol'"</span>);</div><div class='img'><img src='removeIgraphBlanks-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#</span>
 <span class='no'>g7</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/make_full_graph.html'>graph.full</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>7</span>);
 <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.color</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>),
@@ -298,7 +301,8 @@ make the remaining colors more visibly distinct.</p>
 <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>size</span> <span class='kw'>&lt;-</span> <span class='fl'>10</span>;
 <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>size2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.ncol</span> * <span class='fl'>10</span>;
 <span class='no'>lg7</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/layout_nicely.html'>layout_nicely</a></span>(<span class='no'>g7</span>);
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));</div><div class='img'><img src='removeIgraphBlanks-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g7</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg7</span>, <span class='kw'>vertez.size2</span><span class='kw'>=</span><span class='fl'>10</span>);
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='st'>"mfrow"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>2</span>));
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g7</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg7</span>, <span class='kw'>vertez.size2</span><span class='kw'>=</span><span class='fl'>10</span>);
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g7</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg7</span>, <span class='kw'>vertex.size2</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.ncol</span>*<span class='fl'>10</span>);
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>g7</span>, <span class='kw'>layout</span><span class='kw'>=</span><span class='no'>lg7</span>, <span class='kw'>vertex.size2</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g7</span>)$<span class='no'>coloredrect.nrow</span>*<span class='fl'>10</span>);</div><div class='img'><img src='removeIgraphBlanks-2.png' alt='' width='700' height='433' /></div></pre>
   </div>

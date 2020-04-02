@@ -120,7 +120,7 @@ mem_gene_path_heatmap <- function
          }
       }
       if (verbose) {
-         printDebug("mem_gene_path_heatmap(): ",
+         jamba::printDebug("mem_gene_path_heatmap(): ",
             "auto_split row_split:", row_split,
             ", column_split:", column_split);
       }
@@ -141,13 +141,13 @@ mem_gene_path_heatmap <- function
    }
 
    ## Apply colors to outside annotations
-   col_iml1 <- lapply(nameVectorN(mem$colorV), function(i){
+   col_iml1 <- lapply(jamba::nameVectorN(mem$colorV), function(i){
       j <- mem$colorV[[i]];
       circlize::colorRamp2(breaks=c(0,1),
          colors=jamba::fixYellow(Hrange=c(60,100), fixup=TRUE,
             jamba::getColorRamp(j, n=3)[1:2]))
    });
-   col_iml4 <- lapply(nameVectorN(mem$colorV), function(i){
+   col_iml4 <- lapply(jamba::nameVectorN(mem$colorV), function(i){
       j <- mem$colorV[[i]];
       circlize::colorRamp2(
          #breaks=c(0,4),
@@ -196,7 +196,7 @@ mem_gene_path_heatmap <- function
          #gp=grid::gpar(col="black"),
          col=col_iml4,
          df=-log10(mem$enrichIM[sets,,drop=FALSE])),
-      col=getColorRamp("Reds", lens=2),
+      col=jamba::getColorRamp("Reds", lens=2),
       left_annotation=ComplexHeatmap::HeatmapAnnotation(which="row",
          border=TRUE,
          col=col_iml1,
@@ -284,7 +284,7 @@ mem_enrichment_heatmap <- function
       breaks=c(-log10(p_cutoff+1e-5),
          seq(from=-log10(p_cutoff), to=-log10(p_floor), length.out=25)),
       colors=c("white",
-         getColorRamp("Reds", lens=4, n=25, trimRamp=c(2,0)))
+         jamba::getColorRamp("Reds", lens=4, n=25, trimRamp=c(2,0)))
    )
    if (length(sets) > 0) {
       mem$enrichIM <- mem$enrichIM[intersect(rownames(mem$enrichIM), sets),,drop=FALSE];
@@ -294,14 +294,21 @@ mem_enrichment_heatmap <- function
    if (any(dim(mem$enrichIM) == 0)) {
       stop("No remaining data after filtering.");
    }
-   er_hc2 <- amap::hcluster(
-      link="ward",
-      noiseFloor(
-         -log10(mem$enrichIM[sets,,drop=FALSE]),
-         minimum=-log10(p_cutoff+1e-5),
-         newValue=0,
-         ceiling=3),
-      method=row_method);
+   if (ncol(mem$enrichIM) > 1) {
+      er_hc2 <- amap::hcluster(
+         link="ward",
+         jamba::noiseFloor(
+            -log10(mem$enrichIM[sets,,drop=FALSE]),
+            minimum=-log10(p_cutoff+1e-5),
+            newValue=0,
+            ceiling=3),
+         method=row_method);
+      row_dend_width <- grid::unit(30, "mm");
+   } else {
+      er_hc2 <- FALSE;
+      cluster_columns <- FALSE;
+      row_dend_width <- grid::unit(10, "mm");
+   }
    hm <- ComplexHeatmap::Heatmap(
       -log10(mem$enrichIM),
       name=name,
@@ -318,8 +325,8 @@ mem_enrichment_heatmap <- function
       ...);
    if (color_by_column) {
       hm_sets <- rownames(mem$enrichIM)[ComplexHeatmap::row_order(hm)];
-      jamba::imageByColors(mem$enrichIMcolors[hm_sets,],
-         cellnote=sapply(mem$enrichIM[hm_sets,],
+      jamba::imageByColors(mem$enrichIMcolors[hm_sets,,drop=FALSE],
+         cellnote=sapply(mem$enrichIM[hm_sets,,drop=FALSE],
             format.pval,
             eps=1e-50,
             digits=2),
@@ -557,7 +564,7 @@ mem_legend <- function
       stop("Input mem must be a list with element 'colorV'");
    }
    colorV <- mem[["colorV"]];
-   colorVb <- makeColorDarker(colorV, darkFactor=1.5);
+   colorVb <- jamba::makeColorDarker(colorV, darkFactor=1.5);
 
    legend(x=x,
       y=y,
@@ -868,7 +875,9 @@ mem_plot_folio <- function
    }
    ret_vals <- list();
    plot_num <- 0;
-
+   if (length(do_which) == 0) {
+      do_which <- seq_len(50);
+   }
 
    #############################################################
    ## Enrichment P-value heatmap
@@ -885,8 +894,12 @@ mem_plot_folio <- function
       mem_hm <- mem_enrichment_heatmap(mem,
          p_cutoff=p_cutoff,
          ...);
-      grid_with_title(mem_hm,
-         title=main);
+      if (length(main) > 0 && nchar(main) > 0) {
+         grid_with_title(mem_hm,
+            title=main);
+      } else {
+         draw(mem_hm);
+      }
       ret_vals$enrichment_hm <- mem_hm;
    }
 
@@ -972,9 +985,15 @@ mem_plot_folio <- function
          jamba::printDebug("mem_plot_folio(): ",
             "subsetCnetIgraph()");
       }
-      cnet_collapsed <- cnet_collapsed %>%
-         subsetCnetIgraph(remove_blanks=TRUE,
-            verbose=verbose>1);
+      cnet_collapsed <- tryCatch({
+         cnet_collapsed %>%
+            subsetCnetIgraph(remove_blanks=TRUE,
+               verbose=verbose>1);
+      }, error=function(e){
+         cnet_collapsed %>%
+            subsetCnetIgraph(remove_blanks=FALSE,
+               verbose=verbose>1);
+      })
       if (length(edge_color) > 0) {
          E(cnet_collapsed)$color <- edge_color;
       }
@@ -999,7 +1018,7 @@ mem_plot_folio <- function
       #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
       if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
          V(cnet_collapsed)$label <- ifelse(
-            nchar(rmNA(naValue="", igraph:::V(cnet_collapsed)$set_labels)) > 0,
+            nchar(jamba::rmNA(naValue="", igraph:::V(cnet_collapsed)$set_labels)) > 0,
             V(cnet_collapsed)$set_labels,
             V(cnet_collapsed)$name);
       }
@@ -1198,7 +1217,10 @@ mem_plot_folio <- function
 #'    the `caption_x` is defined by `grid::unit(0.2, "npc")`, which
 #'    positions the caption at the left side (20% from the left edge)
 #'    of the plot, with text proceeding to the right of that point.
+#' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
+#'
+#' @importFrom ComplexHeatmap draw
 #'
 #' @export
 grid_with_title <- function
@@ -1210,6 +1232,7 @@ grid_with_title <- function
  caption_fontsize=12,
  caption_just="left",
  caption_x=NULL,
+ verbose=FALSE,
  ...)
 {
    ## This function requires grid, need to verify function prefixing
@@ -1244,6 +1267,15 @@ grid_with_title <- function
    panel_heights <- c(title_nlines,
       1,
       caption_nlines);
+   if (verbose) {
+      jamba::printDebug("grid_with_title(): ",
+         "panel_heights:",
+         panel_heights);
+      jamba::printDebug("grid_with_title(): ",
+         "panel_units:",
+         panel_units);
+   }
+
    ## Create grid layout object
    l <- grid::grid.layout(nrow=length(panel_heights),
       ncol=1,
@@ -1258,19 +1290,38 @@ grid_with_title <- function
    grid::grid.newpage();
    grid::pushViewport(vp);
 
+   if (verbose) {
+      jamba::printDebug("grid_with_title(): ",
+         "pushing viewport row:",
+         hm_row);
+   }
    grid::pushViewport(
       grid::viewport(
          layout.pos.row=hm_row));
    if ("gTree" %in% class(object)) {
       grid::grid.draw(object);
    } else {
+      if (verbose) {
+         jamba::printDebug("grid_with_title(): ",
+            "creating grid object grTree.");
+      }
+      grobject <- grid::grid.grabExpr(
+         draw(object));
+      if (verbose) {
+         jamba::printDebug("grid_with_title(): ",
+            "calling grid::grid.draw()");
+      }
       grid::grid.draw(
-         grid::grid.grabExpr(
-            draw(object)));
+         grobject);
    }
    grid::popViewport();
 
    if (length(title_nlines) > 0) {
+      if (verbose) {
+         jamba::printDebug("grid_with_title(): ",
+            "drawing title in row:",
+            1);
+      }
       grid::grid.text(title,
          just=title_just,
          gp=grid::gpar(fontsize=title_fontsize),
@@ -1284,6 +1335,14 @@ grid_with_title <- function
          } else {
             caption_x <- grid::unit(0.5, "npc");
          }
+      }
+      if (verbose) {
+         jamba::printDebug("grid_with_title(): ",
+            "drawing caption in row:",
+            caption_row);
+         jamba::printDebug("grid_with_title(): ",
+            "caption_x:",
+            caption_x);
       }
       grid::grid.text(caption,
          just=caption_just,

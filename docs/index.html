@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.25.900</span>
       </span>
     </div>
 
@@ -109,11 +109,12 @@
 <div id="how-to-install" class="section level2">
 <h2 class="hasAnchor">
 <a href="#how-to-install" class="anchor"></a>How to install</h2>
-<p>Install using the R package <code>devtools</code> and this command:</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"jmw86069/multienrichjam"</span>,
-   <span class="dt">dependencies=</span><span class="ot">TRUE</span>);</code></pre></div>
-<p>If you do not have the <code>devtools</code> package, you can install it from CRAN:</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>);</code></pre></div>
+<p>Install using the R package <code>remotes</code> and this command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"jmw86069/multienrichjam"</span>,</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">   <span class="dt">dependencies=</span><span class="ot">TRUE</span>);</a></code></pre></div>
+<p>If you do not have the <code>remotes</code> package, you can install it from CRAN:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>);</a></code></pre></div>
+<p>Note that we changed the recommended installation from using <code>devtools</code> to using <code>remotes</code> because the <code>remotes</code> package is much smaller with fewer dependencies.</p>
 </div>
 </div>
   </div>

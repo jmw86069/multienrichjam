@@ -1,8 +1,10 @@
 ---
 title: "How to import and use Ingenuity IPA enrichment data"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    df_print: kable
 vignette: >
-  %\VignetteIndexEntry{How to import and use Ingenuity IPA enrichment data}
+  %\VignetteIndexEntry{Analysis of Ingenuity IPA enrichment data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,8 +23,8 @@ library(colorjam);
 suppressPackageStartupMessages(library(ComplexHeatmap));
 options("stringsAsFactors"=FALSE, "warn"=-1);
 knitr::opts_chunk$set(
-   fig.height=10,
-   fig.width=10,
+   fig.height=8,
+   fig.width=7,
    fig.align="center"
 )
 ```
@@ -95,7 +97,7 @@ etc. However, it is not always the case, so it is
 recommended to check and verify each IPA file contains
 at least the enrichment tests needed for downstream analysis.
 
-### Analyze IPA enrichments from one enrichment test
+## Analyze IPA enrichments from one enrichment test
 
 IPA performs multiple enrichment tests, which are
 done independently and with unique assumptions
@@ -122,15 +124,15 @@ er_canonical <- lapply(enrichList_canonical, function(i){
       pvalueCutoff=1)
 });
 sdim(er_canonical);
-print(head(as.data.frame(er_canonical[[1]])));
+head(as.data.frame(er_canonical[[1]]));
 ```
 
-#### run multiEnrichMap()
+### run multiEnrichMap()
 
 Now given a list of `data.frame` results, we can
 run `multiEnrichMap()`:
 
-```{r, mem_canonical}
+```{r, mem_canonical, fig.height=8, fig.width=7}
 mem_canonical <- multiEnrichMap(er_canonical,
    enrichBaseline=1,
    cutoffRowMinP=0.05,
@@ -144,6 +146,94 @@ results.
 ```{r, mem_sdim}
 sdim(mem_canonical);
 ```
+
+### Create a "Mem Plot Folio" (new Apr2020)
+
+The other analysis steps describe in this vignette are
+valid options, however in recent
+work with `multienrichjam` we have developed a new function
+to create a small folio of relates plots that we call
+a "mem plot folio", and the function is `mem_plot_folio()`.
+
+The `mem_plot_folio()` function creates the following plots by default:
+
+1. Enrichment P-value heatmap (optionally colored by group)
+2. Gene-pathway incidence matrix, clustered by column and by row
+3. Cnet plot including all collapsed pathway clusters
+
+    * The first plot labels clusters by `LETTERS`, "A", "B", "C", "D", etc.
+    * The second plot labels clusters by the top `n` pathway names
+    * The third plot labels clusters by the top `n` pathway names, but hides gene labels.
+    This plot is best when there are too many genes to label.
+
+4. Cnet plot using 1,2,3 exemplars per pathway cluster (configurable)
+
+    * The first plot uses 1 exemplar per cluster.
+    * The second plot uses 2 exemplars per cluster.
+    * The third plot uses 3 exemplars per cluster.
+
+5. Cnet plot of each pathway cluster individually
+
+    * The number of plots is the number of heatmap pathway_clusters.
+
+```{r, mem_folio, fig.height=7, fig.width=7}
+mem_canonical_plots <- mem_plot_folio(mem_canonical,
+   pathway_column_split=4,
+   main="Canonical Pathways");
+```
+
+The object returned `mem_canonical_plots` will contain a list
+of the graphical objects for each plot requested. For example,
+each Cnet plot returns an `igraph` object which can be customized.
+
+
+#### Commentary on the "Plot Folio"
+
+In practice, we rarely found much benefit from the multi-enrichment map,
+which shows pathways connected to pathways based upon Jaccard overlap.
+This network view was often disorganized, not clearly clustered,
+and lacked ability to see which genes drive the overlaps between
+pathways. Perhaps it works best for the highly structured Gene Ontology (GO),
+but in our hands GO was just not insightful for the broad range of
+experiments we were analyzing.
+
+Instead, we almost always gravitated toward the Cnet plot, a clever idea
+by Dr. Guangchang Yu that connects pathways to genes, where genes also connect
+naturally to other pathways. This plot for many of our collaborators has
+seemed more intuitive, and answers the next question people often have:
+"What are the shared genes?" Our subtle addition to this plot is to
+color-code genes by the enrichment experiment, so you can see which genes
+are shared or unique by experiment.
+
+Since most enrichment results have far more pathways than can be shown
+in one Cnet plot, we tried to prioritize which pathways to display.
+The logic in Dr. Yu's `enrichplot` is to take the top `n` pathways by P-value,
+however we noticed for our data this logic often shows redundant pathways and
+misses orthologous biological functions, which might be enriched
+to a lesser degree. So we started clustering pathways by P-value,
+then by using the pathway-gene incidence matrix.
+
+The pathway-gene incidence matrix worked best in our hands for this
+clustering, partly because it clusters pathways by the genes involved,
+and not by the pattern of enrichment across the enrichment tests
+(which may not be related to the underlying genes.) So we cluster
+pathways, then choose an arbitrary number of clusters, and took
+one "exemplar" from each cluster to represent each cluster. This
+practice is mostly effective, especially when the clusters are well-defined,
+and when members of each cluster have relatively similar function.
+We can increase the exemplars per cluster as needed. This strategy
+is helpful because each pathway is very clearly labeled.
+
+Most recently, we experimented with collapsing each pathway_cluster,
+so each pathway_cluster includes all genes implicated by pathways
+contained in the pathway_cluster. The benefit here is that no genes are lost
+by selecting a subset of "exemplar" pathways -- all genes are retained
+per cluster. Then instead of plotting pathway-gene network, we plot
+a pathway_cluster-gene network. Each pathway_cluster is labeled
+using the top `n` pathway names -- which is configurable, and is
+only a visible label. Each pathway_cluster contains all the
+pathways in the cluster.
+
 
 #### Plot the MultiEnrichMap network
 
@@ -221,7 +311,7 @@ below which cells are colorized -- every P-value above
 this threshold is not colored, and displayed as white,
 even when the P-value is less than 1.
 
-```{r, enrich_hm, fig.height=10, fig.width=10}
+```{r, enrich_hm, fig.height=8, fig.width=7}
 mem_enrichment_heatmap(mem_canonical, p_cutoff=0.05);
 ```
 
@@ -230,7 +320,7 @@ a color gradient to each column, using the same P-value
 threshold defined by `p_cutoff`. In this case, cells are
 labeled to indicate the actual enrichment P-value.
 
-```{r, enrich_hm_2, fig.height=10, fig.width=10}
+```{r, enrich_hm_2, fig.height=8, fig.width=7}
 mem_enrichment_heatmap(mem_canonical, color_by_column=TRUE);
 ```
 
@@ -261,7 +351,7 @@ function, which enables many awesome customizable features.
 The `...` argument is passed to `ComplexHeatmap::Heatmap()`,
 so you can use those features as needed.
 
-```{r, mem_hm, fig.height=10, fig.width=10}
+```{r, mem_hm, fig.height=8, fig.width=7}
 hm <- mem_gene_path_heatmap(mem_canonical);
 hm;
 ```
@@ -287,24 +377,26 @@ result through other helper functions:
 * `relayout_with_qfr()` applies network layout and adjusts node labels
 * `removeIgraphBlanks()` removes blank colors from the `igraph` nodes
 
-```{r, cnet_plot_1, fig.height=10, fig.width=10}
+```{r, cnet_plot_1, fig.height=8, fig.width=7}
 #cnet <- mem_canonical$multiCnetPlot1b;
 cnet <- mem_canonical %>% 
    memIM2cnet() %>%
    fixSetLabels() %>%
    removeIgraphBlanks() %>%
    relayout_with_qfr(repulse=4);
-plot(cnet, vertex.label.cex=0.6);
+#plot(cnet, vertex.label.cex=0.6);
+jam_igraph(cnet, vertex.label.cex=0.6);
 mem_legend(mem_canonical);
 ```
 
 You can extract the largest connected subnetwork to plot, as before.
 
-```{r, cnet_plot_2, fig.height=10, fig.width=10}
+```{r, cnet_plot_2, fig.height=8, fig.width=7}
 g2 <- cnet;
 g2_sub <- subset_igraph_components(cnet, keep=1)
 
-plot(g2_sub);
+#plot(g2_sub);
+jam_igraph(g2_sub);
 ```
 
 #### Customizing the Cnet plot
@@ -316,7 +408,7 @@ One useful method to choose a subset of pathways
 is to view one heatmap cluster at a time. Here
 we will use `hm_sets` made previously.
 
-```{r, cnet_plot_1_custom, fig.height=10, fig.width=10}
+```{r, cnet_plot_1_custom, fig.height=8, fig.width=7}
 cnet_sub <- subsetCnetIgraph(cnet,
    repulse=3.5,
    includeSets=unlist(hm_sets[c("A")]));
@@ -355,7 +447,7 @@ from the edges entering each node, `spread_labels=TRUE`
 nodes, `remove_blanks=FALSE`, but can be during this step by
 `remove_blanks=TRUE`.
 
-```{r, subnet, fig.height=10, fig.width=10}
+```{r, subnet, fig.height=8, fig.width=7}
 cnet3 <- multienrichjam::subsetCnetIgraph(cnet,
    repulse=5,
    minSetDegree=6,
@@ -389,7 +481,7 @@ these changes:
 3x larger, which emphasizes the label placement at an angle away from
 the edges of each node.
 
-```{r, jam_igraph_1, fig.height=10, fig.width=10}
+```{r, jam_igraph_1, fig.height=8, fig.width=7}
 jam_igraph(cnet3,
    edge_factor=2,
    node_factor=2, 
@@ -401,7 +493,7 @@ One more fancy alternative, you can colorize the edges based
 upon the node colors, a great idea inspired by the Gephi
 netowrk visualization tool.
 
-```{r, jam_igraph_2, fig.height=10, fig.width=10}
+```{r, jam_igraph_2, fig.height=8, fig.width=7}
 jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
    edge_factor=2,
    node_factor=2, 

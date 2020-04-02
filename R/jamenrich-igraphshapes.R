@@ -296,7 +296,7 @@ shape.coloredrectangle.plot <- function
             "names(rectDFL):", names(rectDFL));
       }
 
-      rect_order <- provigrep(c("frame", "square", "."), names(rectDFL));
+      rect_order <- jamba::provigrep(c("frame", "square", "."), names(rectDFL));
       for (rectDFi in rectDFL[rect_order]) {
          symbols(x=rectDFi$x,
             y=rectDFi$y,

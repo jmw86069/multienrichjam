@@ -64,6 +64,8 @@
 #'
 #' @family jam conversion functions
 #'
+#' @importFrom jamba nameVector
+#'
 #' @export
 enrichDF2enrichResult <- function
 (enrichDF=NULL,
@@ -107,7 +109,7 @@ enrichDF2enrichResult <- function
       stop("Could not find c(keyColname, pvalueColname, geneColname) in the input colnames.");
    }
 
-   enrichDF2 <- renameColumn(enrichDF,
+   enrichDF2 <- jamba::renameColumn(enrichDF,
       from=c(keyColname, pvalueColname, geneColname),
       to=c("ID", "pvalue", "geneID"));
    enrichDF2[,"p.adjust"] <- enrichDF2[,"pvalue"];
@@ -203,11 +205,11 @@ enrichDF2enrichResult <- function
             "geneHits/pathGenes");
       }
       geneRatioColname <- "GeneRatio";
-      enrichDF2[,"GeneRatio"] <- pasteByRow(enrichDF2[,c(geneHits,pathGenes),drop=FALSE],
+      enrichDF2[,"GeneRatio"] <- jamba::pasteByRow(enrichDF2[,c(geneHits,pathGenes),drop=FALSE],
          sep="/");
    }
 
-   enrichDF2 <- renameColumn(enrichDF2,
+   enrichDF2 <- jamba::renameColumn(enrichDF2,
       from=c(geneRatioColname, pathGenes, geneHits),
       to=c("GeneRatio", "setSize", "Count"));
       #to=c("BgRatio", "setSize", "Count"));
@@ -222,10 +224,15 @@ enrichDF2enrichResult <- function
          "colnames(enrichDF2):", colnames(enrichDF2));
       jamba::printDebug("enrichList2df(): ",
          "class(enrichDF2):", class(enrichDF2));
+      print(head(enrichDF2, 3));
    }
-   enrichDF2a <- dplyr::select(enrichDF2,
-      dplyr::matches("^ID$"), tidyselect::everything());
-   enrichDF2 <- enrichDF2a;
+   keepcolids <- match(
+      unique(jamba::provigrep(c("^ID$","."), colnames(enrichDF2))),
+      colnames(enrichDF2));
+   enrichDF2 <- enrichDF2[,keepcolids,drop=FALSE];
+   #enrichDF2a <- dplyr::select(enrichDF2,
+   #   dplyr::matches("^ID$"), tidyselect::everything());
+   #enrichDF2 <- enrichDF2a;
    if (verbose) {
       jamba::printDebug("enrichList2df(): ",
          "Done.");
@@ -673,9 +680,9 @@ multiEnrichMap <- function
          jamba::printDebug("multiEnrichMap(): ",
             "nrow(geneIM) before:",
             nrow(geneIM));
-         printDebug("setdiff(rownames(geneIM), newGenes):", setdiff(rownames(geneIM), newGenes));
-         printDebug("setdiff(newGenes, rownames(geneIM)):", setdiff(newGenes, rownames(geneIM)));
-         printDebug("setdiff(newGenes, origGenes):", setdiff(newGenes, origGenes));
+         jamba::printDebug("setdiff(rownames(geneIM), newGenes):", setdiff(rownames(geneIM), newGenes));
+         jamba::printDebug("setdiff(newGenes, rownames(geneIM)):", setdiff(newGenes, rownames(geneIM)));
+         jamba::printDebug("setdiff(newGenes, origGenes):", setdiff(newGenes, origGenes));
       }
       geneIM <- geneIM[rownames(geneIM) %in% newGenes,,drop=FALSE];
       if (verbose) {
@@ -734,9 +741,9 @@ multiEnrichMap <- function
       verbose=verbose,
       GmtT=msigdbGmtT)[enrichLsetNames,,drop=FALSE];
    if (all(is.na(enrichIM))) {
-      printDebug("all enrichIM is NA.");
-      printDebug("pvalueColname:", pvalueColname);
-      printDebug("nameColname:", nameColname);
+      jamba::printDebug("all enrichIM is NA.");
+      jamba::printDebug("pvalueColname:", pvalueColname);
+      jamba::printDebug("nameColname:", nameColname);
       stop("enrichIM is entirely NA.");
    }
 
@@ -965,10 +972,10 @@ multiEnrichMap <- function
       nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
       vertex.label.cex=0.5,
       verbose=verbose);
-   ## normScale(..., low=0) scales range 0 to maximum, into 0 to 1
+   ## jamba::normScale(..., low=0) scales range 0 to maximum, into 0 to 1
    ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
    V(enrichEM)$size_orig <- V(enrichEM)$size;
-   V(enrichEM)$size <- (normScale(V(enrichEM)$size, low=0) + 0.3) * 8;
+   V(enrichEM)$size <- (jamba::normScale(V(enrichEM)$size, low=0) + 0.3) * 8;
    E(enrichEM)$color <- "#99999977";
 
    mem$multiEnrichMap <- enrichEM;
@@ -995,7 +1002,7 @@ multiEnrichMap <- function
       nrow=nrow,
       ncol=ncol,
       byrow=byrow);
-   V(enrichEMpieUseSub2)$size <- (normScale(V(enrichEMpieUseSub2)$size) + 0.3) * 6;
+   V(enrichEMpieUseSub2)$size <- (jamba::normScale(V(enrichEMpieUseSub2)$size) + 0.3) * 6;
    V(enrichEMpieUseSub2)$size2 <- V(enrichEMpieUseSub2)$size2 / 2;
    mem$multiEnrichMap2 <- enrichEMpieUseSub2;
 
@@ -1197,10 +1204,10 @@ enrichList2df <- function
    enrichCols <- enrichCols[unique(names(enrichCols))];
 
    ## Get first non-NULL data.frame from enrichList
-   if (!jamba::igrepHas("data.frame", class(head(rmNULL(enrichList), 1)))) {
-      iDF <- as.data.frame(rmNULL(enrichList)[[1]]);
+   if (!jamba::igrepHas("data.frame", class(head(jamba::rmNULL(enrichList), 1)))) {
+      iDF <- as.data.frame(jamba::rmNULL(enrichList)[[1]]);
    } else {
-      iDF <- rmNULL(enrichList)[[1]];
+      iDF <- jamba::rmNULL(enrichList)[[1]];
    }
 
    if (verbose) {
@@ -1301,16 +1308,16 @@ enrichList2df <- function
          if (!jamba::igrepHas("data.frame", class(iDF))) {
             iDF <- as.data.frame(iDF);
          }
-         iDF <- renameColumn(iDF,
+         iDF <- jamba::renameColumn(iDF,
             from=geneColname,
             to=iName);
          iDF[,c(keyColname,iName)];
       });
-      enrichL1L <- mergeAllXY(enrichL1L1);
+      enrichL1L <- jamba::mergeAllXY(enrichL1L1);
       enrichL1V <- jamba::nameVector(
          gsub("^[,/ ]+|[,/ ]+$",
             "",
-            pasteByRow(
+            jamba::pasteByRow(
                enrichL1L[,-match(keyColname, colnames(enrichL1L)),drop=FALSE],
                sep=",")),
          enrichL1L[[keyColname]]);
@@ -1345,7 +1352,7 @@ enrichList2df <- function
          "dim(enrichValuesM):",
          dim(enrichValuesM));
    }
-   keepColDF <- renameColumn(
+   keepColDF <- jamba::renameColumn(
       data.frame(row.names=rownames(enrichValuesM),
          keyColname=rep(NA, nrow(enrichValuesM))),
       from="keyColname",
@@ -1387,7 +1394,7 @@ enrichList2df <- function
          keepColDF=keepColDF));
    }
    if (verbose) {
-      printDebug("multiEnrichMap(): ",
+      jamba::printDebug("multiEnrichMap(): ",
          "Creating enrichDF.");
    }
    enrichDF <- data.frame(check.names=FALSE,
@@ -2243,7 +2250,7 @@ topEnrichBySource <- function
    ##
    ## If sourceSubset is supplied, it will return only results from
    ## source groups with these names, using names derived from:
-   ## pasteByRow(sourceColnames, sep=sourceSep).
+   ## jamba::pasteByRow(sourceColnames, sep=sourceSep).
    ##
    ## If supplied, curateFrom and curateTo are a vector of gsub(from, to, ...)
    ## arguments, which are processed sequentially. The defaults will change
@@ -2316,7 +2323,7 @@ topEnrichBySource <- function
    } else if (length(sourceColnames) == 1) {
       iDFsplit <- enrichDF[[sourceColnames]];
    } else {
-      iDFsplit <- pasteByRow(sep=sourceSep,
+      iDFsplit <- jamba::pasteByRow(sep=sourceSep,
          enrichDF[,sourceColnames,drop=FALSE]);
    }
    if (length(curateFrom) > 0) {

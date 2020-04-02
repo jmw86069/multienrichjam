@@ -223,7 +223,7 @@ importIPAenrichment <- function
             colNames=FALSE);
          i <- gsub("\t+$",
             "",
-            pasteByRow(iDF,
+            jamba::pasteByRow(iDF,
                sep="\t",
                condenseBlanks=FALSE));
          #i <- jamba::vigrep("\t.*\t", i);
@@ -235,7 +235,7 @@ importIPAenrichment <- function
          }
          #i <- system(intern=TRUE,
          #      paste0("grep '\t.*\t' ", ipaFile));
-         i <- vigrep(".", readLines(ipaFile));
+         i <- jamba::vigrep(".", readLines(ipaFile));
          #i <- system(intern=TRUE,
          #   paste0("grep '.*' ", ipaFile));
          ## Clean up trailing newlines
@@ -440,7 +440,7 @@ curateIPAcolnames <- function
    if (length(nameCol) == 1) {
       jDF[["Name"]] <- jDF[[nameCol]];
       ## Skip rename, in order to maintain the original colname
-      #jDF <- renameColumn(jDF,
+      #jDF <- jamba::renameColumn(jDF,
       #   from=nameCol,
       #   to="Name");
       if (verbose) {
@@ -453,7 +453,7 @@ curateIPAcolnames <- function
    ## Determine which column contains the genes of interest
    geneCol <- head(jamba::provigrep(geneGrep, colnames(jDF)), 1);
    if (length(geneCol) == 1) {
-      jDF <- renameColumn(jDF,
+      jDF <- jamba::renameColumn(jDF,
          from=geneCol,
          to="geneNames");
       if (verbose) {
@@ -491,7 +491,7 @@ curateIPAcolnames <- function
    pCol <- head(setdiff(jamba::vigrep("^p.value", colnames(jDF)), "P-value"), 1);
    if (length(pCol) == 1) {
       if (length(logpCol) != 1) {
-         jDF <- renameColumn(jDF,
+         jDF <- jamba::renameColumn(jDF,
             from=pCol,
             to="P-value");
          if (verbose) {

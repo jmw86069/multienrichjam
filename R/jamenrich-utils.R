@@ -212,7 +212,7 @@ mem_find_overlap <- function
    oseq <- seq(from=overlap_range[1],
       to=overlap_range[2],
       by=0.01);
-   odata <- lapply(nameVector(oseq), function(i){
+   odata <- lapply(jamba::nameVector(oseq), function(i){
       g <- mem_multienrichplot(mem,
          overlap=i,
          remove_blanks=FALSE,
@@ -340,6 +340,10 @@ heatmap_column_order <- function
 
 #' Sort colors
 #'
+#' This function is intended to be a very rapid method to sort
+#' colors, based upon hue, then chroma descending, then luminance
+#' descending.
+#'
 #' @family jam utility functions
 #'
 #' @examples
@@ -368,9 +372,15 @@ sort_colors <- function
 {
    ## hue_offset=-12 makes red the first color,
    ## and moves pink to the end with purple
+   if (length(x) == 0) {
+      return(x);
+   }
    x_sort <- data.frame(input=x);
-   if (any(c("h","c","l") %in% sort_by)) {
+   if (any(c("h","c","l","-c", "-l") %in% sort_by)) {
       x_hcl <- farver::decode_colour(x, to="hcl");
+      x_hcl[,"h"] <- jamba::rmNA(naValue=0, x_hcl[,"h"]);
+      x_hcl[,"c"] <- jamba::rmNA(naValue=c_min, x_hcl[,"c"]);
+      x_hcl[,"l"] <- jamba::rmNA(naValue=0, x_hcl[,"l"]);
       x_hcl[,"h"] <- (x_hcl[,"h"] + hue_offset) %% 360;
       if (any(x_hcl[,"c"] <= c_min)) {
          c_is_min <- which(x_hcl[,"c"] <= c_min);
@@ -380,11 +390,15 @@ sort_colors <- function
       x_hcl <- round(x_hcl/4)*4;
       x_sort <- cbind(x_sort, x_hcl);
    }
-   if (any(c("s","v") %in% sort_by)) {
+   if (any(c("s","v","-s","-v") %in% sort_by)) {
+      x_hcl[,"s"] <- jamba::rmNA(naValue=0, x_hcl[,"s"]);
+      x_hcl[,"v"] <- jamba::rmNA(naValue=0, x_hcl[,"v"]);
       x_sv <- 100*farver::decode_colour(x, to="hsv")[,c("s","v"),drop=FALSE];
       x_sort <- cbind(x_sort, x_sv);
    }
-   if (any(c("a","b") %in% sort_by)) {
+   if (any(c("a","b","-a","-b") %in% sort_by)) {
+      x_hcl[,"a"] <- jamba::rmNA(naValue=0, x_hcl[,"a"]);
+      x_hcl[,"b"] <- jamba::rmNA(naValue=0, x_hcl[,"b"]);
       x_ab <- round(farver::decode_colour(x, to="lab")[,c("a","b"),drop=FALSE]);
       x_sort <- cbind(x_sort, x_ab);
    }
@@ -585,7 +599,7 @@ rank_mem_clusters <- function
          minp_rank=minp_rank,
          composite_rank=composite_rank);
       if (length(byCols) > 0) {
-         ijdf <- mixedSortDF(ijdf,
+         ijdf <- jamba::mixedSortDF(ijdf,
             byCols=byCols);
       }
       ijdf$cluster_rank <- paste0(iname, "_", seq_len(nrow(ijdf)));
@@ -643,8 +657,8 @@ collapse_mem_clusters <- function
       byCols=byCols,
       verbose=verbose);
    cluster_sets_l <- split(clusters_df$set, clusters_df$cluster);
-   cluster_sets <- cPaste(cluster_sets_l);
-   cluster_labels <- cPaste(sep=";\n",
+   cluster_sets <- jamba::cPaste(cluster_sets_l);
+   cluster_labels <- jamba::cPaste(sep=";\n",
       lapply(cluster_sets_l, function(i){
          if (length(i) > max_labels) {
             more <- paste0("(", length(i) - max_labels, " more)");
@@ -666,21 +680,21 @@ collapse_mem_clusters <- function
       iv;
    }));
 
-   cluster_enrichIMgeneCount <- do.call(cbind, lapply(nameVector(colnames(mem$geneIM)), function(i){
+   cluster_enrichIMgeneCount <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$geneIM)), function(i){
       xgenes <- intersect(rownames(mem$geneIM)[mem$geneIM[,i] > 0],
          rownames(cluster_memIM));
       if (verbose) {
-         printDebug("length(xgenes):", length(xgenes));
-         printDebug("head(xgenes, 30):");
+         jamba::printDebug("length(xgenes):", length(xgenes));
+         jamba::printDebug("head(xgenes, 30):");
          print(head(xgenes, 30));
       }
       colSums(cluster_memIM[xgenes,,drop=FALSE] > 0);
    }));
-   cluster_enrichIM <- rbindList(lapply(split(clusters_df, clusters_df$cluster), function(idf){
+   cluster_enrichIM <- jamba::rbindList(lapply(split(clusters_df, clusters_df$cluster), function(idf){
       im1 <- subset(mem$enrichIM[idf$set,,drop=FALSE]);
       10^colMeans(log10(im1))
    }));
-   cluster_enrichIMcolors <- do.call(cbind, lapply(nameVector(colnames(mem$enrichIMcolors)), function(i){
+   cluster_enrichIMcolors <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$enrichIMcolors)), function(i){
       avg_colors_by_list(split(mem$enrichIMcolors[clusters_df$set,i], clusters_df$cluster))
    }))
    ## avg_colors_by_list
@@ -702,7 +716,7 @@ collapse_mem_clusters <- function
 
    ## Make Cnet plot
    if (verbose) {
-      printDebug("collapse_mem_clusters(): ",
+      jamba::printDebug("collapse_mem_clusters(): ",
          "Calling memIM2cnet()");
    }
    cnet <- memIM2cnet(cluster_mem,

@@ -14,7 +14,9 @@ sort_colors(
 )
 }
 \description{
-Sort colors
+This function is intended to be a very rapid method to sort
+colors, based upon hue, then chroma descending, then luminance
+descending.
 }
 \examples{
 x <- jamba::nameVector(colors());

@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.16.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.25.900</span>
       </span>
     </div>
 
@@ -188,7 +188,7 @@ leading or trailing delimiters.</p></td>
       <td><p>integer value indicating the method used to
 import data from a text file, where: <code>method=1</code> uses
 <code>data.table::read.table()</code> and the <code>textConnection</code> argument;
-<code>method=2</code> uses <code>readr::read_tsv()</code>. The motivation to use
+<code>method=2</code> uses <code><a href='https://readr.tidyverse.org/reference/read_delim.html'>readr::read_tsv()</a></code>. The motivation to use
 <code>data.table::read.table()</code> is it performed better in the
 presence of UTF-8 characters such as the alpha symbol.</p></td>
     </tr>

@@ -59,7 +59,7 @@ list2im <- function
       stop("list2im() requires the arules package.");
    }
    if (keepCounts) {
-      xCt <- rmNULL(lapply(x, jamba::tcount, minCount=2));
+      xCt <- jamba::rmNULL(lapply(x, jamba::tcount, minCount=2));
       if (length(xCt) == 0) {
          if (verbose) {
             jamba::printDebug("list2im():",

@@ -94,6 +94,7 @@ Other jam igraph functions:
 \code{\link{cnet2im}()},
 \code{\link{cnetplotJam}()},
 \code{\link{cnetplot_internalJam}()},
+\code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},

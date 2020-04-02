@@ -13,6 +13,7 @@ grid_with_title(
   caption_fontsize = 12,
   caption_just = "left",
   caption_x = NULL,
+  verbose = FALSE,
   ...
 )
 }
@@ -38,6 +39,8 @@ position the caption text. By default when \code{caption_just} is \code{"left"}
 the \code{caption_x} is defined by \code{grid::unit(0.2, "npc")}, which
 positions the caption at the left side (20\% from the left edge)
 of the plot, with text proceeding to the right of that point.}
+
+\item{verbose}{logical indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
 }
