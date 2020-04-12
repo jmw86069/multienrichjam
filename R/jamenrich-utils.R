@@ -672,15 +672,15 @@ collapse_mem_clusters <- function
    cluster_labels <- jamba::cPaste(sep=";\n",
       lapply(jamba::nameVectorN(cluster_sets_l), function(j){
          i <- cluster_sets_l[[j]];
-         if (length(i) > max_labels[i]) {
-            more <- paste0("(", length(i) - max_labels[i], " more)");
+         if (length(i) > max_labels[j]) {
+            more <- paste0("(", length(i) - max_labels[j], " more)");
          } else {
             more <- NULL;
          }
-         c(head(ifelse(nchar(i) <= max_nchar_labels[i],
+         c(head(ifelse(nchar(i) <= max_nchar_labels[j],
             i,
-            paste0(substr(i, 1, max_nchar_labels[i] - 3), "...")),
-            max_labels[i]), more);
+            paste0(substr(i, 1, max_nchar_labels[j] - 3), "...")),
+            max_labels[j]), more);
       }));
    ## Optionally prepend the cluster title to the cluster_labels
    if (include_cluster_title) {
@@ -743,11 +743,12 @@ collapse_mem_clusters <- function
    cnet <- memIM2cnet(cluster_mem,
       verbose=verbose,
       ...);
-   set_match <- match(names(cluster_sets), V(cnet)$name)
-   V(cnet)$set_names <- "";
-   V(cnet)$set_names[set_match] <- cluster_sets;
-   V(cnet)$set_labels <- "";
-   V(cnet)$set_labels[set_match] <- cluster_labels;
+   set_match <- match(names(cluster_sets),
+      igraph::V(cnet)$name)
+   igraph::V(cnet)$set_names <- "";
+   igraph::V(cnet)$set_names[set_match] <- cluster_sets;
+   igraph::V(cnet)$set_labels <- "";
+   igraph::V(cnet)$set_labels[set_match] <- cluster_labels;
    cluster_mem$multiCnetPlot <- cnet;
 
    if ("cnet" %in% return_type) {

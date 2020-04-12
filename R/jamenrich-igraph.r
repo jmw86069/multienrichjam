@@ -345,16 +345,16 @@ verbose=FALSE,
       fixed=fixed,
       doPlot=doPlot,
       ...);
-   V(g)$frame.color <- jamba::makeColorDarker(V(g)$color,
+   igraph::V(g)$frame.color <- jamba::makeColorDarker(igraph::V(g)$color,
       darkFactor=1.5,
       alpha=0.5);
-   V(g)$label.cex <- labelCex;
+   igraph::V(g)$label.cex <- labelCex;
 
    ## Match category and gene color
    categoryColorMatch <- "#E5C494";
    geneColorMatch <- "#B3B3B3";
-   iWhichCat <- which(V(g)$color %in% categoryColorMatch);
-   iWhichGene <- which(V(g)$color %in% geneColorMatch);
+   iWhichCat <- which(igraph::V(g)$color %in% categoryColorMatch);
+   iWhichGene <- which(igraph::V(g)$color %in% geneColorMatch);
    #V(g)$color <- ifelse(V(g)$color %in% categoryColorMatch,
    #   categoryColor,
    #   ifelse(V(g)$color %in% geneColorMatch,
@@ -362,40 +362,40 @@ verbose=FALSE,
    #      V(g)$color));
    if (!all(categoryColor %in% categoryColorMatch) &&
          length(iWhichCat) > 0) {
-      V(g)[iWhichCat]$color <- rep(categoryColor,
+      igraph::V(g)[iWhichCat]$color <- rep(categoryColor,
          length.out=length(iWhichCat));
    }
    if (!all(geneColor %in% geneColorMatch) &&
          length(iWhichGene) > 0) {
-      V(g)[iWhichGene]$color <- rep(geneColor,
+      igraph::V(g)[iWhichGene]$color <- rep(geneColor,
          length.out=length(iWhichGene));
    }
 
    ## Optionally custom color nodes using colorSub
    if (!is.null(colorSub)) {
-      if (any(names(colorSub) %in% V(g)$name)) {
-         iWhich <- which(V(g)$name %in% names(colorSub));
+      if (any(names(colorSub) %in% igraph::V(g)$name)) {
+         iWhich <- which(igraph::V(g)$name %in% names(colorSub));
          if (length(iWhich) > 0) {
-            V(g)[iWhich]$color <- colorSub[V(g)[iWhich]$name];
+            igraph::V(g)[iWhich]$color <- colorSub[igraph::V(g)[iWhich]$name];
          }
       }
    }
 
    ## Normalize gene and category node sizes
    if (normalizeGeneSize && length(iWhichCat) && length(iWhichGene)) {
-      geneSize <- mean(V(g)[iWhichGene]$size);
-      catSizes <- V(g)[iWhichCat]$size;
-      degreeCat <- degree(g)[iWhichCat];
+      geneSize <- mean(igraph::V(g)[iWhichGene]$size);
+      catSizes <- igraph::V(g)[iWhichCat]$size;
+      degreeCat <- igraph::degree(g)[iWhichCat];
       #catSize <- sqrt(degreeCat/pi)/2;
       catSize <- sqrt(degreeCat/pi);
-      V(g)[iWhichCat]$size <- catSize;
+      igraph::V(g)[iWhichCat]$size <- catSize;
       if (geneSize > median(catSize)) {
          if (verbose) {
             jamba::printDebug("cnetplotJam(): ",
                "Shrinking gene nodes to median category node size.");
          }
          geneSize <- median(catSize);
-         V(g)[iWhichGene]$size <- geneSize;
+         igraph::V(g)[iWhichGene]$size <- geneSize;
       }
    }
 
@@ -459,34 +459,34 @@ cnetplot_internalJam <- function
 
    ## Color gene nodes by fold change if supplied
    if (!is.null(foldChange)) {
-      node.idx <- (lengthOfCategory + 1):length(V(g));
-      fcColors <- vals2colorLevels(foldChange,
+      node.idx <- (lengthOfCategory + 1):igraph::vcount(g);
+      fcColors <- colorjam::vals2colorLevels(foldChange,
          col=colorRamp,
          divergent=TRUE,
          ...);
-      V(g)[node.idx]$color <- fcColors;
+      igraph::V(g)[node.idx]$color <- fcColors;
       g <- scaleNodeColor(g, foldChange, node.idx, DE.foldChange);
    }
 
-   V(g)$size <- 5;
-   V(g)$color <- geneColor;
-   V(g)[1:lengthOfCategory]$size <- 30;
-   V(g)[1:lengthOfCategory]$color <- categoryColor;
+   igraph::V(g)$size <- 5;
+   igraph::V(g)$color <- geneColor;
+   igraph::V(g)[1:lengthOfCategory]$size <- 30;
+   igraph::V(g)[1:lengthOfCategory]$color <- categoryColor;
 
    ## Size category nodes
    if (is.numeric(categorySize)) {
       ## If supplied a numeric vector, size categories directly
-      V(g)[1:lengthOfCategory]$size <- categorySize;
+      igraph::V(g)[1:lengthOfCategory]$size <- categorySize;
    } else {
       if (categorySize == "geneNum") {
-         n <- degree(g)[1:lengthOfCategory];
-         V(g)[1:lengthOfCategory]$size <- n/sum(n) * 100;
+         n <- igraph::degree(g)[1:lengthOfCategory];
+         igraph::V(g)[1:lengthOfCategory]$size <- n/sum(n) * 100;
       } else if (categorySize == "pvalue") {
          if (is.null(pvalue) || any(is.na(pvalue))) {
             stop("pvalue must not be NULL or contain NA values.");
          }
          pScore <- -log10(pvalue);
-         V(g)[1:lengthOfCategory]$size <- pScore/sum(pScore) * 100;
+         igraph::V(g)[1:lengthOfCategory]$size <- pScore/sum(pScore) * 100;
       }
    }
    invisible(g);
@@ -567,7 +567,7 @@ igraph2pieGraph <- function
    }
 
    ## Determine matching node names
-   iNodes <- which(toupper(V(g)$name) %in% toupper(rownames(valueIMcolors)));
+   iNodes <- which(toupper(igraph::V(g)$name) %in% toupper(rownames(valueIMcolors)));
    if (length(iNodes) == 0) {
       if (verbose) {
          jamba::printDebug("igraph2pieGraph(): ",
@@ -582,9 +582,9 @@ igraph2pieGraph <- function
          head(iNodes, 10));
    }
 
-   Vshapes <- V(g)$shape;
+   Vshapes <- igraph::V(g)$shape;
    if (length(Vshapes) == 0) {
-      V(g)$shape <- "circle";
+      igraph::V(g)$shape <- "circle";
    }
 
    ## Change above logic to use lapply() then try to assign to igraph
@@ -594,7 +594,7 @@ igraph2pieGraph <- function
          "iNodeParamsL");
    }
    iNodeParamsL <- lapply(iNodes, function(i){
-      iNode <- V(g)$name[i];
+      iNode <- igraph::V(g)$name[i];
       iV <- match(toupper(iNode), toupper(rownames(valueIMcolors)));
 
       iPieColor <- valueIMcolors[iV,];
@@ -623,11 +623,11 @@ igraph2pieGraph <- function
    iPieNamesL <- lapply(iNodeParamsL, function(i){
       i$pie.names;
    });
-   V(g)[iNodes]$shape <- "pie";
-   V(g)[iNodes]$pie.value <- iPieValueL;
-   V(g)[iNodes]$pie <- iPieValueL;
-   V(g)[iNodes]$pie.color <- iPieColorL;
-   V(g)[iNodes]$pie.names <- iPieNamesL;
+   igraph::V(g)[iNodes]$shape <- "pie";
+   igraph::V(g)[iNodes]$pie.value <- iPieValueL;
+   igraph::V(g)[iNodes]$pie <- iPieValueL;
+   igraph::V(g)[iNodes]$pie.color <- iPieColorL;
+   igraph::V(g)[iNodes]$pie.names <- iPieNamesL;
 
    ## Define stable layout
    if (defineLayout) {
@@ -652,13 +652,13 @@ igraph2pieGraph <- function
          jamba::printDebug("igraph2pieGraph(): ",
             "Updating node labels.");
       }
-      if (is.null(V(g)$label)) {
-         V(g)$label <- V(g)$name;
+      if (is.null(igraph::V(g)$label)) {
+         igraph::V(g)$label <- igraph::V(g)$name;
       }
       if (!is.null(maxNchar)) {
-         V(g)$label <- substr(V(g)$label, 1, maxNchar);
+         igraph::V(g)$label <- substr(igraph::V(g)$label, 1, maxNchar);
       }
-      V(g)$label <- jamba::ucfirst(tolower(V(g)$label));
+      igraph::V(g)$label <- jamba::ucfirst(tolower(igraph::V(g)$label));
    }
    return(g);
 }
@@ -860,9 +860,9 @@ cnet2df <- function
 {
    ## Purpose is to summarize an igraph object by connectivity,
    ## connected components, and neighbors
-   df <- data.frame(nodeType=V(g)$nodeType,
-      name=V(g)$name,
-      label=V(g)$label,
+   df <- data.frame(nodeType=igraph::V(g)$nodeType,
+      name=igraph::V(g)$name,
+      label=igraph::V(g)$label,
       degree=degree(g),
       membership=components(g)$membership);
    if (getNeighbors || checkSubsets) {
@@ -1058,7 +1058,7 @@ removeIgraphBlanks <- function
 
    constrain <- match.arg(constrain);
    #ixV <- which(V(g)$shape %in% "coloredrectangle");
-   ixV <- which(lengths(V(g)$coloredrect.color) > 0);
+   ixV <- which(lengths(igraph::V(g)$coloredrect.color) > 0);
 
    if ("coloredrect.color" %in% list.vertex.attributes(g)) {
       if (verbose) {
@@ -1068,11 +1068,11 @@ removeIgraphBlanks <- function
       ## Rewrote code to use vectorized logic.
 
       ## Determine the coloredrect.ncol to use in resizing
-      ncolVbefore <- get.vertex.attribute(g, "coloredrect.ncol");
+      ncolVbefore <- igraph::get.vertex.attribute(g, "coloredrect.ncol");
       if (length(ncolVbefore) == 0) {
-         ncolVbefore <- lengths(get.vertex.attribute(g, "coloredrect.color"));
+         ncolVbefore <- lengths(igraph::get.vertex.attribute(g, "coloredrect.color"));
       }
-      nrowVbefore <- get.vertex.attribute(g, "coloredrect.nrow");
+      nrowVbefore <- igraph::get.vertex.attribute(g, "coloredrect.nrow");
 
       ## Determine which pie wedges are blank
       iCrColorL <- igraph::get.vertex.attribute(g, "coloredrect.color");
@@ -1089,12 +1089,12 @@ removeIgraphBlanks <- function
       }
 
       crLengths <- lengths(iCrColorL);
-      crSplitV <- rep(factor(seq_len(vcount(g))), crLengths);
+      crSplitV <- rep(factor(seq_len(igraph::vcount(g))), crLengths);
       ## Vector of TRUE,FALSE
       crBlanksV <- unlist(unname(crBlanksL));
       ## Iterate each attribute
       crAttrs <- intersect(c("coloredrect.color", "coloredrect.names"),
-         list.vertex.attributes(g));
+         igraph::list.vertex.attributes(g));
       crAttr <- "coloredrect.color";
       crName <- "coloredrect.names";
 
@@ -1113,11 +1113,11 @@ removeIgraphBlanks <- function
          }
       } else {
          ##
-         nrowV <- jamba::rmNULL(get.vertex.attribute(g, "coloredrect.nrow"),
+         nrowV <- jamba::rmNULL(igraph::get.vertex.attribute(g, "coloredrect.nrow"),
             nullValue=1);
-         ncolV <- jamba::rmNULL(get.vertex.attribute(g, "coloredrect.ncol"),
+         ncolV <- jamba::rmNULL(igraph::get.vertex.attribute(g, "coloredrect.ncol"),
             nullValue=1);
-         byrowV <- jamba::rmNULL(get.vertex.attribute(g, "coloredrect.byrow")*1,
+         byrowV <- jamba::rmNULL(igraph::get.vertex.attribute(g, "coloredrect.byrow")*1,
             nullValue=TRUE);
          nprodV <- nrowV * ncolV;
          if (any(crLengths != nprodV)) {
@@ -1162,10 +1162,10 @@ removeIgraphBlanks <- function
             ncolV <- ifelse(nrowV == 1 | ncolV > 1, crLengthsNew, ncolV);
             nrowV <- ifelse(nrowV == 1 | ncolV > 1, 1, crLengthsNew);
 
-            g <- set.vertex.attribute(g,
+            g <- igraph::set.vertex.attribute(g,
                name="coloredrect.nrow",
                value=nrowV);
-            g <- set.vertex.attribute(g,
+            g <- igraph::set.vertex.attribute(g,
                name="coloredrect.ncol",
                value=ncolV);
             ## TODO: only update nodes that change
@@ -1289,19 +1289,19 @@ removeIgraphBlanks <- function
                   iMncol <- rep(nrowNcolByrowV[2], length(iMnrow));
                }
                iSet <- as.integer(names(iMvalsL));
-               g <- set.vertex.attribute(g,
+               g <- igraph::set.vertex.attribute(g,
                   index=iSet,
                   name="coloredrect.ncol",
                   value=iMncol);
-               g <- set.vertex.attribute(g,
+               g <- igraph::set.vertex.attribute(g,
                   index=iSet,
                   name="coloredrect.nrow",
                   value=iMnrow);
-               g <- set.vertex.attribute(g,
+               g <- igraph::set.vertex.attribute(g,
                   index=iSet,
                   name="coloredrect.color",
                   value=iMvalsL);
-               g <- set.vertex.attribute(g,
+               g <- igraph::set.vertex.attribute(g,
                   index=iSet,
                   name="coloredrect.names",
                   value=iMnamesL);
@@ -1319,12 +1319,12 @@ removeIgraphBlanks <- function
                "Resizing coloredrect nodes.");
          }
          ## Make multi-segment gene nodes wider
-         ncolVafter <- get.vertex.attribute(g, "coloredrect.ncol");
-         nrowVafter <- get.vertex.attribute(g, "coloredrect.nrow");
+         ncolVafter <- igraph::get.vertex.attribute(g, "coloredrect.ncol");
+         nrowVafter <- igraph::get.vertex.attribute(g, "coloredrect.nrow");
          resizeWhich <- (ncolVbefore != ncolVafter) |  (nrowVbefore != nrowVafter);
          if (any(resizeWhich)) {
             new_size2 <-nrowVbefore / nrowVafter *
-               get.vertex.attribute(g,
+               igraph::get.vertex.attribute(g,
                   name="size2");
             if (verbose) {
                print(data.frame(ncolVbefore,
@@ -1332,7 +1332,7 @@ removeIgraphBlanks <- function
                   size2=V(g)$size2,
                   new_size2));
             }
-            g <- set.vertex.attribute(g,
+            g <- igraph::set.vertex.attribute(g,
                name="size2",
                value=new_size2[resizeWhich],
                index=which(resizeWhich));
@@ -1344,7 +1344,7 @@ removeIgraphBlanks <- function
    if (applyToPie) {
       ## Adjust several pie attributes depending upon what is present
       pieAttrs <- intersect(c("pie", "pie.value", "pie.names", "pie.color"),
-         list.vertex.attributes(g));
+         igraph::list.vertex.attributes(g));
 
       if ("pie.color" %in% pieAttrs) {
          if (verbose) {
@@ -1389,14 +1389,14 @@ removeIgraphBlanks <- function
       }
    }
    if (pie_to_circle) {
-      is_pie <- V(g)$shape %in% "pie";
+      is_pie <- igraph::V(g)$shape %in% "pie";
       if (any(is_pie)) {
-         is_single_color <- lengths(V(g)[is_pie]$pie.color) == 1;
+         is_single_color <- lengths(igraph::V(g)[is_pie]$pie.color) == 1;
          if (any(is_single_color)) {
             switch_nodes <- which(is_pie)[is_single_color];
-            i_colors <- unname(unlist(V(g)[switch_nodes]$pie.color));
-            V(g)[switch_nodes]$color <- i_colors;
-            V(g)[switch_nodes]$shape <- "circle";
+            i_colors <- unname(unlist(igraph::V(g)[switch_nodes]$pie.color));
+            igraph::V(g)[switch_nodes]$color <- i_colors;
+            igraph::V(g)[switch_nodes]$shape <- "circle";
          }
       }
    }
@@ -1461,19 +1461,19 @@ rectifyPiegraph <- function
       stop("Input g must be an igraph object.");
    }
    whichPie <- intersect(whichNodes,
-      which(V(g)$shape %in% "pie"));
+      which(igraph::V(g)$shape %in% "pie"));
 
    if (length(whichPie) == 0) {
       return(g);
    }
 
-   V(g)[whichPie]$coloredrect.color <- V(g)[whichPie]$pie.color;
-   V(g)[whichPie]$coloredrect.names <- V(g)[whichPie]$pie.names;
-   V(g)[whichPie]$coloredrect.nrow <- nrow;
-   V(g)[whichPie]$coloredrect.ncol <- ncol;
-   V(g)[whichPie]$coloredrect.byrow <- byrow;
-   V(g)[whichPie]$shape <- "coloredrectangle";
-   V(g)[whichPie]$size2 <- sqrt(V(g)[whichPie]$size)*1.5;
+   igraph::V(g)[whichPie]$coloredrect.color <- igraph::V(g)[whichPie]$pie.color;
+   igraph::V(g)[whichPie]$coloredrect.names <- igraph::V(g)[whichPie]$pie.names;
+   igraph::V(g)[whichPie]$coloredrect.nrow <- nrow;
+   igraph::V(g)[whichPie]$coloredrect.ncol <- ncol;
+   igraph::V(g)[whichPie]$coloredrect.byrow <- byrow;
+   igraph::V(g)[whichPie]$shape <- "coloredrectangle";
+   igraph::V(g)[whichPie]$size2 <- sqrt(igraph::V(g)[whichPie]$size)*1.5;
    g;
 }
 
@@ -1548,8 +1548,8 @@ reorderIgraphNodes <- function
    if (length(layout) == 0) {
       if (!"layout" %in% list.graph.attributes(g)) {
          if (all(c("x","y") %in% vertex_attr_names(g))) {
-            layout <- cbind(V(g)$x, V(g)$y);
-            g <- set_graph_attr(g, "layout", layout)
+            layout <- cbind(igraph::V(g)$x, igraph::V(g)$y);
+            g <- igraph::set_graph_attr(g, "layout", layout)
          } else {
             g <- relayout_with_qfr(g, ...);
          }
@@ -1559,10 +1559,10 @@ reorderIgraphNodes <- function
       if ("igraph" %in% class(g2)) {
          g <- g2;
       } else {
-         g <- set_graph_attr(g, "layout", g2);
+         g <- igraph::set_graph_attr(g, "layout", g2);
       }
    } else if (jamba::igrepHas("data.*frame|matrix", class(layout))) {
-      g <- set_graph_attr(g, "layout", layout);
+      g <- igraph::set_graph_attr(g, "layout", layout);
    } else {
       stop("reorderIgraphNodes() could not determine the layout from the given input.");
    }
@@ -1587,7 +1587,8 @@ reorderIgraphNodes <- function
    }
 
    ## Use one or more vertex attributes for grouping
-   sortAttributes <- intersect(sortAttributes, vertex_attr_names(g));
+   sortAttributes <- intersect(sortAttributes,
+      igraph::vertex_attr_names(g));
    if (length(sortAttributes) == 0) {
       if (verbose) {
          jamba::printDebug("reorderIgraphNodes(): ",
@@ -1602,12 +1603,12 @@ reorderIgraphNodes <- function
    neighborA <- jamba::pasteByRow(do.call(cbind, lapply(sortAttributes,
       function(sortAttribute){
          #jamba::printDebug("sortAttribute:", sortAttribute);
-         j <- jamba::rmNULL(get.vertex.attribute(g, sortAttribute),
+         j <- jamba::rmNULL(igraph::get.vertex.attribute(g, sortAttribute),
             nullValue="#555555");
          names(j) <- seq_len(vcount(g));
 
          if (sortAttribute %in% c("coloredrect.color","pie.color","color")) {
-            j_colors <- vertex_attr(g, sortAttribute);
+            j_colors <- igraph::vertex_attr(g, sortAttribute);
             if (verbose) {
                jamba::printDebug("reorderIgraphNodes(): ",
                   "avg_colors_by_list for ", length(j_colors), " colors")
@@ -1631,12 +1632,12 @@ reorderIgraphNodes <- function
             }
             if (1 == 1) {
                jString <- sapply(seq_along(j), function(j1){
-                  if ("coloredrect.nrow" %in% list.vertex.attributes(g)) {
-                     cnrow <- V(g)[j1]$coloredrect.nrow;
+                  if ("coloredrect.nrow" %in% igraph::list.vertex.attributes(g)) {
+                     cnrow <- igraph::V(g)[j1]$coloredrect.nrow;
                      cbyrow <- jamba::rmNA(rmNULL=TRUE,
                         naValue=TRUE,
                         nullValue=TRUE,
-                        V(g)[j1]$coloredrect.byrow);
+                        igraph::V(g)[j1]$coloredrect.byrow);
                   } else {
                      cnrow <- 1;
                      cbyrow <- TRUE;
@@ -1912,7 +1913,7 @@ spread_igraph_labels <- function
    }
 
    if (length(rownames(layout)) == 0) {
-      rownames(layout) <- V(g)$name;
+      rownames(layout) <- igraph::V(g)$name;
    }
    if (do_reorder) {
       if (verbose) {
@@ -1942,15 +1943,15 @@ spread_igraph_labels <- function
       }
       xymean <- colMeans(xy1[rep(1, nrow(xy2)),,drop=FALSE] - xy2);
       -(xyAngle(xymean[1], xymean[2]*y_bias, directed=TRUE) + 0) %% 360
-   }), V(g)$name);
+   }), igraph::V(g)$name);
    if (update_g_coords) {
       g <- set_graph_attr(g, "layout", layout);
    }
-   V(g)$label.degree <- jamba::deg2rad(g_angle);
-   if (!"label.dist" %in% list.vertex.attributes(g)) {
-      V(g)$label.dist <- label_min_dist;
+   igraph::V(g)$label.degree <- jamba::deg2rad(g_angle);
+   if (!"label.dist" %in% igraph::list.vertex.attributes(g)) {
+      igraph::V(g)$label.dist <- label_min_dist;
    } else {
-      V(g)$label.dist <- pmax(V(g)$label.dist, label_min_dist);
+      igraph::V(g)$label.dist <- pmax(igraph::V(g)$label.dist, label_min_dist);
    }
    g;
 }
@@ -2031,15 +2032,16 @@ memIM2cnet <- function
       jamba::printDebug("memIM2cnet(): ",
          "basic aesthetics");
    }
-   V(g)$nodeType <- "Set";
-   V(g)$nodeType[match(rownames(memIM), V(g)$name)] <- "Gene";
-   table(V(g)$nodeType);
-   isset <- V(g)$nodeType %in% "Set";
-   V(g)$size <- ifelse(isset, categorySize, geneSize);
-   V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
-   V(g)$label.color <- ifelse(isset, categoryLabelColor, geneLabelColor);
-   V(g)$color <- ifelse(isset, categoryColor, geneColor);
-   V(g)$frame.color <- jamba::makeColorDarker(V(g)$color,
+   igraph::V(g)$nodeType <- "Set";
+   igraph::V(g)$nodeType[match(rownames(memIM), igraph::V(g)$name)] <- "Gene";
+   table(igraph::V(g)$nodeType);
+   isset <- igraph::V(g)$nodeType %in% "Set";
+   igraph::V(g)$size <- ifelse(isset, categorySize, geneSize);
+   igraph::V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
+   igraph::V(g)$label.color <- ifelse(isset, categoryLabelColor, geneLabelColor);
+   igraph::V(g)$color <- ifelse(isset, categoryColor, geneColor);
+   igraph::V(g)$frame.color <- jamba::makeColorDarker(
+      igraph::V(g)$color,
       darkFactor=frame_darkFactor,
       ...);
 
@@ -2049,9 +2051,9 @@ memIM2cnet <- function
          "applying node colors");
    }
    if (length(geneIM) > 0 && length(geneIMcolors) > 0) {
-      geneIM <- subset(geneIM, rownames(geneIM) %in% V(g)$name[!isset]);
+      geneIM <- subset(geneIM, rownames(geneIM) %in% igraph::V(g)$name[!isset]);
       gene_match <- match(rownames(geneIM),
-         V(g)$name[!isset]);
+         igraph::V(g)$name[!isset]);
       gene_which <- which(!isset)[gene_match];
       for (j in c("pie", "pie.value", "pie.color", "pie.names",
          "coloredrect.color", "coloredrect.nrow",
@@ -2059,52 +2061,52 @@ memIM2cnet <- function
          "coloredrect.names")) {
          if (!j %in% list.vertex.attributes(g)) {
             if (jamba::igrepHas("color$", j)) {
-               vertex_attr(g, j) <- as.list(V(g)$color);
+               igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
             } else if (jamba::igrepHas("byrow", j)) {
-               vertex_attr(g, j) <- rep(unlist(coloredrect_byrow), length.out=vcount(g));
+               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_byrow), length.out=vcount(g));
             } else if (jamba::igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
-               vertex_attr(g, j) <- rep(unlist(coloredrect_ncol), length.out=vcount(g));
+               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_ncol), length.out=vcount(g));
             } else if (jamba::igrepHas("nrow", j) && length(coloredrect_nrow) > 0) {
-               vertex_attr(g, j) <- rep(unlist(coloredrect_nrow), length.out=vcount(g));
+               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_nrow), length.out=vcount(g));
             } else {
-               vertex_attr(g, j) <- as.list(rep(1, vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(1, vcount(g)));
             }
          }
       }
-      V(g)$pie[gene_which] <- lapply(gene_which, function(i){
+      igraph::V(g)$pie[gene_which] <- lapply(gene_which, function(i){
          rep(1, ncol(geneIM));
       });
-      V(g)$pie.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$pie.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
          geneIM[i,,drop=FALSE];
       });
-      V(g)$pie.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$pie.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
          jamba::nameVector(geneIMcolors[i,],
             colnames(geneIMcolors));
       });
-      V(g)$pie.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$pie.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
          colnames(geneIM);
       });
       ## Now do the same for coloredrectangle node shapes
-      V(g)$coloredrect.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$coloredrect.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
          jamba::nameVector(geneIMcolors[i,],
             colnames(geneIMcolors));
       });
-      V(g)$coloredrect.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$coloredrect.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
          geneIM[i,,drop=FALSE];
       });
       if (length(coloredrect_byrow) > 0) {
-         V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_byrow, length.out=length(gene_which));
+         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_byrow, length.out=length(gene_which));
       }
       if (length(coloredrect_nrow) > 0) {
-         V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_nrow, length.out=length(gene_which));
+         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_nrow, length.out=length(gene_which));
       }
       if (length(coloredrect_ncol) > 0) {
-         V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_ncol, length.out=length(gene_which));
+         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_ncol, length.out=length(gene_which));
       }
-      V(g)$coloredrect.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$coloredrect.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
          colnames(geneIM);
       });
-      V(g)$shape[gene_which] <- geneShape;
+      igraph::V(g)$shape[gene_which] <- geneShape;
    }
    ## Optionally apply category/set node coloring
    if (verbose) {
@@ -2112,55 +2114,55 @@ memIM2cnet <- function
          "applying category/set node colors");
    }
    if (length(enrichIM) > 0 && length(enrichIMcolors) > 0) {
-      enrichIM <- subset(enrichIM, rownames(enrichIM) %in% V(g)$name[isset]);
+      enrichIM <- subset(enrichIM, rownames(enrichIM) %in% igraph::V(g)$name[isset]);
       enrich_match <- match(rownames(enrichIM),
-         V(g)$name[isset]);
+         igraph::V(g)$name[isset]);
       enrich_which <- which(isset)[enrich_match];
       for (j in c("pie", "pie.value", #"pie.color",
          "coloredrect.color", "coloredrect.nrow",
          "coloredrect.byrow", "coloredrect.value")) {
          if (!j %in% list.vertex.attributes(g)) {
             if (jamba::igrepHas("color$", j)) {
-               vertex_attr(g, j) <- as.list(V(g)$color);
+               igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
             } else if (jamba::igrepHas("byrow", j)) {
-               vertex_attr(g, j) <- as.list(rep(coloredrect_byrow, length.out=vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_byrow, length.out=vcount(g)));
             } else if (jamba::igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
-               vertex_attr(g, j) <- as.list(rep(coloredrect_ncol, length.out=vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_ncol, length.out=vcount(g)));
             } else if (jamba::igrepHas("nrow", j) && length(coloredrect_nrow) > 0) {
-               vertex_attr(g, j) <- as.list(rep(coloredrect_nrow, length.out=vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_nrow, length.out=vcount(g)));
             } else {
-               vertex_attr(g, j) <- as.list(rep(1, vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(1, igraph::vcount(g)));
             }
          }
       }
-      V(g)$pie[enrich_which] <- lapply(enrich_which, function(i){
+      igraph::V(g)$pie[enrich_which] <- lapply(enrich_which, function(i){
          rep(1, ncol(enrichIM));
       });
-      V(g)$pie.value[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      igraph::V(g)$pie.value[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
          enrichIM[i,,drop=FALSE];
       });
-      V(g)$pie.color[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      igraph::V(g)$pie.color[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
          jamba::nameVector(enrichIMcolors[i,],
             colnames(enrichIMcolors));
       });
       ## Now do the same for coloredrectangle node shapes
-      V(g)$coloredrect.color[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      igraph::V(g)$coloredrect.color[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
          jamba::nameVector(enrichIMcolors[i,],
             colnames(enrichIMcolors));
       });
-      V(g)$coloredrect.value[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      igraph::V(g)$coloredrect.value[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
          enrichIM[i,,drop=FALSE];
       });
       if (length(coloredrect_byrow) > 0) {
-         V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_byrow, length.out=length(enrich_which));
+         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_byrow, length.out=length(enrich_which));
       }
       if (length(coloredrect_nrow) > 0) {
-         V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_nrow, length.out=length(enrich_which));
+         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_nrow, length.out=length(enrich_which));
       }
       if (length(coloredrect_ncol) > 0) {
-         V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_ncol, length.out=length(enrich_which));
+         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_ncol, length.out=length(enrich_which));
       }
-      V(g)$shape[enrich_which] <- categoryShape;
+      igraph::V(g)$shape[enrich_which] <- categoryShape;
    }
    if (verbose) {
       jamba::printDebug("memIM2cnet(): ",
@@ -2314,13 +2316,13 @@ color_edges_by_nodes <- function
  alpha=NULL,
  ...)
 {
-   edge_m <- as_edgelist(g, names=FALSE);
-   g_colors <- ifelse(V(g)$shape %in% "circle",
-      V(g)$color,
-      ifelse(V(g)$shape %in% "pie",
-         V(g)$pie.color,
-         ifelse(V(g)$shape %in% "coloredrectangle",
-            V(g)$coloredrect.color,
+   edge_m <- igraph::as_edgelist(g, names=FALSE);
+   g_colors <- ifelse(igraph::V(g)$shape %in% "circle",
+      igraph::V(g)$color,
+      ifelse(igraph::V(g)$shape %in% "pie",
+         igraph::V(g)$pie.color,
+         ifelse(igraph::V(g)$shape %in% "coloredrectangle",
+            igraph::V(g)$coloredrect.color,
             "#FFFFFF00")));
    g_color <- avg_colors_by_list(g_colors);
    edge_m[] <- g_color[edge_m];
@@ -2330,7 +2332,7 @@ color_edges_by_nodes <- function
       edge_colors <- jamba::alpha2col(edge_colors,
          alpha=alpha);
    }
-   E(g)$color <- unname(edge_colors);
+   igraph::E(g)$color <- unname(edge_colors);
    return(g);
 }
 
