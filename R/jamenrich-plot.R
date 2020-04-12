@@ -863,6 +863,9 @@ mem_plot_folio <- function
  cex.main=2,
  cex.sub=1.5,
  do_which=NULL,
+ max_labels=4,
+ max_nchar_labels=25,
+ include_cluster_title=TRUE,
  verbose=TRUE,
  ...)
 {
@@ -963,6 +966,9 @@ mem_plot_folio <- function
          collapse_mem_clusters(mem=mem,
             clusters=clusters_mem,
             verbose=verbose>1,
+            max_labels=max_labels,
+            max_nchar_labels=max_nchar_labels,
+            include_cluster_title=include_cluster_title,
             return_type="cnet");
       }, error=function(e){
          NULL
