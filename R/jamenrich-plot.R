@@ -866,6 +866,7 @@ mem_plot_folio <- function
  max_labels=4,
  max_nchar_labels=25,
  include_cluster_title=TRUE,
+ repulse=4,
  verbose=TRUE,
  ...)
 {
@@ -994,6 +995,7 @@ mem_plot_folio <- function
       cnet_collapsed <- tryCatch({
          cnet_collapsed %>%
             subsetCnetIgraph(remove_blanks=TRUE,
+               repulse=repulse,
                verbose=verbose>1);
       }, error=function(e){
          cnet_collapsed %>%
