@@ -867,6 +867,7 @@ mem_plot_folio <- function
  max_nchar_labels=25,
  include_cluster_title=TRUE,
  repulse=4,
+ use_shadowText=FALSE,
  verbose=TRUE,
  ...)
 {
@@ -955,8 +956,12 @@ mem_plot_folio <- function
       ret_vals$gp_hm <- gp_hm;
    }
 
-
-
+   #############################################################
+   ## Optional shadowText
+   if (use_shadowText) {
+      text <- jamba::shadowText;
+      on.exit(rm(text));
+   }
 
    #############################################################
    ## Cnet collapsed
