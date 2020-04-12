@@ -1,3 +1,17 @@
+# multienrichjam version 0.0.26.900
+
+## Changes to existing functions
+
+* `collapse_mem_clusters()` now includes the cluster name
+by default with the `set_labels` which are used to display
+the top `n` pathway names for each collapsed Cnet node.
+For example `"Cluster A: Aryl Hydrocarbons; Granzyme Signaling"`.
+* `collapse_mem_clusters()` arguments `max_labels` and `max_char_labels`
+accept multiple values, which are recycled and applied to filter each
+cluster. For example `max_labels=c(5,2)` will filter the first
+cluster to display up to 2 labels, and the second cluster to display
+up to 5 labels.
+
 # multienrichjam version 0.0.25.900
 
 ## Changes to existing functions

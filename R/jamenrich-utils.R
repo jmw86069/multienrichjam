@@ -644,6 +644,7 @@ collapse_mem_clusters <- function
  return_type=c("cnet", "mem"),
  max_labels=4,
  max_nchar_labels=25,
+ include_cluster_title=TRUE,
  verbose=FALSE,
  ...)
 {
@@ -656,19 +657,39 @@ collapse_mem_clusters <- function
       per_cluster=per_cluster,
       byCols=byCols,
       verbose=verbose);
-   cluster_sets_l <- split(clusters_df$set, clusters_df$cluster);
+   cluster_sets_l <- split(clusters_df$set,
+      clusters_df$cluster);
+
+   max_labels <- rep(max_labels,
+      length.out=length(cluster_sets_l));
+   names(max_labels) <- names(cluster_sets_l);
+   max_nchar_labels <- rep(max_nchar_labels,
+      length.out=length(cluster_sets_l));
+   names(max_nchar_labels) <- names(cluster_sets_l);
+
    cluster_sets <- jamba::cPaste(cluster_sets_l);
+
    cluster_labels <- jamba::cPaste(sep=";\n",
-      lapply(cluster_sets_l, function(i){
-         if (length(i) > max_labels) {
-            more <- paste0("(", length(i) - max_labels, " more)");
+      lapply(jamba::nameVectorN(cluster_sets_l), function(j){
+         i <- cluster_sets_l[[j]];
+         if (length(i) > max_labels[i]) {
+            more <- paste0("(", length(i) - max_labels[i], " more)");
          } else {
             more <- NULL;
          }
-         c(head(ifelse(nchar(i) <= max_nchar_labels,
+         c(head(ifelse(nchar(i) <= max_nchar_labels[i],
             i,
-            paste0(substr(i, 1, max_nchar_labels-2), "..")), max_labels), more);
+            paste0(substr(i, 1, max_nchar_labels[i] - 3), "...")),
+            max_labels[i]), more);
       }));
+   ## Optionally prepend the cluster title to the cluster_labels
+   if (include_cluster_title) {
+      cluster_labels <- paste0(
+         "Cluster ",
+         names(cluster_labels),
+         ":\n",
+         cluster_labels);
+   }
    #for (j in cluster_labels){cat("\n");cat(j, "\n\n");}
 
    clusters_df$cluster <- factor(clusters_df$cluster,

@@ -13,6 +13,7 @@ collapse_mem_clusters(
   return_type = c("cnet", "mem"),
   max_labels = 4,
   max_nchar_labels = 25,
+  include_cluster_title = TRUE,
   verbose = FALSE,
   ...
 )

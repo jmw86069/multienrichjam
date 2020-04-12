@@ -960,8 +960,8 @@ mem_plot_folio <- function
       jamba::printDebug("mem_plot_folio(): ",
          "Preparing Cnet collapsed");
       cnet_collapsed <- tryCatch({
-         collapse_mem_clusters(mem,
-            clusters_mem,
+         collapse_mem_clusters(mem=mem,
+            clusters=clusters_mem,
             verbose=verbose>1,
             return_type="cnet");
       }, error=function(e){
@@ -970,12 +970,12 @@ mem_plot_folio <- function
       if (length(cnet_collapsed) == 0) {
          return(list(mem=mem, clusters_mem=clusters_mem, ret_vals=ret_vals))
       }
-      V(cnet_collapsed)$pie.color <- lapply(V(cnet_collapsed)$pie.color, function(i){
+      igraph::V(cnet_collapsed)$pie.color <- lapply(igraph::V(cnet_collapsed)$pie.color, function(i){
          j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
             mem$colorV[names(i)],
             i);
       });
-      V(cnet_collapsed)$coloredrect.color <- lapply(V(cnet_collapsed)$coloredrect.color, function(i){
+      igraph::V(cnet_collapsed)$coloredrect.color <- lapply(igraph::V(cnet_collapsed)$coloredrect.color, function(i){
          j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
             mem$colorV[names(i)],
             i);
@@ -995,7 +995,7 @@ mem_plot_folio <- function
                verbose=verbose>1);
       })
       if (length(edge_color) > 0) {
-         E(cnet_collapsed)$color <- edge_color;
+         igraph::E(cnet_collapsed)$color <- edge_color;
       }
       plot_num <- plot_num + 1;
       if (length(do_which) == 0 || plot_num %in% do_which) {
@@ -1017,10 +1017,10 @@ mem_plot_folio <- function
       ## Draw Cnet collapsed with top n labels
       #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
       if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
-         V(cnet_collapsed)$label <- ifelse(
-            nchar(jamba::rmNA(naValue="", igraph:::V(cnet_collapsed)$set_labels)) > 0,
-            V(cnet_collapsed)$set_labels,
-            V(cnet_collapsed)$name);
+         igraph::V(cnet_collapsed)$label <- ifelse(
+            nchar(jamba::rmNA(naValue="", igraph::V(cnet_collapsed)$set_labels)) > 0,
+            igraph::V(cnet_collapsed)$set_labels,
+            igraph::V(cnet_collapsed)$name);
       }
       plot_num <- plot_num + 1;
       if (length(do_which) == 0 || plot_num %in% do_which) {
@@ -1046,9 +1046,9 @@ mem_plot_folio <- function
                c("Cnet collapsed ", "with set labels, without gene labels"),
                sep="");
          }
-         V(cnet_collapsed)$label <- ifelse(V(cnet_collapsed)$nodeType %in% "Gene",
+         igraph::V(cnet_collapsed)$label <- ifelse(igraph::V(cnet_collapsed)$nodeType %in% "Gene",
             "",
-            V(cnet_collapsed)$label);
+            igraph::V(cnet_collapsed)$label);
          ret_vals$cnet_collapsed_set2 <- cnet_collapsed;
          jam_igraph(cnet_collapsed);
          mem_legend(mem);
@@ -1072,13 +1072,13 @@ mem_plot_folio <- function
       cnet <- memIM2cnet(mem,
          ...);
       ## Freshen pie.color by using the original colorV value by name
-      V(cnet)$pie.color <- lapply(V(cnet)$pie.color, function(i){
+      igraph::V(cnet)$pie.color <- lapply(igraph::V(cnet)$pie.color, function(i){
          j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
             mem$colorV[names(i)],
             i);
       });
       ## Freshen coloredrect.color by using the original colorV value by name
-      V(cnet)$coloredrect.color <- lapply(V(cnet)$coloredrect.color, function(i){
+      igraph::V(cnet)$coloredrect.color <- lapply(igraph::V(cnet)$coloredrect.color, function(i){
          j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
             mem$colorV[names(i)],
             i);
