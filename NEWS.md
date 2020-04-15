@@ -1,3 +1,33 @@
+# multienrichjam version 0.0.27.900
+
+Added a new TODO.md file to track some new feature ideas.
+
+## new functions
+
+* `colors_from_list()` infers the proper order of colors from
+a list of color vectors. It is called by `reorderIgraphNodes()`
+where attributes `"pie.color"` and `"coloredrect.color"` contain
+subsets of colors, but in the proper order. This function returns
+all colors in their proper order.
+* `colors_from_list()` takes a list of colors, and returns the
+unique colors, ordered by the overall order inferred from the
+list. It is internally called by `reorderIgraphNodes()` when
+argument `colorV` is not suppleid, since the attribute `"pie.color"`
+can be used to infer the correct order of colors.
+
+## Changes to existing functions
+
+* `collapse_mem_clusters()` now uses `"; "` as delimiter for the
+`"set_names"` attribute, to make it easier to distinguish individual
+pathway names.
+* `reorderIgraphNodes()` was refactored to handle specific color
+order defined either by argument `colorV` or by inferring the correct
+order of colors from attributes such as `"pie.color"`. This change
+should help order node colors more consistent to the original input
+colors to `multiEnrichMap()`, specifically the argument `colorV`.
+* `reorderIgraphNodes()` now has an example that shows the effects
+of ordering pie nodes by color.
+
 # multienrichjam version 0.0.26.900
 
 ## Changes to existing functions

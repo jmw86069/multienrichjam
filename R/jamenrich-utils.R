@@ -667,7 +667,7 @@ collapse_mem_clusters <- function
       length.out=length(cluster_sets_l));
    names(max_nchar_labels) <- names(cluster_sets_l);
 
-   cluster_sets <- jamba::cPaste(cluster_sets_l);
+   cluster_sets <- jamba::cPaste(cluster_sets_l, sep="; ");
 
    cluster_labels <- jamba::cPaste(sep=";\n",
       lapply(jamba::nameVectorN(cluster_sets_l), function(j){

@@ -71,6 +71,7 @@ list2imSigned(L2);
 }
 \seealso{
 Other jam list functions: 
+\code{\link{colors_from_list}()},
 \code{\link{list2concordance}()},
 \code{\link{list2im}()}
 }

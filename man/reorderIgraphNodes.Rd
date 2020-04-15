@@ -6,9 +6,11 @@
 \usage{
 reorderIgraphNodes(
   g,
-  sortAttributes = c("pie.color", "coloredrect.color", "color", "label", "name"),
+  sortAttributes = c("pie.color", "pie.color.length", "coloredrect.color", "color",
+    "label", "name"),
   nodeSortBy = c("x", "y"),
   layout = NULL,
+  colorV = NULL,
   verbose = FALSE,
   ...
 )
@@ -27,6 +29,10 @@ function used to produce layout coordinates. When layout
 is \code{NULL}, this function tries to use graph attribute
 \code{"layout"}, otherwise
 the \code{relayout_with_qfr} is called.}
+
+\item{colorV}{optional \verb{character vector} that contains R colors,
+used to order the colors in attributes such as \code{"pie.color"}
+and \code{"coloredrect.color"}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 
@@ -63,6 +69,33 @@ be connnected to the same concept. For MultiEnrichmap,
 it typically works when multiple genes are connected
 to the same pathways. When this happens, the genes
 are sorted to group the colors.
+}
+\examples{
+if (require(igraph)) {
+   c3 <- c("red", "gold", "blue");
+   c3l <- list(c3[1], c3[2], c3[3],
+      c3[c(1,2)], c3[c(1,3)], c3[c(2,3)],
+      c3[c(1,2,3)]);
+   set.seed(123);
+   pc <- c(c3l[1], sample(rep(c3l, c(6,5,5, 4, 1, 4, 4))))
+   x <- lapply(pc, function(i){
+      jamba::nameVector(i, paste0("group_", i))
+   })
+   g2 <- igraph::graph_from_edgelist(directed=FALSE,
+      as.matrix(data.frame(
+         node1=rep("Pathway", length(x)),
+         node2=paste0("Gene", jamba::colNum2excelName(seq_along(x))))));
+   V(g2)$pie.color <- x[c(1,seq_along(pc))];
+   V(g2)$shape <- "pie";
+   V(g2)$pie <- lapply(lengths(V(g2)$pie.color), function(i){
+      rep(1, i)
+   });
+   g2 <- relayout_with_qfr(g2, repulse=7, do_reorder=FALSE);
+   jam_igraph(g2, main="Unordered");
+   jam_igraph(reorderIgraphNodes(g2), main="reorderIgraphNodes()");
+   jam_igraph(reorderIgraphNodes(g2, nodeSortBy=c("-y","x")), main="reorderIgraphNodes()");
+}
+
 }
 \seealso{
 Other jam igraph functions: 

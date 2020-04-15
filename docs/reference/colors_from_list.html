@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert enrichList to data.frame — enrichList2df • multienrichjam</title>
+<title>Ordered colors from a list of color vectors — colors_from_list • multienrichjam</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Convert enrichList to data.frame — enrichList2df" />
-<meta property="og:description" content="Convert enrichList to data.frame" />
+<meta property="og:title" content="Ordered colors from a list of color vectors — colors_from_list" />
+<meta property="og:description" content="Ordered colors from a list of color vectors" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,43 +120,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert enrichList to data.frame</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-base.r'><code>R/jamenrich-base.r</code></a></small>
-    <div class="hidden name"><code>enrichList2df.Rd</code></div>
+    <h1>Ordered colors from a list of color vectors</h1>
+    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-igraph.r'><code>R/jamenrich-igraph.r</code></a></small>
+    <div class="hidden name"><code>colors_from_list.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Convert enrichList to data.frame</p>
+    <p>Ordered colors from a list of color vectors</p>
     </div>
 
-    <pre class="usage"><span class='fu'>enrichList2df</span>(
-  <span class='no'>enrichList</span>,
-  <span class='kw'>keyColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"itemsetID"</span>, <span class='st'>"ID"</span>, <span class='st'>"Name"</span>),
-  <span class='kw'>geneColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"geneNames"</span>, <span class='st'>"Genes"</span>),
-  <span class='kw'>geneCountColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"geneCount"</span>, <span class='st'>"geneHits"</span>, <span class='st'>"Count"</span>),
-  <span class='kw'>pvalueColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"P-value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"Pval"</span>),
-  <span class='kw'>pvalueFloor</span> <span class='kw'>=</span> <span class='fl'>1e-200</span>,
-  <span class='kw'>msigdbGmtT</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>geneDelim</span> <span class='kw'>=</span> <span class='st'>"[,/ ]"</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>colors_from_list</span>(<span class='no'>x</span>, <span class='kw'>return_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"colors"</span>, <span class='st'>"order"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>list of character vectors that contain valid R colors.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>character vector of unique colors in <code>x</code></p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function takes a list of colors and returns the unique
+order of colors based upon the order in vectors of the list.
+It is mainly intended to be called by <code><a href='reorderIgraphNodes.html'>reorderIgraphNodes()</a></code>,
+however the function is useful for inferring the proper order
+of unique colors from a list of various subsets of colors.</p>
+<p>The basic assumption is that there exists one true order of
+unique colors, and that each vector in the list contains a
+subset of those colors which is consistent with this
+true order of colors.</p>
+<p>The function uses only vectors that contain two or more
+colors, and therefore requires that all unique colors are
+present in the subset of vectos in the list where length &gt;= 2.
+It then uses vectors with two or more colors, calculates
+the average observed rank for each color, then uses that
+average rank to define the overall color order.</p>
+<p>If not all unique colors are present in vectors with two or
+more colors, the fallback sort uses <code><a href='sort_colors.html'>multienrichjam::sort_colors()</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other jam conversion functions: 
-<code><a href='cnet2df.html'>cnet2df</a>()</code>,
-<code><a href='cnet2im.html'>cnet2im</a>()</code>,
-<code><a href='enrichDF2enrichResult.html'>enrichDF2enrichResult</a>()</code>,
-<code><a href='enrichList2IM.html'>enrichList2IM</a>()</code>,
-<code><a href='enrichMapJam.html'>enrichMapJam</a>()</code></p></div>
+    <div class='dont-index'><p>Other jam list functions: 
+<code><a href='list2concordance.html'>list2concordance</a>()</code>,
+<code><a href='list2imSigned.html'>list2imSigned</a>()</code>,
+<code><a href='list2im.html'>list2im</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
     </ul>
 

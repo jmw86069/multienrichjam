@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.25.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.27.900</span>
       </span>
     </div>
 
@@ -131,9 +131,11 @@
 
     <pre class="usage"><span class='fu'>reorderIgraphNodes</span>(
   <span class='no'>g</span>,
-  <span class='kw'>sortAttributes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pie.color"</span>, <span class='st'>"coloredrect.color"</span>, <span class='st'>"color"</span>, <span class='st'>"label"</span>, <span class='st'>"name"</span>),
+  <span class='kw'>sortAttributes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pie.color"</span>, <span class='st'>"pie.color.length"</span>, <span class='st'>"coloredrect.color"</span>, <span class='st'>"color"</span>,
+    <span class='st'>"label"</span>, <span class='st'>"name"</span>),
   <span class='kw'>nodeSortBy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>),
   <span class='kw'>layout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>colorV</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='no'>...</span>
 )</pre>
@@ -164,6 +166,12 @@ is <code>NULL</code>, this function tries to use graph attribute
 the <code>relayout_with_qfr</code> is called.</p></td>
     </tr>
     <tr>
+      <th>colorV</th>
+      <td><p>optional <code>character vector</code> that contains R colors,
+used to order the colors in attributes such as <code>"pie.color"</code>
+and <code>"coloredrect.color"</code>.</p></td>
+    </tr>
+    <tr>
       <th>verbose</th>
       <td><p>logical indicating whether to print verbose output.</p></td>
     </tr>
@@ -178,7 +186,7 @@ the <code>relayout_with_qfr</code> is called.</p></td>
     <p>igraph with nodes positioned to order
 nodes by color. The layout coordinates are stored in
 the graph attribute <code>"layout"</code>, accessible with
-<code>g$layout</code> or <code>graph_attr(g, "layout")</code>.
+<code>g$layout</code> or <code><a href='https://rdrr.io/pkg/igraph/man/graph_attr.html'>graph_attr(g, "layout")</a></code>.
 When there are not multiple nodes sharing
 the same neighbors, the original igraph object is
 returned, with the addition of layout coordinates.</p>
@@ -228,6 +236,32 @@ are sorted to group the colors.</p>
 <code><a href='subset_igraph_components.html'>subset_igraph_components</a>()</code>,
 <code><a href='with_qfr.html'>with_qfr</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>igraph</span>)) {
+   <span class='no'>c3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"red"</span>, <span class='st'>"gold"</span>, <span class='st'>"blue"</span>);
+   <span class='no'>c3l</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>c3</span>[<span class='fl'>1</span>], <span class='no'>c3</span>[<span class='fl'>2</span>], <span class='no'>c3</span>[<span class='fl'>3</span>],
+      <span class='no'>c3</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>)], <span class='no'>c3</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>3</span>)], <span class='no'>c3</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>)],
+      <span class='no'>c3</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>)]);
+   <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>123</span>);
+   <span class='no'>pc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>c3l</span>[<span class='fl'>1</span>], <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='no'>c3l</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>6</span>,<span class='fl'>5</span>,<span class='fl'>5</span>, <span class='fl'>4</span>, <span class='fl'>1</span>, <span class='fl'>4</span>, <span class='fl'>4</span>))))
+   <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>pc</span>, <span class='kw'>function</span>(<span class='no'>i</span>){
+      <span class='kw pkg'>jamba</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/jamba/man/nameVector.html'>nameVector</a></span>(<span class='no'>i</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"group_"</span>, <span class='no'>i</span>))
+   })
+   <span class='no'>g2</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/igraph/man/graph_from_edgelist.html'>graph_from_edgelist</a></span>(<span class='kw'>directed</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
+      <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+         <span class='kw'>node1</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='st'>"Pathway"</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>x</span>)),
+         <span class='kw'>node2</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"Gene"</span>, <span class='kw pkg'>jamba</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/jamba/man/colNum2excelName.html'>colNum2excelName</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>x</span>))))));
+   <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>pie.color</span> <span class='kw'>&lt;-</span> <span class='no'>x</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>pc</span>))];
+   <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>shape</span> <span class='kw'>&lt;-</span> <span class='st'>"pie"</span>;
+   <span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>pie</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/lengths.html'>lengths</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/igraph/man/V.html'>V</a></span>(<span class='no'>g2</span>)$<span class='no'>pie.color</span>), <span class='kw'>function</span>(<span class='no'>i</span>){
+      <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='no'>i</span>)
+   });
+   <span class='no'>g2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='relayout_with_qfr.html'>relayout_with_qfr</a></span>(<span class='no'>g2</span>, <span class='kw'>repulse</span><span class='kw'>=</span><span class='fl'>7</span>, <span class='kw'>do_reorder</span><span class='kw'>=</span><span class='fl'>FALSE</span>);
+   <span class='fu'><a href='jam_igraph.html'>jam_igraph</a></span>(<span class='no'>g2</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"Unordered"</span>);
+   <span class='fu'><a href='jam_igraph.html'>jam_igraph</a></span>(<span class='fu'>reorderIgraphNodes</span>(<span class='no'>g2</span>), <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"reorderIgraphNodes()"</span>);
+   <span class='fu'><a href='jam_igraph.html'>jam_igraph</a></span>(<span class='fu'>reorderIgraphNodes</span>(<span class='no'>g2</span>, <span class='kw'>nodeSortBy</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-y"</span>,<span class='st'>"x"</span>)), <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"reorderIgraphNodes()"</span>);
+}</div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='img'><img src='reorderIgraphNodes-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='img'><img src='reorderIgraphNodes-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='img'><img src='reorderIgraphNodes-3.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -236,6 +270,7 @@ are sorted to group the colors.</p>
       <li><a href="#value">Value</a></li>
       <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

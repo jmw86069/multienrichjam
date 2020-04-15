@@ -1520,15 +1520,46 @@ rectifyPiegraph <- function
 #'    is `NULL`, this function tries to use graph attribute
 #'    `"layout"`, otherwise
 #'    the `relayout_with_qfr` is called.
+#' @param colorV optional `character vector` that contains R colors,
+#'    used to order the colors in attributes such as `"pie.color"`
+#'    and `"coloredrect.color"`.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
+#'
+#' @examples
+#' if (require(igraph)) {
+#'    c3 <- c("red", "gold", "blue");
+#'    c3l <- list(c3[1], c3[2], c3[3],
+#'       c3[c(1,2)], c3[c(1,3)], c3[c(2,3)],
+#'       c3[c(1,2,3)]);
+#'    set.seed(123);
+#'    pc <- c(c3l[1], sample(rep(c3l, c(6,5,5, 4, 1, 4, 4))))
+#'    x <- lapply(pc, function(i){
+#'       jamba::nameVector(i, paste0("group_", i))
+#'    })
+#'    g2 <- igraph::graph_from_edgelist(directed=FALSE,
+#'       as.matrix(data.frame(
+#'          node1=rep("Pathway", length(x)),
+#'          node2=paste0("Gene", jamba::colNum2excelName(seq_along(x))))));
+#'    V(g2)$pie.color <- x[c(1,seq_along(pc))];
+#'    V(g2)$shape <- "pie";
+#'    V(g2)$pie <- lapply(lengths(V(g2)$pie.color), function(i){
+#'       rep(1, i)
+#'    });
+#'    g2 <- relayout_with_qfr(g2, repulse=7, do_reorder=FALSE);
+#'    jam_igraph(g2, main="Unordered", vertex.label="");
+#'    jam_igraph(reorderIgraphNodes(g2), main="reorderIgraphNodes()", vertex.label="");
+#'    jam_igraph(reorderIgraphNodes(g2, nodeSortBy=c("-y","x")), main="reorderIgraphNodes()", vertex.label="");
+#' }
 #'
 #' @export
 reorderIgraphNodes <- function
 (g,
- sortAttributes=c("pie.color","coloredrect.color", "color", "label", "name"),
+ sortAttributes=c("pie.color", "pie.color.length",
+    "coloredrect.color", "color", "label", "name"),
  nodeSortBy=c("x","y"),
  layout=NULL,
+ colorV=NULL,
  verbose=FALSE,
  ...)
 {
@@ -1587,8 +1618,14 @@ reorderIgraphNodes <- function
    }
 
    ## Use one or more vertex attributes for grouping
+   v_attrs <- igraph::vertex_attr_names(g);
+   v_attrs_length <- intersect(v_attrs, c("pie.color","coloredrect.color"));
+   if (length(v_attrs_length) > 0) {
+      v_attrs <- c(v_attrs,
+         paste0(v_attrs_length, ".length"));
+   }
    sortAttributes <- intersect(sortAttributes,
-      igraph::vertex_attr_names(g));
+      v_attrs);
    if (length(sortAttributes) == 0) {
       if (verbose) {
          jamba::printDebug("reorderIgraphNodes(): ",
@@ -1603,15 +1640,60 @@ reorderIgraphNodes <- function
    neighborA <- jamba::pasteByRow(do.call(cbind, lapply(sortAttributes,
       function(sortAttribute){
          #jamba::printDebug("sortAttribute:", sortAttribute);
-         j <- jamba::rmNULL(igraph::get.vertex.attribute(g, sortAttribute),
-            nullValue="#555555");
-         names(j) <- seq_len(vcount(g));
+         if (sortAttribute %in% c("pie.color.length", "coloredrect.color.length")) {
+            j <- jamba::padInteger(lengths(
+               igraph::vertex_attr(g, gsub("[.]length$", "", sortAttribute))));
+            names(j) <- seq_len(vcount(g));
+         } else {
+            j <- jamba::rmNULL(igraph::vertex_attr(g, sortAttribute),
+               nullValue="#555555");
+            names(j) <- seq_len(vcount(g));
+         }
 
-         if (sortAttribute %in% c("coloredrect.color","pie.color","color")) {
+         if (sortAttribute %in% c("pie.color.length", "coloredrect.color.length")) {
+            jString <- j;
+         } else if (sortAttribute %in% c("coloredrect.color","pie.color")) {
             j_colors <- igraph::vertex_attr(g, sortAttribute);
             if (verbose) {
                jamba::printDebug("reorderIgraphNodes(): ",
-                  "avg_colors_by_list for ", length(j_colors), " colors")
+                  "new color logic for sortAttribute:",
+                  sortAttribute);
+            }
+            if (length(colorV) == 0 || length(names(colorV)) == 0) {
+               colorV <- colors_from_list(j_colors,
+                  verbose=verbose);
+            } else {
+               if (verbose) {
+                  jamba::printDebug("reorderIgraphNodes(): ",
+                     "Using the supplied colorV:",
+                     names(colorV),
+                     fgText=list("darkorange1", "dodgerblue", NA),
+                     bgText=list(NA, NA, colorV));
+               }
+            }
+            colorattrm <- jamba::rbindList(lapply(j_colors, function(ji){
+               factor(ji, levels=colorV)
+            }), fixBlanks=TRUE);
+            colorattrm <- matrix(ncol=ncol(colorattrm),
+               as.numeric(colorattrm));
+            colorattrm2 <- cbind(
+               rowMeans=round(digits=2,rowMeans(colorattrm, na.rm=TRUE)),
+               lengths=lengths(j_colors),
+               colorattrm,
+               order=seq_along(j_colors));
+            colorattrfactor <- factor(jamba::pasteByRow(colorattrm2),
+               levels=unique(jamba::pasteByRow(
+                  jamba::mixedSortDF(colorattrm2, na.last=FALSE))))
+            jString <- paste0(sortAttribute,
+               jamba::padInteger(as.integer(colorattrfactor)));
+            #printDebug("jString:", jString);
+         } else if (sortAttribute %in% c("color")) {
+            j_colors <- igraph::vertex_attr(g, sortAttribute);
+            if (verbose) {
+               jamba::printDebug("reorderIgraphNodes(): ",
+                  "avg_colors_by_list for ",
+                  length(j_colors),
+                  " colors");
             }
             j_colors_v <- avg_colors_by_list(j_colors);
             j_sorted <- sort_colors(j_colors_v);
@@ -2970,3 +3052,97 @@ jam_plot_igraph <- function
    invisible(NULL)
 }
 
+#' Ordered colors from a list of color vectors
+#'
+#' Ordered colors from a list of color vectors
+#'
+#' This function takes a list of colors and returns the unique
+#' order of colors based upon the order in vectors of the list.
+#' It is mainly intended to be called by `reorderIgraphNodes()`,
+#' however the function is useful for inferring the proper order
+#' of unique colors from a list of various subsets of colors.
+#'
+#' The basic assumption is that there exists one true order of
+#' unique colors, and that each vector in the list contains a
+#' subset of those colors which is consistent with this
+#' true order of colors.
+#'
+#' The function uses only vectors that contain two or more
+#' colors, and therefore requires that all unique colors are
+#' present in the subset of vectos in the list where length >= 2.
+#' It then uses vectors with two or more colors, calculates
+#' the average observed rank for each color, then uses that
+#' average rank to define the overall color order.
+#'
+#' If not all unique colors are present in vectors with two or
+#' more colors, the fallback sort uses `multienrichjam::sort_colors()`.
+#'
+#' @family jam list functions
+#'
+#' @return character vector of unique colors in `x`
+#'
+#' @param x list of character vectors that contain valid R colors.
+#'
+#' @export
+colors_from_list <- function
+(x,
+ return_type=c("colors", "order"),
+ verbose=FALSE,
+ ...)
+{
+   return_type <- match.arg(return_type);
+   if (!is.list(x)) {
+      x <- as.list(x);
+   }
+   pcu <- unique(unlist(x));
+   pc2u <- unique(unlist(x[lengths(x) > 1]));
+   if (all(pcu %in% pc2u)) {
+      pc2 <- x[lengths(x) > 1];
+      pcdf <- jamba::rbindList(lapply(pc2, function(pc2i){
+         data.frame(color=as.character(pc2i),
+            name=jamba::rmNULL(nullValue=NA, names(pc2i)),
+            rank=seq_along(pc2i))
+      }))
+      colorV <- names(sort(sapply(split(pcdf$rank, pcdf$color), mean)));
+      colorVnames <- pcdf$name[match(colorV, pcdf$color)];
+      if (all(!is.na(colorVnames))) {
+         names(colorV) <- colorVnames;
+      } else {
+         names(colorV) <- seq_along(colorV);
+      }
+      if (verbose) {
+         jamba::printDebug("colors_from_list(): ",
+            "Derived colorV from node color values:",
+            names(colorV),
+            fgText=list("darkorange1", "dodgerblue", NA),
+            bgText=list(NA, NA, colorV));
+      }
+   } else {
+      pcdf1 <- jamba::rbindList(lapply(unique(x), function(pc2i){
+         data.frame(color=pc2i, name=names(pc2i), rank=seq_along(pc2i))
+      }));
+      colorV <- sort_colors(pcu);
+      colorVnames <- pcdf1$name[match(colorV, pcdf1$color)];
+      if (all(!is.na(colorVnames))) {
+         names(colorV) <- colorVnames;
+      } else {
+         names(colorV) <- seq_along(colorV);
+      }
+      if (verbose) {
+         jamba::printDebug("colors_from_list(): ",
+            "Derived colorV by using sort_colors():",
+            names(colorV),
+            fgText=list("darkorange1", "dodgerblue", NA),
+            bgText=list(NA, NA, colorV));
+      }
+   }
+   if ("colors" %in% return_type) {
+      return(colorV);
+   }
+   colorattrdf <- data.frame(rbindList(x));
+   for (cacol in colnames(colorattrdf)) {
+      colorattrdf[[cacol]] <- factor(colorattrdf[[cacol]], levels=colorV);
+   }
+   jString <- jamba::pasteByRowOrdered(colorattrdf);
+   return(order(jString));
+}

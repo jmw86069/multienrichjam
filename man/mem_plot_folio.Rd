@@ -21,6 +21,11 @@ mem_plot_folio(
   cex.main = 2,
   cex.sub = 1.5,
   do_which = NULL,
+  max_labels = 4,
+  max_nchar_labels = 25,
+  include_cluster_title = TRUE,
+  repulse = 4,
+  use_shadowText = FALSE,
   verbose = TRUE,
   ...
 )
