@@ -10,6 +10,13 @@ in our testing, thanks to efficient methods from the `arules`
 R package for interconverting list to compressed logical
 matrix, and vice versa.
 
+## changes to existing functions
+
+* `mem_enrichment_heatmap()` was modified to use `p_floor`
+as the ceiling for the row hierarchical clustering, previously
+it used `ceiling=3` which caused the dendrogram to have `height=0`
+when all enrichment results were lower than 0.001.
+
 # multienrichjam version 0.0.27.900
 
 Added a new TODO.md file to track some new feature ideas.

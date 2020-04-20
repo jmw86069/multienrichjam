@@ -11,6 +11,7 @@ mem_enrichment_heatmap(
   row_method = "euclidean",
   name = "-log10P",
   row_dend_reorder = TRUE,
+  row_dend_width = grid::unit(30, "mm"),
   row_fontsize = 8,
   column_fontsize = 12,
   cluster_columns = FALSE,

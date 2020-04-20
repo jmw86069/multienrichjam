@@ -270,6 +270,7 @@ mem_enrichment_heatmap <- function
  row_method="euclidean",
  name="-log10P",
  row_dend_reorder=TRUE,
+ row_dend_width=grid::unit(30, "mm"),
  row_fontsize=8,
  column_fontsize=12,
  cluster_columns=FALSE,
@@ -301,13 +302,18 @@ mem_enrichment_heatmap <- function
             -log10(mem$enrichIM[sets,,drop=FALSE]),
             minimum=-log10(p_cutoff+1e-5),
             newValue=0,
-            ceiling=3),
+            ceiling=-log10(p_floor)),
+            #ceiling=3),
          method=row_method);
-      row_dend_width <- grid::unit(30, "mm");
+      if (length(row_dend_width) == 0) {
+         row_dend_width <- grid::unit(30, "mm");
+      }
    } else {
       er_hc2 <- FALSE;
       cluster_columns <- FALSE;
-      row_dend_width <- grid::unit(10, "mm");
+      if (length(row_dend_width) == 0) {
+         row_dend_width <- grid::unit(10, "mm");
+      }
    }
    hm <- ComplexHeatmap::Heatmap(
       -log10(mem$enrichIM),
@@ -319,7 +325,7 @@ mem_enrichment_heatmap <- function
       row_names_gp=grid::gpar(fontsize=row_fontsize),
       column_names_gp=grid::gpar(fontsize=column_fontsize),
       cluster_columns=cluster_columns,
-      row_dend_width=grid::unit(30, "mm"),
+      row_dend_width=row_dend_width,
       row_names_max_width=grid::unit(8, "cm"),
       column_title=column_title,
       ...);
