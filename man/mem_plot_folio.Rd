@@ -6,9 +6,10 @@
 \usage{
 mem_plot_folio(
   mem,
+  do_which = NULL,
   p_cutoff = NULL,
-  main = "",
   p_floor = 1e-06,
+  main = "",
   use_raster = TRUE,
   min_gene_ct = 2,
   min_set_ct = 2,
@@ -20,12 +21,12 @@ mem_plot_folio(
   edge_color = NULL,
   cex.main = 2,
   cex.sub = 1.5,
-  do_which = NULL,
   max_labels = 4,
   max_nchar_labels = 25,
   include_cluster_title = TRUE,
   repulse = 4,
   use_shadowText = FALSE,
+  color_by_column = FALSE,
   verbose = TRUE,
   ...
 )
@@ -35,14 +36,19 @@ mem_plot_folio(
 the object is expected to contain \code{colorV}, \code{enrichIM},
 \code{memIM}, \code{geneIM}.}
 
+\item{do_which}{integer vector of plots to produce. When \code{do_which}
+is \code{NULL}, then all plots are produced. This argument is intended
+to help produce one plot from a folio, therefore each plot is referred
+by the number of the plot, in order.}
+
 \item{p_cutoff}{numeric value indicating the enrichment P-value threshold
 used for \code{multiEnrichMap()}, but when \code{NULL} this value is taken
 from the \code{mem} input, or \code{0.05} is used by default.}
 
-\item{main}{character string used as a title on Cnet plots.}
-
 \item{p_floor}{numeric value indicating the lowest enrichment P-value
 used in the color gradient on the Enrichment Heatmap.}
+
+\item{main}{character string used as a title on Cnet plots.}
 
 \item{use_raster}{logical indicating whether to use raster heatmaps,
 passed to \code{ComplexHeatmap::Heatmap()}.}
@@ -66,10 +72,11 @@ clusters to create in the gene-pathway heatmap.}
 \item{cex.main, cex.sub}{numeric values passed to \code{title()} which
 size the default title and sub-title in Cnet plots.}
 
-\item{do_which}{integer vector of plots to produce. When \code{do_which}
-is \code{NULL}, then all plots are produced. This argument is intended
-to help produce one plot from a folio, therefore each plot is referred
-by the number of the plot, in order.}
+\item{color_by_column}{\code{logical} indicating whether to colorize
+the enrichment heatmap columns using \code{colorV} in the input \code{mem}.
+This argument is only relevant when \code{do_which} include \code{1}.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are passed to downstream functions.}
 }

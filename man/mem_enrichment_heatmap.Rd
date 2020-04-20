@@ -18,6 +18,8 @@ mem_enrichment_heatmap(
   sets = NULL,
   color_by_column = FALSE,
   cex.axis = 1,
+  lens = 4,
+  cexCellnote = 0.7,
   column_title = NULL,
   ...
 )
@@ -64,6 +66,14 @@ using \code{jamba::imageByColors()}.}
 
 \item{cex.axis}{sent to \code{jamba::imageByColors()} only when
 \code{color_by_column=TRUE}.}
+
+\item{lens}{\code{numeric} value used in color gradients, to define whether
+the color gradient should be enhanced in the mid-ranges (positive \code{lens}),
+or diminished in the mid-ranges (negative \code{lens}).}
+
+\item{cexCellnote}{numeric character expansion value used only
+when \code{color_by_column=TRUE}, used to adjust the P-value label size
+inside each heatmap cell.}
 
 \item{column_title}{optional character string with title to display
 above the heatmap.}

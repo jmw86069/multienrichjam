@@ -16,6 +16,10 @@ matrix, and vice versa.
 as the ceiling for the row hierarchical clustering, previously
 it used `ceiling=3` which caused the dendrogram to have `height=0`
 when all enrichment results were lower than 0.001.
+* `mem_enrichment_heatmap()` was modified to calculate its own
+matrix colors when `color_by_column=TRUE`, until the
+`colorjam::matrix2heatColors()` can be updated to the improved
+method.
 * `mem_plot_folio()` now correctly honors `p_floor`.
 
 # multienrichjam version 0.0.27.900

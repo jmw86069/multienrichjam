@@ -257,6 +257,12 @@ mem_gene_path_heatmap <- function
 #'    using `jamba::imageByColors()`.
 #' @param cex.axis sent to `jamba::imageByColors()` only when
 #'    `color_by_column=TRUE`.
+#' @param lens `numeric` value used in color gradients, to define whether
+#'    the color gradient should be enhanced in the mid-ranges (positive `lens`),
+#'    or diminished in the mid-ranges (negative `lens`).
+#' @param cexCellnote numeric character expansion value used only
+#'    when `color_by_column=TRUE`, used to adjust the P-value label size
+#'    inside each heatmap cell.
 #' @param column_title optional character string with title to display
 #'    above the heatmap.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
@@ -277,23 +283,26 @@ mem_enrichment_heatmap <- function
  sets=NULL,
  color_by_column=FALSE,
  cex.axis=1,
+ lens=4,
+ cexCellnote=0.7,
  column_title=NULL,
  ...)
 {
    #
    col_logp <- circlize::colorRamp2(
-      breaks=c(-log10(p_cutoff+1e-5),
+      breaks=c(-log10(p_cutoff + 1e-10),
          seq(from=-log10(p_cutoff),
             to=-log10(p_floor),
             length.out=25)),
       colors=c("white",
          jamba::getColorRamp("Reds",
-            lens=4,
+            lens=lens,
             n=25,
-            trimRamp=c(2,0)))
+            trimRamp=c(2, 0)))
    )
    if (length(sets) > 0) {
-      mem$enrichIM <- mem$enrichIM[intersect(rownames(mem$enrichIM), sets),,drop=FALSE];
+      sets <- intersect(rownames(mem$enrichIM), sets);
+      mem$enrichIM <- mem$enrichIM[sets,,drop=FALSE];
    } else {
       sets <- rownames(mem$enrichIM);
    }
@@ -336,14 +345,33 @@ mem_enrichment_heatmap <- function
       ...);
    if (color_by_column) {
       hm_sets <- rownames(mem$enrichIM)[ComplexHeatmap::row_order(hm)];
-      jamba::imageByColors(mem$enrichIMcolors[hm_sets,,drop=FALSE],
+      ## Prepare fresh image colors using p_cutoff and p_floor
+      enrichIMcolors <- do.call(cbind, lapply(nameVector(colnames(mem$enrichIM)), function(i){
+         x <- -log10(mem$enrichIM[,i]);
+         cr1 <- circlize::colorRamp2(
+            breaks=c(-log10(p_cutoff + 1e-10),
+               seq(from=-log10(p_cutoff), to=-log10(p_floor), length.out=24)),
+            colors=c("white",
+               getColorRamp(mem$colorV[i],
+                  n=24,
+                  trimRamp=c(1, 0),
+                  lens=lens)));
+         cr1(x);
+      }));
+      #enrichIMcolors <- colorjam::matrix2heatColors(
+      #   x=-log10(mem$enrichIM),
+      #   colorV=mem$colorV,
+      #   baseline=-log10(p_cutoff),
+      #   numLimit=-log10(p_floor),
+      #   lens=lens);
+      jamba::imageByColors(enrichIMcolors[hm_sets,,drop=FALSE],
          cellnote=sapply(mem$enrichIM[hm_sets,,drop=FALSE],
-            format.pval,
+            base::format.pval,
             eps=1e-50,
             digits=2),
          adjustMargins=TRUE,
          flip="y",
-         cexCellnote=0.7,
+         cexCellnote=cexCellnote,
          cex.axis=cex.axis,
          main=column_title,
          groupCellnotes=FALSE,
@@ -828,12 +856,16 @@ jam_igraph <- function
 #' @param mem `list` object created by `multiEnrichMap()`. Specifically
 #'    the object is expected to contain `colorV`, `enrichIM`,
 #'    `memIM`, `geneIM`.
+#' @param do_which integer vector of plots to produce. When `do_which`
+#'    is `NULL`, then all plots are produced. This argument is intended
+#'    to help produce one plot from a folio, therefore each plot is referred
+#'    by the number of the plot, in order.
 #' @param p_cutoff numeric value indicating the enrichment P-value threshold
 #'    used for `multiEnrichMap()`, but when `NULL` this value is taken
 #'    from the `mem` input, or `0.05` is used by default.
-#' @param main character string used as a title on Cnet plots.
 #' @param p_floor numeric value indicating the lowest enrichment P-value
 #'    used in the color gradient on the Enrichment Heatmap.
+#' @param main character string used as a title on Cnet plots.
 #' @param use_raster logical indicating whether to use raster heatmaps,
 #'    passed to `ComplexHeatmap::Heatmap()`.
 #' @param min_gene_ct,min_set_ct integer values passed to
@@ -850,18 +882,19 @@ jam_igraph <- function
 #'    clusters to create in the gene-pathway heatmap.
 #' @param cex.main,cex.sub numeric values passed to `title()` which
 #'    size the default title and sub-title in Cnet plots.
-#' @param do_which integer vector of plots to produce. When `do_which`
-#'    is `NULL`, then all plots are produced. This argument is intended
-#'    to help produce one plot from a folio, therefore each plot is referred
-#'    by the number of the plot, in order.
+#' @param color_by_column `logical` indicating whether to colorize
+#'    the enrichment heatmap columns using `colorV` in the input `mem`.
+#'    This argument is only relevant when `do_which` include `1`.
+#' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
 #'
 #' @export
 mem_plot_folio <- function
 (mem,
+ do_which=NULL,
  p_cutoff=NULL,
- main="",
  p_floor=1e-6,
+ main="",
  use_raster=TRUE,
  min_gene_ct=2,
  min_set_ct=2,
@@ -873,12 +906,12 @@ mem_plot_folio <- function
  edge_color=NULL,
  cex.main=2,
  cex.sub=1.5,
- do_which=NULL,
  max_labels=4,
  max_nchar_labels=25,
  include_cluster_title=TRUE,
  repulse=4,
  use_shadowText=FALSE,
+ color_by_column=FALSE,
  verbose=TRUE,
  ...)
 {
@@ -910,12 +943,15 @@ mem_plot_folio <- function
       mem_hm <- mem_enrichment_heatmap(mem,
          p_cutoff=p_cutoff,
          p_floor=p_floor,
+         color_by_column=color_by_column,
          ...);
-      if (length(main) > 0 && nchar(main) > 0) {
-         grid_with_title(mem_hm,
-            title=main);
-      } else {
-         draw(mem_hm);
+      if (!color_by_column) {
+         if (length(main) > 0 && nchar(main) > 0) {
+            grid_with_title(mem_hm,
+               title=main);
+         } else {
+            draw(mem_hm);
+         }
       }
       ret_vals$enrichment_hm <- mem_hm;
    }
