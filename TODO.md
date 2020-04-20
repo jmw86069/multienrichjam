@@ -3,7 +3,7 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
-## Improve reorderIgraphNotes()
+## Improve reorderIgraphNotes() -- DONE needs more testing, verification
 
 * `reorderIgraphNodes()` when it encounters attributes with multiple
 colors per node, such as `"pie.colors"` and `"coloredrect.colors"`,

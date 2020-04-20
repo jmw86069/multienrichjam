@@ -287,3 +287,137 @@ list2concordance <- function
    }
    return(concordM);
 }
+
+#' convert incidence matrix to list
+#'
+#' convert incidence matrix to list
+#'
+#' This function converts an incidence `matrix`, or equivalent
+#' `data.frame`, to a list. The `matrix` should contain either
+#' numeric values such as `c(0, 1)`, or logical values such
+#' as `c(TRUE,FALSE)`, otherwise values are considered either
+#' zero == `FALSE`, or non-zero == `TRUE`.
+#'
+#' The resulting list will be named by `colnames(x)` of the input,
+#' and will contain members named by `rownames(x)` which are
+#' either non-zero, or contain `TRUE`.
+#'
+#' Values of `NA` are converted to zero `0` and therefore ignored.
+#'
+#' This function uses the `transactions` class from the `arules`
+#' R package, which in our testing is substantially faster than
+#' similar techniques from a variety of other R packages.
+#'
+#' @family jam list functions
+#'
+#' @return `list` of `character vectors`, where list names
+#'    are defined by `colnames(x)`, and vectors contain values
+#'    from `rownames(x)`.
+#'
+#' @examples
+#' im <- matrix(c(0,1,-1,1,1,NA,-1,0,1),
+#'    ncol=3,
+#'    nrow=3,
+#'    dimnames=list(letters[1:3], LETTERS[1:3]))
+#' print(im);
+#' # matrix input
+#' im2list(im);
+#'
+#' # data.frame
+#' imdf <- data.frame(im);
+#' print(imdf);
+#' im2list(im);
+#'
+#' # logical input
+#' imtf <- (!im == 0);
+#' print(imtf);
+#' im2list(imtf);
+#'
+#' @export
+im2list <- function
+(x,
+ verbose=FALSE,
+ ...)
+{
+   ## The reciprocal of list2im, it takes an incidence matrix,
+   ## and returns a list, named by colnames(x), of rownames(x)
+   ## where the value is not zero
+   if (!suppressWarnings(suppressPackageStartupMessages(require(arules)))) {
+      stop("The arules package is required for im2list().");
+   }
+   if (!is.matrix(x)) {
+      xRownames <- rownames(x);
+      xColnames <- colnames(x);
+      x <- tryCatch({
+         as.matrix(x);
+      }, error=function(e){
+         as(x, "matrix");
+      });
+      rownames(x) <- xRownames;
+      colnames(x) <- xColnames;
+   }
+   if (any(is.na(x))) {
+      x <- rmNA(naValue=0, x);
+   }
+   as(as(t(x), "transactions"), "list");
+}
+
+#' convert signed incidence matrix to list
+#'
+#' convert signed incidence matrix to list
+#'
+#' This function converts an signed incidence `matrix`
+#' that contains positive and negative values, or equivalent
+#' `data.frame`, to a list of named vectors containing values
+#' `c(-1, 1)` to indicate signed direction.
+#' The input `matrix` should contain numeric values where
+#' positive and negative values indicate directionality.
+#' When the input contains only logical values `c(TRUE,FALSE)`
+#' the direction is assumed to be `+1` positive.
+#'
+#' Values of `NA` are converted to zero `0` and therefore ignored.
+#'
+#' This function uses the `transactions` class from the `arules`
+#' R package, which in our testing is substantially faster than
+#' similar techniques from a variety of other R packages.
+#'
+#' @family jam list functions
+#'
+#' @return `list` of named numeric vectors, where list names
+#'    are defined by `colnames(x)`, and vector names are derived
+#'    from `rownames(x)`. Values in each vector indicate the
+#'    signed direction, `c(-1,1)`.
+#'
+#' @examples
+#' im <- matrix(c(0,1,-1,1,1,NA,-1,0,1),
+#'    ncol=3,
+#'    nrow=3,
+#'    dimnames=list(letters[1:3], LETTERS[1:3]))
+#' print(im);
+#' # matrix input
+#' im2list(im);
+#' imSigned2list(im);
+#' imSigned2list(im != 0);
+#'
+#' @export
+imSigned2list <- function
+(x,
+ verbose=FALSE,
+ ...)
+   {
+   ## The reciprocal of list2im, it takes an incidence matrix,
+   ## and returns a list, named by colnames(x), of rownames(x)
+   ## where the value is not zero
+   if (!suppressWarnings(suppressPackageStartupMessages(require(arules)))) {
+      stop("The arules package is required for imSigned2list().");
+   }
+   if (any(is.na(x))) {
+      x <- rmNA(naValue=0, x);
+   }
+   xUp <- as(as(t(x > 0), "transactions"), "list");
+   xDn <- as(as(t(x < 0), "transactions"), "list");
+   lapply(nameVector(colnames(x)), function(i){
+      c(nameVector(rep(1, length.out=length(xUp[[i]])), xUp[[i]]),
+         nameVector(rep(-1, length.out=length(xDn[[i]])), xDn[[i]]));
+   });
+}

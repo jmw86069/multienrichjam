@@ -58,6 +58,8 @@ list2im(L1, keepCounts=TRUE);
 \seealso{
 Other jam list functions: 
 \code{\link{colors_from_list}()},
+\code{\link{im2list}()},
+\code{\link{imSigned2list}()},
 \code{\link{list2concordance}()},
 \code{\link{list2imSigned}()}
 }

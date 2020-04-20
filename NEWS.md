@@ -1,3 +1,15 @@
+# multienrichjam version 0.0.28.900
+
+## new functions
+
+`im2list()` and `imSigned2list()` are the reciprocal functions
+to `list2im()` and `list2imSigned()`. The new functions convert
+incidence matrix to list, or signed incidence matrix to list,
+respectively. They're notable because they're blazing fast
+in our testing, thanks to efficient methods from the `arules`
+R package for interconverting list to compressed logical
+matrix, and vice versa.
+
 # multienrichjam version 0.0.27.900
 
 Added a new TODO.md file to track some new feature ideas.

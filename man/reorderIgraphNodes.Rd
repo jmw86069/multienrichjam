@@ -91,9 +91,9 @@ if (require(igraph)) {
       rep(1, i)
    });
    g2 <- relayout_with_qfr(g2, repulse=7, do_reorder=FALSE);
-   jam_igraph(g2, main="Unordered");
-   jam_igraph(reorderIgraphNodes(g2), main="reorderIgraphNodes()");
-   jam_igraph(reorderIgraphNodes(g2, nodeSortBy=c("-y","x")), main="reorderIgraphNodes()");
+   jam_igraph(g2, main="Unordered", vertex.label="");
+   jam_igraph(reorderIgraphNodes(g2), main="reorderIgraphNodes()", vertex.label="");
+   jam_igraph(reorderIgraphNodes(g2, nodeSortBy=c("-y","x")), main="reorderIgraphNodes()", vertex.label="");
 }
 
 }
