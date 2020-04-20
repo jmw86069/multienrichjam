@@ -16,6 +16,7 @@ matrix, and vice versa.
 as the ceiling for the row hierarchical clustering, previously
 it used `ceiling=3` which caused the dendrogram to have `height=0`
 when all enrichment results were lower than 0.001.
+* `mem_plot_folio()` now correctly honors `p_floor`.
 
 # multienrichjam version 0.0.27.900
 

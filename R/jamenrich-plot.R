@@ -283,9 +283,14 @@ mem_enrichment_heatmap <- function
    #
    col_logp <- circlize::colorRamp2(
       breaks=c(-log10(p_cutoff+1e-5),
-         seq(from=-log10(p_cutoff), to=-log10(p_floor), length.out=25)),
+         seq(from=-log10(p_cutoff),
+            to=-log10(p_floor),
+            length.out=25)),
       colors=c("white",
-         jamba::getColorRamp("Reds", lens=4, n=25, trimRamp=c(2,0)))
+         jamba::getColorRamp("Reds",
+            lens=4,
+            n=25,
+            trimRamp=c(2,0)))
    )
    if (length(sets) > 0) {
       mem$enrichIM <- mem$enrichIM[intersect(rownames(mem$enrichIM), sets),,drop=FALSE];
@@ -904,6 +909,7 @@ mem_plot_folio <- function
       }
       mem_hm <- mem_enrichment_heatmap(mem,
          p_cutoff=p_cutoff,
+         p_floor=p_floor,
          ...);
       if (length(main) > 0 && nchar(main) > 0) {
          grid_with_title(mem_hm,
