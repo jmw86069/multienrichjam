@@ -1,3 +1,21 @@
+# multienrichjam version 0.0.29.900
+
+## changes to existing functions
+
+* `mem_plot_folio()` new argument `byCols` which is passed along
+to `rank_mem_clusters()`, and is used to sort the pathway names
+within each Cnet cluster. The default uses `"composite_rank"`,
+which sorts by the `floor(-log10(pvalue))` then by the highest
+number of genes per pathway. The `floor()` function effectively
+sorts by the order of magnitude of the enrichment P-value,
+dropping the details. The obvious alternative is `"minp_rank"`
+which uses the `-log10(pvalue)` directly, which therefore does
+not effectively sort by gene count since enrichment P-values
+rarely tie. In our experience, between two pathways with
+reasonably similar enrichment P-value (within one order of magnitude
+such as 2.4e-5 and 3.5e-5) the pathway with more genes was
+usually the more interesting/relevant biological pathway.
+
 # multienrichjam version 0.0.28.900
 
 ## new functions

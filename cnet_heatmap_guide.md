@@ -10,6 +10,16 @@
 
 2. Run mem_plot_folio()
 
+```{r}
+cairo_pdf(file="folio_mem_DM_AffySoma_top20_23apr2020.pdf",
+   height=12, width=12, pointsize=11, onefile=TRUE);
+mem_dm_plots <- mem_plot_folio(mem_dm_affysoma,
+   do_which=2:5,
+   pathway_column_split=4,
+   main="Dermatomyositis Affy-SomaLogic");
+dev.off();
+```
+
    * Make sure `do_which` includes `c(2,4)`, which produces cnet_collapsed_set
    * Review the gene-protein heatmap to ensure the clusters are
    representative of the underlying content of the data. Adjust clustering
@@ -35,6 +45,24 @@
    they need to be defined manually in the Cnet-Heatmap.
 
 3. Extract `cnet_collapsed_set` as the Cnet plot to use for the Cnet-Heatmap.
+
+```{r}
+ht_opt("legend_border"="black");
+cnet_collapsed_set <- mem_dm_plots$cnet_collapsed_set;
+E(cnet_collapsed_set)$color <- "#BBBBBB99";
+V(cnet_collapsed_set)$frame.color <- "#77777799";
+isset <- V(cnet_collapsed_set)$nodeType %in% "Set";
+V(cnet_collapsed_set)$label <- ifelse(isset,
+   V(cnet_collapsed_set)$name,
+   V(cnet_collapsed_set)$label);
+V(cnet_collapsed_set)$label.family <- "Arial";
+V(cnet_collapsed_set)$label.color <- ifelse(isset,
+   "grey85",
+   "grey10");
+## Manually add distance for label from node
+V(cnet_collapsed_set)$label.dist <- 0.8;
+V(cnet_collapsed_set)$label.dist[igrep("^PR", V(cnet_collapsed_set)$name)] <- 2;
+```
 
    * Optionally adjust the network layout using some helpful functions:
    
@@ -83,6 +111,35 @@ present in the gene-pathway data above.
 
 5. Run `plot_cnet_heatmap()`.
 
+```{r}
+{cairo_pdf(file="DM_GeneProtein_MultiEnrich_Heatmap_23apr2020.pdf",
+   height=9, width=10, pointsize=12);
+plot_cnet_heatmaps(mem_folio=cnet_collapsed_set,
+   iexprs_ctr=all_pergene_exprs_ctr,
+   col=circlize::colorRamp2(breaks=seq(from=-2, to=2, length.out=15),
+      colors=getColorRamp("RdBu_r", n=15, lens=2)),
+   isamples=all_samples_dm,
+   column_title_gp=gpar(fontsize=10),
+   igroups=gsub(" ", "\n", all_cohort_type[all_samples_dm]),
+   allowed_degree=c(1,2),
+   use_shadowText=TRUE,
+   layout_widths=c(1, 4, 1),
+   cnet_mar=c(0.5, 7, 0, 6.3),
+   use_gridBase=FALSE,
+   border=FALSE,
+   title_prefix=NULL,
+   label_factor_l=list(nodeType=c(Gene=0.63, Set=1.8)),
+   label_dist_factor_l=list(nodeType=c(Gene=1, Set=0)),
+   set_names=c("C","D","A","B"),
+   set_panel_row=list(c(1:2), c(1:4), c(5:8), c(6:8)),
+   vjust=c(0.9, 0.9, -1, 0),
+   strwrap_width=c(36, 64, 46, 46),
+   fontsize_set_names=9,
+   colorV=c(`DM\nGenes`="firebrick", `DM\nProteins`="gold"),
+   ipa_xref_df=ipa_xref_df)
+dev.off();}
+```
+
    * There are numerous arguments to this function, intended to
    help configure the many details of the figure.
    * `iexprs_ctr` - the expression data matrix, intended to show centered
@@ -115,3 +172,24 @@ present in the gene-pathway data above.
    genes.
    * `use_shadowText=TRUE` uses a slight outline effect around node labels,
    which makes it easier to read over light/dark background colors.
+
+6. Save the same data to Excel:
+
+
+```{r}
+dmlupus_df <- find_shared_pathways(ipa_pathways_all,
+   filter_dysreg=FALSE,
+   hm=mem_dmlupus_plots$gp_hm,
+   prefix1="Affy_DM",
+   prefix2="Affy_Lupus");
+jamba::writeOpenxlsx("DM_Lupus_MultiEnrich_12mar2020.xlsx",
+   sheetName="DM_Lupus",
+   x=dmlupus_df,
+   colorSub=c(Affy_DM="tomato3", Soma_DM="gold", Affy_Lupus="blue3", Soma_Lupus="cyan3", cluster_colors),
+   highlightColumns=igrep("Cluster|Name", colnames(dmlupus_df)),
+   pvalueColumns=igrep("p.value", colnames(dmlupus_df)));
+set_xlsx_colwidths("DM_Lupus_MultiEnrich_12mar2020.xlsx",
+   widths=c(11,8,11,11, 30, 11,11,11,11,11,30,15,40))
+set_xlsx_rowheights("DM_Lupus_MultiEnrich_12mar2020.xlsx",
+   heights=rep(56, nrow(dmlupus_df)))
+```

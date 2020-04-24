@@ -885,6 +885,9 @@ jam_igraph <- function
 #' @param color_by_column `logical` indicating whether to colorize
 #'    the enrichment heatmap columns using `colorV` in the input `mem`.
 #'    This argument is only relevant when `do_which` include `1`.
+#' @param byCols `character` vector describing how to sort the
+#'    pathways within Cnet clusters. This argument is passed
+#'    to `rank_mem_clusters()`.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
 #'
@@ -912,6 +915,7 @@ mem_plot_folio <- function
  repulse=4,
  use_shadowText=FALSE,
  color_by_column=FALSE,
+ byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
  verbose=TRUE,
  ...)
 {
@@ -1021,6 +1025,7 @@ mem_plot_folio <- function
             clusters=clusters_mem,
             verbose=verbose>1,
             max_labels=max_labels,
+            byCols=byCols,
             max_nchar_labels=max_nchar_labels,
             include_cluster_title=include_cluster_title,
             return_type="cnet");

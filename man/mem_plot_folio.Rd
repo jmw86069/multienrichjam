@@ -27,6 +27,7 @@ mem_plot_folio(
   repulse = 4,
   use_shadowText = FALSE,
   color_by_column = FALSE,
+  byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
   verbose = TRUE,
   ...
 )
@@ -75,6 +76,10 @@ size the default title and sub-title in Cnet plots.}
 \item{color_by_column}{\code{logical} indicating whether to colorize
 the enrichment heatmap columns using \code{colorV} in the input \code{mem}.
 This argument is only relevant when \code{do_which} include \code{1}.}
+
+\item{byCols}{\code{character} vector describing how to sort the
+pathways within Cnet clusters. This argument is passed
+to \code{rank_mem_clusters()}.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
