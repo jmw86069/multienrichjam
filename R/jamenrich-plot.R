@@ -109,11 +109,13 @@ mem_gene_path_heatmap <- function
       if (any(memIMsetct_each < min_set_ct_each)) {
          if (verbose) {
             jamba::printDebug("mem_gene_path_heatmap(): ",
-               "Filtered sets by min_set_ct_each:",
+               "Filtered ",
+               sum(memIMsetct_each < min_set_ct_each),
+               " sets by min_set_ct_each:",
                min_set_ct_each);
          }
          sets <- colnames(memIM)[memIMsetct_each >= min_set_ct_each];
-         memIM <- memIM[genes,sets,drop=FALSE];
+         memIM <- memIM[,sets,drop=FALSE];
       }
    }
    memIMsetct <- colSums(memIM > 0);
@@ -124,7 +126,7 @@ mem_gene_path_heatmap <- function
             min_set_ct);
       }
       sets <- colnames(memIM)[memIMsetct >= min_set_ct];
-      memIM <- memIM[genes,sets,drop=FALSE];
+      memIM <- memIM[,sets,drop=FALSE];
    }
    memIMgenect <- rowSums(memIM > 0);
    if (any(memIMgenect < min_gene_ct)) {
@@ -134,7 +136,7 @@ mem_gene_path_heatmap <- function
             min_gene_ct);
       }
       genes <- rownames(memIM)[memIMgenect >= min_gene_ct];
-      memIM <- memIM[genes,sets,drop=FALSE];
+      memIM <- memIM[genes,,drop=FALSE];
    }
 
    ## Additional step to ensure columns and rows are not empty
