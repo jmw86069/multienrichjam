@@ -17,6 +17,18 @@
 #' columns and rows. These guesses can be controlled with argument
 #' `column_split` and `row_split`, respectively.
 #'
+#' When pathways are filtered by `min_gene_ct`, `min_set_ct`,
+#' and `min_set_ct_each`, the order of operations is as follows:
+#'
+#' 1. `min_set_ct_each`, `min_set_ct` - these filters are applied
+#' before filtering genes, in order to ensure all genes are present
+#' from the start.
+#' 2. `min_gene_ct` - genes are filtered after pathway filtering,
+#' in order to remove pathways which were not deemed "significant"
+#' based upon the required number of genes. Only after those pathways
+#' are removed can the number of occurrences of each gene be judged
+#' appropriately.
+#'
 #' @family jam plot functions
 #'
 #' @param mem `list` object created by `multiEnrichMap()`. Specifically
@@ -30,6 +42,8 @@
 #'    across the pathways, all other genes are excluded.
 #' @param min_set_ct minimum number of genes required for each set,
 #'    all other sets are excluded.
+#' @param min_set_ct_each minimum number of genes required for each set,
+#'    required for at least one enrichment test.
 #' @param column_fontsize,row_fontsize arguments passed to
 #'    `ComplexHeatmap::Heatmap()` to size column and row labels.
 #' @param row_method,column_method character string of the distance method
@@ -52,8 +66,9 @@ mem_gene_path_heatmap <- function
 (mem,
  genes=NULL,
  sets=NULL,
- min_gene_ct=2,
- min_set_ct=3,
+ min_gene_ct=1,
+ min_set_ct=1,
+ min_set_ct_each=4,
  column_fontsize=NULL,
  row_fontsize=NULL,
  row_method="binary",
@@ -85,11 +100,43 @@ mem_gene_path_heatmap <- function
    if (any(dim(memIM) == 0)) {
       stop("No remaining data after filtering.");
    }
-   memIMgenect <- rowSums(memIM > 0);
-   genes <- rownames(memIM)[memIMgenect >= min_gene_ct];
+   ## apply min_set_ct to each enrichment test
+   if (length(min_set_ct_each) > 0) {
+      memIMsetct_each <- Reduce("pmax",
+         lapply(colnames(mem$geneIM), function(icol){
+            colSums(mem$geneIM[rownames(memIM),icol] * memIM);
+         }));
+      if (any(memIMsetct_each < min_set_ct_each)) {
+         if (verbose) {
+            jamba::printDebug("mem_gene_path_heatmap(): ",
+               "Filtered sets by min_set_ct_each:",
+               min_set_ct_each);
+         }
+         sets <- colnames(memIM)[memIMsetct_each >= min_set_ct_each];
+         memIM <- memIM[genes,sets,drop=FALSE];
+      }
+   }
    memIMsetct <- colSums(memIM > 0);
-   sets <- colnames(memIM)[memIMsetct >= min_set_ct];
-   memIM <- memIM[genes,sets,drop=FALSE];
+   if (any(memIMsetct < min_set_ct)) {
+      if (verbose) {
+         jamba::printDebug("mem_gene_path_heatmap(): ",
+            "Filtered sets by min_set_ct:",
+            min_set_ct);
+      }
+      sets <- colnames(memIM)[memIMsetct >= min_set_ct];
+      memIM <- memIM[genes,sets,drop=FALSE];
+   }
+   memIMgenect <- rowSums(memIM > 0);
+   if (any(memIMgenect < min_gene_ct)) {
+      if (verbose) {
+         jamba::printDebug("mem_gene_path_heatmap(): ",
+            "Filtered sets by min_gene_ct:",
+            min_gene_ct);
+      }
+      genes <- rownames(memIM)[memIMgenect >= min_gene_ct];
+      memIM <- memIM[genes,sets,drop=FALSE];
+   }
+
    ## Additional step to ensure columns and rows are not empty
    memIM <- memIM[,colSums(memIM > 0) > 0,drop=FALSE];
    memIM <- memIM[rowSums(memIM > 0) > 0,,drop=FALSE];

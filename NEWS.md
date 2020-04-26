@@ -1,3 +1,17 @@
+# multienrichjam version 0.0.30.900
+
+## changes to existing functions
+
+* `mem_gene_pathway_heatmap()` was altered to allow filtering
+pathways for a minimum number of genes represented by at least
+one enrichment result. For example, a pathway may be required to
+have at least 4 genes, despite having a statistically significant
+enrichment P-value. The new argument `min_set_ct_each` tests
+each enrichment to see if any one has enough genes per pathway.
+There are two main effects of this filter: The gene-pathway
+heatmap will display fewer pathways; and any resulting
+Cnet plots will have the same pathways removed.
+
 # multienrichjam version 0.0.29.900
 
 ## changes to existing functions

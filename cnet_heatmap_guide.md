@@ -49,6 +49,11 @@ dev.off();
 ```{r}
 ht_opt("legend_border"="black");
 cnet_collapsed_set <- mem_dm_plots$cnet_collapsed_set;
+
+# Optionally rotate igraph layout coordinates to help position labels
+#cnet_collapsed_set <- rotate_igraph_layout(cnet_collapsed_set, degree=180);
+#cnet_collapsed_set <- spread_igraph_labels(cnet_collapsed_set);
+
 E(cnet_collapsed_set)$color <- "#BBBBBB99";
 V(cnet_collapsed_set)$frame.color <- "#77777799";
 isset <- V(cnet_collapsed_set)$nodeType %in% "Set";
@@ -177,19 +182,14 @@ dev.off();}
 
 
 ```{r}
-dmlupus_df <- find_shared_pathways(ipa_pathways_all,
-   filter_dysreg=FALSE,
-   hm=mem_dmlupus_plots$gp_hm,
-   prefix1="Affy_DM",
-   prefix2="Affy_Lupus");
-jamba::writeOpenxlsx("DM_Lupus_MultiEnrich_12mar2020.xlsx",
-   sheetName="DM_Lupus",
-   x=dmlupus_df,
-   colorSub=c(Affy_DM="tomato3", Soma_DM="gold", Affy_Lupus="blue3", Soma_Lupus="cyan3", cluster_colors),
-   highlightColumns=igrep("Cluster|Name", colnames(dmlupus_df)),
-   pvalueColumns=igrep("p.value", colnames(dmlupus_df)));
-set_xlsx_colwidths("DM_Lupus_MultiEnrich_12mar2020.xlsx",
-   widths=c(11,8,11,11, 30, 11,11,11,11,11,30,15,40))
-set_xlsx_rowheights("DM_Lupus_MultiEnrich_12mar2020.xlsx",
-   heights=rep(56, nrow(dmlupus_df)))
+## Convert to data.frame format
+dlgp_df_cnet <- get_shared_pathways(ipa_pathways_all,
+   groups=mem_dmlupus_affysoma$enrichLabels,
+   cnet=mem_dmlupus_affysoma_plots6_v2$cnet_collapsed_set,
+   subset_cnet=TRUE);
+## save to xlsx
+save_shared_pathways(file="DM_Lupus_GeneProtein_MultiEnrich_Heatmap_top4_20apr2020.xlsx",
+   df=dlgp_df_cnet,
+   sheetName="multienrich_DM_Lupus_GP",
+   colorSub=colorSub);
 ```

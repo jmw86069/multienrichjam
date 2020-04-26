@@ -8,8 +8,9 @@ mem_gene_path_heatmap(
   mem,
   genes = NULL,
   sets = NULL,
-  min_gene_ct = 2,
-  min_set_ct = 3,
+  min_gene_ct = 1,
+  min_set_ct = 1,
+  min_set_ct_each = 4,
   column_fontsize = NULL,
   row_fontsize = NULL,
   row_method = "binary",
@@ -44,6 +45,9 @@ across the pathways, all other genes are excluded.}
 
 \item{min_set_ct}{minimum number of genes required for each set,
 all other sets are excluded.}
+
+\item{min_set_ct_each}{minimum number of genes required for each set,
+required for at least one enrichment test.}
 
 \item{column_fontsize, row_fontsize}{arguments passed to
 \code{ComplexHeatmap::Heatmap()} to size column and row labels.}
@@ -85,6 +89,19 @@ It will try to estimate a reasonable number of column and row
 splits in the dendrogram, based solely upon the number of
 columns and rows. These guesses can be controlled with argument
 \code{column_split} and \code{row_split}, respectively.
+
+When pathways are filtered by \code{min_gene_ct}, \code{min_set_ct},
+and \code{min_set_ct_each}, the order of operations is as follows:
+\enumerate{
+\item \code{min_set_ct_each}, \code{min_set_ct} - these filters are applied
+before filtering genes, in order to ensure all genes are present
+from the start.
+\item \code{min_gene_ct} - genes are filtered after pathway filtering,
+in order to remove pathways which were not deemed "significant"
+based upon the required number of genes. Only after those pathways
+are removed can the number of occurrences of each gene be judged
+appropriately.
+}
 }
 \seealso{
 Other jam plot functions: 
