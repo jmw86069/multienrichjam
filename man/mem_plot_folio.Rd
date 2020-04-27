@@ -13,6 +13,7 @@ mem_plot_folio(
   use_raster = TRUE,
   min_gene_ct = 2,
   min_set_ct = 2,
+  min_set_ct_each = 4,
   column_method = "euclidean",
   row_method = "euclidean",
   exemplar_range = c(1, 2, 3),
@@ -58,6 +59,9 @@ passed to \code{ComplexHeatmap::Heatmap()}.}
 \code{mem_gene_pathway_heatmap()}. The \code{min_gene_ct} requires each set
 to contain \code{min_gene_ct} genes, and \code{min_set_ct} requires each gene
 to be present in at least \code{min_set_ct} sets.}
+
+\item{min_set_ct_each}{minimum number of genes required for each set,
+required for at least one enrichment test.}
 
 \item{column_method, row_method}{arguments passed to
 \code{ComplexHeatmap::Heatmap()} which indicate the distance method used

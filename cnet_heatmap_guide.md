@@ -44,7 +44,9 @@ dev.off();
    * Note the location of Cnet clusters, `c("A", "B", "C", "D")` because
    they need to be defined manually in the Cnet-Heatmap.
 
-3. Extract `cnet_collapsed_set` as the Cnet plot to use for the Cnet-Heatmap.
+3. **(Omit this step -- now these steps are performed inside `plot_cnet_heatmaps()`)**
+
+Extract `cnet_collapsed_set` as the Cnet plot to use for the Cnet-Heatmap.
 
 ```{r}
 ht_opt("legend_border"="black");
@@ -117,31 +119,24 @@ present in the gene-pathway data above.
 5. Run `plot_cnet_heatmap()`.
 
 ```{r}
-{cairo_pdf(file="DM_GeneProtein_MultiEnrich_Heatmap_23apr2020.pdf",
+{cairo_pdf(file="DM_Lupus_GeneProtein_MultiEnrich_Heatmap_27apr2020.pdf",
    height=9, width=10, pointsize=12);
-plot_cnet_heatmaps(mem_folio=cnet_collapsed_set,
+all_samples_dmsle2
+igroups_dlgp <- gsubOrdered("[a-z_ ]+", "", all_cohort_type[all_samples_dmsle2])
+colorV_dlgp <- nameVector(mem_dmlupus_affysoma$colorV,
+   levels(factor(igroups_dlgp[all_samples_dmsle2])));
+pch_dlgp2 <- plot_cnet_heatmaps(mem_folio=mem_dmlupus_affysoma_plots6,
    iexprs_ctr=all_pergene_exprs_ctr,
-   col=circlize::colorRamp2(breaks=seq(from=-2, to=2, length.out=15),
-      colors=getColorRamp("RdBu_r", n=15, lens=2)),
-   isamples=all_samples_dm,
-   column_title_gp=gpar(fontsize=10),
-   igroups=gsub(" ", "\n", all_cohort_type[all_samples_dm]),
-   allowed_degree=c(1,2),
-   use_shadowText=TRUE,
-   layout_widths=c(1, 4, 1),
-   cnet_mar=c(0.5, 7, 0, 6.3),
-   use_gridBase=FALSE,
-   border=FALSE,
-   title_prefix=NULL,
-   label_factor_l=list(nodeType=c(Gene=0.63, Set=1.8)),
-   label_dist_factor_l=list(nodeType=c(Gene=1, Set=0)),
-   set_names=c("C","D","A","B"),
-   set_panel_row=list(c(1:2), c(1:4), c(5:8), c(6:8)),
-   vjust=c(0.9, 0.9, -1, 0),
-   strwrap_width=c(36, 64, 46, 46),
-   fontsize_set_names=9,
-   colorV=c(`DM\nGenes`="firebrick", `DM\nProteins`="gold"),
-   ipa_xref_df=ipa_xref_df)
+   isamples=all_samples_dmsle2,
+   rotate_degrees=15,
+   layout_reflect="y",
+   igroups=igroups_dlgp,
+   set_names=c("A","B","D","C"),
+   set_panel_row=list(c(1:5), c(1:4), c(6:8), c(6:8)),
+   cnet_mar=c(0.5, 6.2, 0.7, 6),
+   vjust=c(0.9, 0.9, -0.5, -0.5),
+   strwrap_width=c(60, 33, 36, 36),
+   colorV=colorV_dlgp)
 dev.off();}
 ```
 

@@ -921,6 +921,8 @@ jam_igraph <- function
 #'    `mem_gene_pathway_heatmap()`. The `min_gene_ct` requires each set
 #'    to contain `min_gene_ct` genes, and `min_set_ct` requires each gene
 #'    to be present in at least `min_set_ct` sets.
+#' @param min_set_ct_each minimum number of genes required for each set,
+#'    required for at least one enrichment test.
 #' @param column_method,row_method arguments passed to
 #'    `ComplexHeatmap::Heatmap()` which indicate the distance method used
 #'    to cluster columns and rows, respectively.
@@ -939,6 +941,9 @@ jam_igraph <- function
 #'    to `rank_mem_clusters()`.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
+#'    Notably, `sets` is passed to `mem_gene_pathway_heatmap()` which
+#'    allows one to define a specific subset of sets to use in the
+#'    gene-pathway heatmap.
 #'
 #' @export
 mem_plot_folio <- function
@@ -950,6 +955,7 @@ mem_plot_folio <- function
  use_raster=TRUE,
  min_gene_ct=2,
  min_set_ct=2,
+ min_set_ct_each=4,
  column_method="euclidean",
  row_method="euclidean",
  exemplar_range=c(1, 2, 3),
@@ -1027,6 +1033,7 @@ mem_plot_folio <- function
       use_raster=use_raster,
       min_gene_ct=min_gene_ct,
       min_set_ct=min_set_ct,
+      min_set_ct_each=min_set_ct_each,
       ...);
    ## Obtain heatmap pathway clusters
    clusters_mem <- heatmap_column_order(gp_hm);
