@@ -1,3 +1,15 @@
+# multienrichjam version 0.0.31.900
+
+## changes to existing functions
+
+* `mem_gene_pathway_heatmap()` new argument `enrich_gene_weight`
+used to adjust the relative influence of the enrichment `-log10 P-value`
+and the gene incidence matrix on the column clustering. The
+effect is to adjust how much the enrichment P-values, or the
+gene content, affects the clusters. In principle both should
+have similar effects, but sometimes it helps to favor gene
+incidence or pathway enrichment.
+
 # multienrichjam version 0.0.30.900
 
 ## changes to existing functions

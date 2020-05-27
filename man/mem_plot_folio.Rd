@@ -87,7 +87,10 @@ to \code{rank_mem_clusters()}.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
-\item{...}{additional arguments are passed to downstream functions.}
+\item{...}{additional arguments are passed to downstream functions.
+Notably, \code{sets} is passed to \code{mem_gene_pathway_heatmap()} which
+allows one to define a specific subset of sets to use in the
+gene-pathway heatmap.}
 }
 \value{
 \code{list} is returned via invisible, which contains each

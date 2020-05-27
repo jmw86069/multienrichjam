@@ -49,6 +49,14 @@
 #' @param row_method,column_method character string of the distance method
 #'    to use for row and column clustering. The clustering is performed
 #'    by `amap::hcluster()`.
+#' @param enrich_gene_weight `numeric` value between 0 and 1 indicating
+#'    the relative weight of enrichment `-log10 P-value` and gene
+#'    incidence matrix when combined prior to clustering the columns
+#'    in the resulting heatmap. When `enrich_gene_weight=0` then
+#'    the data is scaled using zero weight for enrichment and therefore
+#'    only uses the gene incidence matrix; when `enrich_gene_weight=1`
+#'    the gene incidence matrix is scaled using zero weight and
+#'    therefore clustering only uses the `-log10 P-value` values.
 #' @param name character value passed to `ComplexHeatmap::Heatmap()`,
 #'    used as a label above the heatmap color legend.
 #' @param p_cutoff numeric value of the enrichment P-value cutoff,
@@ -73,6 +81,7 @@ mem_gene_path_heatmap <- function
  row_fontsize=NULL,
  row_method="binary",
  column_method="binary",
+ enrich_gene_weight=0.3,
  cluster_columns=NULL,
  cluster_rows=NULL,
  name="gene_ct",
@@ -213,16 +222,35 @@ mem_gene_path_heatmap <- function
    });
    ## Cluster columns and rows
    if (length(cluster_columns) == 0) {
+      ## Assemble the P-value matrix with gene incidence matrix
+      ## and cluster altogether, which has the benefit/goal of
+      ## accentuating similar enrichment profiles which also have
+      ## similar gene content.
+      if (!length(enrich_gene_weight) == 1 || any(enrich_gene_weight > 1)) {
+         enrich_gene_weight <- 0.2;
+      }
+      enrich_weight <- round(enrich_gene_weight * 10);
+      gene_weight <- 10 - enrich_weight;
+      column_matrix <- cbind(
+         jamba::noiseFloor(
+            -log10(mem$enrichIM[sets,,drop=FALSE]),
+            minimum=-log10(p_cutoff+1e-5),
+            newValue=0,
+            ceiling=10) * enrich_weight,
+         t(mem$memIM[genes,sets,drop=FALSE]) * gene_weight
+      );
+      ## 0.0.31.900 use column_matrix with enrich_gene_weight adjustment
       cluster_columns <- amap::hcluster(
          link="ward",
-         cbind(
-            jamba::noiseFloor(
-               -log10(mem$enrichIM[sets,,drop=FALSE]),
-               minimum=-log10(p_cutoff+1e-5),
-               newValue=0,
-               ceiling=3),
-            t(mem$memIM[genes,sets,drop=FALSE])),
+         column_matrix,
          method=column_method);
+         #cbind(
+         #   jamba::noiseFloor(
+         #      -log10(mem$enrichIM[sets,,drop=FALSE]),
+         #      minimum=-log10(p_cutoff+1e-5),
+         #      newValue=0,
+         #      ceiling=3),
+         #   t(mem$memIM[genes,sets,drop=FALSE])),
    }
    if (length(cluster_rows) == 0) {
       cluster_rows <- amap::hcluster(
