@@ -1,3 +1,18 @@
+# multienrichjam version 0.0.32.900
+
+## changes to existing functions
+
+* `mem_gene_pathway_heatmap()` cleaned up the heatmap overall:
+
+   * left and top annotations have zero gap between columns and rows
+   * left and top annotation legends have discrete color bars; for
+   left it is always `c(0,1)`; for the top it uses -log10 integer steps.
+   * top annotation legend appends `"-log10P"` to the label, to indicate
+   that the color values are based upon `log10()` transform of the
+   enrichment P-value.
+   * the color legend has discrete color bar steps, indicating the
+   number of enrichments where each gene is involved
+
 # multienrichjam version 0.0.31.900
 
 ## changes to existing functions

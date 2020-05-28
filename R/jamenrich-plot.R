@@ -199,12 +199,14 @@ mem_gene_path_heatmap <- function
    }
 
    ## Apply colors to outside annotations
+   ## row annotation colors (genes)
    col_iml1 <- lapply(jamba::nameVectorN(mem$colorV), function(i){
       j <- mem$colorV[[i]];
       circlize::colorRamp2(breaks=c(0,1),
          colors=jamba::fixYellow(Hrange=c(60,100), fixup=TRUE,
             jamba::getColorRamp(j, n=3)[1:2]))
    });
+   ## column annotation colors (enrichments)
    col_iml4 <- lapply(jamba::nameVectorN(mem$colorV), function(i){
       j <- mem$colorV[[i]];
       circlize::colorRamp2(
@@ -270,20 +272,42 @@ mem_gene_path_heatmap <- function
       top_annotation=ComplexHeatmap::HeatmapAnnotation(
          which="column",
          border=TRUE,
-         #gp=grid::gpar(col="black"),
+         #gp=grid::gpar(col="#00000011"),
+         annotation_legend_param=lapply(nameVectorN(col_iml4), function(i){
+            list(color_bar="discrete",
+               #at=c(0, 1),
+               title=paste0(i, "\n-log10P"),
+               border="black")
+         }),
          col=col_iml4,
-         df=-log10(mem$enrichIM[sets,,drop=FALSE])),
-      col=jamba::getColorRamp("Reds", lens=2),
-      left_annotation=ComplexHeatmap::HeatmapAnnotation(which="row",
-         border=TRUE,
+         df=-log10(mem$enrichIM[sets,,drop=FALSE]),
+         gap=grid::unit(0, "mm")
+      ),
+      col=jamba::getColorRamp("Reds",
+         lens=5,
+         trimRamp=c(0,4)),
+      left_annotation=ComplexHeatmap::rowAnnotation(
          col=col_iml1,
-         #gp=grid::gpar(col="black"),
-         df=mem$geneIM[genes,,drop=FALSE]),
+         border=TRUE,
+         annotation_legend_param=lapply(col_iml1, function(i){
+            list(color_bar="discrete",
+               at=c(0, 1),
+               border="black")
+         }),
+         #gp=grid::gpar(col="#00000011"), # per-cell border
+         df=mem$geneIM[genes,,drop=FALSE],
+         gap=grid::unit(0, "mm")
+      ),
       row_names_gp=grid::gpar(fontsize=row_fontsize),
       column_names_gp=grid::gpar(fontsize=column_fontsize),
       column_names_rot=90,
       column_title=column_title,
       row_title=row_title,
+      heatmap_legend_param=list(
+         color_bar="discrete",
+         border="black",
+         at=sort(unique(as.vector(memIM[genes,sets])))
+      ),
       row_title_rot=row_title_rot,
       row_split=row_split,
       column_split=column_split,
