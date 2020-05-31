@@ -2,6 +2,19 @@
 
 ## changes to existing functions
 
+* `collapse_mem_clusters()` was updated with new argument
+`cluster_color_min_fraction` to help filter the enrichment
+colors to include in each resulting cnet cluster. The intent
+is not to represent colors where the number of significant
+pathways is below this threshold. For example, a cluster of
+10 pathways may have only one significant pathway for a
+given enrichment set -- therefore this enrichment color
+would not be included in the cnet cluster colors.
+
+# multienrichjam version 0.0.32.900
+
+## changes to existing functions
+
 * `mem_gene_pathway_heatmap()` cleaned up the heatmap overall:
 
    * left and top annotations have zero gap between columns and rows

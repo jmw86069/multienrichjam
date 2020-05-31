@@ -14,9 +14,29 @@ collapse_mem_clusters(
   max_labels = 4,
   max_nchar_labels = 25,
   include_cluster_title = TRUE,
+  cluster_color_min_fraction = 0.5,
   verbose = FALSE,
   ...
 )
+}
+\arguments{
+\item{cluster_color_min_fraction}{\code{numeric} value between 0 and 1
+used to define the cnet colors for each cluster. The number of
+significant pathways is calculated per cluster for each enrichment
+using \code{mem$enrichIMcolors}, and the fraction of significant
+pathways versus the max number per enrichment is used to filter.
+For example a cluster with 10 pathways, might have 8 significant
+pathways in one enrichment result, and 3 significant pathways in
+another enrichment result. The fraction for each enrichment is
+\code{8/8 == 1} for the first enrichment, and \code{3/8 = 0.375} for the
+second enrichment. When \code{cluster_color_min_fraction=0.5} (default)
+the first enrichment color would be included, but not the second
+enrichment color. The intent is to represent enrichment colors
+that have at least half (\code{0.5}) the pathways of the most
+representative (max) enrichment color. Therefore, a cluster with
+only one significant pathway from a given enrichment would
+typically not be representive of that enrichment, and its
+enrichment color would not be included.}
 }
 \value{
 By default \code{return_type="cnet"} and this function returns

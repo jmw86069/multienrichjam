@@ -634,6 +634,24 @@ rank_mem_clusters <- function
 #'
 #' @family jam utility functions
 #'
+#' @param cluster_color_min_fraction `numeric` value between 0 and 1
+#'    used to define the cnet colors for each cluster. The number of
+#'    significant pathways is calculated per cluster for each enrichment
+#'    using `mem$enrichIMcolors`, and the fraction of significant
+#'    pathways versus the max number per enrichment is used to filter.
+#'    For example a cluster with 10 pathways, might have 8 significant
+#'    pathways in one enrichment result, and 3 significant pathways in
+#'    another enrichment result. The fraction for each enrichment is
+#'    `8/8 == 1` for the first enrichment, and `3/8 = 0.375` for the
+#'    second enrichment. When `cluster_color_min_fraction=0.5` (default)
+#'    the first enrichment color would be included, but not the second
+#'    enrichment color. The intent is to represent enrichment colors
+#'    that have at least half (`0.5`) the pathways of the most
+#'    representative (max) enrichment color. Therefore, a cluster with
+#'    only one significant pathway from a given enrichment would
+#'    typically not be representive of that enrichment, and its
+#'    enrichment color would not be included.
+#'
 #' @export
 collapse_mem_clusters <- function
 (mem,
@@ -645,6 +663,7 @@ collapse_mem_clusters <- function
  max_labels=4,
  max_nchar_labels=25,
  include_cluster_title=TRUE,
+ cluster_color_min_fraction=0.5,
  verbose=FALSE,
  ...)
 {
@@ -715,9 +734,26 @@ collapse_mem_clusters <- function
       im1 <- subset(mem$enrichIM[idf$set,,drop=FALSE]);
       10^colMeans(log10(im1))
    }));
-   cluster_enrichIMcolors <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$enrichIMcolors)), function(i){
-      avg_colors_by_list(split(mem$enrichIMcolors[clusters_df$set,i], clusters_df$cluster))
+
+   ## Method to determine grouped colors per cluster
+   ## - start with enrichIMcolors
+   ## - count non-blank colors per column
+   ## - determine fraction versus max column count
+   cluster_color_min_fraction <- 0.5;
+   cluster_enrichIMcolors <- rbindList(lapply(cluster_sets_l, function(iset1){
+      isetm1 <- mem$enrichIMcolors[iset1,,drop=FALSE]
+      color_counts <- colSums(!apply(isetm1, 2, isColorBlank));
+      sapply(colnames(isetm1), function(k1){
+         if ((color_counts[k1] / max(color_counts)) >= cluster_color_min_fraction) {
+            unname(mem$colorV[k1])
+         } else {
+            "#FFFFFFFF";
+         }
+      })
    }))
+   #cluster_enrichIMcolors <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$enrichIMcolors)), function(i){
+   #   avg_colors_by_list(split(mem$enrichIMcolors[clusters_df$set,i], clusters_df$cluster))
+   #}))
    ## avg_colors_by_list
    cluster_mem <- mem;
    cluster_mem$memIM <- cluster_memIM;
