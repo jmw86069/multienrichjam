@@ -82,6 +82,10 @@
 #'    each enrichment in which a given gene is involved. Colors are
 #'    blended using `avg_colors_by_list()`, using colors from
 #'    `mem$colorV`, applied to `mem$geneIM`.
+#' @param na_col `character` string indicating the color to use for
+#'    NA or missing values. Typically this argument is only used
+#'    when `colorize_by_gene=TRUE`, where entries with no color are
+#'    recognized as `NA` by `ComplexHeatmap::Heatmap()`.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization.
 #'
@@ -110,6 +114,7 @@ mem_gene_path_heatmap <- function
  row_title=NULL,
  row_title_rot=90,
  colorize_by_gene=FALSE,
+ na_col="white",
  verbose=FALSE,
  ...)
 {
@@ -354,6 +359,7 @@ mem_gene_path_heatmap <- function
    hm <- ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
       border=TRUE,
       name=name,
+      na_col=na_col,
       cluster_columns=cluster_columns,
       cluster_rows=cluster_rows,
       clustering_distance_columns=column_method,
