@@ -86,6 +86,9 @@
 #'    NA or missing values. Typically this argument is only used
 #'    when `colorize_by_gene=TRUE`, where entries with no color are
 #'    recognized as `NA` by `ComplexHeatmap::Heatmap()`.
+#' @param seed `numeric` value passed to `set.seed()` to allow
+#'    reproducible results, typically with clustering operations.
+#' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization.
 #'
@@ -115,6 +118,7 @@ mem_gene_path_heatmap <- function
  row_title_rot=90,
  colorize_by_gene=FALSE,
  na_col="white",
+ seed=123,
  verbose=FALSE,
  ...)
 {
@@ -274,6 +278,7 @@ mem_gene_path_heatmap <- function
          t(mem$memIM[genes,sets,drop=FALSE]) * im_weight
       );
       ## 0.0.31.900 use column_matrix with enrich_im_weight adjustment
+      set.seed(seed);
       cluster_columns <- amap::hcluster(
          link="ward",
          column_matrix,
@@ -293,7 +298,7 @@ mem_gene_path_heatmap <- function
          (mem$geneIM[genes,,drop=FALSE]) * gene_weight,
          (mem$memIM[genes,sets,drop=FALSE]) * im_weight
       );
-
+      set.seed(seed);
       cluster_rows <- amap::hcluster(
          link="ward",
          row_matrix,
@@ -362,6 +367,7 @@ mem_gene_path_heatmap <- function
    }
 
    ## Create the heatmap
+   set.seed(seed);
    hm <- ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
       border=TRUE,
       name=name,
