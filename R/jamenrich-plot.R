@@ -1089,6 +1089,9 @@ jam_igraph <- function
 #' @param colorize_by_gene `logical` passed to `mem_gene_path_heatmap()`
 #'    indicating whether the heatmap body for the gene-pathway heatmap
 #'    will be colorized using the enrichment colors for each gene.
+#' @param cluster_color_min_fraction `numeric` value passed to
+#'    `collapse_mem_clusters()` used to determine which enrichment
+#'    colors to associate with each Cnet cluster.
 #' @param byCols `character` vector describing how to sort the
 #'    pathways within Cnet clusters. This argument is passed
 #'    to `rank_mem_clusters()`.
@@ -1126,6 +1129,7 @@ mem_plot_folio <- function
  enrich_im_weight=0.3,
  gene_im_weight=0.5,
  colorize_by_gene=TRUE,
+ cluster_color_min_fraction=0.4,
  byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
  verbose=TRUE,
  ...)
@@ -1242,6 +1246,7 @@ mem_plot_folio <- function
             verbose=verbose>1,
             max_labels=max_labels,
             byCols=byCols,
+            cluster_color_min_fraction=cluster_color_min_fraction,
             max_nchar_labels=max_nchar_labels,
             include_cluster_title=include_cluster_title,
             return_type="cnet");

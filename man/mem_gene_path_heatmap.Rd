@@ -28,6 +28,7 @@ mem_gene_path_heatmap(
   row_title = NULL,
   row_title_rot = 90,
   colorize_by_gene = FALSE,
+  na_col = "white",
   verbose = FALSE,
   ...
 )
@@ -99,6 +100,11 @@ main heatmap body using the colors from \code{geneIM} which represents
 each enrichment in which a given gene is involved. Colors are
 blended using \code{avg_colors_by_list()}, using colors from
 \code{mem$colorV}, applied to \code{mem$geneIM}.}
+
+\item{na_col}{\code{character} string indicating the color to use for
+NA or missing values. Typically this argument is only used
+when \code{colorize_by_gene=TRUE}, where entries with no color are
+recognized as \code{NA} by \code{ComplexHeatmap::Heatmap()}.}
 
 \item{...}{additional arguments are passed to \code{ComplexHeatmap::Heatmap()}
 for customization.}

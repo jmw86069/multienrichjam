@@ -31,6 +31,7 @@ mem_plot_folio(
   enrich_im_weight = 0.3,
   gene_im_weight = 0.5,
   colorize_by_gene = TRUE,
+  cluster_color_min_fraction = 0.4,
   byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
   verbose = TRUE,
   ...
@@ -93,6 +94,10 @@ enrichment P-values, or row gene incidence matrix data.}
 \item{colorize_by_gene}{\code{logical} passed to \code{mem_gene_path_heatmap()}
 indicating whether the heatmap body for the gene-pathway heatmap
 will be colorized using the enrichment colors for each gene.}
+
+\item{cluster_color_min_fraction}{\code{numeric} value passed to
+\code{collapse_mem_clusters()} used to determine which enrichment
+colors to associate with each Cnet cluster.}
 
 \item{byCols}{\code{character} vector describing how to sort the
 pathways within Cnet clusters. This argument is passed
