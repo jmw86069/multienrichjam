@@ -338,7 +338,7 @@ mem_gene_path_heatmap <- function
 
       ## convert memIM to memIM_note
       memIM_note <- apply(memIM, 2, function(i){
-         ifelse(i == 0, "", geneV);
+         ifelse(i == 0, "", geneV[rownames(memIM)]);
       });
       memIM <- memIM_note;
       col_hm <- gene_colorsV;
