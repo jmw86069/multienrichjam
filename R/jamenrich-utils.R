@@ -501,7 +501,7 @@ apply_color_cap <- function
 #' This function takes `list` output from `multiEnrichMap()`, and
 #' a `list` of clusters, and returns a `data.frame` that contains
 #' several rank order metrics. It is intended to be used with
-#' column clusters following `mem_gene_pathway_heatmap()`,
+#' column clusters following `mem_gene_path_heatmap()`,
 #' see examples.
 #'
 #' The argument `per_cluster` is intended to make it convenient
@@ -537,7 +537,7 @@ apply_color_cap <- function
 #' @examples
 #' ## Start with mem
 #' # mem <- multiEnrichMap(...);
-#' # gp_hm <- mem_gene_pathway_heatmap(mem, column_split=4);
+#' # gp_hm <- mem_gene_path_heatmap(mem, column_split=4);
 #' ## Retrieve clusters from the Heatmap output, there should be 4 clusters
 #' # clusters <- heatmap_column_order(gp_hm)
 #' # clusters_df <- rank_mem_clusters(mem, clusters)

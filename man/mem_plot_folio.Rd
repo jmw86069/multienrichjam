@@ -56,7 +56,7 @@ used in the color gradient on the Enrichment Heatmap.}
 passed to \code{ComplexHeatmap::Heatmap()}.}
 
 \item{min_gene_ct, min_set_ct}{integer values passed to
-\code{mem_gene_pathway_heatmap()}. The \code{min_gene_ct} requires each set
+\code{mem_gene_path_heatmap()}. The \code{min_gene_ct} requires each set
 to contain \code{min_gene_ct} genes, and \code{min_set_ct} requires each gene
 to be present in at least \code{min_set_ct} sets.}
 
@@ -88,7 +88,7 @@ to \code{rank_mem_clusters()}.}
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are passed to downstream functions.
-Notably, \code{sets} is passed to \code{mem_gene_pathway_heatmap()} which
+Notably, \code{sets} is passed to \code{mem_gene_path_heatmap()} which
 allows one to define a specific subset of sets to use in the
 gene-pathway heatmap.}
 }
@@ -107,7 +107,7 @@ from a Multienrichment result, the \code{list} output from
 The plots created:
 \enumerate{
 \item Heatmap using enrichment P-values using \code{mem_enrichment_heatmap()}
-\item Gene-Pathway Heatmap using \code{mem_gene_pathway_heatmap()}
+\item Gene-Pathway Heatmap using \code{mem_gene_path_heatmap()}
 \item Cnet plot using Gene-Pathway Heatmap collapsed clusters
 \item Cnet plot using Gene-Pathway Heatmap cluster examplars (n per cluster)
 \item Cnet plots one per cluster

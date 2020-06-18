@@ -1,4 +1,19 @@
-# multienrichjam version 0.0.32.900
+# multienrichjam version 0.0.34.900
+
+## changes to existing functions
+
+* `mem_gene_path_heatmap()` new argument `colorize_by_gene=TRUE`
+will color the heatmap body using blended colors from the
+`geneIMcolors` which represents the enrichments in which the
+gene is involved. The default `colorize_by_gene=FALSE`
+instead colors the heatmap body by the number of enrichments,
+which can be confusing if one of the enrichment colors is
+also red. The goal is to make it visually apparent when
+a gene is involved in one enrichment, by using the color
+from that enrichment. This feature is still in development
+and testing.
+
+# multienrichjam version 0.0.33.900
 
 ## changes to existing functions
 

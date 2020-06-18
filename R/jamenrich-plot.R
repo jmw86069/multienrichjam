@@ -63,9 +63,25 @@
 #'    above which P-values are not colored, and are therefore white.
 #'    The enrichment P-values are displayed as an annotated heatmap
 #'    at the top of the main heatmap. Any cell that has a color meets
-#'    at least the minimum P-value threshold.
+#'    at least the minimum P-value threshold. This value by default
+#'    is taken from input `mem`, using `mem$p_cutoff`, for
+#'    consistency with the input multienrichment analysis.
+#' @param column_split,row_split optional arguments passed to
+#'    `ComplexHeatmap::Heatmap()` to split the heatmap by columns
+#'    or rows, respectively.
 #' @param column_title optional character string with title to display
 #'    above the heatmap.
+#' @param row_title optional character string with title to display
+#'    beside the heatmap. Note when `row_split` is defined, the
+#'    `row_title` is applied to each heatmap section.
+#' @param row_title_rot `numeric` value indicating the rotation of
+#'    `row_title` text, where `0` is not rotated, and `90` is rotated
+#'    90 degrees.
+#' @param colorize_by_gene `logical` indicating whether to color the
+#'    main heatmap body using the colors from `geneIM` which represents
+#'    each enrichment in which a given gene is involved. Colors are
+#'    blended using `avg_colors_by_list()`, using colors from
+#'    `mem$colorV`, applied to `mem$geneIM`.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization.
 #'
@@ -84,14 +100,15 @@ mem_gene_path_heatmap <- function
  enrich_gene_weight=0.3,
  cluster_columns=NULL,
  cluster_rows=NULL,
- name="gene_ct",
- p_cutoff=0.05,
+ name=NULL,
+ p_cutoff=mem$p_cutoff,
  row_split=NULL,
  column_split=NULL,
  auto_split=TRUE,
  column_title=NULL,
  row_title=NULL,
  row_title_rot=90,
+ colorize_by_gene=FALSE,
  verbose=FALSE,
  ...)
 {
@@ -109,6 +126,11 @@ mem_gene_path_heatmap <- function
    if (any(dim(memIM) == 0)) {
       stop("No remaining data after filtering.");
    }
+
+   if (length(name) == 0) {
+      name <- "enrichments\nper gene";
+   }
+
    ## apply min_set_ct to each enrichment test
    if (length(min_set_ct_each) > 0) {
       memIMsetct_each <- Reduce("pmax",
@@ -223,7 +245,8 @@ mem_gene_path_heatmap <- function
       )
    });
    ## Cluster columns and rows
-   if (length(cluster_columns) == 0) {
+   if (length(cluster_columns) == 0 ||
+         (length(cluster_columns) == 1 && is.logical(cluster_colors) && cluster_columns)) {
       ## Assemble the P-value matrix with gene incidence matrix
       ## and cluster altogether, which has the benefit/goal of
       ## accentuating similar enrichment profiles which also have
@@ -254,7 +277,8 @@ mem_gene_path_heatmap <- function
          #      ceiling=3),
          #   t(mem$memIM[genes,sets,drop=FALSE])),
    }
-   if (length(cluster_rows) == 0) {
+   if (length(cluster_rows) == 0 ||
+         (length(cluster_rows) == 1 && is.logical(cluster_rows) && cluster_rows)) {
       cluster_rows <- amap::hcluster(
          link="ward",
          cbind(
@@ -262,6 +286,69 @@ mem_gene_path_heatmap <- function
             (mem$memIM[genes,sets,drop=FALSE])),
          method=row_method);
    }
+
+   ## Optionally colorize the matrix by gene
+   if (colorize_by_gene) {
+      ## Convert rows to blended colors
+      if (verbose) {
+         jamba::printDebug("mem_gene_path_heatmap(): ",
+            "colorize_by_gene");
+      }
+      geneIMu <- unique(mem$geneIM);
+      geneIMu <- mixedSortDF(data.frame(rowSums(geneIMu), -geneIMu))[,-1,drop=FALSE]*-1;
+      geneIMu_names <- jamba::cPaste(im2list(t(geneIMu)));
+      colnames(geneIMu) <- mem$colorV[colnames(mem$geneIM)];
+      geneIMu_colors <- jamba::cPaste(im2list(t(geneIMu)));
+      if (verbose) {
+         for (i in seq_along(geneIMu_colors)) {
+            jamba::printDebug(nameVector(unlist(strsplit(geneIMu_colors[i],",")),
+               unlist(strsplit(geneIMu_names[i],","))),
+               indent="    ");
+         }
+      }
+
+      ## blend using red-yellow-blue color wheel
+      h1h2_original <- colorjam::h2hwOptions();
+      colorjam::h2hwOptions(preset="ryb",
+         setOptions=TRUE);
+      gene_colorsV <- colorjam::closestRcolor(
+         avg_colors_by_list(strsplit(geneIMu_colors, ",")));
+      names(gene_colorsV) <- geneIMu_names;
+      if (verbose) {
+         for (i in seq_along(geneIMu_colors)) {
+            i1 <- c(
+               unlist(strsplit(geneIMu_colors[i],",")),
+               gene_colorsV[i])
+            i2 <- c(
+               unlist(strsplit(geneIMu_names[i],",")),
+               paste0(" -> ", format(justify="right", names(gene_colorsV))[i]))
+            jamba::printDebug(nameVector(i1, i2));
+         }
+      }
+
+      ## restore the original color wheel
+      colorjam::h2hwOptions(h1=h1h2_original$h1,
+         h2=h1h2_original$h2,
+         setOptions=TRUE);
+
+      ## apply these colors to gene rows
+      geneV <- jamba::cPaste(im2list(t(mem$geneIM)));
+      geneColors <- jamba::nameVector(gene_colorsV[geneV],
+         names(geneV));
+
+      ## convert memIM to memIM_note
+      memIM_note <- apply(memIM, 2, function(i){
+         ifelse(i == 0, "", geneV);
+      });
+      memIM <- memIM_note;
+      col_hm <- gene_colorsV;
+   } else {
+      col_hm <- jamba::getColorRamp("Reds",
+         lens=5,
+         trimRamp=c(0,4));
+   }
+
+   ## Create the heatmap
    hm <- ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
       border=TRUE,
       name=name,
@@ -283,9 +370,7 @@ mem_gene_path_heatmap <- function
          df=-log10(mem$enrichIM[sets,,drop=FALSE]),
          gap=grid::unit(0, "mm")
       ),
-      col=jamba::getColorRamp("Reds",
-         lens=5,
-         trimRamp=c(0,4)),
+      col=col_hm,
       left_annotation=ComplexHeatmap::rowAnnotation(
          col=col_iml1,
          border=TRUE,
@@ -944,7 +1029,7 @@ jam_igraph <- function
 #' The plots created:
 #'
 #' 1. Heatmap using enrichment P-values using `mem_enrichment_heatmap()`
-#' 2. Gene-Pathway Heatmap using `mem_gene_pathway_heatmap()`
+#' 2. Gene-Pathway Heatmap using `mem_gene_path_heatmap()`
 #' 3. Cnet plot using Gene-Pathway Heatmap collapsed clusters
 #' 4. Cnet plot using Gene-Pathway Heatmap cluster examplars (n per cluster)
 #' 5. Cnet plots one per cluster
@@ -970,7 +1055,7 @@ jam_igraph <- function
 #' @param use_raster logical indicating whether to use raster heatmaps,
 #'    passed to `ComplexHeatmap::Heatmap()`.
 #' @param min_gene_ct,min_set_ct integer values passed to
-#'    `mem_gene_pathway_heatmap()`. The `min_gene_ct` requires each set
+#'    `mem_gene_path_heatmap()`. The `min_gene_ct` requires each set
 #'    to contain `min_gene_ct` genes, and `min_set_ct` requires each gene
 #'    to be present in at least `min_set_ct` sets.
 #' @param min_set_ct_each minimum number of genes required for each set,
@@ -993,7 +1078,7 @@ jam_igraph <- function
 #'    to `rank_mem_clusters()`.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
-#'    Notably, `sets` is passed to `mem_gene_pathway_heatmap()` which
+#'    Notably, `sets` is passed to `mem_gene_path_heatmap()` which
 #'    allows one to define a specific subset of sets to use in the
 #'    gene-pathway heatmap.
 #'

@@ -18,14 +18,15 @@ mem_gene_path_heatmap(
   enrich_gene_weight = 0.3,
   cluster_columns = NULL,
   cluster_rows = NULL,
-  name = "gene_ct",
-  p_cutoff = 0.05,
+  name = NULL,
+  p_cutoff = mem$p_cutoff,
   row_split = NULL,
   column_split = NULL,
   auto_split = TRUE,
   column_title = NULL,
   row_title = NULL,
   row_title_rot = 90,
+  colorize_by_gene = FALSE,
   verbose = FALSE,
   ...
 )
@@ -73,10 +74,30 @@ used as a label above the heatmap color legend.}
 above which P-values are not colored, and are therefore white.
 The enrichment P-values are displayed as an annotated heatmap
 at the top of the main heatmap. Any cell that has a color meets
-at least the minimum P-value threshold.}
+at least the minimum P-value threshold. This value by default
+is taken from input \code{mem}, using \code{mem$p_cutoff}, for
+consistency with the input multienrichment analysis.}
+
+\item{column_split, row_split}{optional arguments passed to
+\code{ComplexHeatmap::Heatmap()} to split the heatmap by columns
+or rows, respectively.}
 
 \item{column_title}{optional character string with title to display
 above the heatmap.}
+
+\item{row_title}{optional character string with title to display
+beside the heatmap. Note when \code{row_split} is defined, the
+\code{row_title} is applied to each heatmap section.}
+
+\item{row_title_rot}{\code{numeric} value indicating the rotation of
+\code{row_title} text, where \code{0} is not rotated, and \code{90} is rotated
+90 degrees.}
+
+\item{colorize_by_gene}{\code{logical} indicating whether to color the
+main heatmap body using the colors from \code{geneIM} which represents
+each enrichment in which a given gene is involved. Colors are
+blended using \code{avg_colors_by_list()}, using colors from
+\code{mem$colorV}, applied to \code{mem$geneIM}.}
 
 \item{...}{additional arguments are passed to \code{ComplexHeatmap::Heatmap()}
 for customization.}

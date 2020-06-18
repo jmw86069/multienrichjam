@@ -50,7 +50,7 @@ Rank Multienrichment clusters
 This function takes \code{list} output from \code{multiEnrichMap()}, and
 a \code{list} of clusters, and returns a \code{data.frame} that contains
 several rank order metrics. It is intended to be used with
-column clusters following \code{mem_gene_pathway_heatmap()},
+column clusters following \code{mem_gene_path_heatmap()},
 see examples.
 
 The argument \code{per_cluster} is intended to make it convenient
@@ -63,7 +63,7 @@ pathways from specific clusters.
 \examples{
 ## Start with mem
 # mem <- multiEnrichMap(...);
-# gp_hm <- mem_gene_pathway_heatmap(mem, column_split=4);
+# gp_hm <- mem_gene_path_heatmap(mem, column_split=4);
 ## Retrieve clusters from the Heatmap output, there should be 4 clusters
 # clusters <- heatmap_column_order(gp_hm)
 # clusters_df <- rank_mem_clusters(mem, clusters)
