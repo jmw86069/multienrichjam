@@ -262,6 +262,9 @@ mem_gene_path_heatmap <- function
       }
       enrich_weight <- round(enrich_im_weight * 10);
       im_weight <- 10 - enrich_weight;
+      min_weight <- min(c(enrich_weight, im_weight));
+      enrich_weight <- enrich_weight / min_weight;
+      im_weight <- im_weight / min_weight;
       column_matrix <- cbind(
          jamba::noiseFloor(
             -log10(mem$enrichIM[sets,,drop=FALSE]),
@@ -283,6 +286,9 @@ mem_gene_path_heatmap <- function
       }
       gene_weight <- round(gene_im_weight * 10);
       im_weight <- 10 - gene_weight;
+      min_weight <- min(c(gene_weight, im_weight));
+      gene_weight <- gene_weight / min_weight;
+      im_weight <- im_weight / min_weight;
       row_matrix <- cbind(
          (mem$geneIM[genes,,drop=FALSE]) * gene_weight,
          (mem$memIM[genes,sets,drop=FALSE]) * im_weight
