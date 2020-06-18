@@ -739,7 +739,6 @@ collapse_mem_clusters <- function
    ## - start with enrichIMcolors
    ## - count non-blank colors per column
    ## - determine fraction versus max column count
-   cluster_color_min_fraction <- 0.5;
    cluster_enrichIMcolors <- rbindList(lapply(cluster_sets_l, function(iset1){
       isetm1 <- mem$enrichIMcolors[iset1,,drop=FALSE]
       color_counts <- colSums(!apply(isetm1, 2, isColorBlank));
