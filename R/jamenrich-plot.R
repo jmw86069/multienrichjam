@@ -49,12 +49,12 @@
 #' @param row_method,column_method character string of the distance method
 #'    to use for row and column clustering. The clustering is performed
 #'    by `amap::hcluster()`.
-#' @param enrich_gene_weight `numeric` value between 0 and 1 indicating
+#' @param enrich_im_weight `numeric` value between 0 and 1 indicating
 #'    the relative weight of enrichment `-log10 P-value` and gene
 #'    incidence matrix when combined prior to clustering the columns
-#'    in the resulting heatmap. When `enrich_gene_weight=0` then
+#'    in the resulting heatmap. When `enrich_im_weight=0` then
 #'    the data is scaled using zero weight for enrichment and therefore
-#'    only uses the gene incidence matrix; when `enrich_gene_weight=1`
+#'    only uses the gene incidence matrix; when `enrich_im_weight=1`
 #'    the gene incidence matrix is scaled using zero weight and
 #'    therefore clustering only uses the `-log10 P-value` values.
 #' @param name character value passed to `ComplexHeatmap::Heatmap()`,
@@ -97,7 +97,8 @@ mem_gene_path_heatmap <- function
  row_fontsize=NULL,
  row_method="binary",
  column_method="binary",
- enrich_gene_weight=0.3,
+ enrich_im_weight=0.3,
+ gene_im_weight=0.5,
  cluster_columns=NULL,
  cluster_rows=NULL,
  name=NULL,
@@ -251,39 +252,40 @@ mem_gene_path_heatmap <- function
       ## and cluster altogether, which has the benefit/goal of
       ## accentuating similar enrichment profiles which also have
       ## similar gene content.
-      if (!length(enrich_gene_weight) == 1 || any(enrich_gene_weight > 1)) {
-         enrich_gene_weight <- 0.2;
+      if (!length(enrich_im_weight) == 1 || any(enrich_im_weight > 1)) {
+         enrich_im_weight <- 0.3;
       }
-      enrich_weight <- round(enrich_gene_weight * 10);
-      gene_weight <- 10 - enrich_weight;
+      enrich_weight <- round(enrich_im_weight * 10);
+      im_weight <- 10 - enrich_weight;
       column_matrix <- cbind(
          jamba::noiseFloor(
             -log10(mem$enrichIM[sets,,drop=FALSE]),
             minimum=-log10(p_cutoff+1e-5),
             newValue=0,
             ceiling=10) * enrich_weight,
-         t(mem$memIM[genes,sets,drop=FALSE]) * gene_weight
+         t(mem$memIM[genes,sets,drop=FALSE]) * im_weight
       );
-      ## 0.0.31.900 use column_matrix with enrich_gene_weight adjustment
+      ## 0.0.31.900 use column_matrix with enrich_im_weight adjustment
       cluster_columns <- amap::hcluster(
          link="ward",
          column_matrix,
          method=column_method);
-         #cbind(
-         #   jamba::noiseFloor(
-         #      -log10(mem$enrichIM[sets,,drop=FALSE]),
-         #      minimum=-log10(p_cutoff+1e-5),
-         #      newValue=0,
-         #      ceiling=3),
-         #   t(mem$memIM[genes,sets,drop=FALSE])),
    }
    if (length(cluster_rows) == 0 ||
          (length(cluster_rows) == 1 && is.logical(cluster_rows) && cluster_rows)) {
+      if (!length(gene_im_weight) == 1 || any(gene_im_weight > 1)) {
+         gene_im_weight <- 0.5;
+      }
+      gene_weight <- round(gene_im_weight * 10);
+      im_weight <- 10 - gene_weight;
+      row_matrix <- cbind(
+         (mem$geneIM[genes,,drop=FALSE]) * gene_weight,
+         (mem$memIM[genes,sets,drop=FALSE]) * im_weight
+      );
+
       cluster_rows <- amap::hcluster(
          link="ward",
-         cbind(
-            (mem$geneIM[genes,,drop=FALSE]),
-            (mem$memIM[genes,sets,drop=FALSE])),
+         row_matrix,
          method=row_method);
    }
 
@@ -1073,6 +1075,14 @@ jam_igraph <- function
 #' @param color_by_column `logical` indicating whether to colorize
 #'    the enrichment heatmap columns using `colorV` in the input `mem`.
 #'    This argument is only relevant when `do_which` include `1`.
+#' @param enrich_im_weight,gene_im_weight `numeric` value between 0 and
+#'    1, passed to `mem_gene_path_heatmap()`, used to apply relative
+#'    weight to clustering columns and rows, respectively, when
+#'    combining the gene-pathway incidence matrix with either column
+#'    enrichment P-values, or row gene incidence matrix data.
+#' @param colorize_by_gene `logical` passed to `mem_gene_path_heatmap()`
+#'    indicating whether the heatmap body for the gene-pathway heatmap
+#'    will be colorized using the enrichment colors for each gene.
 #' @param byCols `character` vector describing how to sort the
 #'    pathways within Cnet clusters. This argument is passed
 #'    to `rank_mem_clusters()`.
@@ -1107,6 +1117,9 @@ mem_plot_folio <- function
  repulse=4,
  use_shadowText=FALSE,
  color_by_column=FALSE,
+ enrich_im_weight=0.3,
+ gene_im_weight=0.5,
+ colorize_by_gene=TRUE,
  byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
  verbose=TRUE,
  ...)
@@ -1171,6 +1184,9 @@ mem_plot_folio <- function
       min_gene_ct=min_gene_ct,
       min_set_ct=min_set_ct,
       min_set_ct_each=min_set_ct_each,
+      enrich_im_weight=enrich_im_weight,
+      gene_im_weight=gene_im_weight,
+      colorize_by_gene=colorize_by_gene,
       ...);
    ## Obtain heatmap pathway clusters
    clusters_mem <- heatmap_column_order(gp_hm);

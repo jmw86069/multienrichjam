@@ -15,7 +15,8 @@ mem_gene_path_heatmap(
   row_fontsize = NULL,
   row_method = "binary",
   column_method = "binary",
-  enrich_gene_weight = 0.3,
+  enrich_im_weight = 0.3,
+  gene_im_weight = 0.5,
   cluster_columns = NULL,
   cluster_rows = NULL,
   name = NULL,
@@ -58,12 +59,12 @@ required for at least one enrichment test.}
 to use for row and column clustering. The clustering is performed
 by \code{amap::hcluster()}.}
 
-\item{enrich_gene_weight}{\code{numeric} value between 0 and 1 indicating
+\item{enrich_im_weight}{\code{numeric} value between 0 and 1 indicating
 the relative weight of enrichment \verb{-log10 P-value} and gene
 incidence matrix when combined prior to clustering the columns
-in the resulting heatmap. When \code{enrich_gene_weight=0} then
+in the resulting heatmap. When \code{enrich_im_weight=0} then
 the data is scaled using zero weight for enrichment and therefore
-only uses the gene incidence matrix; when \code{enrich_gene_weight=1}
+only uses the gene incidence matrix; when \code{enrich_im_weight=1}
 the gene incidence matrix is scaled using zero weight and
 therefore clustering only uses the \verb{-log10 P-value} values.}
 

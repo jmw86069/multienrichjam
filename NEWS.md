@@ -12,6 +12,11 @@ also red. The goal is to make it visually apparent when
 a gene is involved in one enrichment, by using the color
 from that enrichment. This feature is still in development
 and testing.
+* `mem_gene_path_heatmap()` changed argument name from `enrich_gene_weight`
+to `enrich_im_weight`, before this argument is in wider use. Added
+new argument `gene_im_weight`. These arguments more accurately reflect
+the relative weight between enrichment and incidence matrix for
+`enrich_im_weight`.
 
 # multienrichjam version 0.0.33.900
 
