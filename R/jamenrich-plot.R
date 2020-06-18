@@ -1188,16 +1188,8 @@ mem_plot_folio <- function
       gene_im_weight=gene_im_weight,
       colorize_by_gene=colorize_by_gene,
       ...);
-   ## Obtain heatmap pathway clusters
-   clusters_mem <- heatmap_column_order(gp_hm);
-   ## Get number of pathway clusters
-   pathway_clusters_n <- length(clusters_mem);
-   if (verbose) {
-      jamba::printDebug("mem_plot_folio(): ",
-         c("Defined ", pathway_clusters_n, " pathway clusters."),
-         sep="");
-   }
 
+   ## draw the heatmap
    plot_num <- plot_num + 1;
    if (length(do_which) == 0 || plot_num %in% do_which) {
       if (verbose) {
@@ -1215,6 +1207,15 @@ mem_plot_folio <- function
          title=main,
          caption=caption);
       ret_vals$gp_hm <- gp_hm;
+   }
+   ## Obtain heatmap pathway clusters
+   clusters_mem <- heatmap_column_order(gp_hm);
+   ## Get number of pathway clusters
+   pathway_clusters_n <- length(clusters_mem);
+   if (verbose) {
+      jamba::printDebug("mem_plot_folio(): ",
+         c("Defined ", pathway_clusters_n, " pathway clusters."),
+         sep="");
    }
 
    #############################################################
