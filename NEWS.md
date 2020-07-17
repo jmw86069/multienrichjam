@@ -12,6 +12,9 @@ significant. The new behavior (as expected) is to requires
 an pathway to meet both the `min_set_ct_each` and `p_cutoff`
 thresholds in the same enrichment in order to be retained
 in the gene-pathway incidence matrix.
+* `mem_gene_path_heatmap()` fixed edge case where genes present in
+multiple enrichments counted more toward `min_set_ct_each`,
+but should only count once per gene.
 
 
 ## changes to existing functions
