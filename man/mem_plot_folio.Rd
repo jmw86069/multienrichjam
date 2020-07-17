@@ -18,10 +18,14 @@ mem_plot_folio(
   row_method = "euclidean",
   exemplar_range = c(1, 2, 3),
   pathway_column_split = NULL,
-  pathway_row_split = NULL,
+  pathway_column_title = NULL,
+  gene_row_split = NULL,
+  gene_row_title = NULL,
   edge_color = NULL,
   cex.main = 2,
   cex.sub = 1.5,
+  row_cex = 1,
+  column_cex = 1,
   max_labels = 4,
   max_nchar_labels = 25,
   include_cluster_title = TRUE,
@@ -74,12 +78,29 @@ to cluster columns and rows, respectively.}
 \item{exemplar_range}{integer vector (or \code{NULL}) used to create Cnet
 exemplar plots, using this many exemplars per cluster.}
 
-\item{pathway_column_split}{integer value passed as \code{column_split}
-to \code{mem_gene_path_heatmap()}, indicating the number of pathway
-clusters to create in the gene-pathway heatmap.}
+\item{pathway_column_split, gene_row_split}{optional arguments passed to
+\code{mem_gene_path_heatmap()} to split the heatmap by columns
+or rows, respectively. Note that when \code{pathway_column_split} is \code{NULL}
+and \code{auto_split=TRUE}, it will determine an appropriate number
+of clusters based upon the number of columns. To turn off the split,
+use \code{pathway_column_split} values \code{NULL} or \code{0} or \code{1};
+likewise for \code{gene_row_split}.}
+
+\item{pathway_column_title, gene_row_title}{\code{character} vectors
+passed to \code{mem_gene_path_heatmap()} as \code{column_title} and
+\code{row_title}, respectively. When one value is supplied, it is
+displayed and centered across all the respective splits. When
+multiple values are supplied, values are used to the number
+of splits, and recycled as needed. In that case, repeated
+values are made unique by \code{jamba::makeNames()}.}
 
 \item{cex.main, cex.sub}{numeric values passed to \code{title()} which
 size the default title and sub-title in Cnet plots.}
+
+\item{row_cex, column_cex}{\code{numeric} character expansion factor, used
+to adjust the relative size of row and column labels,
+respectively. A value of \code{1.1} will make row font size 10\%
+larger.}
 
 \item{color_by_column}{\code{logical} indicating whether to colorize
 the enrichment heatmap columns using \code{colorV} in the input \code{mem}.

@@ -68,7 +68,11 @@
 #'    consistency with the input multienrichment analysis.
 #' @param column_split,row_split optional arguments passed to
 #'    `ComplexHeatmap::Heatmap()` to split the heatmap by columns
-#'    or rows, respectively.
+#'    or rows, respectively. Note that when `row_split` is `NULL`
+#'    and `auto_split=TRUE`, it will determine an appropriate number
+#'    of clusters based upon the number of rows. To turn off row split,
+#'    use `row_split=NULL` or `row_split=0` or `row_split=1`;
+#'    likewise for `column_split`.
 #' @param column_title optional character string with title to display
 #'    above the heatmap.
 #' @param row_title optional character string with title to display
@@ -101,7 +105,9 @@ mem_gene_path_heatmap <- function
  min_set_ct=1,
  min_set_ct_each=4,
  column_fontsize=NULL,
+ column_cex=1,
  row_fontsize=NULL,
+ row_cex=1,
  row_method="binary",
  column_method="binary",
  enrich_im_weight=0.3,
@@ -110,11 +116,12 @@ mem_gene_path_heatmap <- function
  cluster_rows=NULL,
  name=NULL,
  p_cutoff=mem$p_cutoff,
+ p_floor=1e-6,
  row_split=NULL,
  column_split=NULL,
  auto_split=TRUE,
- column_title=NULL,
- row_title=NULL,
+ column_title=LETTERS,
+ row_title=letters,
  row_title_rot=90,
  colorize_by_gene=FALSE,
  na_col="white",
@@ -188,46 +195,77 @@ mem_gene_path_heatmap <- function
    }
    genes <- rownames(memIM);
    sets <- colnames(memIM);
-   ## Optional automatic row and column split
+
+   ## Validate row_split, row_title, column_split, column_title
    if (auto_split) {
-      if (nrow(memIM) < 5) {
+      if (length(row_split) == 0) {
+         if (nrow(memIM) < 5) {
+            row_split <- NULL;
+         } else {
+            row_split <- jamba::noiseFloor(floor(nrow(memIM)^(1/2.5)),
+               ceiling=12);
+            if (verbose) {
+               jamba::printDebug("mem_gene_path_heatmap(): ",
+                  "auto_split row_split:", row_split);
+            }
+         }
+      }
+      if (length(column_split) == 0) {
+         if (ncol(memIM) < 5) {
+            column_split <- NULL;
+         } else {
+            ncol_x <- (5 + ncol(memIM)/1.5) ^ (1/2);
+            column_split <- jamba::noiseFloor(floor(ncol_x), ceiling=10);
+            if (verbose) {
+               jamba::printDebug("mem_gene_path_heatmap(): ",
+                  "auto_split column_split:", column_split);
+            }
+         }
+      }
+   }
+   if (length(row_split) == 1 && is.numeric(row_split)) {
+      if (row_split <= 1) {
          row_split <- NULL;
-      } else if (length(row_split) == 0) {
-         row_split <- jamba::noiseFloor(floor(nrow(memIM)^(1/2.5)),
-            ceiling=12);
+         if (length(row_title) > 1) {
+            row_title <- NULL;
+         }
+      } else {
          if (length(row_title) == 0) {
-            row_title <- letters[seq_len(row_split)];
-            row_title_rot <- 0;
+            row_title <- LETTERS;
+         }
+         if (length(row_title) > 1) {
+            row_title <- jamba::makeNames(
+               rep(row_title,
+                  length.out=row_split),
+               ...);
          }
       }
-      if (ncol(memIM) < 5) {
+   }
+   if (length(column_split) == 1 && is.numeric(column_split)) {
+      if (column_split <= 1) {
          column_split <- NULL;
-      } else if (length(column_split) == 0) {
-         ncol_x <- (5 + ncol(memIM)/1.5) ^ (1/2);
-         column_split <- jamba::noiseFloor(floor(ncol_x), ceiling=10);
+         if (length(column_title) > 1) {
+            column_title <- NULL;
+         }
+      } else {
          if (length(column_title) == 0) {
-            column_title <- LETTERS[seq_len(column_split)];
+            column_title <- LETTERS;
+         }
+         if (length(column_title) > 1) {
+            column_title <- jamba::makeNames(
+               rep(column_title,
+                  length.out=column_split),
+               ...);
          }
       }
-      if (verbose) {
-         jamba::printDebug("mem_gene_path_heatmap(): ",
-            "auto_split row_split:", row_split,
-            ", column_split:", column_split);
-      }
-   }
-   if (length(column_split) > 0 && is.numeric(column_split) && length(column_title) == 0) {
-      column_title <- LETTERS[seq_len(column_split)];
-   }
-   if (length(row_split) > 0 && is.numeric(row_split) && length(row_title) == 0) {
-      row_title <- LETTERS[seq_len(row_split)];
    }
 
    ## Automatic fontsize
    if (length(column_fontsize) == 0) {
-      row_fontsize <- 60/(nrow(memIM))^(1/2);
+      row_fontsize <- row_cex * 60/(nrow(memIM))^(1/2);
    }
    if (length(column_fontsize) == 0) {
-      column_fontsize <- 60/(ncol(memIM))^(1/2);
+      column_fontsize <- column_cex * 60/(ncol(memIM))^(1/2);
    }
 
    ## Apply colors to outside annotations
@@ -241,17 +279,18 @@ mem_gene_path_heatmap <- function
    ## column annotation colors (enrichments)
    col_iml4 <- lapply(jamba::nameVectorN(mem$colorV), function(i){
       j <- mem$colorV[[i]];
-      circlize::colorRamp2(
-         #breaks=c(0,4),
-         breaks=c(-log10(p_cutoff+1e-5), -log10(p_cutoff), 4, 6),
+      p_vector <- c(-log10(p_cutoff + 1e-10),
+         -log10(p_cutoff),
+         (-log10(p_cutoff) - log10(p_floor)) / 2,
+         -log10(p_floor));
+      i_ramp <- circlize::colorRamp2(
+         breaks=p_vector,
          colors=c("white",
             jamba::fixYellow(Hrange=c(60,100), fixup=TRUE,
                jamba::getColorRamp(j,
-                  trimRamp=c(4,2),
+                  trimRamp=c(2,2),
                   n=3,
-                  lens=3)
-            )
-         )
+                  lens=3)))
       )
    });
    ## Cluster columns and rows
@@ -484,12 +523,14 @@ mem_enrichment_heatmap <- function
  row_dend_reorder=TRUE,
  row_dend_width=grid::unit(30, "mm"),
  row_fontsize=8,
+ row_cex=1,
  column_fontsize=12,
+ column_cex=1,
  cluster_columns=FALSE,
  sets=NULL,
  color_by_column=FALSE,
  cex.axis=1,
- lens=4,
+ lens=3,
  cexCellnote=0.7,
  column_title=NULL,
  ...)
@@ -504,7 +545,7 @@ mem_enrichment_heatmap <- function
          jamba::getColorRamp("Reds",
             lens=lens,
             n=25,
-            trimRamp=c(2, 0)))
+            trimRamp=c(2, 2)))
    )
    if (length(sets) > 0) {
       sets <- intersect(rownames(mem$enrichIM), sets);
@@ -535,6 +576,15 @@ mem_enrichment_heatmap <- function
          row_dend_width <- grid::unit(10, "mm");
       }
    }
+
+   ## Automatic fontsize
+   if (length(column_fontsize) == 0) {
+      row_fontsize <- row_cex * 60/(nrow(memIM))^(1/2);
+   }
+   if (length(column_fontsize) == 0) {
+      column_fontsize <- column_cex * 60/(ncol(memIM))^(1/2);
+   }
+
    hm <- ComplexHeatmap::Heatmap(
       -log10(mem$enrichIM),
       name=name,
@@ -1085,11 +1135,31 @@ jam_igraph <- function
 #'    to cluster columns and rows, respectively.
 #' @param exemplar_range integer vector (or `NULL`) used to create Cnet
 #'    exemplar plots, using this many exemplars per cluster.
-#' @param pathway_column_split integer value passed as `column_split`
-#'    to `mem_gene_path_heatmap()`, indicating the number of pathway
-#'    clusters to create in the gene-pathway heatmap.
+#' @param pathway_column_split,gene_row_split `integer` value passed
+#'    as `column_split` and `row_split`, respectively, to
+#'    `mem_gene_path_heatmap()`, indicating the number of pathway
+#'    clusters, and gene clusters, to create in the gene-pathway heatmap.
+#'    When either value is `NULL` then auto-split logic is used.
+#' @param pathway_column_split,gene_row_split optional arguments passed to
+#'    `mem_gene_path_heatmap()` to split the heatmap by columns
+#'    or rows, respectively. Note that when `pathway_column_split` is `NULL`
+#'    and `auto_split=TRUE`, it will determine an appropriate number
+#'    of clusters based upon the number of columns. To turn off the split,
+#'    use `pathway_column_split` values `NULL` or `0` or `1`;
+#'    likewise for `gene_row_split`.
+#' @param pathway_column_title,gene_row_title `character` vectors
+#'    passed to `mem_gene_path_heatmap()` as `column_title` and
+#'    `row_title`, respectively. When one value is supplied, it is
+#'    displayed and centered across all the respective splits. When
+#'    multiple values are supplied, values are used to the number
+#'    of splits, and recycled as needed. In that case, repeated
+#'    values are made unique by `jamba::makeNames()`.
 #' @param cex.main,cex.sub numeric values passed to `title()` which
 #'    size the default title and sub-title in Cnet plots.
+#' @param row_cex,column_cex `numeric` character expansion factor, used
+#'    to adjust the relative size of row and column labels,
+#'    respectively. A value of `1.1` will make row font size 10%
+#'    larger.
 #' @param color_by_column `logical` indicating whether to colorize
 #'    the enrichment heatmap columns using `colorV` in the input `mem`.
 #'    This argument is only relevant when `do_which` include `1`.
@@ -1128,10 +1198,14 @@ mem_plot_folio <- function
  row_method="euclidean",
  exemplar_range=c(1, 2, 3),
  pathway_column_split=NULL,
- pathway_row_split=NULL,
+ pathway_column_title=NULL,
+ gene_row_split=NULL,
+ gene_row_title=NULL,
  edge_color=NULL,
  cex.main=2,
  cex.sub=1.5,
+ row_cex=1,
+ column_cex=1,
  max_labels=4,
  max_nchar_labels=25,
  include_cluster_title=TRUE,
@@ -1175,6 +1249,8 @@ mem_plot_folio <- function
          p_cutoff=p_cutoff,
          p_floor=p_floor,
          color_by_column=color_by_column,
+         row_cex=row_cex,
+         column_cex=column_cex,
          ...);
       if (!color_by_column) {
          if (length(main) > 0 && nchar(main) > 0) {
@@ -1198,10 +1274,15 @@ mem_plot_folio <- function
       "Gene-pathway heatmap");
    gp_hm <- mem_gene_path_heatmap(mem,
       p_cutoff=p_cutoff,
+      p_floor=p_floor,
       row_method=row_method,
       column_split=pathway_column_split,
-      row_split=pathway_row_split,
+      pathway_column_title=pathway_column_title,
+      row_split=gene_row_split,
+      gene_row_title=gene_row_title,
       column_method=column_method,
+      row_cex=row_cex,
+      column_cex=column_cex,
       use_raster=use_raster,
       min_gene_ct=min_gene_ct,
       min_set_ct=min_set_ct,

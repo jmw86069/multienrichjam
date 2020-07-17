@@ -1,3 +1,29 @@
+# multienrichjam version 0.0.35.900
+
+## changes to existing functions
+
+* `mem_gene_path_heatmap()` new arguments `column_title`, and
+`row_title` allow custom cluster names, which are also
+carried to Cnet cluster names as needed.
+* `mem_gene_path_heatmap()` was updated to handle `row_split`
+and `column_split` arguments more intuitively, and to allow
+`row_split` values `FALSE`,`0`,`1` to inactivate the split
+completely. Previously it was not possible to turn off split.
+* `mem_plot_folio()` argument was renamed from `pathway_row_split`
+to `gene_row_split` to reflect the intent of this argument
+more accurately. This change is early in the function lifecycle
+and not in broader use yet -- better to change it now. Otherwise,
+future argument name changes will not occur without some type
+of backward compatibility.
+* `mem_gene_path_heatmap()`, `mem_enrichment_heatmap()` and
+`mem_plot_folio()` new arguments `row_cex` and `column_cex`
+used to adjust row and column heatmap labels, which is helpful
+when used with auto-sized axis labels to make minor adjustments.
+* `mem_enrichment_heatmap()` was updated to make the color ramp
+more consistent with `mem_gene_path_heatmap()`, so the color
+scale atop the gene-pathway heatmap more accurately reflects the
+color scale used in the enrichment heatmap itself.
+
 # multienrichjam version 0.0.34.900
 
 ## changes to existing functions

@@ -12,7 +12,9 @@ mem_gene_path_heatmap(
   min_set_ct = 1,
   min_set_ct_each = 4,
   column_fontsize = NULL,
+  column_cex = 1,
   row_fontsize = NULL,
+  row_cex = 1,
   row_method = "binary",
   column_method = "binary",
   enrich_im_weight = 0.3,
@@ -21,14 +23,16 @@ mem_gene_path_heatmap(
   cluster_rows = NULL,
   name = NULL,
   p_cutoff = mem$p_cutoff,
+  p_floor = 1e-06,
   row_split = NULL,
   column_split = NULL,
   auto_split = TRUE,
-  column_title = NULL,
-  row_title = NULL,
+  column_title = LETTERS,
+  row_title = letters,
   row_title_rot = 90,
   colorize_by_gene = FALSE,
   na_col = "white",
+  seed = 123,
   verbose = FALSE,
   ...
 )
@@ -82,7 +86,11 @@ consistency with the input multienrichment analysis.}
 
 \item{column_split, row_split}{optional arguments passed to
 \code{ComplexHeatmap::Heatmap()} to split the heatmap by columns
-or rows, respectively.}
+or rows, respectively. Note that when \code{row_split} is \code{NULL}
+and \code{auto_split=TRUE}, it will determine an appropriate number
+of clusters based upon the number of rows. To turn off row split,
+use \code{row_split=NULL} or \code{row_split=0} or \code{row_split=1};
+likewise for \code{column_split}.}
 
 \item{column_title}{optional character string with title to display
 above the heatmap.}
@@ -105,6 +113,11 @@ blended using \code{avg_colors_by_list()}, using colors from
 NA or missing values. Typically this argument is only used
 when \code{colorize_by_gene=TRUE}, where entries with no color are
 recognized as \code{NA} by \code{ComplexHeatmap::Heatmap()}.}
+
+\item{seed}{\code{numeric} value passed to \code{set.seed()} to allow
+reproducible results, typically with clustering operations.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are passed to \code{ComplexHeatmap::Heatmap()}
 for customization.}
