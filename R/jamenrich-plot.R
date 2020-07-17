@@ -148,8 +148,29 @@ mem_gene_path_heatmap <- function
       name <- "enrichments\nper gene";
    }
 
-   ## apply min_set_ct to each enrichment test
-   if (length(min_set_ct_each) > 0) {
+   ## TODO:
+   ## apply min_set_ct_each alongside p_cutoff to ensure the
+   ## pathways with min_set_ct_each also meet p_cutoff
+   met_p_cutoff <- (mem$enrichIM[colnames(memIM),,drop=FALSE] <= p_cutoff)
+   met_min_set_ct_each <- do.call(cbind, lapply(nameVector(colnames(mem$geneIM)), function(icol){
+      colSums(mem$geneIM[rownames(memIM),icol] * memIM) >= min_set_ct_each;
+   }));
+   met_criteria <- rowSums(met_p_cutoff & met_min_set_ct_each) > 0;
+   if (any(!met_criteria) && verbose) {
+      jamba::printDebug("mem_gene_path_heatmap(): ",
+         "Filtered out ",
+         sum(!met_criteria),
+         " of ",
+         length(met_criteria),
+         " sets using p_cutoff <= ",
+         p_cutoff,
+         " and min_set_ct_each >= ",
+         min_set_ct_each);
+   }
+   memIM <- memIM[,met_criteria,drop=FALSE];
+
+   ## apply min_set_ct_each to each enrichment test
+   if (1 == 2 && length(min_set_ct_each) > 0) {
       memIMsetct_each <- Reduce("pmax",
          lapply(colnames(mem$geneIM), function(icol){
             colSums(mem$geneIM[rownames(memIM),icol] * memIM);
@@ -166,6 +187,7 @@ mem_gene_path_heatmap <- function
          memIM <- memIM[,sets,drop=FALSE];
       }
    }
+   ## apply min_set_ct to each enrichment test
    memIMsetct <- colSums(memIM > 0);
    if (any(memIMsetct < min_set_ct)) {
       if (verbose) {

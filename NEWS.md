@@ -1,5 +1,19 @@
 # multienrichjam version 0.0.35.900
 
+## bug fixes
+
+* `mem_gene_path_heatmap()` was updated to fix a small issue
+with `min_set_ct_each` which requires at least one enrichment
+to have `min_set_ct_each` genes. However, this filter was
+not applied alongside the `p_cutoff` -- therefore some pathways
+with enough genes which were not significantly enriched were
+fulfilling these criteria, as along as another enrichment was
+significant. The new behavior (as expected) is to requires
+an pathway to meet both the `min_set_ct_each` and `p_cutoff`
+thresholds in the same enrichment in order to be retained
+in the gene-pathway incidence matrix.
+
+
 ## changes to existing functions
 
 * `mem_gene_path_heatmap()` new arguments `column_title`, and

@@ -3,6 +3,21 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## Optional highlight genes
+
+* `mem_plot_folio()` and subsequent plots, optional argument
+`highlight_genes` which would effectively hide all gene labels
+except `highlight_genes` -- to help especially crowded plots.
+Would propagate to new function `plot_cnet_heatmaps()` which
+displays expression heatmaps around central cnet plot.
+
+## add `plot_cnet_heatmaps()`
+
+* `plot_cnet_heatmaps()` is in development, and arranges expression
+heatmaps around a central Cnet plot, using genes in each cnet
+cluster. It is intended with `collapse_mem_clusters()` to be
+used with Cnet clusters.
+
 ## Improve reorderIgraphNotes() -- DONE needs more testing, verification
 
 * `reorderIgraphNodes()` when it encounters attributes with multiple
