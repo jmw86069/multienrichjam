@@ -19,6 +19,7 @@ multiEnrichMap(
   enrichLens = 0,
   enrichNumLimit = 4,
   nEM = 500,
+  min_count = 1,
   topEnrichN = 20,
   topEnrichSources = c("Category", "Source"),
   topEnrichCurateFrom = c("CP:.*"),
@@ -26,15 +27,16 @@ multiEnrichMap(
   topEnrichSourceSubset = c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
   topEnrichDescriptionGrep = NULL,
   topEnrichNameGrep = NULL,
-  keyColname = c("ID", "Name", "itemsetID"),
-  nameColname = c("ID", "Name", "itemsetID"),
+  keyColname = c("ID", "Name", "pathway", "itemsetID"),
+  nameColname = c("ID", "Name", "pathway", "itemsetID"),
   geneColname = c("geneID", "geneNames", "Genes"),
-  pvalueColname = c("P-value", "pvalue", "Pval"),
+  countColname = c("gene_count", "count"),
+  pvalueColname = c("padjust", "p.adjust", "adjp", "pvalue", "p.value", "pval", "FDR"),
   descriptionColname = c("Description", "Name", "Pathway"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
   descriptionCurateTo = c(""),
   pathGenes = c("setSize", "pathGenes"),
-  geneHits = c("Count", "geneHits"),
+  geneHits = c("Count", "geneHits", "gene_count"),
   geneDelim = "[,/ ]+",
   GmtTname = NULL,
   msigdbGmtT = NULL,
@@ -106,15 +108,16 @@ from each \code{enrichList} table, by source. Set \code{topEnrichN=0} or
 \code{topEnrichN=NULL} to disable subsetting for the top rows.}
 
 \item{topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep}{arguments passed to \code{topEnrichListBySource()} when \code{topEnrichN}
-is greater than \code{0}.}
+is greater than \code{0}. The default values are used only when
+input data matches these patterns.}
 
-\item{keyColname, nameColname, geneColname, pvalueColname, descriptionColname}{character vectors indicating the colname or colname pattern to
-use for the \code{key}, \code{name}, \code{gene}, \code{pvalue}, and \code{description},
+\item{keyColname, nameColname, geneColname, pvalueColname, descriptionColname}{\code{character} vector in each case indicating the colnames
+for \code{key}, \code{name}, \code{gene}, \code{pvalue}, and \code{description},
 respectively. Each vector is passed to \code{find_colname()} to determine
 the first suitable matching colname for each \code{data.frame} in
 \code{enrichList}.}
 
-\item{descriptionCurateFrom, descriptionCurateTo}{character vectors
+\item{descriptionCurateFrom, descriptionCurateTo}{\code{character} vectors
 with patterns and replacements, passed to \code{gsubs()}, intended to
 help curate common descriptions to shorter, perhaps more
 user-friendly labels. One example is removing the prefix
@@ -123,7 +126,7 @@ These label can be manually curated later, but it is often
 more convenient to curate them upfront in order to keep the
 different result objects consistent.}
 
-\item{pathGenes, geneHits}{character values indicating the colnames
+\item{pathGenes, geneHits}{\code{character} values indicating the colnames
 that contain the number of pathway genes, and the number of gene
 hits, respectively.}
 

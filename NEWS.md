@@ -1,3 +1,38 @@
+# multienrichjam version 0.0.36.900
+
+## bug fixed
+
+* `enrichDF2enrichResult()` was updated to fix #3, thanks to
+@john-lee-johnson for reporting. Issue arose because
+`enrichplot::cnetplot()` expected enrichResult rownames to
+be equal to values in the `"ID"` column of the enrichment
+`data.frame`.
+
+## changes to existing functions
+
+* `multiEnrichMap()` new argument `min_count` requires a pathway
+to contain at least `min_count` genes in order to be considered
+a "hit". This filter is mostly important when used with `topEnrichN`
+to use the top pathways -- it will only sort pathways then take
+the top `topEnrichN` number of pathways that also contain at
+least `min_count` genes.
+* `topEnrichBySource()` and `topEnrichListBySource()` new arguments
+`min_count`, `p_cutoff` require pathways to contain at least
+`min_count` genes, and have no higher than `p_cutoff` enrichment
+P-Value. Previously these functions only took the top pathways,
+regardless of these filters (which were applied later). This change
+allows the filters to be applied before taking the top `topEnrichN`
+pathways, which mostly helps when `min_count` is greater than 1 --
+sometimes pathways with only one gene involved in enrichment
+have statistically significant P-value, but are not biologically
+relevant for interpretation or follow-up experiments.
+For `topEnrichListBySource()` the filter is applied to each
+enrichment in the list, and any pathways meeting the criteria are
+taken for all enrichment lists. So a pathway must 
+be present in the top `topEnrichN` entries which meet both
+the `p_cutoff` and `min_count` criteria to be retained by these
+functions.
+
 # multienrichjam version 0.0.35.900
 
 ## bug fixes

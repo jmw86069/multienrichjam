@@ -7,8 +7,12 @@
 topEnrichBySource(
   enrichDF,
   n = 15,
+  min_count = 1,
+  p_cutoff = 1,
   sourceColnames = c("Category", "Source"),
   sortColname = c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
+  countColname = c("gene_count", "count"),
+  pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val"),
   newColname = "EnrichGroup",
   curateFrom = c("CP:.*"),
   curateTo = c("CP"),
@@ -25,6 +29,19 @@ topEnrichBySource(
 \arguments{
 \item{enrichDF}{\code{data.frame} containing enrichment results.}
 
+\item{n}{\code{integer} maximum number of pathways to retain,
+after applying \code{min_count} and \code{p_cutoff} thresholds
+if relevant.}
+
+\item{min_count}{\code{integer} minimum number of genes involved
+in an enrichment result to be retained, based upon values
+in \code{countColname}.}
+
+\item{p_cutoff}{\code{numeric} value indicating the enrichment
+P-value threshold, pathways with enrichment P-value at
+or below this threshold are retained, based upon values
+in \code{pvalueColname}.}
+
 \item{sourceColnames}{character vector of colnames in
 \code{enrichDF} to consider as the \code{"Source"}. Multiple
 columns will be combined using delimiter argument
@@ -39,8 +56,19 @@ results by source. This argument is passed to
 can be sorted in reverse order by using the prefix \code{"-"},
 as described in \code{jamba::mixedSortDF()}.}
 
+\item{countColname}{\code{character} vector of possible colnames
+in \code{enrichDF} that should contain the \code{integer} number
+of genes involved in enrichment. This vector is
+passed to \code{find_colname()} to find an appropriate
+matching colname in \code{enrichDF}.}
+
+\item{pvalueColname}{\code{character} vector of possible colnames
+in \code{enrichDF} that should contain the enrichment P-value
+used for filtering by \code{p_cutoff}.}
+
 \item{newColname}{new column name to use when \code{sourceColname}
-contains multiple values.}
+matches multiple colnames in \code{enrichDF}. Values for each
+row are combined using \code{jamba::pasteByRow()}.}
 
 \item{curateFrom, curateTo}{character vectors with
 pattern,replacement values, passed to \code{gsubs()}
@@ -50,12 +78,13 @@ to use \code{"CP"} which has the effect of combining all
 canonical pathways before selecting the top \code{n} results.}
 
 \item{sourceSubset}{character vector with a subset of
-sources to retain. This filter is applied after
-\code{sourceColname} values are combined with delimiter
-\code{sourceSep} if there are multiple colnames in \code{sourceColname}.}
+sources to retain. If there are multiple colnames in
+\code{sourceColnames}, then column values are combined
+using \code{jamba::pasteByRow()} and delimiter \code{sourceSep},
+prior to filtering.}
 
 \item{sourceSep}{character string used as a delimiter
-when \code{sourceColname} contains multiple colnames.}
+when \code{sourceColnames} contains multiple colnames.}
 
 \item{descriptionColname, nameColname}{character vectors
 indicating the colnames to consider description and name,
@@ -67,13 +96,16 @@ supplied.}
 to filter pathways to those matching one or more patterns.
 This argument is used to help extract a specific subset
 of pathways of interest using keywords.
-The \code{descriptionGrep} argument searches only colname \code{"Description"}.
-The \code{nameGrep} argument searches only colname \code{"Name"}.}
+The \code{descriptionGrep} argument searches only \code{descriptionColname};
+the \code{nameGrep} argument searches only \code{nameColname}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
+
+\item{...}{additional arguments are ignored.}
 }
 \value{
-\code{data.frame} subsetted by the given parameters.
+\code{data.frame} subset up to \code{topEnrichN} rows, after
+applying optional \code{min_count} and \code{p_cutoff} filters.
 }
 \description{
 Subset enrichList for top enrichment results by source
@@ -82,17 +114,39 @@ Subset enrichList for top enrichment results by source
 This function takes one \code{enrichResult} object, or
 a \code{data.frame} of enrichment results, and determines the
 top \code{n} number of pathways sorted by P-values, within
-each pathway source.
+each pathway source. This function may optionally require
+\code{min_count} genes in each pathway, and \code{p_cutoff} maximum
+enrichment P-value, prior to taking the top \code{topEnrichN}
+entries. The default arguments do not apply filters
+to \code{min_count} and \code{p_cutoff}.
 
-It is particularly effective with results from MSigDB
-(http://software.broadinstitute.org/gsea/msigdb/index.jsp)
-which contains gene sets from a large number of very
-different sources -- which therefore impart different
-characteristics on the enrichment results. Notably,
-certain sources contain small gene sets, which
-produce enrichment P-values in a different possible
-range than other sources which provide much larger
-gene sets.
+When the enrichment data represents pathways from multiple
+sources, the filtering and sorting is applied to each source
+independently. The intent is to retain the top entries from
+each source, as a method of representing each source
+consistently even when one source may contain many more
+pathways, and importantly where the range of enrichment P-values
+may be very different for each source. For example, a database
+of small canonical pathways would generally provide less
+statistically significant P-values than a database of
+dysregulated genes from gene expression experiments, where
+each set contains a large number of genes.
+
+This function can optionally apply basic curation of pathway
+source names, and can optionally be applied to multiple
+source columns. This feature is intended for sources like
+MSigDB (see http://software.broadinstitute.org/gsea/msigdb/index.jsp)
+which contains columns \code{"Source"} and \code{"Category"},
+and where canonical pathways are either represented with \code{"CP"}
+or a prefix \code{"CP:"}. The default parameters recognize this
+case and curates all prefix \code{"CP:.*"} down to just \code{"CP"}
+so that all canonical pathways are considered to be the
+same source. For MSigDB there are also numerous other sources,
+which are each independently filtered and sorted to the
+top \code{topEnrichN} entries.
+
+Finally, this function is useful to subset enrichment results
+by name, using \code{descriptionGrep} or \code{nameGrep}.
 }
 \seealso{
 Other jam enrichment functions: 

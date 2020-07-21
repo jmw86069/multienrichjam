@@ -7,8 +7,12 @@
 topEnrichListBySource(
   enrichList,
   n = 15,
+  min_count = min_count,
+  p_cutoff = 1,
   sourceColnames = c("Category", "Source"),
   sortColname = c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
+  countColname = c("gene_count", "count"),
+  pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val"),
   newColname = "EnrichGroup",
   curateFrom = c("CP:.*"),
   curateTo = c("CP"),
@@ -26,6 +30,19 @@ topEnrichListBySource(
 \item{enrichList}{\code{list} of \code{enrichDF} entries, each passed
 to \code{topEnrichBySource()}.}
 
+\item{n}{\code{integer} maximum number of pathways to retain,
+after applying \code{min_count} and \code{p_cutoff} thresholds
+if relevant.}
+
+\item{min_count}{\code{integer} minimum number of genes involved
+in an enrichment result to be retained, based upon values
+in \code{countColname}.}
+
+\item{p_cutoff}{\code{numeric} value indicating the enrichment
+P-value threshold, pathways with enrichment P-value at
+or below this threshold are retained, based upon values
+in \code{pvalueColname}.}
+
 \item{sourceColnames}{character vector of colnames in
 \code{enrichDF} to consider as the \code{"Source"}. Multiple
 columns will be combined using delimiter argument
@@ -40,8 +57,19 @@ results by source. This argument is passed to
 can be sorted in reverse order by using the prefix \code{"-"},
 as described in \code{jamba::mixedSortDF()}.}
 
+\item{countColname}{\code{character} vector of possible colnames
+in \code{enrichDF} that should contain the \code{integer} number
+of genes involved in enrichment. This vector is
+passed to \code{find_colname()} to find an appropriate
+matching colname in \code{enrichDF}.}
+
+\item{pvalueColname}{\code{character} vector of possible colnames
+in \code{enrichDF} that should contain the enrichment P-value
+used for filtering by \code{p_cutoff}.}
+
 \item{newColname}{new column name to use when \code{sourceColname}
-contains multiple values.}
+matches multiple colnames in \code{enrichDF}. Values for each
+row are combined using \code{jamba::pasteByRow()}.}
 
 \item{curateFrom}{character vectors with
 pattern,replacement values, passed to \code{gsubs()}
@@ -58,12 +86,13 @@ to use \code{"CP"} which has the effect of combining all
 canonical pathways before selecting the top \code{n} results.}
 
 \item{sourceSubset}{character vector with a subset of
-sources to retain. This filter is applied after
-\code{sourceColname} values are combined with delimiter
-\code{sourceSep} if there are multiple colnames in \code{sourceColname}.}
+sources to retain. If there are multiple colnames in
+\code{sourceColnames}, then column values are combined
+using \code{jamba::pasteByRow()} and delimiter \code{sourceSep},
+prior to filtering.}
 
 \item{sourceSep}{character string used as a delimiter
-when \code{sourceColname} contains multiple colnames.}
+when \code{sourceColnames} contains multiple colnames.}
 
 \item{descriptionColname}{character vectors
 indicating the colnames to consider description and name,
@@ -81,17 +110,19 @@ supplied.}
 to filter pathways to those matching one or more patterns.
 This argument is used to help extract a specific subset
 of pathways of interest using keywords.
-The \code{descriptionGrep} argument searches only colname \code{"Description"}.
-The \code{nameGrep} argument searches only colname \code{"Name"}.}
+The \code{descriptionGrep} argument searches only \code{descriptionColname};
+the \code{nameGrep} argument searches only \code{nameColname}.}
 
 \item{nameGrep}{character vector of patterns, used
 to filter pathways to those matching one or more patterns.
 This argument is used to help extract a specific subset
 of pathways of interest using keywords.
-The \code{descriptionGrep} argument searches only colname \code{"Description"}.
-The \code{nameGrep} argument searches only colname \code{"Name"}.}
+The \code{descriptionGrep} argument searches only \code{descriptionColname};
+the \code{nameGrep} argument searches only \code{nameColname}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
+
+\item{...}{additional arguments are ignored.}
 }
 \description{
 Subset enrichList for top enrichment results by source

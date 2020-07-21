@@ -114,6 +114,12 @@ enrichDF2enrichResult <- function
       to=c("ID", "pvalue", "geneID"));
    enrichDF2[,"p.adjust"] <- enrichDF2[,"pvalue"];
 
+   ## Ensure all entries in column "ID" are unique
+   ## because these values need to become rownames for compatibility
+   ## with enrichplot::cnetplot()
+   enrichDF2[["ID"]] <- jamba::makeNames(enrichDF2[["ID"]]);
+   rownames(enrichDF2) <- enrichDF2[["ID"]];
+
    ## Convert gene delimiters all to "/"
    enrichDF2[["geneID"]] <- gsub(geneDelim,
       "/",
@@ -378,14 +384,15 @@ enrichDF2enrichResult <- function
 #'    `topEnrichN=NULL` to disable subsetting for the top rows.
 #' @param topEnrichSources,topEnrichCurateFrom,topEnrichCurateTo,topEnrichSourceSubset,topEnrichDescriptionGrep,topEnrichNameGrep
 #'    arguments passed to `topEnrichListBySource()` when `topEnrichN`
-#'    is greater than `0`.
+#'    is greater than `0`. The default values are used only when
+#'    input data matches these patterns.
 #' @param keyColname,nameColname,geneColname,pvalueColname,descriptionColname
-#'    character vectors indicating the colname or colname pattern to
-#'    use for the `key`, `name`, `gene`, `pvalue`, and `description`,
+#'    `character` vector in each case indicating the colnames
+#'    for `key`, `name`, `gene`, `pvalue`, and `description`,
 #'    respectively. Each vector is passed to `find_colname()` to determine
 #'    the first suitable matching colname for each `data.frame` in
 #'    `enrichList`.
-#' @param descriptionCurateFrom,descriptionCurateTo character vectors
+#' @param descriptionCurateFrom,descriptionCurateTo `character` vectors
 #'    with patterns and replacements, passed to `gsubs()`, intended to
 #'    help curate common descriptions to shorter, perhaps more
 #'    user-friendly labels. One example is removing the prefix
@@ -393,7 +400,7 @@ enrichDF2enrichResult <- function
 #'    These label can be manually curated later, but it is often
 #'    more convenient to curate them upfront in order to keep the
 #'    different result objects consistent.
-#' @param pathGenes,geneHits character values indicating the colnames
+#' @param pathGenes,geneHits `character` values indicating the colnames
 #'    that contain the number of pathway genes, and the number of gene
 #'    hits, respectively.
 #' @param geneDelim character pattern used with `strsplit()` to
@@ -431,6 +438,7 @@ multiEnrichMap <- function
  enrichLens=0,
  enrichNumLimit=4,
  nEM=500,
+ min_count=1,
  topEnrichN=20,
  topEnrichSources=c("Category", "Source"),
  topEnrichCurateFrom=c("CP:.*"),
@@ -438,15 +446,16 @@ multiEnrichMap <- function
  topEnrichSourceSubset=c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
  topEnrichDescriptionGrep=NULL,
  topEnrichNameGrep=NULL,
- keyColname=c("ID", "Name", "itemsetID"),
- nameColname=c("ID", "Name", "itemsetID"),
+ keyColname=c("ID", "Name", "pathway", "itemsetID"),
+ nameColname=c("ID", "Name", "pathway", "itemsetID"),
  geneColname=c("geneID", "geneNames", "Genes"),
- pvalueColname=c("P-value", "pvalue", "Pval"),
+ countColname=c("gene_count", "count"),
+ pvalueColname=c("padjust", "p.adjust", "adjp", "pvalue", "p.value", "pval", "FDR"),
  descriptionColname=c("Description", "Name", "Pathway"),
  descriptionCurateFrom=c("^Genes annotated by the GO term "),
  descriptionCurateTo=c(""),
  pathGenes=c("setSize", "pathGenes"),
- geneHits=c("Count", "geneHits"),
+ geneHits=c("Count", "geneHits", "gene_count"),
  geneDelim="[,/ ]+",
  GmtTname=NULL,
  #GmtTname="msigdbGmtTv50human",
@@ -539,6 +548,8 @@ multiEnrichMap <- function
    pvalueColname <- find_colname(pvalueColname, iDF1);
    descriptionColname <- find_colname(descriptionColname, iDF1);
    nameColname <- find_colname(nameColname, iDF1);
+   countColname <- find_colname(countColname, iDF1);
+   geneHits <- find_colname(geneHits, iDF1);
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "keyColname:", keyColname);
@@ -550,6 +561,8 @@ multiEnrichMap <- function
          "pvalueColname:", pvalueColname);
       jamba::printDebug("multiEnrichMap(): ",
          "descriptionColname:", descriptionColname);
+      jamba::printDebug("multiEnrichMap(): ",
+         "countColname:", countColname);
    }
 
    ## Add some basic information
@@ -647,7 +660,11 @@ multiEnrichMap <- function
       }
       enrichList <- topEnrichListBySource(enrichList,
          n=topEnrichN,
+         min_count=min_count,
+         p_cutoff=cutoffRowMinP,
          sourceColnames=topEnrichSources,
+         pvalueColname=pvalueColname,
+         countColname=geneHits,
          curateFrom=topEnrichCurateFrom,
          curateTo=topEnrichCurateTo,
          sourceSubset=topEnrichSourceSubset,
@@ -2166,23 +2183,56 @@ fixSetLabels <- function
 #' This function takes one `enrichResult` object, or
 #' a `data.frame` of enrichment results, and determines the
 #' top `n` number of pathways sorted by P-values, within
-#' each pathway source.
+#' each pathway source. This function may optionally require
+#' `min_count` genes in each pathway, and `p_cutoff` maximum
+#' enrichment P-value, prior to taking the top `topEnrichN`
+#' entries. The default arguments do not apply filters
+#' to `min_count` and `p_cutoff`.
 #'
-#' It is particularly effective with results from MSigDB
-#' (http://software.broadinstitute.org/gsea/msigdb/index.jsp)
-#' which contains gene sets from a large number of very
-#' different sources -- which therefore impart different
-#' characteristics on the enrichment results. Notably,
-#' certain sources contain small gene sets, which
-#' produce enrichment P-values in a different possible
-#' range than other sources which provide much larger
-#' gene sets.
+#' When the enrichment data represents pathways from multiple
+#' sources, the filtering and sorting is applied to each source
+#' independently. The intent is to retain the top entries from
+#' each source, as a method of representing each source
+#' consistently even when one source may contain many more
+#' pathways, and importantly where the range of enrichment P-values
+#' may be very different for each source. For example, a database
+#' of small canonical pathways would generally provide less
+#' statistically significant P-values than a database of
+#' dysregulated genes from gene expression experiments, where
+#' each set contains a large number of genes.
 #'
-#' @return `data.frame` subsetted by the given parameters.
+#' This function can optionally apply basic curation of pathway
+#' source names, and can optionally be applied to multiple
+#' source columns. This feature is intended for sources like
+#' MSigDB (see http://software.broadinstitute.org/gsea/msigdb/index.jsp)
+#' which contains columns `"Source"` and `"Category"`,
+#' and where canonical pathways are either represented with `"CP"`
+#' or a prefix `"CP:"`. The default parameters recognize this
+#' case and curates all prefix `"CP:.*"` down to just `"CP"`
+#' so that all canonical pathways are considered to be the
+#' same source. For MSigDB there are also numerous other sources,
+#' which are each independently filtered and sorted to the
+#' top `topEnrichN` entries.
+#'
+#' Finally, this function is useful to subset enrichment results
+#' by name, using `descriptionGrep` or `nameGrep`.
+#'
+#' @return `data.frame` subset up to `topEnrichN` rows, after
+#'    applying optional `min_count` and `p_cutoff` filters.
 #'
 #' @family jam enrichment functions
 #'
 #' @param enrichDF `data.frame` containing enrichment results.
+#' @param n `integer` maximum number of pathways to retain,
+#'    after applying `min_count` and `p_cutoff` thresholds
+#'    if relevant.
+#' @param min_count `integer` minimum number of genes involved
+#'    in an enrichment result to be retained, based upon values
+#'    in `countColname`.
+#' @param p_cutoff `numeric` value indicating the enrichment
+#'    P-value threshold, pathways with enrichment P-value at
+#'    or below this threshold are retained, based upon values
+#'    in `pvalueColname`.
 #' @param sourceColnames character vector of colnames in
 #'    `enrichDF` to consider as the `"Source"`. Multiple
 #'    columns will be combined using delimiter argument
@@ -2195,8 +2245,17 @@ fixSetLabels <- function
 #'    `jamba::mixedSortDF(x, byCols=sortColname)`. Columns
 #'    can be sorted in reverse order by using the prefix `"-"`,
 #'    as described in `jamba::mixedSortDF()`.
+#' @param countColname `character` vector of possible colnames
+#'    in `enrichDF` that should contain the `integer` number
+#'    of genes involved in enrichment. This vector is
+#'    passed to `find_colname()` to find an appropriate
+#'    matching colname in `enrichDF`.
+#' @param pvalueColname `character` vector of possible colnames
+#'    in `enrichDF` that should contain the enrichment P-value
+#'    used for filtering by `p_cutoff`.
 #' @param newColname new column name to use when `sourceColname`
-#'    contains multiple values.
+#'    matches multiple colnames in `enrichDF`. Values for each
+#'    row are combined using `jamba::pasteByRow()`.
 #' @param curateFrom,curateTo character vectors with
 #'    pattern,replacement values, passed to `gsubs()`
 #'    to allow some editing of values. The default values
@@ -2204,11 +2263,12 @@ fixSetLabels <- function
 #'    to use `"CP"` which has the effect of combining all
 #'    canonical pathways before selecting the top `n` results.
 #' @param sourceSubset character vector with a subset of
-#'    sources to retain. This filter is applied after
-#'    `sourceColname` values are combined with delimiter
-#'    `sourceSep` if there are multiple colnames in `sourceColname`.
+#'    sources to retain. If there are multiple colnames in
+#'    `sourceColnames`, then column values are combined
+#'    using `jamba::pasteByRow()` and delimiter `sourceSep`,
+#'    prior to filtering.
 #' @param sourceSep character string used as a delimiter
-#'    when `sourceColname` contains multiple colnames.
+#'    when `sourceColnames` contains multiple colnames.
 #' @param descriptionColname,nameColname character vectors
 #'    indicating the colnames to consider description and name,
 #'    as returned from `find_colname()`. These arguments are
@@ -2218,16 +2278,21 @@ fixSetLabels <- function
 #'    to filter pathways to those matching one or more patterns.
 #'    This argument is used to help extract a specific subset
 #'    of pathways of interest using keywords.
-#'    The `descriptionGrep` argument searches only colname `"Description"`.
-#'    The `nameGrep` argument searches only colname `"Name"`.
+#'    The `descriptionGrep` argument searches only `descriptionColname`;
+#'    the `nameGrep` argument searches only `nameColname`.
 #' @param verbose logical indicating whether to print verbose output.
+#' @param ... additional arguments are ignored.
 #'
 #' @export
 topEnrichBySource <- function
 (enrichDF,
  n=15,
+ min_count=1,
+ p_cutoff=1,
  sourceColnames=c("Category","Source"),
  sortColname=c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
+ countColname=c("gene_count", "count"),
+ pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val"),
  newColname="EnrichGroup",
  curateFrom=c("CP:.*"),
  curateTo=c("CP"),
@@ -2290,6 +2355,8 @@ topEnrichBySource <- function
    sourceColnames <- find_colname(sourceColnames, enrichDF);
    descriptionColname <- find_colname(descriptionColname, enrichDF);
    nameColname <- find_colname(nameColname, enrichDF);
+   countColname <- find_colname(countColname, enrichDF);
+   pvalueColname <- find_colname(pvalueColname, enrichDF);
    if (verbose) {
       jamba::printDebug("topEnrichBySource(): ",
          "sourceColnames:", sourceColnames);
@@ -2299,6 +2366,10 @@ topEnrichBySource <- function
          "nameColname:", nameColname);
       jamba::printDebug("topEnrichBySource(): ",
          "sortColname:", sortColname);
+      jamba::printDebug("topEnrichBySource(): ",
+         "countColname:", countColname);
+      jamba::printDebug("topEnrichBySource(): ",
+         "pvalueColname:", pvalueColname);
    }
 
    ## Optionally determine column sort order
@@ -2315,6 +2386,38 @@ topEnrichBySource <- function
       enrichDF <- jamba::mixedSortDF(enrichDF,
          byCols=sortColname,
          ...);
+   }
+
+   ## Apply gene count filter
+   if (length(countColname) > 0 && length(min_count) > 0 && min_count > 1) {
+      if (verbose) {
+         jamba::printDebug("topEnrichBySource(): ",
+            c("Applying filter for min_count >= ",
+               min_count,
+               " retaining ",
+               jamba::formatInt(sum(enrichDF[[countColname]] >= min_count)),
+               " out of ",
+               jamba::formatInt(nrow(enrichDF)),
+               " total entries."),
+            sep="");
+      }
+      enrichDF <- subset(enrichDF, enrichDF[[countColname]] >= min_count);
+   }
+
+   ## Apply pvalue filter
+   if (length(pvalueColname) > 0 && length(p_cutoff) > 0 && p_cutoff < 1) {
+      if (verbose) {
+         jamba::printDebug("topEnrichBySource(): ",
+            c("Applying filter for p_cutoff <= ",
+               p_cutoff,
+               " retaining ",
+               jamba::formatInt(sum(enrichDF[[pvalueColname]] <= p_cutoff)),
+               " out of ",
+               jamba::formatInt(nrow(enrichDF)),
+               " total entries."),
+            sep="");
+      }
+      enrichDF <- subset(enrichDF, enrichDF[[pvalueColname]] <= p_cutoff);
    }
 
    if (length(sourceColnames) == 0) {
@@ -2429,8 +2532,12 @@ topEnrichBySource <- function
 topEnrichListBySource <- function
 (enrichList,
  n=15,
+ min_count=min_count,
+ p_cutoff=1,
  sourceColnames=c("Category","Source"),
  sortColname=c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
+ countColname=c("gene_count", "count"),
+ pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val"),
  newColname="EnrichGroup",
  curateFrom=c("CP:.*"),
  curateTo=c("CP"),
@@ -2459,7 +2566,11 @@ topEnrichListBySource <- function
       iDF <- enrichList[[iName]];
       iDFsub <- topEnrichBySource(iDF,
          n=n,
+         min_count=min_count,
+         p_cutoff=p_cutoff,
          sourceColnames=sourceColnames,
+         countColname=countColname,
+         pvalueColname=pvalueColname,
          sortColname=sortColname,
          newColname=newColname,
          curateFrom=curateFrom,

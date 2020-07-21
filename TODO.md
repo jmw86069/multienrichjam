@@ -3,6 +3,18 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## Apply min_count in `multiEnrichMap()`
+
+* Currently `multiEnrichMap()` does not filter by number of
+genes involved in enrichment, it only filters by enrichment P-value.
+New argument `min_count` is applied only when `topEnrichN` is used,
+but nothing else downstream is aware of filtering by `min_count`.
+The corresponding argument in `mem_plot_folio()` is
+`min_set_ct_each`, which requires a set (pathway) to contain
+at least this many entries in at least one enrichment result
+which also meets `p_cutoff` criteria for enrichment P-value.
+
+
 ## Optional highlight genes
 
 * `mem_plot_folio()` and subsequent plots, optional argument
