@@ -2504,7 +2504,7 @@ topEnrichBySource <- function
       } else {
          subset_keep <- rep(TRUE, nrow(iDFsub))
       }
-      rows_keep <- (descr_keep | name_keep | subset_keep);
+      rows_keep <- (descr_keep & name_keep & subset_keep);
       if (any(!rows_keep)) {
          iDFsub <- sub(iDFsub, rows_keep);
       }
