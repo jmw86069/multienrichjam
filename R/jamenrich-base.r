@@ -671,6 +671,7 @@ multiEnrichMap <- function
          curateFrom=topEnrichCurateFrom,
          curateTo=topEnrichCurateTo,
          sourceSubset=topEnrichSourceSubset,
+         subsetSets=subsetSets,
          descriptionGrep=topEnrichDescriptionGrep,
          nameGrep=topEnrichNameGrep,
          verbose=verbose);
