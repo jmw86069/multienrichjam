@@ -1323,11 +1323,17 @@ mem_plot_folio <- function
             c("Gene-Pathway Heatmap"),
             sep="");
       }
-      caption <- paste0("Hierarchical clustering: distance metric '",
-         column_method, "'\n",
+      caption <- paste0("Hierarchical clustering: column metric '",
+         column_method,
+         "'; row metric '",
+         row_method,
+         "'\n",
          "Data filtering: enrichment P-value <= ", p_cutoff,
          "; genes per set >= ", min_gene_ct,
-         "; sets per gene >= ", min_set_ct);
+         "; sets per gene >= ", min_set_ct,
+         "\n",
+         jamba::formatInt(nrow(gp_hm)), " rows x ",
+         jamba::formatInt(ncol(gp_hm)), " columns");
       grid_with_title(gp_hm,
          title=main,
          caption=caption);

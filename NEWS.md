@@ -1,3 +1,21 @@
+# multienrichjam version 0.0.37.900
+
+## bug fixed
+
+* `multiEnrichMap()` argument `subsetSets` was never implemented;
+existing arguments `descriptionGrep` and `nameGrep` were used for
+similar but insufficient purpose. The `subsetSets` argument defines
+specific pathway names to retain for analysis, and is implemented
+through `topEnrichBySource()` and by proxy `topEnrichListBySource()`.
+These functions might better be called `subsetEnrichResult()` and
+`subsetEnrichList()`, but will not rename these functions.
+
+## enhancements
+
+* `mem_plot_folio()` includes the number of rows (genes)
+and columns (pathways) displayed in the gene-pathway incidence
+matrix heatmap.
+
 # multienrichjam version 0.0.36.900
 
 ## bug fixed

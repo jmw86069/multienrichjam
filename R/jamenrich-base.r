@@ -653,7 +653,10 @@ multiEnrichMap <- function
 
    #####################################################################
    ## Optionally run topEnrichBySource()
-   if (length(topEnrichN) > 0 && all(topEnrichN) > 0) {
+   if ((length(topEnrichN) > 0 && all(topEnrichN) > 0) ||
+         length(subsetSets) > 0 ||
+         length(topEnrichNameGrep) > 0 ||
+         length(topEnrichDescriptionGrep) > 0) {
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "running topEnrichBySource().");
@@ -2298,6 +2301,7 @@ topEnrichBySource <- function
  curateTo=c("CP"),
  sourceSubset=NULL,
  sourceSep="_",
+ subsetSets=NULL,
  descriptionColname=c("Description", "Name", "Pathway"),
  nameColname=c("ID", "Name"),
  descriptionGrep=NULL,
@@ -2470,6 +2474,7 @@ topEnrichBySource <- function
 
    iDFtopL <- lapply(jamba::nameVectorN(iDFsplitL), function(iSubset){
       iDFsub <- iDFsplitL[[iSubset]];
+      ## descriptionGrep
       if (length(descriptionColname) > 0 && length(descriptionGrep) > 0 && nrow(iDFsub) > 0) {
          descr_keep_vals <- jamba::provigrep(descriptionGrep,
             iDFsub[[descriptionColname]]);
@@ -2481,6 +2486,7 @@ topEnrichBySource <- function
       } else {
          descr_keep <- rep(TRUE, nrow(iDFsub))
       }
+      ## nameGrep
       if (length(nameColname) > 0 && length(nameGrep) > 0 && nrow(iDFsub) > 0) {
          name_keep_vals <- jamba::provigrep(nameGrep,
             iDFsub[[nameColname]]);
@@ -2492,7 +2498,13 @@ topEnrichBySource <- function
       } else {
          name_keep <- rep(TRUE, nrow(iDFsub))
       }
-      rows_keep <- (descr_keep | name_keep);
+      ## subsetSets
+      if (length(nameColname) > 0 && length(subsetSets) > 0) {
+         subset_keep <- (tolower(iDFsub[[nameColname]]) %in% tolower(subsetSets));
+      } else {
+         subset_keep <- rep(TRUE, nrow(iDFsub))
+      }
+      rows_keep <- (descr_keep | name_keep | subset_keep);
       if (any(!rows_keep)) {
          iDFsub <- sub(iDFsub, rows_keep);
       }
@@ -2543,6 +2555,7 @@ topEnrichListBySource <- function
  curateTo=c("CP"),
  sourceSubset=NULL,
  sourceSep="_",
+ subsetSets=NULL,
  descriptionColname=c("Description", "Name", "Pathway"),
  nameColname=c("ID", "Name"),
  descriptionGrep=NULL,
@@ -2580,6 +2593,7 @@ topEnrichListBySource <- function
          descriptionColname=descriptionColname,
          nameColname=nameColname,
          descriptionGrep=descriptionGrep,
+         subsetSets=subsetSets,
          nameGrep=nameGrep,
          verbose=FALSE,
          ...);
@@ -2602,11 +2616,9 @@ topEnrichListBySource <- function
       iDF <- enrichList[[iName]];
       if (jamba::igrepHas("enrichResult", class(iDF))) {
          iDF <- iDF@result;
-         if (!"Name" %in% colnames(iDF)) {
-            iDF[,"Name"] <- iDF[,"ID"];
-         }
       }
-      iDFsub <- subset(iDF, Name %in% enrichNames);
+      nameColnameUse <- find_colname(nameColname, iDF);
+      iDFsub <- subset(iDF, iDF[[nameColnameUse]] %in% enrichNames);
       iDFsub;
    });
    enrichLsubL;

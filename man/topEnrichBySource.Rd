@@ -18,6 +18,7 @@ topEnrichBySource(
   curateTo = c("CP"),
   sourceSubset = NULL,
   sourceSep = "_",
+  subsetSets = NULL,
   descriptionColname = c("Description", "Name", "Pathway"),
   nameColname = c("ID", "Name"),
   descriptionGrep = NULL,

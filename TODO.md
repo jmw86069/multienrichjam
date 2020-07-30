@@ -3,6 +3,22 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## apply subsetSets in `multiEnrichMap()`
+
+* apparently it had never been implemented?
+
+
+## apply node color order based upon shape of node cluster
+
+`reorderIgraphNodes()`
+
+* when a cluster of nodes is short-wide, the order should be left-to-right
+* when a cluster of nodes is tall-skinny, the order should be top-to-bottom
+* all else should be sorted left-to-right (or user-defined default order)
+
+   * it is visually confusing when tall-skinny nodes are sorted left-to-right
+
+
 ## Apply min_count in `multiEnrichMap()`
 
 * Currently `multiEnrichMap()` does not filter by number of
