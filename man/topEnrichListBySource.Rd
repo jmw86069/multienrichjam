@@ -7,7 +7,7 @@
 topEnrichListBySource(
   enrichList,
   n = 15,
-  min_count = min_count,
+  min_count = 1,
   p_cutoff = 1,
   sourceColnames = c("Category", "Source"),
   sortColname = c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),

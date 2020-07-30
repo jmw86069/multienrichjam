@@ -2506,7 +2506,7 @@ topEnrichBySource <- function
       }
       rows_keep <- (descr_keep & name_keep & subset_keep);
       if (any(!rows_keep)) {
-         iDFsub <- sub(iDFsub, rows_keep);
+         iDFsub <- subset(iDFsub, rows_keep);
       }
       iDFtop <- head(iDFsub, n);
       iDFtop;
@@ -2544,7 +2544,7 @@ topEnrichBySource <- function
 topEnrichListBySource <- function
 (enrichList,
  n=15,
- min_count=min_count,
+ min_count=1,
  p_cutoff=1,
  sourceColnames=c("Category","Source"),
  sortColname=c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
