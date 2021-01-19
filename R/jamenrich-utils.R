@@ -266,6 +266,9 @@ mem_find_overlap <- function
 #' it takes a list of `enrichResult` objects, and determines
 #' the full set of genes involved in each `enrichResult`.
 #'
+#' This function also works with `ComplexHeatmap::HeatmapList`
+#' objects.
+#'
 #' @family jam utility functions
 #'
 #' @return `list` of character vectors, containing the unique
@@ -304,6 +307,15 @@ enrichList2geneHitList <- function
 
 #' Return Heatmap row order
 #'
+#' Return Heatmap row order as a list of character vectors
+#'
+#' This function is a helpful utility to return the fully
+#' qualified list of rownames in a `ComplexHeatmap::Heatmap`
+#' object.
+#'
+#' This function also works with `ComplexHeatmap::HeatmapList`
+#' objects.
+#'
 #' @family jam utility functions
 #'
 #' @export
@@ -311,6 +323,9 @@ heatmap_row_order <- function
 (hm)
 {
    ##
+   if ("HeatmapList" %in% class(hm)) {
+      hm <- hm@ht_list[[1]];
+   }
    x <- lapply(ComplexHeatmap::row_order(hm), function(i){
       hm@row_names_param$labels[i]
    });
@@ -322,6 +337,12 @@ heatmap_row_order <- function
 
 #' Return Heatmap column order
 #'
+#' Return Heatmap column order as a list of character vectors
+#'
+#' This function is a helpful utility to return the fully
+#' qualified list of colnames in a `ComplexHeatmap::Heatmap`
+#' object.
+#'
 #' @family jam utility functions
 #'
 #' @export
@@ -329,6 +350,9 @@ heatmap_column_order <- function
 (hm)
 {
    ##
+   if ("HeatmapList" %in% class(hm)) {
+      hm <- hm@ht_list[[1]];
+   }
    x <- lapply(ComplexHeatmap::column_order(hm), function(i){
       hm@column_names_param$labels[i]
    });

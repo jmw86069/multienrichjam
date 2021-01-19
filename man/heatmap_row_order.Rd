@@ -7,7 +7,15 @@
 heatmap_row_order(hm)
 }
 \description{
-Return Heatmap row order
+Return Heatmap row order as a list of character vectors
+}
+\details{
+This function is a helpful utility to return the fully
+qualified list of rownames in a \code{ComplexHeatmap::Heatmap}
+object.
+
+This function also works with \code{ComplexHeatmap::HeatmapList}
+objects.
 }
 \seealso{
 Other jam utility functions: 

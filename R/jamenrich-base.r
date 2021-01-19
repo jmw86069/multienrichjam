@@ -79,6 +79,7 @@ enrichDF2enrichResult <- function
  geneRatioColname=c("GeneRatio", "^Ratio"),
  geneDelim="[,/ ]+",
  pvalueColname=c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
+ descriptionColname=c("Description", "Name", "Pathway"),
  verbose=FALSE,
  ...)
 {
@@ -95,6 +96,7 @@ enrichDF2enrichResult <- function
    geneHits <- find_colname(geneHits, enrichDF);
    geneRatioColname <- find_colname(geneRatioColname, enrichDF);
    pvalueColname <- find_colname(pvalueColname, enrichDF);
+   descriptionColname <- find_colname(descriptionColname, enrichDF);
    if (verbose) {
       jamba::printDebug("enrichDF2enrichResult(): ",
          "Colnames matched in the input data:",
@@ -103,16 +105,40 @@ enrichDF2enrichResult <- function
          "\ngeneColname:", geneColname,
          "\ngeneHits:", geneHits,
          "\ngeneRatioColname:", geneRatioColname,
-         "\npvalueColname:", pvalueColname);
+         "\npvalueColname:", pvalueColname,
+         "\ndescriptionColname:", descriptionColname);
    }
    if (length(c(keyColname, pvalueColname, geneColname)) < 3) {
       stop("Could not find c(keyColname, pvalueColname, geneColname) in the input colnames.");
+   }
+
+   ## Confirm Description column
+   if (length(descriptionColname) == 0) {
+      warning(paste("No 'Description' colname was found in enrichDF,",
+         "which prevents this data from being used by",
+         "enrichplot and clusterProfiler functions.",
+         "The Description column is recommended to contain",
+         "the full name of the gene set.",
+         sep="\n"));
+   } else if (descriptionColname %in% c(keyColname)) {
+      # If it is also the keyColname we need to make two columns
+      # so both names can co-exist.
+      enrichDF$Description <- enrichDF[[descriptionColname]];
+   } else {
+      ## Otherwise rename to make sure the final colname
+      ## is 'Description' to fit expectations of
+      ## enrichplot:::fortify.internal()
+      enrichDF <- jamba::renameColumn(enrichDF,
+         from=descriptionColname,
+         to="Description");
+      descriptionColname <- "Description";
    }
 
    enrichDF2 <- jamba::renameColumn(enrichDF,
       from=c(keyColname, pvalueColname, geneColname),
       to=c("ID", "pvalue", "geneID"));
    enrichDF2[,"p.adjust"] <- enrichDF2[,"pvalue"];
+
 
    ## Ensure all entries in column "ID" are unique
    ## because these values need to become rownames for compatibility
@@ -225,7 +251,7 @@ enrichDF2enrichResult <- function
    }
 
    ## Re-order columns so "ID" is the first column
-   if (verbose) {
+   if (verbose >= 2) {
       jamba::printDebug("enrichList2df(): ",
          "colnames(enrichDF2):", colnames(enrichDF2));
       jamba::printDebug("enrichList2df(): ",
@@ -949,6 +975,7 @@ multiEnrichMap <- function
       geneHits=geneHits,
       pathGenes=pathGenes,
       keyColname=keyColname,
+      descriptionColname=descriptionColname,
       geneColname=geneColname,
       geneCountColname=geneCountColname,
       geneDelim=geneDelim,

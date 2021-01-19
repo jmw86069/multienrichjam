@@ -1,3 +1,21 @@
+# multienrichjam version 0.0.38.900
+
+## bug fixes
+
+* Update to address issue #4 in `enrichDF2enrichResult()` with
+new argument `descriptionColname` which will force the resulting
+colname to be `"Description"` to fit expectations of
+`enrichplot:::fortify.internal()` which requires `df$Description`.
+When `descriptionColname` is not supplied, or not found in the
+input `enrichDF` a warning is issued that describes the problem.
+
+## enhancements
+
+* `heatmap_row_order()` and `heatmap_column_order()` now also
+work with `HeatmapList` objects. By default they use the first
+heatmap in the list, which should be consistent with all other
+heatmaps.
+
 # multienrichjam version 0.0.37.900
 
 ## bug fixed

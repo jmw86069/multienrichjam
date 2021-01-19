@@ -23,6 +23,9 @@ Extract gene hit list from list of enrichResult
 This function is mainly for internal use in multienrichjam,
 it takes a list of \code{enrichResult} objects, and determines
 the full set of genes involved in each \code{enrichResult}.
+
+This function also works with \code{ComplexHeatmap::HeatmapList}
+objects.
 }
 \seealso{
 Other jam utility functions: 

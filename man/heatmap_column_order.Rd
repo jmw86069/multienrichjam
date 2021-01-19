@@ -7,7 +7,12 @@
 heatmap_column_order(hm)
 }
 \description{
-Return Heatmap column order
+Return Heatmap column order as a list of character vectors
+}
+\details{
+This function is a helpful utility to return the fully
+qualified list of colnames in a \code{ComplexHeatmap::Heatmap}
+object.
 }
 \seealso{
 Other jam utility functions: 
