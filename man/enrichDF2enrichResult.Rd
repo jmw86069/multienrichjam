@@ -16,7 +16,7 @@ enrichDF2enrichResult(
   geneRatioColname = c("GeneRatio", "^Ratio"),
   geneDelim = "[,/ ]+",
   pvalueColname = c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
-  descriptionColname = c("Description", "Name", "Pathway"),
+  descriptionColname = c("Description", "Name", "Pathway", "ID"),
   verbose = FALSE,
   ...
 )

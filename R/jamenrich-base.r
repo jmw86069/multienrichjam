@@ -79,7 +79,7 @@ enrichDF2enrichResult <- function
  geneRatioColname=c("GeneRatio", "^Ratio"),
  geneDelim="[,/ ]+",
  pvalueColname=c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
- descriptionColname=c("Description", "Name", "Pathway"),
+ descriptionColname=c("Description", "Name", "Pathway", "ID"),
  verbose=FALSE,
  ...)
 {
