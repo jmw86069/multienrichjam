@@ -69,6 +69,11 @@ Create a cnetplot igraph object
 \details{
 The purpose of this function is to mimic the steps in \code{DOSE:::cnetplot()}
 except not plot the output, and provide some customizations.
+
+This function calls \code{cnetplot_internalJam()}, which among other things
+adds a node attribute to the resulting \code{igraph}, \code{"nodeType"},
+where \code{nodeType="Gene"} identifies gene nodes, and \code{nodeType="Set"}
+identifies pathway/gene set nodes.
 }
 \seealso{
 Other jam igraph functions: 

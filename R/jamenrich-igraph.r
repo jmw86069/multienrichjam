@@ -218,6 +218,11 @@ relayout_with_qfr <- function
 #' The purpose of this function is to mimic the steps in `DOSE:::cnetplot()`
 #' except not plot the output, and provide some customizations.
 #'
+#' This function calls `cnetplot_internalJam()`, which among other things
+#' adds a node attribute to the resulting `igraph`, `"nodeType"`,
+#' where `nodeType="Gene"` identifies gene nodes, and `nodeType="Set"`
+#' identifies pathway/gene set nodes.
+#'
 #' @param x enrichResults object
 #' @param showCategory integer number of categories to include in the
 #'    resulting Cnet plot.
@@ -252,19 +257,19 @@ relayout_with_qfr <- function
 #' @export
 cnetplotJam <- function
 (x,
-showCategory=5,
-categorySize="geneNum",
-nodeLabel=c("Name", "Description", "ID"),
-foldChange=NULL,
-fixed=TRUE,
-doPlot=FALSE,
-categoryColor="#E5C494",
-geneColor="#B3B3B3",
-normalizeGeneSize=TRUE,
-labelCex=0.45,
-colorSub=NULL,
-verbose=FALSE,
-...)
+ showCategory=5,
+ categorySize="geneNum",
+ nodeLabel=c("Name", "Description", "ID"),
+ foldChange=NULL,
+ fixed=TRUE,
+ doPlot=FALSE,
+ categoryColor="#E5C494",
+ geneColor="#B3B3B3",
+ normalizeGeneSize=TRUE,
+ labelCex=0.45,
+ colorSub=NULL,
+ verbose=FALSE,
+ ...)
 {
    ## Purpose is to run DOSE::cnetplot() but not create a plot.
    ##
@@ -355,6 +360,7 @@ verbose=FALSE,
    geneColorMatch <- "#B3B3B3";
    iWhichCat <- which(igraph::V(g)$color %in% categoryColorMatch);
    iWhichGene <- which(igraph::V(g)$color %in% geneColorMatch);
+
    #V(g)$color <- ifelse(V(g)$color %in% categoryColorMatch,
    #   categoryColor,
    #   ifelse(V(g)$color %in% geneColorMatch,
@@ -470,8 +476,12 @@ cnetplot_internalJam <- function
 
    igraph::V(g)$size <- 5;
    igraph::V(g)$color <- geneColor;
-   igraph::V(g)[1:lengthOfCategory]$size <- 30;
-   igraph::V(g)[1:lengthOfCategory]$color <- categoryColor;
+   igraph::V(g)[seq_len(lengthOfCategory)]$size <- 30;
+   igraph::V(g)[seq_len(lengthOfCategory)]$color <- categoryColor;
+
+   ## 0.0.39.900 - update to add nodeType "Set" or "Gene"
+   igraph::V(g)$nodeType <- "Gene";
+   igraph::V(g)[seq_len(lengthOfCategory)]$nodeType <- "Set";
 
    ## Size category nodes
    if (is.numeric(categorySize)) {

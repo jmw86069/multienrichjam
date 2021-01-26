@@ -1,3 +1,12 @@
+# multienrichjam version 0.0.39.900
+
+## changes to existing functions
+
+* `cnetplot_internalJam()` was updated to include `"nodeType"` as
+a node attribute, which helps distinguish `"Gene"` and `"Set"`
+nodes in downstream operations. This change helps address
+#5 to hide the gene labels on Cnet plots.
+
 # multienrichjam version 0.0.38.900
 
 ## bug fixes
