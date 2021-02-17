@@ -1,3 +1,10 @@
+# multienrichjam version 0.0.40.900
+
+## bug fixes
+
+* `collapse_mem_clusters()` - fixed error when using `apply()`
+on a matrix that had one row or one column.
+
 # multienrichjam version 0.0.39.900
 
 ## changes to existing functions

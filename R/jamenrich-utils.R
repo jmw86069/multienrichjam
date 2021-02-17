@@ -765,7 +765,10 @@ collapse_mem_clusters <- function
    ## - determine fraction versus max column count
    cluster_enrichIMcolors <- rbindList(lapply(cluster_sets_l, function(iset1){
       isetm1 <- mem$enrichIMcolors[iset1,,drop=FALSE]
-      color_counts <- colSums(!apply(isetm1, 2, isColorBlank));
+      # fix issue when only one row or one column
+      isetm1_blank <- matrix(apply(isetm1, 2, isColorBlank), ncol=ncol(isetm1));
+      color_counts <- colSums(!isetm1_blank);
+      names(color_counts) <- colnames(isetm1);
       sapply(colnames(isetm1), function(k1){
          if ((color_counts[k1] / max(color_counts)) >= cluster_color_min_fraction) {
             unname(mem$colorV[k1])
