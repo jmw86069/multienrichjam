@@ -133,7 +133,9 @@ gene-pathway heatmap.}
 }
 \value{
 \code{list} is returned via invisible, which contains each
-relevant object.
+relevant object: \code{clusters_mem} is a \code{list} representing the Cnet
+pathway clusters indicated in the gene-pathway incidence matrix
+heatmap.
 }
 \description{
 Multienrichment folio of summary plots

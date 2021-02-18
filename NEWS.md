@@ -4,6 +4,14 @@
 
 * `collapse_mem_clusters()` - fixed error when using `apply()`
 on a matrix that had one row or one column.
+* `subsetCnetIgraph()` fixed issue when the Cnet igraph object
+has no internal layout, it runs `relayout_with_qfr()` by default.
+
+## changes to existing functions
+
+* `mem_plot_folio()` now returns `clusters_mem` in the `list`,
+which includes the pathway set names represented in each
+cluster shown in the gene-pathway incidence matrix heatmap.
 
 # multienrichjam version 0.0.39.900
 

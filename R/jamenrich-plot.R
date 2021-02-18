@@ -1129,7 +1129,9 @@ jam_igraph <- function
 #' @family jam plot functions
 #'
 #' @return `list` is returned via invisible, which contains each
-#'    relevant object.
+#'    relevant object: `clusters_mem` is a `list` representing the Cnet
+#'    pathway clusters indicated in the gene-pathway incidence matrix
+#'    heatmap.
 #'
 #' @param mem `list` object created by `multiEnrichMap()`. Specifically
 #'    the object is expected to contain `colorV`, `enrichIM`,
@@ -1341,6 +1343,7 @@ mem_plot_folio <- function
    }
    ## Obtain heatmap pathway clusters
    clusters_mem <- heatmap_column_order(gp_hm);
+   ret_vals$clusters_mem <- clusters_mem;
    ## Get number of pathway clusters
    pathway_clusters_n <- length(clusters_mem);
    if (verbose) {

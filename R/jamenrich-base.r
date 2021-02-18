@@ -1943,7 +1943,14 @@ subsetCnetIgraph <- function
          ...);
    } else {
       if (force_relayout) {
-         if (is.function(layout)) {
+         if (length(layout) == 0) {
+            gCnet <- relayout_with_qfr(gCnet,
+               repulse=repulse,
+               spread_labels=spread_labels,
+               ...);
+            layout <- graph_attr(gCnet, "layout");
+            rownames(layout) <- V(gCnet)$name;
+         } else if (is.function(layout)) {
             layout <- layout(gCnet);
          } else {
             layout <- layout[!dropNodes,,drop=FALSE];
