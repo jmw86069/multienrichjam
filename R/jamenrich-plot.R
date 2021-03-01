@@ -1375,7 +1375,9 @@ mem_plot_folio <- function
             include_cluster_title=include_cluster_title,
             return_type="cnet");
       }, error=function(e){
-         NULL
+         jamba::printDebug("Error during collapse_mem_clusters(), returning NULL.");
+         print(e);
+         NULL;
       });
       if (length(cnet_collapsed) == 0) {
          return(list(mem=mem, clusters_mem=clusters_mem, ret_vals=ret_vals))

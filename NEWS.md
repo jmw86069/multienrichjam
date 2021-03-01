@@ -1,3 +1,16 @@
+# multienrichjam version 0.0.41.900
+
+## bug fixes
+
+* `mem_plot_folio()` returns `NULL` when there is an error
+during the Cnet collapse step, and does not report the error.
+Now it at least reports the error. The underlying cause in
+this case was ComplexHeatmap not accepting horizontal
+color legend orientation in R-3.6.1 (grid package version 3.6.1)
+because of some new unit arithmetic only available in
+grid 4.0.0+. Hiding the color legend, or using vertical
+color legend fixed the issue.
+
 # multienrichjam version 0.0.40.900
 
 ## bug fixes
