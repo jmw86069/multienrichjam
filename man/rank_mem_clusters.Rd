@@ -83,6 +83,7 @@ Other jam utility functions:
 \code{\link{isColorBlank}()},
 \code{\link{mem_find_overlap}()},
 \code{\link{order_colors}()},
+\code{\link{rotate_coordinates}()},
 \code{\link{sort_colors}()},
 \code{\link{subgraph_jam}()},
 \code{\link{xyAngle}()}

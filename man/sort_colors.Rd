@@ -49,6 +49,7 @@ Other jam utility functions:
 \code{\link{mem_find_overlap}()},
 \code{\link{order_colors}()},
 \code{\link{rank_mem_clusters}()},
+\code{\link{rotate_coordinates}()},
 \code{\link{subgraph_jam}()},
 \code{\link{xyAngle}()}
 }

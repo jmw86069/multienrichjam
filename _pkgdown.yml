@@ -18,6 +18,10 @@ reference:
   desc: Functions that extend or customize igraph-related features
   contents:
   - has_concept("jam igraph functions")
+- title: Cnet igraph-related functions
+  desc: Functions specific to Cnet igraph objects
+  contents:
+  - has_concept("jam cnet igraph functions")
 - title: igraph vertex shapes
   desc: Functions that provide custom igraph vertex shapes
   contents:

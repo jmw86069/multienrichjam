@@ -2430,7 +2430,8 @@ color_edges_by_nodes <- function
 
 #' Jam igraph vectorized plot function
 #'
-#' Jam igraph vectorized plot function
+#' Jam igraph vectorized plot function, usually called via `jam_igraph()`
+#' and not called directly.
 #'
 #' This function is a complete copy of `igraph:::plot.igraph()` with
 #' two changes to enable vectorized plotting in these situations:
@@ -3156,3 +3157,4 @@ colors_from_list <- function
    jString <- jamba::pasteByRowOrdered(colorattrdf);
    return(order(jString));
 }
+

@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Prepare MultiEnrichMap data from enrichList — multiEnrichMap" />
 <meta property="og:description" content="Prepare MultiEnrichMap data from enrichList" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.27.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.42.900</span>
       </span>
     </div>
 
@@ -102,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jmw86069/multienrichjam">
+  <a href="http://github.com/jmw86069/multienrichjam/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -121,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prepare MultiEnrichMap data from enrichList</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-base.r'><code>R/jamenrich-base.r</code></a></small>
+    <small class="dont-index">Source: <a href='http://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-base.r'><code>R/jamenrich-base.r</code></a></small>
     <div class="hidden name"><code>multiEnrichMap.Rd</code></div>
     </div>
 
@@ -129,43 +132,45 @@
     <p>Prepare MultiEnrichMap data from enrichList</p>
     </div>
 
-    <pre class="usage"><span class='fu'>multiEnrichMap</span>(
-  <span class='no'>enrichList</span>,
-  <span class='kw'>geneHitList</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>colorV</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>enrichLabels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>subsetSets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>overlapThreshold</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>cutoffRowMinP</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>enrichBaseline</span> <span class='kw'>=</span> -<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log10</a></span>(<span class='no'>cutoffRowMinP</span>),
-  <span class='kw'>enrichLens</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>enrichNumLimit</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>nEM</span> <span class='kw'>=</span> <span class='fl'>500</span>,
-  <span class='kw'>topEnrichN</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>topEnrichSources</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Category"</span>, <span class='st'>"Source"</span>),
-  <span class='kw'>topEnrichCurateFrom</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CP:.*"</span>),
-  <span class='kw'>topEnrichCurateTo</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CP"</span>),
-  <span class='kw'>topEnrichSourceSubset</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C2_CP"</span>, <span class='st'>"C5_BP"</span>, <span class='st'>"C5_CC"</span>, <span class='st'>"C5_MF"</span>),
-  <span class='kw'>topEnrichDescriptionGrep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>topEnrichNameGrep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>keyColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ID"</span>, <span class='st'>"Name"</span>, <span class='st'>"itemsetID"</span>),
-  <span class='kw'>nameColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ID"</span>, <span class='st'>"Name"</span>, <span class='st'>"itemsetID"</span>),
-  <span class='kw'>geneColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"geneID"</span>, <span class='st'>"geneNames"</span>, <span class='st'>"Genes"</span>),
-  <span class='kw'>pvalueColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"P-value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"Pval"</span>),
-  <span class='kw'>descriptionColname</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Description"</span>, <span class='st'>"Name"</span>, <span class='st'>"Pathway"</span>),
-  <span class='kw'>descriptionCurateFrom</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"^Genes annotated by the GO term "</span>),
-  <span class='kw'>descriptionCurateTo</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>""</span>),
-  <span class='kw'>pathGenes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"setSize"</span>, <span class='st'>"pathGenes"</span>),
-  <span class='kw'>geneHits</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Count"</span>, <span class='st'>"geneHits"</span>),
-  <span class='kw'>geneDelim</span> <span class='kw'>=</span> <span class='st'>"[,/ ]+"</span>,
-  <span class='kw'>GmtTname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>msigdbGmtT</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>multiEnrichMap</span><span class='op'>(</span>
+  <span class='va'>enrichList</span>,
+  geneHitList <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colorV <span class='op'>=</span> <span class='cn'>NULL</span>,
+  nrow <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ncol <span class='op'>=</span> <span class='cn'>NULL</span>,
+  byrow <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  enrichLabels <span class='op'>=</span> <span class='cn'>NULL</span>,
+  subsetSets <span class='op'>=</span> <span class='cn'>NULL</span>,
+  overlapThreshold <span class='op'>=</span> <span class='fl'>0.1</span>,
+  cutoffRowMinP <span class='op'>=</span> <span class='fl'>0.05</span>,
+  enrichBaseline <span class='op'>=</span> <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log10</a></span><span class='op'>(</span><span class='va'>cutoffRowMinP</span><span class='op'>)</span>,
+  enrichLens <span class='op'>=</span> <span class='fl'>0</span>,
+  enrichNumLimit <span class='op'>=</span> <span class='fl'>4</span>,
+  nEM <span class='op'>=</span> <span class='fl'>500</span>,
+  min_count <span class='op'>=</span> <span class='fl'>1</span>,
+  topEnrichN <span class='op'>=</span> <span class='fl'>20</span>,
+  topEnrichSources <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Category"</span>, <span class='st'>"Source"</span><span class='op'>)</span>,
+  topEnrichCurateFrom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CP:.*"</span><span class='op'>)</span>,
+  topEnrichCurateTo <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CP"</span><span class='op'>)</span>,
+  topEnrichSourceSubset <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"C2_CP"</span>, <span class='st'>"C5_BP"</span>, <span class='st'>"C5_CC"</span>, <span class='st'>"C5_MF"</span><span class='op'>)</span>,
+  topEnrichDescriptionGrep <span class='op'>=</span> <span class='cn'>NULL</span>,
+  topEnrichNameGrep <span class='op'>=</span> <span class='cn'>NULL</span>,
+  keyColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ID"</span>, <span class='st'>"Name"</span>, <span class='st'>"pathway"</span>, <span class='st'>"itemsetID"</span><span class='op'>)</span>,
+  nameColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ID"</span>, <span class='st'>"Name"</span>, <span class='st'>"pathway"</span>, <span class='st'>"itemsetID"</span><span class='op'>)</span>,
+  geneColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"geneID"</span>, <span class='st'>"geneNames"</span>, <span class='st'>"Genes"</span><span class='op'>)</span>,
+  countColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene_count"</span>, <span class='st'>"count"</span><span class='op'>)</span>,
+  pvalueColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"padjust"</span>, <span class='st'>"p.adjust"</span>, <span class='st'>"adjp"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"p.value"</span>, <span class='st'>"pval"</span>, <span class='st'>"FDR"</span><span class='op'>)</span>,
+  descriptionColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Description"</span>, <span class='st'>"Name"</span>, <span class='st'>"Pathway"</span><span class='op'>)</span>,
+  descriptionCurateFrom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"^Genes annotated by the GO term "</span><span class='op'>)</span>,
+  descriptionCurateTo <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>""</span><span class='op'>)</span>,
+  pathGenes <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"setSize"</span>, <span class='st'>"pathGenes"</span><span class='op'>)</span>,
+  geneHits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Count"</span>, <span class='st'>"geneHits"</span>, <span class='st'>"gene_count"</span><span class='op'>)</span>,
+  geneDelim <span class='op'>=</span> <span class='st'>"[,/ ]+"</span>,
+  GmtTname <span class='op'>=</span> <span class='cn'>NULL</span>,
+  msigdbGmtT <span class='op'>=</span> <span class='cn'>NULL</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -261,19 +266,20 @@ from each <code>enrichList</code> table, by source. Set <code>topEnrichN=0</code
     <tr>
       <th>topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep</th>
       <td><p>arguments passed to <code><a href='topEnrichListBySource.html'>topEnrichListBySource()</a></code> when <code>topEnrichN</code>
-is greater than <code>0</code>.</p></td>
+is greater than <code>0</code>. The default values are used only when
+input data matches these patterns.</p></td>
     </tr>
     <tr>
       <th>keyColname, nameColname, geneColname, pvalueColname, descriptionColname</th>
-      <td><p>character vectors indicating the colname or colname pattern to
-use for the <code>key</code>, <code>name</code>, <code>gene</code>, <code>pvalue</code>, and <code>description</code>,
+      <td><p><code>character</code> vector in each case indicating the colnames
+for <code>key</code>, <code>name</code>, <code>gene</code>, <code>pvalue</code>, and <code>description</code>,
 respectively. Each vector is passed to <code><a href='find_colname.html'>find_colname()</a></code> to determine
 the first suitable matching colname for each <code>data.frame</code> in
 <code>enrichList</code>.</p></td>
     </tr>
     <tr>
       <th>descriptionCurateFrom, descriptionCurateTo</th>
-      <td><p>character vectors
+      <td><p><code>character</code> vectors
 with patterns and replacements, passed to <code><a href='gsubs.html'>gsubs()</a></code>, intended to
 help curate common descriptions to shorter, perhaps more
 user-friendly labels. One example is removing the prefix
@@ -284,7 +290,7 @@ different result objects consistent.</p></td>
     </tr>
     <tr>
       <th>pathGenes, geneHits</th>
-      <td><p>character values indicating the colnames
+      <td><p><code>character</code> values indicating the colnames
 that contain the number of pathway genes, and the number of gene
 hits, respectively.</p></td>
     </tr>
@@ -292,9 +298,9 @@ hits, respectively.</p></td>
       <th>geneDelim</th>
       <td><p>character pattern used with <code><a href='https://rdrr.io/r/base/strsplit.html'>strsplit()</a></code> to
 split multiple gene values into a list of vectors. The default
-for <code>enrichResult</code> objects is <code><a href='https://rdrr.io/r/base/Arithmetic.html'>"/"</a></code>, but the default for other
+for <code>enrichResult</code> objects is <code>"/"</code>, but the default for other
 sources is often <code>","</code>. The default pattern <code>"[,/ ]+"</code> splits
-by either <code><a href='https://rdrr.io/r/base/Arithmetic.html'>"/"</a></code>, <code>","</code>, or whitespace <code>" "</code>.</p></td>
+by either <code>"/"</code>, <code>","</code>, or whitespace <code>" "</code>.</p></td>
     </tr>
     <tr>
       <th>GmtTname, msigdbGmtT</th>
@@ -358,20 +364,14 @@ argument <code>colorV</code>, otherwise colors are assigned using
 <code><a href='topEnrichListBySource.html'>topEnrichListBySource</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>## See the Vignette for a full walkthrough example
+    <pre class="examples"><div class='input'><span class='co'>## See the Vignette for a full walkthrough example</span>
 
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -382,7 +382,7 @@ argument <code>colorV</code>, otherwise colors are assigned using
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

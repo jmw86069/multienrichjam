@@ -70,7 +70,8 @@ plotting.}
 the complete list.}
 }
 \description{
-Jam igraph vectorized plot function
+Jam igraph vectorized plot function, usually called via \code{jam_igraph()}
+and not called directly.
 }
 \details{
 This function is a complete copy of \code{igraph:::plot.igraph()} with
@@ -116,6 +117,7 @@ Other jam igraph functions:
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
+\code{\link{rotate_igraph_layout}()},
 \code{\link{spread_igraph_labels}()},
 \code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},

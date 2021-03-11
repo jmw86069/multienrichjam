@@ -106,7 +106,7 @@ beside the heatmap. Note when \code{row_split} is defined, the
 \item{colorize_by_gene}{\code{logical} indicating whether to color the
 main heatmap body using the colors from \code{geneIM} which represents
 each enrichment in which a given gene is involved. Colors are
-blended using \code{avg_colors_by_list()}, using colors from
+blended using \code{colorjam::blend_colors()}, using colors from
 \code{mem$colorV}, applied to \code{mem$geneIM}.}
 
 \item{na_col}{\code{character} string indicating the color to use for
@@ -120,7 +120,10 @@ reproducible results, typically with clustering operations.}
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are passed to \code{ComplexHeatmap::Heatmap()}
-for customization.}
+for customization. However, if \code{...} causes an error, the same
+\code{ComplexHeatmap::Heatmap()} function is called without \code{...},
+which is intended to allow overloading \code{...} for different
+functions.}
 }
 \description{
 MultiEnrichment Heatmap of Genes and Pathways

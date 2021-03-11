@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-index">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.27.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.42.900</span>
       </span>
     </div>
 
@@ -100,7 +104,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jmw86069/multienrichjam">
+  <a href="http://github.com/jmw86069/multienrichjam/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -136,6 +140,11 @@
           <p class="section-desc"><p>Functions that manipulate enrichment or multiple enrichment results.</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -162,6 +171,11 @@
           <p class="section-desc"><p>Functions to plot MultiEnrichment results</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -212,6 +226,11 @@
           <p class="section-desc"><p>Functions to convert data types</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -256,6 +275,11 @@
           <p class="section-desc"><p>Functions that extend or customize igraph-related features</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -349,6 +373,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="nudge_igraph_node.html">nudge_igraph_node()</a></code> </p>
+        </td>
+        <td><p>Nudge igraph layout by node</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="rectifyPiegraph.html">rectifyPiegraph()</a></code> </p>
         </td>
         <td><p>Convert pie igraph node shapes to coloredrectangle</p></td>
@@ -376,6 +406,12 @@
           <p><code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code> </p>
         </td>
         <td><p>Re-order igraph nodes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rotate_igraph_layout.html">rotate_igraph_layout()</a></code> </p>
+        </td>
+        <td><p>Rotate igraph layout coordinates</p></td>
       </tr><tr>
         
         <td>
@@ -410,10 +446,58 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-cnet-igraph-related-functions" class="hasAnchor"><a href="#section-cnet-igraph-related-functions" class="anchor"></a>Cnet igraph-related functions</h2>
+          <p class="section-desc"><p>Functions specific to Cnet igraph objects</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> </p>
+        </td>
+        <td><p>Adjust Cnet node set</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="adjust_cnet_set_relayout_gene.html">adjust_cnet_set_relayout_gene()</a></code> </p>
+        </td>
+        <td><p>Adjust Set nodes then relayout Gene nodes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code> </p>
+        </td>
+        <td><p>Get Cnet node set by connected Sets</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nudge_igraph_node.html">nudge_igraph_node()</a></code> </p>
+        </td>
+        <td><p>Nudge igraph layout by node</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rotate_igraph_layout.html">rotate_igraph_layout()</a></code> </p>
+        </td>
+        <td><p>Rotate igraph layout coordinates</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-igraph-vertex-shapes" class="hasAnchor"><a href="#section-igraph-vertex-shapes" class="anchor"></a>igraph vertex shapes</h2>
           <p class="section-desc"><p>Functions that provide custom igraph vertex shapes</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -446,12 +530,29 @@
           <p class="section-desc"><p>Functions that operate on list objects</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
           <p><code><a href="colors_from_list.html">colors_from_list()</a></code> </p>
         </td>
         <td><p>Ordered colors from a list of color vectors</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="im2list.html">im2list()</a></code> </p>
+        </td>
+        <td><p>convert incidence matrix to list</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="imSigned2list.html">imSigned2list()</a></code> </p>
+        </td>
+        <td><p>convert signed incidence matrix to list</p></td>
       </tr><tr>
         
         <td>
@@ -478,6 +579,11 @@
           <p class="section-desc"><p>Functions used by other multienrichjam functions</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -559,6 +665,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="rotate_coordinates.html">rotate_coordinates()</a></code> </p>
+        </td>
+        <td><p>Rotate numeric coordinates</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="sort_colors.html">sort_colors()</a></code> </p>
         </td>
         <td><p>Sort colors</p></td>
@@ -582,6 +694,11 @@
           <p class="section-desc"><p>Functions to import enrichment data</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -599,18 +716,10 @@
     </table>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-enrichment-functions">Enrichment functions</a></li>
-      <li><a href="#section-plot-functions">Plot functions</a></li>
-      <li><a href="#section-conversion-functions">Conversion functions</a></li>
-      <li><a href="#section-igraph-related-functions">igraph-related functions</a></li>
-      <li><a href="#section-igraph-vertex-shapes">igraph vertex shapes</a></li>
-      <li><a href="#section-list-functions">list functions</a></li>
-      <li><a href="#section-utility-functions">Utility functions</a></li>
-      <li><a href="#section-import-functions">Import functions</a></li>
-    </ul>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -621,7 +730,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

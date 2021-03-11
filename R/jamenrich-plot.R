@@ -84,7 +84,7 @@
 #' @param colorize_by_gene `logical` indicating whether to color the
 #'    main heatmap body using the colors from `geneIM` which represents
 #'    each enrichment in which a given gene is involved. Colors are
-#'    blended using `avg_colors_by_list()`, using colors from
+#'    blended using `colorjam::blend_colors()`, using colors from
 #'    `mem$colorV`, applied to `mem$geneIM`.
 #' @param na_col `character` string indicating the color to use for
 #'    NA or missing values. Typically this argument is only used
@@ -94,7 +94,10 @@
 #'    reproducible results, typically with clustering operations.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
-#'    for customization.
+#'    for customization. However, if `...` causes an error, the same
+#'    `ComplexHeatmap::Heatmap()` function is called without `...`,
+#'    which is intended to allow overloading `...` for different
+#'    functions.
 #'
 #' @export
 mem_gene_path_heatmap <- function
@@ -374,10 +377,11 @@ mem_gene_path_heatmap <- function
             "colorize_by_gene");
       }
       geneIMu <- unique(mem$geneIM);
-      geneIMu <- mixedSortDF(data.frame(rowSums(geneIMu), -geneIMu))[,-1,drop=FALSE]*-1;
-      geneIMu_names <- jamba::cPaste(im2list(t(geneIMu)));
+      geneIMu <- jamba::mixedSortDF(data.frame(rowSums(geneIMu), -geneIMu))[,-1,drop=FALSE]*-1;
+      geneIMu_names <- jamba::cPasteS(im2list(t(geneIMu)));
       colnames(geneIMu) <- mem$colorV[colnames(mem$geneIM)];
-      geneIMu_colors <- jamba::cPaste(im2list(t(geneIMu)));
+      geneIMu_colors <- jamba::cPasteS(im2list(t(geneIMu)));
+      names(geneIMu_colors) <- geneIMu_names
       if (verbose) {
          for (i in seq_along(geneIMu_colors)) {
             jamba::printDebug(nameVector(unlist(strsplit(geneIMu_colors[i],",")),
@@ -386,32 +390,12 @@ mem_gene_path_heatmap <- function
          }
       }
 
-      ## blend using red-yellow-blue color wheel
-      h1h2_original <- colorjam::h2hwOptions();
-      colorjam::h2hwOptions(preset="ryb",
-         setOptions=TRUE);
-      gene_colorsV <- colorjam::closestRcolor(
-         avg_colors_by_list(strsplit(geneIMu_colors, ",")));
+      ## blend using colorjam::blend_colors()
+      gene_colorsV <- colorjam::blend_colors(strsplit(geneIMu_colors, ","));
       names(gene_colorsV) <- geneIMu_names;
-      if (verbose) {
-         for (i in seq_along(geneIMu_colors)) {
-            i1 <- c(
-               unlist(strsplit(geneIMu_colors[i],",")),
-               gene_colorsV[i])
-            i2 <- c(
-               unlist(strsplit(geneIMu_names[i],",")),
-               paste0(" -> ", format(justify="right", names(gene_colorsV))[i]))
-            jamba::printDebug(nameVector(i1, i2));
-         }
-      }
-
-      ## restore the original color wheel
-      colorjam::h2hwOptions(h1=h1h2_original$h1,
-         h2=h1h2_original$h2,
-         setOptions=TRUE);
 
       ## apply these colors to gene rows
-      geneV <- jamba::cPaste(im2list(t(mem$geneIM)));
+      geneV <- jamba::cPasteS(im2list(t(mem$geneIM)));
       geneColors <- jamba::nameVector(gene_colorsV[geneV],
          names(geneV));
 
@@ -429,55 +413,112 @@ mem_gene_path_heatmap <- function
 
    ## Create the heatmap
    set.seed(seed);
-   hm <- ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
-      border=TRUE,
-      name=name,
-      na_col=na_col,
-      cluster_columns=cluster_columns,
-      cluster_rows=cluster_rows,
-      clustering_distance_columns=column_method,
-      clustering_distance_rows=row_method,
-      top_annotation=ComplexHeatmap::HeatmapAnnotation(
-         which="column",
+   hm <- tryCatch({
+      ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
          border=TRUE,
-         #gp=grid::gpar(col="#00000011"),
-         annotation_legend_param=lapply(nameVectorN(col_iml4), function(i){
-            list(color_bar="discrete",
-               #at=c(0, 1),
-               title=paste0(i, "\n-log10P"),
-               border="black")
-         }),
-         col=col_iml4,
-         df=-log10(mem$enrichIM[sets,,drop=FALSE]),
-         gap=grid::unit(0, "mm")
-      ),
-      col=col_hm,
-      left_annotation=ComplexHeatmap::rowAnnotation(
-         col=col_iml1,
+         name=name,
+         na_col=na_col,
+         cluster_columns=cluster_columns,
+         cluster_rows=cluster_rows,
+         clustering_distance_columns=column_method,
+         clustering_distance_rows=row_method,
+         top_annotation=ComplexHeatmap::HeatmapAnnotation(
+            which="column",
+            border=TRUE,
+            #gp=grid::gpar(col="#00000011"),
+            annotation_legend_param=lapply(nameVectorN(col_iml4), function(i){
+               list(color_bar="discrete",
+                  #at=c(0, 1),
+                  title=paste0(i, "\n-log10P"),
+                  border="black")
+            }),
+            col=col_iml4,
+            df=-log10(mem$enrichIM[sets,,drop=FALSE]),
+            gap=grid::unit(0, "mm")
+         ),
+         col=col_hm,
+         left_annotation=ComplexHeatmap::rowAnnotation(
+            col=col_iml1,
+            border=TRUE,
+            annotation_legend_param=lapply(col_iml1, function(i){
+               list(color_bar="discrete",
+                  at=c(0, 1),
+                  border="black")
+            }),
+            #gp=grid::gpar(col="#00000011"), # per-cell border
+            df=mem$geneIM[genes,,drop=FALSE],
+            gap=grid::unit(0, "mm")
+         ),
+         row_names_gp=grid::gpar(fontsize=row_fontsize),
+         column_names_gp=grid::gpar(fontsize=column_fontsize),
+         column_names_rot=90,
+         column_title=column_title,
+         row_title=row_title,
+         heatmap_legend_param=list(
+            color_bar="discrete",
+            border="black",
+            at=sort(unique(as.vector(memIM[genes,sets])))
+         ),
+         row_title_rot=row_title_rot,
+         row_split=row_split,
+         column_split=column_split,
+         ...);
+   }, error=function(e){
+      # same as above but without ...
+      if (verbose) {
+         jamba::printDebug("mem_gene_pathway_heatmap(): ",
+            "Error in Heatmap(), calling without '...', error is shown below:");
+         print(e);
+      }
+      ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
          border=TRUE,
-         annotation_legend_param=lapply(col_iml1, function(i){
-            list(color_bar="discrete",
-               at=c(0, 1),
-               border="black")
-         }),
-         #gp=grid::gpar(col="#00000011"), # per-cell border
-         df=mem$geneIM[genes,,drop=FALSE],
-         gap=grid::unit(0, "mm")
-      ),
-      row_names_gp=grid::gpar(fontsize=row_fontsize),
-      column_names_gp=grid::gpar(fontsize=column_fontsize),
-      column_names_rot=90,
-      column_title=column_title,
-      row_title=row_title,
-      heatmap_legend_param=list(
-         color_bar="discrete",
-         border="black",
-         at=sort(unique(as.vector(memIM[genes,sets])))
-      ),
-      row_title_rot=row_title_rot,
-      row_split=row_split,
-      column_split=column_split,
-      ...);
+         name=name,
+         na_col=na_col,
+         cluster_columns=cluster_columns,
+         cluster_rows=cluster_rows,
+         clustering_distance_columns=column_method,
+         clustering_distance_rows=row_method,
+         top_annotation=ComplexHeatmap::HeatmapAnnotation(
+            which="column",
+            border=TRUE,
+            #gp=grid::gpar(col="#00000011"),
+            annotation_legend_param=lapply(nameVectorN(col_iml4), function(i){
+               list(color_bar="discrete",
+                  #at=c(0, 1),
+                  title=paste0(i, "\n-log10P"),
+                  border="black")
+            }),
+            col=col_iml4,
+            df=-log10(mem$enrichIM[sets,,drop=FALSE]),
+            gap=grid::unit(0, "mm")
+         ),
+         col=col_hm,
+         left_annotation=ComplexHeatmap::rowAnnotation(
+            col=col_iml1,
+            border=TRUE,
+            annotation_legend_param=lapply(col_iml1, function(i){
+               list(color_bar="discrete",
+                  at=c(0, 1),
+                  border="black")
+            }),
+            #gp=grid::gpar(col="#00000011"), # per-cell border
+            df=mem$geneIM[genes,,drop=FALSE],
+            gap=grid::unit(0, "mm")
+         ),
+         row_names_gp=grid::gpar(fontsize=row_fontsize),
+         column_names_gp=grid::gpar(fontsize=column_fontsize),
+         column_names_rot=90,
+         column_title=column_title,
+         row_title=row_title,
+         heatmap_legend_param=list(
+            color_bar="discrete",
+            border="black",
+            at=sort(unique(as.vector(memIM[genes,sets])))
+         ),
+         row_title_rot=row_title_rot,
+         row_split=row_split,
+         column_split=column_split);
+   })
    return(hm);
 }
 
@@ -1115,8 +1156,12 @@ jam_igraph <- function
 #' Multienrichment folio of summary plots
 #'
 #' This function is intended to create multiple summary plots
-#' from a Multienrichment result, the `list` output from
-#' `multiEnrichMap()`.
+#' using the output data from `multiEnrichMap()`. By default
+#' it creates all plots one by one, sufficient for including
+#' in a multi-page PDF document with `cairo_pdf(..., onefile=TRUE)`.
+#' However, each plot object can be created and viewed later
+#' by using `do_plot=FALSE`. This function returns a `list`
+#' with each plot object, described in detail below.
 #'
 #' The plots created:
 #'
@@ -1126,12 +1171,128 @@ jam_igraph <- function
 #' 4. Cnet plot using Gene-Pathway Heatmap cluster examplars (n per cluster)
 #' 5. Cnet plots one per cluster
 #'
+#' By far the most commonly used plots are `do_which=2` for the
+#' gene-pathway heatmap, and `do_which=4` for the collapsed Cnet
+#' plot, where Cnet clusters are based upon the gene-pathway heatmap.
+#'
+#' The key step in the workflow is the gene-pathway incidence matrix
+#' heatmap. This step also clusters the pathways using a combination
+#' of the pathway-gene incidence matrix results, and a weighted
+#' matrix of enrichment `-log10(Pvalue)` from `mem$enrichIM`.
+#' The pathway clusters are used in subsequent Cnet plots. Our
+#' experience is that the pathway clustering does not need to
+#' be perfect to be useful and valid. The pathway clusters
+#' are valid based upon the parameters used for clustering,
+#' and provide insight into the genes that help define each
+#' cluster distinct from other clusters. Sometimes with clustering
+#' techniques, the results are more or less effective
+#' based upon the type of pattern observed in the data, so it
+#' can be helpful to adjust parameters to drill down to
+#' the most effective patterns.
+#'
+#' The balance of weighting between the incidence matrix and enrichment
+#' P-values is controlled by `enrich_im_weight`: where `enrich_im_weight=0`
+#' will only cluster pathways using the enrichment P-values,
+#' and `enrich_im_weight=1` will only cluster pathways using the
+#' gene-pathway incidence matrix. The default `enrich_im_weight=0.3`
+#' is the recommended starting value based upon our experience.
+#'
+#' The argument `column_method` defines the distance method,
+#' for example `"euclidean"` and `"binary"` are two immediate choices.
+#' The method also adds `"correlation"` from `amap::hcluster()` which
+#' can be very useful especially with large datasets.
+#'
+#' The number of pathway clusters can be controlled with
+#' `pathway_column_split`, by default when `pathway_column_split=NULL`
+#' and `auto_cluster=TRUE` the number of clusters is defined based
+#' upon the total number of pathways. In practice, `pathway_column_split=4`
+#' is almost always a good choice, partly because this number of
+#' clusters is the easiest to visualize in a Cnet plot.
+#'
+#' To define your own pathway cluster names, define `pathway_column_title`
+#' as a vector with length equal to `pathway_column_split`.
+#'
+#' The pathway clusters are dependent upon the genes and pathways
+#' used during clustering, which are also controlled by
+#' `min_set_ct` and `min_gene_ct`.
+#'
+#' Pathways are also filtered with `min_set_ct_each` which requires
+#' each pathway to contain at least this many genes from at least
+#' one enrichment test. Said another way, if `min_set_ct_each=4` it
+#' requires each pathway to contain `4` or more genes, and at least
+#' `4` genes must be present in the same enrichment test as defined in
+#' `mem$geneIM`. If there are `4` genes but each gene was present in
+#' only one enrichment test, this pathway would be filtered out.
+#'
+#' The resulting Cnet pathway clusters are single nodes in the
+#' network, and these nodes are colorized based upon the enrichment
+#' tests involved. The threshold for including the color for
+#' each enrichment test is defined by `cluster_color_min_fraction`,
+#' which requires at least this fraction of pathways in a
+#' pathway cluster meets the significance criteria for that
+#' enrichment test. To reduce this filter to include any enrichment
+#' test with at least one significant result, use
+#' `cluster_color_min_fraction=0.01`. In the gene-pathway heatmap,
+#' these colors are shown across the top of the heatmap.
+#' The default `cluster_color_min_fraction=0.4` requires 40%
+#' of pathways in a cluster for each enrichment test.
+#'
 #' @family jam plot functions
 #'
 #' @return `list` is returned via invisible, which contains each
-#'    relevant object: `clusters_mem` is a `list` representing the Cnet
-#'    pathway clusters indicated in the gene-pathway incidence matrix
-#'    heatmap.
+#'    plot object enabled by the argument `do_which`:
+#'    * `enrichment_hm` is a Heatmap object from `ComplexHeatmap`
+#'    that contains the enrichment P-value heatmap. Note that this
+#'    data is not used directly in subsequent plots, the pathway
+#'    clusters shown here are based upon `-log10(Pvalue)` and not
+#'    the underlying gene content of each pathway. This plot is
+#'    a useful overview that answers the question "How many
+#'    pathways are significantly enriched across the different
+#'    enrichment tests?"
+#'    * `gp_hm` is a Heatmap object from `ComplexHeatmap` with
+#'    the gene-pathway incidence matrix heatmap. This heatmap and
+#'    the column/pathway clusters are the subject of subsequent
+#'    Cnet plots.
+#'    * `gp_hm_caption` is a text caption that describes the gene
+#'    and set filter criteria, and the row and column distance methods
+#'    used for clustering. Because the filtering and clustering
+#'    options have substantial impact on clustering, and the
+#'    pathway clusters are the key for all subsequent plots,
+#'    these values are important to keep associated with the
+#'    output of this function.
+#'    * `clusters_mem` is a `list` with the pathways contained
+#'    in each pathway cluster shown by the gene-pathway heatmap,
+#'    obtained by `heatmap_column_order(gp_hm)`. The pathway names
+#'    should also be present in `colnames(mem$memIM)` and
+#'    `rownames(mem$enrichIM)`, for follow-up inspection.
+#'    * `cnet_collapsed` is an `igraph` object with Cnet plot data,
+#'    where the pathways have been collapsed by cluster, using the
+#'    gene-pathway heatmap clusters defined in `clusters_mem`. Each
+#'    pathway cluster is labeled by cluster name, and the first few
+#'    pathway names.
+#'    This data can be plotted using `jam_igraph(cnet_collapsed)`.
+#'    * `cnet_collapsed_set` is the same as `cnet_collapsed` except the
+#'    pathways are labeled by the cluster name only, for example
+#'    `c("A", "B", "C", "D")`.
+#'    This data can be plotted using `jam_igraph(cnet_collapsed_set)`.
+#'    * `cnet_collapsed_set2` is the same as `cnet_collapsed_set` except the
+#'    gene labels are hidden, useful when there are too many genes to label
+#'    clearly. The gene symbols are still stored in `V(g)$name` but the labels
+#'    in `V(g)$label` are updated to hide the genes.
+#'    This data can be plotted using `jam_igraph(cnet_collapsed_set2)`.
+#'    * `cnet_exemplars` is a `list` of `igraph` Cnet objects, each
+#'    one contains only the number of exemplar pathways from each cluster
+#'    defined by argument `exemplar_range`. By default it uses `1` exemplar
+#'    per cluster, then `2` exemplars per cluster, then `3` exemplars
+#'    per cluster. A number of published figures use `1` exemplar per
+#'    pathway cluster.
+#'    This data can be plotted using `jam_igraph(cnet_exemplars[[1]])`,
+#'    which will plot only the first `igraph` object from the list.
+#'    * `cnet_clusters` is a `list` of `igraph` Cnet objects, each one
+#'    contains all the pathways in one pathway cluster.
+#'    This data can be plotted using `jam_igraph(cnet_clusters[[1]])`,
+#'    or by calling a specific cluster `jam_igraph(cnet_clusters[["A"]])`.
+#'
 #'
 #' @param mem `list` object created by `multiEnrichMap()`. Specifically
 #'    the object is expected to contain `colorV`, `enrichIM`,
@@ -1164,13 +1325,6 @@ jam_igraph <- function
 #'    `mem_gene_path_heatmap()`, indicating the number of pathway
 #'    clusters, and gene clusters, to create in the gene-pathway heatmap.
 #'    When either value is `NULL` then auto-split logic is used.
-#' @param pathway_column_split,gene_row_split optional arguments passed to
-#'    `mem_gene_path_heatmap()` to split the heatmap by columns
-#'    or rows, respectively. Note that when `pathway_column_split` is `NULL`
-#'    and `auto_split=TRUE`, it will determine an appropriate number
-#'    of clusters based upon the number of columns. To turn off the split,
-#'    use `pathway_column_split` values `NULL` or `0` or `1`;
-#'    likewise for `gene_row_split`.
 #' @param pathway_column_title,gene_row_title `character` vectors
 #'    passed to `mem_gene_path_heatmap()` as `column_title` and
 #'    `row_title`, respectively. When one value is supplied, it is
@@ -1201,6 +1355,11 @@ jam_igraph <- function
 #' @param byCols `character` vector describing how to sort the
 #'    pathways within Cnet clusters. This argument is passed
 #'    to `rank_mem_clusters()`.
+#' @param do_plot `logical` indicating whether to render each plot.
+#'    When `do_plot=FALSE` the plot objects will be created and returned,
+#'    but the plot itself will not be rendered. This option may be
+#'    useful to generate the full set of figures in one set, then
+#'    review each figure one by one in an interactive session.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
 #'    Notably, `sets` is passed to `mem_gene_path_heatmap()` which
@@ -1241,6 +1400,7 @@ mem_plot_folio <- function
  colorize_by_gene=TRUE,
  cluster_color_min_fraction=0.4,
  byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
+ do_plot=TRUE,
  verbose=TRUE,
  ...)
 {
@@ -1276,12 +1436,14 @@ mem_plot_folio <- function
          row_cex=row_cex,
          column_cex=column_cex,
          ...);
-      if (!color_by_column) {
-         if (length(main) > 0 && nchar(main) > 0) {
-            grid_with_title(mem_hm,
-               title=main);
-         } else {
-            draw(mem_hm);
+      if (do_plot) {
+         if (!color_by_column) {
+            if (length(main) > 0 && nchar(main) > 0) {
+               grid_with_title(mem_hm,
+                  title=main);
+            } else {
+               draw(mem_hm);
+            }
          }
       }
       ret_vals$enrichment_hm <- mem_hm;
@@ -1336,10 +1498,13 @@ mem_plot_folio <- function
          "\n",
          jamba::formatInt(nrow(gp_hm)), " rows x ",
          jamba::formatInt(ncol(gp_hm)), " columns");
-      grid_with_title(gp_hm,
-         title=main,
-         caption=caption);
+      if (do_plot) {
+         grid_with_title(gp_hm,
+            title=main,
+            caption=caption);
+      }
       ret_vals$gp_hm <- gp_hm;
+      ret_vals$gp_hm_caption <- caption;
    }
    ## Obtain heatmap pathway clusters
    clusters_mem <- heatmap_column_order(gp_hm);
@@ -1354,10 +1519,11 @@ mem_plot_folio <- function
 
    #############################################################
    ## Optional shadowText
-   if (use_shadowText) {
-      text <- jamba::shadowText;
-      on.exit(rm(text));
-   }
+   ## 11mar2021 - disabled in favor of jam_igraph(..., use_shadowText=TRUE)
+   #if (use_shadowText) {
+   #   text <- jamba::shadowText;
+   #   on.exit(rm(text));
+   #}
 
    #############################################################
    ## Cnet collapsed
@@ -1405,6 +1571,7 @@ mem_plot_folio <- function
       }, error=function(e){
          cnet_collapsed %>%
             subsetCnetIgraph(remove_blanks=FALSE,
+               repulse=repulse,
                verbose=verbose>1);
       })
       if (length(edge_color) > 0) {
@@ -1412,20 +1579,28 @@ mem_plot_folio <- function
       }
       plot_num <- plot_num + 1;
       if (length(do_which) == 0 || plot_num %in% do_which) {
-         ret_vals$cnet_collapsed <- cnet_collapsed;
          if (verbose) {
             jamba::printDebug("mem_plot_folio(): ",
                c("plot_num ", plot_num, ": "),
                c("Cnet collapsed ", "with gene and cluster labels"),
                sep="");
          }
+         cnet_title <- "Cnet plot using collapsed clusters";
+         cnet_collapsed <- set_graph_attr(cnet_collapsed,
+            name="title",
+            value=cnet_title);
+         ret_vals$cnet_collapsed <- cnet_collapsed;
          ## Draw Cnet collapsed
-         jam_igraph(cnet_collapsed);
-         mem_legend(mem);
-         title(sub="Cnet plot using collapsed clusters",
-            main=main,
-            cex.main=cex.main,
-            cex.sub=cex.sub);
+         if (do_plot) {
+            jam_igraph(cnet_collapsed,
+               use_shadowText=use_shadowText,
+               ...);
+            mem_legend(mem);
+            title(sub="Cnet plot using collapsed clusters",
+               main=main,
+               cex.main=cex.main,
+               cex.sub=cex.sub);
+         }
       }
       ## Draw Cnet collapsed with top n labels
       #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
@@ -1443,13 +1618,21 @@ mem_plot_folio <- function
                c("Cnet collapsed ", "with gene and set labels"),
                sep="");
          }
+         cnet_title <- "Cnet plot using collapsed clusters\nlabeled by set";
+         cnet_collapsed <- set_graph_attr(cnet_collapsed,
+            name="title",
+            value=cnet_title);
          ret_vals$cnet_collapsed_set <- cnet_collapsed;
-         jam_igraph(cnet_collapsed);
-         mem_legend(mem);
-         title(sub="Cnet plot using collapsed clusters\nlabeled by set",
-            main=main,
-            cex.main=cex.main,
-            cex.sub=cex.sub);
+         if (do_plot) {
+            jam_igraph(cnet_collapsed,
+               use_shadowText=use_shadowText,
+               ...);
+            mem_legend(mem);
+            title(sub=cnet_title,
+               main=main,
+               cex.main=cex.main,
+               cex.sub=cex.sub);
+         }
       }
       plot_num <- plot_num + 1;
       if (length(do_which) == 0 || plot_num %in% do_which) {
@@ -1462,13 +1645,21 @@ mem_plot_folio <- function
          igraph::V(cnet_collapsed)$label <- ifelse(igraph::V(cnet_collapsed)$nodeType %in% "Gene",
             "",
             igraph::V(cnet_collapsed)$label);
+         cnet_title <- "Cnet plot using collapsed clusters\nlabeled by set\ngene labels hidden";
+         cnet_collapsed <- set_graph_attr(cnet_collapsed,
+            name="title",
+            value=cnet_title);
          ret_vals$cnet_collapsed_set2 <- cnet_collapsed;
-         jam_igraph(cnet_collapsed);
-         mem_legend(mem);
-         title(sub="Cnet plot using collapsed clusters\nlabeled by set\ngene labels hidden",
-            main=main,
-            cex.main=cex.main,
-            cex.sub=cex.sub);
+         if (do_plot) {
+            jam_igraph(cnet_collapsed,
+               use_shadowText=use_shadowText,
+               ...);
+            mem_legend(mem);
+            title(sub=cnet_title,
+               main=main,
+               cex.main=cex.main,
+               cex.sub=cex.sub);
+         }
       }
    } else {
       plot_num <- plot_num + 3;
@@ -1480,7 +1671,7 @@ mem_plot_folio <- function
    if (any(c(plot_num + cnet_range) %in% do_which)) {
       if (verbose) {
          jamba::printDebug("mem_plot_folio(): ",
-            "Preparing cnet for subsetting.");
+            "Preparing cnet for subsetting with memIM2cnet().");
       }
       cnet <- memIM2cnet(mem,
          ...);
@@ -1525,18 +1716,26 @@ mem_plot_folio <- function
                      paste0(" exemplar", pluralized)),
                   sep="");
             }
+            cnet_title <- paste0("Cnet plot using ",
+               exemplar_n,
+               " exemplar",
+               pluralized,
+               " per cluster")
+            cnet_exemplar <- set_graph_attr(cnet_exemplar,
+               name="title",
+               value=cnet_title);
             ## Draw Cnet exemplar
-            jam_igraph(cnet_exemplar);
-            title(
-               sub=paste0("Cnet plot using ",
-                  exemplar_n,
-                  " exemplar",
-                  pluralized,
-                  " per cluster"),
-               main=main,
-               cex.main=cex.main,
-               cex.sub=cex.sub);
-            mem_legend(mem);
+            if (do_plot) {
+               jam_igraph(cnet_exemplar,
+                  use_shadowText=use_shadowText,
+                  ...);
+               title(
+                  sub=cnet_title,
+                  main=main,
+                  cex.main=cex.main,
+                  cex.sub=cex.sub);
+               mem_legend(mem);
+            }
             ## Add to return list
             cnet_exemplars <- c(cnet_exemplars,
                list(cnet_exemplar));
@@ -1565,15 +1764,25 @@ mem_plot_folio <- function
             cluster_sets <- unique(unlist(clusters_mem[[cluster_name]]));
             cnet_cluster <- cnet %>%
                subsetCnetIgraph(includeSets=cluster_sets,
+                  repulse=repulse,
                   ...);
+            cnet_title <- paste0("Cnet plot for cluster ",
+               cluster_name);
+            cnet_cluster <- set_graph_attr(cnet_cluster,
+               name="title",
+               value=cnet_title);
             ## Draw Cnet cluster
-            jam_igraph(cnet_cluster);
-            title(sub=paste0("Cnet plot for cluster ",
-               cluster_name),
-               main=main,
-               cex.main=cex.main,
-               cex.sub=cex.sub);
-            mem_legend(mem);
+            if (do_plot) {
+               jam_igraph(cnet_cluster,
+                  use_shadowText=use_shadowText,
+                  ...);
+               title(sub=paste0("Cnet plot for cluster ",
+                  cluster_name),
+                  main=main,
+                  cex.main=cex.main,
+                  cex.sub=cex.sub);
+               mem_legend(mem);
+            }
             ## Add to return list
             cnet_clusters <- c(cnet_clusters,
                list(cnet_cluster));

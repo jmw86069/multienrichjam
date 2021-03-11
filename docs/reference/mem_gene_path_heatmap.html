@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="MultiEnrichment Heatmap of Genes and Pathways — mem_gene_path_heatmap" />
 <meta property="og:description" content="MultiEnrichment Heatmap of Genes and Pathways" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.27.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.42.900</span>
       </span>
     </div>
 
@@ -102,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jmw86069/multienrichjam">
+  <a href="http://github.com/jmw86069/multienrichjam/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -121,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>MultiEnrichment Heatmap of Genes and Pathways</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-plot.R'><code>R/jamenrich-plot.R</code></a></small>
+    <small class="dont-index">Source: <a href='http://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-plot.R'><code>R/jamenrich-plot.R</code></a></small>
     <div class="hidden name"><code>mem_gene_path_heatmap.Rd</code></div>
     </div>
 
@@ -129,29 +132,38 @@
     <p>MultiEnrichment Heatmap of Genes and Pathways</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mem_gene_path_heatmap</span>(
-  <span class='no'>mem</span>,
-  <span class='kw'>genes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>min_gene_ct</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>min_set_ct</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>column_fontsize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>row_fontsize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>row_method</span> <span class='kw'>=</span> <span class='st'>"binary"</span>,
-  <span class='kw'>column_method</span> <span class='kw'>=</span> <span class='st'>"binary"</span>,
-  <span class='kw'>cluster_columns</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cluster_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"gene_ct"</span>,
-  <span class='kw'>p_cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>row_split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>column_split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>auto_split</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>column_title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>row_title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>row_title_rot</span> <span class='kw'>=</span> <span class='fl'>90</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>mem_gene_path_heatmap</span><span class='op'>(</span>
+  <span class='va'>mem</span>,
+  genes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sets <span class='op'>=</span> <span class='cn'>NULL</span>,
+  min_gene_ct <span class='op'>=</span> <span class='fl'>1</span>,
+  min_set_ct <span class='op'>=</span> <span class='fl'>1</span>,
+  min_set_ct_each <span class='op'>=</span> <span class='fl'>4</span>,
+  column_fontsize <span class='op'>=</span> <span class='cn'>NULL</span>,
+  column_cex <span class='op'>=</span> <span class='fl'>1</span>,
+  row_fontsize <span class='op'>=</span> <span class='cn'>NULL</span>,
+  row_cex <span class='op'>=</span> <span class='fl'>1</span>,
+  row_method <span class='op'>=</span> <span class='st'>"binary"</span>,
+  column_method <span class='op'>=</span> <span class='st'>"binary"</span>,
+  enrich_im_weight <span class='op'>=</span> <span class='fl'>0.3</span>,
+  gene_im_weight <span class='op'>=</span> <span class='fl'>0.5</span>,
+  cluster_columns <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cluster_rows <span class='op'>=</span> <span class='cn'>NULL</span>,
+  name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p_cutoff <span class='op'>=</span> <span class='va'>mem</span><span class='op'>$</span><span class='va'>p_cutoff</span>,
+  p_floor <span class='op'>=</span> <span class='fl'>1e-06</span>,
+  row_split <span class='op'>=</span> <span class='cn'>NULL</span>,
+  column_split <span class='op'>=</span> <span class='cn'>NULL</span>,
+  auto_split <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  column_title <span class='op'>=</span> <span class='va'>LETTERS</span>,
+  row_title <span class='op'>=</span> <span class='va'>letters</span>,
+  row_title_rot <span class='op'>=</span> <span class='fl'>90</span>,
+  colorize_by_gene <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  na_col <span class='op'>=</span> <span class='st'>"white"</span>,
+  seed <span class='op'>=</span> <span class='fl'>123</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,6 +195,11 @@ across the pathways, all other genes are excluded.</p></td>
 all other sets are excluded.</p></td>
     </tr>
     <tr>
+      <th>min_set_ct_each</th>
+      <td><p>minimum number of genes required for each set,
+required for at least one enrichment test.</p></td>
+    </tr>
+    <tr>
       <th>column_fontsize, row_fontsize</th>
       <td><p>arguments passed to
 <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code> to size column and row labels.</p></td>
@@ -192,6 +209,17 @@ all other sets are excluded.</p></td>
       <td><p>character string of the distance method
 to use for row and column clustering. The clustering is performed
 by <code><a href='https://rdrr.io/pkg/amap/man/hcluster.html'>amap::hcluster()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>enrich_im_weight</th>
+      <td><p><code>numeric</code> value between 0 and 1 indicating
+the relative weight of enrichment <code>-log10 P-value</code> and gene
+incidence matrix when combined prior to clustering the columns
+in the resulting heatmap. When <code>enrich_im_weight=0</code> then
+the data is scaled using zero weight for enrichment and therefore
+only uses the gene incidence matrix; when <code>enrich_im_weight=1</code>
+the gene incidence matrix is scaled using zero weight and
+therefore clustering only uses the <code>-log10 P-value</code> values.</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -204,7 +232,19 @@ used as a label above the heatmap color legend.</p></td>
 above which P-values are not colored, and are therefore white.
 The enrichment P-values are displayed as an annotated heatmap
 at the top of the main heatmap. Any cell that has a color meets
-at least the minimum P-value threshold.</p></td>
+at least the minimum P-value threshold. This value by default
+is taken from input <code>mem</code>, using <code>mem$p_cutoff</code>, for
+consistency with the input multienrichment analysis.</p></td>
+    </tr>
+    <tr>
+      <th>column_split, row_split</th>
+      <td><p>optional arguments passed to
+<code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code> to split the heatmap by columns
+or rows, respectively. Note that when <code>row_split</code> is <code>NULL</code>
+and <code>auto_split=TRUE</code>, it will determine an appropriate number
+of clusters based upon the number of rows. To turn off row split,
+use <code>row_split=NULL</code> or <code>row_split=0</code> or <code>row_split=1</code>;
+likewise for <code>column_split</code>.</p></td>
     </tr>
     <tr>
       <th>column_title</th>
@@ -212,9 +252,48 @@ at least the minimum P-value threshold.</p></td>
 above the heatmap.</p></td>
     </tr>
     <tr>
+      <th>row_title</th>
+      <td><p>optional character string with title to display
+beside the heatmap. Note when <code>row_split</code> is defined, the
+<code>row_title</code> is applied to each heatmap section.</p></td>
+    </tr>
+    <tr>
+      <th>row_title_rot</th>
+      <td><p><code>numeric</code> value indicating the rotation of
+<code>row_title</code> text, where <code>0</code> is not rotated, and <code>90</code> is rotated
+90 degrees.</p></td>
+    </tr>
+    <tr>
+      <th>colorize_by_gene</th>
+      <td><p><code>logical</code> indicating whether to color the
+main heatmap body using the colors from <code>geneIM</code> which represents
+each enrichment in which a given gene is involved. Colors are
+blended using <code><a href='https://rdrr.io/pkg/colorjam/man/blend_colors.html'>colorjam::blend_colors()</a></code>, using colors from
+<code>mem$colorV</code>, applied to <code>mem$geneIM</code>.</p></td>
+    </tr>
+    <tr>
+      <th>na_col</th>
+      <td><p><code>character</code> string indicating the color to use for
+NA or missing values. Typically this argument is only used
+when <code>colorize_by_gene=TRUE</code>, where entries with no color are
+recognized as <code>NA</code> by <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p><code>numeric</code> value passed to <code><a href='https://rdrr.io/r/base/Random.html'>set.seed()</a></code> to allow
+reproducible results, typically with clustering operations.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> indicating whether to print verbose output.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>additional arguments are passed to <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code>
-for customization.</p></td>
+for customization. However, if <code>...</code> causes an error, the same
+<code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code> function is called without <code>...</code>,
+which is intended to allow overloading <code>...</code> for different
+functions.</p></td>
     </tr>
     </table>
 
@@ -233,6 +312,18 @@ It uses three basic sources of data to annotate the heatmap:</p><ol>
 splits in the dendrogram, based solely upon the number of
 columns and rows. These guesses can be controlled with argument
 <code>column_split</code> and <code>row_split</code>, respectively.</p>
+<p>When pathways are filtered by <code>min_gene_ct</code>, <code>min_set_ct</code>,
+and <code>min_set_ct_each</code>, the order of operations is as follows:</p><ol>
+<li><p><code>min_set_ct_each</code>, <code>min_set_ct</code> - these filters are applied
+before filtering genes, in order to ensure all genes are present
+from the start.</p></li>
+<li><p><code>min_gene_ct</code> - genes are filtered after pathway filtering,
+in order to remove pathways which were not deemed "significant"
+based upon the required number of genes. Only after those pathways
+are removed can the number of occurrences of each gene be judged
+appropriately.</p></li>
+</ol>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other jam plot functions: 
@@ -244,14 +335,10 @@ columns and rows. These guesses can be controlled with argument
 <code><a href='mem_plot_folio.html'>mem_plot_folio</a>()</code></p></div>
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -262,7 +349,7 @@ columns and rows. These guesses can be controlled with argument
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

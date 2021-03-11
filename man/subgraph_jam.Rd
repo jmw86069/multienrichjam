@@ -36,6 +36,7 @@ Other jam utility functions:
 \code{\link{mem_find_overlap}()},
 \code{\link{order_colors}()},
 \code{\link{rank_mem_clusters}()},
+\code{\link{rotate_coordinates}()},
 \code{\link{sort_colors}()},
 \code{\link{xyAngle}()}
 
@@ -60,6 +61,7 @@ Other jam igraph functions:
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
+\code{\link{rotate_igraph_layout}()},
 \code{\link{spread_igraph_labels}()},
 \code{\link{subsetCnetIgraph}()},
 \code{\link{subset_igraph_components}()},

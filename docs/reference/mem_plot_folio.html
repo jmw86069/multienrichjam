@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Multienrichment folio of summary plots — mem_plot_folio" />
 <meta property="og:description" content="Multienrichment folio of summary plots" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.27.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.42.900</span>
       </span>
     </div>
 
@@ -102,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jmw86069/multienrichjam">
+  <a href="http://github.com/jmw86069/multienrichjam/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -121,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Multienrichment folio of summary plots</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-plot.R'><code>R/jamenrich-plot.R</code></a></small>
+    <small class="dont-index">Source: <a href='http://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-plot.R'><code>R/jamenrich-plot.R</code></a></small>
     <div class="hidden name"><code>mem_plot_folio.Rd</code></div>
     </div>
 
@@ -129,31 +132,43 @@
     <p>Multienrichment folio of summary plots</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mem_plot_folio</span>(
-  <span class='no'>mem</span>,
-  <span class='kw'>p_cutoff</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>p_floor</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
-  <span class='kw'>use_raster</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>min_gene_ct</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>min_set_ct</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>column_method</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>,
-  <span class='kw'>row_method</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>,
-  <span class='kw'>exemplar_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>),
-  <span class='kw'>pathway_column_split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>pathway_row_split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>edge_color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cex.main</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>cex.sub</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
-  <span class='kw'>do_which</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>max_labels</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>max_nchar_labels</span> <span class='kw'>=</span> <span class='fl'>25</span>,
-  <span class='kw'>include_cluster_title</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>repulse</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>use_shadowText</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>mem_plot_folio</span><span class='op'>(</span>
+  <span class='va'>mem</span>,
+  do_which <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p_cutoff <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p_floor <span class='op'>=</span> <span class='fl'>1e-06</span>,
+  main <span class='op'>=</span> <span class='st'>""</span>,
+  use_raster <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  min_gene_ct <span class='op'>=</span> <span class='fl'>2</span>,
+  min_set_ct <span class='op'>=</span> <span class='fl'>2</span>,
+  min_set_ct_each <span class='op'>=</span> <span class='fl'>4</span>,
+  column_method <span class='op'>=</span> <span class='st'>"euclidean"</span>,
+  row_method <span class='op'>=</span> <span class='st'>"euclidean"</span>,
+  exemplar_range <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span>,
+  pathway_column_split <span class='op'>=</span> <span class='cn'>NULL</span>,
+  pathway_column_title <span class='op'>=</span> <span class='cn'>NULL</span>,
+  gene_row_split <span class='op'>=</span> <span class='cn'>NULL</span>,
+  gene_row_title <span class='op'>=</span> <span class='cn'>NULL</span>,
+  edge_color <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cex.main <span class='op'>=</span> <span class='fl'>2</span>,
+  cex.sub <span class='op'>=</span> <span class='fl'>1.5</span>,
+  row_cex <span class='op'>=</span> <span class='fl'>1</span>,
+  column_cex <span class='op'>=</span> <span class='fl'>1</span>,
+  max_labels <span class='op'>=</span> <span class='fl'>4</span>,
+  max_nchar_labels <span class='op'>=</span> <span class='fl'>25</span>,
+  include_cluster_title <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  repulse <span class='op'>=</span> <span class='fl'>4</span>,
+  use_shadowText <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  color_by_column <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  enrich_im_weight <span class='op'>=</span> <span class='fl'>0.3</span>,
+  gene_im_weight <span class='op'>=</span> <span class='fl'>0.5</span>,
+  colorize_by_gene <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  cluster_color_min_fraction <span class='op'>=</span> <span class='fl'>0.4</span>,
+  byCols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"composite_rank"</span>, <span class='st'>"minp_rank"</span>, <span class='st'>"gene_count_rank"</span><span class='op'>)</span>,
+  do_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,19 +180,26 @@ the object is expected to contain <code>colorV</code>, <code>enrichIM</code>,
 <code>memIM</code>, <code>geneIM</code>.</p></td>
     </tr>
     <tr>
+      <th>do_which</th>
+      <td><p>integer vector of plots to produce. When <code>do_which</code>
+is <code>NULL</code>, then all plots are produced. This argument is intended
+to help produce one plot from a folio, therefore each plot is referred
+by the number of the plot, in order.</p></td>
+    </tr>
+    <tr>
       <th>p_cutoff</th>
       <td><p>numeric value indicating the enrichment P-value threshold
 used for <code><a href='multiEnrichMap.html'>multiEnrichMap()</a></code>, but when <code>NULL</code> this value is taken
 from the <code>mem</code> input, or <code>0.05</code> is used by default.</p></td>
     </tr>
     <tr>
-      <th>main</th>
-      <td><p>character string used as a title on Cnet plots.</p></td>
-    </tr>
-    <tr>
       <th>p_floor</th>
       <td><p>numeric value indicating the lowest enrichment P-value
 used in the color gradient on the Enrichment Heatmap.</p></td>
+    </tr>
+    <tr>
+      <th>main</th>
+      <td><p>character string used as a title on Cnet plots.</p></td>
     </tr>
     <tr>
       <th>use_raster</th>
@@ -187,9 +209,14 @@ passed to <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>Co
     <tr>
       <th>min_gene_ct, min_set_ct</th>
       <td><p>integer values passed to
-<code>mem_gene_pathway_heatmap()</code>. The <code>min_gene_ct</code> requires each set
+<code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code>. The <code>min_gene_ct</code> requires each set
 to contain <code>min_gene_ct</code> genes, and <code>min_set_ct</code> requires each gene
 to be present in at least <code>min_set_ct</code> sets.</p></td>
+    </tr>
+    <tr>
+      <th>min_set_ct_each</th>
+      <td><p>minimum number of genes required for each set,
+required for at least one enrichment test.</p></td>
     </tr>
     <tr>
       <th>column_method, row_method</th>
@@ -203,10 +230,22 @@ to cluster columns and rows, respectively.</p></td>
 exemplar plots, using this many exemplars per cluster.</p></td>
     </tr>
     <tr>
-      <th>pathway_column_split</th>
-      <td><p>integer value passed as <code>column_split</code>
-to <code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code>, indicating the number of pathway
-clusters to create in the gene-pathway heatmap.</p></td>
+      <th>pathway_column_split, gene_row_split</th>
+      <td><p><code>integer</code> value passed
+as <code>column_split</code> and <code>row_split</code>, respectively, to
+<code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code>, indicating the number of pathway
+clusters, and gene clusters, to create in the gene-pathway heatmap.
+When either value is <code>NULL</code> then auto-split logic is used.</p></td>
+    </tr>
+    <tr>
+      <th>pathway_column_title, gene_row_title</th>
+      <td><p><code>character</code> vectors
+passed to <code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code> as <code>column_title</code> and
+<code>row_title</code>, respectively. When one value is supplied, it is
+displayed and centered across all the respective splits. When
+multiple values are supplied, values are used to the number
+of splits, and recycled as needed. In that case, repeated
+values are made unique by <code><a href='https://rdrr.io/pkg/jamba/man/makeNames.html'>jamba::makeNames()</a></code>.</p></td>
     </tr>
     <tr>
       <th>cex.main, cex.sub</th>
@@ -214,35 +253,196 @@ clusters to create in the gene-pathway heatmap.</p></td>
 size the default title and sub-title in Cnet plots.</p></td>
     </tr>
     <tr>
-      <th>do_which</th>
-      <td><p>integer vector of plots to produce. When <code>do_which</code>
-is <code>NULL</code>, then all plots are produced. This argument is intended
-to help produce one plot from a folio, therefore each plot is referred
-by the number of the plot, in order.</p></td>
+      <th>row_cex, column_cex</th>
+      <td><p><code>numeric</code> character expansion factor, used
+to adjust the relative size of row and column labels,
+respectively. A value of <code>1.1</code> will make row font size 10%
+larger.</p></td>
+    </tr>
+    <tr>
+      <th>color_by_column</th>
+      <td><p><code>logical</code> indicating whether to colorize
+the enrichment heatmap columns using <code>colorV</code> in the input <code>mem</code>.
+This argument is only relevant when <code>do_which</code> include <code>1</code>.</p></td>
+    </tr>
+    <tr>
+      <th>enrich_im_weight, gene_im_weight</th>
+      <td><p><code>numeric</code> value between 0 and
+1, passed to <code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code>, used to apply relative
+weight to clustering columns and rows, respectively, when
+combining the gene-pathway incidence matrix with either column
+enrichment P-values, or row gene incidence matrix data.</p></td>
+    </tr>
+    <tr>
+      <th>colorize_by_gene</th>
+      <td><p><code>logical</code> passed to <code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code>
+indicating whether the heatmap body for the gene-pathway heatmap
+will be colorized using the enrichment colors for each gene.</p></td>
+    </tr>
+    <tr>
+      <th>cluster_color_min_fraction</th>
+      <td><p><code>numeric</code> value passed to
+<code><a href='collapse_mem_clusters.html'>collapse_mem_clusters()</a></code> used to determine which enrichment
+colors to associate with each Cnet cluster.</p></td>
+    </tr>
+    <tr>
+      <th>byCols</th>
+      <td><p><code>character</code> vector describing how to sort the
+pathways within Cnet clusters. This argument is passed
+to <code><a href='rank_mem_clusters.html'>rank_mem_clusters()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>do_plot</th>
+      <td><p><code>logical</code> indicating whether to render each plot.
+When <code>do_plot=FALSE</code> the plot objects will be created and returned,
+but the plot itself will not be rendered. This option may be
+useful to generate the full set of figures in one set, then
+review each figure one by one in an interactive session.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> indicating whether to print verbose output.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments are passed to downstream functions.</p></td>
+      <td><p>additional arguments are passed to downstream functions.
+Notably, <code>sets</code> is passed to <code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code> which
+allows one to define a specific subset of sets to use in the
+gene-pathway heatmap.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>list</code> is returned via invisible, which contains each
-relevant object.</p>
+plot object enabled by the argument <code>do_which</code>:</p><ul>
+<li><p><code>enrichment_hm</code> is a Heatmap object from <code>ComplexHeatmap</code>
+that contains the enrichment P-value heatmap. Note that this
+data is not used directly in subsequent plots, the pathway
+clusters shown here are based upon <code>-log10(Pvalue)</code> and not
+the underlying gene content of each pathway. This plot is
+a useful overview that answers the question "How many
+pathways are significantly enriched across the different
+enrichment tests?"</p></li>
+<li><p><code>gp_hm</code> is a Heatmap object from <code>ComplexHeatmap</code> with
+the gene-pathway incidence matrix heatmap. This heatmap and
+the column/pathway clusters are the subject of subsequent
+Cnet plots.</p></li>
+<li><p><code>gp_hm_caption</code> is a text caption that describes the gene
+and set filter criteria, and the row and column distance methods
+used for clustering. Because the filtering and clustering
+options have substantial impact on clustering, and the
+pathway clusters are the key for all subsequent plots,
+these values are important to keep associated with the
+output of this function.</p></li>
+<li><p><code>clusters_mem</code> is a <code>list</code> with the pathways contained
+in each pathway cluster shown by the gene-pathway heatmap,
+obtained by <code><a href='heatmap_column_order.html'>heatmap_column_order(gp_hm)</a></code>. The pathway names
+should also be present in <code><a href='https://rdrr.io/r/base/colnames.html'>colnames(mem$memIM)</a></code> and
+<code><a href='https://rdrr.io/r/base/colnames.html'>rownames(mem$enrichIM)</a></code>, for follow-up inspection.</p></li>
+<li><p><code>cnet_collapsed</code> is an <code>igraph</code> object with Cnet plot data,
+where the pathways have been collapsed by cluster, using the
+gene-pathway heatmap clusters defined in <code>clusters_mem</code>. Each
+pathway cluster is labeled by cluster name, and the first few
+pathway names.
+This data can be plotted using <code><a href='jam_igraph.html'>jam_igraph(cnet_collapsed)</a></code>.</p></li>
+<li><p><code>cnet_collapsed_set</code> is the same as <code>cnet_collapsed</code> except the
+pathways are labeled by the cluster name only, for example
+<code><a href='https://rdrr.io/r/base/c.html'>c("A", "B", "C", "D")</a></code>.
+This data can be plotted using <code><a href='jam_igraph.html'>jam_igraph(cnet_collapsed_set)</a></code>.</p></li>
+<li><p><code>cnet_collapsed_set2</code> is the same as <code>cnet_collapsed_set</code> except the
+gene labels are hidden, useful when there are too many genes to label
+clearly. The gene symbols are still stored in <code>V(g)$name</code> but the labels
+in <code>V(g)$label</code> are updated to hide the genes.
+This data can be plotted using <code><a href='jam_igraph.html'>jam_igraph(cnet_collapsed_set2)</a></code>.</p></li>
+<li><p><code>cnet_exemplars</code> is a <code>list</code> of <code>igraph</code> Cnet objects, each
+one contains only the number of exemplar pathways from each cluster
+defined by argument <code>exemplar_range</code>. By default it uses <code>1</code> exemplar
+per cluster, then <code>2</code> exemplars per cluster, then <code>3</code> exemplars
+per cluster. A number of published figures use <code>1</code> exemplar per
+pathway cluster.
+This data can be plotted using <code><a href='jam_igraph.html'>jam_igraph(cnet_exemplars[[1]])</a></code>,
+which will plot only the first <code>igraph</code> object from the list.</p></li>
+<li><p><code>cnet_clusters</code> is a <code>list</code> of <code>igraph</code> Cnet objects, each one
+contains all the pathways in one pathway cluster.
+This data can be plotted using <code><a href='jam_igraph.html'>jam_igraph(cnet_clusters[[1]])</a></code>,
+or by calling a specific cluster <code><a href='jam_igraph.html'>jam_igraph(cnet_clusters[["A"]])</a></code>.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function is intended to create multiple summary plots
-from a Multienrichment result, the <code>list</code> output from
-<code><a href='multiEnrichMap.html'>multiEnrichMap()</a></code>.</p>
+using the output data from <code><a href='multiEnrichMap.html'>multiEnrichMap()</a></code>. By default
+it creates all plots one by one, sufficient for including
+in a multi-page PDF document with <code><a href='https://rdrr.io/r/grDevices/cairo.html'>cairo_pdf(..., onefile=TRUE)</a></code>.
+However, each plot object can be created and viewed later
+by using <code>do_plot=FALSE</code>. This function returns a <code>list</code>
+with each plot object, described in detail below.</p>
 <p>The plots created:</p><ol>
 <li><p>Heatmap using enrichment P-values using <code><a href='mem_enrichment_heatmap.html'>mem_enrichment_heatmap()</a></code></p></li>
-<li><p>Gene-Pathway Heatmap using <code>mem_gene_pathway_heatmap()</code></p></li>
+<li><p>Gene-Pathway Heatmap using <code><a href='mem_gene_path_heatmap.html'>mem_gene_path_heatmap()</a></code></p></li>
 <li><p>Cnet plot using Gene-Pathway Heatmap collapsed clusters</p></li>
 <li><p>Cnet plot using Gene-Pathway Heatmap cluster examplars (n per cluster)</p></li>
 <li><p>Cnet plots one per cluster</p></li>
 </ol>
 
+<p>By far the most commonly used plots are <code>do_which=2</code> for the
+gene-pathway heatmap, and <code>do_which=4</code> for the collapsed Cnet
+plot, where Cnet clusters are based upon the gene-pathway heatmap.</p>
+<p>The key step in the workflow is the gene-pathway incidence matrix
+heatmap. This step also clusters the pathways using a combination
+of the pathway-gene incidence matrix results, and a weighted
+matrix of enrichment <code>-log10(Pvalue)</code> from <code>mem$enrichIM</code>.
+The pathway clusters are used in subsequent Cnet plots. Our
+experience is that the pathway clustering does not need to
+be perfect to be useful and valid. The pathway clusters
+are valid based upon the parameters used for clustering,
+and provide insight into the genes that help define each
+cluster distinct from other clusters. Sometimes with clustering
+techniques, the results are more or less effective
+based upon the type of pattern observed in the data, so it
+can be helpful to adjust parameters to drill down to
+the most effective patterns.</p>
+<p>The balance of weighting between the incidence matrix and enrichment
+P-values is controlled by <code>enrich_im_weight</code>: where <code>enrich_im_weight=0</code>
+will only cluster pathways using the enrichment P-values,
+and <code>enrich_im_weight=1</code> will only cluster pathways using the
+gene-pathway incidence matrix. The default <code>enrich_im_weight=0.3</code>
+is the recommended starting value based upon our experience.</p>
+<p>The argument <code>column_method</code> defines the distance method,
+for example <code>"euclidean"</code> and <code>"binary"</code> are two immediate choices.
+The method also adds <code>"correlation"</code> from <code><a href='https://rdrr.io/pkg/amap/man/hcluster.html'>amap::hcluster()</a></code> which
+can be very useful especially with large datasets.</p>
+<p>The number of pathway clusters can be controlled with
+<code>pathway_column_split</code>, by default when <code>pathway_column_split=NULL</code>
+and <code>auto_cluster=TRUE</code> the number of clusters is defined based
+upon the total number of pathways. In practice, <code>pathway_column_split=4</code>
+is almost always a good choice, partly because this number of
+clusters is the easiest to visualize in a Cnet plot.</p>
+<p>To define your own pathway cluster names, define <code>pathway_column_title</code>
+as a vector with length equal to <code>pathway_column_split</code>.</p>
+<p>The pathway clusters are dependent upon the genes and pathways
+used during clustering, which are also controlled by
+<code>min_set_ct</code> and <code>min_gene_ct</code>.</p>
+<p>Pathways are also filtered with <code>min_set_ct_each</code> which requires
+each pathway to contain at least this many genes from at least
+one enrichment test. Said another way, if <code>min_set_ct_each=4</code> it
+requires each pathway to contain <code>4</code> or more genes, and at least
+<code>4</code> genes must be present in the same enrichment test as defined in
+<code>mem$geneIM</code>. If there are <code>4</code> genes but each gene was present in
+only one enrichment test, this pathway would be filtered out.</p>
+<p>The resulting Cnet pathway clusters are single nodes in the
+network, and these nodes are colorized based upon the enrichment
+tests involved. The threshold for including the color for
+each enrichment test is defined by <code>cluster_color_min_fraction</code>,
+which requires at least this fraction of pathways in a
+pathway cluster meets the significance criteria for that
+enrichment test. To reduce this filter to include any enrichment
+test with at least one significant result, use
+<code>cluster_color_min_fraction=0.01</code>. In the gene-pathway heatmap,
+these colors are shown across the top of the heatmap.
+The default <code>cluster_color_min_fraction=0.4</code> requires 40%
+of pathways in a cluster for each enrichment test.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other jam plot functions: 
@@ -254,15 +454,10 @@ from a Multienrichment result, the <code>list</code> output from
 <code><a href='mem_multienrichplot.html'>mem_multienrichplot</a>()</code></p></div>
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -273,7 +468,7 @@ from a Multienrichment result, the <code>list</code> output from
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

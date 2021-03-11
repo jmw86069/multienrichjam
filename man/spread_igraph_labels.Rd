@@ -110,6 +110,7 @@ Other jam igraph functions:
 \code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
+\code{\link{rotate_igraph_layout}()},
 \code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
 \code{\link{subset_igraph_components}()},

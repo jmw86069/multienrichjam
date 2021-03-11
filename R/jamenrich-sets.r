@@ -265,8 +265,6 @@ list2concordance <- function
  verbose=FALSE,
  ...)
 {
-   # check method
-   method <- match.arg(method);
    # check if any values are non-sign
    if (makeSigned && !all(unique(unlist(x)) %in% c(-1,0,1))) {
       x <- lapply(x, sign);
@@ -357,7 +355,7 @@ im2list <- function
       colnames(x) <- xColnames;
    }
    if (any(is.na(x))) {
-      x <- rmNA(naValue=0, x);
+      x <- jamba::rmNA(naValue=0, x);
    }
    as(as(t(x), "transactions"), "list");
 }
@@ -412,12 +410,12 @@ imSigned2list <- function
       stop("The arules package is required for imSigned2list().");
    }
    if (any(is.na(x))) {
-      x <- rmNA(naValue=0, x);
+      x <- jamba::rmNA(naValue=0, x);
    }
    xUp <- as(as(t(x > 0), "transactions"), "list");
    xDn <- as(as(t(x < 0), "transactions"), "list");
-   lapply(nameVector(colnames(x)), function(i){
-      c(nameVector(rep(1, length.out=length(xUp[[i]])), xUp[[i]]),
-         nameVector(rep(-1, length.out=length(xDn[[i]])), xDn[[i]]));
+   lapply(jamba::nameVector(colnames(x)), function(i){
+      c(jamba::nameVector(rep(1, length.out=length(xUp[[i]])), xUp[[i]]),
+         jamba::nameVector(rep(-1, length.out=length(xDn[[i]])), xDn[[i]]));
    });
 }

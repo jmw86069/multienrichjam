@@ -37,6 +37,7 @@ mem_plot_folio(
   colorize_by_gene = TRUE,
   cluster_color_min_fraction = 0.4,
   byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
+  do_plot = TRUE,
   verbose = TRUE,
   ...
 )
@@ -78,13 +79,11 @@ to cluster columns and rows, respectively.}
 \item{exemplar_range}{integer vector (or \code{NULL}) used to create Cnet
 exemplar plots, using this many exemplars per cluster.}
 
-\item{pathway_column_split, gene_row_split}{optional arguments passed to
-\code{mem_gene_path_heatmap()} to split the heatmap by columns
-or rows, respectively. Note that when \code{pathway_column_split} is \code{NULL}
-and \code{auto_split=TRUE}, it will determine an appropriate number
-of clusters based upon the number of columns. To turn off the split,
-use \code{pathway_column_split} values \code{NULL} or \code{0} or \code{1};
-likewise for \code{gene_row_split}.}
+\item{pathway_column_split, gene_row_split}{\code{integer} value passed
+as \code{column_split} and \code{row_split}, respectively, to
+\code{mem_gene_path_heatmap()}, indicating the number of pathway
+clusters, and gene clusters, to create in the gene-pathway heatmap.
+When either value is \code{NULL} then auto-split logic is used.}
 
 \item{pathway_column_title, gene_row_title}{\code{character} vectors
 passed to \code{mem_gene_path_heatmap()} as \code{column_title} and
@@ -124,6 +123,12 @@ colors to associate with each Cnet cluster.}
 pathways within Cnet clusters. This argument is passed
 to \code{rank_mem_clusters()}.}
 
+\item{do_plot}{\code{logical} indicating whether to render each plot.
+When \code{do_plot=FALSE} the plot objects will be created and returned,
+but the plot itself will not be rendered. This option may be
+useful to generate the full set of figures in one set, then
+review each figure one by one in an interactive session.}
+
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are passed to downstream functions.
@@ -133,17 +138,72 @@ gene-pathway heatmap.}
 }
 \value{
 \code{list} is returned via invisible, which contains each
-relevant object: \code{clusters_mem} is a \code{list} representing the Cnet
-pathway clusters indicated in the gene-pathway incidence matrix
-heatmap.
+plot object enabled by the argument \code{do_which}:
+\itemize{
+\item \code{enrichment_hm} is a Heatmap object from \code{ComplexHeatmap}
+that contains the enrichment P-value heatmap. Note that this
+data is not used directly in subsequent plots, the pathway
+clusters shown here are based upon \code{-log10(Pvalue)} and not
+the underlying gene content of each pathway. This plot is
+a useful overview that answers the question "How many
+pathways are significantly enriched across the different
+enrichment tests?"
+\item \code{gp_hm} is a Heatmap object from \code{ComplexHeatmap} with
+the gene-pathway incidence matrix heatmap. This heatmap and
+the column/pathway clusters are the subject of subsequent
+Cnet plots.
+\item \code{gp_hm_caption} is a text caption that describes the gene
+and set filter criteria, and the row and column distance methods
+used for clustering. Because the filtering and clustering
+options have substantial impact on clustering, and the
+pathway clusters are the key for all subsequent plots,
+these values are important to keep associated with the
+output of this function.
+\item \code{clusters_mem} is a \code{list} with the pathways contained
+in each pathway cluster shown by the gene-pathway heatmap,
+obtained by \code{heatmap_column_order(gp_hm)}. The pathway names
+should also be present in \code{colnames(mem$memIM)} and
+\code{rownames(mem$enrichIM)}, for follow-up inspection.
+\item \code{cnet_collapsed} is an \code{igraph} object with Cnet plot data,
+where the pathways have been collapsed by cluster, using the
+gene-pathway heatmap clusters defined in \code{clusters_mem}. Each
+pathway cluster is labeled by cluster name, and the first few
+pathway names.
+This data can be plotted using \code{jam_igraph(cnet_collapsed)}.
+\item \code{cnet_collapsed_set} is the same as \code{cnet_collapsed} except the
+pathways are labeled by the cluster name only, for example
+\code{c("A", "B", "C", "D")}.
+This data can be plotted using \code{jam_igraph(cnet_collapsed_set)}.
+\item \code{cnet_collapsed_set2} is the same as \code{cnet_collapsed_set} except the
+gene labels are hidden, useful when there are too many genes to label
+clearly. The gene symbols are still stored in \code{V(g)$name} but the labels
+in \code{V(g)$label} are updated to hide the genes.
+This data can be plotted using \code{jam_igraph(cnet_collapsed_set2)}.
+\item \code{cnet_exemplars} is a \code{list} of \code{igraph} Cnet objects, each
+one contains only the number of exemplar pathways from each cluster
+defined by argument \code{exemplar_range}. By default it uses \code{1} exemplar
+per cluster, then \code{2} exemplars per cluster, then \code{3} exemplars
+per cluster. A number of published figures use \code{1} exemplar per
+pathway cluster.
+This data can be plotted using \code{jam_igraph(cnet_exemplars[[1]])},
+which will plot only the first \code{igraph} object from the list.
+\item \code{cnet_clusters} is a \code{list} of \code{igraph} Cnet objects, each one
+contains all the pathways in one pathway cluster.
+This data can be plotted using \code{jam_igraph(cnet_clusters[[1]])},
+or by calling a specific cluster \code{jam_igraph(cnet_clusters[["A"]])}.
+}
 }
 \description{
 Multienrichment folio of summary plots
 }
 \details{
 This function is intended to create multiple summary plots
-from a Multienrichment result, the \code{list} output from
-\code{multiEnrichMap()}.
+using the output data from \code{multiEnrichMap()}. By default
+it creates all plots one by one, sufficient for including
+in a multi-page PDF document with \code{cairo_pdf(..., onefile=TRUE)}.
+However, each plot object can be created and viewed later
+by using \code{do_plot=FALSE}. This function returns a \code{list}
+with each plot object, described in detail below.
 
 The plots created:
 \enumerate{
@@ -153,6 +213,72 @@ The plots created:
 \item Cnet plot using Gene-Pathway Heatmap cluster examplars (n per cluster)
 \item Cnet plots one per cluster
 }
+
+By far the most commonly used plots are \code{do_which=2} for the
+gene-pathway heatmap, and \code{do_which=4} for the collapsed Cnet
+plot, where Cnet clusters are based upon the gene-pathway heatmap.
+
+The key step in the workflow is the gene-pathway incidence matrix
+heatmap. This step also clusters the pathways using a combination
+of the pathway-gene incidence matrix results, and a weighted
+matrix of enrichment \code{-log10(Pvalue)} from \code{mem$enrichIM}.
+The pathway clusters are used in subsequent Cnet plots. Our
+experience is that the pathway clustering does not need to
+be perfect to be useful and valid. The pathway clusters
+are valid based upon the parameters used for clustering,
+and provide insight into the genes that help define each
+cluster distinct from other clusters. Sometimes with clustering
+techniques, the results are more or less effective
+based upon the type of pattern observed in the data, so it
+can be helpful to adjust parameters to drill down to
+the most effective patterns.
+
+The balance of weighting between the incidence matrix and enrichment
+P-values is controlled by \code{enrich_im_weight}: where \code{enrich_im_weight=0}
+will only cluster pathways using the enrichment P-values,
+and \code{enrich_im_weight=1} will only cluster pathways using the
+gene-pathway incidence matrix. The default \code{enrich_im_weight=0.3}
+is the recommended starting value based upon our experience.
+
+The argument \code{column_method} defines the distance method,
+for example \code{"euclidean"} and \code{"binary"} are two immediate choices.
+The method also adds \code{"correlation"} from \code{amap::hcluster()} which
+can be very useful especially with large datasets.
+
+The number of pathway clusters can be controlled with
+\code{pathway_column_split}, by default when \code{pathway_column_split=NULL}
+and \code{auto_cluster=TRUE} the number of clusters is defined based
+upon the total number of pathways. In practice, \code{pathway_column_split=4}
+is almost always a good choice, partly because this number of
+clusters is the easiest to visualize in a Cnet plot.
+
+To define your own pathway cluster names, define \code{pathway_column_title}
+as a vector with length equal to \code{pathway_column_split}.
+
+The pathway clusters are dependent upon the genes and pathways
+used during clustering, which are also controlled by
+\code{min_set_ct} and \code{min_gene_ct}.
+
+Pathways are also filtered with \code{min_set_ct_each} which requires
+each pathway to contain at least this many genes from at least
+one enrichment test. Said another way, if \code{min_set_ct_each=4} it
+requires each pathway to contain \code{4} or more genes, and at least
+\code{4} genes must be present in the same enrichment test as defined in
+\code{mem$geneIM}. If there are \code{4} genes but each gene was present in
+only one enrichment test, this pathway would be filtered out.
+
+The resulting Cnet pathway clusters are single nodes in the
+network, and these nodes are colorized based upon the enrichment
+tests involved. The threshold for including the color for
+each enrichment test is defined by \code{cluster_color_min_fraction},
+which requires at least this fraction of pathways in a
+pathway cluster meets the significance criteria for that
+enrichment test. To reduce this filter to include any enrichment
+test with at least one significant result, use
+\code{cluster_color_min_fraction=0.01}. In the gene-pathway heatmap,
+these colors are shown across the top of the heatmap.
+The default \code{cluster_color_min_fraction=0.4} requires 40\%
+of pathways in a cluster for each enrichment test.
 }
 \seealso{
 Other jam plot functions: 

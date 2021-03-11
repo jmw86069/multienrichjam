@@ -27,6 +27,10 @@ knitr::opts_chunk$set(
    fig.width=7,
    fig.align="center"
 )
+ragg_png = function(..., res = 192) {
+  ragg::agg_png(..., res = res, units = "in")
+}
+knitr::opts_chunk$set(dev = "ragg_png", fig.ext = "png")
 ```
 
 ## Import and use Ingenuity IPA enrichment data
@@ -500,3 +504,4 @@ jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
    label_factor=1.2, 
    label_dist_factor=3);
 ```
+

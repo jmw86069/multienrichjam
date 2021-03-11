@@ -44,6 +44,7 @@ Other jam igraph functions:
 \code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
 \code{\link{reorderIgraphNodes}()},
+\code{\link{rotate_igraph_layout}()},
 \code{\link{spread_igraph_labels}()},
 \code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},

@@ -1,4 +1,62 @@
-# multienrichjam version 0.0.41.900
+# multienrichjam 0.0.42.900
+
+## changes to existing functions
+
+* `mem_plot_folio()` has much more detailed help text,
+describing more details about clustering parameters,
+and describing the returned objects in detail.
+* `mem_plot_folio()` new argument `do_plot=TRUE` determines
+whether each plot is rendered, or just returned as a plot
+object to be reviewed separately.
+* `mem_plot_folio()` the returned data now
+includes the gene-pathway heatmap caption, which descibes
+the gene/set filtering criteria, and the row/column
+distance methods used for clustering. Since these arguments
+have substantial effect on the pathway clusters, it is
+helpful to keep this information readily available.
+Similarly, the `cnet` plots as `igraph` objects store
+the title as a graph attribute, accessible using
+`graph_attr(cnet, "title")`.
+* `mem_plot_folio()` argument `colorize_by_gene=TRUE` now
+uses `colorjam::blend_colors()`.
+* `mem_gene_pathway_heatmap()` is tolerant of `'...'` entries
+not valid with `ComplexHeatmap::Heatmap()`, in order to
+allow overloading `'...'` for other function arguments.
+
+
+## new functions
+
+* `nudge_igraph_node()` is intended to help move individual
+nodes in an `igraph` layout, useful for adjusting nodes
+to reduce label overlaps.
+* `get_cnet_nodeset()` is a helper function to get the nodes
+in a nodeset, defined as the `"Gene"` nodes that all connect
+to the same `"Set"` nodes. It is helpful when looking at
+a Cnet plot, and wanting easy access to the `"Gene"` nodes
+in a particular cluster of nodes in the plot.
+* `adjust_cnet_nodeset()` is intended to manipulate the
+layout coordinates for nodes in a nodeset, useful to
+expand, shift, or rotate nodes to help with visibility.
+* `adjust_cnet_set_relayout_gene()` is a very useful function
+with complicated name. It is intended to help move `Set`
+nodes in a Cnet `igraph` layout, then re-positions all
+the `Gene` nodes while keeping the `Set` nodes in fixed
+positions.
+* `rotate_igraph_layout()` which allows rotating an `igraph`
+layout. It can also reflect layout coordinates across one
+or more axes. It also calls other helper functions
+as needed, `spread_igraph_labels()` and `reorderIgraphNodes()`.
+* `rotate_coordinates()` is the underlying function to
+rotate coordinates, it operates on a numeric matrix
+and is called by `rotate_igraph_layout()`.
+
+The next version should include `plot_cnet_heatmaps()` which
+creates nice Cnet cluster plots where each cluster has a
+corresponding expression heatmap displayed at the edge
+of the figure.
+
+
+# multienrichjam 0.0.41.900
 
 ## bug fixes
 
@@ -11,7 +69,7 @@ because of some new unit arithmetic only available in
 grid 4.0.0+. Hiding the color legend, or using vertical
 color legend fixed the issue.
 
-# multienrichjam version 0.0.40.900
+# multienrichjam 0.0.40.900
 
 ## bug fixes
 
@@ -26,7 +84,7 @@ has no internal layout, it runs `relayout_with_qfr()` by default.
 which includes the pathway set names represented in each
 cluster shown in the gene-pathway incidence matrix heatmap.
 
-# multienrichjam version 0.0.39.900
+# multienrichjam 0.0.39.900
 
 ## changes to existing functions
 
@@ -35,7 +93,7 @@ a node attribute, which helps distinguish `"Gene"` and `"Set"`
 nodes in downstream operations. This change helps address
 #5 to hide the gene labels on Cnet plots.
 
-# multienrichjam version 0.0.38.900
+# multienrichjam 0.0.38.900
 
 ## bug fixes
 
@@ -53,7 +111,7 @@ work with `HeatmapList` objects. By default they use the first
 heatmap in the list, which should be consistent with all other
 heatmaps.
 
-# multienrichjam version 0.0.37.900
+# multienrichjam 0.0.37.900
 
 ## bug fixed
 
@@ -71,7 +129,7 @@ These functions might better be called `subsetEnrichResult()` and
 and columns (pathways) displayed in the gene-pathway incidence
 matrix heatmap.
 
-# multienrichjam version 0.0.36.900
+# multienrichjam 0.0.36.900
 
 ## bug fixed
 
@@ -106,7 +164,7 @@ be present in the top `topEnrichN` entries which meet both
 the `p_cutoff` and `min_count` criteria to be retained by these
 functions.
 
-# multienrichjam version 0.0.35.900
+# multienrichjam 0.0.35.900
 
 ## bug fixes
 
@@ -149,7 +207,7 @@ more consistent with `mem_gene_path_heatmap()`, so the color
 scale atop the gene-pathway heatmap more accurately reflects the
 color scale used in the enrichment heatmap itself.
 
-# multienrichjam version 0.0.34.900
+# multienrichjam 0.0.34.900
 
 ## changes to existing functions
 
@@ -169,7 +227,7 @@ new argument `gene_im_weight`. These arguments more accurately reflect
 the relative weight between enrichment and incidence matrix for
 `enrich_im_weight`.
 
-# multienrichjam version 0.0.33.900
+# multienrichjam 0.0.33.900
 
 ## changes to existing functions
 
@@ -182,7 +240,7 @@ pathways is below this threshold. For example, a cluster of
 given enrichment set -- therefore this enrichment color
 would not be included in the cnet cluster colors.
 
-# multienrichjam version 0.0.32.900
+# multienrichjam 0.0.32.900
 
 ## changes to existing functions
 
@@ -197,7 +255,7 @@ would not be included in the cnet cluster colors.
    * the color legend has discrete color bar steps, indicating the
    number of enrichments where each gene is involved
 
-# multienrichjam version 0.0.31.900
+# multienrichjam 0.0.31.900
 
 ## changes to existing functions
 
@@ -209,7 +267,7 @@ gene content, affects the clusters. In principle both should
 have similar effects, but sometimes it helps to favor gene
 incidence or pathway enrichment.
 
-# multienrichjam version 0.0.30.900
+# multienrichjam 0.0.30.900
 
 ## changes to existing functions
 
@@ -223,7 +281,7 @@ There are two main effects of this filter: The gene-pathway
 heatmap will display fewer pathways; and any resulting
 Cnet plots will have the same pathways removed.
 
-# multienrichjam version 0.0.29.900
+# multienrichjam 0.0.29.900
 
 ## changes to existing functions
 
@@ -241,7 +299,7 @@ reasonably similar enrichment P-value (within one order of magnitude
 such as 2.4e-5 and 3.5e-5) the pathway with more genes was
 usually the more interesting/relevant biological pathway.
 
-# multienrichjam version 0.0.28.900
+# multienrichjam 0.0.28.900
 
 ## new functions
 
@@ -265,7 +323,7 @@ matrix colors when `color_by_column=TRUE`, until the
 method.
 * `mem_plot_folio()` now correctly honors `p_floor`.
 
-# multienrichjam version 0.0.27.900
+# multienrichjam 0.0.27.900
 
 Added a new TODO.md file to track some new feature ideas.
 
@@ -295,7 +353,7 @@ colors to `multiEnrichMap()`, specifically the argument `colorV`.
 * `reorderIgraphNodes()` now has an example that shows the effects
 of ordering pie nodes by color.
 
-# multienrichjam version 0.0.26.900
+# multienrichjam 0.0.26.900
 
 ## Changes to existing functions
 
@@ -309,7 +367,7 @@ cluster. For example `max_labels=c(5,2)` will filter the first
 cluster to display up to 2 labels, and the second cluster to display
 up to 5 labels.
 
-# multienrichjam version 0.0.25.900
+# multienrichjam 0.0.25.900
 
 ## Changes to existing functions
 
@@ -327,7 +385,7 @@ in the new package which seems misleading... Ah well.)
 input to multiEnrichMap(). It still provides some useful graphical
 benefits even with only one enrichment input.
 
-# multienrichjam version 0.0.24.900
+# multienrichjam 0.0.24.900
 
 ## Changes to existing functions
 
@@ -335,7 +393,7 @@ benefits even with only one enrichment input.
 enrichment result. Testing whether the downstream capabilities are
 useful in the context of one enrichment result.
 
-# multienrichjam version 0.0.23.900
+# multienrichjam 0.0.23.900
 
 ## Changes to existing functions
 
@@ -360,7 +418,7 @@ is likely to become the core part of the analysis workflow:
  
 > gene-pathway heatmap -> pathway clusters -> Cnet using pathway clusters
 
-# multienrichjam version 0.0.22.900
+# multienrichjam 0.0.22.900
 
 ## New functions
 
@@ -387,7 +445,7 @@ custom plot function, specifically to use `jam_plot_igraph()`.
 * Functions for igraph vertex shapes were moved into a new .R file,
 and into a new function family `"jam igraph shapes"`.
 
-# multienrichjam version 0.0.21.900
+# multienrichjam 0.0.21.900
 
 ## New functions
 
@@ -396,7 +454,7 @@ subtitle, allowing for grid objects such as `ComplexHeatmap::Heatmap`
 objects, or even multiple heatmaps. That said, any grid `"gTree"`
 object should work.
 
-# multienrichjam version 0.0.20.900
+# multienrichjam 0.0.20.900
 
 ## New functions
 
@@ -420,7 +478,7 @@ can be colored white (or the background color.)
 * `mem_plot_folio()` new argument (minor release) `do_which` to
 help produce selected plot pages from a folio of plots.
 
-# multienrichjam version 0.0.19.900
+# multienrichjam 0.0.19.900
 
 ## New functions
 
@@ -433,7 +491,7 @@ are present per cluster. This function also calls
 `rank_mem_clusters()`, so it's possible to pick a handful of the
 top pathways per cluster, as relevant.
 
-# multienrichjam version 0.0.18.900
+# multienrichjam 0.0.18.900
 
 ## New functions
 
@@ -451,7 +509,7 @@ properly applying `min_gene_ct` and `min_path_ct` however it
 did not check the resulting data to remove empty columns and
 rows. This change has been made.
 
-# multienrichjam version 0.0.17.900
+# multienrichjam 0.0.17.900
 
 ## New functions
 
@@ -475,7 +533,7 @@ frame after the fill colors, which caused the frames to overlap
 each other and appear transparent.
 
 
-# multienrichjam version 0.0.16.900
+# multienrichjam 0.0.16.900
 
 The vignette was updated to use the new functions, for
 a much cleaner overall workflow.
@@ -525,7 +583,7 @@ layout coordinates.
 a layout specification object, for use with `igraph::add_layout_()`
 in a more confusing workflow pattern than I expected.
 
-# multienrichjam version 0.0.15.900
+# multienrichjam 0.0.15.900
 
 ## Changes to existing functions
 
@@ -540,7 +598,7 @@ the actual rownames and colnames of data in the heatmap. Very useful
 when the data used for the heatmap has been filtered internal
 to the function.
 
-# multienrichjam version 0.0.14.900
+# multienrichjam 0.0.14.900
 
 ## Changes to existing functions
 
@@ -566,7 +624,7 @@ help recognize the proper identifier in each scenario.
 and returns the list of genes represented in each `enrichResult`.
 Intended mainly for internal use by `multiEnrichMap()`.
 
-# multienrichjam version 0.0.13.900
+# multienrichjam 0.0.13.900
 
 ## New plotting functions
 
@@ -593,7 +651,7 @@ and enrichment incidence matrix colors.
 rapid color blending.
 
 
-# multienrichjam version 0.0.11.900
+# multienrichjam 0.0.11.900
 
 ## Bug fixed
 
@@ -602,7 +660,7 @@ pathway set name is identical to one or more genes, which
 happens with IPA pathway analysis, in the "Upstream Regulators"
 output.
 
-# multienrichjam version 0.0.10.900
+# multienrichjam 0.0.10.900
 
 ## New functions
 
@@ -642,7 +700,7 @@ was because `as.character()` removes names from a character vector,
 and the conversion was done to enforce proper handling by `strsplit()`
 which gives unexpected results when the list may contain a factor.
 
-# multienrichjam version 0.0.9.900
+# multienrichjam 0.0.9.900
 
 ## bug fixes
 
@@ -650,7 +708,7 @@ which gives unexpected results when the list may contain a factor.
 to remove blank rows, for now it uses `readLines()` and
 `jamba::vigrep()` to select rows with at least one character.
 
-# multienrichjam version 0.0.8.900
+# multienrichjam 0.0.8.900
 
 ## bug fixes
 
@@ -662,7 +720,7 @@ is the default in base R. Now all calls to `strsplit()` enforce
 all package dependencies.
 
 
-# multienrichjam version 0.0.7.900
+# multienrichjam 0.0.7.900
 
 ## bug fixes
 
@@ -677,7 +735,7 @@ When no sort columns are found, a warning message is printed.
 * Added vignette describing the workflow starting with Ingenuity
 IPA enrichment results.
 
-# multienrichjam version 0.0.6.900
+# multienrichjam 0.0.6.900
 
 ## new functions
 
@@ -700,7 +758,7 @@ input pathway enrichment results by taking the top `n` result,
 then making sure the overall selected pathways are retained for
 all enrichment tables.
 
-# multienrichjam version 0.0.5.900
+# multienrichjam 0.0.5.900
 
 ## changes
 
@@ -714,7 +772,7 @@ applied to igraph objects where `"pie"` colors are accessed as a list.
 * `removeIgraphBlanks()` was updated to use vectorized logic for `"pie"`
 vertex attributes.
 
-# multienrichjam version 0.0.4.900
+# multienrichjam 0.0.4.900
 
 ## bug fixed
 
@@ -725,14 +783,14 @@ vertex attributes.
 * Updated `fixSetLabels()` to handle words the should be kept
 uppercase, with some defaults pre-configured, e.g. "mRNA".
 
-# multienrichjam version 0.0.3.900
+# multienrichjam 0.0.3.900
 
 ## changes
 
 * removed `mergeAllXY()` and `unnestList()` and moved them to the `jamba`
 package. Added corresponding version requirement on jamba.
 
-# multienrichjam version 0.0.2.900
+# multienrichjam 0.0.2.900
 
 ## changes
 
@@ -748,7 +806,7 @@ for extracting subsets of pathways using various network descriptors.
 shape "ellipse" whose shape is controlled by vertex.ellipse.ratio,
 where `1` creates a circular node.
 
-# multienrichjam version 0.0.1.900
+# multienrichjam 0.0.1.900
 
 ## new functions
 

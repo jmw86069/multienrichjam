@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.27.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.42.900</span>
       </span>
     </div>
 
@@ -100,7 +104,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/jmw86069/multienrichjam">
+  <a href="http://github.com/jmw86069/multienrichjam/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,9 +128,57 @@
 <div id="todo" class="section level1">
 
 <p>This document describes plans for enhancements to the multienrichjam R package.</p>
-<div id="improve-reorderigraphnotes" class="section level2">
+<div id="apply-subsetsets-in-multienrichmap" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improve-reorderigraphnotes" class="anchor"></a>Improve reorderIgraphNotes()</h2>
+<a href="#apply-subsetsets-in-multienrichmap" class="anchor"></a>apply subsetSets in <code>multiEnrichMap()</code>
+</h2>
+<ul>
+<li>apparently it had never been implemented?</li>
+</ul>
+</div>
+<div id="apply-node-color-order-based-upon-shape-of-node-cluster" class="section level2">
+<h2 class="hasAnchor">
+<a href="#apply-node-color-order-based-upon-shape-of-node-cluster" class="anchor"></a>apply node color order based upon shape of node cluster</h2>
+<p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code></p>
+<ul>
+<li><p>when a cluster of nodes is short-wide, the order should be left-to-right</p></li>
+<li><p>when a cluster of nodes is tall-skinny, the order should be top-to-bottom</p></li>
+<li>
+<p>all else should be sorted left-to-right (or user-defined default order)</p>
+<ul>
+<li>it is visually confusing when tall-skinny nodes are sorted left-to-right</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="apply-min_count-in-multienrichmap" class="section level2">
+<h2 class="hasAnchor">
+<a href="#apply-min_count-in-multienrichmap" class="anchor"></a>Apply min_count in <code>multiEnrichMap()</code>
+</h2>
+<ul>
+<li>Currently <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> does not filter by number of genes involved in enrichment, it only filters by enrichment P-value. New argument <code>min_count</code> is applied only when <code>topEnrichN</code> is used, but nothing else downstream is aware of filtering by <code>min_count</code>. The corresponding argument in <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> is <code>min_set_ct_each</code>, which requires a set (pathway) to contain at least this many entries in at least one enrichment result which also meets <code>p_cutoff</code> criteria for enrichment P-value.</li>
+</ul>
+</div>
+<div id="optional-highlight-genes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#optional-highlight-genes" class="anchor"></a>Optional highlight genes</h2>
+<ul>
+<li>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> and subsequent plots, optional argument <code>highlight_genes</code> which would effectively hide all gene labels except <code>highlight_genes</code> – to help especially crowded plots. Would propagate to new function <code>plot_cnet_heatmaps()</code> which displays expression heatmaps around central cnet plot.</li>
+</ul>
+</div>
+<div id="add-plot_cnet_heatmaps" class="section level2">
+<h2 class="hasAnchor">
+<a href="#add-plot_cnet_heatmaps" class="anchor"></a>add <code>plot_cnet_heatmaps()</code>
+</h2>
+<ul>
+<li>
+<code>plot_cnet_heatmaps()</code> is in development, and arranges expression heatmaps around a central Cnet plot, using genes in each cnet cluster. It is intended with <code><a href="reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code> to be used with Cnet clusters.</li>
+</ul>
+</div>
+<div id="improve-reorderigraphnotes--done-needs-more-testing-verification" class="section level2">
+<h2 class="hasAnchor">
+<a href="#improve-reorderigraphnotes--done-needs-more-testing-verification" class="anchor"></a>Improve reorderIgraphNotes() – DONE needs more testing, verification</h2>
 <ul>
 <li>
 <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> when it encounters attributes with multiple colors per node, such as <code>"pie.colors"</code> and <code>"coloredrect.colors"</code>, calls <code><a href="reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> to generate one blended color per node, then it sorts those colors using <code><a href="reference/sort_colors.html">sort_colors()</a></code>. However, the color order ultimately does not match the order in the color legend, and other plots such as heatmaps.</li>
@@ -136,6 +188,12 @@
 </div>
 </div>
 
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -148,7 +206,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
