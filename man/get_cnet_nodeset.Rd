@@ -60,6 +60,7 @@ of nodes.
 Other jam cnet igraph functions: 
 \code{\link{adjust_cnet_nodeset}()},
 \code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_nodeset_spacing}()},
 \code{\link{nudge_igraph_node}()},
 \code{\link{rotate_igraph_layout}()}
 }

@@ -1,3 +1,28 @@
+# multienrichjam 0.0.43.900
+
+## changes to existing functions
+
+* `adjust_cnet_nodeset()` logic was updated for `expand`
+which was not properly applying negative values to
+compress the spacing between nodes in a node set. This
+use is relatively rare but feasible.
+* `adjust_cnet_nodeset()` argument `set_nodes` now optionally
+allows referring to a nodeset using the name of one node
+contained in the nodeset, as a convenience.
+
+## new functions
+
+* `apply_nodeset_spacing()` attempts to automate the process
+of applying `adjust_cnet_nodeset()` for each subcluster of
+nodes in a Cnet plot to enforce a minimum spacing between
+nodes. The Fruchterman-Reingold layout algorithm
+might offer a minimum distance threshold, but I could
+not find it. Incidentally, this new function can also
+compress node spacing, which might be useful when
+gene labels are not shown.
+
+
+
 # multienrichjam 0.0.42.900
 
 ## changes to existing functions

@@ -68,6 +68,7 @@ were included in \code{nodes}.
 \seealso{
 Other jam cnet igraph functions: 
 \code{\link{adjust_cnet_nodeset}()},
+\code{\link{apply_nodeset_spacing}()},
 \code{\link{get_cnet_nodeset}()},
 \code{\link{nudge_igraph_node}()},
 \code{\link{rotate_igraph_layout}()}

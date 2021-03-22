@@ -23,7 +23,9 @@ contains values \code{"Gene"} and \code{"Set"}, as produced by \code{memIM2cnet(
 defined here as the names of the nodes with \code{nodeType="Set"}
 to which each node with \code{nodeType="Gene"} is connected.
 For example \code{set_nodes=c("A", "B")} will return all Gene nodes
-that are connected only to Set nodes \code{"A"} and \code{"B"}.}
+that are connected only to Set nodes \code{"A"} and \code{"B"}. Alternatively,
+one can refer to a cluster by the node name of one member of the
+cluster, as a convenience option.}
 
 \item{x, y}{\code{numeric} indicating the relative amount to move nodes
 in the node set, based upon the overall range of x and y values
@@ -84,6 +86,7 @@ jam_igraph(g2)
 \seealso{
 Other jam cnet igraph functions: 
 \code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_nodeset_spacing}()},
 \code{\link{get_cnet_nodeset}()},
 \code{\link{nudge_igraph_node}()},
 \code{\link{rotate_igraph_layout}()}

@@ -3,6 +3,7 @@
 export(adjust_cnet_nodeset)
 export(adjust_cnet_set_relayout_gene)
 export(apply_color_cap)
+export(apply_nodeset_spacing)
 export(avg_angles)
 export(avg_colors_by_list)
 export(cnet2df)
