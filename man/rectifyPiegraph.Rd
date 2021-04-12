@@ -9,7 +9,7 @@ rectifyPiegraph(
   nrow = 2,
   ncol = 5,
   byrow = TRUE,
-  whichNodes = seq_len(vcount(g)),
+  whichNodes = seq_len(igraph::vcount(g)),
   ...
 )
 }
@@ -65,8 +65,10 @@ Other jam igraph functions:
 \code{\link{cnetplot_internalJam}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
+\code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},

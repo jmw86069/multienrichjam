@@ -1,3 +1,99 @@
+# multienrichjam 0.0.44.900
+
+The edge bundling update!
+
+The new functions are under rapid development, and represent potentially
+quite useful functions for visualizing complex `igraph` networks,
+specifically Cnet plots with Gene and Set node types.
+
+The general technique of bundling edges between two groups
+of nodes is relatively stable. The details and extent that edges are
+bundled, including visual display of bundled edges, is
+under active evaluation and development. So far it doesn't
+seem to take much to improve the output figure, compared
+to using straight edges.
+
+In the near future, Cnet plots may by default enable
+some form of edge bundling, as Cnet plots were in fact
+the motivating example.
+
+See pkgdown docs for `edge_bundle_nodegroups()` for visual
+examples using the Karate network.
+
+## current issues in edge bundling
+
+`edge_bundle_nodegroups()` is the core function, and it does not
+yet implement:
+
+* edge clipping based upon igraph vertex shape, for example
+using `igraph:::.igraph.shapes[["circle"]]$clip()`.
+* edge arrows, which requires edge clipping for proper usage,
+otherwise edge arrows will be underneath the node shape itself.
+* edge labels, which could be implemented, except that bundled
+edges are by definition much more likely to be too close for
+effective labels. I rarely use edge labels, so I will target
+the simplest thing that works.
+
+
+## new igraph edge bundling functions
+
+* `get_bipartite_nodeset()` - is a general use function to return
+nodes that are grouped by having identical node neighbors. This
+situation usually happens rarely, except with bipartite graphs
+where there are often clusters of nodes with the same neighbors,
+especially common for Cnet plot data.
+* `edge_bundle_bipartite()` is the first edge bundling function,
+it is actually a light wrapper around `edge_bundle_nodegroups()`.
+Bipartite bundling connects a nodeset (defined as having the
+same neighbor nodes) to each neighbor node.
+* `edge_bundle_nodegroups()` is a general edge bundling technique
+that bundles edges between node groups. These node groups can
+be defined by any relevant technique, typically a
+community detection algorithm such as `igraph::cluster_walktrap()`
+or any other of several `igraph::cluster_*` functions.
+
+## new igraph functions
+
+* `color_edges_by_nodes()` is a simple function that blends the colors
+of the two nodes involved in each edge, using `colorjam::blend_colors()`
+since it uses RYB color blending. It is optimized so it only
+blends unique combinations of colors.
+
+
+## new utility functions
+
+* `deconcat_df2()` is a necessary utility function that "expands"
+a `data.frame` that has one or more columns with multiple
+delimited values. It simply expands the rows to represent one
+individual value per row for those columns. This function
+will very likely be moved into the `"jamba"` package for
+much broader use.
+* `handle_igraph_param_list()` is a helper function for `jam_igraph()`
+which is intended to update node and edge attributes in bulk based
+upon another attribute. For example "make all the Gene nodes small,
+and all the Set nodes large." Same with labels, colors, etc.
+
+
+## updates to existing functions
+
+* `jam_igraph()` has new arguments:
+
+* `edge_bundling` - for `"nodegroups"`, `"connections"` and `"none"`
+This argument will enable edge bundling by calling `edge_bundle_nodegroups()`
+and `get_bipartite_nodeset()` when needed. See examples.
+* `render_nodes,render_edges,render_nodelabels,render_nodegroups` are
+options to skip various aspects of `igraph` plot features, either to
+save time, or to allow more detailed visual layering.
+* `vectorized_node_shapes` toggle the vectorized node shape plotting
+when there is more than one node shape in the `igraph` object. Note
+this feature is *substantially* faster, but changes the order that
+nodes are rendered, by design. As a result, nodes are drawn in order
+of shape, so each render is a bulk operation. For nodes that overlap,
+or partially overlap, this feature will visibly change the ordering
+of nodes. In general, speed is still ideal, and reducing node layout
+overlaps should be a separate step.
+
+
 # multienrichjam 0.0.43.900
 
 ## changes to existing functions

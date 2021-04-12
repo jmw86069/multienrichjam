@@ -6,26 +6,34 @@
 \usage{
 jam_plot_igraph(
   x,
+  ...,
   axes = FALSE,
   add = FALSE,
   xlim = c(-1, 1),
   ylim = c(-1, 1),
   mark.groups = list(),
   mark.shape = 1/2,
-  mark.col = head(colorjam::rainbowJam(max(c(1, length(mark.groups))), alpha = 0.3),
-    length(mark.groups)),
-  mark.border = head(colorjam::rainbowJam(max(c(1, length(mark.groups))), alpha = 1),
-    length(mark.groups)),
-  mark.expand = 15,
+  mark.col = NULL,
+  mark.border = NULL,
+  mark.expand = 8,
   pie_to_jampie = TRUE,
   use_shadowText = FALSE,
+  vectorized_node_shapes = TRUE,
+  edge_bundling = c("none", "connections", "nodegroups"),
+  nodegroups = NULL,
+  render_nodes = TRUE,
+  render_edges = TRUE,
+  render_groups = TRUE,
+  render_nodelabels = TRUE,
   verbose = FALSE,
-  debug = NULL,
-  ...
+  debug = NULL
 )
 }
 \arguments{
 \item{x}{The graph to plot.}
+
+\item{...}{Additional plotting parameters. See \link[igraph]{igraph.plotting} for
+the complete list.}
 
 \item{axes}{Logical, whether to plot axes, defaults to FALSE.}
 
@@ -62,16 +70,71 @@ the marked vertex groups. It is in the same units as the vertex sizes. If a
 vector is given, then different values are used for the different vertex
 groups.}
 
-\item{pie_to_jampie}{logical indicating whether to convert
+\item{pie_to_jampie}{\code{logical} indicating whether to convert
 vertex shape \code{"pie"} to \code{"jampie"} in order to use vectorized
 plotting.}
 
-\item{...}{Additional plotting parameters. See \link[igraph]{igraph.plotting} for
-the complete list.}
+\item{use_shadowText}{\code{logical} indicating whether to use
+\code{jamba::shadowText()} instead of \code{graphics::text()}, in order
+to render text labels with a subtle shadow-like outline around
+each label. This change improves legibility of labels at
+the expense of slightly longer plot rendering time.}
+
+\item{vectorized_node_shapes}{\code{logical} indicating whether to plot
+vertex node shapes using vectorized operations. It is substantially
+faster, however the one drawback is that nodes are plotted in
+order of their shape, which affects the positioning of nodes
+when there are node overlaps. This tradeoff is relatively minor,
+and it is recommended either to reposition nodes to reduce or
+prevent overlaps, or adjust node sizes to reduce overlaps.}
+
+\item{edge_bundling}{\code{character} string or \code{function}, where:
+\itemize{
+\item \code{character} string \code{"none"} will perform no edge bundling
+\item \code{character} string \code{"connections"} will perform graph
+edge connection bundling via \code{edge_bundle_bipartite()} then
+\code{edge_bundle_nodegroups()}
+\item \code{character} string \code{"nodegroups"} will perform graph edge
+connection bundling using \code{nodegroups} via
+\code{edge_bundle_bipartite()}
+\item \code{function} will call a custom edge bundling function using
+the \code{igraph} object \code{x} and the igraph parameters \code{param}
+as input. This output is currently untested, and is intended
+to enable alternative edge bundling functions which may exist
+outside this package.
+}}
+
+\item{nodegroups}{\code{list} object as output by \code{edge_bundle_bipartite()}
+where each list element is a \code{character} vector of vertex node
+names present in \code{igraph::V(x)$name}. If no \code{"name"} vertex node
+attribute exists, then integer index values are used as names.
+Note that all vertex nodes must be represented in \code{nodegroup}
+in order for the corresponding edges to be plotted.}
+
+\item{render_nodes, render_edges}{\code{logical} indicating whether to
+render vertex nodes, or edges, respectively. Sometimes it can
+be useful to call this function for other byproduct outputs,
+for example, \code{jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)}
+will create a new plot device with appropriate axis ranges,
+and can be used to render edge bundling results for example.}
+
+\item{render_groups}{\code{logical} indicating whether to render groups
+when \code{mark.groups} is supplied. Groups are rendered with a
+shaded polygon and border.}
+
+\item{render_nodelabels}{\code{logical} indicating whether to draw node
+labels, which is typically the last operation in the plot sequence.
+Note that node labels can be rendered without also rendering
+the nodes or edges.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
+
+\item{debug}{\code{logical} or \code{character} vector of attributes for
+which debug output will be plotted onscreen.}
 }
 \description{
-Jam igraph vectorized plot function, usually called via \code{jam_igraph()}
-and not called directly.
+Jam igraph vectorized plot function, \verb{replaces igraph:::plot.igraph()},
+as called via \code{jam_igraph()}.
 }
 \details{
 This function is a complete copy of \code{igraph:::plot.igraph()} with
@@ -87,6 +150,10 @@ draws each label one by one. The \code{jam_plot_igraph()} draws
 labels in groups of font family. This situation is very rare, however
 when used the speed improvement is substantial.
 }
+
+All node shapes \code{"pie"} are changed to \code{"jampie"} with default
+argument \code{pie_to_jampie=TRUE}. This change substantially speeds
+rendering pie nodes in vectorized fashion.
 
 Note that this function is not called by default, and is only called
 by \code{multienrichjam::jam_igraph()}.
@@ -104,8 +171,10 @@ Other jam igraph functions:
 \code{\link{cnetplot_internalJam}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
+\code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{layout_with_qfrf}()},

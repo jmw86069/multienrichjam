@@ -23,6 +23,7 @@ Other jam utility functions:
 \code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
+\code{\link{handle_igraph_param_list}()},
 \code{\link{heatmap_row_order}()},
 \code{\link{isColorBlank}()},
 \code{\link{mem_find_overlap}()},

@@ -58,8 +58,8 @@
 layout_with_qfr <- function
 (g,
  repulse=3.5,
- area=8*(vcount(g)^2),
- repulse.rad=(vcount(g)^repulse),
+ area=8*(igraph::vcount(g)^2),
+ repulse.rad=(igraph::vcount(g)^repulse),
  constraints=NULL,
  seed=123,
  weights=NULL,
@@ -85,16 +85,17 @@ layout_with_qfr <- function
    set.seed(seed);
 
    ## Handle weights from E(g)$weight if supplied
-   if (length(weights) == 0 && "weight" %in% list.edge.attributes(g)) {
+   if (length(weights) == 0 && "weight" %in% igraph::list.edge.attributes(g)) {
       if (verbose) {
          jamba::printDebug("layout_with_qfr(): ",
             "Using E(g)$weight to define weights during layout.");
       }
-      weights <- E(g)$weight;
+      weights <- igraph::E(g)$weight;
    }
 
-   frL <- qgraph::qgraph.layout.fruchtermanreingold(e,
-      vcount=vcount(g),
+   frL <- qgraph::qgraph.layout.fruchtermanreingold(
+      e,
+      vcount=igraph::vcount(g),
       area=area,
       repulse.rad=repulse.rad,
       constraints=constraints,
@@ -1070,7 +1071,7 @@ removeIgraphBlanks <- function
    #ixV <- which(V(g)$shape %in% "coloredrectangle");
    ixV <- which(lengths(igraph::V(g)$coloredrect.color) > 0);
 
-   if ("coloredrect.color" %in% list.vertex.attributes(g)) {
+   if ("coloredrect.color" %in% igraph::list.vertex.attributes(g)) {
       if (verbose) {
          jamba::printDebug("removeIgraphBlanks(): ",
             "Adjusting coloredrect nodes.");
@@ -1371,7 +1372,7 @@ removeIgraphBlanks <- function
             alpha_max=alpha_max,
             ...);
          pieLengths <- lengths(iPieColorL);
-         pieSplitV <- rep(seq_len(vcount(g)), pieLengths);
+         pieSplitV <- rep(seq_len(igraph::vcount(g)), pieLengths);
          ## Vector of TRUE,FALSE
          pieBlanksV <- unlist(unname(pieBlanksL));
          ## Iterate each pie attribute
@@ -1459,7 +1460,7 @@ rectifyPiegraph <- function
  nrow=2,
  ncol=5,
  byrow=TRUE,
- whichNodes=seq_len(vcount(g)),
+ whichNodes=seq_len(igraph::vcount(g)),
  ...)
 {
    ## Purpose is to convert a piegraph igraph into coloredrectangles,
@@ -1610,12 +1611,12 @@ reorderIgraphNodes <- function
 
    ## comma-delimited neighboring nodes for each node
    neighborG <- jamba::cPaste(
-      lapply(seq_len(vcount(g)), function(v){
+      lapply(seq_len(igraph::vcount(g)), function(v){
          neighbors(g, v, mode="all");
       }),
       doSort=TRUE,
       makeUnique=FALSE);
-   names(neighborG) <- seq_len(vcount(g));
+   names(neighborG) <- seq_len(igraph::vcount(g));
 
    ## Determine which edge groups are present multiple times
    neighborGct <- jamba::tcount(neighborG, minCount=2);
@@ -1653,11 +1654,11 @@ reorderIgraphNodes <- function
          if (sortAttribute %in% c("pie.color.length", "coloredrect.color.length")) {
             j <- jamba::padInteger(lengths(
                igraph::vertex_attr(g, gsub("[.]length$", "", sortAttribute))));
-            names(j) <- seq_len(vcount(g));
+            names(j) <- seq_len(igraph::vcount(g));
          } else {
             j <- jamba::rmNULL(igraph::vertex_attr(g, sortAttribute),
                nullValue="#555555");
-            names(j) <- seq_len(vcount(g));
+            names(j) <- seq_len(igraph::vcount(g));
          }
 
          if (sortAttribute %in% c("pie.color.length", "coloredrect.color.length")) {
@@ -1762,7 +1763,7 @@ reorderIgraphNodes <- function
                      collapse="_")
                });
             }
-            names(jString) <- seq_len(vcount(g));
+            names(jString) <- seq_len(igraph::vcount(g));
             if (verbose) {
                jamba::printDebug("reorderIgraphNodes(): ",
                   "head(jString):",
@@ -1779,7 +1780,7 @@ reorderIgraphNodes <- function
             } else {
                jString <- j;
             }
-            names(jString) <- seq_len(vcount(g));
+            names(jString) <- seq_len(igraph::vcount(g));
             jString;
          }
          data.frame(jString);
@@ -1965,7 +1966,7 @@ spread_igraph_labels <- function
    ##
    if (verbose) {
       jamba::printDebug("spread_igraph_labels(): ",
-         "vcount:", vcount(g));
+         "vcount:", igraph::vcount(g));
    }
    if (length(layout) == 0) {
       if (!force_relayout) {
@@ -1975,12 +1976,12 @@ spread_igraph_labels <- function
                   "Using ","layout"," from graph attributes.");
             }
             layout <- g$layout;
-         } else if (all(c("x", "y") %in% list.vertex.attributes(g))) {
+         } else if (all(c("x", "y") %in% igraph::list.vertex.attributes(g))) {
             if (verbose) {
                jamba::printDebug("spread_igraph_labels(): ",
                   "Using ","x,y"," from vertex attributes.");
             }
-            layout <- cbind(x=V(g)$x, y=V(g)$y);
+            layout <- cbind(x=igraph::V(g)$x, y=V(g)$y);
          } else {
             layout <- layout_with_qfr(g,
                repulse=repulse,
@@ -2020,14 +2021,14 @@ spread_igraph_labels <- function
          nodeSortBy=nodeSortBy,
          sortAttributes=sortAttributes,
          verbose=verbose);
-      layout <- g$layout;
+      layout <- igraph::graph_attr(g, "layout");
       if (verbose) {
          jamba::printDebug("spread_igraph_labels(): ",
             "head(layout) after:");
          print(head(layout));
       }
    }
-   g_angle <- jamba::nameVector(sapply(seq_len(vcount(g)), function(i){
+   g_angle <- jamba::nameVector(sapply(seq_len(igraph::vcount(g)), function(i){
       xy1 <- layout[i,1:2,drop=FALSE];
       xy2 <- layout[as.numeric(ego(g, nodes=i, mindist=1)[[1]]),1:2,drop=FALSE];
       if (length(xy2) == 0) {
@@ -2037,7 +2038,7 @@ spread_igraph_labels <- function
       -(xyAngle(xymean[1], xymean[2]*y_bias, directed=TRUE) + 0) %% 360
    }), igraph::V(g)$name);
    if (update_g_coords) {
-      g <- set_graph_attr(g, "layout", layout);
+      g <- igraph::set_graph_attr(g, "layout", layout);
    }
    igraph::V(g)$label.degree <- jamba::deg2rad(g_angle);
    if (!"label.dist" %in% igraph::list.vertex.attributes(g)) {
@@ -2151,17 +2152,20 @@ memIM2cnet <- function
          "coloredrect.color", "coloredrect.nrow",
          "coloredrect.byrow", "coloredrect.value",
          "coloredrect.names")) {
-         if (!j %in% list.vertex.attributes(g)) {
+         if (!j %in% igraph::list.vertex.attributes(g)) {
             if (jamba::igrepHas("color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
             } else if (jamba::igrepHas("byrow", j)) {
-               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_byrow), length.out=vcount(g));
+               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_byrow),
+                  length.out=igraph::vcount(g));
             } else if (jamba::igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
-               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_ncol), length.out=vcount(g));
+               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_ncol),
+                  length.out=igraph::vcount(g));
             } else if (jamba::igrepHas("nrow", j) && length(coloredrect_nrow) > 0) {
-               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_nrow), length.out=vcount(g));
+               igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_nrow),
+                  length.out=igraph::vcount(g));
             } else {
-               igraph::vertex_attr(g, j) <- as.list(rep(1, vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(1, igraph::vcount(g)));
             }
          }
       }
@@ -2217,11 +2221,14 @@ memIM2cnet <- function
             if (jamba::igrepHas("color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
             } else if (jamba::igrepHas("byrow", j)) {
-               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_byrow, length.out=vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_byrow,
+                  length.out=igraph::vcount(g)));
             } else if (jamba::igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
-               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_ncol, length.out=vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_ncol,
+                  length.out=igraph::vcount(g)));
             } else if (jamba::igrepHas("nrow", j) && length(coloredrect_nrow) > 0) {
-               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_nrow, length.out=vcount(g)));
+               igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_nrow,
+                  length.out=igraph::vcount(g)));
             } else {
                igraph::vertex_attr(g, j) <- as.list(rep(1, igraph::vcount(g)));
             }
@@ -2246,13 +2253,16 @@ memIM2cnet <- function
          enrichIM[i,,drop=FALSE];
       });
       if (length(coloredrect_byrow) > 0) {
-         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_byrow, length.out=length(enrich_which));
+         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_byrow,
+            length.out=length(enrich_which));
       }
       if (length(coloredrect_nrow) > 0) {
-         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_nrow, length.out=length(enrich_which));
+         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_nrow,
+            length.out=length(enrich_which));
       }
       if (length(coloredrect_ncol) > 0) {
-         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_ncol, length.out=length(enrich_which));
+         igraph::V(g)$coloredrect.byrow[enrich_which] <- rep(coloredrect_ncol,
+            length.out=length(enrich_which));
       }
       igraph::V(g)$shape[enrich_which] <- categoryShape;
    }
@@ -2307,7 +2317,7 @@ subset_igraph_components <- function
 {
    gc <- igraph::components(g,
       ...);
-   vnum <- seq_len(vcount(g));
+   vnum <- seq_len(igraph::vcount(g));
    gc_list <- split(vnum, membership(gc));
    if (order_by_size) {
       gc_order <- names(rev(sort(lengths(gc_list))));
@@ -2430,8 +2440,8 @@ color_edges_by_nodes <- function
 
 #' Jam igraph vectorized plot function
 #'
-#' Jam igraph vectorized plot function, usually called via `jam_igraph()`
-#' and not called directly.
+#' Jam igraph vectorized plot function, `replaces igraph:::plot.igraph()`,
+#' as called via `jam_igraph()`.
 #'
 #' This function is a complete copy of `igraph:::plot.igraph()` with
 #' two changes to enable vectorized plotting in these situations:
@@ -2446,6 +2456,10 @@ color_edges_by_nodes <- function
 #' labels in groups of font family. This situation is very rare, however
 #' when used the speed improvement is substantial.
 #'
+#' All node shapes `"pie"` are changed to `"jampie"` with default
+#' argument `pie_to_jampie=TRUE`. This change substantially speeds
+#' rendering pie nodes in vectorized fashion.
+#'
 #' Note that this function is not called by default, and is only called
 #' by `multienrichjam::jam_igraph()`.
 #'
@@ -2457,42 +2471,123 @@ color_edges_by_nodes <- function
 #' @family jam igraph functions
 #'
 #' @inheritParams igraph::plot.igraph
-#' @param pie_to_jampie logical indicating whether to convert
+#' @param pie_to_jampie `logical` indicating whether to convert
 #'    vertex shape `"pie"` to `"jampie"` in order to use vectorized
 #'    plotting.
+#' @param use_shadowText `logical` indicating whether to use
+#'    `jamba::shadowText()` instead of `graphics::text()`, in order
+#'    to render text labels with a subtle shadow-like outline around
+#'    each label. This change improves legibility of labels at
+#'    the expense of slightly longer plot rendering time.
+#' @param vectorized_node_shapes `logical` indicating whether to plot
+#'    vertex node shapes using vectorized operations. It is substantially
+#'    faster, however the one drawback is that nodes are plotted in
+#'    order of their shape, which affects the positioning of nodes
+#'    when there are node overlaps. This tradeoff is relatively minor,
+#'    and it is recommended either to reposition nodes to reduce or
+#'    prevent overlaps, or adjust node sizes to reduce overlaps.
+#' @param edge_bundling `character` string or `function`, where:
+#'    * `character` string `"none"` will perform no edge bundling
+#'    * `character` string `"connections"` will perform graph
+#'    edge connection bundling via `edge_bundle_bipartite()` then
+#'    `edge_bundle_nodegroups()`
+#'    * `character` string `"nodegroups"` will perform graph edge
+#'    connection bundling using `nodegroups` via
+#'    `edge_bundle_bipartite()`
+#'    * `function` will call a custom edge bundling function using
+#'    the `igraph` object `x` and the igraph parameters `param`
+#'    as input. This output is currently untested, and is intended
+#'    to enable alternative edge bundling functions which may exist
+#'    outside this package.
+#' @param nodegroups `list` object as output by `edge_bundle_bipartite()`
+#'    where each list element is a `character` vector of vertex node
+#'    names present in `igraph::V(x)$name`. If no `"name"` vertex node
+#'    attribute exists, then integer index values are used as names.
+#'    Note that all vertex nodes must be represented in `nodegroup`
+#'    in order for the corresponding edges to be plotted.
+#' @param render_nodes,render_edges `logical` indicating whether to
+#'    render vertex nodes, or edges, respectively. Sometimes it can
+#'    be useful to call this function for other byproduct outputs,
+#'    for example, `jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)`
+#'    will create a new plot device with appropriate axis ranges,
+#'    and can be used to render edge bundling results for example.
+#' @param render_groups `logical` indicating whether to render groups
+#'    when `mark.groups` is supplied. Groups are rendered with a
+#'    shaded polygon and border.
+#' @param render_nodelabels `logical` indicating whether to draw node
+#'    labels, which is typically the last operation in the plot sequence.
+#'    Note that node labels can be rendered without also rendering
+#'    the nodes or edges.
+#' @param debug `logical` or `character` vector of attributes for
+#'    which debug output will be plotted onscreen.
+#' @param verbose `logical` indicating whether to print verbose output.
 #'
 #' @export
 jam_plot_igraph <- function
 (x,
- axes = FALSE,
- add = FALSE,
- xlim = c(-1, 1),
- ylim = c(-1, 1),
- mark.groups = list(),
- mark.shape = 1/2,
+ ...,
+ axes=FALSE,
+ add=FALSE,
+ xlim=c(-1, 1),
+ ylim=c(-1, 1),
+ mark.groups=list(),
+ mark.shape=1/2,
  #mark.col = rainbow(length(mark.groups), alpha = 0.3),
  #mark.border = rainbow(length(mark.groups), alpha = 1),
- mark.col = head(colorjam::rainbowJam(max(c(1, length(mark.groups))), alpha = 0.3), length(mark.groups)),
- mark.border = head(colorjam::rainbowJam(max(c(1, length(mark.groups))), alpha = 1), length(mark.groups)),
- mark.expand = 15,
+ mark.col=NULL,
+ mark.border=NULL,
+ mark.expand=8,
  pie_to_jampie=TRUE,
  use_shadowText=FALSE,
+ vectorized_node_shapes=TRUE,
+ edge_bundling=c("none", "connections", "nodegroups"),
+ nodegroups=NULL,
+ render_nodes=TRUE,
+ render_edges=TRUE,
+ render_groups=TRUE,
+ render_nodelabels=TRUE,
  verbose=FALSE,
- debug=NULL,
-...)
+ debug=NULL)
 {
    graph <- x;
+   if (!igraph::is_igraph(graph)) {
+      stop("Not an igraph object")
+   }
+
+   # validate edge_bundling input
+   if (length(edge_bundling) == 0) {
+      edge_bundling <- "none";
+   } else if (is.atomic(edge_bundling)) {
+      edge_bundling <- head(intersect(edge_bundling,
+         eval(formals(jam_plot_igraph)$edge_bundling)), 1);
+      if (length(edge_bundling) == 0) {
+         stop("edge_bundling method not recognized")
+      }
+   } else if (is.function(edge_bundling)) {
+      edge_function <- edge_bundling;
+      edge_bundling <- "function";
+   }
+
+   # create mark.col if needed
+   if (length(mark.groups) > 0) {
+      if (length(mark.col) == 0) {
+         mark.col <- colorjam::rainbowJam(length(mark.groups),
+            alpha=0.2);
+      }
+      if (length(mark.border) == 0) {
+         mark.border <- jamba::alpha2col(mark.col,
+            alpha=1);
+      }
+   }
+
    if (use_shadowText) {
       text <- jamba::shadowText;
-   }
-   if (!igraph::is_igraph(graph)) {
-      stop("Not a graph object")
    }
    if (verbose) {
       jamba::printDebug("jam_plot_igraph(): ",
          "Parsing igraph params.");
    }
-   params <- igraph:::i.parse.plot.params(graph, list(...))
+   params <- igraph:::i.parse.plot.params(graph, list(...));
    vertex.size <- 1/200 * params("vertex", "size")
    label.family <- params("vertex", "label.family")
    label.font <- params("vertex", "label.font")
@@ -2546,7 +2641,8 @@ jam_plot_igraph <- function
    }
    layout <- params("plot", "layout")
    margin <- params("plot", "margin")
-   margin <- rep(margin, length = 4)
+   margin <- rep(margin,
+      length.out=4);
    rescale <- params("plot", "rescale")
    asp <- params("plot", "asp")
    frame <- params("plot", "frame")
@@ -2554,13 +2650,18 @@ jam_plot_igraph <- function
    sub <- params("plot", "sub")
    xlab <- params("plot", "xlab")
    ylab <- params("plot", "ylab")
+
+   ## color palette, is this chunk needed? palette is not called again
    palette <- params("plot", "palette")
    if (!is.null(palette)) {
       old_palette <- palette(palette)
-      on.exit(palette(old_palette), add = TRUE)
+      on.exit(palette(old_palette), add=TRUE)
    }
+
    arrow.mode <- igraph:::i.get.arrow.mode(graph, arrow.mode)
    maxv <- max(vertex.size)
+
+   ## Optional axis range scaling
    if (rescale) {
       layout <- igraph::norm_coords(layout, -1, 1, -1, 1)
       xlim <- c(xlim[1] - margin[2] - maxv,
@@ -2572,6 +2673,8 @@ jam_plot_igraph <- function
       jamba::printDebug("jam_plot_igraph(): ",
          "Parsed igraph params.");
    }
+
+   ## initial plot device
    if (!add) {
       if (length(debug) > 0 && any(c("labels","label.dist") %in% debug)) {
          jamba::printDebug("jam_plot_igraph(): ",
@@ -2586,478 +2689,580 @@ jam_plot_igraph <- function
       }
       plot(0,
          0,
-         type = "n",
-         xlab = xlab,
-         ylab = ylab,
-         xlim = xlim,
-         ylim = ylim,
-         axes = axes,
-         frame = frame,
-         asp = asp,
-         main = main,
-         sub = sub)
-   }
-   if (!is.list(mark.groups) && is.numeric(mark.groups)) {
-      mark.groups <- list(mark.groups)
-   }
-   mark.shape <- rep(mark.shape, length = length(mark.groups))
-   mark.border <- rep(mark.border, length = length(mark.groups))
-   mark.col <- rep(mark.col, length = length(mark.groups))
-   mark.expand <- rep(mark.expand, length = length(mark.groups))
-   for (g in seq_along(mark.groups)) {
-      v <- igraph::V(graph)[mark.groups[[g]]]
-      if (length(vertex.size) == 1) {
-         vs <- vertex.size
-      } else {
-         vs <- rep(vertex.size, length = igraph::vcount(graph))[v]
-      }
-      igraph:::igraph.polygon(layout[v, , drop = FALSE],
-         vertex.size = vs,
-         expand.by = mark.expand[g]/200,
-         shape = mark.shape[g],
-         col = mark.col[g],
-         border = mark.border[g])
-   }
-   if (verbose) {
-      jamba::printDebug("jam_plot_igraph(): ",
-         "Processing igraph edges");
+         type="n",
+         xlab=xlab,
+         ylab=ylab,
+         xlim=xlim,
+         ylim=ylim,
+         axes=axes,
+         frame=frame,
+         asp=asp,
+         main=main,
+         sub=sub)
    }
 
-   el <- igraph::as_edgelist(graph, names = FALSE)
-   loops.e <- which(el[, 1] == el[, 2])
-   nonloops.e <- which(el[, 1] != el[, 2])
-   loops.v <- el[, 1][loops.e]
-   loop.labels <- edge.labels[loops.e]
-   loop.labx <- if (is.null(elab.x)) {
-      rep(NA, length(loops.e))
-   } else {
-      elab.x[loops.e]
-   }
-   loop.laby <- if (is.null(elab.y)) {
-      rep(NA, length(loops.e))
-   } else {
-      elab.y[loops.e]
-   }
-   edge.labels <- edge.labels[nonloops.e]
-   elab.x <- if (is.null(elab.x)) {
-      NULL
-   } else {
-      elab.x[nonloops.e]
-   }
-   elab.y <- if (is.null(elab.y)){
-      NULL
-   } else {
-      elab.y[nonloops.e]
-   }
-   el <- el[nonloops.e, , drop = FALSE]
-   edge.coords <- matrix(0, nrow = nrow(el), ncol = 4)
-   edge.coords[, 1] <- layout[, 1][el[, 1]]
-   edge.coords[, 2] <- layout[, 2][el[, 1]]
-   edge.coords[, 3] <- layout[, 1][el[, 2]]
-   edge.coords[, 4] <- layout[, 2][el[, 2]]
-   if (length(unique(shape)) == 1) {
-      ec <- igraph:::.igraph.shapes[[shape[1]]]$clip(edge.coords,
-         el,
-         params = params,
-         end = "both")
-   } else {
-      shape <- rep(shape, length = vcount(graph))
-      ec <- edge.coords
-      ec[, 1:2] <- t(sapply(seq(length = nrow(el)), function(x) {
-         igraph:::.igraph.shapes[[shape[el[x, 1]]]]$clip(
-            edge.coords[x, , drop = FALSE],
-            el[x, , drop = FALSE],
-            params = params,
-            end = "from")
-      }))
-      ec[, 3:4] <- t(sapply(seq(length = nrow(el)), function(x) {
-         igraph:::.igraph.shapes[[shape[el[x, 2]]]]$clip(
-            edge.coords[x, , drop = FALSE],
-            el[x, , drop = FALSE],
-            params = params,
-            end = "to")
-      }))
-   }
-   x0 <- ec[, 1]
-   y0 <- ec[, 2]
-   x1 <- ec[, 3]
-   y1 <- ec[, 4]
+   ## Optional mark groups
+   if (render_groups && length(mark.groups) > 0) {
+      if (!is.list(mark.groups) && is.numeric(mark.groups)) {
+         mark.groups <- list(mark.groups)
+      }
+      if (length(mark.groups) > 0) {
+         mark.shape <- rep(mark.shape,
+            length.out=length(mark.groups))
+         mark.border <- rep(mark.border,
+            length.out=length(mark.groups))
+         mark.col <- rep(mark.col,
+            length.out=length(mark.groups))
 
-   if (length(loops.e) > 0) {
-      if (verbose) {
-         jamba::printDebug("jam_plot_igraph(): ",
-            "Processing igraph edge loops");
-      }
-      ec <- edge.color
-      if (length(ec) > 1) {
-         ec <- ec[loops.e]
-      }
-      point.on.cubic.bezier <- function(cp, t) {
-         c <- 3 * (cp[2, ] - cp[1, ])
-         b <- 3 * (cp[3, ] - cp[2, ]) - c
-         a <- cp[4, ] - cp[1, ] - c - b
-         t2 <- t * t
-         t3 <- t * t * t
-         a * t3 + b * t2 + c * t + cp[1, ]
-      }
-      compute.bezier <- function(cp, points) {
-         dt <- seq(0, 1, by = 1/(points - 1))
-         sapply(dt, function(t) {
-            point.on.cubic.bezier(cp, t)
-         })
-      }
-      plot.bezier <- function
-      (cp,
-         points,
-         color,
-         width,
-         arr,
-         lty,
-         arrow.size,
-         arr.w)
-      {
-         p <- compute.bezier(cp, points)
-         polygon(p[1, ],
-            p[2, ],
-            border = color,
-            lwd = width,
-            lty = lty)
-         if (arr == 1 || arr == 3) {
-            igraph:::igraph.Arrows(p[1, ncol(p) - 1],
-               p[2, ncol(p) - 1],
-               p[1, ncol(p)],
-               p[2, ncol(p)],
-               sh.col = color,
-               h.col = color,
-               size = arrow.size,
-               sh.lwd = width,
-               h.lwd = width,
-               open = FALSE,
-               code = 2,
-               width = arr.w)
-         }
-         if (arr == 2 || arr == 3) {
-            igraph:::igraph.Arrows(p[1, 2],
-               p[2, 2],
-               p[1, 1], p[2, 1],
-               sh.col = color,
-               h.col = color,
-               size = arrow.size,
-               sh.lwd = width,
-               h.lwd = width,
-               open = FALSE,
-               code = 2,
-               width = arr.w)
+         max_xy_range <- max(c(
+            abs(diff(range(xlim))),
+            abs(diff(range(ylim)))));
+         mark.expand <- rep(mark.expand,
+            length.out=length(mark.groups))
+         expand.by <- (mark.expand / 200) * max_xy_range;
+
+         for (g in seq_along(mark.groups)) {
+            v <- igraph::V(graph)[mark.groups[[g]]]
+            if (length(vertex.size) == 1) {
+               vs <- vertex.size
+            } else {
+               vs <- rep(vertex.size,
+                  length=igraph::vcount(graph))[v]
+            }
+            igraph:::igraph.polygon(
+               layout[v, , drop=FALSE],
+               vertex.size=vs,
+               expand.by=expand.by[g],
+               #expand.by=mark.expand[g]/200,
+               shape=mark.shape[g],
+               col=mark.col[g],
+               border=mark.border[g])
          }
       }
-      loop <- function
-      (x0,
-         y0,
-         cx = x0,
-         cy = y0,
-         color,
-         angle = 0,
-         label = NA,
-         width = 1,
-         arr = 2,
-         lty = 1,
-         arrow.size = arrow.size,
-         arr.w = arr.w,
-         lab.x, lab.y)
-      {
-         rad <- angle
-         center <- c(cx, cy)
-         cp <- matrix(
-            c(x0,
+   }
+
+   ## Render edges
+   if (render_edges) {
+      if ("none" %in% edge_bundling) {
+         ## process edges with default igraph methods
+         if (verbose) {
+            jamba::printDebug("jam_plot_igraph(): ",
+               "Processing igraph edges");
+         }
+         el <- igraph::as_edgelist(graph, names=FALSE);
+         loops.e <- which(el[, 1] == el[, 2])
+         nonloops.e <- which(el[, 1] != el[, 2])
+         loops.v <- el[, 1][loops.e]
+         loop.labels <- edge.labels[loops.e]
+         loop.labx <- if (is.null(elab.x)) {
+            rep(NA, length(loops.e))
+         } else {
+            elab.x[loops.e]
+         }
+         loop.laby <- if (is.null(elab.y)) {
+            rep(NA, length(loops.e))
+         } else {
+            elab.y[loops.e]
+         }
+         edge.labels <- edge.labels[nonloops.e]
+         elab.x <- if (is.null(elab.x)) {
+            NULL
+         } else {
+            elab.x[nonloops.e]
+         }
+         elab.y <- if (is.null(elab.y)) {
+            NULL
+         } else {
+            elab.y[nonloops.e]
+         }
+         el <- el[nonloops.e, , drop=FALSE]
+         edge.coords <- matrix(0,
+            nrow=nrow(el),
+            ncol=4)
+         edge.coords[, 1] <- layout[, 1][el[, 1]]
+         edge.coords[, 2] <- layout[, 2][el[, 1]]
+         edge.coords[, 3] <- layout[, 1][el[, 2]]
+         edge.coords[, 4] <- layout[, 2][el[, 2]]
+
+         ## clip edge coordinates using node shape functions
+         if (length(unique(shape)) == 1) {
+            ec <- igraph:::.igraph.shapes[[shape[1]]]$clip(
+               edge.coords,
+               el,
+               params=params,
+               end="both")
+         } else {
+            shape <- rep(shape, length=igraph::vcount(graph))
+            ec <- edge.coords;
+            ec[, 1:2] <- t(sapply(seq_len(nrow(el)), function(x) {
+               igraph:::.igraph.shapes[[shape[el[x, 1]]]]$clip(
+                  edge.coords[x, , drop=FALSE],
+                  el[x, , drop=FALSE],
+                  params=params,
+                  end="from")
+            }))
+            ec[, 3:4] <- t(sapply(seq_len(nrow(el)), function(x) {
+               igraph:::.igraph.shapes[[shape[el[x, 2]]]]$clip(
+                  edge.coords[x, , drop=FALSE],
+                  el[x, , drop=FALSE],
+                  params=params,
+                  end="to")
+            }))
+         }
+         x0 <- ec[, 1]
+         y0 <- ec[, 2]
+         x1 <- ec[, 3]
+         y1 <- ec[, 4]
+
+         ## Plot edges that are self-loops
+         if (length(loops.e) > 0) {
+            if (verbose) {
+               jamba::printDebug("jam_plot_igraph(): ",
+                  "Processing igraph edge self-loops");
+            }
+            ec <- edge.color;
+            if (length(ec) > 1) {
+               ec <- ec[loops.e]
+            }
+            point.on.cubic.bezier <- function(cp, t) {
+               c <- 3 * (cp[2, ] - cp[1, ])
+               b <- 3 * (cp[3, ] - cp[2, ]) - c
+               a <- cp[4, ] - cp[1, ] - c - b
+               t2 <- t * t
+               t3 <- t * t * t
+               a * t3 + b * t2 + c * t + cp[1, ]
+            }
+            compute.bezier <- function(cp, points) {
+               dt <- seq(0, 1, by=1/(points - 1))
+               sapply(dt, function(t) {
+                  point.on.cubic.bezier(cp, t)
+               })
+            }
+            plot.bezier <- function
+            (cp,
+               points,
+               color,
+               width,
+               arr,
+               lty,
+               arrow.size,
+               arr.w)
+            {
+               p <- compute.bezier(cp, points)
+               polygon(p[1, ],
+                  p[2, ],
+                  border = color,
+                  lwd = width,
+                  lty = lty)
+               if (arr == 1 || arr == 3) {
+                  igraph:::igraph.Arrows(p[1, ncol(p) - 1],
+                     p[2, ncol(p) - 1],
+                     p[1, ncol(p)],
+                     p[2, ncol(p)],
+                     sh.col = color,
+                     h.col = color,
+                     size = arrow.size,
+                     sh.lwd = width,
+                     h.lwd = width,
+                     open = FALSE,
+                     code = 2,
+                     width = arr.w)
+               }
+               if (arr == 2 || arr == 3) {
+                  igraph:::igraph.Arrows(p[1, 2],
+                     p[2, 2],
+                     p[1, 1], p[2, 1],
+                     sh.col = color,
+                     h.col = color,
+                     size = arrow.size,
+                     sh.lwd = width,
+                     h.lwd = width,
+                     open = FALSE,
+                     code = 2,
+                     width = arr.w)
+               }
+            }
+            loop <- function
+            (x0,
                y0,
-               x0 + 0.4,
-               y0 + 0.2,
-               x0 + 0.4,
-               y0 - 0.2,
-               x0,
-               y0),
-            ncol = 2,
-            byrow = TRUE)
-         phi <- atan2(cp[, 2] - center[2],
-            cp[, 1] - center[1])
-         r <- sqrt((cp[, 1] - center[1])^2 + (cp[, 2] - center[2])^2)
-         phi <- phi + rad
-         cp[, 1] <- cx + r * cos(phi)
-         cp[, 2] <- cy + r * sin(phi)
-         plot.bezier(cp,
-            50,
-            color,
-            width,
-            arr = arr,
-            lty = lty,
-            arrow.size = arrow.size,
-            arr.w = arr.w)
-         if (is.language(label) || !is.na(label)) {
-            lx <- x0 + 0.3
-            ly <- y0
-            phi <- atan2(ly - center[2],
-               lx - center[1])
-            r <- sqrt((lx - center[1])^2 + (ly - center[2])^2)
-            phi <- phi + rad
-            lx <- cx + r * cos(phi)
-            ly <- cy + r * sin(phi)
-            if (!is.na(lab.x)) {
-               lx <- lab.x
-            }
-            if (!is.na(lab.y)) {
-               ly <- lab.y
-            }
-            text(lx,
-               ly,
-               label,
-               col = edge.label.color,
-               font = edge.label.font,
-               family = edge.label.family,
-               cex = edge.label.cex)
-         }
-      }
-      ec <- edge.color
-      if (length(ec) > 1) {
-         ec <- ec[loops.e]
-      }
-      vs <- vertex.size
-      if (length(vertex.size) > 1) {
-         vs <- vs[loops.v]
-      }
-      ew <- edge.width
-      if (length(edge.width) > 1) {
-         ew <- ew[loops.e]
-      }
-      la <- loop.angle
-      if (length(loop.angle) > 1) {
-         la <- la[loops.e]
-      }
-      lty <- edge.lty
-      if (length(edge.lty) > 1) {
-         lty <- lty[loops.e]
-      }
-      arr <- arrow.mode
-      if (length(arrow.mode) > 1) {
-         arr <- arrow.mode[loops.e]
-      }
-      asize <- arrow.size
-      if (length(arrow.size) > 1) {
-         asize <- arrow.size[loops.e]
-      }
-      xx0 <- layout[loops.v, 1] + cos(la) * vs
-      yy0 <- layout[loops.v, 2] - sin(la) * vs
-      mapply(loop,
-         xx0,
-         yy0,
-         color = ec,
-         angle = -la,
-         label = loop.labels,
-         lty = lty,
-         width = ew,
-         arr = arr,
-         arrow.size = asize,
-         arr.w = arrow.width,
-         lab.x = loop.labx,
-         lab.y = loop.laby)
-   }
-   if (length(x0) != 0) {
-      if (verbose) {
-         jamba::printDebug("jam_plot_igraph(): ",
-            "Processing igraph edge non-loops");
-      }
-      if (length(edge.color) > 1) {
-         edge.color <- edge.color[nonloops.e]
-      }
-      if (length(edge.width) > 1) {
-         edge.width <- edge.width[nonloops.e]
-      }
-      if (length(edge.lty) > 1) {
-         edge.lty <- edge.lty[nonloops.e]
-      }
-      if (length(arrow.mode) > 1) {
-         arrow.mode <- arrow.mode[nonloops.e]
-      }
-      if (length(arrow.size) > 1) {
-         arrow.size <- arrow.size[nonloops.e]
-      }
-      if (length(curved) > 1) {
-         curved <- curved[nonloops.e]
-      }
-      if (length(unique(arrow.mode)) == 1) {
-         lc <- igraph:::igraph.Arrows(x0,
-            y0,
-            x1,
-            y1,
-            h.col = edge.color,
-            sh.col = edge.color,
-            sh.lwd = edge.width,
-            h.lwd = 1,
-            open = FALSE,
-            code = arrow.mode[1],
-            sh.lty = edge.lty,
-            h.lty = 1,
-            size = arrow.size,
-            width = arrow.width,
-            curved = curved)
-         lc.x <- lc$lab.x
-         lc.y <- lc$lab.y
-      } else {
-         curved <- rep(curved, length = ecount(graph))[nonloops.e]
-         lc.x <- lc.y <- numeric(length(curved))
-         for (code in 0:3) {
-            valid <- arrow.mode == code
-            if (!any(valid)) {
-               next
+               cx = x0,
+               cy = y0,
+               color,
+               angle = 0,
+               label = NA,
+               width = 1,
+               arr = 2,
+               lty = 1,
+               arrow.size = arrow.size,
+               arr.w = arr.w,
+               lab.x, lab.y)
+            {
+               rad <- angle
+               center <- c(cx, cy)
+               cp <- matrix(
+                  c(x0,
+                     y0,
+                     x0 + 0.4,
+                     y0 + 0.2,
+                     x0 + 0.4,
+                     y0 - 0.2,
+                     x0,
+                     y0),
+                  ncol = 2,
+                  byrow = TRUE)
+               phi <- atan2(cp[, 2] - center[2],
+                  cp[, 1] - center[1])
+               r <- sqrt((cp[, 1] - center[1])^2 + (cp[, 2] - center[2])^2)
+               phi <- phi + rad
+               cp[, 1] <- cx + r * cos(phi)
+               cp[, 2] <- cy + r * sin(phi)
+               plot.bezier(cp,
+                  50,
+                  color,
+                  width,
+                  arr = arr,
+                  lty = lty,
+                  arrow.size = arrow.size,
+                  arr.w = arr.w)
+               if (is.language(label) || !is.na(label)) {
+                  lx <- x0 + 0.3
+                  ly <- y0
+                  phi <- atan2(ly - center[2],
+                     lx - center[1])
+                  r <- sqrt((lx - center[1])^2 + (ly - center[2])^2)
+                  phi <- phi + rad
+                  lx <- cx + r * cos(phi)
+                  ly <- cy + r * sin(phi)
+                  if (!is.na(lab.x)) {
+                     lx <- lab.x
+                  }
+                  if (!is.na(lab.y)) {
+                     ly <- lab.y
+                  }
+                  text(lx,
+                     ly,
+                     label,
+                     col = edge.label.color,
+                     font = edge.label.font,
+                     family = edge.label.family,
+                     cex = edge.label.cex)
+               }
             }
             ec <- edge.color
             if (length(ec) > 1) {
-               ec <- ec[valid]
+               ec <- ec[loops.e]
+            }
+            vs <- vertex.size
+            if (length(vertex.size) > 1) {
+               vs <- vs[loops.v]
             }
             ew <- edge.width
-            if (length(ew) > 1) {
-               ew <- ew[valid]
+            if (length(edge.width) > 1) {
+               ew <- ew[loops.e]
             }
-            el <- edge.lty
-            if (length(el) > 1) {
-               el <- el[valid]
+            la <- loop.angle
+            if (length(loop.angle) > 1) {
+               la <- la[loops.e]
             }
-            lc <- igraph:::igraph.Arrows(x0[valid],
-               y0[valid],
-               x1[valid],
-               y1[valid],
-               code = code,
-               sh.col = ec,
-               h.col = ec,
-               sh.lwd = ew,
-               h.lwd = 1,
-               h.lty = 1,
-               sh.lty = el,
-               open = FALSE,
-               size = arrow.size,
-               width = arrow.width,
-               curved = curved[valid])
-            lc.x[valid] <- lc$lab.x
-            lc.y[valid] <- lc$lab.y
+            lty <- edge.lty
+            if (length(edge.lty) > 1) {
+               lty <- lty[loops.e]
+            }
+            arr <- arrow.mode
+            if (length(arrow.mode) > 1) {
+               arr <- arrow.mode[loops.e]
+            }
+            asize <- arrow.size
+            if (length(arrow.size) > 1) {
+               asize <- arrow.size[loops.e]
+            }
+            xx0 <- layout[loops.v, 1] + cos(la) * vs
+            yy0 <- layout[loops.v, 2] - sin(la) * vs
+            mapply(loop,
+               xx0,
+               yy0,
+               color = ec,
+               angle = -la,
+               label = loop.labels,
+               lty = lty,
+               width = ew,
+               arr = arr,
+               arrow.size = asize,
+               arr.w = arrow.width,
+               lab.x = loop.labx,
+               lab.y = loop.laby)
+         }
+
+         ## Plot edges that are not self-loops
+         if (length(x0) != 0) {
+            if (verbose) {
+               jamba::printDebug("jam_plot_igraph(): ",
+                  "Processing igraph edge non-loops");
+            }
+            if (length(edge.color) > 1) {
+               edge.color <- edge.color[nonloops.e]
+            }
+            if (length(edge.width) > 1) {
+               edge.width <- edge.width[nonloops.e]
+            }
+            if (length(edge.lty) > 1) {
+               edge.lty <- edge.lty[nonloops.e]
+            }
+            if (length(arrow.mode) > 1) {
+               arrow.mode <- arrow.mode[nonloops.e]
+            }
+            if (length(arrow.size) > 1) {
+               arrow.size <- arrow.size[nonloops.e]
+            }
+            if (length(curved) > 1) {
+               curved <- curved[nonloops.e]
+            }
+            if (length(unique(arrow.mode)) == 1) {
+               lc <- igraph:::igraph.Arrows(x0,
+                  y0,
+                  x1,
+                  y1,
+                  h.col=edge.color,
+                  sh.col=edge.color,
+                  sh.lwd=edge.width,
+                  h.lwd=1,
+                  open=FALSE,
+                  code=arrow.mode[1],
+                  sh.lty=edge.lty,
+                  h.lty=1,
+                  size=arrow.size,
+                  width=arrow.width,
+                  curved=curved)
+               lc.x <- lc$lab.x
+               lc.y <- lc$lab.y
+            } else {
+               curved <- rep(curved,
+                  length=igraph::ecount(graph))[nonloops.e]
+               lc.x <- lc.y <- numeric(length(curved))
+               for (code in 0:3) {
+                  valid <- (arrow.mode == code)
+                  if (!any(valid)) {
+                     next;
+                  }
+                  ec <- edge.color
+                  if (length(ec) > 1) {
+                     ec <- ec[valid]
+                  }
+                  ew <- edge.width
+                  if (length(ew) > 1) {
+                     ew <- ew[valid]
+                  }
+                  el <- edge.lty
+                  if (length(el) > 1) {
+                     el <- el[valid]
+                  }
+                  lc <- igraph:::igraph.Arrows(
+                     x0[valid],
+                     y0[valid],
+                     x1[valid],
+                     y1[valid],
+                     code=code,
+                     sh.col=ec,
+                     h.col=ec,
+                     sh.lwd=ew,
+                     h.lwd=1,
+                     h.lty=1,
+                     sh.lty=el,
+                     open=FALSE,
+                     size=arrow.size,
+                     width=arrow.width,
+                     curved=curved[valid])
+                  lc.x[valid] <- lc$lab.x
+                  lc.y[valid] <- lc$lab.y
+               }
+            }
+            if (!is.null(elab.x)) {
+               lc.x <- ifelse(is.na(elab.x),
+                  lc.x,
+                  elab.x)
+            }
+            if (!is.null(elab.y)) {
+               lc.y <- ifelse(is.na(elab.y),
+                  lc.y,
+                  elab.y)
+            }
+            ## edge labels
+            if (length(lc.x) > 0 && length(lc.y) > 0 && length(edge.labels) > 0) {
+               text(lc.x,
+                  lc.y,
+                  labels=edge.labels,
+                  col=edge.label.color,
+                  family=edge.label.family,
+                  font=edge.label.font,
+                  cex=edge.label.cex)
+            }
+         }
+         ## remove x0, x1, y0, y1 (why?)
+         rm(x0, y0, x1, y1)
+      } else if ("connections" %in% edge_bundling) {
+         if (verbose) {
+            jamba::printDebug("jam_plot_igraph(): ",
+               "Edge bundling with edge_bundle_bipartite()");
+         }
+         # bipartite nodegroups
+         igraph::graph_attr(graph, "layout") <- layout;
+         nodegroups <- edge_bundle_bipartite(graph,
+            verbose=TRUE,
+            ...);
+         if (verbose) {
+            jamba::printDebug("jam_plot_igraph(): ",
+               "Rendering edge bundling with edge_bundle_nodegroups()");
+         }
+         igraph::E(graph)$color <- edge.color;
+         igraph::E(graph)$width <- edge.width;
+         edge_bundle_nodegroups(graph,
+            nodegroups=nodegroups,
+            ...);
+
+      } else if ("nodegroups" %in% edge_bundling) {
+         if (verbose) {
+            jamba::printDebug("jam_plot_igraph(): ",
+               "Rendering edge bundling with edge_bundle_nodegroups()");
+         }
+         igraph::graph_attr(graph, "layout") <- layout;
+         igraph::E(graph)$color <- edge.color;
+         igraph::E(graph)$width <- edge.width;
+         edge_bundle_nodegroups(graph,
+            nodegroups=nodegroups,
+            ...);
+      } else if ("function" %in% edge_bundling) {
+         if (verbose) {
+            jamba::printDebug("jam_plot_igraph(): ",
+               "Edge bundling with custom function.");
+         }
+         edge_function(x,
+            param,
+            verbose=verbose>1,
+            ...)
+      }
+   }
+   ## End edge plotting
+
+   ## plot vertex/node shapes
+   if (render_nodes) {
+      if (length(unique(shape)) == 1) {
+         igraph:::.igraph.shapes[[shape[1]]]$plot(
+            layout,
+            params=params)
+      } else {
+         ## Loop each unique shape here instead of individual nodes
+         unique_shapes <- unique(shape);
+         nodes_by_shape <- split(seq_len(igraph::vcount(graph)), shape);
+         if (vectorized_node_shapes) {
+            if (verbose) {
+               jamba::printDebug("jam_plot_igraph(): ",
+                  "Using vectorized node shape plotting.");
+            }
+            sapply(nodes_by_shape, function(x){
+               shape1 <- shape[x[1]];
+               igraph:::.igraph.shapes[[shape1]]$plot(
+                  layout[x, , drop=FALSE],
+                  v=x,
+                  params=params)
+            })
+         } else {
+            if (verbose) {
+               jamba::printDebug("jam_plot_igraph(): ",
+                  "Using linear non-vectorized node shape plotting.");
+            }
+            sapply(seq_len(igraph::vcount(graph)), function(x) {
+               igraph:::.igraph.shapes[[shape[x]]]$plot(
+                  layout[x, , drop=FALSE],
+                  v=x,
+                  params=params)
+            })
          }
       }
-      if (!is.null(elab.x)) {
-         lc.x <- ifelse(is.na(elab.x),
-            lc.x,
-            elab.x)
-      }
-      if (!is.null(elab.y)) {
-         lc.y <- ifelse(is.na(elab.y),
-            lc.y,
-            elab.y)
-      }
-      text(lc.x,
-         lc.y,
-         labels = edge.labels,
-         col = edge.label.color,
-         family = edge.label.family,
-         font = edge.label.font,
-         cex = edge.label.cex)
    }
-   rm(x0, y0, x1, y1)
-   if (length(unique(shape)) == 1) {
-      igraph:::.igraph.shapes[[shape[1]]]$plot(
-         layout,
-         params = params)
-   } else {
-      ## Loop each unique shape here instead of individual nodes
-      unique_shapes <- unique(shape);
-      nodes_by_shape <- split(seq_len(vcount(graph)), shape);
-      if (1 == 1) {
-         sapply(nodes_by_shape, function(x){
-            shape1 <- shape[x[1]];
-            igraph:::.igraph.shapes[[shape1]]$plot(
-               layout[x, , drop = FALSE],
-               v = x,
-               params = params)
-         })
-      } else {
-         sapply(seq(length = vcount(graph)), function(x) {
-            igraph:::.igraph.shapes[[shape[x]]]$plot(
-               layout[x, , drop = FALSE],
-               v = x,
-               params = params)
-         })
+
+   # forxce xpd=TRUE?
+
+   ## Define node label positions
+   if (render_nodelabels) {
+      opar <- par(xpd=TRUE);
+      x <- layout[, 1] +
+         (label.dist *
+               cos(-label.degree) *
+               (vertex.size + 6 * 8 * log10(2))/200);
+      y <- layout[, 2] +
+         (label.dist *
+               sin(-label.degree) *
+               (vertex.size + 6 * 8 * log10(2))/200);
+      if ("labels" %in% debug) {
+         jamba::printDebug("jam_plot_igraph(): ",
+            "labels x,y coords:");
+         print(head(
+            data.frame(
+               labels=labels,
+               x=layout[, 1],
+               y=layout[, 2],
+               label_x=x,
+               label_y=y,
+               vertex.size=vertex.size,
+               label.degree=label.degree,
+               label.dist=label.dist), Inf));
       }
-   }
-   par(xpd = TRUE)
-   x <- layout[, 1] +
-      (label.dist *
-            cos(-label.degree) *
-            (vertex.size + 6 * 8 * log10(2))/200);
-   y <- layout[, 2] +
-      (label.dist *
-            sin(-label.degree) *
-            (vertex.size + 6 * 8 * log10(2))/200);
-   if ("labels" %in% debug) {
-      jamba::printDebug("jam_plot_igraph(): ",
-         "labels x,y coords:");
-      print(head(
-         data.frame(
+      if (length(label.family) == 1) {
+         if ("labels" %in% debug) {
+            jamba::printDebug("jam_plot_igraph(): ",
+               "labels all have one font family, one call to text()");
+         }
+         text(x,
+            y,
             labels=labels,
-            x=layout[, 1],
-            y=layout[, 2],
-            label_x=x,
-            label_y=y,
-            vertex.size=vertex.size,
-            label.degree=label.degree,
-            label.dist=label.dist), Inf));
-   }
-   if (length(label.family) == 1) {
-      if ("labels" %in% debug) {
-         jamba::printDebug("jam_plot_igraph(): ",
-            "labels all have one font family, one call to text()");
-      }
-      text(x,
-         y,
-         labels = labels,
-         col = label.color,
-         family = label.family,
-         font = label.font,
-         cex = label.cex)
-   } else {
-      if ("labels" %in% debug) {
-         jamba::printDebug("jam_plot_igraph(): ",
-            "labels all have different font families, multiple calls to text()");
-      }
-      if1 <- function(vect, idx) if (length(vect) == 1) {
-         vect
+            col=label.color,
+            family=label.family,
+            font=label.font,
+            cex=label.cex)
       } else {
-         vect[idx]
+         if ("labels" %in% debug) {
+            jamba::printDebug("jam_plot_igraph(): ",
+               "labels all have different font families, multiple calls to text()");
+         }
+         if1 <- function(vect, idx) if (length(vect) == 1) {
+            vect
+         } else {
+            vect[idx]
+         }
+         ## Also loop through each family here instead of each node
+         unique_family <- unique(label.family);
+         label.family <- rep(label.family,
+            length.out=igraph::vcount(graph));
+         nodes_by_family <- split(seq_len(igraph::vcount(graph)), label.family);
+         if (1 == 1) {
+            sapply(nodes_by_family, function(v){
+               family1 <- label.family[v[1]];
+               text(
+                  x[v],
+                  y[v],
+                  labels=if1(labels, v),
+                  col=if1(label.color, v),
+                  family=family1,
+                  font=if1(label.font, v),
+                  cex=if1(label.cex, v))
+            })
+         } else {
+            sapply(seq_len(igraph::vcount(graph)), function(v) {
+               text(x[v],
+                  y[v],
+                  labels=if1(labels, v),
+                  col=if1(label.color, v),
+                  family=if1(label.family, v),
+                  font=if1(label.font, v),
+                  cex=if1(label.cex, v))
+            })
+         }
       }
-      ## Also loop through each family here instead of each node
-      unique_family <- unique(label.family);
-      label.family <- rep(label.family, length.out=vcount(graph));
-      nodes_by_family <- split(seq_len(vcount(graph)), label.family);
-      if (1 == 1) {
-         sapply(nodes_by_family, function(v){
-            family1 <- label.family[v[1]];
-            text(x[v],
-               y[v],
-               labels = if1(labels, v),
-               col = if1(label.color, v),
-               family = family1,
-               font = if1(label.font, v),
-               cex = if1(label.cex, v))
-         })
-      } else {
-         sapply(seq_len(vcount(graph)), function(v) {
-            text(x[v],
-               y[v],
-               labels = if1(labels, v),
-               col = if1(label.color, v),
-               family = if1(label.family, v),
-               font = if1(label.font, v),
-               cex = if1(label.cex, v))
-         })
-      }
+      par(opar)
    }
    if (use_shadowText) {
-      text <- graphics::text;
+      #text <- graphics::text;
+      rm(text)
    }
    rm(x, y)
    invisible(NULL)
@@ -3156,5 +3361,69 @@ colors_from_list <- function
    }
    jString <- jamba::pasteByRowOrdered(colorattrdf);
    return(order(jString));
+}
+
+
+#' Colorize igraph edges by nodes
+#'
+#' Colorize igraph edges using node colors
+#'
+#' This function colorizes edges by blending colors for the
+#' nodes involved, by calling `colorjam::blend_colors()`.
+#'
+#' @family jam igraph functions
+#'
+#' @return `igraph` object with edge color attribute updated to
+#'    represent the result of blending node colors, seen by
+#'    `igraph::edge_attr(g)$color`.
+#'
+#' @param g `igraph` object that contains vertex node attribute `"color"`
+#'    as seen with `igraph::vertex_attr(g, "color")`.
+#' @param edge_alpha `numeric` or `NULL`, where numeric value sets
+#'    the edge alpha transparency, where `edge_alpha=0` is completely
+#'    transparent, `edge_alpha=0.5` is 50% transparent, and `edge_alpha=1`
+#'    is completely not transparent, and is opaque. When `edge_alpha=NULL`
+#'    the alpha values are supplied by `colorjam::blend_colors()`
+#'    which blends the two values.
+#' @param ... additional arguments are passed to `colorjam::blend_colors()`.
+#'
+#' @export
+color_edges_by_nodes <- function
+(g,
+ edge_alpha=NULL,
+ ...)
+{
+   # confirm color is present
+   if (!"igraph" %in% class(g)) {
+      stop("Input must be class 'igraph'");
+   }
+   if (!"color" %in% igraph::list.vertex.attributes(g)) {
+      stop("Node attributes must contain 'color' in V(g)$color");
+   }
+   # get edge data.frame
+   if (!"name" %in% igraph::list.vertex.attributes(g)) {
+      vname <- as.character(seq_len(igraph::vcount(g)));
+   } else {
+      vname <- igraph::V(g)$name;
+   }
+
+   edge_df <- data.frame(check.names=FALSE,
+      stringsAsFactors=FALSE,
+      igraph::as_edgelist(g));
+   edge_df$color1 <- igraph::V(g)$color[match(edge_df[,1], vname)];
+   edge_df$color2 <- igraph::V(g)$color[match(edge_df[,2], vname)];
+   color1_2 <- split(
+      c(edge_df$color1, edge_df$color2),
+      rep(seq_len(nrow(edge_df)), 2));
+   blended1_2 <- colorjam::blend_colors(color1_2,
+      ...);
+   if (length(edge_alpha) > 0) {
+      igraph::E(g)$color <- jamba::alpha2col(blended1_2,
+         alpha=rep(edge_alpha,
+            length.out=length(blended1_2)));
+   } else {
+      igraph::E(g)$color <- blended1_2;
+   }
+   return(g);
 }
 

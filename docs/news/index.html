@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.42.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
       </span>
     </div>
 
@@ -126,28 +126,109 @@
       <small>Source: <a href='http://github.com/jmw86069/multienrichjam/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="multienrichjam-0042900" class="section level1">
-<h1 class="page-header" data-toc-text="0.0.42.900">
-<a href="#multienrichjam-0042900" class="anchor"></a>multienrichjam 0.0.42.900</h1>
+    <div id="multienrichjam-0044900" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.44.900">
+<a href="#multienrichjam-0044900" class="anchor"></a>multienrichjam 0.0.44.900</h1>
+<p>The edge bundling update!</p>
+<p>The new functions are under rapid development, and represent potentially quite useful functions for visualizing complex <code>igraph</code> networks, specifically Cnet plots with Gene and Set node types.</p>
+<p>The general technique of bundling edges between two groups of nodes is relatively stable. The details and extent that edges are bundled, including visual display of bundled edges, is under active evaluation and development. So far it doesn’t seem to take much to improve the output figure, compared to using straight edges.</p>
+<p>In the near future, Cnet plots may by default enable some form of edge bundling, as Cnet plots were in fact the motivating example.</p>
+<p>See pkgdown docs for <code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code> for visual examples using the Karate network.</p>
+<div id="current-issues-in-edge-bundling" class="section level2">
+<h2 class="hasAnchor">
+<a href="#current-issues-in-edge-bundling" class="anchor"></a>current issues in edge bundling</h2>
+<p><code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code> is the core function, and it does not yet implement:</p>
+<ul>
+<li>edge clipping based upon igraph vertex shape, for example using <code>igraph:::.igraph.shapes[["circle"]]$clip()</code>.</li>
+<li>edge arrows, which requires edge clipping for proper usage, otherwise edge arrows will be underneath the node shape itself.</li>
+<li>edge labels, which could be implemented, except that bundled edges are by definition much more likely to be too close for effective labels. I rarely use edge labels, so I will target the simplest thing that works.</li>
+</ul>
+</div>
+<div id="new-igraph-edge-bundling-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-igraph-edge-bundling-functions" class="anchor"></a>new igraph edge bundling functions</h2>
+<ul>
+<li>
+<code><a href="../reference/get_bipartite_nodeset.html">get_bipartite_nodeset()</a></code> - is a general use function to return nodes that are grouped by having identical node neighbors. This situation usually happens rarely, except with bipartite graphs where there are often clusters of nodes with the same neighbors, especially common for Cnet plot data.</li>
+<li>
+<code><a href="../reference/edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code> is the first edge bundling function, it is actually a light wrapper around <code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>. Bipartite bundling connects a nodeset (defined as having the same neighbor nodes) to each neighbor node.</li>
+<li>
+<code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code> is a general edge bundling technique that bundles edges between node groups. These node groups can be defined by any relevant technique, typically a community detection algorithm such as <code><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html">igraph::cluster_walktrap()</a></code> or any other of several <code>igraph::cluster_*</code> functions.</li>
+</ul>
+</div>
+<div id="new-igraph-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-igraph-functions" class="anchor"></a>new igraph functions</h2>
+<ul>
+<li>
+<code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> is a simple function that blends the colors of the two nodes involved in each edge, using <code><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html">colorjam::blend_colors()</a></code> since it uses RYB color blending. It is optimized so it only blends unique combinations of colors.</li>
+</ul>
+</div>
+<div id="new-utility-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-utility-functions" class="anchor"></a>new utility functions</h2>
+<ul>
+<li>
+<code><a href="../reference/deconcat_df2.html">deconcat_df2()</a></code> is a necessary utility function that “expands” a <code>data.frame</code> that has one or more columns with multiple delimited values. It simply expands the rows to represent one individual value per row for those columns. This function will very likely be moved into the <code>"jamba"</code> package for much broader use.</li>
+<li>
+<code><a href="../reference/handle_igraph_param_list.html">handle_igraph_param_list()</a></code> is a helper function for <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> which is intended to update node and edge attributes in bulk based upon another attribute. For example “make all the Gene nodes small, and all the Set nodes large.” Same with labels, colors, etc.</li>
+</ul>
+</div>
+<div id="updates-to-existing-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#updates-to-existing-functions" class="anchor"></a>updates to existing functions</h2>
+<ul>
+<li><p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> has new arguments:</p></li>
+<li><p><code>edge_bundling</code> - for <code>"nodegroups"</code>, <code>"connections"</code> and <code>"none"</code> This argument will enable edge bundling by calling <code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code> and <code><a href="../reference/get_bipartite_nodeset.html">get_bipartite_nodeset()</a></code> when needed. See examples.</p></li>
+<li><p><code>render_nodes,render_edges,render_nodelabels,render_nodegroups</code> are options to skip various aspects of <code>igraph</code> plot features, either to save time, or to allow more detailed visual layering.</p></li>
+<li><p><code>vectorized_node_shapes</code> toggle the vectorized node shape plotting when there is more than one node shape in the <code>igraph</code> object. Note this feature is <em>substantially</em> faster, but changes the order that nodes are rendered, by design. As a result, nodes are drawn in order of shape, so each render is a bulk operation. For nodes that overlap, or partially overlap, this feature will visibly change the ordering of nodes. In general, speed is still ideal, and reducing node layout overlaps should be a separate step.</p></li>
+</ul>
+</div>
+</div>
+    <div id="multienrichjam-0043900" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.43.900">
+<a href="#multienrichjam-0043900" class="anchor"></a>multienrichjam 0.0.43.900</h1>
 <div id="changes-to-existing-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#changes-to-existing-functions" class="anchor"></a>changes to existing functions</h2>
+<ul>
+<li>
+<code><a href="../reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> logic was updated for <code>expand</code> which was not properly applying negative values to compress the spacing between nodes in a node set. This use is relatively rare but feasible.</li>
+<li>
+<code><a href="../reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> argument <code>set_nodes</code> now optionally allows referring to a nodeset using the name of one node contained in the nodeset, as a convenience.</li>
+</ul>
+</div>
+<div id="new-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functions" class="anchor"></a>new functions</h2>
+<ul>
+<li>
+<code><a href="../reference/apply_nodeset_spacing.html">apply_nodeset_spacing()</a></code> attempts to automate the process of applying <code><a href="../reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> for each subcluster of nodes in a Cnet plot to enforce a minimum spacing between nodes. The Fruchterman-Reingold layout algorithm might offer a minimum distance threshold, but I could not find it. Incidentally, this new function can also compress node spacing, which might be useful when gene labels are not shown.</li>
+</ul>
+</div>
+</div>
+    <div id="multienrichjam-0042900" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.42.900">
+<a href="#multienrichjam-0042900" class="anchor"></a>multienrichjam 0.0.42.900</h1>
+<div id="changes-to-existing-functions-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#changes-to-existing-functions-1" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> has much more detailed help text, describing more details about clustering parameters, and describing the returned objects in detail.</li>
 <li>
 <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> new argument <code>do_plot=TRUE</code> determines whether each plot is rendered, or just returned as a plot object to be reviewed separately.</li>
 <li>
-<code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> the returned data now includes the gene-pathway heatmap caption, which descibes the gene/set filtering criteria, and the row/column distance methods used for clustering. Since these arguments have substantial effect on the pathway clusters, it is helpful to keep this information readily available. Similarly, the <code>cnet</code> plots as <code>igraph</code> objects store the title as a graph attribute, accessible using <code>graph_attr(cnet, "title")</code>.</li>
+<code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> the returned data now includes the gene-pathway heatmap caption, which descibes the gene/set filtering criteria, and the row/column distance methods used for clustering. Since these arguments have substantial effect on the pathway clusters, it is helpful to keep this information readily available. Similarly, the <code>cnet</code> plots as <code>igraph</code> objects store the title as a graph attribute, accessible using <code><a href="https://rdrr.io/pkg/igraph/man/graph_attr.html">graph_attr(cnet, "title")</a></code>.</li>
 <li>
 <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> argument <code>colorize_by_gene=TRUE</code> now uses <code><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html">colorjam::blend_colors()</a></code>.</li>
 <li>
 <code>mem_gene_pathway_heatmap()</code> is tolerant of <code>'...'</code> entries not valid with <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html">ComplexHeatmap::Heatmap()</a></code>, in order to allow overloading <code>'...'</code> for other function arguments.</li>
 </ul>
 </div>
-<div id="new-functions" class="section level2">
+<div id="new-functions-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions" class="anchor"></a>new functions</h2>
+<a href="#new-functions-1" class="anchor"></a>new functions</h2>
 <ul>
 <li>
 <code><a href="../reference/nudge_igraph_node.html">nudge_igraph_node()</a></code> is intended to help move individual nodes in an <code>igraph</code> layout, useful for adjusting nodes to reduce label overlaps.</li>
@@ -190,9 +271,9 @@
 <code><a href="../reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code> fixed issue when the Cnet igraph object has no internal layout, it runs <code><a href="../reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> by default.</li>
 </ul>
 </div>
-<div id="changes-to-existing-functions-1" class="section level2">
+<div id="changes-to-existing-functions-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-1" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-2" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> now returns <code>clusters_mem</code> in the <code>list</code>, which includes the pathway set names represented in each cluster shown in the gene-pathway incidence matrix heatmap.</li>
@@ -202,9 +283,9 @@
     <div id="multienrichjam-0039900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.39.900">
 <a href="#multienrichjam-0039900" class="anchor"></a>multienrichjam 0.0.39.900</h1>
-<div id="changes-to-existing-functions-2" class="section level2">
+<div id="changes-to-existing-functions-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-2" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-3" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/cnetplot_internalJam.html">cnetplot_internalJam()</a></code> was updated to include <code>"nodeType"</code> as a node attribute, which helps distinguish <code>"Gene"</code> and <code>"Set"</code> nodes in downstream operations. This change helps address
@@ -262,9 +343,9 @@
 <code><a href="../reference/enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code> was updated to fix <a href='http://github.com/jmw86069/multienrichjam/issues/3'>#3</a>, thanks to <a href='http://github.com/john-lee-johnson'>@john-lee-johnson</a> for reporting. Issue arose because <code><a href="https://rdrr.io/pkg/enrichplot/man/cnetplot.html">enrichplot::cnetplot()</a></code> expected enrichResult rownames to be equal to values in the <code>"ID"</code> column of the enrichment <code>data.frame</code>.</li>
 </ul>
 </div>
-<div id="changes-to-existing-functions-3" class="section level2">
+<div id="changes-to-existing-functions-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-3" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-4" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> new argument <code>min_count</code> requires a pathway to contain at least <code>min_count</code> genes in order to be considered a “hit”. This filter is mostly important when used with <code>topEnrichN</code> to use the top pathways – it will only sort pathways then take the top <code>topEnrichN</code> number of pathways that also contain at least <code>min_count</code> genes.</li>
@@ -286,9 +367,9 @@
 <code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> fixed edge case where genes present in multiple enrichments counted more toward <code>min_set_ct_each</code>, but should only count once per gene.</li>
 </ul>
 </div>
-<div id="changes-to-existing-functions-4" class="section level2">
+<div id="changes-to-existing-functions-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-4" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-5" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> new arguments <code>column_title</code>, and <code>row_title</code> allow custom cluster names, which are also carried to Cnet cluster names as needed.</li>
@@ -306,9 +387,9 @@
     <div id="multienrichjam-0034900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.34.900">
 <a href="#multienrichjam-0034900" class="anchor"></a>multienrichjam 0.0.34.900</h1>
-<div id="changes-to-existing-functions-5" class="section level2">
+<div id="changes-to-existing-functions-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-5" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-6" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> new argument <code>colorize_by_gene=TRUE</code> will color the heatmap body using blended colors from the <code>geneIMcolors</code> which represents the enrichments in which the gene is involved. The default <code>colorize_by_gene=FALSE</code> instead colors the heatmap body by the number of enrichments, which can be confusing if one of the enrichment colors is also red. The goal is to make it visually apparent when a gene is involved in one enrichment, by using the color from that enrichment. This feature is still in development and testing.</li>
@@ -320,9 +401,9 @@
     <div id="multienrichjam-0033900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.33.900">
 <a href="#multienrichjam-0033900" class="anchor"></a>multienrichjam 0.0.33.900</h1>
-<div id="changes-to-existing-functions-6" class="section level2">
+<div id="changes-to-existing-functions-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-6" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-7" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code> was updated with new argument <code>cluster_color_min_fraction</code> to help filter the enrichment colors to include in each resulting cnet cluster. The intent is not to represent colors where the number of significant pathways is below this threshold. For example, a cluster of 10 pathways may have only one significant pathway for a given enrichment set – therefore this enrichment color would not be included in the cnet cluster colors.</li>
@@ -332,9 +413,9 @@
     <div id="multienrichjam-0032900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.32.900">
 <a href="#multienrichjam-0032900" class="anchor"></a>multienrichjam 0.0.32.900</h1>
-<div id="changes-to-existing-functions-7" class="section level2">
+<div id="changes-to-existing-functions-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-7" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-8" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <p><code>mem_gene_pathway_heatmap()</code> cleaned up the heatmap overall:</p>
@@ -351,9 +432,9 @@
     <div id="multienrichjam-0031900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.31.900">
 <a href="#multienrichjam-0031900" class="anchor"></a>multienrichjam 0.0.31.900</h1>
-<div id="changes-to-existing-functions-8" class="section level2">
+<div id="changes-to-existing-functions-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-8" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-9" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code>mem_gene_pathway_heatmap()</code> new argument <code>enrich_gene_weight</code> used to adjust the relative influence of the enrichment <code>-log10 P-value</code> and the gene incidence matrix on the column clustering. The effect is to adjust how much the enrichment P-values, or the gene content, affects the clusters. In principle both should have similar effects, but sometimes it helps to favor gene incidence or pathway enrichment.</li>
@@ -363,9 +444,9 @@
     <div id="multienrichjam-0030900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.30.900">
 <a href="#multienrichjam-0030900" class="anchor"></a>multienrichjam 0.0.30.900</h1>
-<div id="changes-to-existing-functions-9" class="section level2">
+<div id="changes-to-existing-functions-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-9" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-10" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code>mem_gene_pathway_heatmap()</code> was altered to allow filtering pathways for a minimum number of genes represented by at least one enrichment result. For example, a pathway may be required to have at least 4 genes, despite having a statistically significant enrichment P-value. The new argument <code>min_set_ct_each</code> tests each enrichment to see if any one has enough genes per pathway. There are two main effects of this filter: The gene-pathway heatmap will display fewer pathways; and any resulting Cnet plots will have the same pathways removed.</li>
@@ -375,9 +456,9 @@
     <div id="multienrichjam-0029900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.29.900">
 <a href="#multienrichjam-0029900" class="anchor"></a>multienrichjam 0.0.29.900</h1>
-<div id="changes-to-existing-functions-10" class="section level2">
+<div id="changes-to-existing-functions-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-10" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-11" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> new argument <code>byCols</code> which is passed along to <code><a href="../reference/rank_mem_clusters.html">rank_mem_clusters()</a></code>, and is used to sort the pathway names within each Cnet cluster. The default uses <code>"composite_rank"</code>, which sorts by the <code><a href="https://rdrr.io/r/base/Round.html">floor(-log10(pvalue))</a></code> then by the highest number of genes per pathway. The <code><a href="https://rdrr.io/r/base/Round.html">floor()</a></code> function effectively sorts by the order of magnitude of the enrichment P-value, dropping the details. The obvious alternative is <code>"minp_rank"</code> which uses the <code>-log10(pvalue)</code> directly, which therefore does not effectively sort by gene count since enrichment P-values rarely tie. In our experience, between two pathways with reasonably similar enrichment P-value (within one order of magnitude such as 2.4e-5 and 3.5e-5) the pathway with more genes was usually the more interesting/relevant biological pathway.</li>
@@ -387,14 +468,14 @@
     <div id="multienrichjam-0028900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.28.900">
 <a href="#multienrichjam-0028900" class="anchor"></a>multienrichjam 0.0.28.900</h1>
-<div id="new-functions-1" class="section level2">
+<div id="new-functions-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-1" class="anchor"></a>new functions</h2>
+<a href="#new-functions-2" class="anchor"></a>new functions</h2>
 <p><code><a href="../reference/im2list.html">im2list()</a></code> and <code><a href="../reference/imSigned2list.html">imSigned2list()</a></code> are the reciprocal functions to <code><a href="../reference/list2im.html">list2im()</a></code> and <code><a href="../reference/list2imSigned.html">list2imSigned()</a></code>. The new functions convert incidence matrix to list, or signed incidence matrix to list, respectively. They’re notable because they’re blazing fast in our testing, thanks to efficient methods from the <code>arules</code> R package for interconverting list to compressed logical matrix, and vice versa.</p>
 </div>
-<div id="changes-to-existing-functions-11" class="section level2">
+<div id="changes-to-existing-functions-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-11" class="anchor"></a>changes to existing functions</h2>
+<a href="#changes-to-existing-functions-12" class="anchor"></a>changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> was modified to use <code>p_floor</code> as the ceiling for the row hierarchical clustering, previously it used <code>ceiling=3</code> which caused the dendrogram to have <code>height=0</code> when all enrichment results were lower than 0.001.</li>
@@ -409,9 +490,9 @@
 <h1 class="page-header" data-toc-text="0.0.27.900">
 <a href="#multienrichjam-0027900" class="anchor"></a>multienrichjam 0.0.27.900</h1>
 <p>Added a new TODO.md file to track some new feature ideas.</p>
-<div id="new-functions-2" class="section level2">
+<div id="new-functions-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-2" class="anchor"></a>new functions</h2>
+<a href="#new-functions-3" class="anchor"></a>new functions</h2>
 <ul>
 <li>
 <code><a href="../reference/colors_from_list.html">colors_from_list()</a></code> infers the proper order of colors from a list of color vectors. It is called by <code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> where attributes <code>"pie.color"</code> and <code>"coloredrect.color"</code> contain subsets of colors, but in the proper order. This function returns all colors in their proper order.</li>
@@ -419,9 +500,9 @@
 <code><a href="../reference/colors_from_list.html">colors_from_list()</a></code> takes a list of colors, and returns the unique colors, ordered by the overall order inferred from the list. It is internally called by <code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> when argument <code>colorV</code> is not suppleid, since the attribute <code>"pie.color"</code> can be used to infer the correct order of colors.</li>
 </ul>
 </div>
-<div id="changes-to-existing-functions-12" class="section level2">
+<div id="changes-to-existing-functions-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-12" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-13" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code> now uses <code>"; "</code> as delimiter for the <code>"set_names"</code> attribute, to make it easier to distinguish individual pathway names.</li>
@@ -435,9 +516,9 @@
     <div id="multienrichjam-0026900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.26.900">
 <a href="#multienrichjam-0026900" class="anchor"></a>multienrichjam 0.0.26.900</h1>
-<div id="changes-to-existing-functions-13" class="section level2">
+<div id="changes-to-existing-functions-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-13" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-14" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code> now includes the cluster name by default with the <code>set_labels</code> which are used to display the top <code>n</code> pathway names for each collapsed Cnet node. For example <code>"Cluster A: Aryl Hydrocarbons; Granzyme Signaling"</code>.</li>
@@ -449,11 +530,11 @@
     <div id="multienrichjam-0025900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.25.900">
 <a href="#multienrichjam-0025900" class="anchor"></a>multienrichjam 0.0.25.900</h1>
-<div id="changes-to-existing-functions-14" class="section level2">
+<div id="changes-to-existing-functions-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-14" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-15" class="anchor"></a>Changes to existing functions</h2>
 <ul>
-<li>Thanks to <code>simang5c</code> the function calls to <code>renameColumn()</code> were corrected to <code><a href="https://rdrr.io/pkg/jamba/man/renameColumn.html">jamba::renameColumn()</a></code>, to resolve issue <a href='http://github.com/jmw86069/multienrichjam/issues/1'>#1</a>. Also fixed several other references to <code>jamba</code> functions: <code>nameVector()</code>, <code>nameVectorN()</code>, <code>makeNames()</code>, <code>printDebug()</code>, <code>mixedSortDF()</code>, <code>cPaste()</code>, <code>igrepHas()</code>, <code>provigrep()</code>, <code>vigrep()</code>, <code>unvigrep()</code>, <code>rbindList()</code>, <code>noiseFloor()</code>, <code>rmNA()</code>, <code>rmNULL()</code>, <code>normScale()</code>, <code>getColorRamp()</code>, <code>deg2rad()</code>. Omg! There were so many more cases than I thought! (Package-building options to import functions from packages seem to go too far, the imported functions appear to be contained in the new package which seems misleading… Ah well.)</li>
+<li>Thanks to <code>simang5c</code> the function calls to <code><a href="https://rdrr.io/pkg/jamba/man/renameColumn.html">renameColumn()</a></code> were corrected to <code><a href="https://rdrr.io/pkg/jamba/man/renameColumn.html">jamba::renameColumn()</a></code>, to resolve issue <a href='http://github.com/jmw86069/multienrichjam/issues/1'>#1</a>. Also fixed several other references to <code>jamba</code> functions: <code><a href="https://rdrr.io/pkg/jamba/man/nameVector.html">nameVector()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/nameVectorN.html">nameVectorN()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/makeNames.html">makeNames()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/printDebug.html">printDebug()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/mixedSortDF.html">mixedSortDF()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/cPaste.html">cPaste()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/igrepHas.html">igrepHas()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/provigrep.html">provigrep()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/vigrep.html">vigrep()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/unvigrep.html">unvigrep()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/rbindList.html">rbindList()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/noiseFloor.html">noiseFloor()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/rmNA.html">rmNA()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/rmNULL.html">rmNULL()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/normScale.html">normScale()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/getColorRamp.html">getColorRamp()</a></code>, <code><a href="https://rdrr.io/pkg/jamba/man/deg2rad.html">deg2rad()</a></code>. Omg! There were so many more cases than I thought! (Package-building options to import functions from packages seem to go too far, the imported functions appear to be contained in the new package which seems misleading… Ah well.)</li>
 <li>Also made several small changes to handle single-enrichment input to multiEnrichMap(). It still provides some useful graphical benefits even with only one enrichment input.</li>
 </ul>
 </div>
@@ -461,9 +542,9 @@
     <div id="multienrichjam-0024900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.24.900">
 <a href="#multienrichjam-0024900" class="anchor"></a>multienrichjam 0.0.24.900</h1>
-<div id="changes-to-existing-functions-15" class="section level2">
+<div id="changes-to-existing-functions-16" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-15" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-16" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> was updated to enable analysis with only one enrichment result. Testing whether the downstream capabilities are useful in the context of one enrichment result.</li>
@@ -473,9 +554,9 @@
     <div id="multienrichjam-0023900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.23.900">
 <a href="#multienrichjam-0023900" class="anchor"></a>multienrichjam 0.0.23.900</h1>
-<div id="changes-to-existing-functions-16" class="section level2">
+<div id="changes-to-existing-functions-17" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-16" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-17" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>Several functions have additional <code><a href="https://rdrr.io/pkg/jamba/man/printDebug.html">jamba::printDebug()</a></code> output when <code>verbose=TRUE</code>.</li>
 <li>
@@ -497,9 +578,9 @@
     <div id="multienrichjam-0022900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.22.900">
 <a href="#multienrichjam-0022900" class="anchor"></a>multienrichjam 0.0.22.900</h1>
-<div id="new-functions-3" class="section level2">
+<div id="new-functions-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-3" class="anchor"></a>New functions</h2>
+<a href="#new-functions-4" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/shape.jampie.plot.html">shape.jampie.plot()</a></code> provides a new <code>igraph</code> vertex shape <code>"jampie"</code>. It is a complete clone to the default <code>igraph</code> shape <code>"pie"</code> except that it offers vectorized plotting, which can be substantially faster for large <code>igraph</code> objects that use <code>"pie"</code> nodes.</li>
@@ -507,9 +588,9 @@
 <code><a href="../reference/jam_plot_igraph.html">jam_plot_igraph()</a></code> is a similar clone to <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html">igraph::plot.igraph()</a></code> except that it uses vectorized plotting specifically when there are multiple shapes in the same <code>igraph</code> object. Formerly, each node is drawn individually which is substantially slower, especially for <code>igraph</code> objects with more than 100 nodes. It also by default converts shape <code>"pie"</code> to <code>"jampie"</code> in order to use vectorized plotting via <code><a href="../reference/shape.jampie.plot.html">shape.jampie.plot()</a></code> above.</li>
 </ul>
 </div>
-<div id="changes-to-existing-functions-17" class="section level2">
+<div id="changes-to-existing-functions-18" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-17" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-18" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> new argument <code>plot_function</code> allows use of custom plot function, specifically to use <code><a href="../reference/jam_plot_igraph.html">jam_plot_igraph()</a></code>.</li>
@@ -526,9 +607,9 @@
     <div id="multienrichjam-0021900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.21.900">
 <a href="#multienrichjam-0021900" class="anchor"></a>multienrichjam 0.0.21.900</h1>
-<div id="new-functions-4" class="section level2">
+<div id="new-functions-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-4" class="anchor"></a>New functions</h2>
+<a href="#new-functions-5" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/grid_with_title.html">grid_with_title()</a></code> draws a grid object with title and optional subtitle, allowing for grid objects such as <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html">ComplexHeatmap::Heatmap</a></code> objects, or even multiple heatmaps. That said, any grid <code>"gTree"</code> object should work.</li>
@@ -538,9 +619,9 @@
     <div id="multienrichjam-0020900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.20.900">
 <a href="#multienrichjam-0020900" class="anchor"></a>multienrichjam 0.0.20.900</h1>
-<div id="new-functions-5" class="section level2">
+<div id="new-functions-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-5" class="anchor"></a>New functions</h2>
+<a href="#new-functions-6" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> is a new function that creates the current recommended folio of multienrichment plots:</li>
@@ -553,9 +634,9 @@
 <li>Cnet using each individual pathway cluster</li>
 </ol>
 </div>
-<div id="changes-to-existing-functions-18" class="section level2">
+<div id="changes-to-existing-functions-19" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-18" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-19" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> now includes <code>p_cutoff</code> in the output, which represents the enrichment P-value threshold used for the analysis. This cutoff is useful in making other color gradients respect the same threshold required for significant enrichment results, so P-values that do not meet this threshold can be colored white (or the background color.)</li>
@@ -567,9 +648,9 @@
     <div id="multienrichjam-0019900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.19.900">
 <a href="#multienrichjam-0019900" class="anchor"></a>multienrichjam 0.0.19.900</h1>
-<div id="new-functions-6" class="section level2">
+<div id="new-functions-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-6" class="anchor"></a>New functions</h2>
+<a href="#new-functions-7" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code> is an intriguing new method of simplifying the numerous pathways, by using each pathway cluster from <code>mem_gene_pathway_heatmap()</code>. Each cluster is condensed to one result, combining all genes in each cluster. The results are surprisingly insightful, especially when numerous pathways are present per cluster. This function also calls <code><a href="../reference/rank_mem_clusters.html">rank_mem_clusters()</a></code>, so it’s possible to pick a handful of the top pathways per cluster, as relevant.</li>
@@ -579,9 +660,9 @@
     <div id="multienrichjam-0018900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.18.900">
 <a href="#multienrichjam-0018900" class="anchor"></a>multienrichjam 0.0.18.900</h1>
-<div id="new-functions-7" class="section level2">
+<div id="new-functions-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-7" class="anchor"></a>New functions</h2>
+<a href="#new-functions-8" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/rank_mem_clusters.html">rank_mem_clusters()</a></code> is a convenience function which ranks pathways/sets within clusters, useful with a list of clusters following <code>mem_gene_pathway_heatmap()</code>. It makes it easier to rank pathways within a cluster, potentially choosing one exemplar pathway to represent each cluster. This function is part of more effort to streamline the overall analysis workflow.</li>
@@ -598,17 +679,17 @@
     <div id="multienrichjam-0017900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.17.900">
 <a href="#multienrichjam-0017900" class="anchor"></a>multienrichjam 0.0.17.900</h1>
-<div id="new-functions-8" class="section level2">
+<div id="new-functions-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-8" class="anchor"></a>New functions</h2>
+<a href="#new-functions-9" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> takes an igraph, determines a color for each node based upon the shape (using <code>avg_colors_from_list()</code> for shape <code>"pie"</code> and <code>"coloredrectangle"</code>), then creates an average color between two nodes, and uses that as the edge color.</li>
 </ul>
 </div>
-<div id="changes-to-existing-functions-19" class="section level2">
+<div id="changes-to-existing-functions-20" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-19" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-20" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> has more configurable arguments, in the form of named lists. The driving example is <code>label_factor_l=list(nodeType=c(Gene=0.01, Set=1))</code>, that will apply <code>label.cex*0.01</code> to “Gene” nodes, and <code>label.cex*1.5</code> to “Set” nodes. Similar arguments: <code>node_factor_l</code> to apply to node size, and <code>label_dist_factor_l</code> to apply to label distance from node center.</li>
@@ -621,9 +702,9 @@
 <h1 class="page-header" data-toc-text="0.0.16.900">
 <a href="#multienrichjam-0016900" class="anchor"></a>multienrichjam 0.0.16.900</h1>
 <p>The vignette was updated to use the new functions, for a much cleaner overall workflow.</p>
-<div id="changes-to-existing-functions-20" class="section level2">
+<div id="changes-to-existing-functions-21" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-20" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-21" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> uses new function <code><a href="../reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> to create one color to represent each node, then <code><a href="../reference/sort_colors.html">sort_colors()</a></code> to sort nodes by color hue, instead of previous behavior which sorted by the hex color string. This change affects attributes <code>"pie.color"</code>, <code>"coloredrect.color"</code> and <code>"color"</code>. Recall that this function <code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> is intended to help visually organize groups of nodes by their colors, to make it easier to tell how many nodes are each color.</li>
@@ -633,9 +714,9 @@
 <code><a href="../reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code> now includes convenience calls to <code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>, <code><a href="../reference/spread_igraph_labels.html">spread_igraph_labels()</a></code>, <code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>, and <code><a href="../reference/relayout_with_qfr.html">relayout_with_qfr()</a></code>. In almost all cases, creating a subset of a Cnet necessitates a new layout, which therefore requires new node ordering (sorting groups of equivalent nodes by color), and then label orientation (the angle used to offset the node label from the center of each node).</li>
 </ul>
 </div>
-<div id="new-functions-9" class="section level2">
+<div id="new-functions-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-9" class="anchor"></a>New functions</h2>
+<a href="#new-functions-10" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/sort_colors.html">sort_colors()</a></code> and <code><a href="../reference/order_colors.html">order_colors()</a></code> uses the <code><a href="https://farver.data-imaginist.com/reference/encode_colour.html">farver::encode_colour()</a></code> function to convert colors to HCL, then sorts by hue, and returns the original sorted vector or corresponding order, respectively. For sorting colors inside a <code>data.frame</code>, convert colors to a factor whose levels are <code><a href="../reference/sort_colors.html">sort_colors(unique(colors))</a></code>, in order to maintain ties during multi-column sorting.</li>
@@ -653,17 +734,17 @@
     <div id="multienrichjam-0015900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.15.900">
 <a href="#multienrichjam-0015900" class="anchor"></a>multienrichjam 0.0.15.900</h1>
-<div id="changes-to-existing-functions-21" class="section level2">
+<div id="changes-to-existing-functions-22" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-21" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-22" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> several updates to improve robustness in the overall workflow.</li>
 </ul>
 </div>
-<div id="new-functions-10" class="section level2">
+<div id="new-functions-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-10" class="anchor"></a>new functions</h2>
+<a href="#new-functions-11" class="anchor"></a>new functions</h2>
 <ul>
 <li>
 <code><a href="../reference/heatmap_row_order.html">heatmap_row_order()</a></code> and <code><a href="../reference/heatmap_column_order.html">heatmap_column_order()</a></code> provide enhanced output from <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/row_order-dispatch.html">ComplexHeatmap::row_order()</a></code>, mainly that they return the actual rownames and colnames of data in the heatmap. Very useful when the data used for the heatmap has been filtered internal to the function.</li>
@@ -673,9 +754,9 @@
     <div id="multienrichjam-0014900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.14.900">
 <a href="#multienrichjam-0014900" class="anchor"></a>multienrichjam 0.0.14.900</h1>
-<div id="changes-to-existing-functions-22" class="section level2">
+<div id="changes-to-existing-functions-23" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-to-existing-functions-22" class="anchor"></a>Changes to existing functions</h2>
+<a href="#changes-to-existing-functions-23" class="anchor"></a>Changes to existing functions</h2>
 <ul>
 <li>
 <code><a href="../reference/list2im.html">list2im()</a></code> removed argument <code>makeUnique</code> because the underlying conversion to matrix no longer requires that step, and it was a performance hit for extremely large lists. The argument <code>keepCounts</code> is the only requirement to maintain the count of each entry per list.</li>
@@ -687,9 +768,9 @@
 <code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code> was enhanced for more robust import conditions, specifically for different variations of missing IPA enrichment results. Also, empty colnames are removed, to help recognize the proper identifier in each scenario.</li>
 </ul>
 </div>
-<div id="new-functions-11" class="section level2">
+<div id="new-functions-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-11" class="anchor"></a>New functions</h2>
+<a href="#new-functions-12" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code><a href="../reference/enrichList2geneHitList.html">enrichList2geneHitList()</a></code> takes a list of <code>enrichResult</code> and returns the list of genes represented in each <code>enrichResult</code>. Intended mainly for internal use by <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code>.</li>
@@ -739,9 +820,9 @@
     <div id="multienrichjam-0010900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.10.900">
 <a href="#multienrichjam-0010900" class="anchor"></a>multienrichjam 0.0.10.900</h1>
-<div id="new-functions-12" class="section level2">
+<div id="new-functions-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-12" class="anchor"></a>New functions</h2>
+<a href="#new-functions-13" class="anchor"></a>New functions</h2>
 <ul>
 <li>
 <code>mem_gene_pathway_heatmap()</code> is a wrapper to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html">ComplexHeatmap::Heatmap()</a></code> which takes output from <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> and produces a heatmap styled similar to a pathway-gene incidence matrix. It includes row and column annotations to help interpret the results.</li>
@@ -819,9 +900,9 @@
     <div id="multienrichjam-006900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.6.900">
 <a href="#multienrichjam-006900" class="anchor"></a>multienrichjam 0.0.6.900</h1>
-<div id="new-functions-13" class="section level2">
+<div id="new-functions-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-13" class="anchor"></a>new functions</h2>
+<a href="#new-functions-14" class="anchor"></a>new functions</h2>
 <ul>
 <li>
 <code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code> imports Ingenuity IPA enrichment results, by default splitting each enrichment table into its own <code>data.frame</code>. It curates colnames to be consistent with downstream analyses.</li>
@@ -883,7 +964,7 @@
 <h2 class="hasAnchor">
 <a href="#changes-3" class="anchor"></a>changes</h2>
 <ul>
-<li>removed <code>mergeAllXY()</code> and <code>unnestList()</code> and moved them to the <code>jamba</code> package. Added corresponding version requirement on jamba.</li>
+<li>removed <code><a href="https://rdrr.io/pkg/jamba/man/mergeAllXY.html">mergeAllXY()</a></code> and <code><a href="https://rdrr.io/pkg/jamba/man/unnestList.html">unnestList()</a></code> and moved them to the <code>jamba</code> package. Added corresponding version requirement on jamba.</li>
 </ul>
 </div>
 </div>
@@ -898,9 +979,9 @@
 <code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code> was updated to include a wider set of canonical pathway prefixes used in MsigDB v6.1.</li>
 </ul>
 </div>
-<div id="new-functions-14" class="section level2">
+<div id="new-functions-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-14" class="anchor"></a>new functions</h2>
+<a href="#new-functions-15" class="anchor"></a>new functions</h2>
 <ul>
 <li>
 <code><a href="../reference/cnet2im.html">cnet2im()</a></code> and <code><a href="../reference/cnet2df.html">cnet2df()</a></code> are helper functions used to convert a Cnet igraph to either a incidence matrix, or a table summary useful for extracting subsets of pathways using various network descriptors.</li>
@@ -912,9 +993,9 @@
     <div id="multienrichjam-001900" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.1.900">
 <a href="#multienrichjam-001900" class="anchor"></a>multienrichjam 0.0.1.900</h1>
-<div id="new-functions-15" class="section level2">
+<div id="new-functions-16" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-functions-15" class="anchor"></a>new functions</h2>
+<a href="#new-functions-16" class="anchor"></a>new functions</h2>
 <ul>
 <li>
 <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> the workhorse core function, implementing the full workflow to pre-process the results for later inspection.</li>
@@ -923,9 +1004,9 @@
 <li>
 <code><a href="../reference/cnetplotJam.html">cnetplotJam()</a></code> custom function to create a cnet plot igraph object.</li>
 <li>
-<code>mergeAllXY()</code> which merges a list of data.frames while keeping all rows.</li>
+<code><a href="https://rdrr.io/pkg/jamba/man/mergeAllXY.html">mergeAllXY()</a></code> which merges a list of data.frames while keeping all rows.</li>
 <li>
-<code>unnestList()</code> which un-nests a list of lists, resulting in a flattened list. It directly supports <code>mergeAllXY()</code> in order to provide a simple list of data.frame objects from potentially nested list of lists of data.frame objects.</li>
+<code><a href="https://rdrr.io/pkg/jamba/man/unnestList.html">unnestList()</a></code> which un-nests a list of lists, resulting in a flattened list. It directly supports <code><a href="https://rdrr.io/pkg/jamba/man/mergeAllXY.html">mergeAllXY()</a></code> in order to provide a simple list of data.frame objects from potentially nested list of lists of data.frame objects.</li>
 <li>
 <code><a href="../reference/enrichList2IM.html">enrichList2IM()</a></code> converts a list of enrichResult objects (or data.frames) into an indidence matrix of gene rows and pathway columns.</li>
 <li>

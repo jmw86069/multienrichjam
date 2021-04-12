@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.42.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
       </span>
     </div>
 
@@ -128,17 +128,100 @@
 <div id="todo" class="section level1">
 
 <p>This document describes plans for enhancements to the multienrichjam R package.</p>
-<div id="apply-subsetsets-in-multienrichmap" class="section level2">
+<div id="10apr2021-implement-edge-bundling-techniques" class="section level2">
 <h2 class="hasAnchor">
-<a href="#apply-subsetsets-in-multienrichmap" class="anchor"></a>apply subsetSets in <code>multiEnrichMap()</code>
+<a href="#10apr2021-implement-edge-bundling-techniques" class="anchor"></a>10apr2021: implement edge bundling techniques</h2>
+<p>Priority: high</p>
+<ul>
+<li>Cnet edge bundles - special case of nodeset-to-node edge bundling</li>
+<li>Node group bundles - general case of nodeset-to-nodeset edge bundling</li>
+</ul>
+<p>Useful to improve readability/aesthetics of collapsed Cnet plots, especially Cnet plots with many gene nodes where it is difficult to tell which pathway clusters are connected to each gene.</p>
+</div>
+<div id="10apr2021-enhancements-to-jam_igraph" class="section level2">
+<h2 class="hasAnchor">
+<a href="#10apr2021-enhancements-to-jam_igraph" class="anchor"></a>10apr2021: enhancements to <code>jam_igraph()</code>
 </h2>
 <ul>
-<li>apparently it had never been implemented?</li>
+<li><p>Consider silently returning the <code>igraph</code> object plotted where the vertex, edge, and graph attributes are updated to the values used at runtime. For example, if user overrides any attributes, those attributes will be present in the object returned, so the next iteration someone could just call <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> without any custom attributes and it would produce the same plot again.</p></li>
+<li><p>See <a href="https://igraph.org/r/doc/plot.common.html" class="uri">https://igraph.org/r/doc/plot.common.html</a> and <code><a href="https://rdrr.io/pkg/igraph/man/igraph_options.html">igraph::igraph_options()</a></code></p></li>
 </ul>
 </div>
-<div id="apply-node-color-order-based-upon-shape-of-node-cluster" class="section level2">
+<div id="10apr2021-implement-edge-bundling-in-jam_igraph" class="section level2">
 <h2 class="hasAnchor">
-<a href="#apply-node-color-order-based-upon-shape-of-node-cluster" class="anchor"></a>apply node color order based upon shape of node cluster</h2>
+<a href="#10apr2021-implement-edge-bundling-in-jam_igraph" class="anchor"></a>10apr2021: implement edge bundling in <code>jam_igraph()</code>
+</h2>
+<p>Priority: high</p>
+<ul>
+<li>
+<p>This task involves making edge bundling accessible as a simple option during plotting, to prevent having to run 3 or 4 functions:</p>
+<ul>
+<li>
+<code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges</li>
+<li>
+<code>bundle_node_edges()</code> to display edges on top of nodes</li>
+<li>(optional) <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges, nodes with solid white color so they fully cover edges.</li>
+<li>
+<code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges, to display nodes on top of bundled edges while allowing nodes to have alpha transparency</li>
+</ul>
+</li>
+<li>
+<p>Note there is a package based on <code>ggraph</code> that implements edge bundling - if <code>jam_ggraph()</code> is going to be our future, maybe we should implement edge bundling using a similar approach used by that R package.</p>
+<ul>
+<li><a href="https://github.com/schochastics/edgebundle" class="uri">https://github.com/schochastics/edgebundle</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="10apr2021-add-plot_cnet_heatmaps-to-multienrichjam" class="section level2">
+<h2 class="hasAnchor">
+<a href="#10apr2021-add-plot_cnet_heatmaps-to-multienrichjam" class="anchor"></a>10apr2021: add <code>plot_cnet_heatmaps()</code> to multienrichjam</h2>
+<p>Priority: high</p>
+<ul>
+<li>
+<code>plot_cnet_heatmaps()</code> is in development, and arranges expression heatmaps around a central Cnet plot, using genes in each cnet cluster. It is intended to be used with Cnet clusters from <code><a href="reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code>, by-product of <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>.</li>
+</ul>
+<p>This figure seems very useful because it integrates expression changes alongside gene-pathway connections.</p>
+<p>The multienrichment workflow would likely become:</p>
+<ul>
+<li>Prepare enrichment data</li>
+<li><code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></li>
+<li><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></li>
+<li><code>plot_cnet_heatmap()</code></li>
+</ul>
+</div>
+<div id="10apr2021-enable-plotting-node-community-data-in-jam_igraph" class="section level2">
+<h2 class="hasAnchor">
+<a href="#10apr2021-enable-plotting-node-community-data-in-jam_igraph" class="anchor"></a>10apr2021: enable plotting node community data in <code>jam_igraph()</code>
+</h2>
+<p>Priority: low</p>
+<ul>
+<li>Analogous to <code>igraph:::plot.communities()</code> with <code>mark.groups</code>
+</li>
+<li>for edge bundling, this step could optionally display boundaries around each node group.</li>
+</ul>
+<p>Value is reinforcing node groups with a boundary. In testing, the boundary actually made plots look more complex. And with simple plots, it does not seem necessary since nodes are already well-spaced.</p>
+</div>
+<div id="10apr2021-include-genecount-matrix-output-from-multienrichmap" class="section level2">
+<h2 class="hasAnchor">
+<a href="#10apr2021-include-genecount-matrix-output-from-multienrichmap" class="anchor"></a>10apr2021: include geneCount matrix output from <code>multiEnrichMap()</code>
+</h2>
+<p>Priority: medium</p>
+<ul>
+<li><p>Purpose is to complement the “enrichIM” matrix, with P-values for each set. However “dysregulated pathways” may also be required to have N number of genes, yet this data is not easily available.</p></li>
+<li>
+<p>Rows are pathways, columns are enrichments, values are the number of genes involved in enrichment.</p>
+<ul>
+<li>Consider a matrix whose cells contain delimited gene symbols</li>
+</ul>
+</li>
+</ul>
+<p>Useful to apply filtering at matrix-level for pathways that meet enrichment P-value and gene count thresholds.</p>
+</div>
+<div id="2020-apply-node-color-order-based-upon-shape-of-node-cluster" class="section level2">
+<h2 class="hasAnchor">
+<a href="#2020-apply-node-color-order-based-upon-shape-of-node-cluster" class="anchor"></a>2020: apply node color order based upon shape of node cluster</h2>
+<p>Priority: medium</p>
 <p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code></p>
 <ul>
 <li><p>when a cluster of nodes is short-wide, the order should be left-to-right</p></li>
@@ -150,35 +233,125 @@
 </ul>
 </li>
 </ul>
+<p>Useful to automate the ordering of node colors</p>
 </div>
-<div id="apply-min_count-in-multienrichmap" class="section level2">
+<div id="2020-apply-subsetsets-in-multienrichmap" class="section level2">
 <h2 class="hasAnchor">
-<a href="#apply-min_count-in-multienrichmap" class="anchor"></a>Apply min_count in <code>multiEnrichMap()</code>
+<a href="#2020-apply-subsetsets-in-multienrichmap" class="anchor"></a>2020: apply subsetSets in <code>multiEnrichMap()</code>
+</h2>
+<p>Priority: low</p>
+<ul>
+<li>apparently it had never been implemented? User-defined subset of pathways/sets to include in <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>, as an alternative to using <code><a href="reference/topEnrichBySource.html">topEnrichBySource()</a></code>.</li>
+</ul>
+<p>Users can currently perform this subset step before running <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>.</p>
+</div>
+<div id="complete-apply-min_count-in-multienrichmap" class="section level2">
+<h2 class="hasAnchor">
+<a href="#complete-apply-min_count-in-multienrichmap" class="anchor"></a>COMPLETE: Apply min_count in <code>multiEnrichMap()</code>
 </h2>
 <ul>
 <li>Currently <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> does not filter by number of genes involved in enrichment, it only filters by enrichment P-value. New argument <code>min_count</code> is applied only when <code>topEnrichN</code> is used, but nothing else downstream is aware of filtering by <code>min_count</code>. The corresponding argument in <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> is <code>min_set_ct_each</code>, which requires a set (pathway) to contain at least this many entries in at least one enrichment result which also meets <code>p_cutoff</code> criteria for enrichment P-value.</li>
 </ul>
 </div>
-<div id="optional-highlight-genes" class="section level2">
+<div id="2020-optional-highlight-genes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#optional-highlight-genes" class="anchor"></a>Optional highlight genes</h2>
+<a href="#2020-optional-highlight-genes" class="anchor"></a>2020: Optional highlight genes</h2>
+<p>Priority: low</p>
 <ul>
 <li>
-<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> and subsequent plots, optional argument <code>highlight_genes</code> which would effectively hide all gene labels except <code>highlight_genes</code> – to help especially crowded plots. Would propagate to new function <code>plot_cnet_heatmaps()</code> which displays expression heatmaps around central cnet plot.</li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> and subsequent plots, optional argument <code>highlight_genes</code> which would effectively hide all gene labels except <code>highlight_genes</code> – to help especially crowded plots.</p>
+<ul>
+<li>Option 1: User-supplied genes</li>
+<li>Option 2: Genes defined by one or more pathways/sets to highlight</li>
+<li>Implement as wrapper to <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> to hide/display relevant node labels</li>
+<li>
+<code>plot_cnet_heatmap()</code> could label the heatmap rows using <code>anno_mark()</code>
+</li>
+</ul>
+</li>
+</ul>
+<p>Useful in Cnet plots with too many genes to label, it allows only a subset of genes to be highlighted. Will become high priority if a manuscript decides to use this technique.</p>
+</div>
+<div id="consider-a-strict-output-format-for-mem_plot_folio" class="section level2">
+<h2 class="hasAnchor">
+<a href="#consider-a-strict-output-format-for-mem_plot_folio" class="anchor"></a>Consider a strict output format for <code>mem_plot_folio()</code>
+</h2>
+<p>Priority: medium</p>
+<ul>
+<li><p>Goal is to run <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> once then be able to plot any component separately. Would help keep all plots in sync with the settings used.</p></li>
+<li><p>Benefit: Always have ability to see the exact gene-pathway incidence matrix heatmap, and its clustering, which is used for a collapsed Cnet plots.</p></li>
+<li>
+<p>Design idea: List format</p>
+<ul>
+<li>
+<p>Named by type of output:</p>
+<ul>
+<li><p>enrichment P-values</p></li>
+<li>
+<p>gene-pathway heatmap</p>
+<ul>
+<li>Heatmap object</li>
+<li>gene clusters</li>
+<li>pathway clusters</li>
+<li>filter/cluster settings used</li>
+</ul>
+</li>
+<li>
+<p>collapsed cnet igraphs</p>
+<ul>
+<li>with each labeling option implemented</li>
+</ul>
+</li>
+<li>
+<p>cnet exemplar igraphs</p>
+<ul>
+<li>1 exemplar per pathway cluster</li>
+<li>2 exemplars per pathway cluster</li>
+<li>3 exemplars per pathway cluster</li>
+</ul>
+</li>
+<li>
+<p>each cnet cluster igraph</p>
+<ul>
+<li>cluster 1 cnet igraph</li>
+<li>cluster 2 cnet igraph</li>
+<li>cluster 3 cnet igraph</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Each type of output contains a <code>list</code> of relevant components</p></li>
+</ul>
+</li>
 </ul>
 </div>
-<div id="add-plot_cnet_heatmaps" class="section level2">
+<div id="10apr2021-make-plot-commands-word-for-ggraph" class="section level2">
 <h2 class="hasAnchor">
-<a href="#add-plot_cnet_heatmaps" class="anchor"></a>add <code>plot_cnet_heatmaps()</code>
+<a href="#10apr2021-make-plot-commands-word-for-ggraph" class="anchor"></a>10apr2021: make plot commands word for ggraph</h2>
+<p>Priority: low</p>
+<ul>
+<li><p>Goal is to use ggraph for ggplot2-type plotting instead of using base R for <code>igraph</code> plots.</p></li>
+<li>
+<p><code>jam_ggraph()</code> ?</p>
+<ul>
+<li>Test <code>scatterpie</code> R package which implements pie node shapes for use in ggraph. Unsure the data content requirement.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="10apr2021-document-examples-for-reorderigraphnotes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#10apr2021-document-examples-for-reorderigraphnotes" class="anchor"></a>10apr2021: document examples for <code>reorderIgraphNotes()</code>
 </h2>
 <ul>
-<li>
-<code>plot_cnet_heatmaps()</code> is in development, and arranges expression heatmaps around a central Cnet plot, using genes in each cnet cluster. It is intended with <code><a href="reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code> to be used with Cnet clusters.</li>
+<li>Examples should show how to specify color order, or change the order if necessary.</li>
 </ul>
 </div>
-<div id="improve-reorderigraphnotes--done-needs-more-testing-verification" class="section level2">
+<div id="complete-2020-improve-reorderigraphnotes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improve-reorderigraphnotes--done-needs-more-testing-verification" class="anchor"></a>Improve reorderIgraphNotes() – DONE needs more testing, verification</h2>
+<a href="#complete-2020-improve-reorderigraphnotes" class="anchor"></a>COMPLETE: 2020: Improve <code>reorderIgraphNotes()</code>
+</h2>
 <ul>
 <li>
 <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> when it encounters attributes with multiple colors per node, such as <code>"pie.colors"</code> and <code>"coloredrect.colors"</code>, calls <code><a href="reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> to generate one blended color per node, then it sorts those colors using <code><a href="reference/sort_colors.html">sort_colors()</a></code>. However, the color order ultimately does not match the order in the color legend, and other plots such as heatmaps.</li>

@@ -801,22 +801,22 @@ mem_multienrichplot <- function
 
    ## Optionally filter for specific sets
    if (length(sets) > 0) {
-      keep_nodes <- which(V(g)$name %in% sets);
+      keep_nodes <- which(igraph::V(g)$name %in% sets);
       if (length(keep_nodes) == 0) {
          stop("No sets remain after filtering V(g)$name for sets.");
       }
-      g <- subgraph(g, v=keep_nodes);
+      g <- igraph::subgraph(g, v=keep_nodes);
    }
 
    ## Filter to remove nodes as needed
    if (length(overlap) > 0 && overlap > 0) {
-      delete_edges <- which(E(g)$overlap < overlap);
+      delete_edges <- which(igraph::E(g)$overlap < overlap);
       if (length(delete_edges) > 0) {
          g <- igraph::delete.edges(g, delete_edges);
       }
    }
-   if (length(overlap_count) > 0 && "overlap_count" %in% list.edge.attributes(g)) {
-      delete_edges <- which(E(g)$overlap_count < overlap_count);
+   if (length(overlap_count) > 0 && "overlap_count" %in% igraph::list.edge.attributes(g)) {
+      delete_edges <- which(igraph::E(g)$overlap_count < overlap_count);
       if (length(delete_edges) > 0) {
          g <- igraph::delete.edges(g, delete_edges);
       }
@@ -835,35 +835,35 @@ mem_multienrichplot <- function
          ...);
    }
    ## Optionally label edges
-   label_edges <- head(intersect(label_edges, list.edge.attributes(g)), 1);
+   label_edges <- head(intersect(label_edges, igraph::list.edge.attributes(g)), 1);
    if (length(label_edges) > 0) {
       if (!"label" %in% label_edges) {
-         edge_text <- edge_attr(g, label_edges);
+         edge_text <- igraph::edge_attr(g, label_edges);
          if (is.numeric(edge_text)) {
             edge_text <- format(edge_text,
                trim=TRUE,
                digits=2);
          }
-         E(g)$label <- edge_text;
+         igraph::E(g)$label <- edge_text;
       }
    }
    if (length(edge_cex) > 0) {
-      E(g)$label.cex <- edge_cex;
+      igraph::E(g)$label.cex <- edge_cex;
    }
    if (length(edge_color) > 0) {
-      E(g)$color <- edge_color;
+      igraph::E(g)$color <- edge_color;
    }
    if (length(shape) > 0) {
-      V(g)$shape <- shape;
+      igraph::V(g)$shape <- shape;
    }
    if (length(node_size) > 0) {
-      V(g)$size <- node_size;
+      igraph::V(g)$size <- node_size;
    }
    if (length(node_cex) > 0) {
-      V(g)$label.cex <- node_cex;
+      igraph::V(g)$label.cex <- node_cex;
    }
    if (length(frame_color) > 0) {
-      V(g)$frame.color <- frame_color;
+      igraph::V(g)$frame.color <- frame_color;
    }
    if (length(main) > 0) {
       main <- glue::glue(main);
@@ -939,217 +939,6 @@ mem_legend <- function
       ...);
 }
 
-#' Jam wrapper to plot igraph
-#'
-#' Jam wrapper to plot igraph
-#'
-#' This function is a lightweight wrapper around `igraph::plot.igraph()`
-#' intended to handle `rescale=FALSE` properly, which is not done
-#' in the former function (as of January 2020). The desired outcome
-#' is for the `xlim` and `ylim` defaults to be scaled according to the
-#' `igraph` layout. Similarly, the `vertex.size` and `vertex.label.dist`
-#' parameters should also be scaled proportionally.
-#'
-#' You can use argument `label_factor_l=list(nodeType=c(Gene=0.01, Set=1))`
-#' to hide labels for Gene nodes, and display labels for Set nodes.
-#' Note that due to a quirk in `igraph`, setting `label.cex=0`
-#' will revert the font to default size, and will not hide the
-#' label.
-#'
-#' @family jam igraph functions
-#' @family jam plot functions
-#'
-#' @param x `igraph` object to be plotted
-#' @param ... additional arguments are passed to `igraph::plot.igraph()`
-#' @param xlim,ylim default x and y axis limits
-#' @param expand numeric value used to expand the x and y axis ranges,
-#'    where `0.03` expands each size `3%`.
-#' @param rescale logical indicating whether to rescale the layout
-#'    coordinates to `c(-1, 1)`. When `rescale=FALSE` the original
-#'    layout coordinates are used as-is without change.
-#' @param node_factor numeric value multiplied by `V(x)$size` to adjust
-#'    the relative size of all nodes by a common numeric scalar value.
-#' @param edge_factor numeric value multiplied by `E(x)$width` to adjust
-#'    the relative width of all edges by a common numeric scalar value.
-#' @param label_factor numeric value multiplied by `V(x)$label.cex`
-#'    and `E(x)$label.cex` to adjust the relative size of all labels on
-#'    nodes and edges by a common numeric scalar value.
-#' @param label_dist_factor numeric value multiplied by `V(x)$label.dist`
-#'    to adjust the relative distance of all nodes labels from the node center
-#'    by a common numeric scalar value.
-#' @param node_factor_l,label_factor_l,label_dist_factor_l `list`
-#'    of vectors, where the names of the `list` are attribute
-#'    names, and the names of each vector are attributes values.
-#'    The vector values are used as scalar multipliers, analogous to
-#'    `node_factor`. The purpose is to apply scalar values to different
-#'    subsets of nodes. For example, consider:
-#'    `node_factor_l=list(nodeType=c(Gene=1, Set=2)`. The list name
-#'    `"nodeType"` says to look at `vertex_attr(x, "nodeType")`. Nodes
-#'    where `nodeType="Gene"` will use `1`, and where `nodeType="Set"`
-#'    will use `2` as the scalar value.
-#'
-#' @examples
-#' ## example showing how to use the list form
-#' ## This form resizes nodes where V(g)$nodeType %in% "Gene" by 2x,
-#' ## and resizes nodes where V(g)$nodeType %in% "Set" by 3x.
-#' node_factor_l <- list(nodeType=c(Gene=2, Set=3));
-#'
-#' ## This form multiplies label.dist for nodeType="Gene" nodes by 1,
-#' ## and multiplies label.dist for nodeType="Set" nodes by 0.5
-#' label_dist_factor_l <- list(nodeType=c(Gene=1, Set=0.5))
-#'
-#' # jam_igraph(g, node_factor_l=node_factor_l, label_dist_factor_l=label_dist_factor_l);
-#'
-#' @export
-jam_igraph <- function
-(x,
- ...,
- xlim=c(-1,1),
- ylim=c(-1,1),
- expand=0.03,
- rescale=FALSE,
- node_factor=1,
- node_factor_l=NULL,
- edge_factor=1,
- label_factor=1,
- label_factor_l=NULL,
- label_dist_factor=1,
- label_dist_factor_l=1,
- use_shadowText=FALSE,
- plot_function=jam_plot_igraph,
- verbose=FALSE,
- debug=NULL)
-{
-   ##
-   params <- igraph:::i.parse.plot.params(x, list(...));
-   layout <- params("plot", "layout");
-   vertex.size <- params("vertex", "size");
-   vertex.size2 <- params("vertex", "size2");
-   vertex.label.dist <- params("vertex", "label.dist") * label_dist_factor;
-   edge.width <- params("edge", "width") * edge_factor;
-
-   if (is.function(label_factor)) {
-      if (verbose) {
-         jamba::printDebug("jam_igraph(): ",
-            "Applying ", "label_factor(label.cex)");
-      }
-      vertex.label.cex <- label_factor(params("vertex", "label.cex"));
-      edge.label.cex <- label_factor(params("edge", "label.cex"));
-   } else {
-      if (verbose) {
-         jamba::printDebug("jam_igraph(): ",
-            "Applying ", "label.cex * label_factor");
-      }
-      vertex.label.cex <- params("vertex", "label.cex") * label_factor;
-      edge.label.cex <- params("edge", "label.cex") * label_factor;
-   }
-   if (is.function(node_factor)) {
-      vertex.size <- node_factor(vertex.size);
-      vertex.size2 <- node_factor(vertex.size2);
-   } else {
-      vertex.size <- vertex.size * node_factor;
-      vertex.size2 <- vertex.size2 * node_factor;
-   }
-
-   ## Handle input as list type
-   handle_factor_list <- function(x, attr, factor_l, i_values) {
-      if (length(factor_l) > 0 && is.numeric(factor_l)) {
-         if (verbose) {
-            jamba::printDebug("jam_igraph(): ",
-               "Applying ['", attr, "'] * factor");
-         }
-         i_values <- factor_l * i_values;
-      } else if (length(factor_l) > 0 && is.function(factor_l)) {
-         if (verbose) {
-            jamba::printDebug("jam_igraph(): ",
-               "Applying factor(", attr, ")");
-         }
-         i_values <- factor_l(i_values);
-      } else if (length(factor_l) > 0 && is.list(factor_l)) {
-         for (i in names(factor_l)) {
-            j <- factor_l[[i]];
-            for (k in names(j)) {
-               x_factor <- factor_l[[i]][[k]];
-               if (i %in% list.vertex.attributes(x)) {
-                  i_nodes <- (vertex_attr(x, i) %in% k);
-                  if (any(i_nodes)) {
-                     if (verbose) {
-                        jamba::printDebug(sep="",
-                           c("jam_igraph(): ",
-                              "Applying ",
-                              " factor_l[['",i,"']][['",k,"']] to ",
-                              jamba::formatInt(sum(i_nodes)),
-                              " nodes: ['", attr, "'] * (", x_factor, ")"));
-                     }
-                     #vertex.label.cex[i_nodes] <- vertex.label.cex[i_nodes] * x_factor;
-                     i_values[i_nodes] <- i_values[i_nodes] * x_factor;
-                  }
-               }
-            }
-         }
-      }
-      return(i_values);
-   }
-   ## label_factor_l=list(nodeType=c(Gene=1, Set=2))
-   vertex.label.cex <- handle_factor_list(x, attr="label.cex", label_factor_l, i_values=vertex.label.cex);
-   vertex.label.dist <- handle_factor_list(x, attr="label.dist", label_dist_factor_l, i_values=vertex.label.dist);
-   vertex.size <- handle_factor_list(x, attr="size", node_factor_l, i_values=vertex.size);
-
-   if (!rescale) {
-      dist_factor <- 4;
-      if (min(xlim) <= min(layout[,1]) && max(xlim) >= max(layout[,1])) {
-         xlim_asis <- TRUE;
-      } else {
-         xlim <- range(layout[,1]);
-         xlim_asis <- FALSE;
-      }
-      if (length(debug) > 0 && any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
-         jamba::printDebug("jam_igraph(): ",
-            "xlim before:",
-            xlim);
-         jamba::printDebug("jam_igraph(): ",
-            "head(vertex.size, 20) before:",
-            head(vertex.size, 20));
-      }
-      vertex.size <- vertex.size * diff(xlim) / 2;
-      vertex.size2 <- vertex.size2 * diff(xlim) / 2;
-      vertex.label.dist <- vertex.label.dist * diff(xlim) / dist_factor;
-      if (!xlim_asis) {
-         xlim <- xlim + diff(xlim) * c(-1,1) * expand;
-      }
-      if (min(ylim) <= min(layout[,2]) && max(ylim) >= max(layout[,2])) {
-         ylim_asis <- TRUE;
-      } else {
-         ylim <- range(layout[,2]);
-         ylim_asis <- FALSE;
-         ylim <- ylim + diff(ylim) * c(-1,1) * expand;
-      }
-   }
-   if (length(debug) > 0 && any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
-      jamba::printDebug("jam_igraph(): ",
-         "xlim after:",
-         xlim);
-      jamba::printDebug("jam_igraph(): ",
-         "head(vertex.label.dist, 20):",
-         head(vertex.label.dist, 20));
-      jamba::printDebug("jam_igraph(): ",
-         "head(vertex.size, 20) after:",
-         head(vertex.size, 20));
-   }
-   plot_function(x=x,
-      ...,
-      rescale=rescale,
-      vertex.size=vertex.size,
-      vertex.size2=vertex.size2,
-      vertex.label.dist=vertex.label.dist,
-      vertex.label.cex=vertex.label.cex,
-      edge.label.cex=edge.label.cex,
-      edge.width=edge.width,
-      use_shadowText=use_shadowText,
-      xlim=xlim,
-      ylim=ylim,
-      debug=debug);
-}
 
 #' Multienrichment folio of summary plots
 #'

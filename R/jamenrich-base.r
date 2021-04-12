@@ -1022,9 +1022,9 @@ multiEnrichMap <- function
       verbose=verbose);
    ## jamba::normScale(..., low=0) scales range 0 to maximum, into 0 to 1
    ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
-   V(enrichEM)$size_orig <- V(enrichEM)$size;
-   V(enrichEM)$size <- (jamba::normScale(V(enrichEM)$size, low=0) + 0.3) * 8;
-   E(enrichEM)$color <- "#99999977";
+   igraph::V(enrichEM)$size_orig <- igraph::V(enrichEM)$size;
+   igraph::V(enrichEM)$size <- (jamba::normScale(igraph::V(enrichEM)$size, low=0) + 0.3) * 8;
+   igraph::E(enrichEM)$color <- "#99999977";
 
    mem$multiEnrichMap <- enrichEM;
 
@@ -1050,8 +1050,8 @@ multiEnrichMap <- function
       nrow=nrow,
       ncol=ncol,
       byrow=byrow);
-   V(enrichEMpieUseSub2)$size <- (jamba::normScale(V(enrichEMpieUseSub2)$size) + 0.3) * 6;
-   V(enrichEMpieUseSub2)$size2 <- V(enrichEMpieUseSub2)$size2 / 2;
+   igraph::V(enrichEMpieUseSub2)$size <- (jamba::normScale(igraph::V(enrichEMpieUseSub2)$size) + 0.3) * 6;
+   igraph::V(enrichEMpieUseSub2)$size2 <- igraph::V(enrichEMpieUseSub2)$size2 / 2;
    mem$multiEnrichMap2 <- enrichEMpieUseSub2;
 
    #######################################################
@@ -1071,13 +1071,13 @@ multiEnrichMap <- function
       doPlot=FALSE,
       nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
       verbose=verbose);
-   V(gCnet)$nodeType <- "Gene";
-   V(gCnet)[seq_len(gCt)]$nodeType <- "Set";
+   igraph::V(gCnet)$nodeType <- "Gene";
+   igraph::V(gCnet)[seq_len(gCt)]$nodeType <- "Set";
    mem$multiCnetPlot <- gCnet;
 
    #######################################################
    ## Convert to coloredrectangle
-   V(gCnet)[seq_len(gCt)]$name <- toupper(V(gCnet)[seq_len(gCt)]$name);
+   igraph::V(gCnet)[seq_len(gCt)]$name <- toupper(igraph::V(gCnet)[seq_len(gCt)]$name);
    ## Enrichment IM colors
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
@@ -1529,9 +1529,9 @@ enrichMapJam <- function
    if (suppressPackageStartupMessages(!require(reshape2))) {
       stop("enrichMapJam() requires the reshape2 package is required for melt().");
    }
-   if (suppressPackageStartupMessages(!require(igraph))) {
-      stop("enrichMapJam() requires the igraph package.");
-   }
+   #if (suppressPackageStartupMessages(!require(igraph))) {
+   #   stop("enrichMapJam() requires the igraph package.");
+   #}
    if (suppressPackageStartupMessages(!require(DOSE))) {
       stop("enrichMapJam() requires the DOSE package.");
    }
@@ -1593,8 +1593,8 @@ enrichMapJam <- function
    } else if (n == 1) {
       g <- igraph::graph.empty(0, directed=FALSE);
       g <- igraph::add_vertices(g, nv=1);
-      V(g)$name <- y[, descriptionColname];
-      V(g)$color <- "red";
+      igraph::V(g)$name <- y[, descriptionColname];
+      igraph::V(g)$color <- "red";
    } else {
       pvalue <- jamba::nameVector(y$pvalue, y[[nodeLabel]]);
 
@@ -1660,7 +1660,10 @@ enrichMapJam <- function
             iMatchWhich <- which(!is.na(iMatch));
             if (length(iMatchWhich) > 0) {
                for (iCol1 in setdiff(colnames(msigdbGmtT@itemsetInfo), "Name")) {
-                  g <- set_vertex_attr(g, iCol1, V(g)[iMatchWhich], msigdbGmtT@itemsetInfo[iMatch[iMatchWhich],iCol1]);
+                  g <- igraph::set_vertex_attr(g,
+                     iCol1,
+                     igraph::V(g)[iMatchWhich],
+                     msigdbGmtT@itemsetInfo[iMatch[iMatchWhich],iCol1]);
                }
             }
          }
@@ -1675,7 +1678,7 @@ enrichMapJam <- function
       }
 
       ## Delete edges where overlap is below a threshold
-      g <- delete.edges(g, E(g)[E(g)$overlap < overlapThreshold]);
+      g <- igraph::delete.edges(g, igraph::E(g)[igraph::E(g)$overlap < overlapThreshold]);
 
       pvalue <- igraph::V(g)$pvalue;
 
@@ -1704,7 +1707,7 @@ enrichMapJam <- function
       igraph::V(g)$size <- node_size;
 
       if (length(nodeLabelFunc) > 0 && is.function(nodeLabelFunc)) {
-         igraph::V(g)$label <- sapply(V(g)$name, nodeLabelFunc);
+         igraph::V(g)$label <- sapply(igraph::V(g)$name, nodeLabelFunc);
       }
    }
    invisible(g);
@@ -1819,22 +1822,22 @@ subsetCnetIgraph <- function
    ##########################################
    ## Optionally subset for certain pathways
    if (length(includeSets) > 0) {
-      if (length(V(gCnet)$label) == 0) {
-         includeV <- which(V(gCnet)$nodeType %in% "Set" &
+      if (length(igraph::V(gCnet)$label) == 0) {
+         includeV <- which(igraph::V(gCnet)$nodeType %in% "Set" &
                (
-                  toupper(V(gCnet)$name) %in% toupper(includeSets)
+                  toupper(igraph::V(gCnet)$name) %in% toupper(includeSets)
                ));
       } else {
-         includeV <- which(V(gCnet)$nodeType %in% "Set" &
+         includeV <- which(igraph::V(gCnet)$nodeType %in% "Set" &
                (
-                  toupper(V(gCnet)$name) %in% toupper(includeSets) |
-                  toupper(V(gCnet)$label) %in% toupper(includeSets)
+                  toupper(igraph::V(gCnet)$name) %in% toupper(includeSets) |
+                  toupper(igraph::V(gCnet)$label) %in% toupper(includeSets)
                ));
       }
       includeV2 <- unique(unlist(lapply(includeV, function(v){
-         which(V(gCnet)$nodeType %in% "Gene" &
-               V(gCnet)$name %in%
-               names(neighbors(gCnet,
+         which(igraph::V(gCnet)$nodeType %in% "Gene" &
+               igraph::V(gCnet)$name %in%
+               names(igraph::neighbors(gCnet,
                   v=v,
                   mode="all")));
       })));
@@ -1842,7 +1845,7 @@ subsetCnetIgraph <- function
       if (verbose) {
          jamba::printDebug("subsetCnetIgraph(): ",
             "Filtered ",
-            jamba::formatInt(sum(V(gCnet)$nodeType %in% "Set")),
+            jamba::formatInt(sum(igraph::V(gCnet)$nodeType %in% "Set")),
             " Set nodes using ",
             jamba::formatInt(length(includeSets)),
             " includeSets down to ",
@@ -1850,7 +1853,7 @@ subsetCnetIgraph <- function
             " sets and ",
             jamba::formatInt(length(includeV2)),
             " genes in the Cnet igraph object.");
-         whichNodeSets <- which(V(gCnet)$nodeType %in% "Set");
+         whichNodeSets <- which(igraph::V(gCnet)$nodeType %in% "Set");
       }
       gCnet <- subgraph_jam(gCnet,
          includeVall);
@@ -1859,17 +1862,17 @@ subsetCnetIgraph <- function
    ##########################################
    ## Optionally subset for certain genes
    if (length(includeGenes) > 0) {
-      keepSetNodes <- which(V(gCnet)$nodeType %in% "Set");
-      if (length(V(gCnet)$label) == 0) {
+      keepSetNodes <- which(igraph::V(gCnet)$nodeType %in% "Set");
+      if (length(igraph::V(gCnet)$label) == 0) {
          keepGeneNodes <- which(
-            V(gCnet)$nodeType %in% "Gene" &
-               toupper(V(gCnet)$name) %in% toupper(includeGenes)
+            igraph::V(gCnet)$nodeType %in% "Gene" &
+               toupper(igraph::V(gCnet)$name) %in% toupper(includeGenes)
          );
       } else {
          keepGeneNodes <- which(
-            V(gCnet)$nodeType %in% "Gene" &
-               (toupper(V(gCnet)$name) %in% toupper(includeGenes) |
-                     toupper(V(gCnet)$label) %in% toupper(includeGenes))
+            igraph::V(gCnet)$nodeType %in% "Gene" &
+               (toupper(igraph::V(gCnet)$name) %in% toupper(includeGenes) |
+                     toupper(igraph::V(gCnet)$label) %in% toupper(includeGenes))
          );
       }
       keepNodes <- sort(unique(c(keepSetNodes, keepGeneNodes)));
@@ -1890,16 +1893,16 @@ subsetCnetIgraph <- function
    #####################################################
    ## Optionally subset by degree of Set and Gene nodes
    if (length(minSetDegree) > 0) {
-      dropSetNodes <- (V(gCnet)$nodeType %in% "Set" &
+      dropSetNodes <- (igraph::V(gCnet)$nodeType %in% "Set" &
             degree(gCnet) < minSetDegree);
    } else {
-      dropSetNodes <- rep(FALSE, vcount(gCnet));
+      dropSetNodes <- rep(FALSE, igraph::vcount(gCnet));
    }
    if (length(minGeneDegree) > 0) {
-      dropGeneNodes <- (V(gCnet)$nodeType %in% "Gene" &
+      dropGeneNodes <- (igraph::V(gCnet)$nodeType %in% "Gene" &
             degree(gCnet) < minGeneDegree);
    } else {
-      dropGeneNodes <- rep(FALSE, vcount(gCnet));
+      dropGeneNodes <- rep(FALSE, igraph::vcount(gCnet));
    }
    dropNodes <- (dropSetNodes | dropGeneNodes);
    if (any(dropNodes)) {
@@ -1949,16 +1952,16 @@ subsetCnetIgraph <- function
                spread_labels=spread_labels,
                ...);
             layout <- graph_attr(gCnet, "layout");
-            rownames(layout) <- V(gCnet)$name;
+            rownames(layout) <- igraph::V(gCnet)$name;
          } else if (is.function(layout)) {
             layout <- layout(gCnet);
          } else {
             layout <- layout[!dropNodes,,drop=FALSE];
          }
-         if (nrow(layout) != vcount(gCnet)) {
+         if (nrow(layout) != igraph::vcount(gCnet)) {
             stop("layout dimensions do not match the subset cnet igraph.");
          }
-         gCnet <- set_graph_attr(gCnet,
+         gCnet <- igraph::set_graph_attr(gCnet,
             "layout",
             layout);
       }
@@ -2146,15 +2149,15 @@ fixSetLabels <- function
    nodeType <- match.arg(nodeType);
    if (jamba::igrepHas("igraph", class(x))) {
       if ("any" %in% nodeType) {
-         which_nodes <- seq_len(vcount(x));
+         which_nodes <- seq_len(igraph::vcount(x));
       } else {
-         which_nodes <- which(V(x)$nodeType %in% nodeType);
+         which_nodes <- which(igraph::V(x)$nodeType %in% nodeType);
       }
       xPrep <- gsub("_", " ",
          gsub(removeGrep,
             "",
             ignore.case=TRUE,
-            V(x)$name[which_nodes]));
+            igraph::V(x)$name[which_nodes]));
    } else {
       which_nodes <- seq_along(x);
       xPrep <- gsub("_", " ",
@@ -2202,10 +2205,10 @@ fixSetLabels <- function
    }
    ## Update the proper data to return
    if (jamba::igrepHas("igraph", class(x))) {
-      if (!"label" %in% list.vertex.attributes(x)) {
-         V(x)$label <- V(x)$name;
+      if (!"label" %in% igraph::list.vertex.attributes(x)) {
+         igraph::V(x)$label <- igraph::V(x)$name;
       }
-      V(x)[which_nodes]$label <- xNew;
+      igraph::V(x)[which_nodes]$label <- xNew;
    } else {
       x <- xNew;
    }

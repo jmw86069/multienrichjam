@@ -51,6 +51,7 @@ Other jam utility functions:
 \code{\link{collapse_mem_clusters}()},
 \code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
+\code{\link{handle_igraph_param_list}()},
 \code{\link{heatmap_column_order}()},
 \code{\link{heatmap_row_order}()},
 \code{\link{isColorBlank}()},
