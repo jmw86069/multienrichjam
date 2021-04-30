@@ -2388,9 +2388,12 @@ subgraph_jam <- function
    return(graph);
 }
 
-#' Color igraph edges using node colors
+#' Color igraph edges using node colors (deprecated)
 #'
-#' Color igraph edges using node colors
+#' Color igraph edges using node colors (deprecated)
+#'
+#' Note: This function is deprecated in favor of
+#' `color_edges_by_nodes()`.
 #'
 #' This function uses the average color for the two nodes
 #' involved in each edge, and applies that as the new edge color.
@@ -2413,7 +2416,7 @@ subgraph_jam <- function
 #' @family jam igraph functions
 #'
 #' @export
-color_edges_by_nodes <- function
+color_edges_by_nodes_deprecated <- function
 (g,
  alpha=NULL,
  ...)
@@ -3371,6 +3374,15 @@ colors_from_list <- function
 #' This function colorizes edges by blending colors for the
 #' nodes involved, by calling `colorjam::blend_colors()`.
 #'
+#' The color for each node depends upon the node shape, so
+#' the color or colors used to render each node shape will
+#' be used for the edge. For example:
+#'
+#' * `shape="pie"` uses the average color from `V(g)$pie.color`
+#' * `shape="coloredrectangle"` uses the avereage color from
+#' `V(g)$coloredrect.color`
+#' * everything else uses `V(g)$color`
+#'
 #' @family jam igraph functions
 #'
 #' @return `igraph` object with edge color attribute updated to
@@ -3391,6 +3403,8 @@ colors_from_list <- function
 color_edges_by_nodes <- function
 (g,
  edge_alpha=NULL,
+ Crange=c(0, 200),
+ Lrange=c(0, 65),
  ...)
 {
    # confirm color is present
@@ -3410,13 +3424,42 @@ color_edges_by_nodes <- function
    edge_df <- data.frame(check.names=FALSE,
       stringsAsFactors=FALSE,
       igraph::as_edgelist(g));
-   edge_df$color1 <- igraph::V(g)$color[match(edge_df[,1], vname)];
-   edge_df$color2 <- igraph::V(g)$color[match(edge_df[,2], vname)];
+
+   node_colors_list <- ifelse(
+      igraph::V(g)$shape %in% "pie",
+      igraph::V(g)$pie.color,
+      ifelse(
+         igraph::V(g)$shape %in% "coloredrectangle",
+         igraph::V(g)$coloredrect.color,
+         igraph::V(g)$color))
+   node_colors <- colorjam::blend_colors(node_colors_list);
+   node_alphas <- sapply(node_colors_list, function(i){
+      mean(jamba::col2alpha(jamba::rmNA(naValue=0.01, i)))
+   })
+   if (any(node_alphas < 1)) {
+      newalpha <- (node_alphas < 1);
+      node_colors[newalpha] <- jamba::alpha2col(node_colors[newalpha],
+         alpha=node_alphas[newalpha]);
+   }
+
+   edge_df$color1 <- node_colors[match(edge_df[,1], vname)];
+   edge_df$color2 <- node_colors[match(edge_df[,2], vname)];
+
    color1_2 <- split(
       c(edge_df$color1, edge_df$color2),
       rep(seq_len(nrow(edge_df)), 2));
    blended1_2 <- colorjam::blend_colors(color1_2,
       ...);
+
+   # apply Crange and Lrange to restrict output chroma and luminance
+   if (max(Crange) < 200 || max(Lrange) < 100) {
+      blended1_2 <- jamba::applyCLrange(blended1_2,
+         Crange=Crange,
+         Lrange=Lrange,
+         CLmethod="floor");
+   }
+
+   # apply edge alpha transparency
    if (length(edge_alpha) > 0) {
       igraph::E(g)$color <- jamba::alpha2col(blended1_2,
          alpha=rep(edge_alpha,

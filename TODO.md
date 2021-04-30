@@ -4,12 +4,26 @@ This document describes plans for enhancements to the
 multienrichjam R package.
 
 
-## 10apr2021: implement edge bundling techniques
+## Smaller usability items
+
+* edge_bundling="connections" should also allow `render_groups=TRUE`
+to work, by returning the `"nodegroups"` required for that step.
+
+   * It should probably filter out singlet nodes by default, since
+   the typical use case is "nodeset-to-node" for Cnet plots.
+   * Main use case is with a Cnet plot, edge bundling by connected nodes
+   should allow drawing an optional border around each group of nodes.
+
+
+
+## COMPLETE: 10apr2021: implement edge bundling techniques
 
 Priority: high 
 
-* Cnet edge bundles - special case of nodeset-to-node edge bundling
-* Node group bundles - general case of nodeset-to-nodeset edge bundling
+Status: Implemented, early active testing of usability and functionality
+
+* "connections" - Cnet edge bundles - special case of nodeset-to-node edge bundling
+* "nodegroups": Node group bundles - general case of nodeset-to-nodeset edge bundling
 
 Useful to improve readability/aesthetics of collapsed Cnet plots,
 especially Cnet plots with many gene nodes where it is
@@ -17,7 +31,7 @@ difficult to tell which pathway clusters are connected
 to each gene.
 
 
-## 10apr2021: enhancements to `jam_igraph()`
+## 10apr2021: enhancements to `jam_igraph()` (must be done inside `jam_plot_igraph()`)
 
 * Consider silently returning the `igraph` object plotted
 where the vertex, edge, and graph attributes are updated
@@ -32,9 +46,11 @@ and `igraph::igraph_options()`
 
 
 
-## 10apr2021: implement edge bundling in `jam_igraph()`
+## 10apr2021: implement edge bundling in `jam_igraph()` and `jam_plot_igraph()`
 
 Priority: high
+
+Status: Implemented
 
 * This task involves making edge bundling accessible as a simple
 option during plotting, to prevent having to run 3 or 4 functions:

@@ -32,6 +32,7 @@ Other jam igraph functions:
 \code{\link{cnet2df}()},
 \code{\link{cnet2im}()},
 \code{\link{cnetplotJam}()},
+\code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
 \code{\link{edge_bundle_nodegroups}()},

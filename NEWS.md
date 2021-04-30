@@ -1,3 +1,21 @@
+# multienrichjam 0.0.45.900
+
+## changes to existing functions
+
+* `color_edges_by_nodes()` was implemented twice (smh) so the
+older function was renamed `color_edges_by_nodes_deprecated()`.
+The older function blended colors using a simpler approach
+with `avg_colors_by_list()` that took a very fast hue average;
+while the new function uses `colorjam::blend_colors()` that
+uses red-yellow-blue additive color blending model.
+Honestly the function `color_edges_by_nodes()` is not used much yet,
+but is likely to be used more with community detection,
+and Cnet/community edge bundling.
+The new `color_edges_by_nodes()` also applies alpha to the
+intermediate blended colors, to retain the relative weight
+of colors during the blending step.
+
+
 # multienrichjam 0.0.44.900
 
 The edge bundling update!

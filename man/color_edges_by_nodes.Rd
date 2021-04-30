@@ -2,11 +2,15 @@
 % Please edit documentation in R/jamenrich-igraph.r
 \name{color_edges_by_nodes}
 \alias{color_edges_by_nodes}
-\title{Color igraph edges using node colors}
+\title{Colorize igraph edges by nodes}
 \usage{
-color_edges_by_nodes(g, edge_alpha = NULL, ...)
-
-color_edges_by_nodes(g, edge_alpha = NULL, ...)
+color_edges_by_nodes(
+  g,
+  edge_alpha = NULL,
+  Crange = c(0, 200),
+  Lrange = c(0, 65),
+  ...
+)
 }
 \arguments{
 \item{g}{\code{igraph} object that contains vertex node attribute \code{"color"}
@@ -20,11 +24,6 @@ the alpha values are supplied by \code{colorjam::blend_colors()}
 which blends the two values.}
 
 \item{...}{additional arguments are passed to \code{colorjam::blend_colors()}.}
-
-\item{alpha}{\code{NULL} or numeric vector with value between 0 and 1,
-where 0 is transparent and 1 is non-transparent. When supplied,
-this value is passed to \code{jamba::alpha2col()} to apply alpha
-transparency to each edge color.}
 }
 \value{
 \code{igraph} object with edge color attribute updated to
@@ -32,24 +31,21 @@ represent the result of blending node colors, seen by
 \code{igraph::edge_attr(g)$color}.
 }
 \description{
-Color igraph edges using node colors
-
 Colorize igraph edges using node colors
 }
 \details{
-This function uses the average color for the two nodes
-involved in each edge, and applies that as the new edge color.
-
-The color for each node depends upon the node shape, where
-shape \code{"pie"} uses the average color from \code{"pie.color"}, and
-shape \code{"coloredrectangle"} uses the avereage color from
-\code{"coloredrect.color"}. Everything else uses \code{"color"}.
-
-This function relies upon \code{avg_colors_by_list()} to
-blend multiple colors together.
-
 This function colorizes edges by blending colors for the
 nodes involved, by calling \code{colorjam::blend_colors()}.
+
+The color for each node depends upon the node shape, so
+the color or colors used to render each node shape will
+be used for the edge. For example:
+\itemize{
+\item \code{shape="pie"} uses the average color from \code{V(g)$pie.color}
+\item \code{shape="coloredrectangle"} uses the avereage color from
+\code{V(g)$coloredrect.color}
+\item everything else uses \code{V(g)$color}
+}
 }
 \seealso{
 Other jam igraph functions: 
@@ -57,35 +53,7 @@ Other jam igraph functions:
 \code{\link{cnet2im}()},
 \code{\link{cnetplotJam}()},
 \code{\link{cnetplot_internalJam}()},
-\code{\link{drawEllipse}()},
-\code{\link{edge_bundle_nodegroups}()},
-\code{\link{enrichMapJam}()},
-\code{\link{fixSetLabels}()},
-\code{\link{get_bipartite_nodeset}()},
-\code{\link{igraph2pieGraph}()},
-\code{\link{jam_igraph}()},
-\code{\link{jam_plot_igraph}()},
-\code{\link{layout_with_qfrf}()},
-\code{\link{layout_with_qfr}()},
-\code{\link{memIM2cnet}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{rectifyPiegraph}()},
-\code{\link{relayout_with_qfr}()},
-\code{\link{removeIgraphBlanks}()},
-\code{\link{removeIgraphSinglets}()},
-\code{\link{reorderIgraphNodes}()},
-\code{\link{rotate_igraph_layout}()},
-\code{\link{spread_igraph_labels}()},
-\code{\link{subgraph_jam}()},
-\code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()},
-\code{\link{with_qfr}()}
-
-Other jam igraph functions: 
-\code{\link{cnet2df}()},
-\code{\link{cnet2im}()},
-\code{\link{cnetplotJam}()},
-\code{\link{cnetplot_internalJam}()},
+\code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{drawEllipse}()},
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
