@@ -44,8 +44,12 @@
 #'    all other sets are excluded.
 #' @param min_set_ct_each minimum number of genes required for each set,
 #'    required for at least one enrichment test.
-#' @param column_fontsize,row_fontsize arguments passed to
-#'    `ComplexHeatmap::Heatmap()` to size column and row labels.
+#' @param column_fontsize,row_fontsize `numeric`
+#'    passed as `fontsize` to `ComplexHeatmap::Heatmap()`
+#'    to define a specific fontsize for column and row labels. When
+#'    `NULL` the nrow/ncol of the heatmap are used to infer a reasonable
+#'    starting point fontsize, which can be adjusted with `column_cex`
+#'    and `row_cex`.
 #' @param row_method,column_method character string of the distance method
 #'    to use for row and column clustering. The clustering is performed
 #'    by `amap::hcluster()`.
@@ -90,6 +94,25 @@
 #'    NA or missing values. Typically this argument is only used
 #'    when `colorize_by_gene=TRUE`, where entries with no color are
 #'    recognized as `NA` by `ComplexHeatmap::Heatmap()`.
+#' @param rotate_heatmap `logical` indicating whether the entire heatmap
+#'    should be rotated so that pathway names are displayed as rows,
+#'    and genes as columns. Notes on how arguments are applied to rows
+#'    and columns:
+#'    * Column arguments applied to rows:
+#'    `column_split`, `column_title`, `cluster_columns`,
+#'    `column_fontsize`, `column_cex`
+#'    are applied to rows since they refer to pathway data;
+#'    * Row arguments applied to columns:
+#'    `row_split`, `row_title`, `cluster_rows`, `row_fontsize`, `row_cex`
+#'    are applied to columns since they refer to gene data;
+#'    * Arguments applied directly to columns:
+#'    `column_method`, `column_title_rot`
+#'    are applied directly to heatmap columns since they
+#'    refer to the output heatmap options.
+#'    * Arguments applied directly to rows:
+#'    `row_method`, `row_title_rot`
+#'    are applied directly to heatmap rows since they
+#'    refer to the output heatmap options.
 #' @param seed `numeric` value passed to `set.seed()` to allow
 #'    reproducible results, typically with clustering operations.
 #' @param verbose `logical` indicating whether to print verbose output.
@@ -128,6 +151,7 @@ mem_gene_path_heatmap <- function
  row_title_rot=90,
  colorize_by_gene=FALSE,
  na_col="white",
+ rotate_heatmap=FALSE,
  seed=123,
  verbose=FALSE,
  ...)
@@ -286,7 +310,7 @@ mem_gene_path_heatmap <- function
    }
 
    ## Automatic fontsize
-   if (length(column_fontsize) == 0) {
+   if (length(row_fontsize) == 0) {
       row_fontsize <- row_cex * 60/(nrow(memIM))^(1/2);
    }
    if (length(column_fontsize) == 0) {
@@ -378,24 +402,28 @@ mem_gene_path_heatmap <- function
       }
       geneIMu <- unique(mem$geneIM);
       geneIMu <- jamba::mixedSortDF(data.frame(rowSums(geneIMu), -geneIMu))[,-1,drop=FALSE]*-1;
-      geneIMu_names <- jamba::cPasteS(im2list(t(geneIMu)));
+      sep <- ",\n";
+      geneIMu_names <- jamba::cPasteS(im2list(t(geneIMu)),
+         sep=sep);
       colnames(geneIMu) <- mem$colorV[colnames(mem$geneIM)];
-      geneIMu_colors <- jamba::cPasteS(im2list(t(geneIMu)));
+      geneIMu_colors <- jamba::cPasteS(im2list(t(geneIMu)),
+         sep=sep);
       names(geneIMu_colors) <- geneIMu_names
       if (verbose) {
          for (i in seq_along(geneIMu_colors)) {
-            jamba::printDebug(nameVector(unlist(strsplit(geneIMu_colors[i],",")),
-               unlist(strsplit(geneIMu_names[i],","))),
+            jamba::printDebug(nameVector(unlist(strsplit(geneIMu_colors[i], sep)),
+               unlist(strsplit(geneIMu_names[i], sep))),
                indent="    ");
          }
       }
 
       ## blend using colorjam::blend_colors()
-      gene_colorsV <- colorjam::blend_colors(strsplit(geneIMu_colors, ","));
+      gene_colorsV <- colorjam::blend_colors(strsplit(geneIMu_colors, sep));
       names(gene_colorsV) <- geneIMu_names;
 
       ## apply these colors to gene rows
-      geneV <- jamba::cPasteS(im2list(t(mem$geneIM)));
+      geneV <- jamba::cPasteS(im2list(t(mem$geneIM)),
+         sep=sep);
       geneColors <- jamba::nameVector(gene_colorsV[geneV],
          names(geneV));
 
@@ -413,112 +441,167 @@ mem_gene_path_heatmap <- function
 
    ## Create the heatmap
    set.seed(seed);
-   hm <- tryCatch({
-      ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
+
+   # pathway annotation legend param
+   path_annotation_legend_param <- lapply(jamba::nameVectorN(col_iml4), function(i){
+      list(color_bar="discrete",
+         #at=c(0, 1),
+         title=paste0(i, "\n-log10P"),
+         border="black")
+   });
+   # gene annotation legend param
+   gene_annotation_legend_param <- lapply(col_iml1, function(i){
+      list(color_bar="discrete",
+         at=c(0, 1),
+         border="black")
+   });
+   # heatmap legend param
+   heatmap_legend_param <- list(
+      color_bar="discrete",
+      border="black",
+      at=sort(unique(as.vector(memIM[genes,sets])))
+   );
+
+   if (!rotate_heatmap) {
+      ##################################################
+      # default orientation, gene rows, pathway columns
+      top_annotation <- ComplexHeatmap::HeatmapAnnotation(
+         which="column",
          border=TRUE,
-         name=name,
-         na_col=na_col,
-         cluster_columns=cluster_columns,
-         cluster_rows=cluster_rows,
-         clustering_distance_columns=column_method,
-         clustering_distance_rows=row_method,
-         top_annotation=ComplexHeatmap::HeatmapAnnotation(
-            which="column",
-            border=TRUE,
-            #gp=grid::gpar(col="#00000011"),
-            annotation_legend_param=lapply(nameVectorN(col_iml4), function(i){
-               list(color_bar="discrete",
-                  #at=c(0, 1),
-                  title=paste0(i, "\n-log10P"),
-                  border="black")
-            }),
-            col=col_iml4,
-            df=-log10(mem$enrichIM[sets,,drop=FALSE]),
-            gap=grid::unit(0, "mm")
-         ),
-         col=col_hm,
-         left_annotation=ComplexHeatmap::rowAnnotation(
-            col=col_iml1,
-            border=TRUE,
-            annotation_legend_param=lapply(col_iml1, function(i){
-               list(color_bar="discrete",
-                  at=c(0, 1),
-                  border="black")
-            }),
-            #gp=grid::gpar(col="#00000011"), # per-cell border
-            df=mem$geneIM[genes,,drop=FALSE],
-            gap=grid::unit(0, "mm")
-         ),
-         row_names_gp=grid::gpar(fontsize=row_fontsize),
-         column_names_gp=grid::gpar(fontsize=column_fontsize),
-         column_names_rot=90,
-         column_title=column_title,
-         row_title=row_title,
-         heatmap_legend_param=list(
-            color_bar="discrete",
-            border="black",
-            at=sort(unique(as.vector(memIM[genes,sets])))
-         ),
-         row_title_rot=row_title_rot,
-         row_split=row_split,
-         column_split=column_split,
-         ...);
-   }, error=function(e){
-      # same as above but without ...
-      if (verbose) {
-         jamba::printDebug("mem_gene_pathway_heatmap(): ",
-            "Error in Heatmap(), calling without '...', error is shown below:");
-         print(e);
-      }
-      ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
+         annotation_legend_param=path_annotation_legend_param,
+         col=col_iml4,
+         df=-log10(mem$enrichIM[sets,,drop=FALSE]),
+         gap=grid::unit(0, "mm")
+      );
+      left_annotation <- ComplexHeatmap::rowAnnotation(
+         col=col_iml1,
          border=TRUE,
-         name=name,
-         na_col=na_col,
-         cluster_columns=cluster_columns,
-         cluster_rows=cluster_rows,
-         clustering_distance_columns=column_method,
-         clustering_distance_rows=row_method,
-         top_annotation=ComplexHeatmap::HeatmapAnnotation(
-            which="column",
+         annotation_legend_param=gene_annotation_legend_param,
+         #gp=grid::gpar(col="#00000011"), # per-cell border
+         df=mem$geneIM[genes,,drop=FALSE],
+         gap=grid::unit(0, "mm")
+      );
+
+      hm <- tryCatch({
+         ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
             border=TRUE,
-            #gp=grid::gpar(col="#00000011"),
-            annotation_legend_param=lapply(nameVectorN(col_iml4), function(i){
-               list(color_bar="discrete",
-                  #at=c(0, 1),
-                  title=paste0(i, "\n-log10P"),
-                  border="black")
-            }),
-            col=col_iml4,
-            df=-log10(mem$enrichIM[sets,,drop=FALSE]),
-            gap=grid::unit(0, "mm")
-         ),
-         col=col_hm,
-         left_annotation=ComplexHeatmap::rowAnnotation(
-            col=col_iml1,
+            name=name,
+            na_col=na_col,
+            cluster_columns=cluster_columns,
+            cluster_rows=cluster_rows,
+            clustering_distance_columns=column_method,
+            clustering_distance_rows=row_method,
+            top_annotation=top_annotation,
+            col=col_hm,
+            left_annotation=left_annotation,
+            row_names_gp=grid::gpar(fontsize=row_fontsize),
+            column_names_gp=grid::gpar(fontsize=column_fontsize),
+            column_names_rot=90,
+            column_title=column_title,
+            row_title=row_title,
+            heatmap_legend_param=heatmap_legend_param,
+            row_title_rot=row_title_rot,
+            row_split=row_split,
+            column_split=column_split,
+            ...);
+      }, error=function(e){
+         # same as above but without ...
+         if (verbose) {
+            jamba::printDebug("mem_gene_pathway_heatmap(): ",
+               "Error in Heatmap(), calling without '...', error is shown below:");
+            print(e);
+         }
+         ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
             border=TRUE,
-            annotation_legend_param=lapply(col_iml1, function(i){
-               list(color_bar="discrete",
-                  at=c(0, 1),
-                  border="black")
-            }),
-            #gp=grid::gpar(col="#00000011"), # per-cell border
-            df=mem$geneIM[genes,,drop=FALSE],
-            gap=grid::unit(0, "mm")
-         ),
-         row_names_gp=grid::gpar(fontsize=row_fontsize),
-         column_names_gp=grid::gpar(fontsize=column_fontsize),
-         column_names_rot=90,
-         column_title=column_title,
-         row_title=row_title,
-         heatmap_legend_param=list(
-            color_bar="discrete",
-            border="black",
-            at=sort(unique(as.vector(memIM[genes,sets])))
-         ),
-         row_title_rot=row_title_rot,
-         row_split=row_split,
-         column_split=column_split);
-   })
+            name=name,
+            na_col=na_col,
+            cluster_columns=cluster_columns,
+            cluster_rows=cluster_rows,
+            clustering_distance_columns=column_method,
+            clustering_distance_rows=row_method,
+            top_annotation=top_annotation,
+            col=col_hm,
+            left_annotation=left_annotation,
+            row_names_gp=grid::gpar(fontsize=row_fontsize),
+            column_names_gp=grid::gpar(fontsize=column_fontsize),
+            column_names_rot=90,
+            column_title=column_title,
+            row_title=row_title,
+            heatmap_legend_param=heatmap_legend_param,
+            row_title_rot=row_title_rot,
+            row_split=row_split,
+            column_split=column_split);
+      })
+   } else {
+      ########################################################################
+      # rotate heatmap 90 degrees so pathway names are rows, genes are columns
+      left_annotation <- ComplexHeatmap::rowAnnotation(
+         border=TRUE,
+         annotation_legend_param=path_annotation_legend_param,
+         col=col_iml4,
+         df=-log10(mem$enrichIM[sets,,drop=FALSE]),
+         gap=grid::unit(0, "mm")
+      );
+      top_annotation <- ComplexHeatmap::HeatmapAnnotation(
+         col=col_iml1,
+         border=TRUE,
+         annotation_legend_param=gene_annotation_legend_param,
+         #gp=grid::gpar(col="#00000011"), # per-cell border
+         df=mem$geneIM[genes,,drop=FALSE],
+         gap=grid::unit(0, "mm")
+      );
+      hm <- tryCatch({
+         ComplexHeatmap::Heatmap(t(memIM[genes,sets,drop=FALSE]),
+            border=TRUE,
+            name=name,
+            na_col=na_col,
+            cluster_rows=cluster_columns,
+            cluster_columns=cluster_rows,
+            clustering_distance_columns=column_method,
+            clustering_distance_rows=row_method,
+            top_annotation=top_annotation,
+            col=col_hm,
+            left_annotation=left_annotation,
+            row_names_gp=grid::gpar(fontsize=column_fontsize),
+            column_names_gp=grid::gpar(fontsize=row_fontsize),
+            column_names_rot=90,
+            row_title=column_title,
+            column_title=row_title,
+            heatmap_legend_param=heatmap_legend_param,
+            row_title_rot=row_title_rot,
+            column_split=row_split,
+            row_split=column_split,
+            ...);
+      }, error=function(e){
+         # same as above but without ...
+         if (verbose) {
+            jamba::printDebug("mem_gene_pathway_heatmap(): ",
+               "Error in Heatmap(), calling without '...', error is shown below:");
+            print(e);
+         }
+         ComplexHeatmap::Heatmap(t(memIM[genes,sets,drop=FALSE]),
+            border=TRUE,
+            name=name,
+            na_col=na_col,
+            cluster_rows=cluster_columns,
+            cluster_columns=cluster_rows,
+            clustering_distance_columns=column_method,
+            clustering_distance_rows=row_method,
+            top_annotation=top_annotation,
+            col=col_hm,
+            left_annotation=left_annotation,
+            row_names_gp=grid::gpar(fontsize=column_fontsize),
+            column_names_gp=grid::gpar(fontsize=row_fontsize),
+            column_names_rot=90,
+            row_title=column_title,
+            column_title=row_title,
+            heatmap_legend_param=heatmap_legend_param,
+            row_title_rot=row_title_rot,
+            column_split=row_split,
+            row_split=column_split);
+      })
+   }
+
    return(hm);
 }
 

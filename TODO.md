@@ -3,6 +3,13 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## 21jun2021
+
+* COMPLETE: Allow rotating gene-pathway incidence matrix when using
+`mem_gene_path_heatmap()`, so the pathway names are rows.
+* Add test data object `mem` to be convenient for function examples,
+and testthis test suite.
+
 
 ## Smaller usability items
 

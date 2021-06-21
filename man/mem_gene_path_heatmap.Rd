@@ -32,6 +32,7 @@ mem_gene_path_heatmap(
   row_title_rot = 90,
   colorize_by_gene = FALSE,
   na_col = "white",
+  rotate_heatmap = FALSE,
   seed = 123,
   verbose = FALSE,
   ...
@@ -57,8 +58,12 @@ all other sets are excluded.}
 \item{min_set_ct_each}{minimum number of genes required for each set,
 required for at least one enrichment test.}
 
-\item{column_fontsize, row_fontsize}{arguments passed to
-\code{ComplexHeatmap::Heatmap()} to size column and row labels.}
+\item{column_fontsize, row_fontsize}{\code{numeric}
+passed as \code{fontsize} to \code{ComplexHeatmap::Heatmap()}
+to define a specific fontsize for column and row labels. When
+\code{NULL} the nrow/ncol of the heatmap are used to infer a reasonable
+starting point fontsize, which can be adjusted with \code{column_cex}
+and \code{row_cex}.}
 
 \item{row_method, column_method}{character string of the distance method
 to use for row and column clustering. The clustering is performed
@@ -113,6 +118,28 @@ blended using \code{colorjam::blend_colors()}, using colors from
 NA or missing values. Typically this argument is only used
 when \code{colorize_by_gene=TRUE}, where entries with no color are
 recognized as \code{NA} by \code{ComplexHeatmap::Heatmap()}.}
+
+\item{rotate_heatmap}{\code{logical} indicating whether the entire heatmap
+should be rotated so that pathway names are displayed as rows,
+and genes as columns. Notes on how arguments are applied to rows
+and columns:
+\itemize{
+\item Column arguments applied to rows:
+\code{column_split}, \code{column_title}, \code{cluster_columns},
+\code{column_fontsize}, \code{column_cex}
+are applied to rows since they refer to pathway data;
+\item Row arguments applied to columns:
+\code{row_split}, \code{row_title}, \code{cluster_rows}, \code{row_fontsize}, \code{row_cex}
+are applied to columns since they refer to gene data;
+\item Arguments applied directly to columns:
+\code{column_method}, \code{column_title_rot}
+are applied directly to heatmap columns since they
+refer to the output heatmap options.
+\item Arguments applied directly to rows:
+\code{row_method}, \code{row_title_rot}
+are applied directly to heatmap rows since they
+refer to the output heatmap options.
+}}
 
 \item{seed}{\code{numeric} value passed to \code{set.seed()} to allow
 reproducible results, typically with clustering operations.}

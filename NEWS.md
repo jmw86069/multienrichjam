@@ -1,3 +1,15 @@
+# multienrichjam 0.0.46.900
+
+## changes to existing functions
+
+* `mem_gene_path_heatmap()` new argument `rotate_heatmap=TRUE`
+will rotate the heatmap layout so pathway names are displayed
+as rows, and genes are displayed as columns.
+
+I still need example data to use for function document examples,
+to show utility of rotating the gene-pathway heatmap.
+
+
 # multienrichjam 0.0.45.900
 
 ## changes to existing functions
