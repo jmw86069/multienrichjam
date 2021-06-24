@@ -76,17 +76,13 @@ nudge_igraph_node <- function
          pmin_narm <- function(...){pmin(..., na.rm=TRUE)};
          idx <- Reduce("pmin_narm", matchlist);
       } else if (use_grep) {
-         idx1 <- lapply(jamba::provigrep(nodes, igraph::V(g)$name, returnType="list"), function(i){
-            match(i, igraph::V(g)$name)
-         })
-         idx2 <- lapply(jamba::provigrep(nodes, igraph::V(g)$label, returnType="list"), function(i){
-            match(i, igraph::V(g)$label)
-         })
-         idxs <- lapply(seq_along(idx1), function(i){
+         idx1 <- jamba::provigrep(nodes, igraph::V(g)$name, returnType="list", value=FALSE)
+         idx2 <- jamba::provigrep(nodes, igraph::V(g)$label, returnType="list", value=FALSE)
+         idx <- lapply(seq_along(idx1), function(i){
             sort(unique(c(idx1[[i]], idx2[[i]])));
-         })
-         x <- rep(x, lengths(idxs));
-         y <- rep(y, lengths(idxs));
+         });
+         x <- rep(x, lengths(idx));
+         y <- rep(y, lengths(idx));
          idx <- unlist(idx);
       }
    }

@@ -2,6 +2,7 @@
 % Please edit documentation in R/jamenrich-base.r
 \name{topEnrichBySource}
 \alias{topEnrichBySource}
+\alias{topEnrichListBySource}
 \title{Subset enrichList for top enrichment results by source}
 \usage{
 topEnrichBySource(
@@ -9,13 +10,38 @@ topEnrichBySource(
   n = 15,
   min_count = 1,
   p_cutoff = 1,
-  sourceColnames = c("Category", "Source"),
-  sortColname = c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
-  countColname = c("gene_count", "count"),
-  pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val"),
+  sourceColnames = c("gs_cat", "gs_subcat"),
+  sortColname = c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count",
+    "-geneHits"),
+  countColname = c("gene_count", "count", "geneHits"),
+  pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
   newColname = "EnrichGroup",
-  curateFrom = c("CP:.*"),
-  curateTo = c("CP"),
+  curateFrom = NULL,
+  curateTo = NULL,
+  sourceSubset = NULL,
+  sourceSep = "_",
+  subsetSets = NULL,
+  descriptionColname = c("Description", "Name", "Pathway"),
+  nameColname = c("ID", "Name"),
+  descriptionGrep = NULL,
+  nameGrep = NULL,
+  verbose = FALSE,
+  ...
+)
+
+topEnrichListBySource(
+  enrichList,
+  n = 15,
+  min_count = 1,
+  p_cutoff = 1,
+  sourceColnames = c("gs_cat", "gs_subcat"),
+  sortColname = c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count",
+    "-geneHits"),
+  countColname = c("gene_count", "count", "geneHits"),
+  pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
+  newColname = "EnrichGroup",
+  curateFrom = NULL,
+  curateTo = NULL,
   sourceSubset = NULL,
   sourceSep = "_",
   subsetSets = NULL,
@@ -103,12 +129,17 @@ the \code{nameGrep} argument searches only \code{nameColname}.}
 \item{verbose}{logical indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
+
+\item{enrichList}{\code{list} of \code{enrichDF} entries, each passed
+to \code{topEnrichBySource()}.}
 }
 \value{
 \code{data.frame} subset up to \code{topEnrichN} rows, after
 applying optional \code{min_count} and \code{p_cutoff} filters.
 }
 \description{
+Subset enrichList for top enrichment results by source
+
 Subset enrichList for top enrichment results by source
 }
 \details{
@@ -148,10 +179,21 @@ top \code{topEnrichN} entries.
 
 Finally, this function is useful to subset enrichment results
 by name, using \code{descriptionGrep} or \code{nameGrep}.
+
+\code{topEnrichListBySource()} extends \code{topEnrichBySource()} by applying
+filters to each \code{enrichList} entry, then keeping pathways
+across all \code{enrichList} that match the filter criteria in any
+one \code{enrichList}. It is most useful in the context of
+\code{multiEnrichMap()} where a pathway must meet all criteria
+in at least one enrichment, and that pathway should then
+be included for all enrichments for the purpose of
+comparative analysis.
 }
 \seealso{
 Other jam enrichment functions: 
-\code{\link{multiEnrichMap}()},
-\code{\link{topEnrichListBySource}()}
+\code{\link{multiEnrichMap}()}
+
+Other jam enrichment functions: 
+\code{\link{multiEnrichMap}()}
 }
 \concept{jam enrichment functions}

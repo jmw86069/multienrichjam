@@ -466,17 +466,18 @@ multiEnrichMap <- function
  nEM=500,
  min_count=1,
  topEnrichN=20,
- topEnrichSources=c("Category", "Source"),
- topEnrichCurateFrom=c("CP:.*"),
- topEnrichCurateTo=c("CP"),
- topEnrichSourceSubset=c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
+ topEnrichSources=c("gs_cat", "gs_subat"),
+ topEnrichCurateFrom=NULL,
+ topEnrichCurateTo=NULL,
+ topEnrichSourceSubset=NULL,
  topEnrichDescriptionGrep=NULL,
  topEnrichNameGrep=NULL,
  keyColname=c("ID", "Name", "pathway", "itemsetID"),
  nameColname=c("ID", "Name", "pathway", "itemsetID"),
  geneColname=c("geneID", "geneNames", "Genes"),
  countColname=c("gene_count", "count"),
- pvalueColname=c("padjust", "p.adjust", "adjp", "pvalue", "p.value", "pval", "FDR"),
+ pvalueColname=c("padjust", "p.adjust", "adjp", "qvalue", "q.value",
+    "pvalue", "p.value", "pval", "FDR"),
  descriptionColname=c("Description", "Name", "Pathway"),
  descriptionCurateFrom=c("^Genes annotated by the GO term "),
  descriptionCurateTo=c(""),
@@ -568,7 +569,7 @@ multiEnrichMap <- function
    ## Define some default colnames
    #nameColname <- "Name";
    #geneColname <- "geneNames";
-   iDF1 <- head(as.data.frame(enrichList[[1]]), 30);
+   iDF1 <- head(enrichList[[1]]@result, 30);
    keyColname <- find_colname(keyColname, iDF1);
    geneColname <- find_colname(geneColname, iDF1);
    pvalueColname <- find_colname(pvalueColname, iDF1);
@@ -1135,16 +1136,43 @@ multiEnrichMap <- function
 #'
 #' Convert enrichList to IM incidence matrix
 #'
+#' This function takes a `list` of `enrichResult` objects
+#' and creates an incidence matrix using the value defined
+#' by `valueColname`.
+#'
+#' TODO: Port to use `venndir::list2im_value()`, which itself
+#' may be moved to its own proper R package for set and list
+#' manipulation, without the dependencies incurred by `venndir`.
+#'
 #' @family jam conversion functions
+#'
+#' @param enrichList `list` of `enrichResult` objects
+#' @param GmtT not implemented here, experimental gene set object
+#'    format that uses `arules::transactions` class, an efficient
+#'    object with robust access functions in `arules`.
+#' @param addAnnotations `logical` not implemented, this argument
+#'    is paired with `GmtT`.
+#' @param keyColname `character` used to match colnames, referring
+#'    to the unique identifier. Values in this column will become
+#'    the column headers in the resulting incidence matrix.
+#' @param valueColname `character` used to match colnames to determine
+#'    the value to place in each cell of the incidence matrix.
+#' @param emptyValue `numeric` value used to fill empty cells in the
+#'    incidence matrix. When `NULL` and `valueColname` contains
+#'    "gene", "count", "num", "hit" then `emptyValue=0`, otherwise
+#'    `emptyValue=1` is used with the assumption that `valueColname`
+#'    refers to P-values.
+#' @param verbose `logical` indicating whether to print verbose output.
 #'
 #' @export
 enrichList2IM <- function
 (enrichList,
  GmtT=NULL,
  addAnnotations=TRUE,
- keyColname="Name",
- valueColname="P-value",
- emptyValue=1,
+ keyColname=c("ID", "Name", "pathway", "itemsetID"),
+ #keyColname="Name",
+ valueColname=c("qvalue", "q.value", "pvalue", "p.value"),
+ emptyValue=NULL,
  verbose=FALSE,
  ...)
 {
@@ -1160,16 +1188,19 @@ enrichList2IM <- function
    ## enrichSubIMP <- enrichList2IM(enrichSubL, msigdbGmtTv50mouseV2, keyColname="Description", valueColname="geneHits", emptyValue=0);
    ##
    enrichIMP <- as.data.frame(list2imSigned(lapply(enrichList, function(iDF){
-      if (!jamba::igrepHas("data.frame", class(iDF))) {
-         iDF <- as.data.frame(iDF);
+      if (jamba::igrepHas("enrichResult", class(iDF))) {
+         iDF <- iDF@result;
       }
-      ## If "GeneRatio" then parse out the geneCount value
+      keyColname <- find_colname(keyColname, iDF);
+      valueColname <- find_colname(valueColname, iDF);
       if (verbose) {
          jamba::printDebug("enrichList2IM(): ",
             "keyColname:", keyColname);
          jamba::printDebug("enrichList2IM(): ",
             "valueColname:", valueColname);
       }
+
+      ## If "GeneRatio" then parse out the geneCount value
       if (jamba::igrepHas("GeneRatio", valueColname)) {
          iDF[,valueColname] <- gsub("[/].*$", "", iDF[,valueColname]);
          if (length(grep("^[0-9]*$", iDF[,valueColname])) == nrow(iDF)) {
@@ -1184,6 +1215,14 @@ enrichList2IM <- function
       jamba::nameVector(iDF[,c(valueColname,keyColname),drop=FALSE]);
    })));
    ## Empty values should be 1 instead of 0
+   valueColname <- find_colname(valueColname, enrichList[[1]]);
+   if (length(emptyValue) == 0) {
+      if (jamba::igrepHas("gene|count|hits|num", valueColname)) {
+         emptyValue <- 0;
+      } else {
+         emptyValue <- 1;
+      }
+   }
    if (emptyValue != 0) {
       enrichIMP[is.na(enrichIMP) | enrichIMP == 0] <- emptyValue;
    }
@@ -2330,13 +2369,13 @@ topEnrichBySource <- function
  n=15,
  min_count=1,
  p_cutoff=1,
- sourceColnames=c("Category","Source"),
- sortColname=c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
- countColname=c("gene_count", "count"),
- pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val"),
+ sourceColnames=c("gs_cat", "gs_subcat"),
+ sortColname=c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count", "-geneHits"),
+ countColname=c("gene_count", "count", "geneHits"),
+ pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
  newColname="EnrichGroup",
- curateFrom=c("CP:.*"),
- curateTo=c("CP"),
+ curateFrom=NULL,
+ curateTo=NULL,
  sourceSubset=NULL,
  sourceSep="_",
  subsetSets=NULL,
@@ -2386,19 +2425,32 @@ topEnrichBySource <- function
    ##
 
    ## First convert enrichResult class to data.frame if needed
+   enrichR <- NULL;
    if (jamba::igrepHas("enrichResult", class(enrichDF))) {
-      enrichDF <- enrichDF@result;
-      if (!"Name" %in% colnames(enrichDF)) {
-         enrichDF[,"Name"] <- enrichDF[,"ID"];
+      if (length(rownames(enrichDF@result)) == 0) {
+         rownames(enrichDF@result) <- paste0("row",
+            jamba::padInteger(seq_len(nrow(enrichDF@result))));
+      } else {
+         rownames(enrichDF@result) <- jamba::makeNames(rownames(enrichDF@result));
       }
+      nameColname <- find_colname(nameColname, enrichDF@result);
+      if (!"Name" %in% nameColname) {
+         enrichDF@result[,"Name"] <- enrichDF@result[[nameColname]];
+      }
+      enrichR <- enrichDF;
+      enrichDF <- enrichDF@result;
    }
 
    ## Validate colnames
-   sourceColnames <- find_colname(sourceColnames, enrichDF);
+   sourceColnames <- find_colname(sourceColnames, enrichDF, max=Inf);
    descriptionColname <- find_colname(descriptionColname, enrichDF);
    nameColname <- find_colname(nameColname, enrichDF);
    countColname <- find_colname(countColname, enrichDF);
    pvalueColname <- find_colname(pvalueColname, enrichDF);
+   if (!"Name" %in% nameColname) {
+      enrichDF[,"Name"] <- enrichDF[[nameColname]];
+   }
+
    if (verbose) {
       jamba::printDebug("topEnrichBySource(): ",
          "sourceColnames:", sourceColnames);
@@ -2505,10 +2557,23 @@ topEnrichBySource <- function
          stop("topEnrichBySource() failed due to sourceSubset mismatch.");
       }
       sourceSubset <- intersect(sourceSubset, iDFsplit);
-      enrichDF <- subset(enrichDF, iDFsplit %in% sourceSubset);
-      iDFsplit <- iDFsplit[iDFsplit %in% sourceSubset];
+      ikeep <- (iDFsplit %in% sourceSubset);
+      if (verbose) {
+         jamba::printDebug("topEnrichBySource(): ",
+            "sourceSubset: ", sourceSubset);
+         jamba::printDebug("topEnrichBySource(): ",
+            "table(ikeep): ");
+         print(table(ikeep));
+      }
+      enrichDF <- subset(enrichDF, ikeep);
+      iDFsplit <- iDFsplit[ikeep];
    }
    iDFsplitL <- split(enrichDF, iDFsplit);
+   if (verbose) {
+      jamba::printDebug("topEnrichBySource(): ",
+         "sdim(iDFsplitL): ");
+      print(jamba::sdim(iDFsplitL));
+   }
 
    iDFtopL <- lapply(jamba::nameVectorN(iDFsplitL), function(iSubset){
       iDFsub <- iDFsplitL[[iSubset]];
@@ -2549,9 +2614,29 @@ topEnrichBySource <- function
       iDFtop <- head(iDFsub, n);
       iDFtop;
    });
-   data.frame(jamba::rbindList(iDFtopL),
+   if (verbose) {
+      jamba::printDebug("topEnrichBySource(): ",
+         "sdim(iDFtopL): ");
+      print(jamba::sdim(iDFtopL));
+      print(head(iDFtopL[[1]], 5));
+   }
+   iDFnew <- data.frame(jamba::rbindList(unname(iDFtopL)),
       check.names=FALSE,
       stringsAsFactors=FALSE);
+   if (verbose) {
+      jamba::printDebug("topEnrichBySource(): ",
+         "dim(iDFnew): ");
+      print(dim(iDFnew));
+      print(head(iDFnew, 5));
+   }
+   if (length(enrichR) > 0) {
+      #ematch <- match(rownames(iDFnew), rownames(enrichR@result));
+      ematch <- match(iDFnew$Name, rownames(enrichR@result));
+      enrichR@result <- enrichR@result[ematch,,drop=FALSE];
+      enrichR@geneSets <- enrichR@geneSets[ematch];
+      return(enrichR)
+   }
+   iDFnew;
 }
 
 
@@ -2559,24 +2644,21 @@ topEnrichBySource <- function
 #'
 #' Subset enrichList for top enrichment results by source
 #'
-#' This function extends `topEnrichBySource()` by applying
-#' consistent filters to each `enrichList` entry. The purpose
-#' of this function is to generate an overall set of pathways
-#' to return from any one or more enrichment results. Then
-#' apply that filter consistently across all enrichment results.
+#' `topEnrichListBySource()` extends `topEnrichBySource()` by applying
+#' filters to each `enrichList` entry, then keeping pathways
+#' across all `enrichList` that match the filter criteria in any
+#' one `enrichList`. It is most useful in the context of
+#' `multiEnrichMap()` where a pathway must meet all criteria
+#' in at least one enrichment, and that pathway should then
+#' be included for all enrichments for the purpose of
+#' comparative analysis.
 #'
-#' For example, if `"Pathway A"` is the top `n` enriched
-#' pathway in `enrichList[[1]]`, then `"Pathway A"` will be included
-#' for every entry in `enrichList`, even when `"Pathway A"` is
-#' not significant in `enrichList[[2]]`. The purpose is to allow
-#' comparison of enrichment results when a pathway meets the
-#' filter criteria in any one entry in `enrichList`.
+#' @rdname topEnrichBySource
 #'
 #' @family jam enrichment functions
 #'
 #' @param enrichList `list` of `enrichDF` entries, each passed
 #'    to `topEnrichBySource()`.
-#' @inheritParams topEnrichBySource
 #'
 #' @export
 topEnrichListBySource <- function
@@ -2584,13 +2666,13 @@ topEnrichListBySource <- function
  n=15,
  min_count=1,
  p_cutoff=1,
- sourceColnames=c("Category","Source"),
- sortColname=c("P-value", "pvalue", "padjust", "-GeneRatio", "-geneHits"),
- countColname=c("gene_count", "count"),
- pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val"),
+ sourceColnames=c("gs_cat", "gs_subcat"),
+ sortColname=c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count", "-geneHits"),
+ countColname=c("gene_count", "count", "geneHits"),
+ pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
  newColname="EnrichGroup",
- curateFrom=c("CP:.*"),
- curateTo=c("CP"),
+ curateFrom=NULL,
+ curateTo=NULL,
  sourceSubset=NULL,
  sourceSep="_",
  subsetSets=NULL,
@@ -2633,9 +2715,19 @@ topEnrichListBySource <- function
          descriptionGrep=descriptionGrep,
          subsetSets=subsetSets,
          nameGrep=nameGrep,
-         verbose=FALSE,
+         verbose=verbose,
          ...);
-      iDFsub$Name;
+      if ("enrichResult" %in% class(iDFsub)) {
+         eName <- iDFsub@result$Name;
+      } else {
+         eName <- iDFsub$Name;
+      }
+      if (verbose) {
+         jamba::printDebug("topEnrichListBySource(): ",
+            "   length(enrichNames):",
+            jamba::formatInt(length(eName)));
+      }
+      eName;
    });
    enrichNames <- unique(unlist(enrichLsub));
    if (verbose) {
@@ -2653,11 +2745,18 @@ topEnrichListBySource <- function
       }
       iDF <- enrichList[[iName]];
       if (jamba::igrepHas("enrichResult", class(iDF))) {
-         iDF <- iDF@result;
+         nameColnameUse <- find_colname(nameColname, iDF@result);
+         ematch <- jamba::rmNA(match(enrichNames,
+            iDF@result[[nameColnameUse]]));
+         iDF@result <- iDF@result[ematch,,drop=FALSE];
+         iDF@geneSets <- iDF@geneSets[ematch];
+      } else {
+         nameColnameUse <- find_colname(nameColname, iDF);
+         ematch <- match(enrichNames,
+            iDF[[nameColnameUse]]);
+         iDF <- iDF[ematch,,drop=FALSE];
       }
-      nameColnameUse <- find_colname(nameColname, iDF);
-      iDFsub <- subset(iDF, iDF[[nameColnameUse]] %in% enrichNames);
-      iDFsub;
+      iDF;
    });
    enrichLsubL;
 }

@@ -1,3 +1,30 @@
+# multienrichjam 0.0.47.900
+
+
+## bug fixes
+
+* `topEnrichBySource()` was not correctly handling multiple
+`sourceColnames` values, instead was only using the first value.
+This bug has been corrected.
+
+## changes to existing functions
+
+* * `topEnrichBySource()` and `topEnrichListBySource()` now
+return `enrichResult` when supplied with `enrichResult`,
+instead of coercing to `data.frame` which would then need
+to be converted back to `enrichResult`.
+* `topEnrichBySource()` and `topEnrichListBySource()` argument
+default `sourceColnames` was changed to reflect
+usage with R package `msigdbr` for MSigDB gene set data,
+specifically `sourceColnames=c("gs_cat", "gs_subcat")`.
+Similarly, default values were removed from `curateFrom`
+and `curateTo`, since these defaults imposed a specific
+outcome.
+* `multiEnrichMap()` default values for `topEnrichCurate*` arguments
+were changed to NULL; default argument values changed to
+`topEnrichSources=c("gs_cat", "gs_subat")`.
+
+
 # multienrichjam 0.0.46.900
 
 ## changes to existing functions

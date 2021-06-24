@@ -3,6 +3,19 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## 24jun2021
+
+* In `multiEnrichMap()` remove default `topEnrichSources`
+and `topEnrichSourceSubset` which throw errors when not
+using MSigDB data.
+* `topEnrichBySource()` and `topEnrichListBySource()` should
+be able to accept `enrichResult` as input, and return `enrichResult`
+and not `data.frame` which is understandably lossy.
+I need to understand the proper method for creating a subset
+of an `enrichList` object, including its internal data.
+* Streamline the `topEnrichListBySource()` workflow.
+
+
 ## 21jun2021
 
 * COMPLETE: Allow rotating gene-pathway incidence matrix when using

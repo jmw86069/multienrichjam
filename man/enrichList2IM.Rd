@@ -8,15 +8,49 @@ enrichList2IM(
   enrichList,
   GmtT = NULL,
   addAnnotations = TRUE,
-  keyColname = "Name",
-  valueColname = "P-value",
-  emptyValue = 1,
+  keyColname = c("ID", "Name", "pathway", "itemsetID"),
+  valueColname = c("qvalue", "q.value", "pvalue", "p.value"),
+  emptyValue = NULL,
   verbose = FALSE,
   ...
 )
 }
+\arguments{
+\item{enrichList}{\code{list} of \code{enrichResult} objects}
+
+\item{GmtT}{not implemented here, experimental gene set object
+format that uses \code{arules::transactions} class, an efficient
+object with robust access functions in \code{arules}.}
+
+\item{addAnnotations}{\code{logical} not implemented, this argument
+is paired with \code{GmtT}.}
+
+\item{keyColname}{\code{character} used to match colnames, referring
+to the unique identifier. Values in this column will become
+the column headers in the resulting incidence matrix.}
+
+\item{valueColname}{\code{character} used to match colnames to determine
+the value to place in each cell of the incidence matrix.}
+
+\item{emptyValue}{\code{numeric} value used to fill empty cells in the
+incidence matrix. When \code{NULL} and \code{valueColname} contains
+"gene", "count", "num", "hit" then \code{emptyValue=0}, otherwise
+\code{emptyValue=1} is used with the assumption that \code{valueColname}
+refers to P-values.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
+}
 \description{
 Convert enrichList to IM incidence matrix
+}
+\details{
+This function takes a \code{list} of \code{enrichResult} objects
+and creates an incidence matrix using the value defined
+by \code{valueColname}.
+
+TODO: Port to use \code{venndir::list2im_value()}, which itself
+may be moved to its own proper R package for set and list
+manipulation, without the dependencies incurred by \code{venndir}.
 }
 \seealso{
 Other jam conversion functions: 

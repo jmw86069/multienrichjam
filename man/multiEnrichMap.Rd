@@ -21,17 +21,18 @@ multiEnrichMap(
   nEM = 500,
   min_count = 1,
   topEnrichN = 20,
-  topEnrichSources = c("Category", "Source"),
-  topEnrichCurateFrom = c("CP:.*"),
-  topEnrichCurateTo = c("CP"),
-  topEnrichSourceSubset = c("C2_CP", "C5_BP", "C5_CC", "C5_MF"),
+  topEnrichSources = c("gs_cat", "gs_subat"),
+  topEnrichCurateFrom = NULL,
+  topEnrichCurateTo = NULL,
+  topEnrichSourceSubset = NULL,
   topEnrichDescriptionGrep = NULL,
   topEnrichNameGrep = NULL,
   keyColname = c("ID", "Name", "pathway", "itemsetID"),
   nameColname = c("ID", "Name", "pathway", "itemsetID"),
   geneColname = c("geneID", "geneNames", "Genes"),
   countColname = c("gene_count", "count"),
-  pvalueColname = c("padjust", "p.adjust", "adjp", "pvalue", "p.value", "pval", "FDR"),
+  pvalueColname = c("padjust", "p.adjust", "adjp", "qvalue", "q.value", "pvalue",
+    "p.value", "pval", "FDR"),
   descriptionColname = c("Description", "Name", "Pathway"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
   descriptionCurateTo = c(""),
@@ -196,7 +197,6 @@ argument \code{colorV}, otherwise colors are assigned using
 }
 \seealso{
 Other jam enrichment functions: 
-\code{\link{topEnrichBySource}()},
-\code{\link{topEnrichListBySource}()}
+\code{\link{topEnrichBySource}()}
 }
 \concept{jam enrichment functions}
