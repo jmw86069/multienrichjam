@@ -115,6 +115,9 @@
 #'    refer to the output heatmap options.
 #' @param seed `numeric` value passed to `set.seed()` to allow
 #'    reproducible results, typically with clustering operations.
+#' @param colramp `character` name of color, color gradient, or a
+#'    vector of colors, anything compatible with input to
+#'    `jamba::getColorRamp()`.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization. However, if `...` causes an error, the same
@@ -152,6 +155,7 @@ mem_gene_path_heatmap <- function
  colorize_by_gene=FALSE,
  na_col="white",
  rotate_heatmap=FALSE,
+ colramp="Reds",
  seed=123,
  verbose=FALSE,
  ...)
@@ -196,24 +200,6 @@ mem_gene_path_heatmap <- function
    }
    memIM <- memIM[,met_criteria,drop=FALSE];
 
-   ## apply min_set_ct_each to each enrichment test
-   if (1 == 2 && length(min_set_ct_each) > 0) {
-      memIMsetct_each <- Reduce("pmax",
-         lapply(colnames(mem$geneIM), function(icol){
-            colSums(mem$geneIM[rownames(memIM),icol] * memIM);
-         }));
-      if (any(memIMsetct_each < min_set_ct_each)) {
-         if (verbose) {
-            jamba::printDebug("mem_gene_path_heatmap(): ",
-               "Filtered ",
-               sum(memIMsetct_each < min_set_ct_each),
-               " sets by min_set_ct_each:",
-               min_set_ct_each);
-         }
-         sets <- colnames(memIM)[memIMsetct_each >= min_set_ct_each];
-         memIM <- memIM[,sets,drop=FALSE];
-      }
-   }
    ## apply min_set_ct to each enrichment test
    memIMsetct <- colSums(memIM > 0);
    if (any(memIMsetct < min_set_ct)) {
@@ -279,9 +265,6 @@ mem_gene_path_heatmap <- function
             row_title <- NULL;
          }
       } else {
-         if (length(row_title) == 0) {
-            row_title <- LETTERS;
-         }
          if (length(row_title) > 1) {
             row_title <- jamba::makeNames(
                rep(row_title,
@@ -344,7 +327,7 @@ mem_gene_path_heatmap <- function
    });
    ## Cluster columns and rows
    if (length(cluster_columns) == 0 ||
-         (length(cluster_columns) == 1 && is.logical(cluster_colors) && cluster_columns)) {
+         (length(cluster_columns) == 1 && is.logical(cluster_columns) && cluster_columns)) {
       ## Assemble the P-value matrix with gene incidence matrix
       ## and cluster altogether, which has the benefit/goal of
       ## accentuating similar enrichment profiles which also have
@@ -354,7 +337,7 @@ mem_gene_path_heatmap <- function
       }
       enrich_weight <- round(enrich_im_weight * 10);
       im_weight <- 10 - enrich_weight;
-      min_weight <- min(c(enrich_weight, im_weight));
+      min_weight <- max(c(1, min(c(enrich_weight, im_weight))));
       enrich_weight <- enrich_weight / min_weight;
       im_weight <- im_weight / min_weight;
       column_matrix <- cbind(
@@ -377,15 +360,20 @@ mem_gene_path_heatmap <- function
       if (!length(gene_im_weight) == 1 || any(gene_im_weight > 1)) {
          gene_im_weight <- 0.5;
       }
-      gene_weight <- round(gene_im_weight * 10);
+      gene_weight <- round(gene_im_weight * 100)/10;
       im_weight <- 10 - gene_weight;
-      min_weight <- min(c(gene_weight, im_weight));
+      min_weight <- max(c(1, min(c(gene_weight, im_weight))));
       gene_weight <- gene_weight / min_weight;
       im_weight <- im_weight / min_weight;
-      row_matrix <- cbind(
-         (mem$geneIM[genes,,drop=FALSE]) * gene_weight,
-         (mem$memIM[genes,sets,drop=FALSE]) * im_weight
-      );
+      if (im_weight == 0) {
+         row_matrix <- (mem$geneIM[genes,,drop=FALSE]) * gene_weight;
+      } else if (gene_weight == 0) {
+         row_matrix <- (mem$memIM[genes,sets,drop=FALSE]) * im_weight;
+      } else {
+         row_matrix <- cbind(
+            (mem$geneIM[genes,,drop=FALSE]) * gene_weight,
+            (mem$memIM[genes,sets,drop=FALSE]) * im_weight)
+      }
       set.seed(seed);
       cluster_rows <- amap::hcluster(
          link="ward",
@@ -402,7 +390,7 @@ mem_gene_path_heatmap <- function
       }
       geneIMu <- unique(mem$geneIM);
       geneIMu <- jamba::mixedSortDF(data.frame(rowSums(geneIMu), -geneIMu))[,-1,drop=FALSE]*-1;
-      sep <- ",\n";
+      sep <- ",\n  ";
       geneIMu_names <- jamba::cPasteS(im2list(t(geneIMu)),
          sep=sep);
       colnames(geneIMu) <- mem$colorV[colnames(mem$geneIM)];
@@ -431,12 +419,25 @@ mem_gene_path_heatmap <- function
       memIM_note <- apply(memIM, 2, function(i){
          ifelse(i == 0, "", geneV[rownames(memIM)]);
       });
-      memIM <- memIM_note;
-      col_hm <- gene_colorsV;
+      memIM_levels <- c("", geneIMu_names);
+      gene_colorsV_idx <- c("white", gene_colorsV);
+      col_hm <- circlize::colorRamp2(
+         breaks=seq(from=0, to=length(gene_colorsV)),
+         colors=gene_colorsV_idx);
+      col_hm_at <- rev(seq_along(gene_colorsV));
+      col_hm_labels <- rev(tail(memIM_levels, -1));
+      memIM_idx <- as.numeric(factor(memIM_note, levels=memIM_levels)) - 1;
+      memIM <- matrix(0,
+         ncol=ncol(memIM),
+         nrow=nrow(memIM),
+         dimnames=dimnames(memIM));
+      memIM[] <- memIM_idx;
    } else {
-      col_hm <- jamba::getColorRamp("Reds",
+      col_hm <- jamba::getColorRamp(colramp,
          lens=5,
          trimRamp=c(0,4));
+      col_hm_at <- sort(unique(as.vector(memIM[genes,sets])));
+      col_hm_labels <- col_hm_at;
    }
 
    ## Create the heatmap
@@ -459,7 +460,8 @@ mem_gene_path_heatmap <- function
    heatmap_legend_param <- list(
       color_bar="discrete",
       border="black",
-      at=sort(unique(as.vector(memIM[genes,sets])))
+      at=col_hm_at,
+      labels=col_hm_labels
    );
 
    if (!rotate_heatmap) {

@@ -33,6 +33,7 @@ mem_gene_path_heatmap(
   colorize_by_gene = FALSE,
   na_col = "white",
   rotate_heatmap = FALSE,
+  colramp = "Reds",
   seed = 123,
   verbose = FALSE,
   ...
@@ -140,6 +141,10 @@ refer to the output heatmap options.
 are applied directly to heatmap rows since they
 refer to the output heatmap options.
 }}
+
+\item{colramp}{\code{character} name of color, color gradient, or a
+vector of colors, anything compatible with input to
+\code{jamba::getColorRamp()}.}
 
 \item{seed}{\code{numeric} value passed to \code{set.seed()} to allow
 reproducible results, typically with clustering operations.}

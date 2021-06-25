@@ -1,5 +1,26 @@
-# multienrichjam 0.0.47.900
+# multienrichjam 0.0.48.900
 
+## bug fixes
+
+* `mem_gene_path_heatmap()` was updated to handle edge cases:
+
+   * `gene_im_weight` 0 or 1; `enrich_im_weight` 0 or 1
+   * user-supplied `cluster_rows` or `cluster_columns` with `colorize_by_gene`
+   * The `colorize_by_gene` logic was changed to convert to an integer
+   matrix that refers to colors and labels by factor levels, which helps
+   for user-defined clustering methods, also helps labeling the color
+   legend.
+   * new argument `colramp` for user-defined color gradient.
+   * `row_title` is no longer assigned when user-defined argument is `NULL`.
+   This workaround helps the edge case with `gene_im_weight=1` where
+   the `row_split` is forced to have a limited number of values regardless
+   what `row_split` integer value is sent, thus causing `row_title`
+   mismatch in length.
+   * Fixed egregious type in second part of an `if` statement, only
+   called when user supplies a custom cluster function.
+   
+
+# multienrichjam 0.0.47.900
 
 ## bug fixes
 
