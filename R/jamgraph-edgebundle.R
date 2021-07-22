@@ -151,6 +151,17 @@ get_bipartite_nodeset <- function
 
 #' Bundle edges in a bipartite graph
 #'
+#' Bundle edges in a bipartite graph
+#'
+#' This function performs edge bundling in bipartite network graphs,
+#' which are expected to contain two classes of nodes. In general
+#' this situation lends itself well to bundling edges by shared
+#' connections, where a subset of nodes of one class all bind to
+#' the same set of nodes in the other class. These nodes are
+#' typically co-located in the network layout, which works well
+#' with this style of edge bundling.
+#'
+#' @family jam igraph functions
 #'
 #' @export
 edge_bundle_bipartite <- function

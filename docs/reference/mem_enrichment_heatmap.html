@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -134,15 +134,18 @@
 
     <pre class="usage"><span class='fu'>mem_enrichment_heatmap</span><span class='op'>(</span>
   <span class='va'>mem</span>,
-  p_cutoff <span class='op'>=</span> <span class='fl'>0.05</span>,
+  style <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"heatmap"</span>, <span class='st'>"dotplot"</span><span class='op'>)</span>,
+  p_cutoff <span class='op'>=</span> <span class='va'>mem</span><span class='op'>$</span><span class='va'>p_cutoff</span>,
   p_floor <span class='op'>=</span> <span class='fl'>1e-06</span>,
+  point_size_factor <span class='op'>=</span> <span class='fl'>10</span>,
+  point_size_max <span class='op'>=</span> <span class='fl'>5</span>,
   row_method <span class='op'>=</span> <span class='st'>"euclidean"</span>,
   name <span class='op'>=</span> <span class='st'>"-log10P"</span>,
   row_dend_reorder <span class='op'>=</span> <span class='cn'>TRUE</span>,
   row_dend_width <span class='op'>=</span> <span class='fu'>grid</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>30</span>, <span class='st'>"mm"</span><span class='op'>)</span>,
-  row_fontsize <span class='op'>=</span> <span class='fl'>8</span>,
+  row_fontsize <span class='op'>=</span> <span class='cn'>NULL</span>,
   row_cex <span class='op'>=</span> <span class='fl'>1</span>,
-  column_fontsize <span class='op'>=</span> <span class='fl'>12</span>,
+  column_fontsize <span class='op'>=</span> <span class='cn'>NULL</span>,
   column_cex <span class='op'>=</span> <span class='fl'>1</span>,
   cluster_columns <span class='op'>=</span> <span class='cn'>FALSE</span>,
   sets <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -151,6 +154,9 @@
   lens <span class='op'>=</span> <span class='fl'>3</span>,
   cexCellnote <span class='op'>=</span> <span class='fl'>0.7</span>,
   column_title <span class='op'>=</span> <span class='cn'>NULL</span>,
+  row_names_max_width <span class='op'>=</span> <span class='fu'>grid</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>12</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  column_names_max_height <span class='op'>=</span> <span class='fu'>grid</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>12</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  heatmap_legend_param <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -163,17 +169,39 @@
 the object is expected to contain <code>enrichIM</code>.</p></td>
     </tr>
     <tr>
+      <th>style</th>
+      <td><p><code>character</code> string indicating the style of heatmap:
+<code>"heatmap"</code> produces a regular heatmap, shaded by <code><a href='https://rdrr.io/r/base/Log.html'>log10(Pvalue)</a></code>;
+<code>"dotplot"</code> produces a dotplot, where the dot size is proportional
+to the number of genes. See function description for details on
+how to include the point size legend beside the heatmap.
+The main benefit of using "dotplot" style is that it also indicates
+the relative number of genes involved in the enrichment.</p></td>
+    </tr>
+    <tr>
       <th>p_cutoff</th>
-      <td><p>numeric value of the enrichment P-value cutoff,
-above which P-values are not colored, and are therefore white.
-The enrichment P-values are displayed as an annotated heatmap
-at the top of the main heatmap. Any cell that has a color meets
-at least the minimum P-value threshold.</p></td>
+      <td><p><code>numeric</code> value of the enrichment P-value cutoff,
+by default this value is obtained from <code>mem$p_cutoff</code> to be
+consistent with the original <code><a href='multiEnrichMap.html'>multiEnrichMap()</a></code> analysis.
+P-values above <code>p_cutoff</code> are not colored, and are therefore white.
+This behavior is intended to indicate pathways with P-value above
+this threshold did not meet the threshold, instead of
+pathways with similar P-values displaying with similar color.</p></td>
     </tr>
     <tr>
       <th>p_floor</th>
-      <td><p>numeric minimum P-value used for the color gradient.
-P-values below this floor are colored with the maximum color gradient.</p></td>
+      <td><p><code>numeric</code> minimum P-value used for the color gradient.
+P-values below this floor are colored with the maximum color gradient.
+This value is intended to be used in cases where one enrichment
+P-value is very low (e.g. 1e-36) to prevent all other P-values from
+being colored pale red-white and not be noticeable.</p></td>
+    </tr>
+    <tr>
+      <th>point_size_factor</th>
+      <td><p><code>numeric</code> used to adjust the legend point size,
+since the heatmap point size is dependent upon the number of rows,
+the legend may require some manual adjustment to make sure the
+legend matches the heatmap.</p></td>
     </tr>
     <tr>
       <th>row_method</th>
@@ -239,6 +267,10 @@ inside each heatmap cell.</p></td>
 above the heatmap.</p></td>
     </tr>
     <tr>
+      <th>row_names_max_width, column_names_max_height, heatmap_legend_param</th>
+      <td><p>arguments passed to <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code>.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>additional arguments are passed to <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code>
 for customization.</p></td>
@@ -252,6 +284,16 @@ intended to visualize the enrichment P-values from multiple
 enrichment results. The P-value threshold is used to colorize
 every cell whose P-value meets the threshold, while all other
 cells are therefore white.</p>
+<p>The <code>style</code> argument controls whether a heatmap or dotplot is
+created. When <code>style="dotplot"</code> the cells are colored as usual
+but are drawn as circles sized proportional to the number of
+genes involved in enrichment. Because <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code>
+is used for this step, a separate point legend is returned
+as an attribute of the heatmap object.</p>
+<p>To draw the dotplot heatmap including the point legend,
+use this form:<div class="R"></p><pre><span class='fu'>ComplexHeatmap</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html'>draw</a></span><span class='op'>(</span><span class='va'>hm</span>,
+   annotation_legend_list<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>hm</span>, <span class='st'>"annotation_legend_list"</span><span class='op'>)</span><span class='op'>)</span>
+</pre><p></div></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other jam plot functions: 

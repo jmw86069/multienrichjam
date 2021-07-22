@@ -55,6 +55,7 @@ Other jam igraph functions:
 \code{\link{cnetplot_internalJam}()},
 \code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{drawEllipse}()},
+\code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},

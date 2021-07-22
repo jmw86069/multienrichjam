@@ -9,3 +9,45 @@ edge_bundle_bipartite(g, type = "nodeType", ...)
 \description{
 Bundle edges in a bipartite graph
 }
+\details{
+This function performs edge bundling in bipartite network graphs,
+which are expected to contain two classes of nodes. In general
+this situation lends itself well to bundling edges by shared
+connections, where a subset of nodes of one class all bind to
+the same set of nodes in the other class. These nodes are
+typically co-located in the network layout, which works well
+with this style of edge bundling.
+}
+\seealso{
+Other jam igraph functions: 
+\code{\link{cnet2df}()},
+\code{\link{cnet2im}()},
+\code{\link{cnetplotJam}()},
+\code{\link{cnetplot_internalJam}()},
+\code{\link{color_edges_by_nodes_deprecated}()},
+\code{\link{color_edges_by_nodes}()},
+\code{\link{drawEllipse}()},
+\code{\link{edge_bundle_nodegroups}()},
+\code{\link{enrichMapJam}()},
+\code{\link{fixSetLabels}()},
+\code{\link{get_bipartite_nodeset}()},
+\code{\link{igraph2pieGraph}()},
+\code{\link{jam_igraph}()},
+\code{\link{jam_plot_igraph}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{layout_with_qfr}()},
+\code{\link{memIM2cnet}()},
+\code{\link{mem_multienrichplot}()},
+\code{\link{rectifyPiegraph}()},
+\code{\link{relayout_with_qfr}()},
+\code{\link{removeIgraphBlanks}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{rotate_igraph_layout}()},
+\code{\link{spread_igraph_labels}()},
+\code{\link{subgraph_jam}()},
+\code{\link{subsetCnetIgraph}()},
+\code{\link{subset_igraph_components}()},
+\code{\link{with_qfr}()}
+}
+\concept{jam igraph functions}

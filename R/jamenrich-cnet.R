@@ -577,11 +577,11 @@ apply_nodeset_spacing <- function
  ...)
 {
    # get node layout
-   layout_xy <- graph_attr(cnet, "layout")
+   layout_xy <- igraph::graph_attr(cnet, "layout")
    if (length(layout_xy) == 0) {
       stop("apply_nodeset_spacing() requires layout stored in graph_attr(cnet, 'layout')");
    }
-   rownames(layout_xy) <- V(cnet)$name;
+   rownames(layout_xy) <- igraph::V(cnet)$name;
 
    # get nodesets
    cnet_nodesets <- get_cnet_nodeset(cnet)
@@ -597,7 +597,7 @@ apply_nodeset_spacing <- function
       i1 <- dist(use_xy / max_xy * 100)
       i2 <- as.matrix(i1);
       diag(i2) <- NA;
-      median(colMins(i2, na.rm=TRUE))
+      median(matrixStats::colMins(i2, na.rm=TRUE))
    })
 
    # determine nodesets to expand

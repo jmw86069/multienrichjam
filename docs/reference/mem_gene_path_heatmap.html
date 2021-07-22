@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -158,8 +158,11 @@
   column_title <span class='op'>=</span> <span class='va'>LETTERS</span>,
   row_title <span class='op'>=</span> <span class='va'>letters</span>,
   row_title_rot <span class='op'>=</span> <span class='fl'>90</span>,
-  colorize_by_gene <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  colorize_by_gene <span class='op'>=</span> <span class='cn'>TRUE</span>,
   na_col <span class='op'>=</span> <span class='st'>"white"</span>,
+  rotate_heatmap <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  colramp <span class='op'>=</span> <span class='st'>"Reds"</span>,
+  column_names_max_height <span class='op'>=</span> <span class='fu'>grid</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>12</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
   seed <span class='op'>=</span> <span class='fl'>123</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
@@ -201,8 +204,12 @@ required for at least one enrichment test.</p></td>
     </tr>
     <tr>
       <th>column_fontsize, row_fontsize</th>
-      <td><p>arguments passed to
-<code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code> to size column and row labels.</p></td>
+      <td><p><code>numeric</code>
+passed as <code>fontsize</code> to <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code>
+to define a specific fontsize for column and row labels. When
+<code>NULL</code> the nrow/ncol of the heatmap are used to infer a reasonable
+starting point fontsize, which can be adjusted with <code>column_cex</code>
+and <code>row_cex</code>.</p></td>
     </tr>
     <tr>
       <th>row_method, column_method</th>
@@ -277,6 +284,35 @@ blended using <code><a href='https://rdrr.io/pkg/colorjam/man/blend_colors.html'
 NA or missing values. Typically this argument is only used
 when <code>colorize_by_gene=TRUE</code>, where entries with no color are
 recognized as <code>NA</code> by <code><a href='https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html'>ComplexHeatmap::Heatmap()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>rotate_heatmap</th>
+      <td><p><code>logical</code> indicating whether the entire heatmap
+should be rotated so that pathway names are displayed as rows,
+and genes as columns. Notes on how arguments are applied to rows
+and columns:</p><ul>
+<li><p>Column arguments applied to rows:
+<code>column_split</code>, <code>column_title</code>, <code>cluster_columns</code>,
+<code>column_fontsize</code>, <code>column_cex</code>
+are applied to rows since they refer to pathway data;</p></li>
+<li><p>Row arguments applied to columns:
+<code>row_split</code>, <code>row_title</code>, <code>cluster_rows</code>, <code>row_fontsize</code>, <code>row_cex</code>
+are applied to columns since they refer to gene data;</p></li>
+<li><p>Arguments applied directly to columns:
+<code>column_method</code>, <code>column_title_rot</code>
+are applied directly to heatmap columns since they
+refer to the output heatmap options.</p></li>
+<li><p>Arguments applied directly to rows:
+<code>row_method</code>, <code>row_title_rot</code>
+are applied directly to heatmap rows since they
+refer to the output heatmap options.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>colramp</th>
+      <td><p><code>character</code> name of color, color gradient, or a
+vector of colors, anything compatible with input to
+<code><a href='https://rdrr.io/pkg/jamba/man/getColorRamp.html'>jamba::getColorRamp()</a></code>.</p></td>
     </tr>
     <tr>
       <th>seed</th>

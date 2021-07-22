@@ -70,23 +70,199 @@ nodes and edges by a common numeric scalar value.}
 \item{label_dist_factor}{numeric value multiplied by \code{V(x)$label.dist}
 to adjust the relative distance of all nodes labels from the node center
 by a common numeric scalar value.}
+
+\item{use_shadowText}{\code{logical} indicating whether to use
+\code{jamba::shadowText()} instead of \code{graphics::text()}, in order
+to render text labels with a subtle shadow-like outline around
+each label. This change improves legibility of labels at
+the expense of slightly longer plot rendering time.}
+
+\item{edge_bundling}{\code{character} string or \code{function}, where:
+\itemize{
+\item \code{"none"} will perform no edge bundling
+\item \code{"connections"} will perform graph edge bundling by
+shared connections by calling \code{edge_bundle_bipartite()} then
+\code{edge_bundle_nodegroups()}
+\item \code{"nodegroups"} will perform graph edge bundling
+using \code{nodegroups} by calling \code{edge_bundle_bipartite()}
+\item \code{function} will call a custom edge bundling function using
+the \code{igraph} object \code{x} and the igraph parameters \code{param}
+as input. This output is currently untested, and is intended
+to enable alternative edge bundling functions which may exist
+outside this package. The custom function should be able
+to use the node layout coordinates in \code{graph_attr(x, "layout")},
+and render edges between nodes.
+}}
+
+\item{nodegroups}{\code{list} object as output by \code{edge_bundle_bipartite()}
+where each list element is a \code{character} vector of vertex node
+names present in \code{igraph::V(x)$name}. If no \code{"name"} vertex node
+attribute exists, then integer index values are used as names.
+Note that all vertex nodes must be represented in \code{nodegroup}
+in order for the corresponding edges to be plotted.}
+
+\item{render_nodes}{\code{logical} indicating whether to
+render vertex nodes, or edges, respectively. Sometimes it can
+be useful to call this function for other byproduct outputs,
+for example, \code{jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)}
+will create a new plot device with appropriate axis ranges,
+and can be used to render edge bundling results for example.}
+
+\item{render_edges}{\code{logical} indicating whether to
+render vertex nodes, or edges, respectively. Sometimes it can
+be useful to call this function for other byproduct outputs,
+for example, \code{jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)}
+will create a new plot device with appropriate axis ranges,
+and can be used to render edge bundling results for example.}
+
+\item{render_nodelabels}{\code{logical} indicating whether to draw node
+labels, which is typically the last operation in the plot sequence.
+Note that node labels can be rendered without also rendering
+the nodes or edges.}
+
+\item{render_groups}{\code{logical} indicating whether to render groups
+when \code{mark.groups} is supplied. Groups are rendered with a
+shaded polygon and border.}
+
+\item{vectorized_node_shapes}{\code{logical} indicating whether to plot
+vertex node shapes using vectorized operations. It is substantially
+faster, however the one drawback is that nodes are plotted in
+order of their shape, which affects the positioning of nodes
+when there are node overlaps. This tradeoff is relatively minor,
+and it is recommended either to reposition nodes to reduce or
+prevent overlaps, or adjust node sizes to reduce overlaps.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
+
+\item{debug}{\code{logical} or \code{character} vector of attributes for
+which debug output will be plotted onscreen.}
 }
 \description{
 Jam wrapper to plot igraph
 }
 \details{
-This function is a lightweight wrapper around \code{igraph::plot.igraph()}
-intended to handle \code{rescale=FALSE} properly, which is not done
-in the former function (as of January 2020). The desired outcome
-is for the \code{xlim} and \code{ylim} defaults to be scaled according to the
-\code{igraph} layout. Similarly, the \code{vertex.size} and \code{vertex.label.dist}
-parameters should also be scaled proportionally.
+This function is a drop-in replacement of \code{igraph::plot.igraph()},
+intended to provide substantially faster vectorized plotting,
+to render bundled edges when requested, and
+to handle \code{rescale=FALSE} without requiring further adjustments.
 
-You can use argument \code{label_factor_l=list(nodeType=c(Gene=0.01, Set=1))}
-to hide labels for Gene nodes, and display labels for Set nodes.
-Note that due to a quirk in \code{igraph}, setting \code{label.cex=0}
-will revert the font to default size, and will not hide the
-label.
+It also provides some convenient methods to adjust node
+size, label font size, and label distance from node center,
+based upon node attributes.
+\subsection{vectorized plots}{
+
+This function calls \code{jam_plot_igraph()} as a replacement for
+\code{igraph::plot.igraph()}, and that function implements vectorized
+plot features when \code{vectorized_node_shapes=TRUE} by default:
+\enumerate{
+\item When there are multiple different vertex \code{"shape"} attributes,
+this function renders nodes vectorized, one shape at a time.
+In this scenario, the original \code{igraph::plot.igraph()} draws
+each individual vertex,
+which is substantially slower (minutes compared to 1-2 seconds)
+for large \code{igraph} objects.
+\item When there are multiple font families, labels are rendered in
+groups by font family, in order to comply with limitations
+in \code{graphics::text()}. This situation is fairly rare, however
+the speed improvement is substantial, again roughly minutes down
+to 1-2 seconds. The \code{igraph::plot.igraph()} renders each node label
+individually when there are multiple font families.
+}
+}
+
+\subsection{rescale=FALSE}{
+
+The default \code{igraph::plot.igraph()} uses \code{rescale=TRUE}, which
+can distort the layout coordinates to fit within a fixed
+x- and y-axis range \code{c(-1, 1)}. When using \code{rescale=FALSE} the
+\code{xlim} and \code{ylim} values are not adjusted to the actual coordinate
+range. The desired effect from this function \code{jam_igraph()} is
+to apply \code{aspect=1} (\code{asp=1}) which fixes the aspect ratio so
+the coordinates represent visual Euclidean distance between nodes,
+and to define \code{xlim} and \code{ylim} to accomodate the full layout.
+This function also adjusts node \code{vertex.size} and \code{vertex.label.dist}
+proportionally.
+}
+
+\subsection{edge bundling}{
+
+When \code{edge_bundling} is something other than \code{edge_bundling="none"},
+edge connections between nodes are rendered using a specific
+function by drawing curved splines for each bundle of edges.
+The approach in \code{igraph::plot.igraph()} only draws
+straight edges between nodes. The recommended method is
+\code{edge_bundling="connections"} which will bundle edges among nodes
+that share identical connections.
+}
+
+\subsection{Adjust node size, label size, label distance}{
+
+The following arguments apply scaling to all nodes or edges:
+\itemize{
+\item \code{node_factor} - \code{numeric} multiplied by node size
+\item \code{edge_factor} - \code{numeric} multiplied by edge size
+\item \code{label_factor} - \code{numeric} multiplied by label font size
+\item \code{label_dist_factor} - \code{numeric} multiplied by label distance from
+node center
+}
+
+The following arguments apply scale factor based upon node attribute:
+\itemize{
+\item \code{node_factor_l} - \code{list} of named vectors applied to node size
+\item \code{label_factor_l} - \code{list} of named vectors applied to label font size
+\item \code{label_dist_factor_l} - \code{list} of named vectors applied to label
+distance from node center
+}
+
+The \code{factor_l} technique is as follows:\if{html}{\out{<div class="R">}}\preformatted{node_factor_l = list(node_attr_name = c(
+   attr_value1 = factor1,
+   attr_value2 = factor2))
+}\if{html}{\out{</div>}}
+
+A specific example:\if{html}{\out{<div class="R">}}\preformatted{node_factor_l = list(nodeType = c(
+   Gene=1.5,
+   Set=2))
+}\if{html}{\out{</div>}}
+
+In this case, nodes with attribute
+\code{V(g)$nodeType == "Gene"} will use factor \code{1.5}
+Nodes with attribute
+\code{V(g)$nodeType == "Set"} will use factor \code{2}
+All other nodes will not be adjusted.
+}
+
+\subsection{Other features}{
+
+When \code{use_shadowText=TRUE} node labels call \code{jamba::shadowText()}
+which draws a small partly transparent outline around labels, making
+them more legible when they overlap colored nodes. This step
+effectively draws each label \code{n} times, which can slightly slow
+the rendering of the overall figure.
+
+When \code{pie_to_jampie=TRUE}, any nodes with \code{shape="pie"} are
+changed to \code{shape="jampie"} for the purpose of rendering pie
+shapes in vectorized fashion, instead of being drawn for each
+node separately. This change is a substantial improvement in
+rendering time.
+
+Default colors for marked node groups \code{mark.col} and \code{mark.border}
+when not defined upfront, will call \code{colorjam::rainbowJam()}
+and not \verb{grDevices::rainbow(). The }colorjam::rainbowJam()\verb{produces more visually distinct categorical colors. This behavior can be controlled by supplying a}character\verb{vector with specific colors for}mark.col\code{and}mark.border\verb{. Note that the border should match the colors, or it can be set to }"grey45"`
+for a generally visible border.
+
+Optional argument \code{nodegroups} can be supplied, which is a \code{list}
+of vectors, where each vector represents a group of nodes. The
+\code{nodegroups} can be used with \code{edge_bundling="nodegroups"} to
+define custom edge bundling.
+
+Finally, individual plot components can be individually disabled:
+\itemize{
+\item \code{render_nodes=FALSE}
+\item \code{render_edges=FALSE}
+\item \code{render_groups=FALSE}
+\item \code{render_nodelabels=FALSE}
+}
+}
 }
 \examples{
 ## example showing how to use the list form
@@ -166,6 +342,7 @@ Other jam igraph functions:
 \code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
+\code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},

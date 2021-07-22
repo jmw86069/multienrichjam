@@ -6,7 +6,6 @@
 \usage{
 enrichDF2enrichResult(
   enrichDF = NULL,
-  msigdbGmtT = NULL,
   pvalueCutoff = 1,
   pAdjustMethod = "none",
   keyColname = c("itemsetID", "ID", "Name", "Pathway"),
@@ -17,16 +16,14 @@ enrichDF2enrichResult(
   geneDelim = "[,/ ]+",
   pvalueColname = c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
   descriptionColname = c("Description", "Name", "Pathway", "ID"),
+  msigdbGmtT = NULL,
   verbose = FALSE,
   ...
 )
 }
 \arguments{
-\item{enrichDF}{data.frame representing gene set enrichment
+\item{enrichDF}{\code{data.frame} representing gene set enrichment
 results.}
-
-\item{msigdbGmtT}{optional gmtT object, a representation of
-\code{arules::transactions-class}.}
 
 \item{pvalueCutoff}{numeric value range 0 to 1, to define the
 P-value threshold for enrichment results to be considered
@@ -63,7 +60,12 @@ values.}
 \item{pvalueColname}{character value of the \code{colname(enrichDF)}
 containing enrichment P-values to use in downstream processing.}
 
+\item{msigdbGmtT}{optional gmtT object, a representation of
+\code{arules::transactions-class}. (Not currently implemented.)}
+
 \item{verbose}{logical indicating whether to print verbose output.}
+
+\item{...}{additional arguments are ignored.}
 }
 \description{
 Convert data.frame to enrichResult

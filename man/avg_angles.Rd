@@ -19,6 +19,7 @@ Other jam utility functions:
 \code{\link{apply_color_cap}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{collapse_mem_clusters}()},
+\code{\link{deconcat_df2}()},
 \code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},

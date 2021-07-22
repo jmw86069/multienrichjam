@@ -4,7 +4,7 @@ output:
   rmarkdown::html_vignette:
     df_print: kable
 vignette: >
-  %\VignetteIndexEntry{Analysis of Ingenuity IPA enrichment data}
+  %\VignetteIndexEntry{How to import and use Ingenuity IPA enrichment data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,8 +23,8 @@ library(colorjam);
 suppressPackageStartupMessages(library(ComplexHeatmap));
 options("stringsAsFactors"=FALSE, "warn"=-1);
 knitr::opts_chunk$set(
-   fig.height=8,
-   fig.width=7,
+   fig.height=10,
+   fig.width=10,
    fig.align="center"
 )
 ragg_png = function(..., res = 192) {
@@ -136,7 +136,7 @@ head(as.data.frame(er_canonical[[1]]));
 Now given a list of `data.frame` results, we can
 run `multiEnrichMap()`:
 
-```{r, mem_canonical, fig.height=8, fig.width=7}
+```{r, mem_canonical, fig.height=9, fig.width=10}
 mem_canonical <- multiEnrichMap(er_canonical,
    enrichBaseline=1,
    cutoffRowMinP=0.05,
@@ -180,9 +180,12 @@ The `mem_plot_folio()` function creates the following plots by default:
 
     * The number of plots is the number of heatmap pathway_clusters.
 
-```{r, mem_folio, fig.height=7, fig.width=7}
+```{r, mem_folio, fig.height=10, fig.width=10}
 mem_canonical_plots <- mem_plot_folio(mem_canonical,
    pathway_column_split=4,
+   node_factor=5,
+   use_shadowText=TRUE,
+   label_factor=1.5,
    main="Canonical Pathways");
 ```
 
@@ -239,34 +242,45 @@ only a visible label. Each pathway_cluster contains all the
 pathways in the cluster.
 
 
+### Directly create each individual plot
+
+The plots in `mem_plot_folio()` are also available as individual
+functions.
+
+In general, it is most convenient to call `mem_plot_folio()` and
+use the output `list` to create custom plots, however the functions
+are also available to be called independently.
+
 #### Plot the MultiEnrichMap network
 
-For example, we can view the "Multi Enrichment Map" itself.
+We can view the "Multi Enrichment Map" itself
+with `mem_multienrichplot()`.
+
 This network connects pathways when they meet a Jaccard
 overlap coefficient threshold based upon the shared genes
-between the pathways. The cutoff is defined in 
-`multiEnrichMap()` with argument `overlapThreshold=0.1`.
+between the pathways. The default overlap is stored
+by `multiEnrichMap()` in the output object `mem_canonical`.
 
-The `mem_canonical` object contains the igraph objects
-as `"multiEnrichMap"` for circular nodes, and `"multiEnrichMap2"`
-for coloredrectangle, or pie nodes. However, the helper
-function `mem_multienrichplot()` is used because it
-allows more customization, and prints a color legend by default.
 
 ```{r, mem_plot_1}
-g <- mem_multienrichplot(mem_canonical, repulse=3.5)
+g <- mem_multienrichplot(mem_canonical,
+   node_factor=3,
+   repulse=3.5)
 ```
 
-You can custom filter the Jaccard overlap, or try the
-helper function `mem_find_overlap()` which does pretty
-well at guessing the best overlap threshold to use, by
-optimizing the cluster size and total nodes involved.
+The overlap threshold can be customized manually,
+or through the helper function `mem_find_overlap()`.
+This function attempts to guess a reasonable overlap
+threshold based upon the network connectivity,
+by optimizing the cluster size and total nodes involved.
 
 ```{r, mem_plot_1b}
 g <- mem_multienrichplot(mem_canonical,
    overlap=mem_find_overlap(mem_canonical),
+   node_factor=3,
    repulse=3.5)
 ```
+
 
 Notice there are distinct subnetworks, called "components",
 which are not connected to each other. A useful follow-up
@@ -298,7 +312,8 @@ g_sub <- relayout_with_qfr(repulse=3.5,
       removeIgraphBlanks(g_sub))
 
 ## Plot
-plot(g_sub, vertex.size=15)
+plot(g_sub,
+   vertex.size=15)
 ```
 
 
@@ -315,7 +330,7 @@ below which cells are colorized -- every P-value above
 this threshold is not colored, and displayed as white,
 even when the P-value is less than 1.
 
-```{r, enrich_hm, fig.height=8, fig.width=7}
+```{r, enrich_hm}
 mem_enrichment_heatmap(mem_canonical, p_cutoff=0.05);
 ```
 
@@ -324,7 +339,7 @@ a color gradient to each column, using the same P-value
 threshold defined by `p_cutoff`. In this case, cells are
 labeled to indicate the actual enrichment P-value.
 
-```{r, enrich_hm_2, fig.height=8, fig.width=7}
+```{r, enrich_hm_2}
 mem_enrichment_heatmap(mem_canonical, color_by_column=TRUE);
 ```
 
@@ -355,8 +370,9 @@ function, which enables many awesome customizable features.
 The `...` argument is passed to `ComplexHeatmap::Heatmap()`,
 so you can use those features as needed.
 
-```{r, mem_hm, fig.height=8, fig.width=7}
-hm <- mem_gene_path_heatmap(mem_canonical);
+```{r, mem_hm}
+hm <- mem_gene_path_heatmap(mem_canonical,
+   row_cex=0.6);
 hm;
 ```
 
@@ -381,7 +397,7 @@ result through other helper functions:
 * `relayout_with_qfr()` applies network layout and adjusts node labels
 * `removeIgraphBlanks()` removes blank colors from the `igraph` nodes
 
-```{r, cnet_plot_1, fig.height=8, fig.width=7}
+```{r, cnet_plot_1}
 #cnet <- mem_canonical$multiCnetPlot1b;
 cnet <- mem_canonical %>% 
    memIM2cnet() %>%
@@ -389,18 +405,25 @@ cnet <- mem_canonical %>%
    removeIgraphBlanks() %>%
    relayout_with_qfr(repulse=4);
 #plot(cnet, vertex.label.cex=0.6);
-jam_igraph(cnet, vertex.label.cex=0.6);
+jam_igraph(cnet,
+   edge_bundling="connections",
+   use_shadowText=TRUE,
+   node_factor=3,
+   vertex.label.cex=0.6);
 mem_legend(mem_canonical);
 ```
 
 You can extract the largest connected subnetwork to plot, as before.
 
-```{r, cnet_plot_2, fig.height=8, fig.width=7}
+```{r, cnet_plot_2}
 g2 <- cnet;
 g2_sub <- subset_igraph_components(cnet, keep=1)
 
 #plot(g2_sub);
-jam_igraph(g2_sub);
+jam_igraph(g2_sub,
+   edge_bundling="connections",
+   use_shadowText=TRUE,
+   node_factor=3);
 ```
 
 #### Customizing the Cnet plot
@@ -412,12 +435,13 @@ One useful method to choose a subset of pathways
 is to view one heatmap cluster at a time. Here
 we will use `hm_sets` made previously.
 
-```{r, cnet_plot_1_custom, fig.height=8, fig.width=7}
+```{r, cnet_plot_1_custom}
 cnet_sub <- subsetCnetIgraph(cnet,
    repulse=3.5,
    includeSets=unlist(hm_sets[c("A")]));
 jam_igraph(cnet_sub,
-   node_factor=2,
+   node_factor=3,
+   use_shadowText=TRUE,
    label_dist_factor=3,
    label_factor=1.3);
 mem_legend(mem_canonical);
@@ -456,7 +480,9 @@ cnet3 <- multienrichjam::subsetCnetIgraph(cnet,
    repulse=5,
    minSetDegree=6,
    minGeneDegree=1);
-plot(cnet3);
+jam_igraph(cnet3,
+   node_factor=3,
+   use_shadowText=TRUE);
 mem_legend(mem_canonical);
 ```
 
@@ -465,10 +491,14 @@ mem_legend(mem_canonical);
 The `jam_igraph()` function is a custom version of `igraph::plot()`
 intended to enhance the base function in a few ways:
 
-* argument `rescale=FALSE` will keep the network layout aspect
-ratio 1:1, instead of scaling the coordinates to fit the size
-of the plot window. It also properly scales the node and edge sizes,
-unlike the base `igraph::plot()` function.
+* `edge_bundling="connections"` improves the rendering of edges
+by bundling edges from node clusters, so they are drawn with
+a bezier curve
+* `use_shadowText=TRUE` will draw labels with a contrasting border
+to improve legibility of text labels
+* `rescale=FALSE` keeps the network layout aspect ratio
+instead of scaling the coordinates to fit the size
+of the plot window. It also properly scales the node and edge sizes.
 * new arguments to help resize existing values:
 
    * `label_factor` re-scales the `label.cex` values by a multiplier
@@ -487,9 +517,11 @@ the edges of each node.
 
 ```{r, jam_igraph_1, fig.height=8, fig.width=7}
 jam_igraph(cnet3,
+   edge_bundling="connections",
    edge_factor=2,
    node_factor=2, 
    label_factor=1.2, 
+   use_shadowText=TRUE,
    label_dist_factor=3);
 ```
 
@@ -499,6 +531,7 @@ netowrk visualization tool.
 
 ```{r, jam_igraph_2, fig.height=8, fig.width=7}
 jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
+   edge_bundling="connections",
    edge_factor=2,
    node_factor=2, 
    label_factor=1.2, 

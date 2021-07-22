@@ -30,10 +30,8 @@
 #' compatible with methods provided by the `clusterProfiler`
 #' package.
 #'
-#' @param enrichDF data.frame representing gene set enrichment
+#' @param enrichDF `data.frame` representing gene set enrichment
 #'    results.
-#' @param msigdbGmtT optional gmtT object, a representation of
-#'    `arules::transactions-class`.
 #' @param pvalueCutoff numeric value range 0 to 1, to define the
 #'    P-value threshold for enrichment results to be considered
 #'    in downstream processing.
@@ -60,7 +58,10 @@
 #'    values.
 #' @param pvalueColname character value of the `colname(enrichDF)`
 #'    containing enrichment P-values to use in downstream processing.
+#' @param msigdbGmtT optional gmtT object, a representation of
+#'    `arules::transactions-class`. (Not currently implemented.)
 #' @param verbose logical indicating whether to print verbose output.
+#' @param ... additional arguments are ignored.
 #'
 #' @family jam conversion functions
 #'
@@ -69,7 +70,6 @@
 #' @export
 enrichDF2enrichResult <- function
 (enrichDF=NULL,
- msigdbGmtT=NULL,#msigdbGmtTv50mouse,
  pvalueCutoff=1,
  pAdjustMethod="none",
  keyColname=c("itemsetID", "ID", "Name", "Pathway"),
@@ -80,6 +80,7 @@ enrichDF2enrichResult <- function
  geneDelim="[,/ ]+",
  pvalueColname=c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
  descriptionColname=c("Description", "Name", "Pathway", "ID"),
+ msigdbGmtT=NULL,
  verbose=FALSE,
  ...)
 {
@@ -434,11 +435,6 @@ enrichDF2enrichResult <- function
 #'    for `enrichResult` objects is `"/"`, but the default for other
 #'    sources is often `","`. The default pattern `"[,/ ]+"` splits
 #'    by either `"/"`, `","`, or whitespace `" "`.
-#' @param GmtTname,msigdbGmtT optional objects used to define the
-#'    full pathway universe tested. When not supplied, these values
-#'    are inferred from the input `enrichList`. The `msigdbGmtT`
-#'    object is used to determine the full set of genes contained
-#'    in each pathway.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are passed to various internal
 #'    functions.
@@ -472,17 +468,45 @@ multiEnrichMap <- function
  topEnrichSourceSubset=NULL,
  topEnrichDescriptionGrep=NULL,
  topEnrichNameGrep=NULL,
- keyColname=c("ID", "Name", "pathway", "itemsetID"),
- nameColname=c("ID", "Name", "pathway", "itemsetID"),
- geneColname=c("geneID", "geneNames", "Genes"),
- countColname=c("gene_count", "count"),
- pvalueColname=c("padjust", "p.adjust", "adjp", "qvalue", "q.value",
-    "pvalue", "p.value", "pval", "FDR"),
- descriptionColname=c("Description", "Name", "Pathway"),
+ keyColname=c("ID",
+    "Name",
+    "pathway",
+    "itemsetID",
+    "Description"),
+ nameColname=c("Name",
+    "pathway",
+    "Description",
+    "itemsetID",
+    "ID"),
+ geneColname=c("geneID",
+    "geneNames",
+    "Genes"),
+ countColname=c("gene_count",
+    "count",
+    "geneHits"),
+ pvalueColname=c("padjust",
+    "p.adjust",
+    "adjp",
+    "padj",
+    "qvalue",
+    "qval",
+    "q.value",
+    "pvalue",
+    "p.value",
+    "pval",
+    "FDR"),
+ descriptionColname=c("Description",
+    "Name",
+    "Pathway",
+    "ID"),
  descriptionCurateFrom=c("^Genes annotated by the GO term "),
  descriptionCurateTo=c(""),
- pathGenes=c("setSize", "pathGenes"),
- geneHits=c("Count", "geneHits", "gene_count"),
+ pathGenes=c("setSize",
+    "pathGenes",
+    "Count"),
+ geneHits=c("Count",
+    "geneHits",
+    "gene_count"),
  geneDelim="[,/ ]+",
  GmtTname=NULL,
  #GmtTname="msigdbGmtTv50human",
@@ -506,11 +530,6 @@ multiEnrichMap <- function
    ## colorV is a vector of colors, whose names match the names
    ##    of enrichList. If colorV is empty, rainbowCat() is called,
    ##    and colors are assigned to names(enrichList) in the same order.
-   ##
-   ## geneHits,pathGenes,msigdbGmtT,keyColname,geneColname, are used
-   ##    by enrichDF2enrichResult()
-   ##    to convert the combined enrichment data.frame to enrichResult
-   ##    object.
    ##
    ## pathGenes is the colname in each enrichment data.frame which represents
    ##    the number of genes in each pathway, as tested for enrichment
@@ -1821,7 +1840,7 @@ enrichMapJam <- function
 #'    called when `force_relayout=TRUE`, and must be supplied as
 #'    a function in order to be applied properly to the subset
 #'    Cnet `igraph`. To apply layout before the subset operation,
-#'    do so with `set_graph_attr(g, "layout", layout)`.
+#'    do so with `igraph::set_graph_attr(g, "layout", layout)`.
 #' @param verbose logical indicating whether to print verbose output.
 #'
 #' @export
@@ -1933,13 +1952,13 @@ subsetCnetIgraph <- function
    ## Optionally subset by degree of Set and Gene nodes
    if (length(minSetDegree) > 0) {
       dropSetNodes <- (igraph::V(gCnet)$nodeType %in% "Set" &
-            degree(gCnet) < minSetDegree);
+            igraph::degree(gCnet) < minSetDegree);
    } else {
       dropSetNodes <- rep(FALSE, igraph::vcount(gCnet));
    }
    if (length(minGeneDegree) > 0) {
       dropGeneNodes <- (igraph::V(gCnet)$nodeType %in% "Gene" &
-            degree(gCnet) < minGeneDegree);
+            igraph::degree(gCnet) < minGeneDegree);
    } else {
       dropGeneNodes <- rep(FALSE, igraph::vcount(gCnet));
    }
@@ -1964,7 +1983,6 @@ subsetCnetIgraph <- function
    #####################################################
    ## Polish the igraph by removing nodes with no edges
    if (remove_singlets) {
-      #iDegree <- degree(gCnet);
       gCnet <- removeIgraphSinglets(gCnet,
          min_degree=1,
          verbose=verbose);
@@ -1990,7 +2008,7 @@ subsetCnetIgraph <- function
                repulse=repulse,
                spread_labels=spread_labels,
                ...);
-            layout <- graph_attr(gCnet, "layout");
+            layout <- igraph::graph_attr(gCnet, "layout");
             rownames(layout) <- igraph::V(gCnet)$name;
          } else if (is.function(layout)) {
             layout <- layout(gCnet);

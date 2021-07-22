@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -136,14 +136,64 @@
   <span class='va'>enrichList</span>,
   GmtT <span class='op'>=</span> <span class='cn'>NULL</span>,
   addAnnotations <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  keyColname <span class='op'>=</span> <span class='st'>"Name"</span>,
-  valueColname <span class='op'>=</span> <span class='st'>"P-value"</span>,
-  emptyValue <span class='op'>=</span> <span class='fl'>1</span>,
+  keyColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ID"</span>, <span class='st'>"Name"</span>, <span class='st'>"pathway"</span>, <span class='st'>"itemsetID"</span><span class='op'>)</span>,
+  valueColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"qvalue"</span>, <span class='st'>"q.value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"p.value"</span><span class='op'>)</span>,
+  emptyValue <span class='op'>=</span> <span class='cn'>NULL</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>enrichList</th>
+      <td><p><code>list</code> of <code>enrichResult</code> objects</p></td>
+    </tr>
+    <tr>
+      <th>GmtT</th>
+      <td><p>not implemented here, experimental gene set object
+format that uses <code><a href='https://rdrr.io/pkg/arules/man/transactions-class.html'>arules::transactions</a></code> class, an efficient
+object with robust access functions in <code>arules</code>.</p></td>
+    </tr>
+    <tr>
+      <th>addAnnotations</th>
+      <td><p><code>logical</code> not implemented, this argument
+is paired with <code>GmtT</code>.</p></td>
+    </tr>
+    <tr>
+      <th>keyColname</th>
+      <td><p><code>character</code> used to match colnames, referring
+to the unique identifier. Values in this column will become
+the column headers in the resulting incidence matrix.</p></td>
+    </tr>
+    <tr>
+      <th>valueColname</th>
+      <td><p><code>character</code> used to match colnames to determine
+the value to place in each cell of the incidence matrix.</p></td>
+    </tr>
+    <tr>
+      <th>emptyValue</th>
+      <td><p><code>numeric</code> value used to fill empty cells in the
+incidence matrix. When <code>NULL</code> and <code>valueColname</code> contains
+"gene", "count", "num", "hit" then <code>emptyValue=0</code>, otherwise
+<code>emptyValue=1</code> is used with the assumption that <code>valueColname</code>
+refers to P-values.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> indicating whether to print verbose output.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function takes a <code>list</code> of <code>enrichResult</code> objects
+and creates an incidence matrix using the value defined
+by <code>valueColname</code>.</p>
+<p>TODO: Port to use <code><a href='https://rdrr.io/pkg/venndir/man/list2im_value.html'>venndir::list2im_value()</a></code>, which itself
+may be moved to its own proper R package for set and list
+manipulation, without the dependencies incurred by <code>venndir</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other jam conversion functions: 

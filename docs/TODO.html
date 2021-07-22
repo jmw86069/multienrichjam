@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -105,7 +105,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -128,30 +128,89 @@
 <div id="todo" class="section level1">
 
 <p>This document describes plans for enhancements to the multienrichjam R package.</p>
-<div id="10apr2021-implement-edge-bundling-techniques" class="section level2">
+<div id="20jul2021" class="section level2">
 <h2 class="hasAnchor">
-<a href="#10apr2021-implement-edge-bundling-techniques" class="anchor"></a>10apr2021: implement edge bundling techniques</h2>
-<p>Priority: high</p>
+<a href="#20jul2021" class="anchor"></a>20jul2021</h2>
 <ul>
-<li>Cnet edge bundles - special case of nodeset-to-node edge bundling</li>
-<li>Node group bundles - general case of nodeset-to-nodeset edge bundling</li>
+<li>
+<p>Replace <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> with <code>multienrichjam()</code> and simplify the arguments:</p>
+<ul>
+<li>p_cutoff</li>
+<li>min_gene_count</li>
+<li>top_enrich_n</li>
+<li>colnames: id, name, description, pvalue, gene</li>
+<li>color_sub</li>
+</ul>
+</li>
+<li><p>Port <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> argument <code>colorize_by_gene=TRUE</code> to use <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html">ComplexHeatmap::Heatmap()</a></code> instead of <code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html">jamba::imageByColors()</a></code> for consistency, also so it can support <code>style="dotplot"</code>.</p></li>
+</ul>
+</div>
+<div id="19jul2021" class="section level2">
+<h2 class="hasAnchor">
+<a href="#19jul2021" class="anchor"></a>19jul2021</h2>
+<ul>
+<li>
+<code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with <code>rescale=TRUE</code> should also scale igraph vertex size and igraph label size according to the new axis ranges.</li>
+<li>Debug <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> when <code>vertex.size</code> is defined alongside V(g)$size, and <code>node_factor</code>. It appears not to apply the size properly.</li>
+<li>COMPLETE: <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> new option for dot plot format, based upon <code><a href="https://rdrr.io/pkg/enrichplot/man/dotplot.html">enrichplot::dotplot()</a></code> that sizes each dot by the number of genes present.</li>
+</ul>
+</div>
+<div id="24jun2021" class="section level2">
+<h2 class="hasAnchor">
+<a href="#24jun2021" class="anchor"></a>24jun2021</h2>
+<ul>
+<li>In <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> remove default <code>topEnrichSources</code> and <code>topEnrichSourceSubset</code> which throw errors when not using MSigDB data.</li>
+<li>
+<code><a href="reference/topEnrichBySource.html">topEnrichBySource()</a></code> and <code><a href="reference/topEnrichBySource.html">topEnrichListBySource()</a></code> should be able to accept <code>enrichResult</code> as input, and return <code>enrichResult</code> and not <code>data.frame</code> which is understandably lossy. I need to understand the proper method for creating a subset of an <code>enrichList</code> object, including its internal data.</li>
+<li>Streamline the <code><a href="reference/topEnrichBySource.html">topEnrichListBySource()</a></code> workflow.</li>
+</ul>
+</div>
+<div id="21jun2021" class="section level2">
+<h2 class="hasAnchor">
+<a href="#21jun2021" class="anchor"></a>21jun2021</h2>
+<ul>
+<li>COMPLETE: Allow rotating gene-pathway incidence matrix when using <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, so the pathway names are rows.</li>
+<li>Add test data object <code>mem</code> to be convenient for function examples, and testthis test suite.</li>
+</ul>
+</div>
+<div id="smaller-usability-items" class="section level2">
+<h2 class="hasAnchor">
+<a href="#smaller-usability-items" class="anchor"></a>Smaller usability items</h2>
+<ul>
+<li>
+<p>edge_bundling=“connections” should also allow <code>render_groups=TRUE</code> to work, by returning the <code>"nodegroups"</code> required for that step.</p>
+<ul>
+<li>It should probably filter out singlet nodes by default, since the typical use case is “nodeset-to-node” for Cnet plots.</li>
+<li>Main use case is with a Cnet plot, edge bundling by connected nodes should allow drawing an optional border around each group of nodes.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="complete-10apr2021-implement-edge-bundling-techniques" class="section level2">
+<h2 class="hasAnchor">
+<a href="#complete-10apr2021-implement-edge-bundling-techniques" class="anchor"></a>COMPLETE: 10apr2021: implement edge bundling techniques</h2>
+<p>Priority: high</p>
+<p>Status: Implemented, early active testing of usability and functionality</p>
+<ul>
+<li>“connections” - Cnet edge bundles - special case of nodeset-to-node edge bundling</li>
+<li>“nodegroups”: Node group bundles - general case of nodeset-to-nodeset edge bundling</li>
 </ul>
 <p>Useful to improve readability/aesthetics of collapsed Cnet plots, especially Cnet plots with many gene nodes where it is difficult to tell which pathway clusters are connected to each gene.</p>
 </div>
-<div id="10apr2021-enhancements-to-jam_igraph" class="section level2">
+<div id="10apr2021-enhancements-to-jam_igraph-must-be-done-inside-jam_plot_igraph" class="section level2">
 <h2 class="hasAnchor">
-<a href="#10apr2021-enhancements-to-jam_igraph" class="anchor"></a>10apr2021: enhancements to <code>jam_igraph()</code>
-</h2>
+<a href="#10apr2021-enhancements-to-jam_igraph-must-be-done-inside-jam_plot_igraph" class="anchor"></a>10apr2021: enhancements to <code>jam_igraph()</code> (must be done inside <code>jam_plot_igraph()</code>)</h2>
 <ul>
 <li><p>Consider silently returning the <code>igraph</code> object plotted where the vertex, edge, and graph attributes are updated to the values used at runtime. For example, if user overrides any attributes, those attributes will be present in the object returned, so the next iteration someone could just call <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> without any custom attributes and it would produce the same plot again.</p></li>
 <li><p>See <a href="https://igraph.org/r/doc/plot.common.html" class="uri">https://igraph.org/r/doc/plot.common.html</a> and <code><a href="https://rdrr.io/pkg/igraph/man/igraph_options.html">igraph::igraph_options()</a></code></p></li>
 </ul>
 </div>
-<div id="10apr2021-implement-edge-bundling-in-jam_igraph" class="section level2">
+<div id="10apr2021-implement-edge-bundling-in-jam_igraph-and-jam_plot_igraph" class="section level2">
 <h2 class="hasAnchor">
-<a href="#10apr2021-implement-edge-bundling-in-jam_igraph" class="anchor"></a>10apr2021: implement edge bundling in <code>jam_igraph()</code>
+<a href="#10apr2021-implement-edge-bundling-in-jam_igraph-and-jam_plot_igraph" class="anchor"></a>10apr2021: implement edge bundling in <code>jam_igraph()</code> and <code>jam_plot_igraph()</code>
 </h2>
 <p>Priority: high</p>
+<p>Status: Implemented</p>
 <ul>
 <li>
 <p>This task involves making edge bundling accessible as a simple option during plotting, to prevent having to run 3 or 4 functions:</p>

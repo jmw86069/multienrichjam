@@ -24,6 +24,7 @@ mem_multienrichplot(
   repulse = 3.7,
   sets = NULL,
   rescale = TRUE,
+  edge_bundling = "connections",
   main = "MultiEnrichMap\\noverlap >= {overlap}, overlap_count >= {overlap_count}",
   ...
 )
@@ -118,6 +119,7 @@ Other jam igraph functions:
 \code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
+\code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},

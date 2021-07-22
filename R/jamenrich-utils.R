@@ -219,10 +219,10 @@ mem_find_overlap <- function
          remove_singlets=TRUE,
          spread_labels=FALSE,
          do_plot=FALSE);
-      if (vcount(g) <= 1) {
+      if (igraph::vcount(g) <= 1) {
          return(NULL);
       }
-      gc <- components(g);
+      gc <- igraph::components(g);
       k <- rev(sort(gc$csize));
       c(k, frac_max=k[1] / sum(k));
    });
@@ -241,12 +241,16 @@ mem_find_overlap <- function
    o_choose <- as.numeric(names(which.max(o_score)));
 
    if (length(debug) > 0 && debug) {
-      return(list(odata=odata, oct=oct, omax=omax, o_fraction=o_fraction, o_score=o_score));
+      return(list(odata=odata,
+         oct=oct,
+         omax=omax,
+         o_fraction=o_fraction,
+         o_score=o_score));
    }
    if (length(o_choose) > 0) {
       return(o_choose);
    } else {
-      return(min(E(g)$overlap, na.rm=TRUE));
+      return(min(igraph::E(g)$overlap, na.rm=TRUE));
    }
    for (max_cutoff_i in seq(from=max_cutoff, to=1, by=0.01)) {
       omet <- sapply(odata, function(i){
@@ -763,7 +767,7 @@ collapse_mem_clusters <- function
    ## - start with enrichIMcolors
    ## - count non-blank colors per column
    ## - determine fraction versus max column count
-   cluster_enrichIMcolors <- rbindList(lapply(cluster_sets_l, function(iset1){
+   cluster_enrichIMcolors <- jamba::rbindList(lapply(cluster_sets_l, function(iset1){
       isetm1 <- mem$enrichIMcolors[iset1,,drop=FALSE]
       # fix issue when only one row or one column
       isetm1_blank <- matrix(apply(isetm1, 2, isColorBlank), ncol=ncol(isetm1));

@@ -14,6 +14,8 @@
 #' zero-length entries are replaced with `blank=""` so these
 #' rows are not dropped from the output.
 #'
+#' @family jam utility functions
+#'
 #' @param x `data.frame` or compatible object
 #' @param column `character` vector with one or more `colnames(x)`
 #'    that should be de-concatenated.

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -221,21 +221,208 @@ nodes and edges by a common numeric scalar value.</p></td>
 to adjust the relative distance of all nodes labels from the node center
 by a common numeric scalar value.</p></td>
     </tr>
+    <tr>
+      <th>use_shadowText</th>
+      <td><p><code>logical</code> indicating whether to use
+<code><a href='https://rdrr.io/pkg/jamba/man/shadowText.html'>jamba::shadowText()</a></code> instead of <code><a href='https://rdrr.io/r/graphics/text.html'>graphics::text()</a></code>, in order
+to render text labels with a subtle shadow-like outline around
+each label. This change improves legibility of labels at
+the expense of slightly longer plot rendering time.</p></td>
+    </tr>
+    <tr>
+      <th>edge_bundling</th>
+      <td><p><code>character</code> string or <code>function</code>, where:</p><ul>
+<li><p><code>"none"</code> will perform no edge bundling</p></li>
+<li><p><code>"connections"</code> will perform graph edge bundling by
+shared connections by calling <code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite()</a></code> then
+<code><a href='edge_bundle_nodegroups.html'>edge_bundle_nodegroups()</a></code></p></li>
+<li><p><code>"nodegroups"</code> will perform graph edge bundling
+using <code>nodegroups</code> by calling <code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite()</a></code></p></li>
+<li><p><code>function</code> will call a custom edge bundling function using
+the <code>igraph</code> object <code>x</code> and the igraph parameters <code>param</code>
+as input. This output is currently untested, and is intended
+to enable alternative edge bundling functions which may exist
+outside this package. The custom function should be able
+to use the node layout coordinates in <code>graph_attr(x, "layout")</code>,
+and render edges between nodes.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>nodegroups</th>
+      <td><p><code>list</code> object as output by <code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite()</a></code>
+where each list element is a <code>character</code> vector of vertex node
+names present in <code>igraph::V(x)$name</code>. If no <code>"name"</code> vertex node
+attribute exists, then integer index values are used as names.
+Note that all vertex nodes must be represented in <code>nodegroup</code>
+in order for the corresponding edges to be plotted.</p></td>
+    </tr>
+    <tr>
+      <th>render_nodes</th>
+      <td><p><code>logical</code> indicating whether to
+render vertex nodes, or edges, respectively. Sometimes it can
+be useful to call this function for other byproduct outputs,
+for example, <code><a href='jam_plot_igraph.html'>jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)</a></code>
+will create a new plot device with appropriate axis ranges,
+and can be used to render edge bundling results for example.</p></td>
+    </tr>
+    <tr>
+      <th>render_edges</th>
+      <td><p><code>logical</code> indicating whether to
+render vertex nodes, or edges, respectively. Sometimes it can
+be useful to call this function for other byproduct outputs,
+for example, <code><a href='jam_plot_igraph.html'>jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)</a></code>
+will create a new plot device with appropriate axis ranges,
+and can be used to render edge bundling results for example.</p></td>
+    </tr>
+    <tr>
+      <th>render_nodelabels</th>
+      <td><p><code>logical</code> indicating whether to draw node
+labels, which is typically the last operation in the plot sequence.
+Note that node labels can be rendered without also rendering
+the nodes or edges.</p></td>
+    </tr>
+    <tr>
+      <th>render_groups</th>
+      <td><p><code>logical</code> indicating whether to render groups
+when <code>mark.groups</code> is supplied. Groups are rendered with a
+shaded polygon and border.</p></td>
+    </tr>
+    <tr>
+      <th>vectorized_node_shapes</th>
+      <td><p><code>logical</code> indicating whether to plot
+vertex node shapes using vectorized operations. It is substantially
+faster, however the one drawback is that nodes are plotted in
+order of their shape, which affects the positioning of nodes
+when there are node overlaps. This tradeoff is relatively minor,
+and it is recommended either to reposition nodes to reduce or
+prevent overlaps, or adjust node sizes to reduce overlaps.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> indicating whether to print verbose output.</p></td>
+    </tr>
+    <tr>
+      <th>debug</th>
+      <td><p><code>logical</code> or <code>character</code> vector of attributes for
+which debug output will be plotted onscreen.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is a lightweight wrapper around <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code>
-intended to handle <code>rescale=FALSE</code> properly, which is not done
-in the former function (as of January 2020). The desired outcome
-is for the <code>xlim</code> and <code>ylim</code> defaults to be scaled according to the
-<code>igraph</code> layout. Similarly, the <code>vertex.size</code> and <code>vertex.label.dist</code>
-parameters should also be scaled proportionally.</p>
-<p>You can use argument <code>label_factor_l=list(nodeType=c(Gene=0.01, Set=1))</code>
-to hide labels for Gene nodes, and display labels for Set nodes.
-Note that due to a quirk in <code>igraph</code>, setting <code>label.cex=0</code>
-will revert the font to default size, and will not hide the
-label.</p>
+    <p>This function is a drop-in replacement of <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code>,
+intended to provide substantially faster vectorized plotting,
+to render bundled edges when requested, and
+to handle <code>rescale=FALSE</code> without requiring further adjustments.</p>
+<p>It also provides some convenient methods to adjust node
+size, label font size, and label distance from node center,
+based upon node attributes.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>vectorized plots</h3>
+
+
+<p>This function calls <code><a href='jam_plot_igraph.html'>jam_plot_igraph()</a></code> as a replacement for
+<code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code>, and that function implements vectorized
+plot features when <code>vectorized_node_shapes=TRUE</code> by default:</p><ol>
+<li><p>When there are multiple different vertex <code>"shape"</code> attributes,
+this function renders nodes vectorized, one shape at a time.
+In this scenario, the original <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code> draws
+each individual vertex,
+which is substantially slower (minutes compared to 1-2 seconds)
+for large <code>igraph</code> objects.</p></li>
+<li><p>When there are multiple font families, labels are rendered in
+groups by font family, in order to comply with limitations
+in <code><a href='https://rdrr.io/r/graphics/text.html'>graphics::text()</a></code>. This situation is fairly rare, however
+the speed improvement is substantial, again roughly minutes down
+to 1-2 seconds. The <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code> renders each node label
+individually when there are multiple font families.</p></li>
+</ol>
+
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>rescale=FALSE</h3>
+
+
+<p>The default <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code> uses <code>rescale=TRUE</code>, which
+can distort the layout coordinates to fit within a fixed
+x- and y-axis range <code><a href='https://rdrr.io/r/base/c.html'>c(-1, 1)</a></code>. When using <code>rescale=FALSE</code> the
+<code>xlim</code> and <code>ylim</code> values are not adjusted to the actual coordinate
+range. The desired effect from this function <code>jam_igraph()</code> is
+to apply <code>aspect=1</code> (<code>asp=1</code>) which fixes the aspect ratio so
+the coordinates represent visual Euclidean distance between nodes,
+and to define <code>xlim</code> and <code>ylim</code> to accomodate the full layout.
+This function also adjusts node <code>vertex.size</code> and <code>vertex.label.dist</code>
+proportionally.</p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>edge bundling</h3>
+
+
+<p>When <code>edge_bundling</code> is something other than <code>edge_bundling="none"</code>,
+edge connections between nodes are rendered using a specific
+function by drawing curved splines for each bundle of edges.
+The approach in <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code> only draws
+straight edges between nodes. The recommended method is
+<code>edge_bundling="connections"</code> which will bundle edges among nodes
+that share identical connections.</p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Adjust node size, label size, label distance</h3>
+
+
+<p>The following arguments apply scaling to all nodes or edges:</p><ul>
+<li><p><code>node_factor</code> - <code>numeric</code> multiplied by node size</p></li>
+<li><p><code>edge_factor</code> - <code>numeric</code> multiplied by edge size</p></li>
+<li><p><code>label_factor</code> - <code>numeric</code> multiplied by label font size</p></li>
+<li><p><code>label_dist_factor</code> - <code>numeric</code> multiplied by label distance from
+node center</p></li>
+</ul>
+
+<p>The following arguments apply scale factor based upon node attribute:</p><ul>
+<li><p><code>node_factor_l</code> - <code>list</code> of named vectors applied to node size</p></li>
+<li><p><code>label_factor_l</code> - <code>list</code> of named vectors applied to label font size</p></li>
+<li><p><code>label_dist_factor_l</code> - <code>list</code> of named vectors applied to label
+distance from node center</p></li>
+</ul>
+
+<p>The <code>factor_l</code> technique is as follows:<div class="R"></p><pre><span class='va'>node_factor_l</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>node_attr_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+   attr_value1 <span class='op'>=</span> <span class='va'>factor1</span>,
+   attr_value2 <span class='op'>=</span> <span class='va'>factor2</span><span class='op'>)</span><span class='op'>)</span>
+</pre><p></div></p>
+<p>A specific example:<div class="R"></p><pre><span class='va'>node_factor_l</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>nodeType <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+   Gene<span class='op'>=</span><span class='fl'>1.5</span>,
+   Set<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+</pre><p></div></p>
+<p>In this case, nodes with attribute
+<code>V(g)$nodeType == "Gene"</code> will use factor <code>1.5</code>
+Nodes with attribute
+<code>V(g)$nodeType == "Set"</code> will use factor <code>2</code>
+All other nodes will not be adjusted.</p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Other features</h3>
+
+
+<p>When <code>use_shadowText=TRUE</code> node labels call <code><a href='https://rdrr.io/pkg/jamba/man/shadowText.html'>jamba::shadowText()</a></code>
+which draws a small partly transparent outline around labels, making
+them more legible when they overlap colored nodes. This step
+effectively draws each label <code>n</code> times, which can slightly slow
+the rendering of the overall figure.</p>
+<p>When <code>pie_to_jampie=TRUE</code>, any nodes with <code>shape="pie"</code> are
+changed to <code>shape="jampie"</code> for the purpose of rendering pie
+shapes in vectorized fashion, instead of being drawn for each
+node separately. This change is a substantial improvement in
+rendering time.</p>
+<p>Default colors for marked node groups <code>mark.col</code> and <code>mark.border</code>
+when not defined upfront, will call <code><a href='https://rdrr.io/pkg/colorjam/man/rainbowJam.html'>colorjam::rainbowJam()</a></code>
+and not <code>grDevices::rainbow(). The </code>colorjam::rainbowJam()<code>produces more visually distinct categorical colors. This behavior can be controlled by supplying a</code>character<code>vector with specific colors for</code>mark.col<code>and</code>mark.border<code>. Note that the border should match the colors, or it can be set to </code>"grey45"`
+for a generally visible border.</p>
+<p>Optional argument <code>nodegroups</code> can be supplied, which is a <code>list</code>
+of vectors, where each vector represents a group of nodes. The
+<code>nodegroups</code> can be used with <code>edge_bundling="nodegroups"</code> to
+define custom edge bundling.</p>
+<p>Finally, individual plot components can be individually disabled:</p><ul>
+<li><p><code>render_nodes=FALSE</code></p></li>
+<li><p><code>render_edges=FALSE</code></p></li>
+<li><p><code>render_groups=FALSE</code></p></li>
+<li><p><code>render_nodelabels=FALSE</code></p></li>
+</ul>
+
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other jam igraph functions: 
@@ -243,8 +430,10 @@ label.</p>
 <code><a href='cnet2im.html'>cnet2im</a>()</code>,
 <code><a href='cnetplotJam.html'>cnetplotJam</a>()</code>,
 <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a>()</code>,
+<code><a href='color_edges_by_nodes_deprecated.html'>color_edges_by_nodes_deprecated</a>()</code>,
 <code><a href='color_edges_by_nodes.html'>color_edges_by_nodes</a>()</code>,
 <code><a href='drawEllipse.html'>drawEllipse</a>()</code>,
+<code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite</a>()</code>,
 <code><a href='edge_bundle_nodegroups.html'>edge_bundle_nodegroups</a>()</code>,
 <code><a href='enrichMapJam.html'>enrichMapJam</a>()</code>,
 <code><a href='fixSetLabels.html'>fixSetLabels</a>()</code>,

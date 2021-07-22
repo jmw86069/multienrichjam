@@ -30,10 +30,11 @@ mem_gene_path_heatmap(
   column_title = LETTERS,
   row_title = letters,
   row_title_rot = 90,
-  colorize_by_gene = FALSE,
+  colorize_by_gene = TRUE,
   na_col = "white",
   rotate_heatmap = FALSE,
   colramp = "Reds",
+  column_names_max_height = grid::unit(12, "cm"),
   seed = 123,
   verbose = FALSE,
   ...

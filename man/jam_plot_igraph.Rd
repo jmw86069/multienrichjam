@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-igraph.r
 \name{jam_plot_igraph}
 \alias{jam_plot_igraph}
-\title{Jam igraph vectorized plot function}
+\title{Jam igraph vectorized plot function (internal)}
 \usage{
 jam_plot_igraph(
   x,
@@ -90,18 +90,19 @@ prevent overlaps, or adjust node sizes to reduce overlaps.}
 
 \item{edge_bundling}{\code{character} string or \code{function}, where:
 \itemize{
-\item \code{character} string \code{"none"} will perform no edge bundling
-\item \code{character} string \code{"connections"} will perform graph
-edge connection bundling via \code{edge_bundle_bipartite()} then
+\item \code{"none"} will perform no edge bundling
+\item \code{"connections"} will perform graph edge bundling by
+shared connections by calling \code{edge_bundle_bipartite()} then
 \code{edge_bundle_nodegroups()}
-\item \code{character} string \code{"nodegroups"} will perform graph edge
-connection bundling using \code{nodegroups} via
-\code{edge_bundle_bipartite()}
+\item \code{"nodegroups"} will perform graph edge bundling
+using \code{nodegroups} by calling \code{edge_bundle_bipartite()}
 \item \code{function} will call a custom edge bundling function using
 the \code{igraph} object \code{x} and the igraph parameters \code{param}
 as input. This output is currently untested, and is intended
 to enable alternative edge bundling functions which may exist
-outside this package.
+outside this package. The custom function should be able
+to use the node layout coordinates in \code{graph_attr(x, "layout")},
+and render edges between nodes.
 }}
 
 \item{nodegroups}{\code{list} object as output by \code{edge_bundle_bipartite()}
@@ -133,35 +134,93 @@ the nodes or edges.}
 which debug output will be plotted onscreen.}
 }
 \description{
-Jam igraph vectorized plot function, \verb{replaces igraph:::plot.igraph()},
-as called via \code{jam_igraph()}.
+Jam igraph vectorized plot function called by \code{jam_igraph()}
 }
 \details{
-This function is a complete copy of \code{igraph:::plot.igraph()} with
-two changes to enable vectorized plotting in these situations:
+Note that this function is intended to be called by \code{jam_igraph()},
+which handles the overall plot equivalent of \code{igraph::plot.igraph()},
+but calculates layout coordinates, x- and y-axis ranges, and
+adjusts node and label sizes.
+
+The steps here are a reproduction of \code{igraph:::plot.igraph()} with
+four changes:
 \enumerate{
-\item When there are multiple vertex \code{"shape"} attributes, the
-base plot function draws each individual \code{igraph} vertex one by one.
-The \code{jam_plot_igraph()} plots nodes of each shape in a group. For
-fairly large \code{igraph} objects (about 1000 nodes), this change
-is substantially faster.
-\item When there are multiple font families, the default plot function
-draws each label one by one. The \code{jam_plot_igraph()} draws
-labels in groups of font family. This situation is very rare, however
-when used the speed improvement is substantial.
+\item Default \code{rescale=FALSE}, and \code{asp=1} which means igraph layout is
+drawn true to the layout coordinates without distortion. To use
+default \code{igraph::plot.igraph()} behavior, use \code{rescale=TRUE}.
+The new default may not be appropriate for bipartite layout
+algorithms that generate two columns, and seems most useful
+with organic layouts where aspect ratio 1 helps convey important
+meaning in the graph structure, namely by enforcing consistent
+x- and y-axis visual distance between nodes.
+\itemize{
+\item Related: the \code{xlim} and \code{ylim} values are automatically adjusted
+to include the layout coordinate range. The default
+\code{igraph::plot.igraph(..., rescale=FALSE)} does not adjust the
+\code{xlim} and \code{ylim} ranges, which can be problematic when supplying
+layout as a function, and therefore the output node coordinates
+are not known until the plot rendering step.
+}
 }
 
-All node shapes \code{"pie"} are changed to \code{"jampie"} with default
-argument \code{pie_to_jampie=TRUE}. This change substantially speeds
-rendering pie nodes in vectorized fashion.
+When \code{vectorized_node_shapes=TRUE} by default:
+\enumerate{
+\item When there are multiple different vertex \code{"shape"} attributes, the
+nodes are rendered vectorized one shape at a time. The original
+\code{igraph::plot.igraph()} draws each individual vertex one by one,
+which is substantially slower (minutes compared to 1-2 seconds)
+for large \code{igraph} objects.
+\item When there are multiple font families, the default plot function
+draws each label one by one. The \code{jam_plot_igraph()} draws
+labels in groups of font family, in order to comply with limitations
+in \code{graphics::text()}. This situation is fairly rare, however
+the speed improvement is substantial, again roughly minutes down
+to 1-2 seconds.
+}
+
+The fourth difference involves edge bundling:
+\enumerate{
+\item When \code{edge_bundling} is used, it renders edges differently
+than the approach in \code{igraph::plot.igraph()}, by drawing curved
+splines for each bundle of edges.
+}
+
+Some other distinctive features include:
+
+When \code{use_shadowText=TRUE} node labels call \code{jamba::shadowText()}
+which draws a small partly transparent outline around labels, making
+them more legible when they overlap colored nodes. This step
+effectively draws each label \code{n} times, which can slightly slow
+the rendering of the overall figure.
+
+When \code{pie_to_jampie=TRUE}, any nodes with \code{shape="pie"} are
+changed to \code{shape="jampie"} for the purpose of rendering pie
+shapes in vectorized fashion, instead of being drawn for each
+node separately. This change is a substantial improvement in
+rendering time.
+
+Default colors for marked node groups \code{mark.col} and \code{mark.border}
+when not defined upfront, will call \code{colorjam::rainbowJam()}
+and not \verb{grDevices::rainbow(). The }colorjam::rainbowJam()\verb{produces more visually distinct categorical colors. This behavior can be controlled by supplying a}character\verb{vector with specific colors for}mark.col\code{and}mark.border\verb{. Note that the border should match the colors, or it can be set to }"grey45"`
+for a generally visible border.
+
+Optional argument \code{nodegroups} can be supplied, which is a \code{list}
+of vectors, where each vector represents a group of nodes. The
+\code{nodegroups} can be used with \code{edge_bundling="nodegroups"} to
+define custom edge bundling.
+
+Finally, individual plot components can be individually disabled:
+\itemize{
+\item \code{render_nodes=FALSE}
+\item \code{render_edges=FALSE}
+\item \code{render_groups=FALSE}
+\item \code{render_nodelabels=FALSE}
+}
 
 Note that this function is not called by default, and is only called
 by \code{multienrichjam::jam_igraph()}.
 
-Smaller changes: \code{mark.col} and \code{mark.border} default colors
-now call \code{colorjam::rainbowJam()} instead of \code{grDevices::rainbow()}.
-
-All arguments are documented in \code{igraph::plot.igraph()}.
+All other arguments are documented in \code{igraph::plot.igraph()}.
 }
 \seealso{
 Other jam igraph functions: 
@@ -172,6 +231,7 @@ Other jam igraph functions:
 \code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
+\code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},

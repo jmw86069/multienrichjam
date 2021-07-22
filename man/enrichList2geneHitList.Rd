@@ -33,6 +33,7 @@ Other jam utility functions:
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{collapse_mem_clusters}()},
+\code{\link{deconcat_df2}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
 \code{\link{handle_igraph_param_list}()},

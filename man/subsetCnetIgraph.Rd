@@ -70,7 +70,7 @@ numeric matrix of node coordinates. This function is only
 called when \code{force_relayout=TRUE}, and must be supplied as
 a function in order to be applied properly to the subset
 Cnet \code{igraph}. To apply layout before the subset operation,
-do so with \code{set_graph_attr(g, "layout", layout)}.}
+do so with \code{igraph::set_graph_attr(g, "layout", layout)}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 }
@@ -112,6 +112,7 @@ Other jam igraph functions:
 \code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{drawEllipse}()},
+\code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},

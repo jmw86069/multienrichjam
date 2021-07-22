@@ -27,16 +27,16 @@ multiEnrichMap(
   topEnrichSourceSubset = NULL,
   topEnrichDescriptionGrep = NULL,
   topEnrichNameGrep = NULL,
-  keyColname = c("ID", "Name", "pathway", "itemsetID"),
-  nameColname = c("ID", "Name", "pathway", "itemsetID"),
+  keyColname = c("ID", "Name", "pathway", "itemsetID", "Description"),
+  nameColname = c("Name", "pathway", "Description", "itemsetID", "ID"),
   geneColname = c("geneID", "geneNames", "Genes"),
-  countColname = c("gene_count", "count"),
-  pvalueColname = c("padjust", "p.adjust", "adjp", "qvalue", "q.value", "pvalue",
-    "p.value", "pval", "FDR"),
-  descriptionColname = c("Description", "Name", "Pathway"),
+  countColname = c("gene_count", "count", "geneHits"),
+  pvalueColname = c("padjust", "p.adjust", "adjp", "padj", "qvalue", "qval", "q.value",
+    "pvalue", "p.value", "pval", "FDR"),
+  descriptionColname = c("Description", "Name", "Pathway", "ID"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
   descriptionCurateTo = c(""),
-  pathGenes = c("setSize", "pathGenes"),
+  pathGenes = c("setSize", "pathGenes", "Count"),
   geneHits = c("Count", "geneHits", "gene_count"),
   geneDelim = "[,/ ]+",
   GmtTname = NULL,
@@ -136,12 +136,6 @@ split multiple gene values into a list of vectors. The default
 for \code{enrichResult} objects is \code{"/"}, but the default for other
 sources is often \code{","}. The default pattern \code{"[,/ ]+"} splits
 by either \code{"/"}, \code{","}, or whitespace \code{" "}.}
-
-\item{GmtTname, msigdbGmtT}{optional objects used to define the
-full pathway universe tested. When not supplied, these values
-are inferred from the input \code{enrichList}. The \code{msigdbGmtT}
-object is used to determine the full set of genes contained
-in each pathway.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 

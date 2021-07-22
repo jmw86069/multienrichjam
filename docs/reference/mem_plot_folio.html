@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -160,11 +160,13 @@
   repulse <span class='op'>=</span> <span class='fl'>4</span>,
   use_shadowText <span class='op'>=</span> <span class='cn'>FALSE</span>,
   color_by_column <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  style <span class='op'>=</span> <span class='st'>"dotplot"</span>,
   enrich_im_weight <span class='op'>=</span> <span class='fl'>0.3</span>,
   gene_im_weight <span class='op'>=</span> <span class='fl'>0.5</span>,
   colorize_by_gene <span class='op'>=</span> <span class='cn'>TRUE</span>,
   cluster_color_min_fraction <span class='op'>=</span> <span class='fl'>0.4</span>,
   byCols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"composite_rank"</span>, <span class='st'>"minp_rank"</span>, <span class='st'>"gene_count_rank"</span><span class='op'>)</span>,
+  edge_bundling <span class='op'>=</span> <span class='st'>"connections"</span>,
   do_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,
   verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>...</span>
@@ -290,6 +292,13 @@ colors to associate with each Cnet cluster.</p></td>
       <td><p><code>character</code> vector describing how to sort the
 pathways within Cnet clusters. This argument is passed
 to <code><a href='rank_mem_clusters.html'>rank_mem_clusters()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>edge_bundling</th>
+      <td><p><code>character</code> string passed to <code><a href='jam_igraph.html'>jam_igraph()</a></code>
+to control edge bundling. The default <code>edge_bundling="connections"</code>
+will bundle Cnet plot edges for genes that share the same pathway
+connections.</p></td>
     </tr>
     <tr>
       <th>do_plot</th>

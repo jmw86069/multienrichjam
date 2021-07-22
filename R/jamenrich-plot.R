@@ -152,10 +152,11 @@ mem_gene_path_heatmap <- function
  column_title=LETTERS,
  row_title=letters,
  row_title_rot=90,
- colorize_by_gene=FALSE,
+ colorize_by_gene=TRUE,
  na_col="white",
  rotate_heatmap=FALSE,
  colramp="Reds",
+ column_names_max_height=grid::unit(12, "cm"),
  seed=123,
  verbose=FALSE,
  ...)
@@ -183,7 +184,7 @@ mem_gene_path_heatmap <- function
    ## apply min_set_ct_each alongside p_cutoff to ensure the
    ## pathways with min_set_ct_each also meet p_cutoff
    met_p_cutoff <- (mem$enrichIM[colnames(memIM),,drop=FALSE] <= p_cutoff)
-   met_min_set_ct_each <- do.call(cbind, lapply(nameVector(colnames(mem$geneIM)), function(icol){
+   met_min_set_ct_each <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$geneIM)), function(icol){
       colSums(mem$geneIM[rownames(memIM),icol] * (memIM != 0)) >= min_set_ct_each;
    }));
    met_criteria <- rowSums(met_p_cutoff & met_min_set_ct_each) > 0;
@@ -297,7 +298,9 @@ mem_gene_path_heatmap <- function
       row_fontsize <- row_cex * 60/(nrow(memIM))^(1/2);
    }
    if (length(column_fontsize) == 0) {
-      column_fontsize <- column_cex * 60/(ncol(memIM))^(1/2);
+      column_fontsize <- jamba::noiseFloor(column_cex * 60/(ncol(memIM))^(1/2),
+         minimum=1,
+         ceiling=18);
    }
 
    ## Apply colors to outside annotations
@@ -389,7 +392,10 @@ mem_gene_path_heatmap <- function
             "colorize_by_gene");
       }
       geneIMu <- unique(mem$geneIM);
-      geneIMu <- jamba::mixedSortDF(data.frame(rowSums(geneIMu), -geneIMu))[,-1,drop=FALSE]*-1;
+      geneIMu <- jamba::mixedSortDF(
+         data.frame(check.names=FALSE,
+            rowSums(geneIMu),
+            -geneIMu))[,-1,drop=FALSE]*-1;
       sep <- ",\n  ";
       geneIMu_names <- jamba::cPasteS(im2list(t(geneIMu)),
          sep=sep);
@@ -399,7 +405,7 @@ mem_gene_path_heatmap <- function
       names(geneIMu_colors) <- geneIMu_names
       if (verbose) {
          for (i in seq_along(geneIMu_colors)) {
-            jamba::printDebug(nameVector(unlist(strsplit(geneIMu_colors[i], sep)),
+            jamba::printDebug(jamba::nameVector(unlist(strsplit(geneIMu_colors[i], sep)),
                unlist(strsplit(geneIMu_names[i], sep))),
                indent="    ");
          }
@@ -499,6 +505,7 @@ mem_gene_path_heatmap <- function
             row_names_gp=grid::gpar(fontsize=row_fontsize),
             column_names_gp=grid::gpar(fontsize=column_fontsize),
             column_names_rot=90,
+            column_names_max_height=column_names_max_height,
             column_title=column_title,
             row_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
@@ -617,17 +624,48 @@ mem_gene_path_heatmap <- function
 #' every cell whose P-value meets the threshold, while all other
 #' cells are therefore white.
 #'
+#' The `style` argument controls whether a heatmap or dotplot is
+#' created. When `style="dotplot"` the cells are colored as usual
+#' but are drawn as circles sized proportional to the number of
+#' genes involved in enrichment. Because `ComplexHeatmap::Heatmap()`
+#' is used for this step, a separate point legend is returned
+#' as an attribute of the heatmap object.
+#'
+#' To draw the dotplot heatmap including the point legend,
+#' use this form:
+#'
+#' ```R
+#' ComplexHeatmap::draw(hm,
+#'    annotation_legend_list=attr(hm, "annotation_legend_list"))
+#' ```
+#'
 #' @family jam plot functions
 #'
 #' @param mem `list` object created by `multiEnrichMap()`. Specifically
 #'    the object is expected to contain `enrichIM`.
-#' @param p_cutoff numeric value of the enrichment P-value cutoff,
-#'    above which P-values are not colored, and are therefore white.
-#'    The enrichment P-values are displayed as an annotated heatmap
-#'    at the top of the main heatmap. Any cell that has a color meets
-#'    at least the minimum P-value threshold.
-#' @param p_floor numeric minimum P-value used for the color gradient.
+#' @param style `character` string indicating the style of heatmap:
+#'    `"heatmap"` produces a regular heatmap, shaded by `log10(Pvalue)`;
+#'    `"dotplot"` produces a dotplot, where the dot size is proportional
+#'    to the number of genes. See function description for details on
+#'    how to include the point size legend beside the heatmap.
+#'    The main benefit of using "dotplot" style is that it also indicates
+#'    the relative number of genes involved in the enrichment.
+#' @param p_cutoff `numeric` value of the enrichment P-value cutoff,
+#'    by default this value is obtained from `mem$p_cutoff` to be
+#'    consistent with the original `multiEnrichMap()` analysis.
+#'    P-values above `p_cutoff` are not colored, and are therefore white.
+#'    This behavior is intended to indicate pathways with P-value above
+#'    this threshold did not meet the threshold, instead of
+#'    pathways with similar P-values displaying with similar color.
+#' @param p_floor `numeric` minimum P-value used for the color gradient.
 #'    P-values below this floor are colored with the maximum color gradient.
+#'    This value is intended to be used in cases where one enrichment
+#'    P-value is very low (e.g. 1e-36) to prevent all other P-values from
+#'    being colored pale red-white and not be noticeable.
+#' @param point_size_factor `numeric` used to adjust the legend point size,
+#'    since the heatmap point size is dependent upon the number of rows,
+#'    the legend may require some manual adjustment to make sure the
+#'    legend matches the heatmap.
 #' @param row_method character string of the distance method
 #'    to use for row and column clustering. The clustering is performed
 #'    by `amap::hcluster()`.
@@ -658,21 +696,26 @@ mem_gene_path_heatmap <- function
 #'    inside each heatmap cell.
 #' @param column_title optional character string with title to display
 #'    above the heatmap.
+#' @param row_names_max_width,column_names_max_height,heatmap_legend_param
+#'    arguments passed to `ComplexHeatmap::Heatmap()`.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization.
 #'
 #' @export
 mem_enrichment_heatmap <- function
 (mem,
- p_cutoff=0.05,
+ style=c("heatmap", "dotplot"),
+ p_cutoff=mem$p_cutoff,
  p_floor=1e-6,
+ point_size_factor=10,
+ point_size_max=5,
  row_method="euclidean",
  name="-log10P",
  row_dend_reorder=TRUE,
  row_dend_width=grid::unit(30, "mm"),
- row_fontsize=8,
+ row_fontsize=NULL,
  row_cex=1,
- column_fontsize=12,
+ column_fontsize=NULL,
  column_cex=1,
  cluster_columns=FALSE,
  sets=NULL,
@@ -681,9 +724,14 @@ mem_enrichment_heatmap <- function
  lens=3,
  cexCellnote=0.7,
  column_title=NULL,
+ row_names_max_width=grid::unit(12, "cm"),
+ column_names_max_height=grid::unit(12, "cm"),
+ heatmap_legend_param=NULL,
  ...)
 {
    #
+   style <- match.arg(style);
+
    col_logp <- circlize::colorRamp2(
       breaks=c(-log10(p_cutoff + 1e-10),
          seq(from=-log10(p_cutoff),
@@ -727,30 +775,122 @@ mem_enrichment_heatmap <- function
 
    ## Automatic fontsize
    if (length(column_fontsize) == 0) {
-      row_fontsize <- row_cex * 60/(nrow(memIM))^(1/2);
+      row_fontsize <- jamba::noiseFloor(row_cex * 60/(nrow(mem$enrichIM))^(1/2),
+         minimum=1,
+         ceiling=18);
    }
    if (length(column_fontsize) == 0) {
-      column_fontsize <- column_cex * 60/(ncol(memIM))^(1/2);
+      column_fontsize <- jamba::noiseFloor(column_cex * 60/(ncol(mem$enrichIM))^(1/2),
+         minimum=1,
+         ceiling=20);
    }
 
-   hm <- ComplexHeatmap::Heatmap(
-      -log10(mem$enrichIM),
-      name=name,
-      col=col_logp,
-      cluster_rows=er_hc2,
-      row_dend_reorder=row_dend_reorder,
-      border=TRUE,
-      row_names_gp=grid::gpar(fontsize=row_fontsize),
-      column_names_gp=grid::gpar(fontsize=column_fontsize),
-      cluster_columns=cluster_columns,
-      row_dend_width=row_dend_width,
-      row_names_max_width=grid::unit(8, "cm"),
-      column_title=column_title,
-      ...);
-   if (color_by_column) {
+   if (length(heatmap_legend_param) == 0) {
+      heatmap_legend_param <- list(border="black");
+   }
+
+   if ("heatmap" %in% style) {
+      hm <- ComplexHeatmap::Heatmap(
+         -log10(mem$enrichIM),
+         name=name,
+         col=col_logp,
+         cluster_rows=er_hc2,
+         row_dend_reorder=row_dend_reorder,
+         border=TRUE,
+         row_names_gp=grid::gpar(fontsize=row_fontsize),
+         row_names_max_width=row_names_max_width,
+         column_names_gp=grid::gpar(fontsize=column_fontsize),
+         column_names_max_height=column_names_max_height,
+         cluster_columns=cluster_columns,
+         row_dend_width=row_dend_width,
+         column_title=column_title,
+         heatmap_legend_param=heatmap_legend_param,
+         ...);
+   } else {
+      ct_to_breaks <- function(ctmax, n=5, maxsize=5) {
+         if (ctmax == 1) {
+            ctbreaks <- c(0, 1);
+         } else {
+            ctbreaks <- c(0, seq(from=1,
+               to=max(mem$enrichIMgeneCount, na.rm=TRUE),
+               length.out=5));
+         }
+         unique(round(ctbreaks));
+      }
+      ct_to_size <- function(x, ctmax=15, n=5, maxsize=point_size_max) {
+         ctbreaks <- ct_to_breaks(ctmax=ctmax, n=n, maxsize=maxsize)
+         x <- jamba::noiseFloor(x, minimum=0, ceiling=ctmax);
+         xcut <- cut(x,
+            breaks=c(-1, ctbreaks),
+            include.lowest=TRUE);
+         (as.numeric(xcut) - 1) / n * maxsize
+      }
+
+      # define point size legend
+      ctmax <- max(mem$enrichIMgeneCount, na.rm=TRUE);
+      ctbreaks <- ct_to_breaks(ctmax, n=10, maxsize=point_size_max)
+      ctbreaksize <- ct_to_size(ctbreaks, ctmax=ctmax, n=10, maxsize=point_size_max)
+      pt_legend <- ComplexHeatmap::Legend(
+         labels=ctbreaks[ctbreaks > 0],
+         title="Gene Count",
+         type="points",
+         pch=21,
+         size=grid::unit(ctbreaksize[ctbreaks > 0]*point_size_factor, "mm"),
+         grid_height=grid::unit(max(ctbreaksize)*point_size_factor/1.5, "mm"),
+         grid_width=grid::unit(max(ctbreaksize)*point_size_factor/1.5, "mm"),
+         background="transparent",
+         legend_gp=grid::gpar(col="black",
+            fill="grey85"));
+
+      # dot plot style
+      hm <- ComplexHeatmap::Heatmap(
+         -log10(mem$enrichIM),
+         name=name,
+         col=col_logp,
+         cluster_rows=er_hc2,
+         row_dend_reorder=row_dend_reorder,
+         border=TRUE,
+         row_names_gp=grid::gpar(fontsize=row_fontsize),
+         row_names_max_width=row_names_max_width,
+         column_names_gp=grid::gpar(fontsize=column_fontsize),
+         column_names_max_height=column_names_max_height,
+         cluster_columns=cluster_columns,
+         row_dend_width=row_dend_width,
+         column_title=column_title,
+         heatmap_legend_param=heatmap_legend_param,
+         rect_gp=grid::gpar(type="none"),
+         cell_fun=function(j, i, x, y, width, height, fill) {
+            cell_value <- jamba::rmNA(naValue=0,
+               -log10(mem$enrichIM)[i, j]);
+            cell_color <- col_logp(cell_value);
+            # draw grid through center of each cell
+            grid::grid.lines(x=x + width * c(-1/2, 1/2, NA, 0, 0),
+               y=y + height * c(0, 0, NA, -1/2, 1/2),
+               gp=grid::gpar(col="grey80"));
+            if (cell_value >= -log10(mem$p_cutoff)) {
+               cell_size <- ct_to_size(mem$enrichIMgeneCount[i, j],
+                  ctmax=ctmax,
+                  n=10,
+                  maxsize=point_size_max)/5;
+               grid::grid.circle(x=x,
+                  y=y,
+                  r=height * cell_size * 1.5,
+                  gp=grid::gpar(
+                     col=jamba::makeColorDarker(cell_color),
+                     fill=cell_color))
+            }
+         }
+      );
+      attr(hm,
+         "annotation_legend_list") <- pt_legend;
+      draw(hm,
+         annotation_legend_list=pt_legend);
+   }
+
+   if ("heatmap" %in% style && color_by_column) {
       hm_sets <- rownames(mem$enrichIM)[ComplexHeatmap::row_order(hm)];
       ## Prepare fresh image colors using p_cutoff and p_floor
-      enrichIMcolors <- do.call(cbind, lapply(nameVector(colnames(mem$enrichIM)), function(i){
+      enrichIMcolors <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$enrichIM)), function(i){
          x <- -log10(mem$enrichIM[,i]);
          cr1 <- circlize::colorRamp2(
             breaks=c(-log10(p_cutoff + 1e-10),
@@ -875,6 +1015,7 @@ mem_multienrichplot <- function
  repulse=3.7,
  sets=NULL,
  rescale=TRUE,
+ edge_bundling="connections",
  main="MultiEnrichMap\noverlap >= {overlap}, overlap_count >= {overlap_count}",
  ...)
 {
@@ -963,6 +1104,7 @@ mem_multienrichplot <- function
          jam_igraph(g,
             main=main,
             rescale=rescale,
+            edge_bundling=edge_bundling,
             ...);
       }
       if (do_legend) {
@@ -1020,8 +1162,7 @@ mem_legend <- function
       col=colorVb,
       bg=bg,
       box.col=box.col,
-      cex=cex,
-      ...);
+      cex=cex);
 }
 
 
@@ -1229,6 +1370,10 @@ mem_legend <- function
 #' @param byCols `character` vector describing how to sort the
 #'    pathways within Cnet clusters. This argument is passed
 #'    to `rank_mem_clusters()`.
+#' @param edge_bundling `character` string passed to `jam_igraph()`
+#'    to control edge bundling. The default `edge_bundling="connections"`
+#'    will bundle Cnet plot edges for genes that share the same pathway
+#'    connections.
 #' @param do_plot `logical` indicating whether to render each plot.
 #'    When `do_plot=FALSE` the plot objects will be created and returned,
 #'    but the plot itself will not be rendered. This option may be
@@ -1269,11 +1414,13 @@ mem_plot_folio <- function
  repulse=4,
  use_shadowText=FALSE,
  color_by_column=FALSE,
+ style="dotplot",
  enrich_im_weight=0.3,
  gene_im_weight=0.5,
  colorize_by_gene=TRUE,
  cluster_color_min_fraction=0.4,
  byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
+ edge_bundling="connections",
  do_plot=TRUE,
  verbose=TRUE,
  ...)
@@ -1309,14 +1456,22 @@ mem_plot_folio <- function
          color_by_column=color_by_column,
          row_cex=row_cex,
          column_cex=column_cex,
+         style=style,
          ...);
       if (do_plot) {
          if (!color_by_column) {
-            if (length(main) > 0 && nchar(main) > 0) {
-               grid_with_title(mem_hm,
-                  title=main);
+            if ("annotation_legend_list" %in% names(attributes(mem_hm))) {
+               annotation_legend_list <- attributes(mem_hm)$annotation_legend_list;
             } else {
-               draw(mem_hm);
+               annotation_legend_list <- NULL;
+            }
+            if (length(main) > 0 && nchar(main) > 0) {
+               ComplexHeatmap::draw(mem_hm,
+                  annotation_legend_list=annotation_legend_list,
+                  column_title=main);
+            } else {
+               ComplexHeatmap::draw(mem_hm,
+                  annotation_legend_list=annotation_legend_list);
             }
          }
       }
@@ -1372,6 +1527,9 @@ mem_plot_folio <- function
          "\n",
          jamba::formatInt(nrow(gp_hm)), " rows x ",
          jamba::formatInt(ncol(gp_hm)), " columns");
+      # Optionally increase padding between annotation and heatmap body
+      #row_anno_padding <- ComplexHeatmap::ht_opt$ROW_ANNO_PADDING;
+      #column_anno_padding <- ComplexHeatmap::ht_opt$COLUMN_ANNO_PADDING;
       if (do_plot) {
          grid_with_title(gp_hm,
             title=main,
@@ -1413,7 +1571,8 @@ mem_plot_folio <- function
             cluster_color_min_fraction=cluster_color_min_fraction,
             max_nchar_labels=max_nchar_labels,
             include_cluster_title=include_cluster_title,
-            return_type="cnet");
+            return_type="cnet",
+            ...);
       }, error=function(e){
          jamba::printDebug("Error during collapse_mem_clusters(), returning NULL.");
          print(e);
@@ -1460,7 +1619,7 @@ mem_plot_folio <- function
                sep="");
          }
          cnet_title <- "Cnet plot using collapsed clusters";
-         cnet_collapsed <- set_graph_attr(cnet_collapsed,
+         cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
             name="title",
             value=cnet_title);
          ret_vals$cnet_collapsed <- cnet_collapsed;
@@ -1468,6 +1627,7 @@ mem_plot_folio <- function
          if (do_plot) {
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
+               edge_bundling=edge_bundling,
                ...);
             mem_legend(mem);
             title(sub="Cnet plot using collapsed clusters",
@@ -1493,13 +1653,14 @@ mem_plot_folio <- function
                sep="");
          }
          cnet_title <- "Cnet plot using collapsed clusters\nlabeled by set";
-         cnet_collapsed <- set_graph_attr(cnet_collapsed,
+         cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
             name="title",
             value=cnet_title);
          ret_vals$cnet_collapsed_set <- cnet_collapsed;
          if (do_plot) {
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
+               edge_bundling=edge_bundling,
                ...);
             mem_legend(mem);
             title(sub=cnet_title,
@@ -1520,13 +1681,14 @@ mem_plot_folio <- function
             "",
             igraph::V(cnet_collapsed)$label);
          cnet_title <- "Cnet plot using collapsed clusters\nlabeled by set\ngene labels hidden";
-         cnet_collapsed <- set_graph_attr(cnet_collapsed,
+         cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
             name="title",
             value=cnet_title);
          ret_vals$cnet_collapsed_set2 <- cnet_collapsed;
          if (do_plot) {
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
+               edge_bundling=edge_bundling,
                ...);
             mem_legend(mem);
             title(sub=cnet_title,
@@ -1595,13 +1757,14 @@ mem_plot_folio <- function
                " exemplar",
                pluralized,
                " per cluster")
-            cnet_exemplar <- set_graph_attr(cnet_exemplar,
+            cnet_exemplar <- igraph::set_graph_attr(cnet_exemplar,
                name="title",
                value=cnet_title);
             ## Draw Cnet exemplar
             if (do_plot) {
                jam_igraph(cnet_exemplar,
                   use_shadowText=use_shadowText,
+                  edge_bundling=edge_bundling,
                   ...);
                title(
                   sub=cnet_title,
@@ -1642,13 +1805,14 @@ mem_plot_folio <- function
                   ...);
             cnet_title <- paste0("Cnet plot for cluster ",
                cluster_name);
-            cnet_cluster <- set_graph_attr(cnet_cluster,
+            cnet_cluster <- igraph::set_graph_attr(cnet_cluster,
                name="title",
                value=cnet_title);
             ## Draw Cnet cluster
             if (do_plot) {
                jam_igraph(cnet_cluster,
                   use_shadowText=use_shadowText,
+                  edge_bundling=edge_bundling,
                   ...);
                title(sub=paste0("Cnet plot for cluster ",
                   cluster_name),

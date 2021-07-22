@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Jam igraph vectorized plot function — jam_plot_igraph • multienrichjam</title>
+<title>Jam igraph vectorized plot function (internal) — jam_plot_igraph • multienrichjam</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Jam igraph vectorized plot function — jam_plot_igraph" />
-<meta property="og:description" content="Jam igraph vectorized plot function, replaces igraph:::plot.igraph(),
-as called via jam_igraph()." />
+<meta property="og:title" content="Jam igraph vectorized plot function (internal) — jam_plot_igraph" />
+<meta property="og:description" content="Jam igraph vectorized plot function called by jam_igraph()" />
 
 
 
@@ -73,7 +72,7 @@ as called via jam_igraph()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -81,7 +80,7 @@ as called via jam_igraph()." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -107,7 +106,7 @@ as called via jam_igraph()." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -124,14 +123,13 @@ as called via jam_igraph()." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Jam igraph vectorized plot function</h1>
+    <h1>Jam igraph vectorized plot function (internal)</h1>
     <small class="dont-index">Source: <a href='http://github.com/jmw86069/multienrichjam/blob/master/R/jamenrich-igraph.r'><code>R/jamenrich-igraph.r</code></a></small>
     <div class="hidden name"><code>jam_plot_igraph.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Jam igraph vectorized plot function, <code>replaces igraph:::plot.igraph()</code>,
-as called via <code><a href='jam_igraph.html'>jam_igraph()</a></code>.</p>
+    <p>Jam igraph vectorized plot function called by <code><a href='jam_igraph.html'>jam_igraph()</a></code></p>
     </div>
 
     <pre class="usage"><span class='fu'>jam_plot_igraph</span><span class='op'>(</span>
@@ -251,18 +249,19 @@ prevent overlaps, or adjust node sizes to reduce overlaps.</p></td>
     <tr>
       <th>edge_bundling</th>
       <td><p><code>character</code> string or <code>function</code>, where:</p><ul>
-<li><p><code>character</code> string <code>"none"</code> will perform no edge bundling</p></li>
-<li><p><code>character</code> string <code>"connections"</code> will perform graph
-edge connection bundling via <code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite()</a></code> then
+<li><p><code>"none"</code> will perform no edge bundling</p></li>
+<li><p><code>"connections"</code> will perform graph edge bundling by
+shared connections by calling <code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite()</a></code> then
 <code><a href='edge_bundle_nodegroups.html'>edge_bundle_nodegroups()</a></code></p></li>
-<li><p><code>character</code> string <code>"nodegroups"</code> will perform graph edge
-connection bundling using <code>nodegroups</code> via
-<code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite()</a></code></p></li>
+<li><p><code>"nodegroups"</code> will perform graph edge bundling
+using <code>nodegroups</code> by calling <code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite()</a></code></p></li>
 <li><p><code>function</code> will call a custom edge bundling function using
 the <code>igraph</code> object <code>x</code> and the igraph parameters <code>param</code>
 as input. This output is currently untested, and is intended
 to enable alternative edge bundling functions which may exist
-outside this package.</p></li>
+outside this package. The custom function should be able
+to use the node layout coordinates in <code>graph_attr(x, "layout")</code>,
+and render edges between nodes.</p></li>
 </ul></td>
     </tr>
     <tr>
@@ -309,27 +308,78 @@ which debug output will be plotted onscreen.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is a complete copy of <code>igraph:::plot.igraph()</code> with
-two changes to enable vectorized plotting in these situations:</p><ol>
-<li><p>When there are multiple vertex <code>"shape"</code> attributes, the
-base plot function draws each individual <code>igraph</code> vertex one by one.
-The <code>jam_plot_igraph()</code> plots nodes of each shape in a group. For
-fairly large <code>igraph</code> objects (about 1000 nodes), this change
-is substantially faster.</p></li>
-<li><p>When there are multiple font families, the default plot function
-draws each label one by one. The <code>jam_plot_igraph()</code> draws
-labels in groups of font family. This situation is very rare, however
-when used the speed improvement is substantial.</p></li>
+    <p>Note that this function is intended to be called by <code><a href='jam_igraph.html'>jam_igraph()</a></code>,
+which handles the overall plot equivalent of <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code>,
+but calculates layout coordinates, x- and y-axis ranges, and
+adjusts node and label sizes.</p>
+<p>The steps here are a reproduction of <code>igraph:::plot.igraph()</code> with
+four changes:</p><ol>
+<li><p>Default <code>rescale=FALSE</code>, and <code>asp=1</code> which means igraph layout is
+drawn true to the layout coordinates without distortion. To use
+default <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code> behavior, use <code>rescale=TRUE</code>.
+The new default may not be appropriate for bipartite layout
+algorithms that generate two columns, and seems most useful
+with organic layouts where aspect ratio 1 helps convey important
+meaning in the graph structure, namely by enforcing consistent
+x- and y-axis visual distance between nodes.</p><ul>
+<li><p>Related: the <code>xlim</code> and <code>ylim</code> values are automatically adjusted
+to include the layout coordinate range. The default
+<code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph(..., rescale=FALSE)</a></code> does not adjust the
+<code>xlim</code> and <code>ylim</code> ranges, which can be problematic when supplying
+layout as a function, and therefore the output node coordinates
+are not known until the plot rendering step.</p></li>
+</ul></li>
 </ol>
 
-<p>All node shapes <code>"pie"</code> are changed to <code>"jampie"</code> with default
-argument <code>pie_to_jampie=TRUE</code>. This change substantially speeds
-rendering pie nodes in vectorized fashion.</p>
+<p>When <code>vectorized_node_shapes=TRUE</code> by default:</p><ol>
+<li><p>When there are multiple different vertex <code>"shape"</code> attributes, the
+nodes are rendered vectorized one shape at a time. The original
+<code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code> draws each individual vertex one by one,
+which is substantially slower (minutes compared to 1-2 seconds)
+for large <code>igraph</code> objects.</p></li>
+<li><p>When there are multiple font families, the default plot function
+draws each label one by one. The <code>jam_plot_igraph()</code> draws
+labels in groups of font family, in order to comply with limitations
+in <code><a href='https://rdrr.io/r/graphics/text.html'>graphics::text()</a></code>. This situation is fairly rare, however
+the speed improvement is substantial, again roughly minutes down
+to 1-2 seconds.</p></li>
+</ol>
+
+<p>The fourth difference involves edge bundling:</p><ol>
+<li><p>When <code>edge_bundling</code> is used, it renders edges differently
+than the approach in <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code>, by drawing curved
+splines for each bundle of edges.</p></li>
+</ol>
+
+<p>Some other distinctive features include:</p>
+<p>When <code>use_shadowText=TRUE</code> node labels call <code><a href='https://rdrr.io/pkg/jamba/man/shadowText.html'>jamba::shadowText()</a></code>
+which draws a small partly transparent outline around labels, making
+them more legible when they overlap colored nodes. This step
+effectively draws each label <code>n</code> times, which can slightly slow
+the rendering of the overall figure.</p>
+<p>When <code>pie_to_jampie=TRUE</code>, any nodes with <code>shape="pie"</code> are
+changed to <code>shape="jampie"</code> for the purpose of rendering pie
+shapes in vectorized fashion, instead of being drawn for each
+node separately. This change is a substantial improvement in
+rendering time.</p>
+<p>Default colors for marked node groups <code>mark.col</code> and <code>mark.border</code>
+when not defined upfront, will call <code><a href='https://rdrr.io/pkg/colorjam/man/rainbowJam.html'>colorjam::rainbowJam()</a></code>
+and not <code>grDevices::rainbow(). The </code>colorjam::rainbowJam()<code>produces more visually distinct categorical colors. This behavior can be controlled by supplying a</code>character<code>vector with specific colors for</code>mark.col<code>and</code>mark.border<code>. Note that the border should match the colors, or it can be set to </code>"grey45"`
+for a generally visible border.</p>
+<p>Optional argument <code>nodegroups</code> can be supplied, which is a <code>list</code>
+of vectors, where each vector represents a group of nodes. The
+<code>nodegroups</code> can be used with <code>edge_bundling="nodegroups"</code> to
+define custom edge bundling.</p>
+<p>Finally, individual plot components can be individually disabled:</p><ul>
+<li><p><code>render_nodes=FALSE</code></p></li>
+<li><p><code>render_edges=FALSE</code></p></li>
+<li><p><code>render_groups=FALSE</code></p></li>
+<li><p><code>render_nodelabels=FALSE</code></p></li>
+</ul>
+
 <p>Note that this function is not called by default, and is only called
 by <code><a href='jam_igraph.html'>multienrichjam::jam_igraph()</a></code>.</p>
-<p>Smaller changes: <code>mark.col</code> and <code>mark.border</code> default colors
-now call <code><a href='https://rdrr.io/pkg/colorjam/man/rainbowJam.html'>colorjam::rainbowJam()</a></code> instead of <code><a href='https://rdrr.io/r/grDevices/palettes.html'>grDevices::rainbow()</a></code>.</p>
-<p>All arguments are documented in <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code>.</p>
+<p>All other arguments are documented in <code><a href='https://rdrr.io/pkg/igraph/man/plot.igraph.html'>igraph::plot.igraph()</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other jam igraph functions: 
@@ -337,8 +387,10 @@ now call <code><a href='https://rdrr.io/pkg/colorjam/man/rainbowJam.html'>colorj
 <code><a href='cnet2im.html'>cnet2im</a>()</code>,
 <code><a href='cnetplotJam.html'>cnetplotJam</a>()</code>,
 <code><a href='cnetplot_internalJam.html'>cnetplot_internalJam</a>()</code>,
+<code><a href='color_edges_by_nodes_deprecated.html'>color_edges_by_nodes_deprecated</a>()</code>,
 <code><a href='color_edges_by_nodes.html'>color_edges_by_nodes</a>()</code>,
 <code><a href='drawEllipse.html'>drawEllipse</a>()</code>,
+<code><a href='edge_bundle_bipartite.html'>edge_bundle_bipartite</a>()</code>,
 <code><a href='edge_bundle_nodegroups.html'>edge_bundle_nodegroups</a>()</code>,
 <code><a href='enrichMapJam.html'>enrichMapJam</a>()</code>,
 <code><a href='fixSetLabels.html'>fixSetLabels</a>()</code>,

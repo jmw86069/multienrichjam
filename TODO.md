@@ -3,6 +3,31 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## 20jul2021
+
+* Replace `multiEnrichMap()` with `multienrichjam()` and simplify the arguments:
+
+   * p_cutoff
+   * min_gene_count
+   * top_enrich_n
+   * colnames: id, name, description, pvalue, gene
+   * color_sub
+
+* Port `mem_enrichment_heatmap()` argument `colorize_by_gene=TRUE` to
+use `ComplexHeatmap::Heatmap()` instead of `jamba::imageByColors()`
+for consistency, also so it can support `style="dotplot"`.
+
+## 19jul2021
+
+* `jam_igraph()` with `rescale=TRUE` should also scale igraph vertex
+size and igraph label size according to the new axis ranges.
+* Debug `jam_igraph()` when `vertex.size` is defined alongside
+V(g)$size, and `node_factor`. It appears not to apply the size
+properly.
+* COMPLETE: `mem_enrichment_heatmap()` new option for dot plot format,
+based upon `enrichplot::dotplot()` that sizes each dot by the
+number of genes present.
+
 ## 24jun2021
 
 * In `multiEnrichMap()` remove default `topEnrichSources`

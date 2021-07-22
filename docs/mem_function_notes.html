@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -105,7 +105,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -125,33 +125,155 @@
       <h1>NA</h1>
     </div>
 
-<div id="keep-track-of-what-igraph-functions-call-other-igraph-functions" class="section level2">
+
+<div id="keep-track-of-igraph-related-functions-that-call-other-functions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#keep-track-of-what-igraph-functions-call-other-igraph-functions" class="anchor"></a>Keep track of what igraph functions call other igraph functions</h2>
-<p>subsetCnetIgraph()</p>
+<a href="#keep-track-of-igraph-related-functions-that-call-other-functions" class="anchor"></a>Keep track of igraph-related functions that call other functions</h2>
+<p><code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code></p>
 <ul>
-<li>removeIgraphSinglets() - optional, default=TRUE</li>
-<li>removeIgraphBlanks() - optional, default=TRUE</li>
-<li>spread_igraph_labels() - optional, default=TRUE</li>
-<li>reorderIgraphNodes() - optional, default=TRUE</li>
+<li>
+<code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code> - optional, default=TRUE</li>
+<li>
+<code><a href="reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code> - optional, default=TRUE</li>
+<li>
+<code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> - optional, default=TRUE</li>
+<li>
+<code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> - optional, default=TRUE</li>
 </ul>
-<p>spread_igraph_labels()</p>
+<p><code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></p>
 <ul>
-<li>layout_with_qfr() - called if force_relayout=TRUE, OR (layout=NULL and g$layout=NULL)
+<li>
+<p><code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code> - called if force_relayout=TRUE, OR (layout=NULL and g$layout=NULL)</p>
 <ul>
-<li>layout() - only called if force_relayout=TRUE</li>
+<li>
+<code><a href="https://rdrr.io/r/graphics/layout.html">layout()</a></code> - only called if force_relayout=TRUE</li>
 </ul>
 </li>
-<li>reorderIgraphNodes() - optional, default=TRUE</li>
+<li><p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> - optional, default=TRUE</p></li>
 </ul>
-<p>reorderIgraphNodes()</p>
+<p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code></p>
 <ul>
-<li>returns g which always includes g$layout with layout coordinates</li>
-<li>layout() - called if layout is a function</li>
-<li>relayout_with_qfr() - called if layout=NULL, g$layout=NULL</li>
-<li>isColorBlank() - called with isColorBlank(…)</li>
+<li>returns g which always includes <code>g$layout</code> with layout coordinates</li>
+<li>
+<code><a href="https://rdrr.io/r/graphics/layout.html">layout()</a></code> - called if layout is a function</li>
+<li>
+<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> - called if <code>layout=NULL, g$layout=NULL</code>
+</li>
+<li>
+<code><a href="reference/isColorBlank.html">isColorBlank()</a></code> - called with <code><a href="reference/isColorBlank.html">isColorBlank(...)</a></code>
+</li>
 </ul>
 </div>
+<div id="re-consider-function-name-style" class="section level2">
+<h2 class="hasAnchor">
+<a href="#re-consider-function-name-style" class="anchor"></a>Re-consider function name style</h2>
+<p>Re-consider whether renaming functions with some consistent and intuitive naming scheme could be beneficial. I actually complain about my own inconsistency so I think it best to rename functions sooner than later. Old functions will be deprecated and aliased to the new function names.</p>
+<div id="function-style-option-a-type_verb_subtype" class="section level3">
+<h3 class="hasAnchor">
+<a href="#function-style-option-a-type_verb_subtype" class="anchor"></a>Function Style Option A: <code>type_verb_subtype()</code>
+</h3>
+<p>For me it is sometimes helpful to see the relevant object type first in the function name, however this style may not be idea. For example:</p>
+<ul>
+<li><code>input_method_subtype()</code></li>
+<li>
+<code>igraph_reorder_nodes()</code> instead of <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>
+</li>
+<li>
+<code>igraph_spread_labels()</code> instead of <code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code>
+</li>
+<li>
+<code>igraph_subset_cnet()</code> instead of <code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>
+</li>
+<li>
+<code>igraph_remove_singlets()</code> instead of <code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code>
+</li>
+<li>
+<code>igraph_remove_blanks()</code> instead of <code><a href="reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>
+</li>
+<li>
+<code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code> for consistency with <code>igraph::layout_with_()</code> convention.</li>
+<li>
+<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> consistent with <code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code>
+</li>
+<li>
+<code>color_is_blank()</code> possible instead of <code><a href="reference/isColorBlank.html">isColorBlank()</a></code>
+</li>
+</ul>
+</div>
+<div id="function-style-option-b-verb_type_subtype" class="section level3">
+<h3 class="hasAnchor">
+<a href="#function-style-option-b-verb_type_subtype" class="anchor"></a>Function Style Option B: <code>verb_type_subtype()</code>
+</h3>
+<p><strong>This option is preferred because it matches Tidyverse convention</strong></p>
+<p>A counter point, the tidyverse style guide suggests using verbs, all lowercase with underscore ’_’ between words (not camelCase). For example:</p>
+<ul>
+<li><code>method_input_typeaffected()</code></li>
+<li>
+<code>reorder_igraph_nodes()</code> instead of <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>
+</li>
+<li><code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></li>
+<li>
+<code>subset_cnet_igraph()</code> instead of <code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>
+</li>
+<li>
+<code>remove_igraph_singlets()</code> instead of <code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code>
+</li>
+<li>
+<code>remove_igraph_blanks()</code> instead of <code><a href="reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>
+</li>
+<li><code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code></li>
+<li><code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code></li>
+<li>
+<code>is_color_blank()</code> instead of <code><a href="reference/isColorBlank.html">isColorBlank()</a></code>
+</li>
+</ul>
+</div>
+</div>
+<div id="new-alternate-function-subset_igraph" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-alternate-function-subset_igraph" class="anchor"></a>New alternate function <code>subset_igraph()</code>?</h2>
+<p>Instead of:</p>
+<ul>
+<li><code>remove_igraph_singlets()</code></li>
+<li><code>remove_igraph_blanks()</code></li>
+</ul>
+<p>One common function:</p>
+<ul>
+<li>
+<p><code>subset_igraph()</code></p>
+<p><em>-</em> or <code>prune_igraph()</code> or <code>filter_igraph()</code></p>
+<ul>
+<li><code>remove_singlets=FALSE</code></li>
+<li><code>remove_blanks=FALSE</code></li>
+</ul>
+</li>
+<li>
+<p><code>subset_cnet_igraph()</code></p>
+<ul>
+<li>same as above except option to subset by specific entries by <code>V(g)$nodeType</code>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="tidyverse--and-r-41--pipe-compatibility" class="section level2">
+<h2 class="hasAnchor">
+<a href="#tidyverse--and-r-41--pipe-compatibility" class="anchor"></a>Tidyverse %&gt;% and R-4.1 &gt; pipe compatibility</h2>
+<p>Where possible and where relevant the functions should be compatible with tidyverse pipe <code>%&gt;%</code> and the new R-4.1 operator pipe <code>\&gt;</code></p>
+<p>In practice when functions are called for their side-effects, the function should return the same object supplied after applying modifications.</p>
+<ul>
+<li><code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code></li>
+<li><code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></li>
+<li><code>subset_cnet_igraph()</code></li>
+<li><code>remove_igraph_singlets()</code></li>
+<li><code>remove_igraph_blanks()</code></li>
+</ul>
+</div>
+<div id="finding-relevant-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#finding-relevant-functions" class="anchor"></a>Finding relevant functions</h2>
+<p>For convenience one can use <code><a href="https://rdrr.io/pkg/jamba/man/grepls.html">jamba::grepls("igraph.")</a></code> to find functions relevant to <code>igraph</code> objects.</p>
+</div>
+
 
   </div>
 

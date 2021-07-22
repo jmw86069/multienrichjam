@@ -32,11 +32,13 @@ mem_plot_folio(
   repulse = 4,
   use_shadowText = FALSE,
   color_by_column = FALSE,
+  style = "dotplot",
   enrich_im_weight = 0.3,
   gene_im_weight = 0.5,
   colorize_by_gene = TRUE,
   cluster_color_min_fraction = 0.4,
   byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
+  edge_bundling = "connections",
   do_plot = TRUE,
   verbose = TRUE,
   ...
@@ -122,6 +124,11 @@ colors to associate with each Cnet cluster.}
 \item{byCols}{\code{character} vector describing how to sort the
 pathways within Cnet clusters. This argument is passed
 to \code{rank_mem_clusters()}.}
+
+\item{edge_bundling}{\code{character} string passed to \code{jam_igraph()}
+to control edge bundling. The default \code{edge_bundling="connections"}
+will bundle Cnet plot edges for genes that share the same pathway
+connections.}
 
 \item{do_plot}{\code{logical} indicating whether to render each plot.
 When \code{do_plot=FALSE} the plot objects will be created and returned,

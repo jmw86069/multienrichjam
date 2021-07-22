@@ -200,7 +200,7 @@ relayout_with_qfr <- function
          "head(layout_xy):");
       print(head(layout_xy));
    }
-   g <- set_graph_attr(g,
+   g <- igraph::set_graph_attr(g,
       "layout",
       layout_xy);
    if (spread_labels) {
@@ -874,12 +874,12 @@ cnet2df <- function
    df <- data.frame(nodeType=igraph::V(g)$nodeType,
       name=igraph::V(g)$name,
       label=igraph::V(g)$label,
-      degree=degree(g),
-      membership=components(g)$membership);
+      degree=igraph::degree(g),
+      membership=igraph::components(g)$membership);
    if (getNeighbors || checkSubsets) {
       df$neighbors <- jamba::cPaste(
-         lapply(seq_len(vcount(g)), function(i){
-            neighbors(g, i)$name;
+         lapply(seq_len(igraph::vcount(g)), function(i){
+            igraph::neighbors(g, i)$name;
          }),
          doSort=TRUE,
          makeUnique=TRUE);
@@ -1241,7 +1241,7 @@ removeIgraphBlanks <- function
                   ## keep track of which columns belong to which node
                   iMcol <- factor(rep(which(iUse), crLengths[iUse]/nrowNcolByrowV[1]));
                   ## Find columns where the colMin is 1, meaning all are blank
-                  iMblank <- (colMins(iM) == 1);
+                  iMblank <- (matrixStats::colMins(iM) == 1);
                   # Subset for non-blank columns
                   iMvalsM <- iMvals[,!iMblank,drop=FALSE];
                   iMnamesM <- iMnames[,!iMblank,drop=FALSE];
@@ -1588,8 +1588,8 @@ reorderIgraphNodes <- function
    ## red or blue, they should be visibly grouped together by that color.
    ##
    if (length(layout) == 0) {
-      if (!"layout" %in% list.graph.attributes(g)) {
-         if (all(c("x","y") %in% vertex_attr_names(g))) {
+      if (!"layout" %in% igraph::list.graph.attributes(g)) {
+         if (all(c("x","y") %in% igraph::vertex_attr_names(g))) {
             layout <- cbind(igraph::V(g)$x, igraph::V(g)$y);
             g <- igraph::set_graph_attr(g, "layout", layout)
          } else {
@@ -1612,7 +1612,7 @@ reorderIgraphNodes <- function
    ## comma-delimited neighboring nodes for each node
    neighborG <- jamba::cPaste(
       lapply(seq_len(igraph::vcount(g)), function(v){
-         neighbors(g, v, mode="all");
+         igraph::neighbors(g, v, mode="all");
       }),
       doSort=TRUE,
       makeUnique=FALSE);
@@ -1855,7 +1855,7 @@ reorderIgraphNodes <- function
    neighborDF[iMatch,c("x","y")] <- newDF[,c("x","y")];
    subDF <- subset(neighborDF, edgeGroup %in% neighborDF[1,"edgeGroup"]);
    new_layout <- as.matrix(neighborDF[,c("x","y"),drop=FALSE]);
-   g <- set_graph_attr(g, "layout", new_layout);
+   g <- igraph::set_graph_attr(g, "layout", new_layout);
    return(g);
 }
 
@@ -1881,7 +1881,7 @@ removeIgraphSinglets <- function
  min_degree=1,
  ...)
 {
-   keep_nodes <- (degree(g) >= min_degree);
+   keep_nodes <- (igraph::degree(g) >= min_degree);
    g_new <- subgraph_jam(g,
       which(keep_nodes));
    return(g_new);
@@ -1970,7 +1970,7 @@ spread_igraph_labels <- function
    }
    if (length(layout) == 0) {
       if (!force_relayout) {
-         if ("layout" %in% list.graph.attributes(g)) {
+         if ("layout" %in% igraph::list.graph.attributes(g)) {
             if (verbose) {
                jamba::printDebug("spread_igraph_labels(): ",
                   "Using ","layout"," from graph attributes.");
@@ -2030,7 +2030,7 @@ spread_igraph_labels <- function
    }
    g_angle <- jamba::nameVector(sapply(seq_len(igraph::vcount(g)), function(i){
       xy1 <- layout[i,1:2,drop=FALSE];
-      xy2 <- layout[as.numeric(ego(g, nodes=i, mindist=1)[[1]]),1:2,drop=FALSE];
+      xy2 <- layout[as.numeric(igraph::ego(g, nodes=i, mindist=1)[[1]]),1:2,drop=FALSE];
       if (length(xy2) == 0) {
          xy2 <- matrix(ncol=2, c(0,0));
       }
@@ -2441,35 +2441,95 @@ color_edges_by_nodes_deprecated <- function
    return(g);
 }
 
-#' Jam igraph vectorized plot function
+#' Jam igraph vectorized plot function (internal)
 #'
-#' Jam igraph vectorized plot function, `replaces igraph:::plot.igraph()`,
-#' as called via `jam_igraph()`.
+#' Jam igraph vectorized plot function called by `jam_igraph()`
 #'
-#' This function is a complete copy of `igraph:::plot.igraph()` with
-#' two changes to enable vectorized plotting in these situations:
+#' Note that this function is intended to be called by `jam_igraph()`,
+#' which handles the overall plot equivalent of `igraph::plot.igraph()`,
+#' but calculates layout coordinates, x- and y-axis ranges, and
+#' adjusts node and label sizes.
 #'
-#' 1. When there are multiple vertex `"shape"` attributes, the
-#' base plot function draws each individual `igraph` vertex one by one.
-#' The `jam_plot_igraph()` plots nodes of each shape in a group. For
-#' fairly large `igraph` objects (about 1000 nodes), this change
-#' is substantially faster.
-#' 2. When there are multiple font families, the default plot function
+#' The steps here are a reproduction of `igraph:::plot.igraph()` with
+#' four changes:
+#'
+#' 1. Default `rescale=FALSE`, and `asp=1` which means igraph layout is
+#' drawn true to the layout coordinates without distortion. To use
+#' default `igraph::plot.igraph()` behavior, use `rescale=TRUE`.
+#' The new default may not be appropriate for bipartite layout
+#' algorithms that generate two columns, and seems most useful
+#' with organic layouts where aspect ratio 1 helps convey important
+#' meaning in the graph structure, namely by enforcing consistent
+#' x- and y-axis visual distance between nodes.
+#'
+#'    * Related: the `xlim` and `ylim` values are automatically adjusted
+#'    to include the layout coordinate range. The default
+#'    `igraph::plot.igraph(..., rescale=FALSE)` does not adjust the
+#'    `xlim` and `ylim` ranges, which can be problematic when supplying
+#'    layout as a function, and therefore the output node coordinates
+#'    are not known until the plot rendering step.
+#'
+#' When `vectorized_node_shapes=TRUE` by default:
+#'
+#' 2. When there are multiple different vertex `"shape"` attributes, the
+#' nodes are rendered vectorized one shape at a time. The original
+#' `igraph::plot.igraph()` draws each individual vertex one by one,
+#' which is substantially slower (minutes compared to 1-2 seconds)
+#' for large `igraph` objects.
+#' 3. When there are multiple font families, the default plot function
 #' draws each label one by one. The `jam_plot_igraph()` draws
-#' labels in groups of font family. This situation is very rare, however
-#' when used the speed improvement is substantial.
+#' labels in groups of font family, in order to comply with limitations
+#' in `graphics::text()`. This situation is fairly rare, however
+#' the speed improvement is substantial, again roughly minutes down
+#' to 1-2 seconds.
 #'
-#' All node shapes `"pie"` are changed to `"jampie"` with default
-#' argument `pie_to_jampie=TRUE`. This change substantially speeds
-#' rendering pie nodes in vectorized fashion.
+#' The fourth difference involves edge bundling:
+#'
+#' 4. When `edge_bundling` is used, it renders edges differently
+#' than the approach in `igraph::plot.igraph()`, by drawing curved
+#' splines for each bundle of edges.
+#'
+#' Some other distinctive features include:
+#'
+#' When `use_shadowText=TRUE` node labels call `jamba::shadowText()`
+#' which draws a small partly transparent outline around labels, making
+#' them more legible when they overlap colored nodes. This step
+#' effectively draws each label `n` times, which can slightly slow
+#' the rendering of the overall figure.
+#'
+#' When `pie_to_jampie=TRUE`, any nodes with `shape="pie"` are
+#' changed to `shape="jampie"` for the purpose of rendering pie
+#' shapes in vectorized fashion, instead of being drawn for each
+#' node separately. This change is a substantial improvement in
+#' rendering time.
+#'
+#' Default colors for marked node groups `mark.col` and `mark.border`
+#' when not defined upfront, will call `colorjam::rainbowJam()`
+#' and not `grDevices::rainbow(). The `colorjam::rainbowJam()`
+#' produces more visually distinct categorical colors.
+#' This behavior can be controlled by supplying a `character`
+#' vector with specific colors for `mark.col` and `mark.border`. Note
+#' that the border should match the colors, or it can be set to `"grey45"`
+#' for a generally visible border.
+#'
+#' Optional argument `nodegroups` can be supplied, which is a `list`
+#' of vectors, where each vector represents a group of nodes. The
+#' `nodegroups` can be used with `edge_bundling="nodegroups"` to
+#' define custom edge bundling.
+#'
+#' Finally, individual plot components can be individually disabled:
+#'
+#' * `render_nodes=FALSE`
+#' * `render_edges=FALSE`
+#' * `render_groups=FALSE`
+#' * `render_nodelabels=FALSE`
+#'
 #'
 #' Note that this function is not called by default, and is only called
 #' by `multienrichjam::jam_igraph()`.
 #'
-#' Smaller changes: `mark.col` and `mark.border` default colors
-#' now call `colorjam::rainbowJam()` instead of `grDevices::rainbow()`.
 #'
-#' All arguments are documented in `igraph::plot.igraph()`.
+#' All other arguments are documented in `igraph::plot.igraph()`.
 #'
 #' @family jam igraph functions
 #'
@@ -2490,18 +2550,19 @@ color_edges_by_nodes_deprecated <- function
 #'    and it is recommended either to reposition nodes to reduce or
 #'    prevent overlaps, or adjust node sizes to reduce overlaps.
 #' @param edge_bundling `character` string or `function`, where:
-#'    * `character` string `"none"` will perform no edge bundling
-#'    * `character` string `"connections"` will perform graph
-#'    edge connection bundling via `edge_bundle_bipartite()` then
+#'    * `"none"` will perform no edge bundling
+#'    * `"connections"` will perform graph edge bundling by
+#'    shared connections by calling `edge_bundle_bipartite()` then
 #'    `edge_bundle_nodegroups()`
-#'    * `character` string `"nodegroups"` will perform graph edge
-#'    connection bundling using `nodegroups` via
-#'    `edge_bundle_bipartite()`
+#'    * `"nodegroups"` will perform graph edge bundling
+#'    using `nodegroups` by calling `edge_bundle_bipartite()`
 #'    * `function` will call a custom edge bundling function using
 #'    the `igraph` object `x` and the igraph parameters `param`
 #'    as input. This output is currently untested, and is intended
 #'    to enable alternative edge bundling functions which may exist
-#'    outside this package.
+#'    outside this package. The custom function should be able
+#'    to use the node layout coordinates in `graph_attr(x, "layout")`,
+#'    and render edges between nodes.
 #' @param nodegroups `list` object as output by `edge_bundle_bipartite()`
 #'    where each list element is a `character` vector of vertex node
 #'    names present in `igraph::V(x)$name`. If no `"name"` vertex node
@@ -3358,7 +3419,7 @@ colors_from_list <- function
    if ("colors" %in% return_type) {
       return(colorV);
    }
-   colorattrdf <- data.frame(rbindList(x));
+   colorattrdf <- data.frame(jamba::rbindList(x));
    for (cacol in colnames(colorattrdf)) {
       colorattrdf[[cacol]] <- factor(colorattrdf[[cacol]], levels=colorV);
    }
@@ -3425,6 +3486,10 @@ color_edges_by_nodes <- function
       stringsAsFactors=FALSE,
       igraph::as_edgelist(g));
 
+   # fix bug when shape is not defined
+   if (length(igraph::V(g)$shape) == 0) {
+      igraph::V(g)$shape <- "circle";
+   }
    node_colors_list <- ifelse(
       igraph::V(g)$shape %in% "pie",
       igraph::V(g)$pie.color,
@@ -3432,10 +3497,16 @@ color_edges_by_nodes <- function
          igraph::V(g)$shape %in% "coloredrectangle",
          igraph::V(g)$coloredrect.color,
          igraph::V(g)$color))
-   node_colors <- colorjam::blend_colors(node_colors_list);
-   node_alphas <- sapply(node_colors_list, function(i){
-      mean(jamba::col2alpha(jamba::rmNA(naValue=0.01, i)))
-   })
+   if (!is.list(node_colors_list)) {
+      node_colors <- node_colors_list;
+      node_alphas <- jamba::col2alpha(
+         jamba::rmNA(naValue=0.01, node_colors));
+   } else {
+      node_colors <- colorjam::blend_colors(node_colors_list);
+      node_alphas <- sapply(node_colors_list, function(i){
+         mean(jamba::col2alpha(jamba::rmNA(naValue=0.01, i)))
+      })
+   }
    if (any(node_alphas < 1)) {
       newalpha <- (node_alphas < 1);
       node_colors[newalpha] <- jamba::alpha2col(node_colors[newalpha],

@@ -1,3 +1,65 @@
+# multienrichjam 0.0.49.900
+
+## extended function help text
+
+* `jam_igraph()` is a drop-in replacement for `igraph::plot.igraph()`,
+and its options were described in much more detail. In brief:
+
+* it plots nodes vectorized which is substantially faster
+* it changes the default to `rescale=FALSE` and maintains
+aspect ratio 1:1, so layout coordinates are rendered without
+distorting the x- and y-axis ranges
+* it optionally bundles edge connections, which helps particularly
+with large bipartite graphs (especially gene-to-pathway graphs.)
+* it allows bulk adjustment to node size, label size, and label
+distance from node center.
+
+## changes to existing functions
+
+* `mem_plot_folio()` new argument `edge_bundling="connections"`
+that by default will bundle edges appropriate for Cnet plots.
+Disable with `edge_bundling="none"`.
+* `mem_enrichment_heatmap()` new argument `style="dotplot"` will
+create a dotplot styled heatmap, whose points are sized proportional
+to the number of genes involved in enrichment. This style is
+under development and may require additional customization options
+such as setting a max gene count for point sizes.
+
+
+## bug fixes
+
+* `mem_gene_path_heatmap()` fixed bug where enrichment names were
+mangled by `data.frame(...)`, avoided by using
+`data.frame(check.names=FALSE, ...)`.
+
+Several functions were updated to include proper package prefix
+for function calls:
+
+* `matrixStats::colMins()`
+* `igraph::V()`
+* `igraph::E()`
+* `igraph::degree()`
+* `igraph::components()`
+* `igraph::vcount()`
+* `igraph::neighbors()`
+* `igraph::vertex_attr_names()`
+* `igraph::list.graph.attributes()`
+* `igraph::ego()`
+* `igraph::set_graph_attr()`
+* `igraph::graph_attr()`
+
+affecting functions:
+
+* `subsetCnetIgraph()`
+* `apply_nodeset_spacing()`
+* `removeIgraphBlanks()`
+* `removeIgraphSinglets()`
+* `mem_find_overlap()`
+* `spread_igraph_labels()`
+* `subgraph_jam()`
+
+
+
 # multienrichjam 0.0.48.900
 
 ## bug fixes

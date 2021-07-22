@@ -6,15 +6,18 @@
 \usage{
 mem_enrichment_heatmap(
   mem,
-  p_cutoff = 0.05,
+  style = c("heatmap", "dotplot"),
+  p_cutoff = mem$p_cutoff,
   p_floor = 1e-06,
+  point_size_factor = 10,
+  point_size_max = 5,
   row_method = "euclidean",
   name = "-log10P",
   row_dend_reorder = TRUE,
   row_dend_width = grid::unit(30, "mm"),
-  row_fontsize = 8,
+  row_fontsize = NULL,
   row_cex = 1,
-  column_fontsize = 12,
+  column_fontsize = NULL,
   column_cex = 1,
   cluster_columns = FALSE,
   sets = NULL,
@@ -23,6 +26,9 @@ mem_enrichment_heatmap(
   lens = 3,
   cexCellnote = 0.7,
   column_title = NULL,
+  row_names_max_width = grid::unit(12, "cm"),
+  column_names_max_height = grid::unit(12, "cm"),
+  heatmap_legend_param = NULL,
   ...
 )
 }
@@ -30,14 +36,32 @@ mem_enrichment_heatmap(
 \item{mem}{\code{list} object created by \code{multiEnrichMap()}. Specifically
 the object is expected to contain \code{enrichIM}.}
 
-\item{p_cutoff}{numeric value of the enrichment P-value cutoff,
-above which P-values are not colored, and are therefore white.
-The enrichment P-values are displayed as an annotated heatmap
-at the top of the main heatmap. Any cell that has a color meets
-at least the minimum P-value threshold.}
+\item{style}{\code{character} string indicating the style of heatmap:
+\code{"heatmap"} produces a regular heatmap, shaded by \code{log10(Pvalue)};
+\code{"dotplot"} produces a dotplot, where the dot size is proportional
+to the number of genes. See function description for details on
+how to include the point size legend beside the heatmap.
+The main benefit of using "dotplot" style is that it also indicates
+the relative number of genes involved in the enrichment.}
 
-\item{p_floor}{numeric minimum P-value used for the color gradient.
-P-values below this floor are colored with the maximum color gradient.}
+\item{p_cutoff}{\code{numeric} value of the enrichment P-value cutoff,
+by default this value is obtained from \code{mem$p_cutoff} to be
+consistent with the original \code{multiEnrichMap()} analysis.
+P-values above \code{p_cutoff} are not colored, and are therefore white.
+This behavior is intended to indicate pathways with P-value above
+this threshold did not meet the threshold, instead of
+pathways with similar P-values displaying with similar color.}
+
+\item{p_floor}{\code{numeric} minimum P-value used for the color gradient.
+P-values below this floor are colored with the maximum color gradient.
+This value is intended to be used in cases where one enrichment
+P-value is very low (e.g. 1e-36) to prevent all other P-values from
+being colored pale red-white and not be noticeable.}
+
+\item{point_size_factor}{\code{numeric} used to adjust the legend point size,
+since the heatmap point size is dependent upon the number of rows,
+the legend may require some manual adjustment to make sure the
+legend matches the heatmap.}
 
 \item{row_method}{character string of the distance method
 to use for row and column clustering. The clustering is performed
@@ -80,6 +104,8 @@ inside each heatmap cell.}
 \item{column_title}{optional character string with title to display
 above the heatmap.}
 
+\item{row_names_max_width, column_names_max_height, heatmap_legend_param}{arguments passed to \code{ComplexHeatmap::Heatmap()}.}
+
 \item{...}{additional arguments are passed to \code{ComplexHeatmap::Heatmap()}
 for customization.}
 }
@@ -92,6 +118,18 @@ intended to visualize the enrichment P-values from multiple
 enrichment results. The P-value threshold is used to colorize
 every cell whose P-value meets the threshold, while all other
 cells are therefore white.
+
+The \code{style} argument controls whether a heatmap or dotplot is
+created. When \code{style="dotplot"} the cells are colored as usual
+but are drawn as circles sized proportional to the number of
+genes involved in enrichment. Because \code{ComplexHeatmap::Heatmap()}
+is used for this step, a separate point legend is returned
+as an attribute of the heatmap object.
+
+To draw the dotplot heatmap including the point legend,
+use this form:\if{html}{\out{<div class="R">}}\preformatted{ComplexHeatmap::draw(hm,
+   annotation_legend_list=attr(hm, "annotation_legend_list"))
+}\if{html}{\out{</div>}}
 }
 \seealso{
 Other jam plot functions: 

@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Subset enrichList for top enrichment results by source — topEnrichBySource" />
-<meta property="og:description" content="Subset enrichList for top enrichment results by source" />
+<meta property="og:description" content="Subset enrichList for top enrichment results by source
+Subset enrichList for top enrichment results by source" />
 
 
 
@@ -72,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.44.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.49.900</span>
       </span>
     </div>
 
@@ -80,7 +81,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,7 +107,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/jmw86069/multienrichjam/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -130,6 +131,7 @@
 
     <div class="ref-description">
     <p>Subset enrichList for top enrichment results by source</p>
+<p>Subset enrichList for top enrichment results by source</p>
     </div>
 
     <pre class="usage"><span class='fu'>topEnrichBySource</span><span class='op'>(</span>
@@ -137,13 +139,38 @@
   n <span class='op'>=</span> <span class='fl'>15</span>,
   min_count <span class='op'>=</span> <span class='fl'>1</span>,
   p_cutoff <span class='op'>=</span> <span class='fl'>1</span>,
-  sourceColnames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Category"</span>, <span class='st'>"Source"</span><span class='op'>)</span>,
-  sortColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"P-value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"padjust"</span>, <span class='st'>"-GeneRatio"</span>, <span class='st'>"-geneHits"</span><span class='op'>)</span>,
-  countColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene_count"</span>, <span class='st'>"count"</span><span class='op'>)</span>,
-  pvalueColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"P.Value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"FDR"</span>, <span class='st'>"adj.P.Val"</span><span class='op'>)</span>,
+  sourceColnames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gs_cat"</span>, <span class='st'>"gs_subcat"</span><span class='op'>)</span>,
+  sortColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"P-value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"qvalue"</span>, <span class='st'>"padjust"</span>, <span class='st'>"-GeneRatio"</span>, <span class='st'>"-Count"</span>,
+    <span class='st'>"-geneHits"</span><span class='op'>)</span>,
+  countColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene_count"</span>, <span class='st'>"count"</span>, <span class='st'>"geneHits"</span><span class='op'>)</span>,
+  pvalueColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"P.Value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"FDR"</span>, <span class='st'>"adj.P.Val"</span>, <span class='st'>"qvalue"</span><span class='op'>)</span>,
   newColname <span class='op'>=</span> <span class='st'>"EnrichGroup"</span>,
-  curateFrom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CP:.*"</span><span class='op'>)</span>,
-  curateTo <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CP"</span><span class='op'>)</span>,
+  curateFrom <span class='op'>=</span> <span class='cn'>NULL</span>,
+  curateTo <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sourceSubset <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sourceSep <span class='op'>=</span> <span class='st'>"_"</span>,
+  subsetSets <span class='op'>=</span> <span class='cn'>NULL</span>,
+  descriptionColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Description"</span>, <span class='st'>"Name"</span>, <span class='st'>"Pathway"</span><span class='op'>)</span>,
+  nameColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ID"</span>, <span class='st'>"Name"</span><span class='op'>)</span>,
+  descriptionGrep <span class='op'>=</span> <span class='cn'>NULL</span>,
+  nameGrep <span class='op'>=</span> <span class='cn'>NULL</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
+
+<span class='fu'>topEnrichListBySource</span><span class='op'>(</span>
+  <span class='va'>enrichList</span>,
+  n <span class='op'>=</span> <span class='fl'>15</span>,
+  min_count <span class='op'>=</span> <span class='fl'>1</span>,
+  p_cutoff <span class='op'>=</span> <span class='fl'>1</span>,
+  sourceColnames <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gs_cat"</span>, <span class='st'>"gs_subcat"</span><span class='op'>)</span>,
+  sortColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"P-value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"qvalue"</span>, <span class='st'>"padjust"</span>, <span class='st'>"-GeneRatio"</span>, <span class='st'>"-Count"</span>,
+    <span class='st'>"-geneHits"</span><span class='op'>)</span>,
+  countColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene_count"</span>, <span class='st'>"count"</span>, <span class='st'>"geneHits"</span><span class='op'>)</span>,
+  pvalueColname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"P.Value"</span>, <span class='st'>"pvalue"</span>, <span class='st'>"FDR"</span>, <span class='st'>"adj.P.Val"</span>, <span class='st'>"qvalue"</span><span class='op'>)</span>,
+  newColname <span class='op'>=</span> <span class='st'>"EnrichGroup"</span>,
+  curateFrom <span class='op'>=</span> <span class='cn'>NULL</span>,
+  curateTo <span class='op'>=</span> <span class='cn'>NULL</span>,
   sourceSubset <span class='op'>=</span> <span class='cn'>NULL</span>,
   sourceSep <span class='op'>=</span> <span class='st'>"_"</span>,
   subsetSets <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -266,6 +293,11 @@ the <code>nameGrep</code> argument searches only <code>nameColname</code>.</p></
       <th>...</th>
       <td><p>additional arguments are ignored.</p></td>
     </tr>
+    <tr>
+      <th>enrichList</th>
+      <td><p><code>list</code> of <code>enrichDF</code> entries, each passed
+to <code>topEnrichBySource()</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -307,11 +339,20 @@ which are each independently filtered and sorted to the
 top <code>topEnrichN</code> entries.</p>
 <p>Finally, this function is useful to subset enrichment results
 by name, using <code>descriptionGrep</code> or <code>nameGrep</code>.</p>
+<p><code>topEnrichListBySource()</code> extends <code>topEnrichBySource()</code> by applying
+filters to each <code>enrichList</code> entry, then keeping pathways
+across all <code>enrichList</code> that match the filter criteria in any
+one <code>enrichList</code>. It is most useful in the context of
+<code><a href='multiEnrichMap.html'>multiEnrichMap()</a></code> where a pathway must meet all criteria
+in at least one enrichment, and that pathway should then
+be included for all enrichments for the purpose of
+comparative analysis.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other jam enrichment functions: 
-<code><a href='multiEnrichMap.html'>multiEnrichMap</a>()</code>,
-<code><a href='topEnrichListBySource.html'>topEnrichListBySource</a>()</code></p></div>
+<code><a href='multiEnrichMap.html'>multiEnrichMap</a>()</code></p>
+<p>Other jam enrichment functions: 
+<code><a href='multiEnrichMap.html'>multiEnrichMap</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
