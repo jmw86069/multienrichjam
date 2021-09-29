@@ -15,6 +15,7 @@ mem_legend(
   ncol = 1,
   pch = 21,
   pt.cex = 2,
+  inset = 0,
   ...
 )
 }

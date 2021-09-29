@@ -1142,6 +1142,7 @@ mem_legend <- function
  ncol=1,
  pch=21,
  pt.cex=2,
+ inset=0,
  ...)
 {
    ##
@@ -1151,18 +1152,36 @@ mem_legend <- function
    colorV <- mem[["colorV"]];
    colorVb <- jamba::makeColorDarker(colorV, darkFactor=1.5);
 
-   legend(x=x,
-      y=y,
-      title=title,
-      ncol=ncol,
-      legend=names(colorV),
-      pch=pch,
-      pt.cex=pt.cex,
-      pt.bg=colorV,
-      col=colorVb,
-      bg=bg,
-      box.col=box.col,
-      cex=cex);
+   tryCatch({
+      legend(x=x,
+         y=y,
+         title=title,
+         ncol=ncol,
+         legend=names(colorV),
+         pch=pch,
+         pt.cex=pt.cex,
+         pt.bg=colorV,
+         col=colorVb,
+         bg=bg,
+         box.col=box.col,
+         cex=cex,
+         inset=inset,
+         ...);
+   }, error=function(e){
+      legend(x=x,
+         y=y,
+         title=title,
+         ncol=ncol,
+         legend=names(colorV),
+         pch=pch,
+         pt.cex=pt.cex,
+         pt.bg=colorV,
+         col=colorVb,
+         bg=bg,
+         box.col=box.col,
+         cex=cex,
+         inset=inset);
+   })
 }
 
 

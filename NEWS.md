@@ -1,3 +1,13 @@
+# multienrichjam 0.0.50.900
+
+## changes to existing functions
+
+* `mem_legend()` new argument `inset` passed to `legend()`.
+Also this function uses `tryCatch()` to try to pass `...`
+arguments, and if they fail it tries again without `...`.
+Fun.
+
+
 # multienrichjam 0.0.49.900
 
 ## extended function help text
