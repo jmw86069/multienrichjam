@@ -157,6 +157,10 @@ mem_gene_path_heatmap <- function
  rotate_heatmap=FALSE,
  colramp="Reds",
  column_names_max_height=grid::unit(12, "cm"),
+   show_gene_legend=FALSE,
+   show_pathway_legend=TRUE,
+   show_heatmap_legend=8,
+ use_raster=FALSE,
  seed=123,
  verbose=FALSE,
  ...)
@@ -416,7 +420,8 @@ mem_gene_path_heatmap <- function
       names(gene_colorsV) <- geneIMu_names;
 
       ## apply these colors to gene rows
-      geneV <- jamba::cPasteS(im2list(t(mem$geneIM)),
+      geneVlist <- im2list(t(mem$geneIM));
+      geneV <- jamba::cPasteS(geneVlist,
          sep=sep);
       geneColors <- jamba::nameVector(gene_colorsV[geneV],
          names(geneV));
@@ -432,6 +437,22 @@ mem_gene_path_heatmap <- function
          colors=gene_colorsV_idx);
       col_hm_at <- rev(seq_along(gene_colorsV));
       col_hm_labels <- rev(tail(memIM_levels, -1));
+      if (is.logical(show_heatmap_legend)) {
+         if (show_heatmap_legend) {
+            show_heatmap_legend <- 8;
+         } else {
+            show_heatmap_legend <- -1;
+         }
+      }
+
+      jamba::printDebug("length(col_hm_at): ", length(col_hm_at),
+         ", show_heatmap_legend: ", show_heatmap_legend);
+      if (length(col_hm_at) > show_heatmap_legend) {
+         singlet_idx <- which(lengths(strsplit(rev(geneIMu_colors), sep)) == 1);
+         col_hm_at <- col_hm_at[singlet_idx];
+         col_hm_labels <- col_hm_labels[singlet_idx];
+      }
+
       memIM_idx <- as.numeric(factor(memIM_note, levels=memIM_levels)) - 1;
       memIM <- matrix(0,
          ncol=ncol(memIM),
@@ -476,6 +497,7 @@ mem_gene_path_heatmap <- function
       top_annotation <- ComplexHeatmap::HeatmapAnnotation(
          which="column",
          border=TRUE,
+         show_legend=show_pathway_legend,
          annotation_legend_param=path_annotation_legend_param,
          col=col_iml4,
          df=-log10(mem$enrichIM[sets,,drop=FALSE]),
@@ -484,6 +506,7 @@ mem_gene_path_heatmap <- function
       left_annotation <- ComplexHeatmap::rowAnnotation(
          col=col_iml1,
          border=TRUE,
+         show_legend=show_gene_legend,
          annotation_legend_param=gene_annotation_legend_param,
          #gp=grid::gpar(col="#00000011"), # per-cell border
          df=mem$geneIM[genes,,drop=FALSE],
@@ -501,6 +524,7 @@ mem_gene_path_heatmap <- function
             clustering_distance_rows=row_method,
             top_annotation=top_annotation,
             col=col_hm,
+            show_legend=show_heatmap_legend,
             left_annotation=left_annotation,
             row_names_gp=grid::gpar(fontsize=row_fontsize),
             column_names_gp=grid::gpar(fontsize=column_fontsize),
@@ -512,6 +536,7 @@ mem_gene_path_heatmap <- function
             row_title_rot=row_title_rot,
             row_split=row_split,
             column_split=column_split,
+            use_raster=use_raster,
             ...);
       }, error=function(e){
          # same as above but without ...
@@ -707,8 +732,9 @@ mem_enrichment_heatmap <- function
  style=c("heatmap", "dotplot"),
  p_cutoff=mem$p_cutoff,
  p_floor=1e-6,
- point_size_factor=10,
- point_size_max=5,
+ point_size_factor=1,
+ point_size_max=8,
+ point_size_min=1,
  row_method="euclidean",
  name="-log10P",
  row_dend_reorder=TRUE,
@@ -807,37 +833,46 @@ mem_enrichment_heatmap <- function
          heatmap_legend_param=heatmap_legend_param,
          ...);
    } else {
-      ct_to_breaks <- function(ctmax, n=5, maxsize=5) {
-         if (ctmax == 1) {
-            ctbreaks <- c(0, 1);
-         } else {
-            ctbreaks <- c(0, seq(from=1,
-               to=max(mem$enrichIMgeneCount, na.rm=TRUE),
-               length.out=5));
+      ctmax <- ceiling(max(mem$enrichIMgeneCount, na.rm=TRUE));
+      #jamba::printDebug("ctmax: ", ctmax);
+
+      if (ctmax <= 1) {
+         ct_ticks <- c(0, 1);
+      } else {
+         n <- 8;
+         ct_ticks <- setdiff(unique(c(1,
+            round(pretty(c(0, ctmax), n=n)))), 0);
+         ct_step <- median(diff(ct_ticks));
+         if (max(ct_ticks) > ctmax) {
+            ct_ticks[which.max(ct_ticks)] <- ctmax;
+            if (tail(diff(ct_ticks), 1) < ceiling(ct_step / 4)) {
+               ct_ticks <- head(ct_ticks, -2);
+            } else if (tail(diff(ct_ticks), 1) < ceiling(ct_step / 2)) {
+               ct_ticks <- c(head(ct_ticks, -2), ctmax);
+            }
          }
-         unique(round(ctbreaks));
       }
-      ct_to_size <- function(x, ctmax=15, n=5, maxsize=point_size_max) {
-         ctbreaks <- ct_to_breaks(ctmax=ctmax, n=n, maxsize=maxsize)
-         x <- jamba::noiseFloor(x, minimum=0, ceiling=ctmax);
-         xcut <- cut(x,
-            breaks=c(-1, ctbreaks),
-            include.lowest=TRUE);
-         (as.numeric(xcut) - 1) / n * maxsize
-      }
+      ct_approxfun <- approxfun(
+         x=c(1, ctmax),
+         yleft=0,
+         ties="ordered",
+         yright=point_size_max,
+         y=c(point_size_min,
+            point_size_max * point_size_factor));
+      ct_tick_sizes <- ct_approxfun(ct_ticks);
 
       # define point size legend
-      ctmax <- max(mem$enrichIMgeneCount, na.rm=TRUE);
-      ctbreaks <- ct_to_breaks(ctmax, n=10, maxsize=point_size_max)
-      ctbreaksize <- ct_to_size(ctbreaks, ctmax=ctmax, n=10, maxsize=point_size_max)
+      #ctbreaks <- ct_to_breaks(ctmax, n=10, maxsize=point_size_max)
+      #ctbreaksize <- ct_to_size(ctbreaks, ctmax=ctmax, n=10, maxsize=point_size_max) * point_size_factor;
+      print(data.frame(ct_ticks, ct_tick_sizes));
       pt_legend <- ComplexHeatmap::Legend(
-         labels=ctbreaks[ctbreaks > 0],
+         labels=ct_ticks,
          title="Gene Count",
          type="points",
          pch=21,
-         size=grid::unit(ctbreaksize[ctbreaks > 0]*point_size_factor, "mm"),
-         grid_height=grid::unit(max(ctbreaksize)*point_size_factor/1.5, "mm"),
-         grid_width=grid::unit(max(ctbreaksize)*point_size_factor/1.5, "mm"),
+         size=grid::unit(ct_tick_sizes, "mm"),
+         grid_height=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
+         grid_width=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
          background="transparent",
          legend_gp=grid::gpar(col="black",
             fill="grey85"));
@@ -868,16 +903,40 @@ mem_enrichment_heatmap <- function
                y=y + height * c(0, 0, NA, -1/2, 1/2),
                gp=grid::gpar(col="grey80"));
             if (cell_value >= -log10(mem$p_cutoff)) {
-               cell_size <- ct_to_size(mem$enrichIMgeneCount[i, j],
-                  ctmax=ctmax,
-                  n=10,
-                  maxsize=point_size_max)/5;
-               grid::grid.circle(x=x,
+               cell_size <- ct_approxfun(mem$enrichIMgeneCount[i, j]);
+               if (i <= 2 && j <= 2) {
+                  jamba::printDebug(
+                     "cell_size: ", cell_size,
+                     ", value: ", mem$enrichIMgeneCount[i, j],
+                     ", ctmax: ", ctmax,
+                     ", point_size_max: ", point_size_max);
+               }
+               grid::grid.points(x=x,
                   y=y,
-                  r=height * cell_size * 1.5,
+                  pch=21,
+                  default.units="mm",
+                  size=grid::unit(cell_size, "mm"),
                   gp=grid::gpar(
                      col=jamba::makeColorDarker(cell_color),
                      fill=cell_color))
+               if (cexCellnote > 0.01) {
+                  grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
+                     x=x,
+                     y=y,
+                     gp=grid::gpar(
+                        fontsize=20 * cexCellnote * 1.05,
+                        fontface=2,
+                        col=jamba::setTextContrastColor(jamba::setTextContrastColor(cell_color, useGrey=15)))
+                  )
+                  grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
+                     x=x,
+                     y=y,
+                     gp=grid::gpar(
+                        fontsize=20 * cexCellnote,
+                        fontface=1,
+                        col=jamba::setTextContrastColor(cell_color, useGrey=15))
+                  )
+               }
             }
          }
       );
@@ -1483,14 +1542,14 @@ mem_plot_folio <- function
                annotation_legend_list <- attributes(mem_hm)$annotation_legend_list;
             } else {
                annotation_legend_list <- NULL;
-            }
-            if (length(main) > 0 && nchar(main) > 0) {
-               ComplexHeatmap::draw(mem_hm,
-                  annotation_legend_list=annotation_legend_list,
-                  column_title=main);
-            } else {
-               ComplexHeatmap::draw(mem_hm,
-                  annotation_legend_list=annotation_legend_list);
+               if (length(main) > 0 && nchar(main) > 0) {
+                  ComplexHeatmap::draw(mem_hm,
+                     annotation_legend_list=annotation_legend_list,
+                     column_title=main);
+               } else {
+                  ComplexHeatmap::draw(mem_hm,
+                     annotation_legend_list=annotation_legend_list);
+               }
             }
          }
       }

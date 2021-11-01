@@ -3,6 +3,30 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## 01nov2021
+
+* `mem_enrichment_heatmap()` - the heatmap circles and legend circles
+are not the same size - they should be fixed to the same absolute size.
+
+   * Optionally label each heatmap cell with the number of genes for
+   visual reinforcement.
+
+
+* When there are more than 3 enrichments, the color legend on the
+gene-pathway heatmap becomes unwieldy - taking over the whole figure.
+
+   * Optionally (and by default) hide color legend for the gene-pathway heatmap.
+
+* The gene-pathway heatmap use_raster=TRUE causes artifacts in output,
+it should be disabled by default. In future, debug why things go wrong.
+
+   * I think the bug is caused by rasterization being done on underlying numbers
+   before the color ramp is applied, in which case this problem cannot be
+   solved when `colorize_by_gene=TRUE` since categorical values are assigned
+   numbers which are not a proper color gradient.
+
+
+
 ## 20jul2021
 
 * Replace `multiEnrichMap()` with `multienrichjam()` and simplify the arguments:

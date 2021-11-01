@@ -1,3 +1,26 @@
+# multienrichjam 0.0.51.900
+
+## changes to existing functions
+
+* `mem_gene_path_heatmap()` will now hide all but the main
+enrichment colors in color legends when there are more than
+8 combinations, to prevent the legend from taking the entire
+plot device space and not displaying the heatmap. The threshold
+is configurable with `show_heatmap_legend=8`.
+New arguments `show_gene_legend`, `show_pathway_legend` are `logical`
+and are intended to allow hiding the other color legends. A minimalist
+style is to show only the main enrichment colors, which are used for
+all other colors anyway.
+* `mem_enrichment_heatmap()` was updated so the default dotplot format
+has properly controlled point sizes, and legend point sizes.
+Previously the two sizes were independent and required manual
+adjustment. The current approach ensures the legend point size
+exactly match the heatmap dot plot point size. An optional parameter
+`cexCellnote` will display labels unless `cexCellnote=0` in which
+case gene count labels are hidden.
+
+
+
 # multienrichjam 0.0.50.900
 
 ## changes to existing functions

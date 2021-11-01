@@ -9,8 +9,9 @@ mem_enrichment_heatmap(
   style = c("heatmap", "dotplot"),
   p_cutoff = mem$p_cutoff,
   p_floor = 1e-06,
-  point_size_factor = 10,
-  point_size_max = 5,
+  point_size_factor = 1,
+  point_size_max = 8,
+  point_size_min = 1,
   row_method = "euclidean",
   name = "-log10P",
   row_dend_reorder = TRUE,
@@ -127,7 +128,7 @@ is used for this step, a separate point legend is returned
 as an attribute of the heatmap object.
 
 To draw the dotplot heatmap including the point legend,
-use this form:\if{html}{\out{<div class="R">}}\preformatted{ComplexHeatmap::draw(hm,
+use this form:\if{html}{\out{<div class="sourceCode R">}}\preformatted{ComplexHeatmap::draw(hm,
    annotation_legend_list=attr(hm, "annotation_legend_list"))
 }\if{html}{\out{</div>}}
 }

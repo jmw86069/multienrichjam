@@ -35,6 +35,10 @@ mem_gene_path_heatmap(
   rotate_heatmap = FALSE,
   colramp = "Reds",
   column_names_max_height = grid::unit(12, "cm"),
+  show_gene_legend = FALSE,
+  show_pathway_legend = TRUE,
+  show_heatmap_legend = 8,
+  use_raster = FALSE,
   seed = 123,
   verbose = FALSE,
   ...

@@ -214,12 +214,12 @@ The following arguments apply scale factor based upon node attribute:
 distance from node center
 }
 
-The \code{factor_l} technique is as follows:\if{html}{\out{<div class="R">}}\preformatted{node_factor_l = list(node_attr_name = c(
+The \code{factor_l} technique is as follows:\if{html}{\out{<div class="sourceCode R">}}\preformatted{node_factor_l = list(node_attr_name = c(
    attr_value1 = factor1,
    attr_value2 = factor2))
 }\if{html}{\out{</div>}}
 
-A specific example:\if{html}{\out{<div class="R">}}\preformatted{node_factor_l = list(nodeType = c(
+A specific example:\if{html}{\out{<div class="sourceCode R">}}\preformatted{node_factor_l = list(nodeType = c(
    Gene=1.5,
    Set=2))
 }\if{html}{\out{</div>}}
