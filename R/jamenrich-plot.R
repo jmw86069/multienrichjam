@@ -864,7 +864,6 @@ mem_enrichment_heatmap <- function
       # define point size legend
       #ctbreaks <- ct_to_breaks(ctmax, n=10, maxsize=point_size_max)
       #ctbreaksize <- ct_to_size(ctbreaks, ctmax=ctmax, n=10, maxsize=point_size_max) * point_size_factor;
-      print(data.frame(ct_ticks, ct_tick_sizes));
       pt_legend <- ComplexHeatmap::Legend(
          labels=ct_ticks,
          title="Gene Count",
@@ -904,13 +903,6 @@ mem_enrichment_heatmap <- function
                gp=grid::gpar(col="grey80"));
             if (cell_value >= -log10(mem$p_cutoff)) {
                cell_size <- ct_approxfun(mem$enrichIMgeneCount[i, j]);
-               if (i <= 2 && j <= 2) {
-                  jamba::printDebug(
-                     "cell_size: ", cell_size,
-                     ", value: ", mem$enrichIMgeneCount[i, j],
-                     ", ctmax: ", ctmax,
-                     ", point_size_max: ", point_size_max);
-               }
                grid::grid.points(x=x,
                   y=y,
                   pch=21,
