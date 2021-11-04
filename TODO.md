@@ -3,21 +3,46 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+
+## 04nov2021
+
+For IPA "Upstream Regulators" it sometimes offers a direction
+implied by the `activation z-score`. Design idea is to implement
+the directionality so it can be included in downstream analyses.
+
+   * `mem_enrichment_heatmap()` - currently shades by the `-log10(pvalue)`
+   however if there is directionality, it could be signed
+   `+` for activated,
+   `-` for inhibited. Then the heatmap color scale would use blue-white-red
+   color gradient.
+   * `mem$enrichIMdirection` contains matrix of direction, by default `1`
+   means all have same direction.
+
+
+During `multiEnrichMap()` it filters for `topEnrichN` entries for
+each enrichment. It might be useful to retain the rank number for
+each enrichment, to review when setting a different `topEnrichN`
+threshold.
+
+   * `mem$enrichIMgeneCount` contains matrix of gene counts
+   * `mem$enrichIMrank` contains matrix of pathway rank (after filtering gene count)
+
+
 ## 01nov2021
 
-* `mem_enrichment_heatmap()` - the heatmap circles and legend circles
+* COMPLETE: `mem_enrichment_heatmap()` - the heatmap circles and legend circles
 are not the same size - they should be fixed to the same absolute size.
 
-   * Optionally label each heatmap cell with the number of genes for
+   * COMPLETE: Optionally label each heatmap cell with the number of genes for
    visual reinforcement.
 
 
-* When there are more than 3 enrichments, the color legend on the
+* COMPLETE: When there are more than 3 enrichments, the color legend on the
 gene-pathway heatmap becomes unwieldy - taking over the whole figure.
 
    * Optionally (and by default) hide color legend for the gene-pathway heatmap.
 
-* The gene-pathway heatmap use_raster=TRUE causes artifacts in output,
+* COMPLETE: The gene-pathway heatmap use_raster=TRUE causes artifacts in output,
 it should be disabled by default. In future, debug why things go wrong.
 
    * I think the bug is caused by rasterization being done on underlying numbers

@@ -6,21 +6,17 @@
 \usage{
 enrichList2IM(
   enrichList,
-  GmtT = NULL,
   addAnnotations = TRUE,
   keyColname = c("ID", "Name", "pathway", "itemsetID"),
   valueColname = c("qvalue", "q.value", "pvalue", "p.value"),
   emptyValue = NULL,
   verbose = FALSE,
+  GmtT = NULL,
   ...
 )
 }
 \arguments{
 \item{enrichList}{\code{list} of \code{enrichResult} objects}
-
-\item{GmtT}{not implemented here, experimental gene set object
-format that uses \code{arules::transactions} class, an efficient
-object with robust access functions in \code{arules}.}
 
 \item{addAnnotations}{\code{logical} not implemented, this argument
 is paired with \code{GmtT}.}
@@ -39,6 +35,12 @@ incidence matrix. When \code{NULL} and \code{valueColname} contains
 refers to P-values.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
+
+\item{GmtT}{not implemented here, experimental gene set object
+format that uses \code{arules::transactions} class, an efficient
+object with robust access functions in \code{arules}.}
+
+\item{...}{additional arguments are ignored.}
 }
 \description{
 Convert enrichList to IM incidence matrix

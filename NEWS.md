@@ -1,3 +1,43 @@
+# multienrichjam 0.0.52.900
+
+## changes to existing functions
+
+Moved some functions into their own .R file for better organization:
+
+* `topEnrichListBySource()` and `topEnrichBySource()` new arguments
+`directionColname` to define an optional column name that contains
+`numeric` values indicating direction of pathway enrichment. These
+values are often in the form of an `"Activation z-score"`, as is the
+case with IPA "Upstream Regulators". Argument `direction_cutoff`
+refers to the absolute value required for direction be given
+a "sign" up or down.
+
+* `multiEnrichMap()` new argument `directionColname` used to determine
+directionality of pathway enrichment, useful for things like
+`"Activation z-score"`, as returned by IPA "Upstream Regulators".
+Output included `mem$enrichIMdirection` which contains the `numeric`
+values, where `NA` values are substituted with `0` zero.
+These values will be used in near future, likely in
+`mem_enrichment_heatmap()` to indicate predicted direction
+of impact on particular pathways.
+Argument `direction_cutoff` is passed to `topEnrichListBySource()`
+for optional filtering to require at least one pathway to contain
+an absolute direction score at or above this threshold. The IPA
+z-score recommends a threshold z=score >= 2 for "activation" or
+"inhibition". Note that many pathways have no z-score, so applying
+this threshold will remove those pathways from downstream analysis.
+
+* `mem_enrichment_heatmap()` new argument `apply_direction` and
+`direction_cutoff` determine whether to indicate direction if it exists,
+and optionally applies a threshold. Still in testing currently.
+Note that applying this cutoff will hide pathways whose `numeric`
+direction is below the threshold.
+New argument `gene_count_max` to apply a max gene count threshold
+for the point size for the dot plot format.
+New argument `legend_height` to control the heatmap legend color bar
+height.
+
+
 # multienrichjam 0.0.51.900
 
 ## changes to existing functions

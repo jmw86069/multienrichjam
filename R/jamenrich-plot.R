@@ -748,11 +748,15 @@ mem_enrichment_heatmap <- function
  color_by_column=FALSE,
  cex.axis=1,
  lens=3,
- cexCellnote=0.7,
+ cexCellnote=0.0,
  column_title=NULL,
  row_names_max_width=grid::unit(12, "cm"),
  column_names_max_height=grid::unit(12, "cm"),
  heatmap_legend_param=NULL,
+ legend_height=grid::unit(6, "cm"),
+ apply_direction=FALSE,
+ direction_cutoff=0,
+ gene_count_max=NULL,
  ...)
 {
    #
@@ -769,6 +773,14 @@ mem_enrichment_heatmap <- function
             n=25,
             trimRamp=c(2, 2)))
    )
+   if (apply_direction) {
+      col_logp <- colorjam::col_div_xf(-log10(p_floor),
+         floor=-log10(p_cutoff),
+         colramp="RdBu_r",
+         trimRamp=c(1, 1),
+         lens=lens);
+   }
+
    if (length(sets) > 0) {
       sets <- intersect(rownames(mem$enrichIM), sets);
       mem$enrichIM <- mem$enrichIM[sets,,drop=FALSE];
@@ -812,12 +824,23 @@ mem_enrichment_heatmap <- function
    }
 
    if (length(heatmap_legend_param) == 0) {
-      heatmap_legend_param <- list(border="black");
+      heatmap_legend_param <- list(
+         border="black",
+         legend_height=legend_height);
+   }
+
+   # optionally apply direction
+   if (apply_direction && "enrichIMdirection" %in% names(mem)) {
+      use_matrix <- -log10(mem$enrichIM);
+      use_direction <- (abs(mem$enrichIMdirection) >= direction_cutoff) * sign(mem$enrichIMdirection + 1e-20);
+      use_matrix <- use_matrix * use_direction;
+   } else {
+      use_matrix <- -log10(mem$enrichIM);
    }
 
    if ("heatmap" %in% style) {
       hm <- ComplexHeatmap::Heatmap(
-         -log10(mem$enrichIM),
+         use_matrix,
          name=name,
          col=col_logp,
          cluster_rows=er_hc2,
@@ -833,7 +856,11 @@ mem_enrichment_heatmap <- function
          heatmap_legend_param=heatmap_legend_param,
          ...);
    } else {
-      ctmax <- ceiling(max(mem$enrichIMgeneCount, na.rm=TRUE));
+      if (length(gene_count_max) == 0) {
+         ctmax <- ceiling(max(mem$enrichIMgeneCount, na.rm=TRUE));
+      } else {
+         ctmax <- gene_count_max;
+      }
       #jamba::printDebug("ctmax: ", ctmax);
 
       if (ctmax <= 1) {
@@ -878,7 +905,7 @@ mem_enrichment_heatmap <- function
 
       # dot plot style
       hm <- ComplexHeatmap::Heatmap(
-         -log10(mem$enrichIM),
+         use_matrix,
          name=name,
          col=col_logp,
          cluster_rows=er_hc2,
@@ -895,13 +922,13 @@ mem_enrichment_heatmap <- function
          rect_gp=grid::gpar(type="none"),
          cell_fun=function(j, i, x, y, width, height, fill) {
             cell_value <- jamba::rmNA(naValue=0,
-               -log10(mem$enrichIM)[i, j]);
+               use_matrix[i, j]);
             cell_color <- col_logp(cell_value);
             # draw grid through center of each cell
             grid::grid.lines(x=x + width * c(-1/2, 1/2, NA, 0, 0),
                y=y + height * c(0, 0, NA, -1/2, 1/2),
                gp=grid::gpar(col="grey80"));
-            if (cell_value >= -log10(mem$p_cutoff)) {
+            if (abs(cell_value) >= -log10(p_cutoff)) {
                cell_size <- ct_approxfun(mem$enrichIMgeneCount[i, j]);
                grid::grid.points(x=x,
                   y=y,

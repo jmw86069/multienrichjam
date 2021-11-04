@@ -25,11 +25,15 @@ mem_enrichment_heatmap(
   color_by_column = FALSE,
   cex.axis = 1,
   lens = 3,
-  cexCellnote = 0.7,
+  cexCellnote = 0,
   column_title = NULL,
   row_names_max_width = grid::unit(12, "cm"),
   column_names_max_height = grid::unit(12, "cm"),
   heatmap_legend_param = NULL,
+  legend_height = grid::unit(6, "cm"),
+  apply_direction = FALSE,
+  direction_cutoff = 0,
+  gene_count_max = NULL,
   ...
 )
 }
