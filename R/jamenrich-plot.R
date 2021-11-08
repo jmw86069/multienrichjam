@@ -832,10 +832,13 @@ mem_enrichment_heatmap <- function
    # optionally apply direction
    if (apply_direction && "enrichIMdirection" %in% names(mem)) {
       use_matrix <- -log10(mem$enrichIM);
-      use_direction <- (abs(mem$enrichIMdirection) >= direction_cutoff) * sign(mem$enrichIMdirection + 1e-20);
-      use_matrix <- use_matrix * use_direction;
+      # use_direction contains z-score values at or above direction_cutoff
+      # otherwise it is set to zero
+      use_direction <- (abs(mem$enrichIMdirection) >= direction_cutoff) * mem$enrichIMdirection;
    } else {
       use_matrix <- -log10(mem$enrichIM);
+      use_direction <- NULL;
+      apply_direction <- FALSE;
    }
 
    if ("heatmap" %in% style) {
@@ -902,25 +905,52 @@ mem_enrichment_heatmap <- function
          background="transparent",
          legend_gp=grid::gpar(col="black",
             fill="grey85"));
+      anno_legends <- list(pt_legend);
 
-      # dot plot style
-      hm <- ComplexHeatmap::Heatmap(
-         use_matrix,
-         name=name,
-         col=col_logp,
-         cluster_rows=er_hc2,
-         row_dend_reorder=row_dend_reorder,
-         border=TRUE,
-         row_names_gp=grid::gpar(fontsize=row_fontsize),
-         row_names_max_width=row_names_max_width,
-         column_names_gp=grid::gpar(fontsize=column_fontsize),
-         column_names_max_height=column_names_max_height,
-         cluster_columns=cluster_columns,
-         row_dend_width=row_dend_width,
-         column_title=column_title,
-         heatmap_legend_param=heatmap_legend_param,
-         rect_gp=grid::gpar(type="none"),
-         cell_fun=function(j, i, x, y, width, height, fill) {
+      # improved cell_fun
+      if (apply_direction) {
+         tcount <- jamba::tcount;
+         dir_colors <- c("royalblue4", "gold", "firebrick3");
+         mcolor <- matrix(ncol=3,
+            c("white", "white", "white",
+               colorjam::blend_colors(c(dir_colors[1], "white", "white", "white", "white")),
+               colorjam::blend_colors(c(dir_colors[2], "white", "white", "white", "white")),
+               colorjam::blend_colors(c(dir_colors[3], "white", "white", "white", "white")),
+               dir_colors),
+            byrow=TRUE);
+         row_breaks <- c(-log10(p_cutoff) - 1e-10,
+            seq(from=-log10(p_cutoff),
+               to=-log10(p_floor),
+               length.out=2));
+         if (p_cutoff == 1) {
+            row_breaks <- tail(row_breaks, -1);
+            mcolor <- mcolor[-2, , drop=FALSE]
+         }
+         col_bivariate <- colorRamp2D(
+            column_breaks=seq(from=-2, to=2, length.out=3),
+            row_breaks=row_breaks,
+            mcolor);
+         cell_fun_custom <- cell_fun_bivariate(
+            list(
+               use_direction,
+               use_matrix,
+               mem$enrichIMgeneCount),
+            pch=21,
+            size_fun=ct_approxfun,
+            size_by=3,
+            outline_style="black",
+            col_hm=col_bivariate,
+            prefix=c("-log10P: ", "z-score: "),
+            show=NULL);
+         legend_bivariate <- make_legend_bivariate(col_bivariate,
+            ylab="-log10pvalue",
+            xlab="z-score");
+         anno_legends <- c(anno_legends,
+            list(legend_bivariate));
+         show_heatmap_legend <- FALSE;
+      } else {
+         show_heatmap_legend <- TRUE;
+         cell_fun_custom <- function(j, i, x, y, width, height, fill) {
             cell_value <- jamba::rmNA(naValue=0,
                use_matrix[i, j]);
             cell_color <- col_logp(cell_value);
@@ -958,11 +988,32 @@ mem_enrichment_heatmap <- function
                }
             }
          }
+      }
+
+      # dot plot style
+      hm <- ComplexHeatmap::Heatmap(
+         use_matrix,
+         name=name,
+         col=col_logp,
+         cluster_rows=er_hc2,
+         row_dend_reorder=row_dend_reorder,
+         border=TRUE,
+         row_names_gp=grid::gpar(fontsize=row_fontsize),
+         row_names_max_width=row_names_max_width,
+         column_names_gp=grid::gpar(fontsize=column_fontsize),
+         column_names_max_height=column_names_max_height,
+         cluster_columns=cluster_columns,
+         row_dend_width=row_dend_width,
+         column_title=column_title,
+         heatmap_legend_param=heatmap_legend_param,
+         rect_gp=grid::gpar(type="none"),
+         cell_fun=cell_fun_custom,
+         show_heatmap_legend=show_heatmap_legend
       );
       attr(hm,
-         "annotation_legend_list") <- pt_legend;
+         "annotation_legend_list") <- anno_legends;
       draw(hm,
-         annotation_legend_list=pt_legend);
+         annotation_legend_list=anno_legends);
    }
 
    if ("heatmap" %in% style && color_by_column) {

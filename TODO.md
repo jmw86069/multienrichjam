@@ -3,6 +3,18 @@
 This document describes plans for enhancements to the
 multienrichjam R package.
 
+## 05nov2021
+
+Now that directional z-score can also be associated with enrichment
+P-values, heatmaps might need to use a bivariate color scale, to
+indicate enrichment and directionality. See "stevens.bluered".
+For example the `mem_enrichment_heatmap()` colors nodes by enrichment
+P-value, more intense is more significant enrichment.
+The z-score direction is used to apply red "activated" or blue "inhibited".
+However, pathways with no z-score, or z-score below the threshold
+are colored red by default. They should use a neutral color.
+
+
 
 ## 04nov2021
 

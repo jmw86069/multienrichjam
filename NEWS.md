@@ -1,3 +1,35 @@
+# multienrichjam 0.0.53.900
+
+This update mainly focuses on implementing directionality when
+available in the pathway enrichment data during `multiEnrichMap()`.
+
+## new functions
+
+* `colorRamp2D()` - implements bivariate color scale, in this case
+for enrichment `-log10pvalue` for color intensity, and `z-score`
+for color hue directionality: blue "inhibited", gold "neutral",
+and red "activated".
+* `display_colorRamp2D()` - display the color ramp defined by `colorRamp2D()`
+* `cell_fun_bivariate()` - define a heatmap cell function that uses
+the color defined by `colorRamp2D()`, optionally plots circle points,
+and optional text labels
+* `make_legend_bivariate()` - creates a 2-D color ramp legend suitable
+for `ComplexHeatmap::draw(..., annotation_legend_list=x)`
+
+## changes to existing functions
+
+* `mem_enrichment_heatmap()` new argument `apply_direction=TRUE` will
+enable bivariate colors, where color intensity is defined by the
+enrichment -log10 P-value, and color hue is defined by z-score direction:
+
+   * blue = "inhibition" with z-score <= -2
+   * gold = "no direction" with z-score > -2 and x score < 2
+   * red = "activation" with z-score >= 2
+
+Points are sized by number of genes.
+
+
+
 # multienrichjam 0.0.52.900
 
 ## changes to existing functions
