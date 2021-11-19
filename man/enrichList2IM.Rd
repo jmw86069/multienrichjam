@@ -9,7 +9,7 @@ enrichList2IM(
   addAnnotations = TRUE,
   keyColname = c("ID", "Name", "pathway", "itemsetID"),
   valueColname = c("qvalue", "q.value", "pvalue", "p.value"),
-  emptyValue = NULL,
+  emptyValue = NA,
   verbose = FALSE,
   GmtT = NULL,
   ...

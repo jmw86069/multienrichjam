@@ -1,3 +1,43 @@
+# multienrichjam 0.0.55.900
+
+## bug fixes
+
+* `multiEnrichMap()` was incorrectly populating empty gene counts
+with default `1` instead of `0`. The effect is mainly during filtering
+by gene count, where the minimum is usually never below `1`, however
+it can cause issues in point sizing particularly in
+`mem_enrichment_heatmap()`. The previous default `1` is a remnant of
+using this function to generate a matrix of enrichment P-values.
+
+
+## changes to existing functions
+
+* `enrichList2IM()` argument default was changed to
+`emptyValue=NA` so in the absence of data to populate into
+the incidence matrix, the default cell value will be `NA`
+to indicate there is no available data.
+* `multiEnrichMap()` was updated to supply a specific `emptyValue`
+for all calls to `enrichList2IM()`.
+* `cell_fun_bivariate()` new argument `type` is intended to allow
+re-using this same function for univariate color functions, so
+heatmaps features can be made consistently, specifically for
+dotplot or normal heatmap output, and optionally labeling cells
+with statistical values.
+* `mem_enrichment_heatmap()` is updated to share common heatmap
+code for bivariate and univariate color gradients. One by-product
+is that output cannot be raster format, which is typically not
+an issue for pathway enrichment, since pathways should not represent
+more than 1,000 or so pathways. In that event, output should probably
+be rasterized (PNG, JPG) instead of vector graphics
+(PDF, SVG).
+* `make_legend_bivariate()` new argument `digits` used to prevent
+displaying weird labels like `5.9999999998` and instead will display `6`.
+* `jam_igraph()` default argument was changed to `edge_bundling="connections"`
+which will enable edge bundling by default. It can be disabled with
+`edge_bundling="none"`, although it is only active when there are edge
+connections that can be bundled.
+
+
 # multienrichjam 0.0.54.900
 
 ## updates to existing functions

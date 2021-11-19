@@ -21,6 +21,7 @@ cell_fun_bivariate(
   size_fun = NULL,
   size_by = 1,
   grid_color = "grey80",
+  type = c("bivariate", "univariate"),
   verbose = FALSE,
   ...
 )
@@ -60,6 +61,10 @@ one value.}
 \item{mcolor}{\code{character} matrix of R colors, with same \code{nrow()}
 and \code{ncol()} or each matrix in \code{m}. When \code{mcolor} is supplied,
 the colors are used directly, and \code{col_hm} is not used.}
+
+\item{type}{\code{character} string indicating whether the color function
+uses bivariate or univariate logic. This argument is intended to
+allow this function to be used in both scenarios for consistency.}
 
 \item{...}{additional arguments are passed to \code{col_hm()} to allow
 custom options relevant to that function.}

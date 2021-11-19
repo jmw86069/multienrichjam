@@ -725,13 +725,17 @@ mem_gene_path_heatmap <- function
 #'    above the heatmap.
 #' @param row_names_max_width,column_names_max_height,heatmap_legend_param
 #'    arguments passed to `ComplexHeatmap::Heatmap()`.
+#' @param top_annotation `HeatmapAnnotation` as produced by
+#'    `ComplexHeatmap::HeatmapAnnotation()` or `NULL`, used to display
+#'    annotation at the top of the heatmap.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization.
 #'
 #' @export
 mem_enrichment_heatmap <- function
 (mem,
- style=c("heatmap", "dotplot"),
+ style=c("dotplot",
+    "heatmap"),
  p_cutoff=mem$p_cutoff,
  min_count=1,
  p_floor=1e-6,
@@ -739,6 +743,7 @@ mem_enrichment_heatmap <- function
  point_size_max=8,
  point_size_min=1,
  row_method="euclidean",
+ column_method="euclidean",
  name="-log10P",
  row_dend_reorder=TRUE,
  row_dend_width=grid::unit(30, "mm"),
@@ -760,6 +765,7 @@ mem_enrichment_heatmap <- function
  apply_direction=FALSE,
  direction_cutoff=0,
  gene_count_max=NULL,
+ top_annotation=NULL,
  show=NULL,
  ...)
 {
@@ -806,10 +812,21 @@ mem_enrichment_heatmap <- function
             minimum=-log10(p_cutoff+1e-5),
             newValue=0,
             ceiling=-log10(p_floor)),
-            #ceiling=3),
          method=row_method);
+      er_hc2 <- as.dendrogram(er_hc2);
       if (length(row_dend_width) == 0) {
          row_dend_width <- grid::unit(30, "mm");
+      }
+      if (cluster_columns) {
+         cluster_columns <- amap::hcluster(
+            link="ward",
+            jamba::noiseFloor(
+               t(-log10(mem$enrichIM[sets,,drop=FALSE])),
+               minimum=-log10(p_cutoff+1e-5),
+               newValue=0,
+               ceiling=-log10(p_floor)),
+            #ceiling=3),
+            method=column_method);
       }
    } else {
       er_hc2 <- FALSE;
@@ -850,6 +867,11 @@ mem_enrichment_heatmap <- function
    }
 
    if ("heatmap" %in% style) {
+      pch <- NULL;
+   } else {
+      pch <- 21;
+   }
+   if ("heatmap1" %in% style) {
       hm <- ComplexHeatmap::Heatmap(
          use_matrix,
          name=name,
@@ -892,13 +914,15 @@ mem_enrichment_heatmap <- function
             }
          }
       }
-      ct_approxfun <- approxfun(
-         x=c(min_count, ctmax),
-         yleft=0,
-         ties="ordered",
-         yright=point_size_max,
-         y=c(point_size_min,
-            point_size_max * point_size_factor));
+      ct_approxfun <- function(x, ...){
+         approxfun(
+            x=sqrt(c(min_count, ctmax)),
+            yleft=0,
+            ties="ordered",
+            yright=point_size_max,
+            y=c(point_size_min,
+               point_size_max * point_size_factor))(sqrt(x), ...);
+      }
       ct_tick_sizes <- ct_approxfun(ct_ticks);
 
       # define point size legend
@@ -908,19 +932,23 @@ mem_enrichment_heatmap <- function
       if (length(ct_ticks) >= 8) {
          pt_legend_ncol <- 2;
       }
-      pt_legend <- ComplexHeatmap::Legend(
-         labels=ct_ticks,
-         title="Gene Count",
-         type="points",
-         pch=21,
-         ncol=pt_legend_ncol,
-         size=grid::unit(ct_tick_sizes, "mm"),
-         grid_height=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
-         grid_width=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
-         background="transparent",
-         legend_gp=grid::gpar(col="black",
-            fill="grey85"));
-      anno_legends <- list(pt_legend);
+      if ("dotplot" %in% style) {
+         pt_legend <- ComplexHeatmap::Legend(
+            labels=ct_ticks,
+            title="Gene Count",
+            type="points",
+            pch=pch,
+            ncol=pt_legend_ncol,
+            size=grid::unit(ct_tick_sizes, "mm"),
+            grid_height=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
+            grid_width=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
+            background="transparent",
+            legend_gp=grid::gpar(col="black",
+               fill="grey85"));
+         anno_legends <- list(pt_legend);
+      } else {
+         anno_legends <- list();
+      }
 
       # improved cell_fun
       if (apply_direction) {
@@ -945,15 +973,19 @@ mem_enrichment_heatmap <- function
             column_breaks=seq(from=-2, to=2, length.out=3),
             row_breaks=row_breaks,
             mcolor);
+         size_by <- match("geneCount",
+            c("-log10Pvalue",
+               "z-score",
+               "geneCount"));
          cell_fun_custom <- cell_fun_bivariate(
             list(
                use_direction,
                use_matrix,
                mem$enrichIMgeneCount),
-            pch=21,
+            pch=pch,
             size_fun=ct_approxfun,
-            size_by=3,
-            outline_style="black",
+            size_by=size_by,
+            outline_style="darker",
             col_hm=col_bivariate,
             show=show,
             cex=cexCellnote,
@@ -970,7 +1002,26 @@ mem_enrichment_heatmap <- function
          show_heatmap_legend <- FALSE;
       } else {
          show_heatmap_legend <- TRUE;
-         cell_fun_custom <- function(j, i, x, y, width, height, fill) {
+         cell_fun_custom <- cell_fun_bivariate(
+            list(
+               use_matrix,
+               use_direction,
+               mem$enrichIMgeneCount),
+            pch=pch,
+            size_fun=ct_approxfun,
+            size_by=3,
+            outline_style="darker",
+            col_hm=col_logp,
+            show=show,
+            cex=cexCellnote,
+            type="univariate",
+            prefix=c("z-score: ",
+               "-log10P: ",
+               "genes: ")[show],
+            ...
+         );
+
+         cell_fun_custom_old <- function(j, i, x, y, width, height, fill) {
             cell_value <- jamba::rmNA(naValue=0,
                use_matrix[i, j]);
             cell_color <- col_logp(cell_value);
@@ -1010,7 +1061,7 @@ mem_enrichment_heatmap <- function
          }
       }
 
-      # dot plot style
+      # dot plot or heatmap style
       hm <- ComplexHeatmap::Heatmap(
          use_matrix,
          name=name,
@@ -1028,8 +1079,9 @@ mem_enrichment_heatmap <- function
          heatmap_legend_param=heatmap_legend_param,
          rect_gp=grid::gpar(type="none"),
          cell_fun=cell_fun_custom,
-         show_heatmap_legend=show_heatmap_legend
-      );
+         show_heatmap_legend=show_heatmap_legend,
+         top_annotation=top_annotation,
+         ...);
       attr(hm,
          "annotation_legend_list") <- anno_legends;
       draw(hm,
@@ -1623,7 +1675,9 @@ mem_plot_folio <- function
          p_floor=p_floor,
          color_by_column=color_by_column,
          row_cex=row_cex,
+         row_method=row_method,
          column_cex=column_cex,
+         column_method=column_method,
          style=style,
          ...);
       if (do_plot) {

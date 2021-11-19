@@ -12,6 +12,7 @@ make_legend_bivariate(
   ylab = "",
   title = "",
   border = TRUE,
+  digits = 3,
   grid_height = grid::unit(5, "mm"),
   grid_width = grid_height,
   row_breaks = NULL,

@@ -82,7 +82,8 @@ colorRamp2D <- function
    (x=NULL,
       return_rgb=FALSE,
       max_value=1,
-      y=NULL)
+      y=NULL,
+      ...)
    {
       if (length(x) == 0) {
          stop("x is required")
@@ -200,6 +201,9 @@ display_colorRamp2D <- function
 #' @param mcolor `character` matrix of R colors, with same `nrow()`
 #'    and `ncol()` or each matrix in `m`. When `mcolor` is supplied,
 #'    the colors are used directly, and `col_hm` is not used.
+#' @param type `character` string indicating whether the color function
+#'    uses bivariate or univariate logic. This argument is intended to
+#'    allow this function to be used in both scenarios for consistency.
 #' @param ... additional arguments are passed to `col_hm()` to allow
 #'    custom options relevant to that function.
 #'
@@ -281,30 +285,33 @@ display_colorRamp2D <- function
 #' @export
 cell_fun_bivariate <- function
 (m,
-   prefix="",
-   suffix="",
-   cex=1,
-   col_hm,
-   outline=FALSE,
-   outline_style=c("none",
-      "contrast",
-      "lighter",
-      "darker",
-      "black",
-      "same"),
-   abbrev=FALSE,
-   show=NULL,
-   rot=0,
-   sep="\n",
-   mcolor=NULL,
-   pch=NULL,
-   size_fun=NULL,
-   size_by=1,
-   grid_color="grey80",
-   verbose=FALSE,
-   ...)
+ prefix="",
+ suffix="",
+ cex=1,
+ col_hm,
+ outline=FALSE,
+ outline_style=c("none",
+    "contrast",
+    "lighter",
+    "darker",
+    "black",
+    "same"),
+ abbrev=FALSE,
+ show=NULL,
+ rot=0,
+ sep="\n",
+ mcolor=NULL,
+ pch=NULL,
+ size_fun=NULL,
+ size_by=1,
+ grid_color="grey80",
+ type=c("bivariate",
+    "univariate"),
+ verbose=FALSE,
+ ...)
 {
    outline_style <- match.arg(outline_style);
+   type <- match.arg(type);
    if (!is.list(m) || (is.list(m) && length(m) < 2)) {
       stop("Input must be a list with two or more matrix objects.")
    }
@@ -335,13 +342,15 @@ cell_fun_bivariate <- function
       #cell_value2 <- jamba::rmNA(naValue=0, m[[2]][i, j]);
       # do not convert NA to zero
       cell_value1 <- m[[1]][i, j];
-      cell_value2 <- m[[2]][i, j];
       if (length(mcolor) > 0) {
          cell_color <- mcolor[i, j];
-      } else {
+      } else if ("bivariate" %in% type) {
+         cell_value2 <- m[[2]][i, j];
          cell_color <- col_hm(x=cell_value1,
             y=cell_value2,
             ...);
+      } else {
+         cell_color <- col_hm(cell_value1);
       }
       cell_label <- "";
       for (k1 in seq_along(show)) {
@@ -384,7 +393,7 @@ cell_fun_bivariate <- function
          } else if ("darker" %in% outline_style) {
             outline_col <- jamba::makeColorDarker(cell_color,
                darkFactor=1.3,
-               sFactor=1.2);
+               sFactor=-1.1);
          } else if ("same" %in% outline_style) {
             outline_col <- cell_color;
          } else if ("black" %in% outline_style) {
@@ -488,6 +497,7 @@ make_legend_bivariate <- function
    ylab="",
    title="",
    border=TRUE,
+   digits=3,
    grid_height=grid::unit(5, "mm"),
    grid_width=grid_height,
    row_breaks=NULL,
@@ -526,7 +536,9 @@ make_legend_bivariate <- function
          title_position <- "lefttop-rot";
       }
       if (i == length(column_breaks)) {
-         labels <- row_breaks;
+         labels <- format(row_breaks,
+            digits=digits,
+            trim=TRUE);
       }
       row_colors <- sapply(row_breaks, function(row_break) {
          col_fun(x=column_break,

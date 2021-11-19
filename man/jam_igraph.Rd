@@ -21,7 +21,7 @@ jam_igraph(
   label_dist_factor_l = 1,
   use_shadowText = FALSE,
   plot_function = jam_plot_igraph,
-  edge_bundling = c("none", "connections", "nodegroups"),
+  edge_bundling = c("connections", "none", "nodegroups"),
   nodegroups = NULL,
   render_nodes = TRUE,
   render_edges = TRUE,

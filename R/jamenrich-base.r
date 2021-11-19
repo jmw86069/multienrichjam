@@ -815,6 +815,7 @@ multiEnrichMap <- function
       valueColname=pvalueColname,
       keyColname=nameColname,
       verbose=verbose,
+      emptyValue=1,
       GmtT=msigdbGmtT);
    match1 <- match(enrichLsetNames, rownames(enrichIM));
    match2 <- match(names(enrichList), colnames(enrichIM));
@@ -882,9 +883,9 @@ multiEnrichMap <- function
    }
 
    enrichIMgeneCount <- enrichList2IM(enrichList,
-      #valueColname="geneCount",
       keyColname=nameColname,
       valueColname=geneCountColname,
+      emptyValue=0,
       verbose=verbose,
       GmtT=msigdbGmtT);
    match1 <- match(enrichLsetNames, rownames(enrichIMgeneCount));
@@ -1229,7 +1230,7 @@ enrichList2IM <- function
  addAnnotations=TRUE,
  keyColname=c("ID", "Name", "pathway", "itemsetID"),
  valueColname=c("qvalue", "q.value", "pvalue", "p.value"),
- emptyValue=NULL,
+ emptyValue=NA,
  verbose=FALSE,
  GmtT=NULL,
  ...)
@@ -1246,7 +1247,9 @@ enrichList2IM <- function
    ## enrichSubIMP <- enrichList2IM(enrichSubL, msigdbGmtTv50mouseV2, keyColname="Description", valueColname="geneHits", emptyValue=0);
    ##
    ## Empty values should be 1 instead of 0
-   valueColname1 <- find_colname(valueColname, enrichList[[1]]);
+   valueColname1 <- find_colname(valueColname,
+      data.frame(check.names=FALSE,
+         enrichList[[1]]));
    if (length(emptyValue) == 0) {
       if (jamba::igrepHas("gene|count|hits|num", valueColname1)) {
          emptyValue <- 0;

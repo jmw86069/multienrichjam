@@ -6,7 +6,7 @@
 \usage{
 mem_enrichment_heatmap(
   mem,
-  style = c("heatmap", "dotplot"),
+  style = c("dotplot", "heatmap"),
   p_cutoff = mem$p_cutoff,
   min_count = 1,
   p_floor = 1e-06,
@@ -14,6 +14,7 @@ mem_enrichment_heatmap(
   point_size_max = 8,
   point_size_min = 1,
   row_method = "euclidean",
+  column_method = "euclidean",
   name = "-log10P",
   row_dend_reorder = TRUE,
   row_dend_width = grid::unit(30, "mm"),
@@ -35,6 +36,7 @@ mem_enrichment_heatmap(
   apply_direction = FALSE,
   direction_cutoff = 0,
   gene_count_max = NULL,
+  top_annotation = NULL,
   show = NULL,
   ...
 )
@@ -115,6 +117,10 @@ inside each heatmap cell.}
 above the heatmap.}
 
 \item{row_names_max_width, column_names_max_height, heatmap_legend_param}{arguments passed to \code{ComplexHeatmap::Heatmap()}.}
+
+\item{top_annotation}{\code{HeatmapAnnotation} as produced by
+\code{ComplexHeatmap::HeatmapAnnotation()} or \code{NULL}, used to display
+annotation at the top of the heatmap.}
 
 \item{...}{additional arguments are passed to \code{ComplexHeatmap::Heatmap()}
 for customization.}
