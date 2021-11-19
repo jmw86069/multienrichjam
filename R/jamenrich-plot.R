@@ -682,6 +682,8 @@ mem_gene_path_heatmap <- function
 #'    This behavior is intended to indicate pathways with P-value above
 #'    this threshold did not meet the threshold, instead of
 #'    pathways with similar P-values displaying with similar color.
+#' @param min_count `numeric` number of genes required for a pathway
+#'    to be considered dysregulated.
 #' @param p_floor `numeric` minimum P-value used for the color gradient.
 #'    P-values below this floor are colored with the maximum color gradient.
 #'    This value is intended to be used in cases where one enrichment
@@ -731,6 +733,7 @@ mem_enrichment_heatmap <- function
 (mem,
  style=c("heatmap", "dotplot"),
  p_cutoff=mem$p_cutoff,
+ min_count=1,
  p_floor=1e-6,
  point_size_factor=1,
  point_size_max=8,
@@ -757,6 +760,7 @@ mem_enrichment_heatmap <- function
  apply_direction=FALSE,
  direction_cutoff=0,
  gene_count_max=NULL,
+ show=NULL,
  ...)
 {
    #
@@ -783,7 +787,11 @@ mem_enrichment_heatmap <- function
 
    if (length(sets) > 0) {
       sets <- intersect(rownames(mem$enrichIM), sets);
-      mem$enrichIM <- mem$enrichIM[sets,,drop=FALSE];
+      i_changes <- jamba::vigrep("^enrichIM", names(mem));
+      for (i_change in i_changes) {
+         i_match <- match(sets, rownames(mem[[i_change]]));
+         mem[[i_change]] <- mem[[i_change]][i_match,,drop=FALSE];
+      }
    } else {
       sets <- rownames(mem$enrichIM);
    }
@@ -870,7 +878,9 @@ mem_enrichment_heatmap <- function
          ct_ticks <- c(0, 1);
       } else {
          n <- 8;
-         ct_ticks <- setdiff(unique(c(1,
+         ct_ticks <- setdiff(unique(c(
+            #1,
+            min_count,
             round(pretty(c(0, ctmax), n=n)))), 0);
          ct_step <- median(diff(ct_ticks));
          if (max(ct_ticks) > ctmax) {
@@ -883,7 +893,7 @@ mem_enrichment_heatmap <- function
          }
       }
       ct_approxfun <- approxfun(
-         x=c(1, ctmax),
+         x=c(min_count, ctmax),
          yleft=0,
          ties="ordered",
          yright=point_size_max,
@@ -894,11 +904,16 @@ mem_enrichment_heatmap <- function
       # define point size legend
       #ctbreaks <- ct_to_breaks(ctmax, n=10, maxsize=point_size_max)
       #ctbreaksize <- ct_to_size(ctbreaks, ctmax=ctmax, n=10, maxsize=point_size_max) * point_size_factor;
+      pt_legend_ncol <- 1;
+      if (length(ct_ticks) >= 8) {
+         pt_legend_ncol <- 2;
+      }
       pt_legend <- ComplexHeatmap::Legend(
          labels=ct_ticks,
          title="Gene Count",
          type="points",
          pch=21,
+         ncol=pt_legend_ncol,
          size=grid::unit(ct_tick_sizes, "mm"),
          grid_height=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
          grid_width=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
@@ -940,8 +955,13 @@ mem_enrichment_heatmap <- function
             size_by=3,
             outline_style="black",
             col_hm=col_bivariate,
-            prefix=c("-log10P: ", "z-score: "),
-            show=NULL);
+            show=show,
+            cex=cexCellnote,
+            prefix=c("z-score: ",
+               "-log10P: ",
+               "genes: ")[show],
+            ...
+         );
          legend_bivariate <- make_legend_bivariate(col_bivariate,
             ylab="-log10pvalue",
             xlab="z-score");

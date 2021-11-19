@@ -1,3 +1,17 @@
+# multienrichjam 0.0.54.900
+
+## updates to existing functions
+
+* `mem_enrichment_heatmap()` was updated to customize directional
+information in heatmaps. Cell labels are optionally displayed,
+defined by `show`, to display one or more of `z-score`,
+`-log10pvalue`, and `gene count`. Argument `sets` was updated
+to handle presence of `enrichIM` and `enrichIMgeneCount` and
+`enrichIMdirection` - as well as future measurements with prefix
+`enrichIM`. New argument `min_count` applies the gene count
+filter to the dot plot output heatmap.
+
+
 # multienrichjam 0.0.53.900
 
 This update mainly focuses on implementing directionality when

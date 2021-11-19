@@ -363,6 +363,7 @@ topEnrichBySource <- function
          }
       } else {
          descr_keep <- rep(TRUE, nrow(iDFsub))
+         descr_keep_vals <- NULL;
       }
       ## nameGrep
       if (length(nameColname) > 0 && length(nameGrep) > 0 && nrow(iDFsub) > 0) {

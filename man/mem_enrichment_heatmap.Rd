@@ -8,6 +8,7 @@ mem_enrichment_heatmap(
   mem,
   style = c("heatmap", "dotplot"),
   p_cutoff = mem$p_cutoff,
+  min_count = 1,
   p_floor = 1e-06,
   point_size_factor = 1,
   point_size_max = 8,
@@ -34,6 +35,7 @@ mem_enrichment_heatmap(
   apply_direction = FALSE,
   direction_cutoff = 0,
   gene_count_max = NULL,
+  show = NULL,
   ...
 )
 }
@@ -56,6 +58,9 @@ P-values above \code{p_cutoff} are not colored, and are therefore white.
 This behavior is intended to indicate pathways with P-value above
 this threshold did not meet the threshold, instead of
 pathways with similar P-values displaying with similar color.}
+
+\item{min_count}{\code{numeric} number of genes required for a pathway
+to be considered dysregulated.}
 
 \item{p_floor}{\code{numeric} minimum P-value used for the color gradient.
 P-values below this floor are colored with the maximum color gradient.
