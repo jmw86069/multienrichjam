@@ -667,7 +667,24 @@ find_colname <- function
  verbose=FALSE,
  ...)
 {
-   ##
+   # handle list of data.frame or enrichResult objects
+   # by iterating each objects and applying criteria
+   if ("list" %in% class(x)) {
+      x_colnames <- lapply(x, function(df) {
+         find_colname(pattern=pattern,
+            x=df,
+            max=1,
+            index=index,
+            require_non_na=require_non_na,
+            verbose=verbose)
+      })
+      x_vals <- head(unique(unlist(x_colnames)), max);
+      return(x_vals);
+   }
+   #
+   if ("enrichResult" %in% class(x)) {
+      x <- x@result;
+   }
    x_colnames <- colnames(x);
    ## require_non_na
    if (require_non_na) {

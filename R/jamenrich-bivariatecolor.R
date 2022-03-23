@@ -211,7 +211,7 @@ display_colorRamp2D <- function
 #' set.seed(12);
 #' m <- matrix(rnorm(36)*2.5, ncol=4)
 #' colnames(m) <- LETTERS[1:4]
-#' rownames(m) <- letters[1:4]
+#' rownames(m) <- letters[1:9]
 #' m2 <- m;
 #' m2[] <- abs(rnorm(36)*3);
 #' mcolor <- matrix(ncol=3,
@@ -242,12 +242,12 @@ display_colorRamp2D <- function
 #' lgds <- make_legend_bivariate(col_bivariate,
 #'    ylab="-log10pvalue",
 #'    xlab="z-score");
-#' draw(hm, annotation_legend_list=lgds)
+#' ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
 #'
 #' lgds <- make_legend_bivariate(col_bivariate,
 #'    row_breaks=seq(from=0, to=1, by=0.25),
 #'    ylab="-log10pvalue");
-#' draw(hm, annotation_legend_list=lgds)
+#' ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
 #'
 #' # heatmap using point circles
 #' ctmax <- 6;
@@ -280,7 +280,7 @@ display_colorRamp2D <- function
 #'       show=NULL),
 #'    show_heatmap_legend=FALSE,
 #' )
-#' draw(hm2, annotation_legend_list=lgds)
+#' ComplexHeatmap::draw(hm2, annotation_legend_list=lgds)
 #'
 #' @export
 cell_fun_bivariate <- function
@@ -468,14 +468,14 @@ cell_fun_bivariate <- function
 #'    xlab="z-score",
 #'    pretty.n=5);
 #' jamba::nullPlot(doBoxes=FALSE);
-#' draw(lgds)
+#' ComplexHeatmap::draw(lgds)
 #'
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
 #'    xlab="z-score",
 #'    pretty.n=NULL);
 #' jamba::nullPlot(doBoxes=FALSE);
-#' draw(lgds)
+#' ComplexHeatmap::draw(lgds)
 #'
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
@@ -486,7 +486,7 @@ cell_fun_bivariate <- function
 #'    row_gap=grid::unit(1, "mm"),
 #'    pretty.n=5);
 #' jamba::nullPlot(doBoxes=FALSE);
-#' draw(lgds)
+#' ComplexHeatmap::draw(lgds)
 #'
 #' @export
 make_legend_bivariate <- function

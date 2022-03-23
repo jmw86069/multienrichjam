@@ -1,3 +1,40 @@
+# multienrichjam 0.0.56.900
+
+## bug fixes
+
+* Issue #7 reported an error, traced back to the vignette. The error
+was caused by passing arguments to `mem_plot_folio()` by overloading
+`...`, when not all arguments were valid in `ComplexHeatmap::Heatmap()`.
+The fix:
+
+   * new function `call_fn_ellipsis()` which passes arguments including `...`
+   to another function, and when that function arguments do not allow `...`
+   then it limits the arguments in `...` to those arguments accepted
+   by the other function.
+   * Instead of: `x <- some_function(a=1, b=2, ...)`
+   * Use: `x <- call_fn_ellipsis(some_function, a=1, b=2, ...)`
+   * `mem_enrichment_heatmap()` and `mem_gene_pathway_heatmap()`
+   were updated to use `call_fn_ellipsis()`.
+
+* Another error was noted during the vignette workflow, that the
+`directionColname` was being populated even when no enrichment data
+contained non-NA values, which was inconsistent with `find_colname()`
+in function `enrich2IM()`. This situation was corrected by requiring
+only one enrichment result to contain a non-NA value in this column.
+* `enrichList2df()`, `multiEnrichMap()`, `enrichList2IM()` were
+updated to call `find_colname()` with the list of `enrichResult` objects.
+
+## changes to existing functions
+
+* `find_colname()` can accept a `list` object, which is expected to
+contain a list of `data.frame` and/or `enrichResult` objects. An
+`enrichResult` is converted to `data.frame` by `enrichResult@result`,
+all other objects must contain `colnames(x)`. When `require_non_na=TRUE`
+it will test each object, and return `max` unique entries that match
+`pattern`. The entries should all contain the same matching colnames
+for most purposes in `multienrichjam`.
+
+
 # multienrichjam 0.0.55.900
 
 ## bug fixes

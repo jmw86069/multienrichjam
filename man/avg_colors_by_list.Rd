@@ -71,6 +71,7 @@ jamba::showColors(list(
 Other jam utility functions: 
 \code{\link{apply_color_cap}()},
 \code{\link{avg_angles}()},
+\code{\link{call_fn_ellipsis}()},
 \code{\link{collapse_mem_clusters}()},
 \code{\link{deconcat_df2}()},
 \code{\link{enrichList2geneHitList}()},

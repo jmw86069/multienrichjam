@@ -592,16 +592,16 @@ multiEnrichMap <- function
    #nameColname <- "Name";
    #geneColname <- "geneNames";
    iDF1 <- head(enrichList[[1]]@result, 30);
-   keyColname <- find_colname(keyColname, iDF1);
-   geneColname <- find_colname(geneColname, iDF1);
-   pvalueColname <- find_colname(pvalueColname, iDF1);
-   descriptionColname <- find_colname(descriptionColname, iDF1);
-   nameColname <- find_colname(nameColname, iDF1);
-   countColname <- find_colname(countColname, iDF1);
-   directionColname <- find_colname(directionColname,
-      iDF1,
-      require_non_na=FALSE);
-   geneHits <- find_colname(geneHits, iDF1);
+   # version 0.0.56.900: change to use enrichList for any one
+   # result to be non-NA, not just testing the first result
+   keyColname <- find_colname(keyColname, enrichList);
+   geneColname <- find_colname(geneColname, enrichList);
+   pvalueColname <- find_colname(pvalueColname, enrichList);
+   descriptionColname <- find_colname(descriptionColname, enrichList);
+   nameColname <- find_colname(nameColname, enrichList);
+   countColname <- find_colname(countColname, enrichList);
+   directionColname <- find_colname(directionColname, enrichList);
+   geneHits <- find_colname(geneHits, enrichList);
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "keyColname:", keyColname);
@@ -1247,11 +1247,11 @@ enrichList2IM <- function
    ## enrichSubIMP <- enrichList2IM(enrichSubL, msigdbGmtTv50mouseV2, keyColname="Description", valueColname="geneHits", emptyValue=0);
    ##
    ## Empty values should be 1 instead of 0
-   valueColname1 <- find_colname(valueColname,
-      data.frame(check.names=FALSE,
-         enrichList[[1]]));
+   valueColname1 <- find_colname(valueColname, enrichList);
+      # data.frame(check.names=FALSE,
+       # enrichList[[1]]));
    if (length(emptyValue) == 0) {
-      if (jamba::igrepHas("gene|count|hits|num", valueColname1)) {
+      if (jamba::igrepHas("gene|count|hits|num|score|total|sum", valueColname1)) {
          emptyValue <- 0;
       } else {
          emptyValue <- 1;
@@ -1266,9 +1266,8 @@ enrichList2IM <- function
       valueColname <- find_colname(valueColname, iDF);
       if (verbose) {
          jamba::printDebug("enrichList2IM(): ",
-            "keyColname:", keyColname);
-         jamba::printDebug("enrichList2IM(): ",
-            "valueColname:", valueColname);
+            "keyColname:", keyColname,
+            ", valueColname:", valueColname);
       }
 
       ## If "GeneRatio" then parse out the geneCount value
@@ -1328,10 +1327,12 @@ enrichList2df <- function
       stop("enrichList2df() requires the matrixStats package.");
    }
    iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
-   keyColname <- find_colname(keyColname, iDF1);
-   geneColname <- find_colname(geneColname, iDF1);
-   geneCountColname <- find_colname(geneCountColname, iDF1);
-   pvalueColname <- find_colname(pvalueColname, iDF1);
+   # version 0.0.56.900: changed to use enrichList which tests all results not
+   # just the first in the list
+   keyColname <- find_colname(keyColname, enrichList);
+   geneColname <- find_colname(geneColname, enrichList);
+   geneCountColname <- find_colname(geneCountColname, enrichList);
+   pvalueColname <- find_colname(pvalueColname, enrichList);
    if (verbose) {
       jamba::printDebug("enrichList2df(): ",
          "colnames(iDF1):",

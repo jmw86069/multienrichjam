@@ -514,7 +514,8 @@ mem_gene_path_heatmap <- function
       );
 
       hm <- tryCatch({
-         ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
+         call_fn_ellipsis(ComplexHeatmap::Heatmap,
+            matrix=memIM[genes,sets,drop=FALSE],
             border=TRUE,
             name=name,
             na_col=na_col,
@@ -872,8 +873,8 @@ mem_enrichment_heatmap <- function
       pch <- 21;
    }
    if ("heatmap1" %in% style) {
-      hm <- ComplexHeatmap::Heatmap(
-         use_matrix,
+      hm <- call_fn_ellipsis(ComplexHeatmap::Heatmap,
+         matrix=use_matrix,
          name=name,
          col=col_logp,
          cluster_rows=er_hc2,
@@ -1062,8 +1063,8 @@ mem_enrichment_heatmap <- function
       }
 
       # dot plot or heatmap style
-      hm <- ComplexHeatmap::Heatmap(
-         use_matrix,
+      hm <- call_fn_ellipsis(ComplexHeatmap::Heatmap,
+         matrix=use_matrix,
          name=name,
          col=col_logp,
          cluster_rows=er_hc2,
@@ -1680,6 +1681,16 @@ mem_plot_folio <- function
          column_method=column_method,
          style=style,
          ...);
+      # mem_hm <- mem_enrichment_heatmap(mem,
+      #    p_cutoff=p_cutoff,
+      #    p_floor=p_floor,
+      #    color_by_column=color_by_column,
+      #    row_cex=row_cex,
+      #    row_method=row_method,
+      #    column_cex=column_cex,
+      #    column_method=column_method,
+      #    style=style,
+      #    ...);
       if (do_plot) {
          if (!color_by_column) {
             if ("annotation_legend_list" %in% names(attributes(mem_hm))) {

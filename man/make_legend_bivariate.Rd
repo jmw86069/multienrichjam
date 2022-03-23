@@ -44,14 +44,14 @@ lgds <- make_legend_bivariate(col_fun,
    xlab="z-score",
    pretty.n=5);
 jamba::nullPlot(doBoxes=FALSE);
-draw(lgds)
+ComplexHeatmap::draw(lgds)
 
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
    xlab="z-score",
    pretty.n=NULL);
 jamba::nullPlot(doBoxes=FALSE);
-draw(lgds)
+ComplexHeatmap::draw(lgds)
 
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
@@ -62,6 +62,6 @@ lgds <- make_legend_bivariate(col_fun,
    row_gap=grid::unit(1, "mm"),
    pretty.n=5);
 jamba::nullPlot(doBoxes=FALSE);
-draw(lgds)
+ComplexHeatmap::draw(lgds)
 
 }

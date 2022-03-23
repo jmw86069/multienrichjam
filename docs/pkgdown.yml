@@ -1,7 +1,7 @@
-pandoc: 2.9.2.1
-pkgdown: 1.6.1
-pkgdown_sha: ~
+pandoc: 2.14.1
+pkgdown: 1.9000.9000.9000
+pkgdown_sha: e72fc30f333dc4f50f3f9d1f274fc29d67e34974
 articles:
   importIPA: importIPA.html
-last_built: 2021-07-21T23:23Z
+last_built: 2022-03-23T22:56Z
 

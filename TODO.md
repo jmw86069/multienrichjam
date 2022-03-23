@@ -1,5 +1,64 @@
 # TODO
 
+## 23mar2022 issue #7 passing arguments through ... in `mem_plot_folio()`
+
+* User reported an error when calling `mem_plot_folio(mem, node_factor=5, label_factor=1.5)`
+* `mem_plot_folio()` is passing `...` to `ComplexHeatmap::Heatmap()` which
+does not accept `...` and throws an error when receiving extra arguments.
+* I need to limit `...` to arguments accepted by `Heatmap()`. I feel like
+there is an R package function to handle this scenario, so I can avoid
+writing `do.call(Heatmap, custom_args)`.
+
+## 04feb2022
+
+Workflow that starts with pathway-gene incidence matrix upfront,
+bypassing the `multiEnrichMap()` workflow altogether.
+
+* `memIM2cnet()` to convert pathway-to-gene incidence matrix to Cnet `igraph`.
+
+   * Requires `geneIM` which is the enrichment-to-gene incidence matrix.
+   In the driving example, each enrichment would represent a disease subgroup,
+   with the full set of differential genes associated to each subgroup.
+   * Requires `enrichIM` which contains enrichment-to-pathway whose values
+   are P-values. When this data is not supplied, it should use 0.001 by default.
+   I think these values are only used as an optional gradient color for the
+   pathway nodes.
+   * Optional `geneIMcolors` which is the same as `geneIM` except the cells
+   contain colors to use for each gene. Currently the function does not
+   fill these colors, the best method is to use `colorjam::matrix2heatColors()`
+   
+   ```R
+   geneIMcolors <- colorjam::matrix2heatColors(x=geneIM,
+      colorV=colorV)
+   ```
+
+
+## 03feb2022
+
+* option to assign pathways to "functional themes" based upon presentation
+by Adeline Chin in  Dr. Hanna Kim' group.
+
+   * This step may "collapse" multiple pathways together, similar to
+   grouping functional groups:
+   union of genes,
+   lowest enrichment P-value.
+
+
+## 25jan2021
+
+* `heatmap_row_order()`, `heatmap_column_order()` should return a flat
+vector when there are no row_split or column_split, respectively.
+Currently data is returned as a list of one-length vectors.
+
+   * Consider moving into `jamba` package, in case this function
+   needs to be re-used, it should not require loading the full
+   `multienrichjam` package, which itself requires things like
+   `igraph`, `clusterProfiler`, `qgraph`, `DOSE`, `matrixStats`.
+   * Import `jamba::heatmap_row_order()` and `jamba::heatmap_column_order()`
+   to ensure any functions or packages calling this function will
+   succeed without error.
+
+
 This document describes plans for enhancements to the
 multienrichjam R package.
 
