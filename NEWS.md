@@ -1,3 +1,19 @@
+# multienrichjam 0.0.57.900
+
+* Issue #6 reported an error when using a series of enrichments
+where only a subset contain a z-score column name for `directionColname`.
+Related, the current approach ignored the `directionColname` when
+all values were NA. Both situations have been corrected, to allow
+flexible mish-mash of NA and non-NA values, and presence/absence
+of `directionColname` in each enrichment input.
+Also related, `mem_plot_folio()` was by default no enabling the
+directionality via `mem_enrichment_heatmap(mem, apply_direction=TRUE)`,
+therefore there is a new argument to `mem_plot_folio()` default
+`apply_direction=NULL` which will auto-detect whether there is
+directional non-zero and non-NA values that can be used in the heatmap.
+Also, `apply_direction` can be defined on its own to force the issue.
+
+
 # multienrichjam 0.0.56.900
 
 ## bug fixes

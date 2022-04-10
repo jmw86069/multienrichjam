@@ -39,6 +39,7 @@ mem_plot_folio(
   cluster_color_min_fraction = 0.4,
   byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
   edge_bundling = "connections",
+  apply_direction = NULL,
   do_plot = TRUE,
   verbose = TRUE,
   ...
@@ -129,6 +130,13 @@ to \code{rank_mem_clusters()}.}
 to control edge bundling. The default \code{edge_bundling="connections"}
 will bundle Cnet plot edges for genes that share the same pathway
 connections.}
+
+\item{apply_direction}{\code{logical} or \code{NULL} indicating whether to
+indicate directionality in the \code{mem_enrichment_heatmap()} which is
+the first plot in the series. The default \code{apply_direction=NULL}
+will auto-detect whether there is directionality present in the
+data, and will set \code{apply_direction=TRUE} only when there are non-NA
+values that differ from zero.}
 
 \item{do_plot}{\code{logical} indicating whether to render each plot.
 When \code{do_plot=FALSE} the plot objects will be created and returned,

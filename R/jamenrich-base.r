@@ -1247,7 +1247,9 @@ enrichList2IM <- function
    ## enrichSubIMP <- enrichList2IM(enrichSubL, msigdbGmtTv50mouseV2, keyColname="Description", valueColname="geneHits", emptyValue=0);
    ##
    ## Empty values should be 1 instead of 0
-   valueColname1 <- find_colname(valueColname, enrichList);
+   valueColname1 <- find_colname(pattern=valueColname,
+      x=enrichList,
+      require_non_na=FALSE);
       # data.frame(check.names=FALSE,
        # enrichList[[1]]));
    if (length(emptyValue) == 0) {
@@ -1262,8 +1264,12 @@ enrichList2IM <- function
       if (jamba::igrepHas("enrichResult", class(iDF))) {
          iDF <- iDF@result;
       }
-      keyColname <- find_colname(keyColname, iDF);
-      valueColname <- find_colname(valueColname, iDF);
+      keyColname <- find_colname(keyColname,
+         x=iDF,
+         require_non_na=FALSE);
+      valueColname <- find_colname(valueColname,
+         x=iDF,
+         require_non_na=FALSE);
       if (verbose) {
          jamba::printDebug("enrichList2IM(): ",
             "keyColname:", keyColname,

@@ -1595,6 +1595,12 @@ mem_legend <- function
 #'    to control edge bundling. The default `edge_bundling="connections"`
 #'    will bundle Cnet plot edges for genes that share the same pathway
 #'    connections.
+#' @param apply_direction `logical` or `NULL` indicating whether to
+#'    indicate directionality in the `mem_enrichment_heatmap()` which is
+#'    the first plot in the series. The default `apply_direction=NULL`
+#'    will auto-detect whether there is directionality present in the
+#'    data, and will set `apply_direction=TRUE` only when there are non-NA
+#'    values that differ from zero.
 #' @param do_plot `logical` indicating whether to render each plot.
 #'    When `do_plot=FALSE` the plot objects will be created and returned,
 #'    but the plot itself will not be rendered. This option may be
@@ -1642,6 +1648,7 @@ mem_plot_folio <- function
  cluster_color_min_fraction=0.4,
  byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
  edge_bundling="connections",
+ apply_direction=NULL,
  do_plot=TRUE,
  verbose=TRUE,
  ...)
@@ -1671,6 +1678,14 @@ mem_plot_folio <- function
             c("Enrichment P-value Heatmap"),
             sep="");
       }
+      if (length(apply_direction) == 0) {
+         apply_direction <- FALSE;
+         if ("enrichIMdirection" %in% names(mem) &&
+               any(!is.na(mem$enrichIMdirection)) &&
+               any(jamba::rmNA(mem$enrichIMdirection) != 0)) {
+            apply_direction <- TRUE;
+         }
+      }
       mem_hm <- mem_enrichment_heatmap(mem,
          p_cutoff=p_cutoff,
          p_floor=p_floor,
@@ -1680,6 +1695,7 @@ mem_plot_folio <- function
          column_cex=column_cex,
          column_method=column_method,
          style=style,
+         apply_direction=apply_direction,
          ...);
       # mem_hm <- mem_enrichment_heatmap(mem,
       #    p_cutoff=p_cutoff,
