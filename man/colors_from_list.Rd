@@ -35,7 +35,7 @@ the average observed rank for each color, then uses that
 average rank to define the overall color order.
 
 If not all unique colors are present in vectors with two or
-more colors, the fallback sort uses \code{multienrichjam::sort_colors()}.
+more colors, the fallback sort uses \code{colorjam::sort_colors()}.
 }
 \seealso{
 Other jam list functions: 

@@ -25,45 +25,45 @@ enrichDF2enrichResult(
 \item{enrichDF}{\code{data.frame} representing gene set enrichment
 results.}
 
-\item{pvalueCutoff}{numeric value range 0 to 1, to define the
+\item{pvalueCutoff}{\code{numeric} value range 0 to 1, to define the
 P-value threshold for enrichment results to be considered
 in downstream processing.}
 
-\item{pAdjustMethod}{character string to define the P-value
+\item{pAdjustMethod}{\code{character} string to define the P-value
 adjustment method, or \code{"none"} for no additional adjustment.
 See \code{stats::p.adjust()} for valid values.}
 
-\item{keyColname}{character value of the \code{colname(enrichDF)}
+\item{keyColname}{\code{character} value of the \code{colname(enrichDF)}
 containing the unique row identifier. It can be a pathway_ID
 or any uniquely identifying value.}
 
-\item{pathGenes}{character or value of the \code{colname(enrichDF)}
+\item{pathGenes}{\code{character} or value of the \code{colname(enrichDF)}
 containing the number of genes in each pathway. This value will be
 derived from \code{geneRatioColname} if needed.}
 
-\item{geneColname}{character value of the \code{colname(enrichDF)}
+\item{geneColname}{\code{character} value of the \code{colname(enrichDF)}
 containing delimiited genes in each pathway.}
 
-\item{geneHits}{character value of the \code{colname(enrichDF)}
+\item{geneHits}{\code{character} value of the \code{colname(enrichDF)}
 containing the integer count of the gene hits in each pathway.
 This value will be derived from \code{geneRatioColname} if needed.}
 
-\item{geneRatioColname}{character value of the \code{colname(enrichDF)}
+\item{geneRatioColname}{\code{character} value of the \code{colname(enrichDF)}
 containing the character ratio of gene hits to pathway size,
 in format "50/100". This value is used when either \code{"pathGenes"}
 or \code{"geneHits"} are not supplied.}
 
-\item{geneDelim}{regular expression pattern used to separate
+\item{geneDelim}{\code{character} regular expression pattern used to separate
 genes in the \code{pathGenes} column into a vector of character
 values.}
 
-\item{pvalueColname}{character value of the \code{colname(enrichDF)}
+\item{pvalueColname}{\code{character} value of the \code{colname(enrichDF)}
 containing enrichment P-values to use in downstream processing.}
 
 \item{msigdbGmtT}{optional gmtT object, a representation of
 \code{arules::transactions-class}. (Not currently implemented.)}
 
-\item{verbose}{logical indicating whether to print verbose output.}
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
 }

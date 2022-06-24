@@ -73,6 +73,8 @@ Cnet \code{igraph}. To apply layout before the subset operation,
 do so with \code{igraph::set_graph_attr(g, "layout", layout)}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
+
+\item{...}{additional arguments are ignored.}
 }
 \description{
 Subset Cnet igraph

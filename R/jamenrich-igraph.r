@@ -1707,7 +1707,8 @@ reorderIgraphNodes <- function
                   " colors");
             }
             j_colors_v <- avg_colors_by_list(j_colors);
-            j_sorted <- sort_colors(j_colors_v);
+            j_sorted <- colorjam::sort_colors(j_colors_v,
+               byCols=c("H", "-C", "-L"));
             if (verbose) {
                jamba::printDebug("reorderIgraphNodes(): ",
                   c("head(j_colors_v):", head(j_colors_v)));
@@ -3355,7 +3356,7 @@ jam_plot_igraph <- function
 #' average rank to define the overall color order.
 #'
 #' If not all unique colors are present in vectors with two or
-#' more colors, the fallback sort uses `multienrichjam::sort_colors()`.
+#' more colors, the fallback sort uses `colorjam::sort_colors()`.
 #'
 #' @family jam list functions
 #'
@@ -3401,7 +3402,8 @@ colors_from_list <- function
       pcdf1 <- jamba::rbindList(lapply(unique(x), function(pc2i){
          data.frame(color=pc2i, name=names(pc2i), rank=seq_along(pc2i))
       }));
-      colorV <- sort_colors(pcu);
+      colorV <- colorjam::sort_colors(pcu,
+         byCols=c("H", "-C", "-L"));
       colorVnames <- pcdf1$name[match(colorV, pcdf1$color)];
       if (all(!is.na(colorVnames))) {
          names(colorV) <- colorVnames;

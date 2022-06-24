@@ -179,10 +179,10 @@ topEnrichBySource <- function
       } else {
          rownames(enrichDF@result) <- jamba::makeNames(rownames(enrichDF@result));
       }
-      nameColname <- find_colname(nameColname, enrichDF@result);
-      if (!"Name" %in% nameColname) {
-         enrichDF@result[,"Name"] <- enrichDF@result[[nameColname]];
-      }
+      # nameColname <- find_colname(nameColname, enrichDF@result);
+      # if (!"Name" %in% nameColname) {
+      #    enrichDF@result[,"Name"] <- enrichDF@result[[nameColname]];
+      # }
       enrichR <- enrichDF;
       enrichDF <- enrichDF@result;
    }
@@ -196,7 +196,8 @@ topEnrichBySource <- function
    directionColname <- find_colname(directionColname,
       enrichDF,
       require_non_na=FALSE);
-   if (!"Name" %in% nameColname) {
+   # if (!"Name" %in% nameColname) {
+   if (!"Name" %in% colnames(enrichDF)) {
       enrichDF[,"Name"] <- enrichDF[[nameColname]];
    }
 
@@ -311,7 +312,7 @@ topEnrichBySource <- function
       enrichDF[[newColname]] <- iDFsplit;
    }
 
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("topEnrichBySource(): ",
          "table(iDFsplit) before subsetting:");
       print(table(iDFsplit));
@@ -394,7 +395,9 @@ topEnrichBySource <- function
       jamba::printDebug("topEnrichBySource(): ",
          "sdim(iDFtopL): ");
       print(jamba::sdim(iDFtopL));
-      print(head(iDFtopL[[1]], 5));
+      if (verbose > 1) {
+         print(head(iDFtopL[[1]], 5));
+      }
    }
    iDFnew <- data.frame(jamba::rbindList(unname(iDFtopL)),
       check.names=FALSE,
@@ -403,13 +406,25 @@ topEnrichBySource <- function
       jamba::printDebug("topEnrichBySource(): ",
          "dim(iDFnew): ");
       print(dim(iDFnew));
-      print(head(iDFnew, 5));
+      if (verbose > 1) {
+         print(head(iDFnew, 5));
+      }
    }
+   # pass nameColname as an attribute
+   attr(iDFnew, "nameColname") <- nameColname;
+
    if (length(enrichR) > 0) {
-      #ematch <- match(rownames(iDFnew), rownames(enrichR@result));
-      ematch <- match(iDFnew$Name, rownames(enrichR@result));
+      # ematch <- match(rownames(iDFnew), rownames(enrichR@result));
+      # ematch <- match(iDFnew$Name, rownames(enrichR@result));
+      ematch <- match(iDFnew[[nameColname]], enrichR@result[[nameColname]]);
       enrichR@result <- enrichR@result[ematch,,drop=FALSE];
+      attr(enrichR@result, "nameColname") <- nameColname;
       enrichR@geneSets <- enrichR@geneSets[ematch];
+      if (verbose) {
+         jamba::printDebug("topEnrichBySource(): ",
+            "sdim(enrichR):");
+         print(sdim(enrichR));
+      }
       return(enrichR)
    }
    iDFnew;
@@ -496,17 +511,23 @@ topEnrichListBySource <- function
          descriptionGrep=descriptionGrep,
          subsetSets=subsetSets,
          nameGrep=nameGrep,
-         verbose=verbose,
+         verbose=(verbose - 1) > 0,
          ...);
       if ("enrichResult" %in% class(iDFsub)) {
-         eName <- iDFsub@result$Name;
+         nameColname <- attr(iDFsub@result, "nameColname");
+         eName <- iDFsub@result[[nameColname]];
       } else {
-         eName <- iDFsub$Name;
+         nameColname <- attr(iDFsub, "nameColname");
+         eName <- iDFsub[[nameColname]];
       }
       if (verbose) {
          jamba::printDebug("topEnrichListBySource(): ",
             "   length(enrichNames):",
             jamba::formatInt(length(eName)));
+         jamba::printDebug("topEnrichListBySource(): ",
+            "   head(enrichNames, 6):",
+            sep=", ",
+            head(eName, 6));
       }
       eName;
    });
@@ -527,15 +548,13 @@ topEnrichListBySource <- function
       iDF <- enrichList[[iName]];
       if (jamba::igrepHas("enrichResult", class(iDF))) {
          nameColnameUse <- find_colname(nameColname, iDF@result);
-         ematch <- jamba::rmNA(match(enrichNames,
-            iDF@result[[nameColnameUse]]));
-         iDF@result <- iDF@result[ematch,,drop=FALSE];
-         iDF@geneSets <- iDF@geneSets[ematch];
+         keepRows <- (iDF@result[[nameColnameUse]] %in% enrichNames);
+         iDF@result <- subset(iDF@result, keepRows);
+         iDF@geneSets <- iDF@geneSets[keepRows];
       } else {
          nameColnameUse <- find_colname(nameColname, iDF);
-         ematch <- match(enrichNames,
-            iDF[[nameColnameUse]]);
-         iDF <- iDF[ematch,,drop=FALSE];
+         keepRows <- (iDF@result[[nameColnameUse]] %in% enrichNames);
+         iDF <- subset(iDF, keepRows);
       }
       iDF;
    });

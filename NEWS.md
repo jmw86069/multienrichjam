@@ -1,3 +1,36 @@
+# multienrichjam 0.0.58.900
+
+* bumped dependency to `jamba (>= 0.0.84.900)` to retire `call_fn_ellipsis()`
+
+## changes to existing functions
+
+* `topEnrichListBySource()` and `topEnrichBySource()` were updated:
+
+   * `nameColname` is handled properly, without relying upon `"Name"` colname,
+   and without relying upon `rownames()` of the enrichment `data.frame`.
+   * Now the subset operations use values in the `nameColname`.
+   * Also the rows in each enrichment `data.frame` with values in
+   `nameColname` are subset using `subset()`, which means in some rare
+   cases multiple rows might be returned, if the input enrichment data
+   has the same name in `nameColname` for multiple rows. This change
+   is intentional, in order to retain all rows with matching names,
+   not just the first that occurs.
+
+* `enrichList2geneHitList()`:
+
+   * argument `geneDelim` has a default value, consistent with `multiEnrichMap()`
+
+## bug fixes
+
+* `enrichList2IM()` will return data with zero rows without error, although
+it usually occurs because of an error somewhere else (for example input data).
+
+
+## functions removed
+
+* `call_fn_ellipsis()` was moved to the jamba package version `0.0.84.900`.
+
+
 # multienrichjam 0.0.57.900
 
 * Issue #6 reported an error when using a series of enrichments

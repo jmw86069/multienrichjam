@@ -282,13 +282,29 @@ mem_find_overlap <- function
 enrichList2geneHitList <- function
 (enrichList,
  geneColname,
- geneDelim,
+ geneDelim="[,/ ]",
  make_unique=TRUE,
+ verbose=FALSE,
  ...)
 {
+   if (verbose) {
+      jamba::printDebug("enrichList2geneHitList(): ",
+         "geneColname: '",
+         geneColname,
+         "'")
+      jamba::printDebug("enrichList2geneHitList(): ",
+         "geneDelim: '",
+         geneDelim,
+         "'")
+   };
    geneHitList <- lapply(enrichList, function(iDF){
       ## Split text field of delimited genes into proper vector
       if (!jamba::igrepHas("data.frame", class(iDF))) {
+         if (verbose) {
+            jamba::printDebug("enrichList2geneHitList(): ",
+               "head(iDF, 3):");
+            print(head(iDF, 3));
+         }
          k <- jamba::mixedSort(unlist(
             strsplit(
                as.character(
@@ -366,7 +382,11 @@ heatmap_column_order <- function
    x;
 }
 
-#' Sort colors
+#' Sort colors (deprecated)
+#'
+#' Sort colors (deprecated)
+#'
+#' This function is deprecated, please use `colorjam::sort_colors()`.
 #'
 #' This function is intended to be a very rapid method to sort
 #' colors, based upon hue, then chroma descending, then luminance
@@ -378,19 +398,19 @@ heatmap_column_order <- function
 #' x <- jamba::nameVector(colors());
 #'
 #' ## Basic color sort
-#' c2 <- sort_colors(x);
+#' c2 <- sort_colors_deprecated(x);
 #' jamba::showColors(c2, main="cmin=4");
 #'
 #' ## Increase filtering of unsaturated colors
-#' c3 <- sort_colors(x, c_min=20);
+#' c3 <- sort_colors_deprecated(x, c_min=20);
 #' jamba::showColors(c3, main="cmin=20");
 #'
 #' ## Increase filtering of unsaturated colors
-#' c4 <- sort_colors(x, c_min=50);
+#' c4 <- sort_colors_deprecated(x, c_min=50);
 #' jamba::showColors(c4, main="cmin=50");
 #'
 #' @export
-sort_colors <- function
+sort_colors_deprecated <- function
 (x,
  sort_by=c("h", "-c", "-l"),
  c_min=4,
@@ -443,7 +463,7 @@ sort_colors <- function
 #' @export
 order_colors <- function
 (x,
- sort_by=c("h", "-c", "-l"),
+ sort_by=c("H", "-C", "-L"),
  c_min=4,
  grey_hue=359,
  hue_offset=0,
@@ -451,11 +471,8 @@ order_colors <- function
 {
    ## hue_offset=-12 makes red the first color,
    ## and moves pink to the end with purple
-   x_sorted <- sort_colors(unique(x),
-      sort_by=sort_by,
-      c_min=c_min,
-      grey_hue=grey_hue,
-      hue_offset=hue_offset,
+   x_sorted <- colorjam::sort_colors(unique(x),
+      byCols=sort_by,
       ...);
    x_factor <- factor(x, levels=x_sorted);
    order(x_factor);
@@ -488,7 +505,7 @@ order_colors <- function
 apply_color_cap <- function
 (x,
  channel="l",
- range=c(0,100),
+ range=c(0, 100),
  space="hcl",
  ...)
 {

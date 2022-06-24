@@ -32,35 +32,35 @@
 #'
 #' @param enrichDF `data.frame` representing gene set enrichment
 #'    results.
-#' @param pvalueCutoff numeric value range 0 to 1, to define the
+#' @param pvalueCutoff `numeric` value range 0 to 1, to define the
 #'    P-value threshold for enrichment results to be considered
 #'    in downstream processing.
-#' @param pAdjustMethod character string to define the P-value
+#' @param pAdjustMethod `character` string to define the P-value
 #'    adjustment method, or `"none"` for no additional adjustment.
 #'    See `stats::p.adjust()` for valid values.
-#' @param keyColname character value of the `colname(enrichDF)`
+#' @param keyColname `character` value of the `colname(enrichDF)`
 #'    containing the unique row identifier. It can be a pathway_ID
 #'    or any uniquely identifying value.
-#' @param geneColname character value of the `colname(enrichDF)`
+#' @param geneColname `character` value of the `colname(enrichDF)`
 #'    containing delimiited genes in each pathway.
-#' @param pathGenes character or value of the `colname(enrichDF)`
+#' @param pathGenes `character` or value of the `colname(enrichDF)`
 #'    containing the number of genes in each pathway. This value will be
 #'    derived from `geneRatioColname` if needed.
-#' @param geneHits character value of the `colname(enrichDF)`
+#' @param geneHits `character` value of the `colname(enrichDF)`
 #'    containing the integer count of the gene hits in each pathway.
 #'    This value will be derived from `geneRatioColname` if needed.
-#' @param geneRatioColname character value of the `colname(enrichDF)`
+#' @param geneRatioColname `character` value of the `colname(enrichDF)`
 #'    containing the character ratio of gene hits to pathway size,
 #'    in format "50/100". This value is used when either `"pathGenes"`
 #'    or `"geneHits"` are not supplied.
-#' @param geneDelim regular expression pattern used to separate
+#' @param geneDelim `character` regular expression pattern used to separate
 #'    genes in the `pathGenes` column into a vector of character
 #'    values.
-#' @param pvalueColname character value of the `colname(enrichDF)`
+#' @param pvalueColname `character` value of the `colname(enrichDF)`
 #'    containing enrichment P-values to use in downstream processing.
 #' @param msigdbGmtT optional gmtT object, a representation of
 #'    `arules::transactions-class`. (Not currently implemented.)
-#' @param verbose logical indicating whether to print verbose output.
+#' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
 #' @family jam conversion functions
@@ -367,7 +367,8 @@ enrichDF2enrichResult <- function
 #'    from the enrichment results themselves. Therefore, if a gene
 #'    does not appear in any enrichment result, it will not be
 #'    used in this function.
-#' @param colorV vector of colors, length equal to `length(enrichList)`,
+#' @param colorV `character` vector of colors, length
+#'    equal to `length(enrichList)`,
 #'    used to assign specific colors to each enrichment result.
 #' @param nrow,ncol,byrow optional arguments used to customize
 #'    `igraph` node shape `"coloredrectangle"`, useful when the
@@ -375,38 +376,38 @@ enrichDF2enrichResult <- function
 #'    defines the number of columns and rows used for each node,
 #'    to display enrichment result colors, and whether to fill
 #'    colors by row when `byrow=TRUE`, or by column when `byrow=FALSE`.
-#' @param enrichLabels character vector of enrichment labels to use,
+#' @param enrichLabels `character` vector of enrichment labels to use,
 #'    as an optional alternative to `names(enrichList)`.
-#' @param subsetSets character vector of optional set names to
+#' @param subsetSets `character` vector of optional set names to
 #'    use in the analysis, useful to analyze only a specific subset
 #'    of known pathways.
-#' @param overlapThreshold numeric value between 0 and 1, indicating
+#' @param overlapThreshold `numeric` value between 0 and 1, indicating
 #'    the Jaccard overlap score above which two pathways will be linked
 #'    in the EnrichMap `igraph` network. By default, pathways whose
 #'    genes overlap more than `0.1` will be connected, which is roughly
 #'    equivalent to about a 10% overlap. Note that the Jaccard coefficient
 #'    is adversely affected when pathway sets differ in size by more than
 #'    about 5-fold.
-#' @param cutoffRowMinP numeric value between 0 and 1, indicating the
+#' @param cutoffRowMinP `numeric` value between 0 and 1, indicating the
 #'    enrichment P-value required by at least one enrichment result, to
 #'    be retained in downstream analyses. This P-value can be confirmed
 #'    in the returned list element `"enrichIM"`, which is a matrix of
 #'    P-values by pathway and enrichment.
-#' @param enrichBaseline numeric value indicating the `-log10(P-value)`
+#' @param enrichBaseline `numeric` value indicating the `-log10(P-value)`
 #'    at which colors are defined as non-blank in color gradients.
 #'    This value is typically derived from `cutoffRowMinP` to ensure
 #'    that colors are only applied when a pathway meets this significance
 #'    threshold.
-#' @param enrichLens numeric value indicating the "lens" to apply to
+#' @param enrichLens `numeric` value indicating the "lens" to apply to
 #'    color gradients, where numbers above 0 make the color ramp more
 #'    compressed, so colors are more vivid at lower numeric values.
-#' @param enrichNumLimit numeric value indicating the `-log10(P-value)`
+#' @param enrichNumLimit `numeric` value indicating the `-log10(P-value)`
 #'    above which each color gradient is considered the maximum color,
 #'    useful to apply a fixed threshold for each color gradient.
-#' @param nEM integer number, to define the maximum number of pathway
+#' @param nEM `integer` number, to define the maximum number of pathway
 #'    nodes to include in the EnrichMap `igraph` network. This argument
 #'    is passed to `enrichMapJam()`.
-#' @param topEnrichN integer value with the maximum rows to retain
+#' @param topEnrichN `integer` value with the maximum rows to retain
 #'    from each `enrichList` table, by source. Set `topEnrichN=0` or
 #'    `topEnrichN=NULL` to disable subsetting for the top rows.
 #' @param topEnrichSources,topEnrichCurateFrom,topEnrichCurateTo,topEnrichSourceSubset,topEnrichDescriptionGrep,topEnrichNameGrep
@@ -416,8 +417,8 @@ enrichDF2enrichResult <- function
 #' @param keyColname,nameColname,geneColname,pvalueColname,descriptionColname
 #'    `character` vector in each case indicating the colnames
 #'    for `key`, `name`, `gene`, `pvalue`, and `description`,
-#'    respectively. Each vector is passed to `find_colname()` to determine
-#'    the first suitable matching colname for each `data.frame` in
+#'    respectively. Each vector is passed to `find_colname()` to find
+#'    a suitable matching colname for each `data.frame` in
 #'    `enrichList`.
 #' @param descriptionCurateFrom,descriptionCurateTo `character` vectors
 #'    with patterns and replacements, passed to `gsubs()`, intended to
@@ -430,12 +431,13 @@ enrichDF2enrichResult <- function
 #' @param pathGenes,geneHits `character` values indicating the colnames
 #'    that contain the number of pathway genes, and the number of gene
 #'    hits, respectively.
-#' @param geneDelim character pattern used with `strsplit()` to
+#' @param geneDelim `character` pattern used with `strsplit()` to
 #'    split multiple gene values into a list of vectors. The default
 #'    for `enrichResult` objects is `"/"`, but the default for other
 #'    sources is often `","`. The default pattern `"[,/ ]+"` splits
 #'    by either `"/"`, `","`, or whitespace `" "`.
-#' @param verbose logical indicating whether to print verbose output.
+#' @param verbose `logical` indicating whether to print verbose output.
+#'    For `verbose` to cascade to internal functions, use `verbose=2`.
 #' @param ... additional arguments are passed to various internal
 #'    functions.
 #'
@@ -685,7 +687,9 @@ multiEnrichMap <- function
       }
       geneHitList <- enrichList2geneHitList(enrichList,
          geneColname=geneColname,
-         geneDelim=geneDelim);
+         geneDelim=geneDelim,
+         verbose=(verbose - 1) > 0,
+         make_unique=TRUE);
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "sdim(geneHitList): ");
@@ -730,7 +734,8 @@ multiEnrichMap <- function
          subsetSets=subsetSets,
          descriptionGrep=topEnrichDescriptionGrep,
          nameGrep=topEnrichNameGrep,
-         verbose=verbose);
+         verbose=(verbose - 1) > 0,
+         ...);
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "sdim after topEnrichBySource():");
@@ -745,10 +750,15 @@ multiEnrichMap <- function
          jamba::printDebug("multiEnrichMap(): ",
             "length(origGenes):",
             length(origGenes));
+         jamba::printDebug("multiEnrichMap(): ",
+            "head(origGenes):",
+            head(origGenes));
       }
       geneHitListNew <- enrichList2geneHitList(enrichList,
          geneColname=geneColname,
-         geneDelim=geneDelim);
+         geneDelim=geneDelim,
+         verbose=(verbose - 1) > 0,
+         make_unique=TRUE);
       newGenes <- jamba::mixedSort(unique(unlist(geneHitListNew)));
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
@@ -814,7 +824,7 @@ multiEnrichMap <- function
    enrichIM <- enrichList2IM(enrichList,
       valueColname=pvalueColname,
       keyColname=nameColname,
-      verbose=verbose,
+      verbose=(verbose - 1) > 0,
       emptyValue=1,
       GmtT=msigdbGmtT);
    match1 <- match(enrichLsetNames, rownames(enrichIM));
@@ -886,7 +896,7 @@ multiEnrichMap <- function
       keyColname=nameColname,
       valueColname=geneCountColname,
       emptyValue=0,
-      verbose=verbose,
+      verbose=(verbose - 1) > 0,
       GmtT=msigdbGmtT);
    match1 <- match(enrichLsetNames, rownames(enrichIMgeneCount));
    match2 <- match(names(enrichList), colnames(enrichIMgeneCount));
@@ -902,7 +912,7 @@ multiEnrichMap <- function
          keyColname=nameColname,
          valueColname=directionColname,
          emptyValue=0,
-         verbose=verbose)[enrichLsetNames,,drop=FALSE];
+         verbose=(verbose - 1) > 0)[enrichLsetNames,,drop=FALSE];
       match1 <- match(enrichLsetNames, rownames(enrichIMdirection));
       match2 <- match(names(enrichList), colnames(enrichIMdirection));
       enrichIMdirection <- enrichIMdirection[match1, match2, drop=FALSE];
@@ -1001,7 +1011,7 @@ multiEnrichMap <- function
       geneCountColname=geneCountColname,
       pvalueColname=pvalueColname,
       geneDelim=geneDelim,
-      verbose=verbose);
+      verbose=(verbose - 1) > 0);
 
    #####################################################################
    ## Some cleaning of Description
@@ -1041,7 +1051,7 @@ multiEnrichMap <- function
       geneDelim=geneDelim,
       pvalueColname=pvalueColname,
       msigdbGmtT=msigdbGmtT,
-      verbose=verbose);
+      verbose=(verbose - 1) > 0);
 
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
@@ -1079,7 +1089,7 @@ multiEnrichMap <- function
       keyColname="ID",
       nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
       vertex.label.cex=0.5,
-      verbose=verbose);
+      verbose=(verbose - 1) > 0);
    ## jamba::normScale(..., low=0) scales range 0 to maximum, into 0 to 1
    ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
    igraph::V(enrichEM)$size_orig <- igraph::V(enrichEM)$size;
@@ -1099,7 +1109,7 @@ multiEnrichMap <- function
    enrichEMpieUse <- igraph2pieGraph(g=enrichEM,
       defineLayout=FALSE,
       valueIMcolors=enrichIMcolors[i1use,useCols,drop=FALSE],
-      verbose=verbose);
+      verbose=(verbose - 1) > 0);
 
    ## Use colored rectangles
    if (verbose) {
@@ -1130,7 +1140,7 @@ multiEnrichMap <- function
       categorySize=geneCountColname,
       doPlot=FALSE,
       nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
-      verbose=verbose);
+      verbose=(verbose - 1) > 0);
    igraph::V(gCnet)$nodeType <- "Gene";
    igraph::V(gCnet)[seq_len(gCt)]$nodeType <- "Set";
    mem$multiCnetPlot <- gCnet;
@@ -1148,7 +1158,7 @@ multiEnrichMap <- function
    gCnetPie1 <- igraph2pieGraph(g=gCnet,
       defineLayout=FALSE,
       valueIMcolors=enrichIMcolors[i1use,useCols,drop=FALSE],
-      verbose=verbose);
+      verbose=(verbose - 1) > 0);
    mem$multiCnetPlot1 <- gCnetPie1;
    ## Gene IM colors
    if (verbose) {
@@ -1160,7 +1170,7 @@ multiEnrichMap <- function
    gCnetPie <- igraph2pieGraph(g=gCnetPie1,
       defineLayout=FALSE,
       valueIMcolors=geneIMcolors[,useCols,drop=FALSE],
-      verbose=verbose);
+      verbose=(verbose - 1) > 0);
    mem$multiCnetPlot1b <- gCnetPie;
 
    #######################################################
@@ -1296,7 +1306,10 @@ enrichList2IM <- function
    });
    enrichIMP <- as.data.frame(list2imSigned(enrichIMP1));
 
-   if (emptyValue != 0) {
+   if (nrow(enrichIMP) == 0) {
+      return(enrichIMP);
+   }
+   if (length(emptyValue) > 0 && !emptyValue %in% 0) {
       enrichIMP[is.na(enrichIMP) | enrichIMP == 0] <- emptyValue;
    }
 
@@ -1898,6 +1911,7 @@ enrichMapJam <- function
 #'    Cnet `igraph`. To apply layout before the subset operation,
 #'    do so with `igraph::set_graph_attr(g, "layout", layout)`.
 #' @param verbose logical indicating whether to print verbose output.
+#' @param ... additional arguments are ignored.
 #'
 #' @export
 subsetCnetIgraph <- function

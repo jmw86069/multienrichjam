@@ -3,6 +3,8 @@
 #'
 #' Call function using safe ellipsis arguments
 #'
+#' This function is deprecated, instead please use `jamba::call_fn_ellipsis()`.
+#'
 #' This function is a wrapper function intended to help
 #' pass ellipsis arguments `...` from a parent function
 #' to an external function in a safe way. It will only
@@ -42,7 +44,7 @@
 #' # call_fn_ellipsis(new_mean, x=x, color="red")
 #'
 #' @export
-call_fn_ellipsis <- function
+call_fn_ellipsis_deprecated <- function
 (FUN,
  ...)
 {

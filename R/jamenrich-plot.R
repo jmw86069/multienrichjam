@@ -1714,11 +1714,11 @@ mem_plot_folio <- function
             } else {
                annotation_legend_list <- NULL;
                if (length(main) > 0 && nchar(main) > 0) {
-                  ComplexHeatmap::draw(mem_hm,
+                  mem_hm <- ComplexHeatmap::draw(mem_hm,
                      annotation_legend_list=annotation_legend_list,
                      column_title=main);
                } else {
-                  ComplexHeatmap::draw(mem_hm,
+                  mem_hm <- ComplexHeatmap::draw(mem_hm,
                      annotation_legend_list=annotation_legend_list);
                }
             }
@@ -1776,6 +1776,8 @@ mem_plot_folio <- function
          "\n",
          jamba::formatInt(nrow(gp_hm)), " rows x ",
          jamba::formatInt(ncol(gp_hm)), " columns");
+      ret_vals$gp_hm <- gp_hm;
+      ret_vals$gp_hm_caption <- caption;
       # Optionally increase padding between annotation and heatmap body
       #row_anno_padding <- ComplexHeatmap::ht_opt$ROW_ANNO_PADDING;
       #column_anno_padding <- ComplexHeatmap::ht_opt$COLUMN_ANNO_PADDING;
@@ -1784,8 +1786,6 @@ mem_plot_folio <- function
             title=main,
             caption=caption);
       }
-      ret_vals$gp_hm <- gp_hm;
-      ret_vals$gp_hm_caption <- caption;
    }
    ## Obtain heatmap pathway clusters
    clusters_mem <- heatmap_column_order(gp_hm);

@@ -57,7 +57,7 @@ Other jam utility functions:
 \code{\link{apply_color_cap}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
-\code{\link{call_fn_ellipsis}()},
+\code{\link{call_fn_ellipsis_deprecated}()},
 \code{\link{collapse_mem_clusters}()},
 \code{\link{deconcat_df2}()},
 \code{\link{enrichList2geneHitList}()},
@@ -71,7 +71,7 @@ Other jam utility functions:
 \code{\link{order_colors}()},
 \code{\link{rank_mem_clusters}()},
 \code{\link{rotate_coordinates}()},
-\code{\link{sort_colors}()},
+\code{\link{sort_colors_deprecated}()},
 \code{\link{subgraph_jam}()}
 }
 \concept{jam utility functions}

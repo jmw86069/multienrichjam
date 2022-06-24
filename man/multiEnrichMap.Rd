@@ -57,7 +57,8 @@ from the enrichment results themselves. Therefore, if a gene
 does not appear in any enrichment result, it will not be
 used in this function.}
 
-\item{colorV}{vector of colors, length equal to \code{length(enrichList)},
+\item{colorV}{\code{character} vector of colors, length
+equal to \code{length(enrichList)},
 used to assign specific colors to each enrichment result.}
 
 \item{nrow, ncol, byrow}{optional arguments used to customize
@@ -67,14 +68,14 @@ defines the number of columns and rows used for each node,
 to display enrichment result colors, and whether to fill
 colors by row when \code{byrow=TRUE}, or by column when \code{byrow=FALSE}.}
 
-\item{enrichLabels}{character vector of enrichment labels to use,
+\item{enrichLabels}{\code{character} vector of enrichment labels to use,
 as an optional alternative to \code{names(enrichList)}.}
 
-\item{subsetSets}{character vector of optional set names to
+\item{subsetSets}{\code{character} vector of optional set names to
 use in the analysis, useful to analyze only a specific subset
 of known pathways.}
 
-\item{overlapThreshold}{numeric value between 0 and 1, indicating
+\item{overlapThreshold}{\code{numeric} value between 0 and 1, indicating
 the Jaccard overlap score above which two pathways will be linked
 in the EnrichMap \code{igraph} network. By default, pathways whose
 genes overlap more than \code{0.1} will be connected, which is roughly
@@ -82,31 +83,31 @@ equivalent to about a 10\% overlap. Note that the Jaccard coefficient
 is adversely affected when pathway sets differ in size by more than
 about 5-fold.}
 
-\item{cutoffRowMinP}{numeric value between 0 and 1, indicating the
+\item{cutoffRowMinP}{\code{numeric} value between 0 and 1, indicating the
 enrichment P-value required by at least one enrichment result, to
 be retained in downstream analyses. This P-value can be confirmed
 in the returned list element \code{"enrichIM"}, which is a matrix of
 P-values by pathway and enrichment.}
 
-\item{enrichBaseline}{numeric value indicating the \code{-log10(P-value)}
+\item{enrichBaseline}{\code{numeric} value indicating the \code{-log10(P-value)}
 at which colors are defined as non-blank in color gradients.
 This value is typically derived from \code{cutoffRowMinP} to ensure
 that colors are only applied when a pathway meets this significance
 threshold.}
 
-\item{enrichLens}{numeric value indicating the "lens" to apply to
+\item{enrichLens}{\code{numeric} value indicating the "lens" to apply to
 color gradients, where numbers above 0 make the color ramp more
 compressed, so colors are more vivid at lower numeric values.}
 
-\item{enrichNumLimit}{numeric value indicating the \code{-log10(P-value)}
+\item{enrichNumLimit}{\code{numeric} value indicating the \code{-log10(P-value)}
 above which each color gradient is considered the maximum color,
 useful to apply a fixed threshold for each color gradient.}
 
-\item{nEM}{integer number, to define the maximum number of pathway
+\item{nEM}{\code{integer} number, to define the maximum number of pathway
 nodes to include in the EnrichMap \code{igraph} network. This argument
 is passed to \code{enrichMapJam()}.}
 
-\item{topEnrichN}{integer value with the maximum rows to retain
+\item{topEnrichN}{\code{integer} value with the maximum rows to retain
 from each \code{enrichList} table, by source. Set \code{topEnrichN=0} or
 \code{topEnrichN=NULL} to disable subsetting for the top rows.}
 
@@ -116,8 +117,8 @@ input data matches these patterns.}
 
 \item{keyColname, nameColname, geneColname, pvalueColname, descriptionColname}{\code{character} vector in each case indicating the colnames
 for \code{key}, \code{name}, \code{gene}, \code{pvalue}, and \code{description},
-respectively. Each vector is passed to \code{find_colname()} to determine
-the first suitable matching colname for each \code{data.frame} in
+respectively. Each vector is passed to \code{find_colname()} to find
+a suitable matching colname for each \code{data.frame} in
 \code{enrichList}.}
 
 \item{descriptionCurateFrom, descriptionCurateTo}{\code{character} vectors
@@ -133,13 +134,14 @@ different result objects consistent.}
 that contain the number of pathway genes, and the number of gene
 hits, respectively.}
 
-\item{geneDelim}{character pattern used with \code{strsplit()} to
+\item{geneDelim}{\code{character} pattern used with \code{strsplit()} to
 split multiple gene values into a list of vectors. The default
 for \code{enrichResult} objects is \code{"/"}, but the default for other
 sources is often \code{","}. The default pattern \code{"[,/ ]+"} splits
 by either \code{"/"}, \code{","}, or whitespace \code{" "}.}
 
-\item{verbose}{logical indicating whether to print verbose output.}
+\item{verbose}{\code{logical} indicating whether to print verbose output.
+For \code{verbose} to cascade to internal functions, use \code{verbose=2}.}
 
 \item{...}{additional arguments are passed to various internal
 functions.}
