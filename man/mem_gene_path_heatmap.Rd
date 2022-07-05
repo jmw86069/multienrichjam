@@ -21,6 +21,8 @@ mem_gene_path_heatmap(
   gene_im_weight = 0.5,
   cluster_columns = NULL,
   cluster_rows = NULL,
+  cluster_row_slices = TRUE,
+  cluster_column_slices = TRUE,
   name = NULL,
   p_cutoff = mem$p_cutoff,
   p_floor = 1e-06,
@@ -29,7 +31,7 @@ mem_gene_path_heatmap(
   auto_split = TRUE,
   column_title = LETTERS,
   row_title = letters,
-  row_title_rot = 90,
+  row_title_rot = 0,
   colorize_by_gene = TRUE,
   na_col = "white",
   rotate_heatmap = FALSE,
@@ -97,11 +99,20 @@ consistency with the input multienrichment analysis.}
 
 \item{column_split, row_split}{optional arguments passed to
 \code{ComplexHeatmap::Heatmap()} to split the heatmap by columns
-or rows, respectively. Note that when \code{row_split} is \code{NULL}
+or rows, respectively.
+\itemize{
+\item when \code{row_split} is \code{NULL}
 and \code{auto_split=TRUE}, it will determine an appropriate number
-of clusters based upon the number of rows. To turn off row split,
+of clusters based upon the number of rows. To turn off row \code{split},
 use \code{row_split=NULL} or \code{row_split=0} or \code{row_split=1};
-likewise for \code{column_split}.}
+likewise for \code{column_split}.
+\item when \code{row_split} or \code{column_split} are supplied as a named
+vector, the names are aligned with \code{sets} to be displayed
+in the heatmap, and will use the \code{intersect()} of the two.
+When data is clustered, \code{cluster_row_slices=FALSE} and
+\code{cluster_column_slices=FALSE} such that the dendrogram will
+be broken into separate pieces.
+}}
 
 \item{column_title}{optional character string with title to display
 above the heatmap.}

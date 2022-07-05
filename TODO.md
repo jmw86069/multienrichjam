@@ -1,5 +1,24 @@
 # TODO
 
+## 05jul2022
+
+* `mem_gene_pathway_heatmap()` when supplied with custom `column_split`
+throws an error when `cluster_columns=TRUE`.
+
+   * internally it uses `amap::hcluster()` to generate a dendrogram/hclust
+   * using split and dendrogram together is not allowed by `ComplexHeatmap::Heatmap()`
+   * this clustering also uses the incidence matrix combined with the
+   pathway enrichment annotation displayed along the top, and these values
+   are weighted with `pathway_column_weight`.
+   * A proper solution would be to provide a custom function for `cluster_columns`
+   that internally combined the incidence matrix and enrichment matrix data
+   together prior to clustering. If this function receives a
+   numeric matrix with proper colnames, it should work.
+
+* COMPLETE: `mem_plot_folio()` argument `gene_row_title=NULL` is being passed
+to `mem_gene_pathway_heatmap()` and is therefore not using the default
+`row_title=letters`.
+
 ## 23mar2022 issue #7 passing arguments through ... in `mem_plot_folio()`
 
 * User reported an error when calling `mem_plot_folio(mem, node_factor=5, label_factor=1.5)`

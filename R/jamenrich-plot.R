@@ -72,11 +72,18 @@
 #'    consistency with the input multienrichment analysis.
 #' @param column_split,row_split optional arguments passed to
 #'    `ComplexHeatmap::Heatmap()` to split the heatmap by columns
-#'    or rows, respectively. Note that when `row_split` is `NULL`
+#'    or rows, respectively.
+#'    * when `row_split` is `NULL`
 #'    and `auto_split=TRUE`, it will determine an appropriate number
-#'    of clusters based upon the number of rows. To turn off row split,
+#'    of clusters based upon the number of rows. To turn off row `split`,
 #'    use `row_split=NULL` or `row_split=0` or `row_split=1`;
 #'    likewise for `column_split`.
+#'    * when `row_split` or `column_split` are supplied as a named
+#'    vector, the names are aligned with `sets` to be displayed
+#'    in the heatmap, and will use the `intersect()` of the two.
+#'    When data is clustered, `cluster_row_slices=FALSE` and
+#'    `cluster_column_slices=FALSE` such that the dendrogram will
+#'    be broken into separate pieces.
 #' @param column_title optional character string with title to display
 #'    above the heatmap.
 #' @param row_title optional character string with title to display
@@ -143,6 +150,8 @@ mem_gene_path_heatmap <- function
  gene_im_weight=0.5,
  cluster_columns=NULL,
  cluster_rows=NULL,
+ cluster_row_slices=TRUE,
+ cluster_column_slices=TRUE,
  name=NULL,
  p_cutoff=mem$p_cutoff,
  p_floor=1e-6,
@@ -151,7 +160,7 @@ mem_gene_path_heatmap <- function
  auto_split=TRUE,
  column_title=LETTERS,
  row_title=letters,
- row_title_rot=90,
+ row_title_rot=0,
  colorize_by_gene=TRUE,
  na_col="white",
  rotate_heatmap=FALSE,
@@ -278,6 +287,33 @@ mem_gene_path_heatmap <- function
          }
       }
    }
+   if (length(row_split) > 0 && !is.numeric(row_split)) {
+      cluster_row_slices=FALSE;
+      # align row_split with genes
+      if (length(names(row_split)) > 0) {
+         if (!any(genes %in% names(row_split))) {
+            stop("names(row_split) do not match any genes");
+         }
+         genes <- intersect(genes, names(row_split));
+         row_split <- row_split[genes];
+         memIM <- memIM[genes, , drop=FALSE];
+      }
+      if (length(row_title) > 0) {
+         if (grepl("frame|matrix|tbl", ignore.case=TRUE, class(row_split))) {
+            row_split_v <- jamba::pasteByRow(row_split);
+            row_title <- jamba::makeNames(
+               rep(row_title,
+                  length.out=length(unique(row_split_v))),
+               ...);
+         } else {
+            row_title <- jamba::makeNames(
+               rep(row_title,
+                  length.out=length(unique(row_split))),
+               ...);
+         }
+      }
+   }
+
    if (length(column_split) == 1 && is.numeric(column_split)) {
       if (column_split <= 1) {
          column_split <- NULL;
@@ -292,6 +328,32 @@ mem_gene_path_heatmap <- function
             column_title <- jamba::makeNames(
                rep(column_title,
                   length.out=column_split),
+               ...);
+         }
+      }
+   }
+   if (length(column_split) > 0 && !is.numeric(column_split)) {
+      cluster_column_slices=FALSE;
+      # align column_split with sets
+      if (length(names(column_split)) > 0) {
+         if (!any(sets %in% names(column_split))) {
+            stop("names(column_split) do not match any sets");
+         }
+         sets <- intersect(sets, names(column_split));
+         column_split <- column_split[sets];
+         memIM <- memIM[, sets, drop=FALSE];
+      }
+      if (length(column_title) > 0) {
+         if (grepl("frame|matrix|tbl", ignore.case=TRUE, class(column_split))) {
+            column_split_v <- jamba::pasteByRow(column_split);
+            column_title <- jamba::makeNames(
+               rep(column_title,
+                  length.out=length(unique(column_split_v))),
+               ...);
+         } else {
+            column_title <- jamba::makeNames(
+               rep(column_title,
+                  length.out=length(unique(column_split))),
                ...);
          }
       }
@@ -332,13 +394,16 @@ mem_gene_path_heatmap <- function
                   lens=3)))
       )
    });
-   ## Cluster columns and rows
+   ## Cluster columns
+   # if cluster_columns=NULL or cluster_columns=TRUE
    if (length(cluster_columns) == 0 ||
-         (length(cluster_columns) == 1 && is.logical(cluster_columns) && cluster_columns)) {
-      ## Assemble the P-value matrix with gene incidence matrix
-      ## and cluster altogether, which has the benefit/goal of
-      ## accentuating similar enrichment profiles which also have
-      ## similar gene content.
+         (length(cluster_columns) == 1 &&
+               is.logical(cluster_columns) &&
+               cluster_columns %in% TRUE)) {
+      # Assemble the P-value matrix with gene incidence matrix
+      # and cluster altogether, which has the benefit/goal of
+      # accentuating similar enrichment profiles which also have
+      # similar gene content.
       if (!length(enrich_im_weight) == 1 || any(enrich_im_weight > 1)) {
          enrich_im_weight <- 0.3;
       }
@@ -347,21 +412,37 @@ mem_gene_path_heatmap <- function
       min_weight <- max(c(1, min(c(enrich_weight, im_weight))));
       enrich_weight <- enrich_weight / min_weight;
       im_weight <- im_weight / min_weight;
+      ## 0.0.31.900 use column_matrix with enrich_im_weight adjustment
       column_matrix <- cbind(
          jamba::noiseFloor(
             -log10(mem$enrichIM[sets,,drop=FALSE]),
             minimum=-log10(p_cutoff+1e-5),
             newValue=0,
-            ceiling=10) * enrich_weight,
-         t(mem$memIM[genes,sets,drop=FALSE]) * im_weight
+            ceiling=-log10(p_floor)) * enrich_weight,
+            # ceiling=10) * enrich_weight,
+         t((mem$memIM[genes, sets, drop=FALSE]) * im_weight) # non-incidence
+         # t((mem$memIM[genes, sets, drop=FALSE] != 0) * 1) * im_weight # incidence
       );
-      ## 0.0.31.900 use column_matrix with enrich_im_weight adjustment
-      set.seed(seed);
-      cluster_columns <- amap::hcluster(
-         link="ward",
-         column_matrix,
-         method=column_method);
+      if (is.numeric(column_split)) {
+         set.seed(seed);
+         cluster_columns <- amap::hcluster(
+            link="ward",
+            column_matrix,
+            method=column_method);
+      } else {
+         cluster_column_slices=FALSE;
+         cluster_columns <- function(x, ...){
+            set.seed(seed);
+            userows <- rownames(x);
+            use_x <- jamba::rmNA(naValue=0,
+               column_matrix[match(userows, rownames(column_matrix)), , drop=FALSE]);
+            amap::hcluster(use_x,
+               link="ward",
+               method=column_method)
+         }
+      }
    }
+   ## Cluster rows
    if (length(cluster_rows) == 0 ||
          (length(cluster_rows) == 1 && is.logical(cluster_rows) && cluster_rows)) {
       if (!length(gene_im_weight) == 1 || any(gene_im_weight > 1)) {
@@ -375,17 +456,33 @@ mem_gene_path_heatmap <- function
       if (im_weight == 0) {
          row_matrix <- (mem$geneIM[genes,,drop=FALSE]) * gene_weight;
       } else if (gene_weight == 0) {
-         row_matrix <- (mem$memIM[genes,sets,drop=FALSE]) * im_weight;
+         row_matrix <- ((mem$memIM[genes,sets,drop=FALSE]) * im_weight); # not incidence
+         # row_matrix <- ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight; # incidence
       } else {
          row_matrix <- cbind(
             (mem$geneIM[genes,,drop=FALSE]) * gene_weight,
-            (mem$memIM[genes,sets,drop=FALSE]) * im_weight)
+            ((mem$memIM[genes,sets,drop=FALSE])) * im_weight) # do not convert to incidence
+            # ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight) # convert to incidence
       }
-      set.seed(seed);
-      cluster_rows <- amap::hcluster(
-         link="ward",
-         row_matrix,
-         method=row_method);
+      if (is.numeric(row_split)) {
+         set.seed(seed);
+         cluster_rows <- amap::hcluster(
+            link="ward",
+            row_matrix,
+            method=row_method);
+      } else {
+         cluster_row_slices=FALSE;
+         cluster_rows <- function(x, ...){
+            set.seed(seed);
+            userows <- rownames(x);
+            usematrix <- jamba::rmNA(naValue=0,
+               row_matrix[x, , drop=FALSE]);
+            amap::hcluster(
+               usematrix,
+               link="ward",
+               method=row_method);
+         }
+      }
    }
 
    ## Optionally colorize the matrix by gene
@@ -445,8 +542,10 @@ mem_gene_path_heatmap <- function
          }
       }
 
-      jamba::printDebug("length(col_hm_at): ", length(col_hm_at),
-         ", show_heatmap_legend: ", show_heatmap_legend);
+      if (verbose) {
+         jamba::printDebug("length(col_hm_at): ", length(col_hm_at),
+            ", show_heatmap_legend: ", show_heatmap_legend);
+      }
       if (length(col_hm_at) > show_heatmap_legend) {
          singlet_idx <- which(lengths(strsplit(rev(geneIMu_colors), sep)) == 1);
          col_hm_at <- col_hm_at[singlet_idx];
@@ -491,9 +590,8 @@ mem_gene_path_heatmap <- function
       labels=col_hm_labels
    );
 
+   # default orientation, gene rows, pathway columns
    if (!rotate_heatmap) {
-      ##################################################
-      # default orientation, gene rows, pathway columns
       top_annotation <- ComplexHeatmap::HeatmapAnnotation(
          which="column",
          border=TRUE,
@@ -520,7 +618,9 @@ mem_gene_path_heatmap <- function
             name=name,
             na_col=na_col,
             cluster_columns=cluster_columns,
+            cluster_column_slices=cluster_column_slices,
             cluster_rows=cluster_rows,
+            cluster_row_slices=cluster_row_slices,
             clustering_distance_columns=column_method,
             clustering_distance_rows=row_method,
             top_annotation=top_annotation,
@@ -1627,9 +1727,9 @@ mem_plot_folio <- function
  row_method="euclidean",
  exemplar_range=c(1, 2, 3),
  pathway_column_split=NULL,
- pathway_column_title=NULL,
+ pathway_column_title=LETTERS,
  gene_row_split=NULL,
- gene_row_title=NULL,
+ gene_row_title=letters,
  edge_color=NULL,
  cex.main=2,
  cex.sub=1.5,
@@ -1668,8 +1768,6 @@ mem_plot_folio <- function
 
    #############################################################
    ## Enrichment P-value heatmap
-   jamba::printDebug("mem_plot_folio(): ",
-      "Enrichment P-value heatmap");
    plot_num <- plot_num + 1;
    if (length(do_which) == 0 || plot_num %in% do_which) {
       if (verbose) {
@@ -1734,8 +1832,10 @@ mem_plot_folio <- function
       return(invisible(ret_vals));
    }
    ## All subsequent plots depend upon mem_gene_path_heatmap()
-   jamba::printDebug("mem_plot_folio(): ",
-      "Gene-pathway heatmap");
+   if (verbose) {
+      jamba::printDebug("mem_plot_folio(): ",
+         "Gene-pathway heatmap");
+   }
    gp_hm <- mem_gene_path_heatmap(mem,
       p_cutoff=p_cutoff,
       p_floor=p_floor,
@@ -1809,8 +1909,10 @@ mem_plot_folio <- function
    #############################################################
    ## Cnet collapsed
    if (any(c(plot_num + c(1, 2, 3)) %in% do_which)) {
-      jamba::printDebug("mem_plot_folio(): ",
-         "Preparing Cnet collapsed");
+      if (verbose) {
+         jamba::printDebug("mem_plot_folio(): ",
+            "Preparing Cnet collapsed");
+      }
       cnet_collapsed <- tryCatch({
          collapse_mem_clusters(mem=mem,
             clusters=clusters_mem,

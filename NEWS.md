@@ -1,3 +1,36 @@
+# multienrichjam 0.0.59.900
+
+* added `amap` package as dependency, it provides `amap::hcluster()`.
+
+## changes to existing functions
+
+* `mem_plot_folio()` verbosity was reduced when `verbose=FALSE`.
+
+## bug fixes, enhancements
+
+* `mem_gene_pathway_heatmap()` now honors `p_floor` when defining the
+incidence matrix values to be used in clustering the weighted and
+combined enrichment and heatmap gene-pathway incidence matrix data.
+* `mem_gene_pathway_heatmap()` was throwing an error when supplying
+`column_split` and the default `cluster_columns=TRUE`.
+
+   * The error was caused by creating a dendrogram for `cluster_columns`
+   then supplying `ComplexHeatmap::Heatmap()` with a `character` vector
+   `column_split`, and a dendrogram/hclust for `cluster_columns`. Instead
+   it allows passing a `function` to `cluster_columns`, which also requires
+   using custom data, since the data used for clustering is a weighted
+   combination of the enrichment P-values across the top of the heatmap,
+   and the data inside the heatmap.
+   * The new default when `row_split` or `column_split` are `character`
+   will be to define `cluster_rows` or `cluster_columns`, respectively,
+   to a `function` that calls `amap::hcluster()` on the combined and
+   weighted heatmap and respective annotation data matrices.
+
+* `mem_plot_folio()` was not properly defining gene row cluster names
+for `mem_gene_pathway_heatmap()`, leaving them empty by default instead
+of assigning from `letters`.
+
+
 # multienrichjam 0.0.58.900
 
 * bumped dependency to `jamba (>= 0.0.84.900)` to retire `call_fn_ellipsis()`
