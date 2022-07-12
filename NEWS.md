@@ -1,3 +1,13 @@
+# multienrichjam 0.0.60.900
+
+## changes to existing functions
+
+* `mem_plot_folio()` default arguments changed:
+
+   * `min_set_ct=1`, previously was 2
+   * `min_gene_ct=1`, previously was 2
+
+
 # multienrichjam 0.0.59.900
 
 * added `amap` package as dependency, it provides `amap::hcluster()`.
