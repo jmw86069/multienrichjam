@@ -1,5 +1,30 @@
 # TODO
 
+## 13jul2022
+
+* `mem_gene_pathway_heatmap()`
+
+   * would be useful to have an option to subset enrichments,
+   this option would likely be useful to `mem_plot_folio()`, and
+   `mem_enrichment_heatmap()`, so the effect could cascade to
+   subsequent functions.
+
+* new function idea? `subset_mem()`
+
+   * Could be useful to accomplish the item above, to subset by enrichments
+   prior to `mem_plot_folio()` related functions.
+   * The challenge is that subsetting only `enrichIM` does not also
+   update corresponding `memIM` data. Data to be updated:
+   * `geneIM`, `geneIMcolors`, `geneIMdirection` - simple subset by colnames
+   * `enrichIM`, `enrichIMcolors`, `enrichIMgeneCount` - simple subset by colnames
+   * `memIM` - re-create after updating `geneIM`
+   * `enrichList` - simple subset by name
+   * Others not necessary for `mem_plot_folio()`:
+   
+      * `multiEnrichMap`, `multiCnetPlot` should be re-created using
+      methods in `multiEnrichMap()`. To be fair, these objects are not
+      that useful anymore, since `mem_plot_folio()` is generally preferred.
+
 ## 05jul2022
 
 * `mem_gene_pathway_heatmap()` when supplied with custom `column_split`

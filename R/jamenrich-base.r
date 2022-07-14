@@ -680,6 +680,12 @@ multiEnrichMap <- function
    ## which may be incorrect. However, this order will
    ## ensure the geneIM is comprehensive, beyond just the
    ## genes involved in enrichment of the filtered subset.
+   if (length(geneHitList) > 0) {
+      if (!all(names(enrichList) %in% names(geneHitList))) {
+         stop("names(enrichList) must all be present in names(geneHitList)");
+      }
+      geneHitList <- geneHitList[intersect(names(enrichList), names(geneHitList))];
+   }
    if (length(geneHitList) == 0) {
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",

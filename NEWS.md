@@ -7,6 +7,13 @@
    * `min_set_ct=1`, previously was 2
    * `min_gene_ct=1`, previously was 2
 
+## minor bug fixes
+
+* `multiEnrichMap()` was not verifying `names(geneHitList)` also
+matched `names(enrichList)`, therefore a mismatch could cause downstream
+errors in `mem_plot_folio()` related functions. This issue now only
+uses `geneHitList` with names that match.
+
 
 # multienrichjam 0.0.59.900
 
