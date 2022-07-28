@@ -1,3 +1,37 @@
+# multienrichjam 0.0.61.900
+
+## changes to existing functions
+
+* `reorderIgraphNodes()` was updated to improve the consistency of
+sorting by different node properties, specifically to allow sorting
+by node fill, and node border color(s).
+* `shape.jampie.plot()` is the function used to render node `shape="pie"`
+by `jam_igraph()`, is an optimized, vectorized method to render nodes
+in one shot, rather than drawing each in a `for()` loop by default.
+
+   * Drawing even 20 or more `pie` nodes is substantially faster
+   using `shape.jampie.plot()` compared to default `igraph` function.
+   * Speed was improved, the method of converting list of polygon coordinates
+   to numeric vectors spaced by `NA` was much improved.
+   * It can render `pie.border` for each pie wedge of
+   each node with `shape="pie"` or `shape="jampie"`. Note that
+   the outer line may be covered by subsequent `frame.color`.
+   Attribute `pie.border` is expected to be a `list` where
+   `lengths(pie.border)` are equal to `lengths(pie)`.
+   * It can render `frame.color` around the full circle of
+   each node with `shape="pie"` or `shape="jampie"`. This line
+   may cover the `pie.border` if also drawn. Attribute `frame.color`
+   is expected to have length equal to `igraph::vcount(g)` which
+   is the total number of nodes, one `frame.color` value per node.
+   * It is recommended to use one style or the other for each node:
+   
+      1. `pie.border=NA`, and `frame.color="red"`
+      2. `pie.border=c("red", "gold")`, and `frame.color=NA`
+
+* Internal function `jam_mypie()` is called by `shape.jampie.plot()`,
+and was updated to handle `frame.color`.
+
+
 # multienrichjam 0.0.60.900
 
 ## changes to existing functions

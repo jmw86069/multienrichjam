@@ -397,6 +397,43 @@ shape.ellipse.plot <- function
 #' This function is a vectorized replacement for plotting
 #' vertex shape `"pie"` in much more efficient manner.
 #'
+#' It is substantially faster to use `shape.jampie.plot()` than
+#' default igraph plotting, even for only 20 pie nodes, the speed
+#' becomes even more dramatically faster for larger networks with
+#' 200+ nodes. Minutes reduced to 1-2 seconds rendering time.
+#'
+#' Pie nodes with only one large
+#' 100% wedge no longer display the small line from origin,
+#' which is a change and improvement from default `igraph` rendering.
+#'
+#' Attribute `vertex.pie.border` can be used to draw a border around
+#' each pie wedge, for each node. It should be a `list` with
+#' `lengths(vertex.pie.border)` equal to `lengths(vertex.pie)`.
+#' To disable, use `pie.border=NA` on the entire attribute, or individual
+#' nodes.
+#'
+#' Attribute `vertex.frame.color` can be used to draw a single circular
+#' border around the entire pie node. The `length(vertex.frame.color)`
+#' should equal the number of nodes in the graph, for example
+#' determined with `igraph::vcount(g)`.
+#' Note that `frame.color` is drawn for each node after the pie
+#' wedges, on top of `pie.border` if defined, so it is
+#' recommended to use only one form of border for each node.
+#'
+#' Each pie node is drawn completely, in order: pie wedges including optional
+#' `pie.border` outline for each pie wedge, then `frame.color`
+#' around the entire node circle; then the next pie node is drawn.
+#' This ordering ensures each entire pie node will overlap, or be
+#' overlapped by other nodes, without artifacts of the `frame.color`
+#' being shown on top of pie nodes that are otherwise beneath
+#' visibility.
+#'
+#' To disable `pie.border` set to `NA` with `vertex.pie.border=NA`
+#' or `V(g)[[2]]$pie.border <- NA`.
+#'
+#' To disable `frame.color` set to `NA` with `vertex.frame.color=NA`
+#' or `V(g)[2]$frame.color <- NA`.
+#'
 #' @family jam igraph shapes
 #'
 #' @export
@@ -417,11 +454,12 @@ shape.jampie.plot <- function
    vertex.size <- rep(1/200 * getparam("size"), length = nrow(coords))
    vertex.pie <- getparam("pie")
    vertex.pie.color <- getparam("pie.color")
+   vertex.pie.border <- getparam("pie.border")
    vertex.pie.angle <- getparam("pie.angle")
    vertex.pie.density <- getparam("pie.density")
    vertex.pie.lty <- getparam("pie.lty")
    ## Convert for loop to lapply that obtains polygon coordinates
-   if (1 == 1) {
+   if (TRUE) {
       #jamba::printDebug("Calculating pie node polygons using ",
       #   "jam_mypie()");
       poly_df <- jamba::rbindList(lapply(seq_len(nrow(coords)), function(i){
@@ -435,7 +473,18 @@ shape.jampie.plot <- function
          } else {
             vertex.pie.color[[i]]
          }
-         jam_mypie(x = coords[i, 1],
+         border <- if (length(vertex.pie.border) == 1) {
+            vertex.pie.border[[1]]
+         } else {
+            vertex.pie.border[[i]]
+         }
+         frame.color <- if (length(vertex.frame.color) == 1) {
+            vertex.frame.color[[1]]
+         } else {
+            vertex.frame.color[[i]]
+         }
+         jam_mypie(
+            x = coords[i, 1],
             y = coords[i, 2],
             pie,
             radius = vertex.size[i],
@@ -443,14 +492,16 @@ shape.jampie.plot <- function
             col = col,
             angle = na.omit(vertex.pie.angle[c(i, 1)])[1],
             density = na.omit(vertex.pie.density[c(i, 1)])[1],
-            border = na.omit(vertex.frame.color[c(i, 1)])[1],
+            border = border,
+            frame.color = frame.color,
             lty = na.omit(vertex.pie.lty[c(i, 1)])[1])
       }));
-      poly_xv <- jamba::cPaste(as(poly_df$x, "list"));
-      poly_yv <- jamba::cPaste(as(poly_df$y, "list"));
-      poly_x <- as.numeric(unlist(strsplit(paste(poly_xv, collapse=",NA"), ",")));
-      poly_y <- as.numeric(unlist(strsplit(paste(poly_yv, collapse=",NA"), ",")));
-      #jamba::printDebug("Plotting pie node polygons.");
+      poly_x <- unlist(lapply(poly_df$x, function(ix1){
+         c(ix1, NA)
+      }))
+      poly_y <- unlist(lapply(poly_df$y, function(ix1){
+         c(ix1, NA)
+      }))
       polygon(x=poly_x,
          y=poly_y,
          density = poly_df$density,
@@ -489,6 +540,9 @@ shape.jampie.plot <- function
 #'
 #' Vectorized mypie() function for igraph vertex pie polygons
 #'
+#' This is a function called internally by `shape.jampie.plot()`,
+#' not intended for direct use.
+#'
 #' This function is a light rewrite of `igraph:::mypie()`, except
 #' that this function determines polygon coordinates without
 #' drawing them, instead returns the polygon coordinates to
@@ -496,10 +550,37 @@ shape.jampie.plot <- function
 #' draws all polygons once using the vectorized approach
 #' described for `graphics::polygon()`.
 #'
-#' One small additional change, pie shapes with only one large
-#' 100% wedge no longer display the small line from origin.
+#' See `shape.jampie.plot()` for more detail.
+#'
+#' To disable `pie.border` set to `NA` with `vertex.pie.border=NA`
+#' or `V(g)[[2]]$pie.border <- NA`.
+#'
+#' To disable `frame.color` set to `NA` with `vertex.frame.color=NA`
+#' or `V(g)[2]$frame.color <- NA`.
+#'
+#' @return `data.frame` with columns suitable for use in `polygon()`
+#'    after each column is expanded to vector form. Columns `x` and `y`
+#'    are stored `AsIs()` in `list` format, and should be combined
+#'    with one `NA` value between each `numeric` vector. The `NA` values
+#'    cause `polygon()` to draw a series of separate polygons in
+#'    one vectorized step, much faster than drawing a series of
+#'    polygons in an iterative loop.
 #'
 #' @family jam igraph shapes
+#'
+#' @param x,y `numeric` coordinate for the center of each `igraph` node.
+#' @param values `numeric` vector of relative pie wedge sizes.
+#' @param radius `numeric` radius of pie
+#' @param edges `integer` number of edges to make a circle
+#' @param col `character` vector of R colors to fill each pie wedge, in order
+#' @param angle,density used to draw lines to fill each pie node, passed
+#'    to `polygon()`
+#' @param border `character` vector of R colors for each pie wedge border
+#' @param frame.color `character` R color used around the entire pie circle.
+#' @param lty `numeric` or `character` line type
+#' @param init.angle `numeric` angle in degrees (0 to 360) where `0` is the
+#'    top of the circle, proceeding clockwide.
+#' @param ... additional arguments are passed to `polygon()`
 #'
 #' @export
 jam_mypie <- function
@@ -512,6 +593,7 @@ jam_mypie <- function
  angle = 45,
  density = NULL,
  border = NULL,
+ frame.color = NULL,
  lty = NULL,
  init.angle = 90,
  ...)
@@ -532,12 +614,12 @@ jam_mypie <- function
          col <- par("fg")
       }
    }
-   col <- rep(col, length.out = nx)
-   border <- rep(border, length.out = nx)
-   lty <- rep(lty, length.out = nx)
-   angle <- rep(angle, length.out = nx)
-   density <- rep(density, length.out = nx)
-   t2xy <- function(t) {
+   col <- rep(jamba::rmNULL(nullValue=NA, col), length.out = nx)
+   border <- rep(jamba::rmNULL(nullValue=NA, border), length.out = nx)
+   lty <- rep(jamba::rmNULL(nullValue=NA, lty), length.out = nx)
+   angle <- rep(jamba::rmNULL(nullValue=NA, angle), length.out = nx)
+   density <- rep(jamba::rmNULL(nullValue=NA, density), length.out = nx)
+   t2xy <- function(t, init.angle=90, radius=1) {
       t2p <- 2 * pi * t + init.angle * pi/180;
       list(x = radius * cos(t2p),
          y = radius * sin(t2p))
@@ -549,9 +631,12 @@ jam_mypie <- function
    ## bonus points: for one-section pie graph, draw a circle without segment
    poly_df <- jamba::rbindList(lapply(seq_len(nx), function(i){
       n <- max(2, floor(edges * dx[i]))
-      P <- t2xy(seq.int(values[i],
-         values[i + 1],
-         length.out = n))
+      P <- t2xy(
+         t=seq.int(values[i],
+            values[i + 1],
+            length.out = n),
+         init.angle=init.angle,
+         radius=radius)
       if (nx == 1) {
          xvals <- (x + c(P$x));
          yvals <- (y + c(P$y));
@@ -567,11 +652,30 @@ jam_mypie <- function
          col = col[i],
          lty = lty[i])
    }));
+   if (length(frame.color) > 0 && !is.na(head(frame.color, 1))) {
+      border_x <- unlist(lapply(poly_df[[1]], function(i){head(i, -2)}));
+      border_y <- unlist(lapply(poly_df[[2]], function(i){head(i, -2)}));
+      border_df <- data.frame(
+         x=I(list(border_x)),
+         y=I(list(border_y)),
+         density = -1,
+         angle = 45,
+         border = head(frame.color, 1),
+         col = NA,
+         lty = head(lty, 1))
+      return_df <- jamba::rbindList(list(
+         poly_df,
+         border_df));
+      return(return_df);
+   }
+   # more bonus points: optionally draw frame.color around each circle
    return(poly_df);
    ## Legacy for loop below
    for (i in 1:nx) {
       n <- max(2, floor(edges * dx[i]))
-      P <- t2xy(seq.int(values[i], values[i + 1], length.out = n))
+      P <- t2xy(seq.int(values[i], values[i + 1], length.out = n),
+         init.angle=init.angle,
+         radius=radius)
       polygon(x + c(P$x, 0),
          y + c(P$y, 0),
          density = density[i],

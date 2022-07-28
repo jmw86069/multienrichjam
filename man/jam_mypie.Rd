@@ -14,15 +14,53 @@ jam_mypie(
   angle = 45,
   density = NULL,
   border = NULL,
+  frame.color = NULL,
   lty = NULL,
   init.angle = 90,
   ...
 )
 }
+\arguments{
+\item{x, y}{\code{numeric} coordinate for the center of each \code{igraph} node.}
+
+\item{values}{\code{numeric} vector of relative pie wedge sizes.}
+
+\item{radius}{\code{numeric} radius of pie}
+
+\item{edges}{\code{integer} number of edges to make a circle}
+
+\item{col}{\code{character} vector of R colors to fill each pie wedge, in order}
+
+\item{angle, density}{used to draw lines to fill each pie node, passed
+to \code{polygon()}}
+
+\item{border}{\code{character} vector of R colors for each pie wedge border}
+
+\item{frame.color}{\code{character} R color used around the entire pie circle.}
+
+\item{lty}{\code{numeric} or \code{character} line type}
+
+\item{init.angle}{\code{numeric} angle in degrees (0 to 360) where \code{0} is the
+top of the circle, proceeding clockwide.}
+
+\item{...}{additional arguments are passed to \code{polygon()}}
+}
+\value{
+\code{data.frame} with columns suitable for use in \code{polygon()}
+after each column is expanded to vector form. Columns \code{x} and \code{y}
+are stored \code{AsIs()} in \code{list} format, and should be combined
+with one \code{NA} value between each \code{numeric} vector. The \code{NA} values
+cause \code{polygon()} to draw a series of separate polygons in
+one vectorized step, much faster than drawing a series of
+polygons in an iterative loop.
+}
 \description{
 Vectorized mypie() function for igraph vertex pie polygons
 }
 \details{
+This is a function called internally by \code{shape.jampie.plot()},
+not intended for direct use.
+
 This function is a light rewrite of \code{igraph:::mypie()}, except
 that this function determines polygon coordinates without
 drawing them, instead returns the polygon coordinates to
@@ -30,8 +68,13 @@ the calling function \code{shape.jampie.plot()} which in turn
 draws all polygons once using the vectorized approach
 described for \code{graphics::polygon()}.
 
-One small additional change, pie shapes with only one large
-100\% wedge no longer display the small line from origin.
+See \code{shape.jampie.plot()} for more detail.
+
+To disable \code{pie.border} set to \code{NA} with \code{vertex.pie.border=NA}
+or \code{V(g)[[2]]$pie.border <- NA}.
+
+To disable \code{frame.color} set to \code{NA} with \code{vertex.frame.color=NA}
+or \code{V(g)[2]$frame.color <- NA}.
 }
 \seealso{
 Other jam igraph shapes: 

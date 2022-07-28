@@ -12,6 +12,43 @@ plot function for igraph vertex shape jampie
 \details{
 This function is a vectorized replacement for plotting
 vertex shape \code{"pie"} in much more efficient manner.
+
+It is substantially faster to use \code{shape.jampie.plot()} than
+default igraph plotting, even for only 20 pie nodes, the speed
+becomes even more dramatically faster for larger networks with
+200+ nodes. Minutes reduced to 1-2 seconds rendering time.
+
+Pie nodes with only one large
+100\% wedge no longer display the small line from origin,
+which is a change and improvement from default \code{igraph} rendering.
+
+Attribute \code{vertex.pie.border} can be used to draw a border around
+each pie wedge, for each node. It should be a \code{list} with
+\code{lengths(vertex.pie.border)} equal to \code{lengths(vertex.pie)}.
+To disable, use \code{pie.border=NA} on the entire attribute, or individual
+nodes.
+
+Attribute \code{vertex.frame.color} can be used to draw a single circular
+border around the entire pie node. The \code{length(vertex.frame.color)}
+should equal the number of nodes in the graph, for example
+determined with \code{igraph::vcount(g)}.
+Note that \code{frame.color} is drawn for each node after the pie
+wedges, on top of \code{pie.border} if defined, so it is
+recommended to use only one form of border for each node.
+
+Each pie node is drawn completely, in order: pie wedges including optional
+\code{pie.border} outline for each pie wedge, then \code{frame.color}
+around the entire node circle; then the next pie node is drawn.
+This ordering ensures each entire pie node will overlap, or be
+overlapped by other nodes, without artifacts of the \code{frame.color}
+being shown on top of pie nodes that are otherwise beneath
+visibility.
+
+To disable \code{pie.border} set to \code{NA} with \code{vertex.pie.border=NA}
+or \code{V(g)[[2]]$pie.border <- NA}.
+
+To disable \code{frame.color} set to \code{NA} with \code{vertex.frame.color=NA}
+or \code{V(g)[2]$frame.color <- NA}.
 }
 \seealso{
 Other jam igraph shapes: 

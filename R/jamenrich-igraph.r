@@ -1648,7 +1648,7 @@ reorderIgraphNodes <- function
       jamba::printDebug("reorderIgraphNodes(): ",
          "Applying sort to each of ", length(sortAttributes), " sortAttributes.");
    }
-   neighborA <- jamba::pasteByRow(do.call(cbind, lapply(sortAttributes,
+   neighborA_df <- do.call(cbind, lapply(sortAttributes,
       function(sortAttribute){
          #jamba::printDebug("sortAttribute:", sortAttribute);
          if (sortAttribute %in% c("pie.color.length", "coloredrect.color.length")) {
@@ -1691,7 +1691,13 @@ reorderIgraphNodes <- function
                rowMeans=round(digits=2,rowMeans(colorattrm, na.rm=TRUE)),
                lengths=lengths(j_colors),
                colorattrm,
-               order=seq_along(j_colors));
+               order=rep(1, length(j_colors))); # do not add order bc it supercedes other sort
+               # order=seq_along(j_colors));
+            if (verbose) {
+               jamba::printDebug("reorderIgraphNodes(): ",
+                  "head(colorattrm2):");
+               print(head(colorattrm2));
+            }
             colorattrfactor <- factor(jamba::pasteByRow(colorattrm2),
                levels=unique(jamba::pasteByRow(
                   jamba::mixedSortDF(colorattrm2, na.last=FALSE))))
@@ -1784,10 +1790,16 @@ reorderIgraphNodes <- function
             names(jString) <- seq_len(igraph::vcount(g));
             jString;
          }
-         data.frame(jString);
+         jdf <- data.frame(jString);
+         colnames(jdf) <- sortAttribute;
+         jdf;
       }
-   )), sep="_");
+   ));
+   neighborA <- jamba::pasteByRow(neighborA_df, sep="_");
    if (verbose) {
+      jamba::printDebug("reorderIgraphNodes(): ",
+         "head(neighborA_df):");
+      print(head(neighborA_df));
       jamba::printDebug("reorderIgraphNodes(): ",
          "head(neighborA):");
       print(head(neighborA));
