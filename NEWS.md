@@ -1,3 +1,26 @@
+# multienrichjam 0.0.62.900
+
+## changes
+
+* bumped dependency on `jamba` to 0.0.87.900 to pick up all the
+recent updates.
+
+## bug fixes
+
+* `reorderIgraphNodes()` somehow broke in a recent `igraph` update,
+apparently the return type is no longer coerced to `character` vector,
+so needs to be converted directly.
+
+   * `mem_plot_folio()` and `subsetCnetIgraph()` were impacted as well.
+   * `mem_plot_folio()` was modified to call `subsetCnetIgraph()`,
+   then failing that call, will return the full `cnet_collapsed`
+   graph without subset. Messages are printed for review.
+
+* `edge_bundle_nodegroups()` initial work on allowing custom midpoints
+within node groups, which would allow defining a custom midpoint
+in x,y coordinates, which may or may not be between the two
+sets of nodes. Implementation is not in place yet, but in progress.
+
 # multienrichjam 0.0.61.900
 
 ## changes to existing functions

@@ -1,5 +1,76 @@
 # TODO
 
+## 31aug2022
+
+* Now that `jam_igraph()` and node shapes `"jampie"` render the
+`pie.border` and `frame.color`, which can indicate the direction
+of change for each gene, in context of each enrichment test, some
+other changes should be made to the workflow:
+
+   * Consider adding `pie.lwd` to recognized attributes in
+   `shape.jampie.plot()`, but confirm that this argument can be used
+   when rendering `"jampie"` node shapes. Currently the line width
+   can only be adjusted with `par("lwd")` which is a global setting.
+   * The default `frame.color` (`vertex.frame.color`) should probably
+   be set to `NA` or `"transparent"` so the frame color is not visible
+   for pie nodes. It shows up as a small white line now, which was not
+   visible previously.
+   * `reorderIgraphNodes()` should include `pie.border` and `frame.color`
+   in sensible default locations, so nodes will also be sorted by these
+   values when relevant, without the user having to add these columns.
+   * New function to populate `frame.color` and `pie.border` for Cnet plots.
+   
+      * When `pie` has only one value, apply color to `frame.color`
+      * When `pie` has multiple values, and different directions, apply
+      colors to `pie.border`
+      * When `pie` has multiple values, and all have the same direction, apply
+      colors to `frame.color`
+      * In absence of any directional data, set all `frame.color` to default,
+      and set all `pie.border` to `"transparent"` or `NA`.
+
+* Need to include gene direction of change in the workflow:
+
+   * Some easy method to include direction of change in the `multiEnrichMap()`
+   workflow, for example argument `geneHitList` currently uses a `character`
+   vector, but could accept `integer` vector direction with genes stored as
+   `character` labels, same as used with `venndir` signed input lists.
+   * When gene direction is available, the `frame.color` and/or
+   `pie.border` colors are defined.
+   * `mem_gene_path_heatmap()` option to represent direction of change
+   in the `gene_im` incidence matrix.
+
+## aug2022
+
+* Edge bundling makes assumptions for bipartite graphs (cnet)
+that are difficult to use with normal graphs.
+
+   * `edge_bundle_nodegroups()` probably needs to subset edges
+   involved in each nodegroup before bundling all edges connected
+   to these nodes. Currently, nodes are assumed to share all
+   connections, but the effect should occur for edges where both
+   ends of the edge are contained in the nodegroup entries.
+   * consider node attribute "`nodegroup`".
+   * consider edge attribute `"edgegroup"`, which would probably be the
+   optimal approach for edge bundling, apart from implementing another
+   technique similar to force-directed, hierarchically-defined, or
+   density-directed edge bundling.
+   * consider an option to specify the "midpoint" for a nodegroup,
+   to allow some control on the spline curvature. Bonus points for
+   allowing multiple points in order, to influence a path.
+
+* `jam_igraph()`
+
+   * fancy effect: allow edge colors to have multiple values, then
+   interpolate color along each edge. For bundled edges, make
+   a gradient equal to the number of line segments. For straight
+   edges, break into `detail` number of pieces. The `detail` argument
+   is also used by the `edge_bundle_*()` functions.
+
+* subset `igraph` object by nodes, with added benefit that the
+`graph_attr(g, "layout")` will also be subset, if present. It is
+odd that the default `igraph::subgraph()` function would subset
+the graph, leaving the layout which inevitably causes an error.
+
 ## 13jul2022
 
 * `mem_gene_pathway_heatmap()`

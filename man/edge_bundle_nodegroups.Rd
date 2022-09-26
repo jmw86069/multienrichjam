@@ -10,6 +10,7 @@ edge_bundle_nodegroups(
   midpoint = 0.5,
   detail = 10,
   draw_lines = TRUE,
+  nodegroup_midpoints = NULL,
   ...
 )
 }
@@ -31,6 +32,14 @@ the spline to render for each edge.}
 
 \item{draw_lines}{\code{logical} indicating whether to render the edge
 splines after calculating them.}
+
+\item{nodegroup_midpoints}{\code{list} with list names that
+match \code{names(nodegroups)}. Each \code{list} element contains one or
+more x,y coordinates as a \code{numeric} matrix. This option will
+define specific coordinates to be used for any entries that
+match \code{names(nodegroups)}, and therefore does not use \code{midpoint}
+for those nodegroups. Any remaining nodegroups will use the
+normal method with \code{midpoint} as described above.}
 
 \item{...}{additional arguments are ignored.}
 }

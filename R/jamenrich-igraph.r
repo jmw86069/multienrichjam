@@ -1612,7 +1612,7 @@ reorderIgraphNodes <- function
    ## comma-delimited neighboring nodes for each node
    neighborG <- jamba::cPaste(
       lapply(seq_len(igraph::vcount(g)), function(v){
-         igraph::neighbors(g, v, mode="all");
+         names(igraph::neighbors(g, v, mode="all"));
       }),
       doSort=TRUE,
       makeUnique=FALSE);

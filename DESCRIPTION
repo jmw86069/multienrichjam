@@ -1,7 +1,7 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.61.900
+Version: 0.0.62.900
 Authors@R: person(given="James M.", family="Ward",
     email="jmw86069@gmail.com", role=c("aut", "cre"))
 Maintainer: James M. Ward <jmw86069@gmail.com>
@@ -11,7 +11,7 @@ Description: Methods to analyze multiple gene set enrichment results,
     results. New igraph node shape "coloredrectangle".
 Depends: R (>= 3.5.0)
 biocViews:
-Imports: jamba (>= 0.0.84.900),
+Imports: jamba (>= 0.0.87.900),
     colorjam (>= 0.0.16.900),
     igraph,
     qgraph,

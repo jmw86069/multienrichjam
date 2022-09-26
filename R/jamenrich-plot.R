@@ -1953,10 +1953,22 @@ mem_plot_folio <- function
                repulse=repulse,
                verbose=verbose>1);
       }, error=function(e){
-         cnet_collapsed %>%
-            subsetCnetIgraph(remove_blanks=FALSE,
-               repulse=repulse,
-               verbose=verbose>1);
+         if (verbose) {
+            jamba::printDebug("mem_plot_folio(): ",
+               "subsetCnetIgraph() error during subsetCnetIgraph(..., remove_blanks=TRUE):");
+            print(e);
+         }
+         cnet_collapsed <- tryCatch({
+            cnet_collapsed %>%
+               subsetCnetIgraph(remove_blanks=FALSE,
+                  repulse=repulse,
+                  verbose=verbose>1);
+         }, error=function(e2){
+            jamba::printDebug("mem_plot_folio(): ",
+               "subsetCnetIgraph() error during subsetCnetIgraph(), skipping this operation.");
+            print(e2);
+            cnet_collapsed;
+         })
       })
       if (length(edge_color) > 0) {
          igraph::E(cnet_collapsed)$color <- edge_color;

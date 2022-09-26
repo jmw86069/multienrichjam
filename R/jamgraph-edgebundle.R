@@ -263,6 +263,13 @@ edge_bundle_bipartite <- function
 #'    the spline to render for each edge.
 #' @param draw_lines `logical` indicating whether to render the edge
 #'    splines after calculating them.
+#' @param nodegroup_midpoints `list` with list names that
+#'    match `names(nodegroups)`. Each `list` element contains one or
+#'    more x,y coordinates as a `numeric` matrix. This option will
+#'    define specific coordinates to be used for any entries that
+#'    match `names(nodegroups)`, and therefore does not use `midpoint`
+#'    for those nodegroups. Any remaining nodegroups will use the
+#'    normal method with `midpoint` as described above.
 #' @param ... additional arguments are ignored.
 #'
 #' @return `data.frame` with each edge spline point represented
@@ -275,10 +282,14 @@ edge_bundle_nodegroups <- function
    midpoint=0.5,
    detail=10,
    draw_lines=TRUE,
+   nodegroup_midpoints=NULL,
    ...)
 {
    # node layout
    layout_xy <- igraph::graph_attr(g, "layout");
+   if (length(layout_xy) == 0 || nrow(layout_xy) == 0) {
+      stop('Edge bundling requires layout in graph_attr(g, "layout"), none was found.');
+   }
    colnames(layout_xy)[1:2] <- c("x", "y");
    if (!"name" %in% igraph::list.vertex.attributes(g)) {
       igraph::V(g)$name <- as.character(seq_len(igraph::vcount(g)));
@@ -292,7 +303,18 @@ edge_bundle_nodegroups <- function
    }
 
    # nodegroup_df
-   # todo: require that every node is contained in a nodegroup
+   # complete: require that every node is contained in a nodegroup
+   if (length(names(nodegroups)) == 0) {
+      names(nodegroups) <- paste0("nodegroup_",
+         jamba::colNum2excelName(seq_along(nodegroups)))
+   }
+   if (!all(V(g)$name %in% unlist(nodegroups))) {
+      add_nodes <- setdiff(V(g)$name,
+         unlist(nodegroups));
+      add_nodegroups <- as.list(jamba::nameVector(
+         add_nodes));
+      nodegroups <- c(nodegroups, add_nodegroups)
+   }
    nodegroup_df <- data.frame(check.names=FALSE,
       stringsAsFactors=FALSE,
       node=unlist(nodegroups),
@@ -301,6 +323,9 @@ edge_bundle_nodegroups <- function
 
    # center point for each nodegroup
    # todo: replace with "node hull" logic, with center inside the hull
+   if (length(nodegroup_midpoints) > 0) {
+      # TODO: implement
+   }
    nodegroup_centers <- lapply(nodegroups, function(i){
       colMeans(layout_xy[i,c("x", "y"),drop=FALSE])
    });
