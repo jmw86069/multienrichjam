@@ -717,7 +717,7 @@ multiEnrichMap <- function
 
    #####################################################################
    ## Optionally run topEnrichBySource()
-   if ((length(topEnrichN) > 0 && all(topEnrichN) > 0) ||
+   if ((length(topEnrichN) > 0 && all(topEnrichN > 0)) ||
          length(subsetSets) > 0 ||
          length(topEnrichNameGrep) > 0 ||
          length(topEnrichDescriptionGrep) > 0) {
@@ -1283,13 +1283,17 @@ enrichList2IM <- function
       keyColname <- find_colname(keyColname,
          x=iDF,
          require_non_na=FALSE);
-      valueColname <- find_colname(valueColname,
+      valueColname <- find_colname(valueColname1,
          x=iDF,
          require_non_na=FALSE);
       if (verbose) {
          jamba::printDebug("enrichList2IM(): ",
             "keyColname:", keyColname,
             ", valueColname:", valueColname);
+      }
+      if (length(valueColname) == 0) {
+         valueColname <- valueColname1;
+         iDF[,valueColname] <- emptyValue;
       }
 
       ## If "GeneRatio" then parse out the geneCount value
@@ -1305,8 +1309,12 @@ enrichList2IM <- function
          print(head(iDF[,unvigrep("geneID", colnames(iDF)), drop=FALSE]));
       }
       x <- jamba::nameVector(iDF[,c(valueColname,keyColname),drop=FALSE]);
-      if (any(is.na(x))) {
-         x[is.na(x)] <- emptyValue;
+      # if (any(is.na(x))) {
+      if (length(emptyValue) > 0) {
+         x_blank <- (x %in% c(NA, ""));
+         if (any(x_blank)) {
+            x[x_blank] <- emptyValue;
+         }
       }
       x;
    });
@@ -1315,10 +1323,16 @@ enrichList2IM <- function
    if (nrow(enrichIMP) == 0) {
       return(enrichIMP);
    }
-   if (length(emptyValue) > 0 && !emptyValue %in% 0) {
-      enrichIMP[is.na(enrichIMP) | enrichIMP == 0] <- emptyValue;
-   }
 
+   # version 0.0.62.900: code below is no longer necessary
+   # assuming there is nothing different in matrix format
+   # that is not covered in the enrichIMP1 <- lapply() above
+   #
+   # if (length(emptyValue) > 0 && !emptyValue %in% 0) {
+   #    enrichIMP[is.na(enrichIMP) | enrichIMP == 0] <- emptyValue;
+   # }
+
+   # option method not yet implemented for using GmtT objects
    if (addAnnotations && length(GmtT) > 0) {
       ## Add information about pathways to the data.frame
       enrichIMPinfo <- GmtT@itemsetInfo[match(rownames(enrichIMP), GmtT@itemsetInfo[,keyColname]),];

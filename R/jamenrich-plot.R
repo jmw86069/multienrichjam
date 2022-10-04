@@ -590,6 +590,32 @@ mem_gene_path_heatmap <- function
       labels=col_hm_labels
    );
 
+   # generate usable caption describing the relevant parameters used
+   caption <- paste0("Hierarchical clustering: column metric '",
+      column_method,
+      "'; row metric '",
+      row_method,
+      "'\n",
+      "Filtering: enrichment P-value <= ", p_cutoff,
+      "; genes per set >= ", min_gene_ct,
+      "; sets per gene >= ", min_set_ct,
+      "\n",
+      "IM weights: enrich_im_weight=", format(enrich_im_weight, digits=3),
+      ", gene_im_weight=", format(gene_im_weight, digits=3),
+      "\n")
+   if (TRUE %in% rotate_heatmap) {
+      caption <- paste0(caption,
+         jamba::formatInt(length(samples)), " set rows",
+         " x ",
+         jamba::formatInt(length(genes)), " gene columns")
+   } else {
+      caption <- paste0(caption,
+         jamba::formatInt(length(genes)), " gene rows",
+         " x ",
+         jamba::formatInt(length(samples)), " set columns");
+   }
+
+
    # default orientation, gene rows, pathway columns
    if (!rotate_heatmap) {
       top_annotation <- ComplexHeatmap::HeatmapAnnotation(
@@ -667,6 +693,8 @@ mem_gene_path_heatmap <- function
             row_split=row_split,
             column_split=column_split);
       })
+      # add caption in attributes
+      attr(hm, "caption") <- caption;
    } else {
       ########################################################################
       # rotate heatmap 90 degrees so pathway names are rows, genes are columns
@@ -735,6 +763,8 @@ mem_gene_path_heatmap <- function
             column_split=row_split,
             row_split=column_split);
       })
+      # add caption in attributes
+      attr(hm, "caption") <- caption;
    }
 
    return(hm);
@@ -829,6 +859,9 @@ mem_gene_path_heatmap <- function
 #' @param top_annotation `HeatmapAnnotation` as produced by
 #'    `ComplexHeatmap::HeatmapAnnotation()` or `NULL`, used to display
 #'    annotation at the top of the heatmap.
+#' @param do_plot `logical` indicating whether to display the plot with
+#'    `ComplexHeatmap::draw()` or `jamba::imageByColors()` as relevant.
+#'    The underlying data is returned invisibly.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization.
 #'
@@ -850,6 +883,7 @@ mem_enrichment_heatmap <- function
  row_dend_width=grid::unit(30, "mm"),
  row_fontsize=NULL,
  row_cex=1,
+ cluster_rows=TRUE,
  column_fontsize=NULL,
  column_cex=1,
  cluster_columns=FALSE,
@@ -868,6 +902,7 @@ mem_enrichment_heatmap <- function
  gene_count_max=NULL,
  top_annotation=NULL,
  show=NULL,
+ do_plot=TRUE,
  ...)
 {
    #
@@ -906,19 +941,21 @@ mem_enrichment_heatmap <- function
       stop("No remaining data after filtering.");
    }
    if (ncol(mem$enrichIM) > 1) {
-      er_hc2 <- amap::hcluster(
-         link="ward",
-         jamba::noiseFloor(
-            -log10(mem$enrichIM[sets,,drop=FALSE]),
-            minimum=-log10(p_cutoff+1e-5),
-            newValue=0,
-            ceiling=-log10(p_floor)),
-         method=row_method);
-      er_hc2 <- as.dendrogram(er_hc2);
-      if (length(row_dend_width) == 0) {
-         row_dend_width <- grid::unit(30, "mm");
+      if (TRUE %in% cluster_rows) {
+         cluster_rows <- amap::hcluster(
+            link="ward",
+            jamba::noiseFloor(
+               -log10(mem$enrichIM[sets,,drop=FALSE]),
+               minimum=-log10(p_cutoff+1e-5),
+               newValue=0,
+               ceiling=-log10(p_floor)),
+            method=row_method);
+         cluster_rows <- as.dendrogram(cluster_rows);
+         if (length(row_dend_width) == 0) {
+            row_dend_width <- grid::unit(30, "mm");
+         }
       }
-      if (cluster_columns) {
+      if (TRUE %in% cluster_columns) {
          cluster_columns <- amap::hcluster(
             link="ward",
             jamba::noiseFloor(
@@ -930,7 +967,7 @@ mem_enrichment_heatmap <- function
             method=column_method);
       }
    } else {
-      er_hc2 <- FALSE;
+      cluster_rows <- FALSE;
       cluster_columns <- FALSE;
       if (length(row_dend_width) == 0) {
          row_dend_width <- grid::unit(10, "mm");
@@ -977,7 +1014,7 @@ mem_enrichment_heatmap <- function
          matrix=use_matrix,
          name=name,
          col=col_logp,
-         cluster_rows=er_hc2,
+         cluster_rows=cluster_rows,
          row_dend_reorder=row_dend_reorder,
          border=TRUE,
          row_names_gp=grid::gpar(fontsize=row_fontsize),
@@ -1167,7 +1204,7 @@ mem_enrichment_heatmap <- function
          matrix=use_matrix,
          name=name,
          col=col_logp,
-         cluster_rows=er_hc2,
+         cluster_rows=cluster_rows,
          row_dend_reorder=row_dend_reorder,
          border=TRUE,
          row_names_gp=grid::gpar(fontsize=row_fontsize),
@@ -1185,8 +1222,12 @@ mem_enrichment_heatmap <- function
          ...);
       attr(hm,
          "annotation_legend_list") <- anno_legends;
-      draw(hm,
-         annotation_legend_list=anno_legends);
+      if (do_plot) {
+         draw(hm,
+            annotation_legend_list=anno_legends);
+         # message to use draw command
+         # draw(hm, annotation_legend_list=anno_legends);
+      }
    }
 
    if ("heatmap" %in% style && color_by_column) {
@@ -1210,7 +1251,22 @@ mem_enrichment_heatmap <- function
       #   baseline=-log10(p_cutoff),
       #   numLimit=-log10(p_floor),
       #   lens=lens);
-      jamba::imageByColors(enrichIMcolors[hm_sets,,drop=FALSE],
+      if (do_plot) {
+         jamba::imageByColors(enrichIMcolors[hm_sets,,drop=FALSE],
+            cellnote=sapply(mem$enrichIM[hm_sets,,drop=FALSE],
+               base::format.pval,
+               eps=1e-50,
+               digits=2),
+            adjustMargins=TRUE,
+            flip="y",
+            cexCellnote=cexCellnote,
+            cex.axis=cex.axis,
+            main=column_title,
+            groupCellnotes=FALSE,
+            ...);
+      }
+      retlist <- list(
+         matrix=enrichIMcolors[hm_sets,,drop=FALSE],
          cellnote=sapply(mem$enrichIM[hm_sets,,drop=FALSE],
             base::format.pval,
             eps=1e-50,
@@ -1220,10 +1276,10 @@ mem_enrichment_heatmap <- function
          cexCellnote=cexCellnote,
          cex.axis=cex.axis,
          main=column_title,
-         groupCellnotes=FALSE,
-         ...);
+         groupCellnotes=FALSE);
+      return(invisible(retlist));
    } else {
-      return(hm);
+      return(invisible(hm));
    }
 }
 
@@ -1794,6 +1850,7 @@ mem_plot_folio <- function
          column_method=column_method,
          style=style,
          apply_direction=apply_direction,
+         do_plot=do_plot,
          ...);
       # mem_hm <- mem_enrichment_heatmap(mem,
       #    p_cutoff=p_cutoff,
@@ -1858,13 +1915,11 @@ mem_plot_folio <- function
 
    ## draw the heatmap
    plot_num <- plot_num + 1;
-   if (length(do_which) == 0 || plot_num %in% do_which) {
-      if (verbose) {
-         jamba::printDebug("mem_plot_folio(): ",
-            c("plot_num ", plot_num, ": "),
-            c("Gene-Pathway Heatmap"),
-            sep="");
-      }
+
+   # generate caption and include in returned results
+   if ("caption" %in% names(attributes(gp_hm))) {
+      caption <- attr(gp_hm, "caption");
+   } else {
       caption <- paste0("Hierarchical clustering: column metric '",
          column_method,
          "'; row metric '",
@@ -1876,6 +1931,17 @@ mem_plot_folio <- function
          "\n",
          jamba::formatInt(nrow(gp_hm)), " rows x ",
          jamba::formatInt(ncol(gp_hm)), " columns");
+   }
+   ret_vals$gp_hm <- gp_hm;
+   ret_vals$gp_hm_caption <- caption;
+
+   if (length(do_which) == 0 || plot_num %in% do_which) {
+      if (verbose) {
+         jamba::printDebug("mem_plot_folio(): ",
+            c("plot_num ", plot_num, ": "),
+            c("Gene-Pathway Heatmap"),
+            sep="");
+      }
       ret_vals$gp_hm <- gp_hm;
       ret_vals$gp_hm_caption <- caption;
       # Optionally increase padding between annotation and heatmap body

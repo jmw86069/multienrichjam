@@ -1,5 +1,21 @@
 # TODO
 
+## 26sep2022
+
+* `mem_plot_folio()`
+
+   * FIXED: `mem_enrichment_heatmap()` does not honor `do_plot=FALSE`.
+
+* `mem_enrichment_heatmap()`
+
+   * DONE: add argument `cluster_rows` to allow `cluster_rows=FALSE`.
+   * DONE for manual plot calls: one goal is to draw this heatmap
+   using the order from the gene-pathway heatmap clustering.
+   * Future idea: allow plotting this data using the same order
+   as the gene-pathway heatmap. This process would require
+   running the gene-pathway clustering first, determining the
+   column order, then using it to order the rows in this heatmap.
+
 ## 31aug2022
 
 * Now that `jam_igraph()` and node shapes `"jampie"` render the

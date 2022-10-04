@@ -181,7 +181,7 @@ list2imSigned <- function
       jamba::igrepHas("numeric|integer|float|long|array", class(i)) &
          !is.null(names(i))
    });
-   if (!all(xClass)) {
+   if (!all(TRUE %in% xClass)) {
       stop("Input is expected to be a list of named numeric vectors.");
    }
    #if (length(names(x)) == 0) {

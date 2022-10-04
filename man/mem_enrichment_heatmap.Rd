@@ -20,6 +20,7 @@ mem_enrichment_heatmap(
   row_dend_width = grid::unit(30, "mm"),
   row_fontsize = NULL,
   row_cex = 1,
+  cluster_rows = TRUE,
   column_fontsize = NULL,
   column_cex = 1,
   cluster_columns = FALSE,
@@ -38,6 +39,7 @@ mem_enrichment_heatmap(
   gene_count_max = NULL,
   top_annotation = NULL,
   show = NULL,
+  do_plot = TRUE,
   ...
 )
 }
@@ -121,6 +123,10 @@ above the heatmap.}
 \item{top_annotation}{\code{HeatmapAnnotation} as produced by
 \code{ComplexHeatmap::HeatmapAnnotation()} or \code{NULL}, used to display
 annotation at the top of the heatmap.}
+
+\item{do_plot}{\code{logical} indicating whether to display the plot with
+\code{ComplexHeatmap::draw()} or \code{jamba::imageByColors()} as relevant.
+The underlying data is returned invisibly.}
 
 \item{...}{additional arguments are passed to \code{ComplexHeatmap::Heatmap()}
 for customization.}

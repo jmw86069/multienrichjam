@@ -424,8 +424,8 @@ edge_bundle_nodegroups <- function
       for (i in row_split) {
          lines(edge_spline_df[i,1:2,drop=FALSE],
             col=edge_spline_df$color[i],
-            lwd=edge_spline_df$width[i],
-            ...);
+            lwd=edge_spline_df$width[i])
+            # ...);
       }
    }
    return(invisible(edge_spline_df));

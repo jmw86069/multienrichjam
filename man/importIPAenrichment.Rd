@@ -12,13 +12,14 @@ importIPAenrichment(
     "Toxicity", "Category", "Categories", "Function", "Symbol$", "^ID$",
     "My.(Lists|Pathways)"),
   geneGrep = c("Molecules in Network", "Molecules"),
-  geneCurateFrom = c(" [(](complex|includes others)[)]", "^[,]+|[,]+$"),
+  geneCurateFrom = c("[ ]*[(](complex|includes others)[)][ ]*", "^[, ]+|[, ]+$"),
   geneCurateTo = c("", ""),
   method = 1,
   sheet = 1,
   sep = "\\t",
   xlsxMultiSheet = TRUE,
   useXlsxSheetNames = FALSE,
+  remove_blank_colnames = TRUE,
   verbose = FALSE,
   ...
 )
@@ -73,6 +74,15 @@ when importing from \code{.xlsx} files, and when
 name is derived from the value matched using \code{ipaNameGrep},
 because in this case, there are expected to me multiple
 enrichment tables in one worksheet.}
+
+\item{remove_blank_colnames}{\code{logical} indicating whether to drop
+\code{colnames()} where all values are contained in \code{c(NA, "")}.
+This option may be preferable \code{remove_blank_colnames=FALSE}
+when all values in some column like \code{zScore} are \code{NA}, but
+you would still like to retain the column for consistency
+with other data. We found that IPA does not report \code{zScore}
+values when there are only 4 or fewer genes involved in
+each enrichment result.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 

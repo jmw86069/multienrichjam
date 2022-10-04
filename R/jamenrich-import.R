@@ -83,6 +83,14 @@
 #'    name is derived from the value matched using `ipaNameGrep`,
 #'    because in this case, there are expected to me multiple
 #'    enrichment tables in one worksheet.
+#' @param remove_blank_colnames `logical` indicating whether to drop
+#'    `colnames()` where all values are contained in `c(NA, "")`.
+#'    This option may be preferable `remove_blank_colnames=FALSE`
+#'    when all values in some column like `zScore` are `NA`, but
+#'    you would still like to retain the column for consistency
+#'    with other data. We found that IPA does not report `zScore`
+#'    values when there are only 4 or fewer genes involved in
+#'    each enrichment result.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -90,14 +98,21 @@
 importIPAenrichment <- function
 (ipaFile,
  headerGrep="(^|\t)((expr.|-log.|)p-value|Pvalue|Score\t|Symbol\t|Ratio\t|Consistency.Score|Master.Regulator\t)",
- ipaNameGrep=c("Pathway", "Regulator$", "Regulators", "Regulator", #"Master.Regulator",
-    "Disease", "Toxicity",
-    "Category", "Categories",
-    "Function", "Symbol$",
-    "^ID$", "My.(Lists|Pathways)"),
+ ipaNameGrep=c("Pathway",
+    "Regulator$",
+    "Regulators",
+    "Regulator", #"Master.Regulator",
+    "Disease",
+    "Toxicity",
+    "Category",
+    "Categories",
+    "Function",
+    "Symbol$",
+    "^ID$",
+    "My.(Lists|Pathways)"),
  geneGrep=c("Molecules in Network", "Molecules"),
- geneCurateFrom=c(" [(](complex|includes others)[)]",
-    "^[,]+|[,]+$"),
+ geneCurateFrom=c("[ ]*[(](complex|includes others)[)][ ]*",
+    "^[, ]+|[, ]+$"),
  geneCurateTo=c("",
      ""),
  method=1,
@@ -105,6 +120,7 @@ importIPAenrichment <- function
  sep="\t",
  xlsxMultiSheet=TRUE,
  useXlsxSheetNames=FALSE,
+ remove_blank_colnames=TRUE,
  verbose=FALSE,
  ...)
 {
@@ -337,10 +353,12 @@ importIPAenrichment <- function
                comment="");
          }
          ## Remove empty colnames
-         non_na_cols <- sapply(colnames(jDF), function(j){
-            !all(jDF[[j]] %in% c(NA, ""))
-         });
-         jDF <- jDF[,non_na_cols,drop=FALSE];
+         if (TRUE %in% remove_blank_colnames) {
+            non_na_cols <- sapply(colnames(jDF), function(j){
+               !all(jDF[[j]] %in% c(NA, ""))
+            });
+            jDF <- jDF[, non_na_cols, drop=FALSE];
+         }
 
          ## Curate IPA colnames
          jDF <- curateIPAcolnames(jDF,
