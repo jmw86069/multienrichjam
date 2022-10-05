@@ -132,6 +132,28 @@
 #'    which is intended to allow overloading `...` for different
 #'    functions.
 #'
+#' @return `Heatmap` object defined in `ComplexHeatmap::Heatmap()`, with
+#'    two additional attributes:
+#'    * `"caption"` - a `character` string with important clustering settings.
+#'    * `"draw_caption"` - a `function` that will draw the caption in the
+#'    bottom-left corner of the heatmap, calling
+#'    `ComplexHeatmap::grid.textbox()`. This function should be called
+#'    with no parameters, for example:
+#'       ```R
+#'       attr(hm, "draw_caption")()
+#'       ```
+#'
+#'    In addition, the returned object can be interrogated with two helper
+#'    functions that help define the row and column clusters, and the
+#'    exact order of labels as they appear in the heatmap.
+#'    1. `jamba::heatmap_row_order()` - returns a `list` of vectors of
+#'    rownames in the order they appear in the heatmap, with list names
+#'    defined by row split.
+#'    2. `jamba::heatmap_column_order()` - returns a `list` of vectors of
+#'    colnames in the order they appear in the heatmap, with list names
+#'    defined by row split.
+#'
+#'
 #' @export
 mem_gene_path_heatmap <- function
 (mem,
@@ -166,9 +188,9 @@ mem_gene_path_heatmap <- function
  rotate_heatmap=FALSE,
  colramp="Reds",
  column_names_max_height=grid::unit(12, "cm"),
-   show_gene_legend=FALSE,
-   show_pathway_legend=TRUE,
-   show_heatmap_legend=8,
+ show_gene_legend=FALSE,
+ show_pathway_legend=TRUE,
+ show_heatmap_legend=8,
  use_raster=FALSE,
  seed=123,
  verbose=FALSE,
@@ -591,28 +613,27 @@ mem_gene_path_heatmap <- function
    );
 
    # generate usable caption describing the relevant parameters used
-   caption <- paste0("Hierarchical clustering: column metric '",
-      column_method,
-      "'; row metric '",
-      row_method,
-      "'\n",
-      "Filtering: enrichment P-value <= ", p_cutoff,
-      "; genes per set >= ", min_gene_ct,
-      "; sets per gene >= ", min_set_ct,
+   caption <- paste0("Hierarchical clustering:\n",
+      "   column metric = '", column_method, "'\n",
+      "   row metric = '", row_method, "'\n",
+      "Filtering:\n   enrichment P-value <= ", p_cutoff,
+      "\n   genes per set >= ", min_gene_ct,
+      "\n   sets per gene >= ", min_set_ct,
       "\n",
-      "IM weights: enrich_im_weight=", format(enrich_im_weight, digits=3),
-      ", gene_im_weight=", format(gene_im_weight, digits=3),
+      "IM weights:\n",
+      "   enrich_im_weight = ", format(enrich_im_weight, digits=3), "\n",
+      "   gene_im_weight = ", format(gene_im_weight, digits=3),
       "\n")
    if (TRUE %in% rotate_heatmap) {
       caption <- paste0(caption,
-         jamba::formatInt(length(samples)), " set rows",
+         jamba::formatInt(length(sets)), " set rows",
          " x ",
          jamba::formatInt(length(genes)), " gene columns")
    } else {
       caption <- paste0(caption,
          jamba::formatInt(length(genes)), " gene rows",
          " x ",
-         jamba::formatInt(length(samples)), " set columns");
+         jamba::formatInt(length(sets)), " set columns");
    }
 
 
@@ -639,7 +660,7 @@ mem_gene_path_heatmap <- function
 
       hm <- tryCatch({
          call_fn_ellipsis(ComplexHeatmap::Heatmap,
-            matrix=memIM[genes,sets,drop=FALSE],
+            matrix=memIM[genes, sets, drop=FALSE],
             border=TRUE,
             name=name,
             na_col=na_col,
@@ -668,7 +689,7 @@ mem_gene_path_heatmap <- function
       }, error=function(e){
          # same as above but without ...
          if (verbose) {
-            jamba::printDebug("mem_gene_pathway_heatmap(): ",
+            jamba::printDebug("mem_gene_path_heatmap(): ",
                "Error in Heatmap(), calling without '...', error is shown below:");
             print(e);
          }
@@ -695,6 +716,30 @@ mem_gene_path_heatmap <- function
       })
       # add caption in attributes
       attr(hm, "caption") <- caption;
+      draw_caption <- function
+      (text=caption,
+         x=grid::unit(1, "npc"),
+         y=grid::unit(0, "npc"),
+         fontsize=6,
+         font="Arial",
+         just=c("right", "bottom"),
+         ...)
+      {
+         ComplexHeatmap::grid.textbox(
+            text=text,
+            x=x,
+            y=y,
+            just=just,
+            gp=grid::gpar(
+               col="midnightblue",
+               fontsize=fontsize,
+               font=font),
+            background_gp=grid::gpar(
+               col="transparent",
+               fill="#FFFFFF"),
+            ...)
+      }
+      attr(hm, "draw_caption") <- draw_caption;
    } else {
       ########################################################################
       # rotate heatmap 90 degrees so pathway names are rows, genes are columns
@@ -738,7 +783,7 @@ mem_gene_path_heatmap <- function
       }, error=function(e){
          # same as above but without ...
          if (verbose) {
-            jamba::printDebug("mem_gene_pathway_heatmap(): ",
+            jamba::printDebug("mem_gene_path_heatmap(): ",
                "Error in Heatmap(), calling without '...', error is shown below:");
             print(e);
          }

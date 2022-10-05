@@ -1,3 +1,16 @@
+# multienrichjam 0.0.63.900
+
+## changes to existing functions
+
+* `mem_gene_path_heatmap()`
+
+   * The attribute `"caption"` is formatted more cleanly.
+   * New returned attribute `"draw_caption"` which is a function
+   that draws the caption in the bottom-right corner of the heatmap,
+   mainly because this location is least likely to overlap other
+   heatmap labels. The location and style can be customized as needed.
+
+
 # multienrichjam 0.0.62.900
 
 ## changes

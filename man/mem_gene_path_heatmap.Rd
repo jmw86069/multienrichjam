@@ -173,6 +173,30 @@ for customization. However, if \code{...} causes an error, the same
 which is intended to allow overloading \code{...} for different
 functions.}
 }
+\value{
+\code{Heatmap} object defined in \code{ComplexHeatmap::Heatmap()}, with
+two additional attributes:
+\itemize{
+\item \code{"caption"} - a \code{character} string with important clustering settings.
+\item \code{"draw_caption"} - a \code{function} that will draw the caption in the
+bottom-left corner of the heatmap, calling
+\code{ComplexHeatmap::grid.textbox()}. This function should be called
+with no parameters, for example:\if{html}{\out{<div class="sourceCode R">}}\preformatted{attr(hm, "draw_caption")()
+}\if{html}{\out{</div>}}
+}
+
+In addition, the returned object can be interrogated with two helper
+functions that help define the row and column clusters, and the
+exact order of labels as they appear in the heatmap.
+\enumerate{
+\item \code{jamba::heatmap_row_order()} - returns a \code{list} of vectors of
+rownames in the order they appear in the heatmap, with list names
+defined by row split.
+\item \code{jamba::heatmap_column_order()} - returns a \code{list} of vectors of
+colnames in the order they appear in the heatmap, with list names
+defined by row split.
+}
+}
 \description{
 MultiEnrichment Heatmap of Genes and Pathways
 }
