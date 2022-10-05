@@ -1566,8 +1566,13 @@ rectifyPiegraph <- function
 #' @export
 reorderIgraphNodes <- function
 (g,
- sortAttributes=c("pie.color", "pie.color.length",
-    "coloredrect.color", "color", "label", "name"),
+ sortAttributes=c("pie.color",
+    "pie.color.length",
+    "coloredrect.color",
+    "color",
+    "pie.border",
+    "label",
+    "name"),
  nodeSortBy=c("x","y"),
  layout=NULL,
  colorV=NULL,

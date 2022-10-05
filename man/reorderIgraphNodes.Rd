@@ -7,7 +7,7 @@
 reorderIgraphNodes(
   g,
   sortAttributes = c("pie.color", "pie.color.length", "coloredrect.color", "color",
-    "label", "name"),
+    "pie.border", "label", "name"),
   nodeSortBy = c("x", "y"),
   layout = NULL,
   colorV = NULL,

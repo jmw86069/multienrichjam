@@ -10,6 +10,11 @@
    mainly because this location is least likely to overlap other
    heatmap labels. The location and style can be customized as needed.
 
+* `reorderIgraphNodes()`
+
+   * argument `sortAttributes` was updated to include `"pie.border"`
+   in the default sort order, for future when Cnet nodes also include
+   border color with the direction of change.
 
 # multienrichjam 0.0.62.900
 
