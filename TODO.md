@@ -1,5 +1,20 @@
 # TODO
 
+## 13oct2022
+
+* fix `reorderIgraphNodes()`
+
+   * add "frame.color":
+   `sortAttributes=c("pie.color", "pie.color.length", "coloredrect.color", "color", "pie.border", "frame.color", "label", "name")`
+
+* Goal is to include gene direction in the workflow:
+
+   * Add `geneIMdirection` to mem object.
+   * Outline of Cnet gene nodes by direction.
+   * Gene-Path heatmap rows should optionally indicate direction,
+   possibly another stripe using geneIMdirection.
+
+
 ## 26sep2022
 
 * `mem_plot_folio()`

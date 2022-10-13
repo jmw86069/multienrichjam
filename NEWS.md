@@ -1,3 +1,11 @@
+# multienrichjam 0.0.64.900
+
+## changes to existing functions
+
+* `reorderIgraphNodes()` argument `sortAttributes` now includes `"frame.color"`
+in order to include `"pie.border"` for pie shape nodes, and `"frame.color"`
+for nodes overall.
+
 # multienrichjam 0.0.63.900
 
 ## changes to existing functions

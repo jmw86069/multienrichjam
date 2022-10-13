@@ -1571,6 +1571,7 @@ reorderIgraphNodes <- function
     "coloredrect.color",
     "color",
     "pie.border",
+    "frame.color",
     "label",
     "name"),
  nodeSortBy=c("x","y"),
