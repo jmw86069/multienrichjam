@@ -19,13 +19,37 @@ for nodes overall.
 * `spread_igraph_labels()` now uses `sortAttributes=NULL` default, when
 it is NULL it uses defaults from `reorderIgraphNodes()`. Previously there
 was inconsistent defaults between the two functions.
+* `memIM2cnet()` and `mem2cnet()`
+
+   * new arguments `geneIMdirection`, `enrichIMdirection` are used
+   to call new function `apply_cnet_direction()` to colorize node
+   borders by default when data is available.
+
+* `mem_plot_folio()` now calls `memIM2cnet()` and no longer edits colors
+itself, those steps are performed by `memIM2cnet()`; no longer calls
+`removeIgraphBlanks()`.
+* `multiEnrichMap()`
+
+   * now applies exact `colorV` colors to `geneIMcolors`
+   without calling `colorjam::matrix2heatColors()` since that process
+   returned slightly darker colors by default, and for little benefit.
+   * new argument `geneHitIM` intended to allow directional hit matrix
+   to be supplied, thus enabling other features as described above,
+   specifically colorized border on Cnet `igraph` plots.
 
 ## new functions
+
+* `apply_cnet_direction()`
+
+   * colorizes node border, pie.border, coloredrect.border based upon
+   directionality, using `geneIMdirection` and `enrichIMdirection`
+   when available.
 
 * `reorder_igraph_nodes()` is step one in migrating function names
 away from camelCase, toward snake_case. Not really a new function, but
 a new function name.
-
+* `mem2cnet()` is a similar rename of `memIM2cnet()` which mostly takes
+`mem` as input instead of `memIM` anyway.
 
 # multienrichjam 0.0.63.900
 

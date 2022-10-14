@@ -9,7 +9,7 @@ subgraph_jam(graph, v)
 \arguments{
 \item{graph}{\code{igraph} object}
 
-\item{v}{integer or logical vector indicating the nodes to
+\item{v}{\code{integer} or \code{logical} vector indicating the nodes to
 retain in the final \code{igraph} object.}
 }
 \description{

@@ -16,6 +16,12 @@
       * inherits `igraph` and extends assumptions, again mainly for clarity
       as input argument to other functions
 
+* `mem_gene_path_heatmap()`
+
+   * option to display dot plot format at the top of heatmaps, equivalent
+   to calling `mem_enrichment_heatmap()`. Benefit would be to indicate
+   direction (color) and number of genes (size) in addition to
+   P-value (intensity).
 
 * fix `reorderIgraphNodes()`
 
@@ -30,26 +36,31 @@
       use "color", "frame.color" and ignore "pie.color", "pie.border",
       "coloredrect.color", "coloredrect.border", "label", "name"
 
-* Include gene direction in the workflow:
+* DONE: Include gene direction in the workflow:
 
-   * Add `geneIMdirection` to mem object.
+   * DONE: Add `geneIMdirection` to mem object.
    
-      * Requires `hitim` input to `multiEnrichMap()`.
+      * Requires `geneHitIM` input to `multiEnrichMap()`.
       * Alternate backwards compatibility is function to add
       `geneIMdirection` to `mem` object, and/or `cnet` `igraph` object.
-      * `memIM2cnet()` should optionally use `enrichIMdirection` to apply
+      * DONE: `memIM2cnet()` should optionally use `enrichIMdirection` to apply
       border color.
    
-   * `mem2cnet()` as its own function, minor variation and extension to
+   * DONE: `mem2cnet()` as its own function, minor variation and extension to
    `memIM2cnet()` which only uses the `memIM` portion of the data.
    * `jam_igraph()` should recognize `lwd` when plotting nodes. This change
    diverges from default behavior in `igraph` which only uses `par("lwd")`
    as a global adjustment for all lines while plotting nodes, therefore
    does not allow any nodes to have different line widths.
-   * Outline of Cnet gene nodes by direction.
+   * DONE: Outline of Cnet gene nodes by direction.
    * Gene-Path heatmap rows should optionally indicate direction,
    possibly another stripe using geneIMdirection.
 
+* `multiEnrichMap()`
+
+   * should call `mem2cnet()` - or just avoid this step altogether since
+   the `cnet` process is better done with `mem_plot_folio()`
+   * consider removing the `enrichMap` and `cnet` steps altogether.
 
 ## 26sep2022
 

@@ -2183,22 +2183,25 @@ mem_plot_folio <- function
          jamba::printDebug("mem_plot_folio(): ",
             "Preparing cnet for subsetting with memIM2cnet().");
       }
+      # spread_labels=FALSE because no layout is required yet
       cnet <- memIM2cnet(mem,
+         remove_blanks=TRUE,
+         spread_labels=FALSE,
          ...);
-      ## Freshen pie.color by using the original colorV value by name
-      igraph::V(cnet)$pie.color <- lapply(igraph::V(cnet)$pie.color, function(i){
-         j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-            mem$colorV[names(i)],
-            i);
-      });
-      ## Freshen coloredrect.color by using the original colorV value by name
-      igraph::V(cnet)$coloredrect.color <- lapply(igraph::V(cnet)$coloredrect.color, function(i){
-         j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-            mem$colorV[names(i)],
-            i);
-      });
-      cnet <- cnet %>%
-         removeIgraphBlanks();
+      # ## Freshen pie.color by using the original colorV value by name
+      # igraph::V(cnet)$pie.color <- lapply(igraph::V(cnet)$pie.color, function(i){
+      #    j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+      #       mem$colorV[names(i)],
+      #       i);
+      # });
+      # ## Freshen coloredrect.color by using the original colorV value by name
+      # igraph::V(cnet)$coloredrect.color <- lapply(igraph::V(cnet)$coloredrect.color, function(i){
+      #    j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
+      #       mem$colorV[names(i)],
+      #       i);
+      # });
+      # cnet <- cnet %>%
+      #    removeIgraphBlanks();
    }
 
    #############################################################

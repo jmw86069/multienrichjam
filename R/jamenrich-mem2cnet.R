@@ -46,6 +46,18 @@
 #'    used when `geneShape="coloredrectangle"`, to define layout and
 #'    placement of colors across columns in `geneIMcolors`. By default,
 #'    one row of colors is used.
+#' @param colorV `character` optional vector of R colors, named by enrichment
+#'    names that appear in `colnames(enrichIM)` when supplied. When
+#'    defined, these colors override those defined in `enrichIMcolors`.
+#' @param remove_blanks `logical` indicating whether to remove blank
+#'    subsections from each node, by calling `removeIgraphBlanks()`.
+#' @param spread_labels `logical` indicating whether to call
+#'    `spread_igraph_labels()` to orient labels radially away from incoming
+#'    edges.
+#' @param verbose `logical` indicating whether to print verbose output.
+#' @param ... additional arguments are passed to downstream functions:
+#'    * when `remove_blanks=TRUE` it is passed to `removeIgraphBlanks()`
+#'    * when `spread_labels=TRUE` it is passed to `spread_igraph_labels()`
 #'
 #' @family jam igraph functions
 #'
@@ -71,6 +83,10 @@ memIM2cnet <- function
  coloredrect_nrow=1,
  coloredrect_ncol=NULL,
  coloredrect_byrow=TRUE,
+ colorV=NULL,
+ direction_col=colorjam::col_div_xf(1.2),
+ remove_blanks=TRUE,
+ spread_labels=FALSE,
  verbose=FALSE,
  ...)
 {
@@ -100,6 +116,9 @@ memIM2cnet <- function
       if (length(enrichIMdirection) == 0) {
          enrichIMdirection <- memIM[["enrichIMdirection"]];
       }
+      if (length(colorV) == 0) {
+         colorV <- memIM[["colorV"]];
+      }
       memIM <- memIM[["memIM"]];
    }
 
@@ -117,16 +136,18 @@ memIM2cnet <- function
    }
    igraph::V(g)$nodeType <- "Set";
    igraph::V(g)$nodeType[match(rownames(memIM), igraph::V(g)$name)] <- "Gene";
-   table(igraph::V(g)$nodeType);
+   # table(igraph::V(g)$nodeType);
    isset <- igraph::V(g)$nodeType %in% "Set";
    igraph::V(g)$size <- ifelse(isset, categorySize, geneSize);
    igraph::V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
    igraph::V(g)$label.color <- ifelse(isset, categoryLabelColor, geneLabelColor);
    igraph::V(g)$color <- ifelse(isset, categoryColor, geneColor);
-   igraph::V(g)$frame.color <- jamba::makeColorDarker(
-      igraph::V(g)$color,
-      darkFactor=frame_darkFactor,
-      ...);
+   if (length(frame_darkFactor) > 0 && frame_darkFactor != 1) {
+      igraph::V(g)$frame.color <- jamba::makeColorDarker(
+         igraph::V(g)$color,
+         darkFactor=frame_darkFactor,
+         ...);
+   }
 
    ## Optionally apply gene node coloring
    if (verbose) {
@@ -256,6 +277,71 @@ memIM2cnet <- function
       }
       igraph::V(g)$shape[enrich_which] <- categoryShape;
    }
+   # optionally remove igraph blanks
+   if (remove_blanks) {
+      if (verbose) {
+         jamba::printDebug("memIM2cnet(): ",
+            "applying removeIgraphBlanks()");
+      }
+      g <- removeIgraphBlanks(g, ...);
+   }
+
+   # Freshen pie.color,coloredrect.color by using colorV by name
+   if (length(colorV) > 0) {
+      if (verbose) {
+         jamba::printDebug("memIM2cnet(): ",
+            "applying colorV");
+      }
+      for (attr_name in c("pie.color", "coloredrect.color")) {
+         igraph::vertex_attr(g, attr_name) <- lapply(igraph::vertex_attr(g, attr_name), function(i){
+            j <- ifelse(names(i) %in% names(colorV) & !isColorBlank(i),
+               colorV[names(i)],
+               i);
+         });
+      }
+      # also update node color when pie has only one color, so they are in sync
+      pie_singlets <- which(lengths(igraph::vertex_attr(g, "pie.color")) == 1)
+      if (length(pie_singlets) > 0) {
+         igraph::vertex_attr(g, "color", index=pie_singlets) <- unname(unlist(
+            igraph::vertex_attr(g, "pie.color", index=pie_singlets)))
+      }
+   }
+
+   # optionally apply direction as a border color
+   if (length(geneIMdirection) > 0 && !all(geneIMdirection %in% c(0, NA))) {
+      if (verbose) {
+         jamba::printDebug("memIM2cnet(): ",
+            "applying geneIMdirection");
+      }
+      g <- apply_cnet_direction(cnet=g,
+         hitim=geneIMdirection,
+         col=direction_col,
+         ...);
+   }
+   if (length(enrichIMdirection) > 0 && !all(enrichIMdirection %in% c(0, NA))) {
+      if (verbose) {
+         jamba::printDebug("memIM2cnet(): ",
+            "applying enrichIMdirection");
+      }
+      g <- apply_cnet_direction(cnet=g,
+         hitim=enrichIMdirection,
+         col=direction_col,
+         ...);
+   }
+
+   # optionally orient labels radially away from incoming edges
+   if (spread_labels) {
+      if (verbose) {
+         jamba::printDebug("memIM2cnet(): ",
+            "applying spread_igraph_labels()");
+      }
+      g <- spread_igraph_labels(g,
+         do_reorder=FALSE,
+         # y_bias=y_bias,
+         # repulse=repulse,
+         ...);
+   }
+
    if (verbose) {
       jamba::printDebug("memIM2cnet(): ",
          "complete");
@@ -263,3 +349,7 @@ memIM2cnet <- function
 
    return(g);
 }
+
+#' @rdname memIM2cnet
+#' @export
+mem2cnet <- memIM2cnet

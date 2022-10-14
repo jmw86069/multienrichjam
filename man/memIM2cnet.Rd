@@ -2,6 +2,7 @@
 % Please edit documentation in R/jamenrich-mem2cnet.R
 \name{memIM2cnet}
 \alias{memIM2cnet}
+\alias{mem2cnet}
 \title{Convert MultiEnrichment incidence matrix to Cnet plot}
 \usage{
 memIM2cnet(
@@ -25,6 +26,39 @@ memIM2cnet(
   coloredrect_nrow = 1,
   coloredrect_ncol = NULL,
   coloredrect_byrow = TRUE,
+  colorV = NULL,
+  direction_col = colorjam::col_div_xf(1.2),
+  remove_blanks = TRUE,
+  spread_labels = FALSE,
+  verbose = FALSE,
+  ...
+)
+
+mem2cnet(
+  memIM,
+  categoryShape = c("pie", "coloredrectangle", "circle", "ellipse"),
+  geneShape = c("pie", "coloredrectangle", "circle", "ellipse"),
+  categoryColor = "#E5C494",
+  geneColor = "#B3B3B3",
+  categoryLabelColor = c("blue3"),
+  geneLabelColor = "grey40",
+  categorySize = 5,
+  geneSize = 2.5,
+  categoryCex = 0.9,
+  geneCex = 0.7,
+  frame_darkFactor = 1.4,
+  geneIM = NULL,
+  geneIMcolors = NULL,
+  geneIMdirection = NULL,
+  enrichIM = NULL,
+  enrichIMcolors = NULL,
+  coloredrect_nrow = 1,
+  coloredrect_ncol = NULL,
+  coloredrect_byrow = TRUE,
+  colorV = NULL,
+  direction_col = colorjam::col_div_xf(1.2),
+  remove_blanks = TRUE,
+  spread_labels = FALSE,
   verbose = FALSE,
   ...
 )
@@ -71,6 +105,25 @@ border colors defined by the direction, where -1 is down, 0 is no change, and
 used when \code{geneShape="coloredrectangle"}, to define layout and
 placement of colors across columns in \code{geneIMcolors}. By default,
 one row of colors is used.}
+
+\item{colorV}{\code{character} optional vector of R colors, named by enrichment
+names that appear in \code{colnames(enrichIM)} when supplied. When
+defined, these colors override those defined in \code{enrichIMcolors}.}
+
+\item{remove_blanks}{\code{logical} indicating whether to remove blank
+subsections from each node, by calling \code{removeIgraphBlanks()}.}
+
+\item{spread_labels}{\code{logical} indicating whether to call
+\code{spread_igraph_labels()} to orient labels radially away from incoming
+edges.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
+
+\item{...}{additional arguments are passed to downstream functions:
+\itemize{
+\item when \code{remove_blanks=TRUE} it is passed to \code{removeIgraphBlanks()}
+\item when \code{spread_labels=TRUE} it is passed to \code{spread_igraph_labels()}
+}}
 }
 \value{
 \code{igraph} object with Concept network data, containing

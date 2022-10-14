@@ -7,6 +7,7 @@
 multiEnrichMap(
   enrichList,
   geneHitList = NULL,
+  geneHitIM = NULL,
   colorV = NULL,
   nrow = NULL,
   ncol = NULL,

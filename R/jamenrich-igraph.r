@@ -2166,7 +2166,7 @@ with_qfr <- function (...,repulse=4) {
 #' @family jam igraph functions
 #'
 #' @param graph `igraph` object
-#' @param v integer or logical vector indicating the nodes to
+#' @param v `integer` or `logical` vector indicating the nodes to
 #'    retain in the final `igraph` object.
 #'
 #' @export
