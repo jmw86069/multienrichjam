@@ -32,10 +32,17 @@ as columns \code{c(1, 2, 3)} respectively. Otherwise, when
 \code{center=NULL} to calculate the center using \code{center_rule}.}
 
 \item{center_rule}{\code{character} string indicating which rule to
-apply to determine the center coordinates, when \code{center=NULL}:
-\code{"origin"} uses c(0, 0); \code{"mean"} uses the mean of each axis;
-\code{"median"} uses the median of each axis; \code{"min"} uses the minimum
-of each axis; \code{"max"} uses the max of each axis.}
+apply to determine the center coordinates when \code{center=NULL}.
+Note that it has little effect on most downstream plotting
+assuming the plot function adjusts x- and y-axis ranges to
+the data range, but may modify the axis ranges as a result.
+\itemize{
+\item \code{"origin"} uses c(0, 0);
+\item \code{"mean"} uses the mean of each axis;
+\item \code{"median"} uses the median of each axis;
+\item \code{"min"} uses the minimum of each axis;
+\item \code{"max"} uses the max of each axis.
+}}
 
 \item{rotation_axes}{\code{integer} vector indicating which axis
 coordinates to rotate, by default \code{c(1, 2)} uses the first

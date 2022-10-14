@@ -5,6 +5,27 @@
 * `reorderIgraphNodes()` argument `sortAttributes` now includes `"frame.color"`
 in order to include `"pie.border"` for pie shape nodes, and `"frame.color"`
 for nodes overall.
+* `list2im()` and `list2imSigned()`
+
+   * new argument `emptyValue` to control how empty incidence entries should
+   appear, either as zero `0`, or as `NA`. This update fixes rare issue
+   where missing enrichment P-values were reported as zero `0` instead
+   of `1` by default.
+   * These functions appear in `venndir` package, however we do not
+   want to make this package dependent upon `venndir` just yet, so they
+   remain here for now. In `venndir` these functions are named:
+   `venndir::list2im_opt()` and `venndir::list2im_value()`.
+
+* `spread_igraph_labels()` now uses `sortAttributes=NULL` default, when
+it is NULL it uses defaults from `reorderIgraphNodes()`. Previously there
+was inconsistent defaults between the two functions.
+
+## new functions
+
+* `reorder_igraph_nodes()` is step one in migrating function names
+away from camelCase, toward snake_case. Not really a new function, but
+a new function name.
+
 
 # multienrichjam 0.0.63.900
 

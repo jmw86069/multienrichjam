@@ -4,7 +4,7 @@
 \alias{list2imSigned}
 \title{convert list to signeddirectional incidence matrix}
 \usage{
-list2imSigned(x, verbose = FALSE, ...)
+list2imSigned(x, emptyValue = NA, verbose = FALSE, ...)
 }
 \arguments{
 \item{x}{\code{list} of named vectors, where the names are used to

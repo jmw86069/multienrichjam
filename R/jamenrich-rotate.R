@@ -66,8 +66,12 @@
 #' @param layout `matrix` with 2 or more columns, when defined this
 #'    layout is used and not the layout from the `g` `igraph` object.
 #' @param ... additional arguments are passed to
-#'    `spread_igraph_labels()` and
-#'    `reorderIgraphNodes()`.
+#'    `spread_igraph_labels()` which calls `reorderIgraphNodes()` when
+#'    `spread_labels=TRUE` and `do_reorder=TRUE`, or to
+#'    `reorderIgraphNodes()` when `spread_labels=FALSE` and
+#'    `do_reorder=TRUE`. Notably, the optional argument `sortAttributes`
+#'    can be passed through those functions to affect the node sort
+#'    priority.
 #'
 #' @examples
 #' layout <- cbind(0:10, 0:10);
@@ -125,6 +129,7 @@ rotate_igraph_layout <- function
    if (length(dim(layout)) < 2) {
       stop("Layout must contain at least 2 columns.");
    }
+   center_rule <- match.arg(center_rule);
    layout <- rotate_coordinates(layout,
       degrees=degrees,
       reflect=reflect,
@@ -183,10 +188,15 @@ rotate_igraph_layout <- function
 #' @param center `numeric` coordinates to use as the center, or
 #'    `center=NULL` to calculate the center using `center_rule`.
 #' @param center_rule `character` string indicating which rule to
-#'    apply to determine the center coordinates, when `center=NULL`:
-#'    `"origin"` uses c(0, 0); `"mean"` uses the mean of each axis;
-#'    `"median"` uses the median of each axis; `"min"` uses the minimum
-#'    of each axis; `"max"` uses the max of each axis.
+#'    apply to determine the center coordinates when `center=NULL`.
+#'    Note that it has little effect on most downstream plotting
+#'    assuming the plot function adjusts x- and y-axis ranges to
+#'    the data range, but may modify the axis ranges as a result.
+#'    * `"origin"` uses c(0, 0);
+#'    * `"mean"` uses the mean of each axis;
+#'    * `"median"` uses the median of each axis;
+#'    * `"min"` uses the minimum of each axis;
+#'    * `"max"` uses the max of each axis.
 #' @param rotation_axes `integer` vector indicating which axis
 #'    coordinates to rotate, by default `c(1, 2)` uses the first
 #'    two axes in `x`. Note that `rotation_axes` must represent

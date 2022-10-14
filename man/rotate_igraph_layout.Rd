@@ -48,8 +48,12 @@ whether to call \code{reorderIgraphNodes()}.}
 layout is used and not the layout from the \code{g} \code{igraph} object.}
 
 \item{...}{additional arguments are passed to
-\code{spread_igraph_labels()} and
-\code{reorderIgraphNodes()}.}
+\code{spread_igraph_labels()} which calls \code{reorderIgraphNodes()} when
+\code{spread_labels=TRUE} and \code{do_reorder=TRUE}, or to
+\code{reorderIgraphNodes()} when \code{spread_labels=FALSE} and
+\code{do_reorder=TRUE}. Notably, the optional argument \code{sortAttributes}
+can be passed through those functions to affect the node sort
+priority.}
 }
 \value{
 \code{igraph} when input \code{g} is supplied, otherwise \verb{numeric matrix}.

@@ -4,8 +4,16 @@
 
 * fix `reorderIgraphNodes()`
 
-   * add "frame.color":
+   * DONE: add "frame.color":
    `sortAttributes=c("pie.color", "pie.color.length", "coloredrect.color", "color", "pie.border", "frame.color", "label", "name")`
+   * future: make sort more intelligent, so it uses appropriate
+   color based upon node shape during the sort.
+
+      * `shape="pie"`: use "pie.color", "pie.border", "frame.color", "label", "name"
+      * `shape="coloredrect"`: use "coloredrect.color", "coloredrect.border", "frame.color", "label", "name"
+      * all others assumed to be `shape="circle"` or similar:
+      use "color", "frame.color" and ignore "pie.color", "pie.border",
+      "coloredrect.color", "coloredrect.border", "label", "name"
 
 * Goal is to include gene direction in the workflow:
 

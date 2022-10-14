@@ -10,7 +10,7 @@ spread_igraph_labels(
   y_bias = 1,
   update_g_coords = TRUE,
   do_reorder = TRUE,
-  sortAttributes = c("pie.color", "coloredrect.color", "color", "label", "name"),
+  sortAttributes = NULL,
   nodeSortBy = c("x", "y"),
   repulse = 3.5,
   force_relayout = FALSE,

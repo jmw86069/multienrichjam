@@ -1521,17 +1521,19 @@ rectifyPiegraph <- function
 #'
 #' @family jam igraph functions
 #'
-#' @param g igraph object
-#' @param sortAttributes character vector of node attribute
+#' @param g `igraph` object, typically expected to have a fixed
+#'    graph layout stored as `igraph::graph_attr(g, "layout")`,
+#'    or supplied via `layout` argument.
+#' @param sortAttributes `character` vector of node attribute
 #'    names, to be applied in order when sorting nodes.
-#' @param nodeSortBy character vector containing `"x"` and
+#' @param nodeSortBy `character` vector containing `"x"` and
 #'    `"y"` indicating the primary axis used to sort nodes.
-#' @param layout numeric matrix of node coordinates, or
+#' @param layout `numeric` matrix of node coordinates, or
 #'    function used to produce layout coordinates. When layout
 #'    is `NULL`, this function tries to use graph attribute
-#'    `"layout"`, otherwise
-#'    the `relayout_with_qfr` is called.
-#' @param colorV optional `character vector` that contains R colors,
+#'    `igraph::graph_attr(g, "layout")`, otherwise
+#'    the `relayout_with_qfr()` is called.
+#' @param colorV optional `character` vector that contains R colors,
 #'    used to order the colors in attributes such as `"pie.color"`
 #'    and `"coloredrect.color"`.
 #' @param verbose logical indicating whether to print verbose output.
@@ -1878,6 +1880,12 @@ reorderIgraphNodes <- function
    return(g);
 }
 
+
+#' @rdname reorderIgraphNodes
+#' @export
+reorder_igraph_nodes <- reorderIgraphNodes
+
+
 #' Remove igraph singlet nodes
 #'
 #' Remove igraph singlet nodes
@@ -1974,7 +1982,7 @@ spread_igraph_labels <- function
  y_bias=1,
  update_g_coords=TRUE,
  do_reorder=TRUE,
- sortAttributes=c("pie.color", "coloredrect.color", "color", "label", "name"),
+ sortAttributes=NULL,
  nodeSortBy=c("x","y"),
  repulse=3.5,
  force_relayout=FALSE,
@@ -2035,6 +2043,11 @@ spread_igraph_labels <- function
             "head(layout) before:");
          print(head(layout));
       }
+      # if sortAttributes is empty, use defaults from reorderIgraphNodes()
+      if (length(sortAttributes) == 0) {
+         sortAttributes <- eval(formals(reorderIgraphNodes)$sortAttributes);
+      }
+      # apply node re-ordering step
       g <- reorderIgraphNodes(g,
          layout=layout,
          nodeSortBy=nodeSortBy,

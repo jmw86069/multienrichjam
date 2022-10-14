@@ -1310,15 +1310,16 @@ enrichList2IM <- function
       }
       x <- jamba::nameVector(iDF[,c(valueColname,keyColname),drop=FALSE]);
       # if (any(is.na(x))) {
-      if (length(emptyValue) > 0) {
-         x_blank <- (x %in% c(NA, ""));
-         if (any(x_blank)) {
-            x[x_blank] <- emptyValue;
-         }
-      }
+      # if (length(emptyValue) > 0) {
+      #    x_blank <- (x %in% c(NA, ""));
+      #    if (any(x_blank)) {
+      #       x[x_blank] <- emptyValue;
+      #    }
+      # }
       x;
    });
-   enrichIMP <- as.data.frame(list2imSigned(enrichIMP1));
+   enrichIMP <- as.data.frame(list2imSigned(enrichIMP1,
+      emptyValue=emptyValue));
 
    if (nrow(enrichIMP) == 0) {
       return(enrichIMP);

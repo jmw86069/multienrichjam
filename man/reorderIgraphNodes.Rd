@@ -2,6 +2,7 @@
 % Please edit documentation in R/jamenrich-igraph.r
 \name{reorderIgraphNodes}
 \alias{reorderIgraphNodes}
+\alias{reorder_igraph_nodes}
 \title{Re-order igraph nodes}
 \usage{
 reorderIgraphNodes(
@@ -14,23 +15,36 @@ reorderIgraphNodes(
   verbose = FALSE,
   ...
 )
+
+reorder_igraph_nodes(
+  g,
+  sortAttributes = c("pie.color", "pie.color.length", "coloredrect.color", "color",
+    "pie.border", "frame.color", "label", "name"),
+  nodeSortBy = c("x", "y"),
+  layout = NULL,
+  colorV = NULL,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
-\item{g}{igraph object}
+\item{g}{\code{igraph} object, typically expected to have a fixed
+graph layout stored as \code{igraph::graph_attr(g, "layout")},
+or supplied via \code{layout} argument.}
 
-\item{sortAttributes}{character vector of node attribute
+\item{sortAttributes}{\code{character} vector of node attribute
 names, to be applied in order when sorting nodes.}
 
-\item{nodeSortBy}{character vector containing \code{"x"} and
+\item{nodeSortBy}{\code{character} vector containing \code{"x"} and
 \code{"y"} indicating the primary axis used to sort nodes.}
 
-\item{layout}{numeric matrix of node coordinates, or
+\item{layout}{\code{numeric} matrix of node coordinates, or
 function used to produce layout coordinates. When layout
 is \code{NULL}, this function tries to use graph attribute
-\code{"layout"}, otherwise
-the \code{relayout_with_qfr} is called.}
+\code{igraph::graph_attr(g, "layout")}, otherwise
+the \code{relayout_with_qfr()} is called.}
 
-\item{colorV}{optional \verb{character vector} that contains R colors,
+\item{colorV}{optional \code{character} vector that contains R colors,
 used to order the colors in attributes such as \code{"pie.color"}
 and \code{"coloredrect.color"}.}
 

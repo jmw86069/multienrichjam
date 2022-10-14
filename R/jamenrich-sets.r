@@ -29,6 +29,9 @@
 #' @param x list of vectors
 #' @param keepCounts boolean indicating whether to return values indicating
 #'    the number of occurrences of each item.
+#' @param emptyValue any single value that should be used for blank entries,
+#'    by default zero `0`. Use `emptyValue=NA` to return `NA` for missing
+#'    entries.
 #' @param verbose boolean indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -50,15 +53,17 @@
 list2im <- function
 (x,
  keepCounts=FALSE,
+ emptyValue=0,
  verbose=FALSE,
  ...)
 {
    ## Purpose is to convert a list of vectors into an incident matrix
    ## using the arules package
+   emptyValue <- head(emptyValue, 1);
    if (!suppressPackageStartupMessages(require(arules))) {
       stop("list2im() requires the arules package.");
    }
-   if (keepCounts) {
+   if (TRUE %in% keepCounts) {
       xCt <- jamba::rmNULL(lapply(x, jamba::tcount, minCount=2));
       if (length(xCt) == 0) {
          if (verbose) {
@@ -83,7 +88,10 @@ list2im <- function
          rownames(xM) <- xT@itemInfo[,1];
       }
    }
-   if (keepCounts) {
+   if (length(emptyValue) > 0 && !c(0) %in% emptyValue) {
+      xM[xM %in% 0] <- emptyValue;
+   }
+   if (TRUE %in% keepCounts) {
       if (verbose) {
          jamba::printDebug("list2im(): ",
             "Applying item counts to the incidence matrix ",
@@ -161,6 +169,7 @@ list2im <- function
 #' @export
 list2imSigned <- function
 (x,
+ emptyValue=NA,
  verbose=FALSE,
  ...)
 {
@@ -190,21 +199,25 @@ list2imSigned <- function
    ## For this step, only use unique elements, since we overwrite the value with the sign anyway
    imx <- list2im(lapply(x, names),
       makeUnique=TRUE,
+      emptyValue=NA,
       keepCounts=FALSE,
       verbose=verbose,
       ...);
-   imx[] <- 0;
+   imx[] <- imx[] * 0;
    ## TODO: handle multiple values somehow... but not yet.
    ## It means we need to decide how to combine multiple signs,
    ## do we add them, average them, comma-delimit?
    for (i in seq_along(x)) {
       xi <- x[[i]];
-      xi <- xi[xi != 0];
+      xi <- xi[!xi %in% c(NA)];
       imx[names(xi),i] <- xi;
    }
    #for (iName in names(x)) {
    #   imx[names(x[[iName]]),iName] <- x[[iName]];
    #}
+   if (length(emptyValue) == 1 && !is.na(emptyValue) && any(is.na(imx))) {
+      imx[is.na(imx)] <- emptyValue;
+   }
    return(imx);
 }
 

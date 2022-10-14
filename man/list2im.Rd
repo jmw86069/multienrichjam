@@ -4,13 +4,17 @@
 \alias{list2im}
 \title{convert list to incidence matrix}
 \usage{
-list2im(x, keepCounts = FALSE, verbose = FALSE, ...)
+list2im(x, keepCounts = FALSE, emptyValue = 0, verbose = FALSE, ...)
 }
 \arguments{
 \item{x}{list of vectors}
 
 \item{keepCounts}{boolean indicating whether to return values indicating
 the number of occurrences of each item.}
+
+\item{emptyValue}{any single value that should be used for blank entries,
+by default zero \code{0}. Use \code{emptyValue=NA} to return \code{NA} for missing
+entries.}
 
 \item{verbose}{boolean indicating whether to print verbose output.}
 
