@@ -49,7 +49,6 @@
 #' @param frame_blank `character` string to define the color used
 #'    for `"frame.color"` when there are multiple colors in `"pie.border"`
 #'    and therefore there should be no visible `"frame.color"`.
-#' @param border_blank
 #' @param ... additional arguments are ignored.
 #'
 #' @export
@@ -59,6 +58,7 @@ apply_cnet_direction <- function
  col=colorjam::col_div_xf(1.2),
  hide_solo_pie=TRUE,
  frame_blank="#FFFFFF00",
+ do_reorder=FALSE,
  ...)
 {
    #
@@ -66,9 +66,10 @@ apply_cnet_direction <- function
    # pie.border, coloredrect.border
    for (attr_name in c("pie.border", "coloredrect.border")) {
       igraph::vertex_attr(cnet, attr_name) <- lapply(seq_along(igraph::V(cnet)), function(i){
-         iname <- igraph::vertex_attr(cnet, "name")[i];
-         ienrich <- names(igraph::vertex_attr(cnet, attr_name)[[i]]);
-         iborder <- igraph::vertex_attr(cnet, attr_name)[i];
+         iname <- igraph::vertex_attr(cnet, "name")[[i]];
+         attr_name2 <- gsub(".border", ".color", attr_name);
+         ienrich <- names(igraph::vertex_attr(cnet, attr_name2)[[i]]);
+         iborder <- igraph::vertex_attr(cnet, attr_name)[[i]];
          if (iname %in% rownames(hitim)) {
             ipieborder <- jamba::nameVector(
                col(hitim[iname, ienrich]),
@@ -82,9 +83,9 @@ apply_cnet_direction <- function
    }
    # frame.color
    cnet_framecolor <- sapply(seq_along(igraph::V(cnet)), function(i){
+      iname <- igraph::vertex_attr(cnet, "name")[[i]];
+      ienrich <- names(igraph::vertex_attr(cnet, "pie.color")[[i]]);
       iframecolor <- igraph::vertex_attr(cnet, "frame.color")[[i]];
-      iname <- igraph::vertex_attr(cnet, "name")[i];
-      ienrich <- names(igraph::vertex_attr(cnet, attr_name)[[i]]);
       if (iname %in% rownames(hitim)) {
          ipieborder <- jamba::nameVector(
             col(hitim[iname, ienrich]),
@@ -98,5 +99,13 @@ apply_cnet_direction <- function
       iframecolor
    })
    vertex_attr(cnet, "frame.color") <- cnet_framecolor
+
+   # optionally reorder nodes using new border color
+   if (TRUE %in% do_reorder) {
+      # apply node re-ordering step
+      cnet <- reorderIgraphNodes(cnet,
+         ...);
+   }
+
    return(cnet);
 }

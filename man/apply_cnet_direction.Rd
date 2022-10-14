@@ -10,6 +10,7 @@ apply_cnet_direction(
   col = colorjam::col_div_xf(1.2),
   hide_solo_pie = TRUE,
   frame_blank = "#FFFFFF00",
+  do_reorder = FALSE,
   ...
 )
 }

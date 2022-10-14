@@ -713,34 +713,6 @@ multiEnrichMap <- function
    geneIM <- list2im(geneHitList)[,,drop=FALSE];
 
    #####################################################################
-   ## geneIMdirection (if geneHitIM is supplied)
-   geneIMdirection <- NULL;
-   if (length(geneHitIM) > 0 &&
-         any(rownames(geneHitIM) %in% rownames(geneIM)) &&
-         any(colnames(geneHitIM) %in% colnames(geneIM))) {
-      geneIMdirection <- (abs(geneHitIM) > 0) * 1;
-      shared_rows <- intersect(rownames(geneHitIM),
-         rownames(geneIMdirection));
-      shared_columns <- intersect(colnames(geneHitIM),
-         colnames(geneIMdirection));
-      geneIMdirection[shared_rows, shared_columns] <- geneHitIM[shared_rows, shared_columns];
-      if (!all(rownames(geneIMdirection) %in% shared_rows)) {
-         missing_rows <- setdiff(rownames(geneIMdirection), shared_rows);
-         jamba::printDebug("multiEnrichMap(): ",
-            "geneHitIM does not contain ",
-            jamba::formatInt(length(missing_rows)),
-            " rows present in geneIM, default values will use 1.");
-      }
-      if (!all(colnames(geneIMdirection) %in% shared_columns)) {
-         missing_columns <- setdiff(colnames(geneIMdirection), shared_columns);
-         jamba::printDebug("multiEnrichMap(): ",
-            "geneHitIM does not contain ",
-            jamba::formatInt(length(missing_columns)),
-            " columns present in geneIM, default values will use 1.");
-      }
-   }
-
-   #####################################################################
    ## Optionally run topEnrichBySource()
    if ((length(topEnrichN) > 0 && all(topEnrichN > 0)) ||
          length(subsetSets) > 0 ||
@@ -803,9 +775,6 @@ multiEnrichMap <- function
          jamba::printDebug("setdiff(newGenes, origGenes):", setdiff(newGenes, origGenes));
       }
       geneIM <- subset(geneIM, rownames(geneIM) %in% newGenes);
-      if (length(geneIMdirection) > 0) {
-         geneIMdirection <- subset(geneIMdirection, rownames(geneIMdirection) %in% newGenes);
-      }
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "nrow(geneIM) after:",
@@ -821,6 +790,35 @@ multiEnrichMap <- function
          jamba::printDebug("multiEnrichMap(): ",
             "lengths(geneHitList) after:",
             lengths(geneHitList));
+      }
+   }
+
+   #####################################################################
+   ## geneIMdirection (if geneHitIM is supplied)
+   geneIMdirection <- NULL;
+   if (length(geneHitIM) > 0 &&
+         any(rownames(geneHitIM) %in% rownames(geneIM)) &&
+         any(colnames(geneHitIM) %in% colnames(geneIM))) {
+      geneIMdirection <- (abs(geneIM) > 0) * 1;
+      shared_rows <- intersect(rownames(geneHitIM),
+         rownames(geneIMdirection));
+      shared_columns <- intersect(colnames(geneHitIM),
+         colnames(geneIMdirection));
+      geneIMdirection[shared_rows, shared_columns] <- geneHitIM[shared_rows, shared_columns];
+      if (!all(rownames(geneIMdirection) %in% shared_rows)) {
+         missing_rows <- setdiff(rownames(geneIMdirection), shared_rows);
+         jamba::printDebug("multiEnrichMap(): ",
+            "geneHitIM does not contain ",
+            jamba::formatInt(length(missing_rows)),
+            " rows present in geneIM, default values will use 1.");
+         print(missing_rows);
+      }
+      if (!all(colnames(geneIMdirection) %in% shared_columns)) {
+         missing_columns <- setdiff(colnames(geneIMdirection), shared_columns);
+         jamba::printDebug("multiEnrichMap(): ",
+            "geneHitIM does not contain ",
+            jamba::formatInt(length(missing_columns)),
+            " columns present in geneIM, default values will use 1.");
       }
    }
 

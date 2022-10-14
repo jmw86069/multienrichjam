@@ -80,6 +80,7 @@ memIM2cnet <- function
  geneIMdirection=NULL,
  enrichIM=NULL,
  enrichIMcolors=NULL,
+ enrichIMdirection=NULL,
  coloredrect_nrow=1,
  coloredrect_ncol=NULL,
  coloredrect_byrow=TRUE,
