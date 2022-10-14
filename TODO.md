@@ -2,6 +2,21 @@
 
 ## 13oct2022
 
+* S4 objects?
+
+   * `mem`:
+
+      * Idea is to have one object type to handle output from `multiEnrichMap()`
+      * benefit is mostly to have default behaviors for things like `print()`
+      but also for clarity during the workflow. The `mem` object can be
+      clear input to other functions.
+   
+   * `cnet`:
+   
+      * inherits `igraph` and extends assumptions, again mainly for clarity
+      as input argument to other functions
+
+
 * fix `reorderIgraphNodes()`
 
    * DONE: add "frame.color":
@@ -15,9 +30,22 @@
       use "color", "frame.color" and ignore "pie.color", "pie.border",
       "coloredrect.color", "coloredrect.border", "label", "name"
 
-* Goal is to include gene direction in the workflow:
+* Include gene direction in the workflow:
 
    * Add `geneIMdirection` to mem object.
+   
+      * Requires `hitim` input to `multiEnrichMap()`.
+      * Alternate backwards compatibility is function to add
+      `geneIMdirection` to `mem` object, and/or `cnet` `igraph` object.
+      * `memIM2cnet()` should optionally use `enrichIMdirection` to apply
+      border color.
+   
+   * `mem2cnet()` as its own function, minor variation and extension to
+   `memIM2cnet()` which only uses the `memIM` portion of the data.
+   * `jam_igraph()` should recognize `lwd` when plotting nodes. This change
+   diverges from default behavior in `igraph` which only uses `par("lwd")`
+   as a global adjustment for all lines while plotting nodes, therefore
+   does not allow any nodes to have different line widths.
    * Outline of Cnet gene nodes by direction.
    * Gene-Path heatmap rows should optionally indicate direction,
    possibly another stripe using geneIMdirection.
