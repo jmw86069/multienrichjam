@@ -83,6 +83,23 @@ nudge_igraph_node <- function
          });
          x <- rep(x, lengths(idx));
          y <- rep(y, lengths(idx));
+         if (verbose) {
+            jamba::printDebug("nudge_igraph_node(): ",
+               "idx1:");
+            print(idx1);
+            jamba::printDebug("nudge_igraph_node(): ",
+               "idx2:");
+            print(idx2);
+            jamba::printDebug("nudge_igraph_node(): ",
+               "idx:");
+            print(idx);
+            jamba::printDebug("nudge_igraph_node(): ",
+               "x:");
+            print(x);
+            jamba::printDebug("nudge_igraph_node(): ",
+               "y:");
+            print(y);
+         }
          idx <- unlist(idx);
       }
    }
@@ -293,12 +310,16 @@ adjust_cnet_nodeset <- function
       expand <- rep(expand, length.out=n)
       rotate_degrees <- rep(rotate_degrees, length.out=n)
       for (i in seq_len(n)) {
+         if (verbose) {
+            jamba::printDebug("adjust_cnet_nodeset(): ",
+               "iteration i:", i)
+         }
          g <- adjust_cnet_nodeset(g=g,
             set_nodes=set_nodes[[i]],
-            x=x[i],
-            y=y[i],
-            expand=expand[i],
-            rotate_degrees=rotate_degrees[i],
+            x=x[[i]],
+            y=y[[i]],
+            expand=expand[[i]],
+            rotate_degrees=rotate_degrees[[i]],
             verbose=verbose,
             ...)
       }
@@ -354,7 +375,8 @@ adjust_cnet_nodeset <- function
          nodes=useG,
          x=rep(x, length.out=length(useG)),
          y=rep(y, length.out=length(useG)),
-         use_grep=FALSE);
+         use_grep=FALSE,
+         verbose=verbose);
    }
 
    # optionally expand
