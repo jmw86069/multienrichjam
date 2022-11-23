@@ -9,6 +9,9 @@ relayout_with_qfr(
   repulse = 3.5,
   spread_labels = TRUE,
   seed = 123,
+  init = NULL,
+  constrain = NULL,
+  constraints = NULL,
   verbose = FALSE,
   ...
 )

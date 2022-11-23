@@ -1,3 +1,67 @@
+# multienrichjam 0.0.65.900
+
+Numerous changes were made to functions in order to improve
+the overall Cnet plot layout experience. New functions were
+developed offline that focus on layout specific to Cnet plots,
+useful for bipartite graphs in general.
+
+## changes to existing functions
+
+* `jam_igraph()` and `jam_plot_igraph()`
+
+   * new argument `plot_grid=FALSE` which optionally plots
+   a grey grid in the background, with units equal to "percentage" across
+   the layout coordinate range. This option is intended to help when
+   manually adjusting node and node_set positions with `nudge_igraph_node()`
+   and `adjust_cnet_nodeset()`, both of which take units `x,y` in the form
+   of fraction of the overall layout dimensions.
+
+* `nudge_igraph_node()`
+
+   * new argument `nodes_xy` is intended to help enter adjustments when
+   many nodes need to be nudged. The `list` is named by node (e.g. by gene),
+   and contains x,y coordinate adjustments. It is completely equivalent to
+   entering `node`, `x`, `y` as three independent vectors, but may be
+   easier to use.
+   * argument default changed from `use_grep=TRUE` to `use_grep=FALSE`,
+   because nudging a node `"A"` should not also nudge every node that contains
+   an `"a"` or `"A"`. This rare change in default argument value seems
+   more helpful to avoid erroneous moves by default.
+
+* `layout_with_qfr()`
+
+   * new argument `constrain` which takes a `character` vector of node names,
+   then ensures those node coordinate positions are properly configured
+   in `constraints` so they do not move during iterative layout.
+   * new default behavior is to define `init` using the current graph layout
+   stored in `igraph::graph_attr(g, "layout")`, instead of using a random
+   circular initial layout.
+
+* `jam_mypie()` internal function `inner_pie_border`
+
+   * new experimental argument `inner_pie_border` is intended to draw
+   the pie wedge border on the inside of the pie wedge shape, so it does
+   not directly overlap the border of an adjacent pie wedge shape.
+   I could not find a polygon function in R that can draw borders on the
+   inside edge of the polygon, which is surprising considering the
+   considerable effort to draw GIS world maps in R. Any adjacent borders
+   are directly overwritten, with no option for borders to be displayed
+   side-by-side along the polygon edge. Seems like an opportunity for someone.
+   * nonetheless this capability is not yet implemented, but the framework
+   is in place to be released soon.
+
+* `mem_legend()`
+
+   * new arguments `do_directional`, `directional_column`, and
+   `directional_colors` are intended to add new directional circles
+   indicating up- and down-regulation.
+
+## new functions
+
+* `plot_layout_scale()` plots a grey grid background to an igraph plot
+indicating percentage units across the range of layout coordinates.
+
+
 # multienrichjam 0.0.64.900
 
 ## changes to existing functions

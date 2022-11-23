@@ -1,5 +1,223 @@
 # TODO
 
+## 23nov2022
+
+* mechanism to store edge coordinates in `igraph` object
+
+   * to my knowledge, this functionality does not exist in `igraph`,
+   nor is it represented in `ggraph` or `tidygraph` objects.
+   However `tidygraph` may have capability to supply specific edge
+   coordinates if they exist, so it might be the closest to
+   implementing this feature.
+   * `igraph::plot()` is not equipped to use edge coordinates
+   * `ggraph` is not equipped to use edge coordinates, it only creates
+   edge coordinates based upon the edge `geom_` being used.
+   * The driving use case is to define edge coordinates to handle:
+   
+      1. edge bundling, a procedure that could be done dynamically,
+      but is computationally expensive for large numbers of nodes;
+      2. custom edge pathing, specifically for pathway schematics,
+      such as those generated when using GraphViz DOT format. While the
+      DOT format generates and stores edge coordinates, I could not
+      find examples in R that import a fully-described DOT file (with
+      edge coordinates embedded) that also imported edge coordinates.
+   
+   * Reasons to want edge coordinates upfront:
+
+      * pre-calculate edge bundling, saving time during rendering
+      * allow custom definition of edges, for example in a pathway
+      schematic where edges are positioned to avoid overlaps.
+      * calculate better label placement by using the angle of incoming
+      edges, not limited to the linear vector from node1 to node2.
+
+   * Issues raised when storing edge coordinates:
+   
+      * Obviously, whenever the node layout coordinates are changed,
+      the edges also need to be changed.
+      * `rotate_igraph_layout()` could rotate nodes and all edges together.
+      * `nudge_igraph_node()` and `adjust_cnet_nodeset()` must decide
+      whether to adjust edges by simple scaling, or simply invalidate
+      all edges, then force the user to re-calculate edge coordinates.
+   
+   * useful helper functions
+   
+      * `validate_edge_coords()` - Test whether edge coordinates match
+      node coordinates. If not, then delete or replace edges with linear
+      equivalent.
+      * `adjust_edge()` - Wrapper function to adjust the curvature,
+      placement, rotation, of edges. Could be called when rotating node
+      layout, to rotate edges accordingly.
+      * `bundle_edges()` - Wrapper to apply bundling to one set of edges
+      together as a group. Optionally define specific coordinate(s)
+      through which the bundling loess curve is routed.
+      * fancy options like routing edges with preference for vertical/horizontal
+      pathing, with slight curvature at right angle turns. Often used in
+      schematic diagrams.
+      * fancy "subway" style options, where bundled edges are allowed to
+      remain visible adjacent to other edges along their path.
+      Edges could "snap" to nearby edges in the same bundle.
+
+## 17nov2022
+
+* `get_cnet_nodeset()`
+
+   * This function is called several times by internal functions,
+   and could therefore be much faster than currently.
+   * Refactor by using `igraph::as_adjacency_matrix()`.
+   Subset rows for `nodeType="Gene"` and columns for `nodeType="Set"`.
+   Then should be able to convert rapidly by `venndir::im2list()`
+   or some `pasteByRow()` magic, produce nodeset per node (row).
+   Finally, split node names by nodeset.
+
+* node adjustment to prevent label overlaps
+
+   * Idea: "stretch" out nodeset nodes "to the right", which fixes the
+   left edge of the nodeset, then expands the node spacing outward as
+   fraction of current range of nodeset nodes. For example,
+   expand to the right by 10%, to improve side-to-side spacing, since
+   label overlaps typically occur with nodes at the same y-level.
+   * Stretch nodes "to the left" would work the same, but fixes the right
+   x-coordinate range, and expands the left x-coordinate range.
+   * Stretch nodes "to the top", and "to the bottom" work similarly.
+   * Future idea to reduce node label overlap is to treat it like
+   biscuit dough under a rolling pin. Stretch subset of nodes
+   in each direction until the labels no longer overlap. The trick is
+   to stretch nodes away from other nodesets, so it does not cause new
+   overlaps with other nodes.
+
+* `adjust_cnet_nodeset()`
+
+   * Consider option to restrict "expand" to x- or y-axis expansion.
+   Basic idea is to limit expansion to "widen" the node spacing,
+   or to make node spacing "taller". The "widen" option is helpful
+   to reduce label overlaps for nodes directly beside each other.
+
+* `spread_igraph_labels()`
+
+   * ideal case: somehow take into account the edge bundling to calculate
+   input angle to each node, rather than straight vector from node to node.
+   * `node_groups` - spread labels relative to node group centroid, so labels
+   in this cluster of nodes will be spaced out from each other.
+   Bonus points for taking into account the overall average input angle to
+   nodes in each group, and applying a fraction of that offset along with the
+   node-to-group offset. For example, for a node group in the top right,
+   they generally point to the top-right, but are fanned out slightly so the
+   bottom-left-most node is not fanned out to bottom-left, but maybe center,
+   or only slightly bottom-left of the node.
+
+* new layout functions specific for Cnet plots
+
+   * `iterate_qfr_layout()` - R code version of
+   `qgraph::qgraph.layout.fruchtermanreingold()` with custom addition of
+   node "shells", and option to call `iterate_node_group_distance()`
+   * `iterate_node_group_distance()` - R layout intended only to enforce
+   separation across node groups (defined by `get_cnet_nodeset()`) so there
+   is additional space between nodesets in the layout.
+   * `layout_cnet()` - wrapper function that calls rounds of layouts.
+   This series of steps is currently the best default layout to generate
+   the most readable Cnet plot possible.
+   
+      1. initial node placement - qfr layout without node/group distance
+      2. node spacing - qfr with node distance
+      3. node/group spacing - qfr with node and group distance
+      4a. imposed nodeset percent spacing
+      4. group spacing - "fix" node layout per nodeset, then layout nodesets
+      5. detect best rotation to place first "Set" node top-left, then rotate
+      6. spread labels, re-order nodes by color/border.
+   
+   * Other ideas:
+   
+      1. Try the new `bubble_force()` calculation for minimum distance,
+      instead of the linear desired distance force.
+      2. Consider constraining all Gene nodes, then allow only Set nodes
+      to move. Goal is to prevent Set nodes from being embedded inside
+      Gene nodes due to overall net forces.
+      3. Optional fixed coordinate range, to prevent layouts from becoming
+      infinitely large, thus endless cycle of imposing minimum precent spacing,
+      making the range larger, thus making the spacing smaller, etc. etc.
+      It means when a force would push a node/group out of bounds, it gets
+      stopped at the boundary/boundaries. Hopefully because forces are applied
+      to both node1 and node2, when node1 cannot move, node2 should still move
+      albeit at half speed.
+      4. Really pie in the sky: Use the node size and shape to calculate
+      distance between nodes, nearest polygon distance for example. Probably
+      also a processing non-starter since it would add overhead to the
+      calculations, however it is the type of thing that could be parallelized
+      during each iteration. No idea how efficient it would be to split threads
+      during each iteration.
+   
+   * Code it in Rust, use R package `expandr` to integrate the Rust function
+   into the package via an R function. Follow C++ code steps used by
+   `qgraph:::qgraph_layout_Cpp()`. It doesn't seem that these layout
+   iterations are particularly good for multi-threading, however.
+   
+      * each iteration could be multi-threaded. Threads could share one
+      distance matrix, the extract values when needed.
+      Or threads could share node coordinates, then calculate distance
+      when needed on the fly. If fast enough, distance matrix (and memory
+      allocation) could be avoided, just do the math when needed.
+      * Look for Rust libraries for geometric calculations.
+
+* `mem_gene_path_heatmap()`
+
+   * add option to display gene incidence matrix (left annotation)
+   using `geneIMdirection` colors, to represent up/down.
+
+* add `plot_cnet_heatmaps()`
+
+   * make default arguments as minimal and close to default settings as possible
+
+
+## 10nov2022
+
+* `adjust_cnet_nodeset()`
+
+   * COMPLETE: add minimum percent spacing, similar to `apply_nodeset_spacing()` except
+   to operate on only one nodeset at a time.
+
+## 04nov2022
+
+* `shape.jampie.plot()` which calls `jam_mypie()`:
+
+   * When drawing borders for multiple pie shapes, the overlapping border
+   are overdrawn, hiding all but the last border drawn.
+   * Instead, draw border inside the polygon edge, so the borders are
+   adjacent and not overlapping.
+   * Quick survey revealed no drop-in replacement `polygon()` functions.
+   * Workaround involves `sf::st_buffer()` to calculate a buffer inside
+   each polygon, creating a "donut" filled with the border color. In
+   principle, this issue tends to occur in relatively few nodes for typical
+   Cnet plots, however it could be substantial performance hit.
+   
+      1. Each polygon, convert to corresponding `sf::st_polygon` object
+      2. Call `sf::st_buffer()`.
+      3. Create polygon from original border, inner buffer border.
+      Or split the original polygon at this border, apply color to the outer
+      and inner polygons. This way the border and fill colors are drawn
+      together so nodes are "complete".
+
+
+## 26oct2022
+
+* `multiEnrichMap()`
+
+   * accept `p_cutoff` and deprecate `cutoffRowMinP` for future removal.
+   `p_cutoff` is used in other package functions, as is `min_count`.
+
+* `mem_enrichment_heatmap()`
+
+   * problem: `style="dotplot"` and `style="heatmap"` have very different
+   visual effects, the dotplot de-emphasizes significance in favor of
+   gene count (point size) - smaller gene count hides significance.
+   The pale bivalent colors are very close to white, while `"Reds"` color
+   gradient is much more distinctive.
+   * Can try transforming point size, so the minimum size starts out larger?
+   Arguments `point_size_min=3` and `point_size_max=10` may help?
+   * Another more dramatic option is to create normal heatmap, then just
+   draw points on top of the already-filled cells. Note the points would
+   be inside the boxes, instead of connected by lines through the center of
+   each box. Could test with `style="hybrid"` and implement both.
+
 ## 13oct2022
 
 * S4 objects?

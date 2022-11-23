@@ -16,6 +16,10 @@ mem_legend(
   pch = 21,
   pt.cex = 2,
   inset = 0,
+  do_directional = FALSE,
+  directional_column = c("same", "added-bottom", "added-top"),
+  directional_colors = c(`up-regulated` = "firebrick3", `down-regulated` =
+    "dodgerblue3"),
   ...
 )
 }
@@ -23,8 +27,29 @@ mem_legend(
 \item{mem}{\code{list} object output from \code{multiEnrichMap()}, specifically
 expected to contain element \code{"colorV"}.}
 
-\item{x, y, bg, box.col, title, cex, ncol, pch, pt.cex}{arguments passed
-to \code{legend()}.}
+\item{x, y, bg, box.col, title, cex, ncol, pch, pt.cex, inset}{arguments passed
+to \code{graphics::legend()}.}
+
+\item{do_directional}{\code{logical} indicating whether to include
+directional colors defined in \code{directional_colors}, indicated only
+as the border color of nodes.}
+
+\item{directional_column}{\code{character} indicating how to add the
+directional colors to columns of legend, with two options:
+\itemize{
+\item "same": appends \code{directional_colors} to legend colors using
+the defined \code{ncol} number of columns.
+\item "added-bottom": appends \code{directional_colors} as a new column
+so the resulting legend with have \code{ncol+1} columns.
+In this case, intervening empty rows are filled with blank space,
+and the \code{directional_colors} are shown in the bottom-most rows in the
+far right column of the legend.
+\item "added-top": appends \code{directional_colors} as a new column
+so the resulting legend with have \code{ncol+1} columns.
+In this case, intervening empty rows are filled with blank space,
+and the \code{directional_colors} are shown in the top-most rows in the
+far right column of the legend.
+}}
 
 \item{...}{additional arguments are passed to \code{legend()}.}
 }

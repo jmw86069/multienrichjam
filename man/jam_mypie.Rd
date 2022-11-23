@@ -17,6 +17,7 @@ jam_mypie(
   frame.color = NULL,
   lty = NULL,
   init.angle = 90,
+  inner_pie_border = getOption("inner_pie_border", FALSE),
   ...
 )
 }
@@ -42,6 +43,11 @@ to \code{polygon()}}
 
 \item{init.angle}{\code{numeric} angle in degrees (0 to 360) where \code{0} is the
 top of the circle, proceeding clockwide.}
+
+\item{inner_pie_border}{\code{logical} whether to apply \code{pie.border} colors
+only along the inside of each pie wedge polygon, so that adjacent
+colors will be seen beside each other without overlapping adjacent
+borders. This method is currently in development.}
 
 \item{...}{additional arguments are passed to \code{polygon()}}
 }

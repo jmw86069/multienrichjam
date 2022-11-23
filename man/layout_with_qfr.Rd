@@ -10,6 +10,7 @@ layout_with_qfr(
   area = 8 * (igraph::vcount(g)^2),
   repulse.rad = (igraph::vcount(g)^repulse),
   constraints = NULL,
+  constrain = NULL,
   seed = 123,
   weights = NULL,
   niter = NULL,
@@ -43,6 +44,14 @@ vertices raised to the \code{repulse} power.}
 \item{constraints}{optional two-column matrix with the coordinates of
 nodes which should not be modified, and NA values for nodes where
 the position can be modified.}
+
+\item{constrain}{\code{character} optional vector of node names that should
+be constrained. This argument is a convenient shortcut for defining
+\code{constraints}, which is a layout coordinate matrix with \code{NA} values
+on each row where the coordinate is free to move, and \code{numeric}
+values where the coordinate is fixed. For graph \code{g} that contains layout
+in \code{igraph::graph_attr(g, "layout")}, the \code{init} can be defined with
+this layout, then \code{constraints} is defined using \code{constrain}.}
 
 \item{...}{other arguments are sent to
 \code{qgraph::qgraph.layout.fruchtermanreingold()}}

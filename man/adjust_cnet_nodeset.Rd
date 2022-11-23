@@ -10,7 +10,9 @@ adjust_cnet_nodeset(
   x = 0,
   y = 0,
   expand = 0,
+  percent_spacing = NULL,
   rotate_degrees = 0,
+  cnet_nodesets = NULL,
   verbose = FALSE,
   ...
 )
@@ -40,6 +42,9 @@ distance to the center.}
 \item{rotate_degrees}{\code{numeric} value indicating the rotation in
 degrees to adjust the node coordinates, relative to the center of
 the coordinates.}
+
+\item{cnet_nodesets}{\code{list} optional to provide the known nodesets
+upfront, in order to avoid re-determining the nodesets.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 

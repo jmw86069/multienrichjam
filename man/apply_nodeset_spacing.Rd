@@ -4,13 +4,85 @@
 \alias{apply_nodeset_spacing}
 \title{Apply minimum node spacing for each Cnet node set}
 \usage{
-apply_nodeset_spacing(cnet, percent_spacing = 3, apply_negative = FALSE, ...)
+apply_nodeset_spacing(
+  cnet,
+  percent_spacing = 3,
+  apply_negative = FALSE,
+  metric = c("median", "minimum"),
+  nodesets = NULL,
+  tolerance = 1.05,
+  cnet_nodesets = NULL,
+  debug = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{cnet}{\code{igraph} object that contains attribute
 \code{"nodeType"} and values \code{nodeType=c("Gene", "Set")},
 consistent with use of \code{get_cnet_nodesets()} and
-\code{adjust_cnet_nodeset()}.}
+\code{adjust_cnet_nodeset()}.
+The node layout is expected to be stored in
+\code{igraph::graph_attr(cnet, "layout")}.}
+
+\item{percent_spacing}{\code{numeric} indicating the target spacing in relation
+to the maximum x-axis and y-axis span for the layout coordinates.
+For example \code{percent_spacing=4} will require that the median spacing
+between nodes in each nodeset is at least 4 percent of the larger of
+the x-axis and y-axis ranges for the layout of input \code{cnet}.}
+
+\item{apply_negative}{\code{logical} indicating whether to shrink node spacing
+when the spacing is larger than the target \verb{percent spacing}. By default
+\code{apply_negative=FALSE} which allows nodes to exceed the spacing, and
+only adjusts node spacing when a nodeset is below this threshold.}
+
+\item{metric}{\code{character} string indicating the metric used to summarize
+nodeset spacing:
+\itemize{
+\item \code{"median"} - takes the median spacing between nodes in the nodeset,
+so the end result has at least half nodes with \code{percent_spacing}
+distance, "typical distance between nodes". This option is useful
+when there may be one node pair close together, but most nodes have
+consistent distance from their nearest node neighbor.
+\item \code{"minimum"} - takes the minimum spacing between nodes in the nodeset,
+so the end result requires all nodes to have at least \code{percent_spacing}
+distance.
+\item \code{function} - a \code{function} can be provided which takes a \code{numeric}
+vector of node distances, and produces a single \code{numeric} summary value,
+which will be scaled relative to the maximum xy axis range. This option
+would allow using \code{mean()}, or a quantile function such as
+\code{function(x){quantile(x, 0.3)}}.
+}}
+
+\item{nodesets}{\code{character} with optional subset of nodesets to adjust,
+or the default \code{nodesets=NULL} will adjust all nodesets. Values can be
+specified either in form or nodeset names, or any one or more members
+of a nodeset.}
+
+\item{tolerance}{\code{numeric} value used to apply a small tolerance to the
+distance threshold, for example the default \code{tolerance=1.05} requires
+nodes to be more than 5\% lower than the actual threshold before
+adjusting nodes. This additional activation threshold is experimental
+and may not be necessary. It is mainly intended to reduce calculations
+for nodesets that are only a small rounding error from being acceptable,
+which can happen when the overall plot range is adjusted during rounds
+of small node coordinate adjustments like with this function,
+\code{nudge_igraph_node()}, \code{apply_nodeset_spacing()}, or
+\code{adjust_cnet_set_relayout_gene()}.}
+
+\item{cnet_nodesets}{\code{list} optional to provide the known nodesets
+upfront, in order to avoid re-determining the nodesets.}
+
+\item{debug}{\code{logical} indicating whether to print debug information
+without adjusting the nodeset spacing. This option is useful to see
+summary information about nodeset spacing before choosing the
+\code{percent_spacing} threshold.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.
+The output includes text printed with \code{debug=TRUE} except that nodes
+are adjusted when \code{debug=FALSE}.}
+
+\item{...}{additional arguments are ignored.}
 }
 \value{
 \code{igraph} Cnet object, whose nodes are adjusted
@@ -40,6 +112,12 @@ use \code{adjust_cnet_nodeset()}. In future, this function
 may attempt to re-position nodesets relative to
 each other, but that process tends to be iterative
 and is not guaranteed to have a solution.
+
+When a nodeset contains only one node, there is no calculated
+distance so it is reported as \code{NA} when \code{verbose=TRUE} or
+\code{debug=TRUE}. However for internal purposes the nodeset is
+treated as if its nodeset spacing is exactly \code{percent_spacing}
+so that no subsequent adjustments are performed on the nodeset.
 }
 \seealso{
 Other jam cnet igraph functions: 

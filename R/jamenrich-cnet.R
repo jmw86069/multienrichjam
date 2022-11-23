@@ -20,6 +20,11 @@
 #' @param x,y `numeric` values indicating the amount to move each node
 #'    defined by `nodes`. These values are relative to the x- and y-axis
 #'    ranges of the layout coordinates, and based upon `aspect` below.
+#' @param nodes_xy `list` alternative to using arguments `nodes,x,y`.
+#'    This argument assumes a `list` of `numeric` adjustments to `x` and `y`,
+#'    where the `names(nodes_xy)` are node names. For example:
+#'    * `nodes_xy=list(APOE=c(x=0.05, y=-0.01), GAPDH=c(x=0.1, y=0.0)`
+#'    however the `numeric` vector does not need to contain names.
 #' @param use_grep `logical` indicating whether to match values in `nodes`
 #'    to `V(g)$name` and `V(g)$label` using `jamba::provigrep()`, which
 #'    follows case-insensitive `grep()`. When `use_grep=FALSE` the
@@ -43,17 +48,27 @@
 #' @export
 nudge_igraph_node <- function
 (g,
- nodes,
+ nodes=NULL,
  x=0,
  y=0,
- use_grep=TRUE,
+ nodes_xy=NULL,
+ use_grep=FALSE,
  aspect=1,
  debug=FALSE,
  verbose=FALSE,
  ...)
 {
+   # expand x,y to length(nodes)
    x <- rep(x, length.out=length(nodes));
    y <- rep(y, length.out=length(nodes));
+
+   # add optional nodes_xy
+   if (length(nodes_xy) > 0) {
+      nodes <- c(nodes, names(nodes_xy));
+      x <- c(x, sapply(nodes_xy, function(ixy){ixy[1]}));
+      y <- c(y, sapply(nodes_xy, function(ixy){ixy[2]}));
+   }
+
    if (!"layout" %in% igraph::list.graph.attributes(g)) {
       stop("g must have graph attribute 'layout'.");
    }
@@ -282,6 +297,8 @@ get_cnet_nodeset <- function
 #' @param rotate_degrees `numeric` value indicating the rotation in
 #'    degrees to adjust the node coordinates, relative to the center of
 #'    the coordinates.
+#' @param cnet_nodesets `list` optional to provide the known nodesets
+#'    upfront, in order to avoid re-determining the nodesets.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -292,10 +309,17 @@ adjust_cnet_nodeset <- function
  x=0,
  y=0,
  expand=0,
+ percent_spacing=NULL,
  rotate_degrees=0,
+ cnet_nodesets=NULL,
  verbose=FALSE,
  ...)
 {
+   # define cnet_nodesets if not supplied
+   if (length(cnet_nodesets) == 0) {
+      cnet_nodesets <- get_cnet_nodeset(g);
+   }
+
    ## List input for bulk operations through one function call
    if (is.list(set_nodes)) {
       if (verbose) {
@@ -308,18 +332,24 @@ adjust_cnet_nodeset <- function
       x <- rep(x, length.out=n)
       y <- rep(y, length.out=n)
       expand <- rep(expand, length.out=n)
+      if (length(percent_spacing) > 0) {
+         percent_spacing <- rep(percent_spacing, length.out=n)
+      }
+
       rotate_degrees <- rep(rotate_degrees, length.out=n)
       for (i in seq_len(n)) {
          if (verbose) {
             jamba::printDebug("adjust_cnet_nodeset(): ",
-               "iteration i:", i)
+               "nodeset number i:", i)
          }
          g <- adjust_cnet_nodeset(g=g,
             set_nodes=set_nodes[[i]],
             x=x[[i]],
             y=y[[i]],
             expand=expand[[i]],
+            percent_spacing=percent_spacing[[i]],
             rotate_degrees=rotate_degrees[[i]],
+            cnet_nodesets=cnet_nodesets,
             verbose=verbose,
             ...)
       }
@@ -330,27 +360,35 @@ adjust_cnet_nodeset <- function
    set_nodes_v <- jamba::cPasteS(set_nodes);
 
    # get nodes in the defined nodeset
-   cnet_nodesets <- get_cnet_nodeset(g);
    if (set_nodes_v %in% names(cnet_nodesets)) {
       useG <- cnet_nodesets[[set_nodes_v]];
       if (verbose) {
          jamba::printDebug("adjust_cnet_nodeset(): ",
-            "Matched nodeset ",
+            "Matched nodeset: ",
             set_nodes_v);
       }
    } else if (any(set_nodes_v %in% unlist(cnet_nodesets))) {
-      set_nodes_v2 <- rep(names(cnet_nodesets),
-         lengths(cnet_nodesets))[match(set_nodes_v, unlist(cnet_nodesets))];
+      cnet_nodesets_df <- data.frame(
+         nodeset=rep(names(cnet_nodesets), lengths(cnet_nodesets)),
+         node=unname(unlist(cnet_nodesets)))
+      use_nodeset <- unique(subset(cnet_nodesets_df, node %in% set_nodes_v)$nodeset);
+      if (length(use_nodeset) > 1) {
+         stop("Handle multiple nodesets with list input.")
+      }
+      useG <- cnet_nodesets[[use_nodeset]];
       if (verbose) {
          jamba::printDebug("adjust_cnet_nodeset(): ",
-            "Matched nodeset ",
-            set_nodes_v2,
-            " using nodeset member ",
+            "Matched nodeset: ",
+            use_nodeset,
+            " using nodeset member: ",
             set_nodes_v);
       }
-      useG <- cnet_nodesets[[set_nodes_v2]];
    } else {
-      stop(paste0("The set_nodes provided do not match nodeset names, nor node members."))
+      jamba::printDebug("cnet_nodesets:");
+      print(cnet_nodesets);
+      stop(paste0("The set_nodes '",
+         set_nodes_v,
+         "' provided do not match nodeset names, nor node members."))
    }
    if (length(useG) == 0) {
       warning(paste("No nodes found with set_nodes:", set_nodes_v));
@@ -379,11 +417,32 @@ adjust_cnet_nodeset <- function
          verbose=verbose);
    }
 
+   # optional percent_spacing, convert to expand
+   if (length(percent_spacing) > 0) {
+      if (verbose) {
+         jamba::printDebug("adjust_cnet_nodeset(): ",
+            "Determining percent_spacing via apply_nodeset_spacing()");
+      }
+      current_spacing <- apply_nodeset_spacing(g,
+         nodesets=set_nodes_v,
+         percent_spacing=percent_spacing,
+         debug=TRUE,
+         verbose=FALSE,
+         ...)
+      # define expand
+      if (verbose) {
+         jamba::printDebug("adjust_cnet_nodeset(): ",
+            "current_spacing:");
+         print(current_spacing);
+      }
+      expand <- current_spacing$expand;
+   }
+
    # optionally expand
    if (any(expand != 0) && length(useG) > 1) {
       if (verbose) {
          jamba::printDebug("adjust_cnet_nodeset(): ",
-            "Applying expand on x,y coordinates.");
+            "expand x,y coordinates.");
       }
       layout <- igraph::graph_attr(g, "layout");
       rownames(layout) <- igraph::V(g)$name;
@@ -406,6 +465,10 @@ adjust_cnet_nodeset <- function
       g <- igraph::set_graph_attr(g,
          name="layout",
          value=layout);
+      if (verbose) {
+         jamba::printDebug("adjust_cnet_nodeset(): ",
+            "expand x,y coordinates - complete.");
+      }
       #xrange <- max(c(
       #   diff(range(layout[,1])),
       #   diff(range(layout[,2]))));
@@ -581,6 +644,12 @@ adjust_cnet_set_relayout_gene <- function
 #' each other, but that process tends to be iterative
 #' and is not guaranteed to have a solution.
 #'
+#' When a nodeset contains only one node, there is no calculated
+#' distance so it is reported as `NA` when `verbose=TRUE` or
+#' `debug=TRUE`. However for internal purposes the nodeset is
+#' treated as if its nodeset spacing is exactly `percent_spacing`
+#' so that no subsequent adjustments are performed on the nodeset.
+#'
 #' @family jam cnet igraph functions
 #'
 #' @return `igraph` Cnet object, whose nodes are adjusted
@@ -590,14 +659,85 @@ adjust_cnet_set_relayout_gene <- function
 #'    `"nodeType"` and values `nodeType=c("Gene", "Set")`,
 #'    consistent with use of `get_cnet_nodesets()` and
 #'    `adjust_cnet_nodeset()`.
+#'    The node layout is expected to be stored in
+#'    `igraph::graph_attr(cnet, "layout")`.
+#' @param percent_spacing `numeric` indicating the target spacing in relation
+#'    to the maximum x-axis and y-axis span for the layout coordinates.
+#'    For example `percent_spacing=4` will require that the median spacing
+#'    between nodes in each nodeset is at least 4 percent of the larger of
+#'    the x-axis and y-axis ranges for the layout of input `cnet`.
+#' @param apply_negative `logical` indicating whether to shrink node spacing
+#'    when the spacing is larger than the target `percent spacing`. By default
+#'    `apply_negative=FALSE` which allows nodes to exceed the spacing, and
+#'    only adjusts node spacing when a nodeset is below this threshold.
+#' @param metric `character` string indicating the metric used to summarize
+#'    nodeset spacing:
+#'    * `"median"` - takes the median spacing between nodes in the nodeset,
+#'    so the end result has at least half nodes with `percent_spacing`
+#'    distance, "typical distance between nodes". This option is useful
+#'    when there may be one node pair close together, but most nodes have
+#'    consistent distance from their nearest node neighbor.
+#'    * `"minimum"` - takes the minimum spacing between nodes in the nodeset,
+#'    so the end result requires all nodes to have at least `percent_spacing`
+#'    distance.
+#'    * `function` - a `function` can be provided which takes a `numeric`
+#'    vector of node distances, and produces a single `numeric` summary value,
+#'    which will be scaled relative to the maximum xy axis range. This option
+#'    would allow using `mean()`, or a quantile function such as
+#'    `function(x){quantile(x, 0.3)}`.
+#' @param nodesets `character` with optional subset of nodesets to adjust,
+#'    or the default `nodesets=NULL` will adjust all nodesets. Values can be
+#'    specified either in form or nodeset names, or any one or more members
+#'    of a nodeset.
+#' @param tolerance `numeric` value used to apply a small tolerance to the
+#'    distance threshold, for example the default `tolerance=1.05` requires
+#'    nodes to be more than 5% lower than the actual threshold before
+#'    adjusting nodes. This additional activation threshold is experimental
+#'    and may not be necessary. It is mainly intended to reduce calculations
+#'    for nodesets that are only a small rounding error from being acceptable,
+#'    which can happen when the overall plot range is adjusted during rounds
+#'    of small node coordinate adjustments like with this function,
+#'    `nudge_igraph_node()`, `apply_nodeset_spacing()`, or
+#'    `adjust_cnet_set_relayout_gene()`.
+#' @param cnet_nodesets `list` optional to provide the known nodesets
+#'    upfront, in order to avoid re-determining the nodesets.
+#' @param debug `logical` indicating whether to print debug information
+#'    without adjusting the nodeset spacing. This option is useful to see
+#'    summary information about nodeset spacing before choosing the
+#'    `percent_spacing` threshold.
+#' @param verbose `logical` indicating whether to print verbose output.
+#'    The output includes text printed with `debug=TRUE` except that nodes
+#'    are adjusted when `debug=FALSE`.
+#' @param ... additional arguments are ignored.
 #'
 #' @export
 apply_nodeset_spacing <- function
 (cnet,
  percent_spacing=3,
  apply_negative=FALSE,
+ metric=c("median", "minimum"),
+ nodesets=NULL,
+ tolerance=1.05,
+ cnet_nodesets=NULL,
+ debug=FALSE,
+ verbose=FALSE,
  ...)
 {
+   # validate metric argument
+   if (length(metric) == 0) {
+      metric <- "median"
+   }
+   if ("character" %in% class(metric)) {
+      metric <- match.arg(metric);
+      if ("median" %in% metric) {
+         metric <- median;
+      } else if ("min" %in% metric) {
+         metric <- min;
+      }
+   } else if (!"function" %in% class(metric)) {
+      stop("metric must either be class 'character' or 'function'");
+   }
+
    # get node layout
    layout_xy <- igraph::graph_attr(cnet, "layout")
    if (length(layout_xy) == 0) {
@@ -606,44 +746,134 @@ apply_nodeset_spacing <- function
    rownames(layout_xy) <- igraph::V(cnet)$name;
 
    # get nodesets
-   cnet_nodesets <- get_cnet_nodeset(cnet)
+   if (length(cnet_nodesets) == 0) {
+      cnet_nodesets <- get_cnet_nodeset(cnet)
+   }
+   if (length(nodesets) > 0) {
+      ikeep_nodeset <- sapply(jamba::nameVectorN(cnet_nodesets), function(iname){
+         if (iname %in% nodesets) {
+            return(TRUE)
+         }
+         inodeset <- cnet_nodesets[[iname]];
+         if (any(inodeset %in% nodesets)) {
+            return(TRUE)
+         }
+         FALSE
+      })
+      cnet_nodesets <- cnet_nodesets[ikeep_nodeset];
+      keep_nodesets <- names(cnet_nodesets);
+      if (length(keep_nodesets) == 0) {
+         stop("After filtering by nodesets argument, no data remained.")
+      }
+      if (verbose) {
+         jamba::printDebug("apply_nodeset_spacing(): ",
+            "Subset nodesets to keep: ",
+            sep="; ",
+            paste0("'", keep_nodesets, "'"))
+      }
+   }
 
    # get x- and y-range for overall scale of the layout
    max_xy <- max(c(
       diff(range(layout_xy[,1])),
       diff(range(layout_xy[,2]))));
+   if (verbose) {
+      jamba::printDebug("apply_nodeset_spacing(): ",
+         "Plot range max_xy: ", max_xy);
+   }
 
    # determine nodeset spacing relative to layout size
-   cnet_spacing <- sapply(cnet_nodesets, function(i){
-      use_xy <- layout_xy[i,,drop=FALSE]
-      i1 <- dist(use_xy / max_xy * 100)
-      i2 <- as.matrix(i1);
-      diag(i2) <- NA;
-      median(matrixStats::colMins(i2, na.rm=TRUE))
+   cnet_spacing <- sapply(jamba::nameVectorN(cnet_nodesets), function(iname){
+      i <- cnet_nodesets[[iname]];
+      if (length(i) <= 1) {
+         imed <- NA;
+         imin <- NA;
+         imetric <- NA;
+      } else {
+         use_xy <- layout_xy[i,,drop=FALSE]
+         # calculate distance then scale as percentage of the max xy range
+         i1 <- dist(use_xy / max_xy * 100)
+         i2 <- as.matrix(i1);
+         diag(i2) <- NA;
+         nearest_distances <- jamba::rmNA(matrixStats::colMins(i2, na.rm=TRUE));
+         imed <- median(nearest_distances);
+         imin <- min(nearest_distances);
+         imetric <- metric(nearest_distances);
+      }
+      # extensive debug output logic here
+      if (verbose) {
+         jamba::printDebug("apply_nodeset_spacing(): ",
+            c("Median spacing for nodeset '", iname, "' = "),
+            imed,
+            ", (minimum spacing = ", imin, ")",
+            sep="");
+         if (!all(imetric == imin | is.na(imetric)) && !all(imetric == imed | is.na(imetric))) {
+            jamba::printDebug("apply_nodeset_spacing(): ",
+               c("spacing by metric for nodeset '", iname, "' = "),
+               imetric,
+               sep="");
+         }
+      }
+      if (length(i) <= 1) {
+         imed <- percent_spacing;
+         imin <- percent_spacing;
+         imetric <- percent_spacing;
+      }
+      unname(imetric);
    })
+   cnet_spacing_df <- data.frame(check.names=FALSE,
+      nodeset=names(cnet_spacing),
+      cnet_spacing=cnet_spacing,
+      expand=0)
 
    # determine nodesets to expand
-   adjust_nodesets <- names(which(cnet_spacing < (percent_spacing/1.05)));
+   # use tolerance to allow some small wiggle room
+   adjust_nodesets <- names(which(cnet_spacing < (percent_spacing / tolerance)));
+
+   adjust_nodesets_expand <- percent_spacing / cnet_spacing;
+   names(adjust_nodesets_expand) <- names(cnet_spacing);
+   adjust_nodesets_expand <- ifelse(adjust_nodesets_expand >= 1,
+      adjust_nodesets_expand - 1,
+      -1 * (1/adjust_nodesets_expand - 1));
+
+   # optionally ignore nodesets that are already above the threshold
    if (apply_negative) {
       adjust_nodesets_neg <- names(which(!is.infinite(cnet_spacing) &
             cnet_spacing > (percent_spacing * 1.05)))
       adjust_nodesets <- c(adjust_nodesets,
          adjust_nodesets_neg);
    }
+   if (length(adjust_nodesets) > 0) {
+      imatch <- match(adjust_nodesets, rownames(cnet_spacing_df));
+      cnet_spacing_df[imatch, "expand"] <- adjust_nodesets_expand[adjust_nodesets];
+   }
+   if (debug) {
+      return(cnet_spacing_df)
+   }
    if (length(adjust_nodesets) == 0) {
+      if (verbose) {
+         jamba::printDebug("apply_nodeset_spacing(): ",
+            "No nodesets required adjustment.");
+      }
       return(cnet)
    }
-   adjust_nodesets_expand <- percent_spacing / cnet_spacing[adjust_nodesets];
-   adjust_nodesets_expand <- ifelse(adjust_nodesets_expand >= 1,
-      adjust_nodesets_expand - 1,
-      -1 * (1/adjust_nodesets_expand - 1));
+
 
    # apply adjustments
+   if (verbose) {
+      jamba::printDebug("apply_nodeset_spacing(): ",
+         "Calling adjust_cnet_nodeset()");
+      jamba::printDebug("apply_nodeset_spacing(): ",
+         "expand: ",
+         adjust_nodesets_expand[adjust_nodesets]);
+   }
    cnet_new <- adjust_cnet_nodeset(cnet,
       set_nodes=strsplit(adjust_nodesets, ","),
       x=0,
       y=0,
-      expand=adjust_nodesets_expand)
+      expand=adjust_nodesets_expand[adjust_nodesets],
+      cnet_nodesets=cnet_nodesets,
+      verbose=verbose)
    return(cnet_new)
 }
 

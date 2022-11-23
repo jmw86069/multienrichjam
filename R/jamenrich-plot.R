@@ -188,6 +188,7 @@ mem_gene_path_heatmap <- function
  rotate_heatmap=FALSE,
  colramp="Reds",
  column_names_max_height=grid::unit(18, "cm"),
+ column_names_rot=90,
  show_gene_legend=FALSE,
  show_pathway_legend=TRUE,
  show_heatmap_legend=8,
@@ -557,10 +558,10 @@ mem_gene_path_heatmap <- function
       col_hm_at <- rev(seq_along(gene_colorsV));
       col_hm_labels <- rev(tail(memIM_levels, -1));
       if (is.logical(show_heatmap_legend)) {
-         if (show_heatmap_legend) {
+         if (show_heatmap_legend > 0) {
             show_heatmap_legend <- 8;
          } else {
-            show_heatmap_legend <- -1;
+            show_heatmap_legend <- FALSE;
          }
       }
 
@@ -653,6 +654,7 @@ mem_gene_path_heatmap <- function
          border=TRUE,
          show_legend=show_gene_legend,
          annotation_legend_param=gene_annotation_legend_param,
+         annotation_name_rot=column_names_rot,
          #gp=grid::gpar(col="#00000011"), # per-cell border
          df=mem$geneIM[genes,,drop=FALSE],
          gap=grid::unit(0, "mm")
@@ -672,11 +674,11 @@ mem_gene_path_heatmap <- function
             clustering_distance_rows=row_method,
             top_annotation=top_annotation,
             col=col_hm,
-            show_legend=show_heatmap_legend,
+            show_heatmap_legend=show_heatmap_legend,
             left_annotation=left_annotation,
             row_names_gp=grid::gpar(fontsize=row_fontsize),
             column_names_gp=grid::gpar(fontsize=column_fontsize),
-            column_names_rot=90,
+            column_names_rot=column_names_rot,
             column_names_max_height=column_names_max_height,
             column_title=column_title,
             row_title=row_title,
@@ -706,7 +708,7 @@ mem_gene_path_heatmap <- function
             left_annotation=left_annotation,
             row_names_gp=grid::gpar(fontsize=row_fontsize),
             column_names_gp=grid::gpar(fontsize=column_fontsize),
-            column_names_rot=90,
+            column_names_rot=column_names_rot,
             column_title=column_title,
             row_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
@@ -746,6 +748,7 @@ mem_gene_path_heatmap <- function
       left_annotation <- ComplexHeatmap::rowAnnotation(
          border=TRUE,
          annotation_legend_param=path_annotation_legend_param,
+         annotation_name_rot=column_names_rot,
          col=col_iml4,
          df=-log10(mem$enrichIM[sets,,drop=FALSE]),
          gap=grid::unit(0, "mm")
@@ -772,7 +775,7 @@ mem_gene_path_heatmap <- function
             left_annotation=left_annotation,
             row_names_gp=grid::gpar(fontsize=column_fontsize),
             column_names_gp=grid::gpar(fontsize=row_fontsize),
-            column_names_rot=90,
+            column_names_rot=column_names_rot,
             row_title=column_title,
             column_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
@@ -800,7 +803,7 @@ mem_gene_path_heatmap <- function
             left_annotation=left_annotation,
             row_names_gp=grid::gpar(fontsize=column_fontsize),
             column_names_gp=grid::gpar(fontsize=row_fontsize),
-            column_names_rot=90,
+            column_names_rot=column_names_rot,
             row_title=column_title,
             column_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
@@ -1529,8 +1532,25 @@ mem_multienrichplot <- function
 #'
 #' @param mem `list` object output from `multiEnrichMap()`, specifically
 #'    expected to contain element `"colorV"`.
-#' @param x,y,bg,box.col,title,cex,ncol,pch,pt.cex arguments passed
-#'    to `legend()`.
+#' @param x,y,bg,box.col,title,cex,ncol,pch,pt.cex,inset arguments passed
+#'    to `graphics::legend()`.
+#' @param do_directional `logical` indicating whether to include
+#'    directional colors defined in `directional_colors`, indicated only
+#'    as the border color of nodes.
+#' @param directional_column `character` indicating how to add the
+#'    directional colors to columns of legend, with two options:
+#'    * "same": appends `directional_colors` to legend colors using
+#'    the defined `ncol` number of columns.
+#'    * "added-bottom": appends `directional_colors` as a new column
+#'    so the resulting legend with have `ncol+1` columns.
+#'    In this case, intervening empty rows are filled with blank space,
+#'    and the `directional_colors` are shown in the bottom-most rows in the
+#'    far right column of the legend.
+#'    * "added-top": appends `directional_colors` as a new column
+#'    so the resulting legend with have `ncol+1` columns.
+#'    In this case, intervening empty rows are filled with blank space,
+#'    and the `directional_colors` are shown in the top-most rows in the
+#'    far right column of the legend.
 #' @param ... additional arguments are passed to `legend()`.
 #'
 #' @export
@@ -1546,25 +1566,77 @@ mem_legend <- function
  pch=21,
  pt.cex=2,
  inset=0,
+ do_directional=FALSE,
+ directional_column=c("same",
+    "added-bottom",
+    "added-top"),
+ directional_colors=c(
+    `up-regulated`="firebrick3",
+    `down-regulated`="dodgerblue3"),
  ...)
 {
    ##
+   directional_column <- match.arg(directional_column);
    if (!is.list(mem) || !"colorV" %in% names(mem)) {
       stop("Input mem must be a list with element 'colorV'");
    }
    colorV <- mem[["colorV"]];
    colorVb <- jamba::makeColorDarker(colorV, darkFactor=1.5);
 
+   # directional circles for some plots
+   if (do_directional) {
+      # exemplar legend()
+      if ("same" %in% directional_column) {
+         # simply include direction at the end with same ncol
+         legend_n <- length(legend) + length(directional_colors);
+         legend_nrow <- ceiling(legend_n / ncol);
+         pt.bg <- c(colorV,
+            rep(NA, length(directional_colors)))
+         col <- c(rep(NA, length(colorV)),
+            directional_colors);
+         pch <- c(rep(pch, length.out=length(legend)),
+            rep(21, length(directional_colors)));
+         legend_names <- c(names(colorV),
+            names(directional_colors));
+      } else {
+         # add direction in its own column
+         legend_nrow <- max(c(
+            length(directional_colors),
+            ceiling(length(legend) / ncol)));
+         legend_n_diff <- (ncol * legend_nrow) - length(legend);
+         legend_n_buff <- 0;
+         if ("added-bottom" %in% directional_column) {
+            legend_n_buff <- legend_nrow - length(legend);
+         }
+         pt.bg <- c(colorV,
+            rep(NA, legend_n_diff + legend_n_buff),
+            rep(NA, length(directional_colors)));
+         col <- c(rep(NA, length(colorV)),
+            rep(NA, legend_n_diff + legend_n_buff),
+            directional_colors);
+         pch <- c(rep(pch, length.out=length(legend)),
+            rep(NA, legend_n_diff + legend_n_buff),
+            rep(21, length(directional_colors)));
+         legend_names <- c(names(colorV),
+            rep("", legend_n_diff + legend_n_buff),
+            names(directional_colors));
+      }
+   } else {
+      legend_names <- names(colorV);
+      pt.bg <- colorV;
+      col <- colorVb;
+   }
+
    tryCatch({
       legend(x=x,
          y=y,
          title=title,
          ncol=ncol,
-         legend=names(colorV),
+         legend=legend_names,
          pch=pch,
          pt.cex=pt.cex,
-         pt.bg=colorV,
-         col=colorVb,
+         pt.bg=pt.bg,
+         col=col,
          bg=bg,
          box.col=box.col,
          cex=cex,
@@ -1575,11 +1647,11 @@ mem_legend <- function
          y=y,
          title=title,
          ncol=ncol,
-         legend=names(colorV),
+         legend=legend_names,
          pch=pch,
          pt.cex=pt.cex,
          pt.bg=colorV,
-         col=colorVb,
+         col=col,
          bg=bg,
          box.col=box.col,
          cex=cex,
@@ -1962,7 +2034,10 @@ mem_plot_folio <- function
    plot_num <- plot_num + 1;
 
    # generate caption and include in returned results
-   if ("caption" %in% names(attributes(gp_hm))) {
+   draw_caption <- NULL;
+   caption <- NULL;
+   if ("draw_caption" %in% names(attributes(gp_hm))) {
+      draw_caption <- attr(gp_hm, "draw_caption");
       caption <- attr(gp_hm, "caption");
    } else {
       caption <- paste0("Hierarchical clustering: column metric '",
@@ -1987,15 +2062,21 @@ mem_plot_folio <- function
             c("Gene-Pathway Heatmap"),
             sep="");
       }
-      ret_vals$gp_hm <- gp_hm;
-      ret_vals$gp_hm_caption <- caption;
       # Optionally increase padding between annotation and heatmap body
       #row_anno_padding <- ComplexHeatmap::ht_opt$ROW_ANNO_PADDING;
       #column_anno_padding <- ComplexHeatmap::ht_opt$COLUMN_ANNO_PADDING;
       if (do_plot) {
-         grid_with_title(gp_hm,
-            title=main,
-            caption=caption);
+         if (length(draw_caption) > 0) {
+            ComplexHeatmap::draw(gp_hm,
+               merge_legends=TRUE,
+               column_title=main,
+               column_title_gp=grid::gpar(fontsize=18));
+            draw_caption();
+         } else {
+            grid_with_title(gp_hm,
+               title=main,
+               caption=caption);
+         }
       }
    }
    ## Obtain heatmap pathway clusters

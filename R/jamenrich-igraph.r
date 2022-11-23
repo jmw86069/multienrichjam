@@ -25,6 +25,13 @@
 #' @param constraints optional two-column matrix with the coordinates of
 #'    nodes which should not be modified, and NA values for nodes where
 #'    the position can be modified.
+#' @param constrain `character` optional vector of node names that should
+#'    be constrained. This argument is a convenient shortcut for defining
+#'    `constraints`, which is a layout coordinate matrix with `NA` values
+#'    on each row where the coordinate is free to move, and `numeric`
+#'    values where the coordinate is fixed. For graph `g` that contains layout
+#'    in `igraph::graph_attr(g, "layout")`, the `init` can be defined with
+#'    this layout, then `constraints` is defined using `constrain`.
 #' @param ... other arguments are sent to
 #'    `qgraph::qgraph.layout.fruchtermanreingold()`
 #'
@@ -61,6 +68,7 @@ layout_with_qfr <- function
  area=8*(igraph::vcount(g)^2),
  repulse.rad=(igraph::vcount(g)^repulse),
  constraints=NULL,
+ constrain=NULL,
  seed=123,
  weights=NULL,
  niter=NULL,
@@ -93,6 +101,43 @@ layout_with_qfr <- function
       weights <- igraph::E(g)$weight;
    }
 
+   # constrain
+   if (length(constrain) > 0 && any(constrain %in% igraph::V(g)$name)) {
+      if (length(init) == 0) {
+         if (verbose) {
+            jamba::printDebug("layout_with_qfr(): ",
+               "Defining init from graph_attr layout.");
+         }
+         init <- igraph::graph_attr(g, "layout");
+      } else {
+         if (verbose) {
+            jamba::printDebug("layout_with_qfr(): ",
+               "Using init supplied.");
+         }
+      }
+      if (length(constraints) == 0) {
+         if (verbose) {
+            jamba::printDebug("layout_with_qfr(): ",
+               "Defining constraints from init.");
+         }
+         constraints <- init;
+         constraints[] <- NA;
+      } else {
+         if (verbose) {
+            jamba::printDebug("layout_with_qfr(): ",
+               "Using init supplied.");
+         }
+      }
+      rownames(init) <- V(g)$name;
+      rownames(constraints) <- V(g)$name;
+      conmatch <- jamba::rmNA(match(constrain, rownames(constraints)));
+      if (verbose) {
+         jamba::printDebug("layout_with_qfr(): ",
+            "Applied constrain to constraints.");
+      }
+      constraints[conmatch,] <- init[conmatch,];
+   }
+
    frL <- qgraph::qgraph.layout.fruchtermanreingold(
       e,
       vcount=igraph::vcount(g),
@@ -109,6 +154,7 @@ layout_with_qfr <- function
       layout.control=layout.control,
       round=round,
       digits=digits);
+   rownames(frL) <- igraph::V(g)$name;
    frL;
 }
 
@@ -187,14 +233,32 @@ relayout_with_qfr <- function
  repulse=3.5,
  spread_labels=TRUE,
  seed=123,
+ init=NULL,
+ constrain=NULL,
+ constraints=NULL,
  verbose=FALSE,
  ...)
 {
+   # if layout exists, use that for init
+   if (length(init) == 0 && "layout" %in% igraph::list.graph.attributes(g)) {
+      init <- igraph::graph_attr(g, "layout");
+      rownames(init) <- igraph::V(g)$name;
+      if (verbose) {
+         jamba::printDebug("relayout_with_qfr(): ",
+            "head(init):");
+         print(head(init));
+      }
+   }
    layout_xy <- layout_with_qfr(g=g,
       repulse=repulse,
       seed=seed,
+      init=init,
+      constrain=constrain,
+      constraints=constraints,
       verbose=verbose,
       ...);
+   rownames(layout_xy) <- igraph::V(g)$name;
+
    if (verbose) {
       jamba::printDebug("relayout_with_qfr(): ",
          "head(layout_xy):");
@@ -205,10 +269,11 @@ relayout_with_qfr <- function
       layout_xy);
    if (spread_labels) {
       g <- spread_igraph_labels(g,
-         #layout=layout_xy,
-         verbose=verbose,
+         # layout=layout_xy,
+         # verbose=verbose,
          ...);
    }
+   rownames(igraph::graph_attr(g, "layout")) <- igraph::V(g)$name;
    return(g);
 }
 
@@ -2390,9 +2455,20 @@ color_edges_by_nodes_deprecated <- function
 #'    labels, which is typically the last operation in the plot sequence.
 #'    Note that node labels can be rendered without also rendering
 #'    the nodes or edges.
+#' @param plot_grid `logical` indicating whether to plot a background grid
+#'    indicating units of 2% across the layout of the network graph. The
+#'    units are calculated consistent with `nudge_igraph_nodes()`,
+#'    `adjust_cnet_nodeset()` and other functions, scaled relative to the
+#'    maximum x- or y-coordinate range of layout of the graph. Layout
+#'    is obtained by `get_igraph_layout()` which by default uses
+#'    supplied `layout`, or graph attribute `igraph::graph_attr(x, "layout")`.
+#'    Note that by default, `jam_igraph()` represents the layout with
+#'    aspect ratio = 1, so x-coordinates and y-coordiantes are represented
+#'    with the same spacing per unit.
+#'    This function calls `plot_layout_scale()` to render the grid lines.
+#' @param verbose `logical` indicating whether to print verbose output.
 #' @param debug `logical` or `character` vector of attributes for
 #'    which debug output will be plotted onscreen.
-#' @param verbose `logical` indicating whether to print verbose output.
 #'
 #' @export
 jam_plot_igraph <- function
@@ -2418,6 +2494,7 @@ jam_plot_igraph <- function
  render_edges=TRUE,
  render_groups=TRUE,
  render_nodelabels=TRUE,
+ plot_grid=FALSE,
  verbose=FALSE,
  debug=NULL)
 {
@@ -2559,6 +2636,7 @@ jam_plot_igraph <- function
             "asp applied:",
             asp);
       }
+      # create blank plot space
       plot(0,
          0,
          type="n",
@@ -2571,6 +2649,11 @@ jam_plot_igraph <- function
          asp=asp,
          main=main,
          sub=sub)
+      # optionally display background grid
+      if (length(plot_grid) > 0 && TRUE %in% plot_grid) {
+         plot_layout_scale(layout=layout,
+            ...)
+      }
    }
 
    ## Optional mark groups

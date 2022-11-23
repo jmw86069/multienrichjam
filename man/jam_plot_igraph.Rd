@@ -25,6 +25,7 @@ jam_plot_igraph(
   render_edges = TRUE,
   render_groups = TRUE,
   render_nodelabels = TRUE,
+  plot_grid = FALSE,
   verbose = FALSE,
   debug = NULL
 )
@@ -127,6 +128,18 @@ shaded polygon and border.}
 labels, which is typically the last operation in the plot sequence.
 Note that node labels can be rendered without also rendering
 the nodes or edges.}
+
+\item{plot_grid}{\code{logical} indicating whether to plot a background grid
+indicating units of 2\% across the layout of the network graph. The
+units are calculated consistent with \code{nudge_igraph_nodes()},
+\code{adjust_cnet_nodeset()} and other functions, scaled relative to the
+maximum x- or y-coordinate range of layout of the graph. Layout
+is obtained by \code{get_igraph_layout()} which by default uses
+supplied \code{layout}, or graph attribute \code{igraph::graph_attr(x, "layout")}.
+Note that by default, \code{jam_igraph()} represents the layout with
+aspect ratio = 1, so x-coordinates and y-coordiantes are represented
+with the same spacing per unit.
+This function calls \code{plot_layout_scale()} to render the grid lines.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 

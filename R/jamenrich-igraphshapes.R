@@ -580,6 +580,10 @@ shape.jampie.plot <- function
 #' @param lty `numeric` or `character` line type
 #' @param init.angle `numeric` angle in degrees (0 to 360) where `0` is the
 #'    top of the circle, proceeding clockwide.
+#' @param inner_pie_border `logical` whether to apply `pie.border` colors
+#'    only along the inside of each pie wedge polygon, so that adjacent
+#'    colors will be seen beside each other without overlapping adjacent
+#'    borders. This method is currently in development.
 #' @param ... additional arguments are passed to `polygon()`
 #'
 #' @export
@@ -596,6 +600,7 @@ jam_mypie <- function
  frame.color = NULL,
  lty = NULL,
  init.angle = 90,
+ inner_pie_border=getOption("inner_pie_border", FALSE),
  ...)
 {
    values <- c(0, cumsum(values)/sum(values))

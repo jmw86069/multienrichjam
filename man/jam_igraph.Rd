@@ -20,7 +20,6 @@ jam_igraph(
   label_dist_factor = 1,
   label_dist_factor_l = 1,
   use_shadowText = FALSE,
-  plot_function = jam_plot_igraph,
   edge_bundling = c("connections", "none", "nodegroups"),
   nodegroups = NULL,
   render_nodes = TRUE,
@@ -28,6 +27,8 @@ jam_igraph(
   render_nodelabels = TRUE,
   render_groups = TRUE,
   vectorized_node_shapes = TRUE,
+  plot_grid = FALSE,
+  plot_function = jam_plot_igraph,
   verbose = FALSE,
   debug = NULL
 )
@@ -132,6 +133,23 @@ when there are node overlaps. This tradeoff is relatively minor,
 and it is recommended either to reposition nodes to reduce or
 prevent overlaps, or adjust node sizes to reduce overlaps.}
 
+\item{plot_grid}{\code{logical} indicating whether to plot a background grid
+indicating units of 2\% across the layout of the network graph. The
+units are calculated consistent with \code{nudge_igraph_nodes()},
+\code{adjust_cnet_nodeset()} and other functions, scaled relative to the
+maximum x- or y-coordinate range of layout of the graph. Layout
+is obtained by \code{get_igraph_layout()} which by default uses
+supplied \code{layout}, or graph attribute \code{igraph::graph_attr(x, "layout")}.
+Note that by default, \code{jam_igraph()} represents the layout with
+aspect ratio = 1, so x-coordinates and y-coordiantes are represented
+with the same spacing per unit.
+This function calls \code{plot_layout_scale()} to render the grid lines.}
+
+\item{plot_function}{\code{function} that renders the graph, not intended to
+be changed except for very customized uses. By default
+\code{plot_function=jam_plot_igraph()} which calls a modified variant of
+\code{igraph:::plot.igraph()}.}
+
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{debug}{\code{logical} or \code{character} vector of attributes for
@@ -145,6 +163,9 @@ This function is a drop-in replacement of \code{igraph::plot.igraph()},
 intended to provide substantially faster vectorized plotting,
 to render bundled edges when requested, and
 to handle \code{rescale=FALSE} without requiring further adjustments.
+Note that this function focuses on recognizing graph options and
+settings, then passes the work off to \code{jam_plot_igraph()}
+which performs the heavy work of rendering the graph.
 
 It also provides some convenient methods to adjust node
 size, label font size, and label distance from node center,

@@ -6,10 +6,11 @@
 \usage{
 nudge_igraph_node(
   g,
-  nodes,
+  nodes = NULL,
   x = 0,
   y = 0,
-  use_grep = TRUE,
+  nodes_xy = NULL,
+  use_grep = FALSE,
   aspect = 1,
   debug = FALSE,
   verbose = FALSE,
@@ -26,6 +27,14 @@ be nudged.}
 \item{x, y}{\code{numeric} values indicating the amount to move each node
 defined by \code{nodes}. These values are relative to the x- and y-axis
 ranges of the layout coordinates, and based upon \code{aspect} below.}
+
+\item{nodes_xy}{\code{list} alternative to using arguments \verb{nodes,x,y}.
+This argument assumes a \code{list} of \code{numeric} adjustments to \code{x} and \code{y},
+where the \code{names(nodes_xy)} are node names. For example:
+\itemize{
+\item \verb{nodes_xy=list(APOE=c(x=0.05, y=-0.01), GAPDH=c(x=0.1, y=0.0)}
+however the \code{numeric} vector does not need to contain names.
+}}
 
 \item{use_grep}{\code{logical} indicating whether to match values in \code{nodes}
 to \code{V(g)$name} and \code{V(g)$label} using \code{jamba::provigrep()}, which

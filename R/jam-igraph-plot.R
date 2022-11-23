@@ -9,6 +9,9 @@
 #' intended to provide substantially faster vectorized plotting,
 #' to render bundled edges when requested, and
 #' to handle `rescale=FALSE` without requiring further adjustments.
+#' Note that this function focuses on recognizing graph options and
+#' settings, then passes the work off to `jam_plot_igraph()`
+#' which performs the heavy work of rendering the graph.
 #'
 #' It also provides some convenient methods to adjust node
 #' size, label font size, and label distance from node center,
@@ -161,6 +164,10 @@
 #'    `"nodeType"` says to look at `vertex_attr(x, "nodeType")`. Nodes
 #'    where `nodeType="Gene"` will use `1`, and where `nodeType="Set"`
 #'    will use `2` as the scalar value.
+#' @param plot_function `function` that renders the graph, not intended to
+#'    be changed except for very customized uses. By default
+#'    `plot_function=jam_plot_igraph()` which calls a modified variant of
+#'    `igraph:::plot.igraph()`.
 #'
 #' @examples
 #' ## example showing how to use the list form
@@ -247,7 +254,6 @@ jam_igraph <- function
  label_dist_factor=1,
  label_dist_factor_l=1,
  use_shadowText=FALSE,
- plot_function=jam_plot_igraph,
  edge_bundling=c("connections", "none", "nodegroups"),
  nodegroups=NULL,
  render_nodes=TRUE,
@@ -255,6 +261,8 @@ jam_igraph <- function
  render_nodelabels=TRUE,
  render_groups=TRUE,
  vectorized_node_shapes=TRUE,
+ plot_grid=FALSE,
+ plot_function=jam_plot_igraph,
  verbose=FALSE,
  debug=NULL)
 {
@@ -396,6 +404,7 @@ jam_igraph <- function
       edge_bundling=edge_bundling,
       nodegroups=nodegroups,
       vectorized_node_shapes=vectorized_node_shapes,
+      plot_grid=plot_grid,
       debug=debug);
 }
 
@@ -529,4 +538,77 @@ handle_igraph_param_list <- function
       }
    }
    return(i_values);
+}
+
+
+#' Plot layout scale by percentage of coordinate range
+#'
+#' Plot layout scale by percentage of coordinate range
+#'
+#' The `layout` argument supplied coordinates, and largest numeric
+#' range of any column is used to define 100 percent scale.
+#' A grey grid is drawn on a base R plot to indicate the big
+#' and small steps across the range, using `big_tick` and `small_tick`,
+#' respectively.
+#'
+#' @param layout `matrix` or `data.frame` with at least two columns,
+#'    only the first two columns are used for the grid.
+#' @param grid_colors `character` colors used for the small and big grid
+#'    lines, respectively.
+#' @param grid_lty `integer` or `character` line type used for the
+#'    small and big grid lines, respectively.
+#' @param big_tick,small_tick `numeric` values in percent, the step size
+#'    between big grid lines, and small grid lines, respectively.
+#' @param ... additional arguments are ignored.
+#'
+#' @export
+plot_layout_scale <- function
+(layout,
+ grid_colors=c("grey80", "grey70"),
+ grid_lty=c("dotted", "solid"),
+ big_tick=10,
+ small_tick=2.5,
+ ...)
+{
+   #
+   if (!any(c("numeric", "matrix", "data.frame", "tbl_df") %in% class(layout))) {
+      stop("layout must contain numeric coordinates as matrix or data.frame")
+   }
+   if (length(grid_colors) == 0) {
+      grid_colors <- c("grey80", "grey70")
+   }
+   grid_colors <- rep(grid_colors, length.out=2)
+   if (length(grid_lty) == 0) {
+      grid_lty <- c("dotted", "solid")
+   }
+   grid_lty <- rep(grid_lty, length.out=2)
+   xy_ranges <- apply(layout, 2, function(i){
+      jamba::nameVector(range(i, na.rm=TRUE),
+         c("min", "max"))})
+   xy_mids <- apply(xy_ranges, 2, mean)
+   xy_spans <- apply(xy_ranges, 2, diff)
+   xy_max <- max(xy_spans)
+   # tick mark steps
+   big_step <- big_tick;
+   smol_step <- small_tick;
+   seq50_big <- seq(from=0, to=100, by=big_step)
+   seq50_smol <- setdiff(seq(from=0, to=100, by=smol_step), seq50_big)
+   # tick mark positions
+   seq50 <- sort(c(seq50_big, seq50_smol))
+   seq50_issmol <- (seq50 %in% seq50_smol)
+   ticks_x <- (seq50 - 50) * xy_max / 100 + xy_mids[1]
+   ticks_y <- (seq50 - 50) * xy_max / 100 + xy_mids[2]
+   # apply ablines
+   abline(v=ticks_x,
+      lty=ifelse(seq50_issmol, grid_lty[[1]], grid_lty[[2]]),
+      col=ifelse(seq50_issmol, grid_colors[[1]], grid_colors[[2]]))
+   abline(h=ticks_y,
+      lty=ifelse(seq50_issmol, grid_lty[[1]], grid_lty[[2]]),
+      col=ifelse(seq50_issmol, grid_colors[[1]], grid_colors[[2]]))
+   rect(xleft=min(ticks_x), xright=max(ticks_x),
+      ybottom=min(ticks_y), ytop=max(ticks_y),
+      lwd=2,
+      lty=grid_lty[[2]],
+      col=NA, border=grid_colors[[2]])
+
 }
