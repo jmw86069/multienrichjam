@@ -2184,7 +2184,8 @@ spread_igraph_labels <- function
          layout=layout,
          nodeSortBy=nodeSortBy,
          sortAttributes=sortAttributes,
-         verbose=verbose);
+         verbose=verbose,
+         ...);
       layout <- igraph::graph_attr(g, "layout");
       if (verbose) {
          jamba::printDebug("spread_igraph_labels(): ",
