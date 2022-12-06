@@ -1,3 +1,66 @@
+# multienrichjam 0.0.66.900
+
+## changes to existing functions
+
+* changed to remove calls to `matrixStats::rowMaxs()` and
+`matrixStats::rowMins()` to use base functions instead.
+This change was due to several R crashes that appear to be bugs somewhere
+in the upstream packages, that also occurred on Mac OSX, and on linux,
+but in both scenarios involved R-3.6.1 which is not likely to gain
+support traction with other package authors. Understandable.
+* `mem_enrichment_heatmap()` fixed potential bug:
+
+   * When `row_split` is passed via `...` to the underlying
+   `ComplexHeatmap::Heatmap()`, it was not aligned to the order of
+   `rownames(matrix)` to be displayed in the heatmap, therefore
+   the rows were split in the wrong visual order.
+   * `row_split` is now a formal argument, and when supplied as
+   a vector, the `names(row_split)` are used to align `rownames(matrix)`
+   appropriately.
+
+* `reorderIgraphNodes()`
+
+   * new argument `nodesets` to define a subset of nodes for which the
+   reordering will be applied, which may be helpful when nodes in
+   a nodeset are horizontal or vertical. In future, this option may
+   be applied based upon the aspect ratio of nodes in a nodeset,
+   or so that the `nodeSortBy` can be defined as a `list` named
+   by `nodesets`. It gets complicated.
+   * more output when `verbose=TRUE`
+   * minor added checks for layout, ensuring matrix input for layout
+   will match `rownames(layout)` to `V(g)$name`, just in case the
+   order is not identical.
+
+* `spread_igraph_labels()`
+
+   * reverted apparent regression which did not pass `...` to child
+   function `reorder_igraph_nodes()`, therefore the `colorV` color
+   order was not properly used when called in this manner.
+
+* `rotate_igraph_nodes()`
+
+   * Change default argument from `center="origin"` to `center="median"`.
+   Rare change to argument default, justified by the change being fairly
+   benign. Also the new default is more consistent with expectations,
+   that nodes would be "rotated in place". Practical outcome is the same,
+   nodes are rotated exactly as before, but the coordinate range is more
+   likely to remain consistent, when input layout is not already centered
+   at coordinates `c(0, 0)`.
+   * new argument `verbose=FALSE`
+   * minor added checks for layout, ensuring matrix input for layout
+   will match `rownames(layout)` to `V(g)$name`, just in case the
+   order is not identical.
+
+* `rotate_coordinates()`
+
+   * Change default argument from `center="origin"` to `center="median"`.
+   Rare change to argument default, justified by the change being fairly
+   benign. Also the new default is more consistent with expectations,
+   that coordinates would be "rotated in place". Practical outcome is the same,
+   points are rotated exactly as before, but the coordinate range is more
+   likely to remain consistent, especially when input layout is not
+   already centered at coordinates `c(0, 0)`.
+
 # multienrichjam 0.0.65.900
 
 Numerous changes were made to functions in order to improve

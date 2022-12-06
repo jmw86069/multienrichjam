@@ -9,8 +9,9 @@ rotate_coordinates(
   degrees = 0,
   reflect = c("none", "x", "y", "z"),
   center = NULL,
-  center_rule = c("origin", "mean", "median", "min", "max"),
+  center_rule = c("median", "origin", "mean", "min", "max"),
   rotation_axes = c(1, 2),
+  verbose = FALSE,
   ...
 )
 }
@@ -21,12 +22,22 @@ rotate_coordinates(
 layout coordinates, where 360 degrees is one complete rotation.}
 
 \item{reflect}{\code{character} string indicating one or more axes
-to reflect coordinates; \code{"none"} to reflect no axis; or
-\code{integer} vector of column index positions. When there
-are no \code{colnames(x)}, then \code{c("x","y","z")} are recognized
-as columns \code{c(1, 2, 3)} respectively. Otherwise, when
-\code{reflect} is a \code{character} vector it is matched to
-\code{colnames(x)}.}
+to reflect coordinates, which flips the position of coordinates
+along that axis. It is usually called to flip x-axis or y-axis
+coordinates, for example with \code{reflect="x"} or \code{reflect=1}.
+Input is handled as follows:
+\itemize{
+\item if \code{reflect} contains \code{"none"}, then reflect is applied to
+none of the coordinate axes, therefore the default
+\code{reflect=c("none", "x", "y", "z")} will apply no reflection.
+\item \code{character} input: \code{reflect} values are matched to \code{colnames(x)}.
+When there are no \code{colnames(x)}, then \code{reflect} values of
+\code{c("x", "y", "z")} are automatically recognized as columns
+\code{c(1, 2, 3)} respectively.
+\item \code{integer} input is treated as a vector of column index positions,
+for example \code{reflect=c(2)} will reflect values on the second
+coordinate column.
+}}
 
 \item{center}{\code{numeric} coordinates to use as the center, or
 \code{center=NULL} to calculate the center using \code{center_rule}.}
@@ -49,21 +60,20 @@ coordinates to rotate, by default \code{c(1, 2)} uses the first
 two axes in \code{x}. Note that \code{rotation_axes} must represent
 columns present in x.}
 
-\item{...}{additional arguments are passed to
-\code{multienrichjam::spread_igraph_labels()} and
-\code{multienrichjam::reorderIgraphNodes()}.}
+\item{...}{additional arguments are ignored.}
 }
 \value{
 \verb{numeric matrix} with the same number of columns as the
 input \code{x}.
 }
 \description{
-Rotate numeric coordinates
+Rotate numeric coordinates, optionally after reflecting coordinates
+along one or more coordinate axes.
 }
 \details{
 This function rotates coordinates in two axes, by the angle
 defined in \code{degrees}. It optionally reflects coordinates in
-one or more axes.
+one or more axes, which occurs before rotation.
 
 Note that the \code{reflect} is applied before \code{degrees}.
 

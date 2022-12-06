@@ -954,7 +954,8 @@ cnet2df <- function
       ## determine if neighbors for a Set node are completely contained
       ## in another Set node
       imSet <- (t(im) %*% im);
-      isSubset <- (rowSums(imSet >= rowMaxs(imSet)) > 1);
+      # isSubset <- (rowSums(imSet >= rowMaxs(imSet)) > 1);
+      isSubset <- (rowSums(imSet >= apply(imSet, 1, max, na.rm=TRUE)) > 1);
       df$isSubset <- FALSE;
       if (any(isSubset)) {
          df[match(rownames(imSet), df$name),"isSubset"] <- isSubset;
@@ -1598,6 +1599,9 @@ rectifyPiegraph <- function
 #'    is `NULL`, this function tries to use graph attribute
 #'    `igraph::graph_attr(g, "layout")`, otherwise
 #'    the `relayout_with_qfr()` is called.
+#' @param nodesets `character` with optional subset of nodesets to
+#'    apply re-ordering. Each value must match names generated
+#'    by `get_cnet_nodeset()`, otherwise it will be ignored.
 #' @param colorV optional `character` vector that contains R colors,
 #'    used to order the colors in attributes such as `"pie.color"`
 #'    and `"coloredrect.color"`.
@@ -1643,6 +1647,7 @@ reorderIgraphNodes <- function
     "name"),
  nodeSortBy=c("x","y"),
  layout=NULL,
+ nodesets=NULL,
  colorV=NULL,
  verbose=FALSE,
  ...)
@@ -1661,25 +1666,66 @@ reorderIgraphNodes <- function
    ## red or blue, they should be visibly grouped together by that color.
    ##
    if (length(layout) == 0) {
-      if (!"layout" %in% igraph::list.graph.attributes(g)) {
+      if (!"layout" %in% names(igraph::graph_attr(g))) {
          if (all(c("x","y") %in% igraph::vertex_attr_names(g))) {
             layout <- cbind(igraph::V(g)$x, igraph::V(g)$y);
             g <- igraph::set_graph_attr(g, "layout", layout)
+            if (verbose) {
+               jamba::printDebug("reorderIgraphNodes(): ",
+                  "used x,y from V(g), and added to graph_attr(g, 'layout')")
+            }
          } else {
             g <- relayout_with_qfr(g, ...);
+            if (verbose) {
+               jamba::printDebug("reorderIgraphNodes(): ",
+                  "applied relayout_with_qfr(g, ...)")
+            }
          }
       }
    } else if (is.function(layout)) {
       g2 <- layout(g);
+      # in future we could pass ...,
+      # only if the first named arg of layout() is 'g'
+      # g2 <- jamba::call_fn_ellipsis(layout,
+      #    g=g,
+      #    ...);
+      if (verbose) {
+         jamba::printDebug("reorderIgraphNodes(): ",
+            "applied layout(g)")
+      }
       if ("igraph" %in% class(g2)) {
          g <- g2;
       } else {
-         g <- igraph::set_graph_attr(g, "layout", g2);
+         g <- igraph::set_graph_attr(graph=g,
+            name="layout",
+            value=g2);
       }
    } else if (jamba::igrepHas("data.*frame|matrix", class(layout))) {
-      g <- igraph::set_graph_attr(g, "layout", layout);
+      if (verbose) {
+         jamba::printDebug("reorderIgraphNodes(): ",
+            "Used layout as provided, and added to graph_attr(g, 'layout')")
+      }
+      if (all(igraph::V(g)$name %in% rownames(layout)) &&
+         !all(igraph::V(g)$name == rownames(layout))) {
+         # confirm order matches node order
+         if (verbose) {
+            jamba::printDebug("reorderIgraphNodes(): ",
+               "Re-ordered layout so rownames(layout) match V(g)$name.")
+         }
+         layout <- layout[match(igraph::V(g)$name, rownames(layout)), , drop=FALSE];
+      }
+      g <- igraph::set_graph_attr(graph=g,
+         name="layout",
+         value=layout);
    } else {
       stop("reorderIgraphNodes() could not determine the layout from the given input.");
+   }
+   # confirm layout is numeric matrix
+   layout <- igraph::graph_attr(g, "layout");
+   rownames(layout) <- igraph::V(g)$name;
+   if (verbose) {
+      jamba::printDebug("head(layout, 10):");
+      print(head(layout, 10));
    }
 
    ## comma-delimited neighboring nodes for each node
@@ -1897,17 +1943,35 @@ reorderIgraphNodes <- function
    }
 
    ## The following code iterates each edge group and reassigns
-   ## layout coordinates from left-to-right
-   ## Bonus points: figure out the coordinates to assign using
-   ## left-to-right logic, but then assign those coordinates
-   ## top-to-bottom.
+   ## layout coordinates by nodeSortBy axis order.
    if (verbose) {
       jamba::printDebug("reorderIgraphNodes(): ",
          "nodeSortBy:",
          nodeSortBy);
+      jamba::printDebug("reorderIgraphNodes(): ",
+         "names(neighborGct):",
+         paste0('"', names(neighborGct), '"'));
    }
+
+   # optional nodesets
+   if (length(nodesets) > 0) {
+      nodesets <- intersect(nodesets,
+         names(neighborGct));
+   }
+   if (length(nodesets) == 0) {
+      nodesets <- names(neighborGct);
+   }
+   if (verbose && length(nodesets) < length(neighborGct)) {
+      jamba::printDebug("reorderIgraphNodes(): ",
+         "applying to subset of nodesets: ",
+         paste0('"', nodesets, '"'));
+   }
+
    newDF <- jamba::rbindList(lapply(names(neighborGct), function(Gname){
       iDF <- subset(neighborDF, edgeGroup %in% Gname);
+      if (!Gname %in% nodesets) {
+         return(iDF)
+      }
       xyOrder <- jamba::mixedSortDF(iDF,
          byCols=nodeSortBy);
 
@@ -1941,6 +2005,9 @@ reorderIgraphNodes <- function
    neighborDF[iMatch,c("x","y")] <- newDF[,c("x","y")];
    subDF <- subset(neighborDF, edgeGroup %in% neighborDF[1,"edgeGroup"]);
    new_layout <- as.matrix(neighborDF[,c("x","y"),drop=FALSE]);
+   # re-apply node names as rownames
+   rownames(new_layout) <- igraph::V(g)$name;
+
    g <- igraph::set_graph_attr(g, "layout", new_layout);
    return(g);
 }

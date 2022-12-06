@@ -760,7 +760,8 @@ collapse_mem_clusters <- function
       levels=unique(clusters_df$cluster));
    cluster_memIM <- do.call(cbind, lapply(split(clusters_df, clusters_df$cluster), function(idf){
       im1 <- subset(mem$memIM[,idf$set,drop=FALSE]);
-      iv <- rowMaxs(im1);
+      # iv <- rowMaxs(im1);
+      iv <- apply(im1, 1, max, na.rm=TRUE);
       names(iv) <- rownames(im1);
       iv;
    }));

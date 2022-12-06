@@ -39,6 +39,10 @@ pie wedges are identical, it is also applied as \code{"frame.color"}.}
 for \code{"frame.color"} when there are multiple colors in \code{"pie.border"}
 and therefore there should be no visible \code{"frame.color"}.}
 
+\item{do_reorder}{\code{logical} indicating whether to call
+\code{reorder_igraph_nodes()} on the resulting \code{igraph}, so that
+the border color can be used in the sort conditions.}
+
 \item{...}{additional arguments are ignored.}
 }
 \description{

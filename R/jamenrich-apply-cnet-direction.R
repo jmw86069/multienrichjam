@@ -49,6 +49,9 @@
 #' @param frame_blank `character` string to define the color used
 #'    for `"frame.color"` when there are multiple colors in `"pie.border"`
 #'    and therefore there should be no visible `"frame.color"`.
+#' @param do_reorder `logical` indicating whether to call
+#'    `reorder_igraph_nodes()` on the resulting `igraph`, so that
+#'    the border color can be used in the sort conditions.
 #' @param ... additional arguments are ignored.
 #'
 #' @export

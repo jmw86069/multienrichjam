@@ -20,6 +20,7 @@ mem_enrichment_heatmap(
   row_dend_width = grid::unit(30, "mm"),
   row_fontsize = NULL,
   row_cex = 1,
+  row_split = NULL,
   cluster_rows = TRUE,
   column_fontsize = NULL,
   column_cex = 1,

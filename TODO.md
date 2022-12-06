@@ -1,5 +1,123 @@
 # TODO
 
+## 30nov2022
+
+* `reorder_igraph_nodes()`
+
+   * to be fancy, it should also propagate changes to `label.dist`
+   and `label.degree`, as created by `spread_igraph_labels()`,
+   since switching coordinates for two nodes should also switch
+   the `label.degree` and `label.dist` associated with those
+   coordinates.
+
+* `jam_igraph()`
+
+   * It shows some lag before plotting all nodes vectorized, check
+   if the edge bundling is the slow step, and optimize as needed.
+   UPDATE: Yes the edge bundling step is introducing lag; or the
+   resulting curved lines are being plotted slowly?
+   Another good reason to store edge bundle coordinates in the `igraph`.
+
+* `mem_legend()`
+
+   * consider using `ComplexHeatmap::Legend()` for consistency with
+   future Cnet-Heatmap usage, and because that mechanism is really nice.
+
+* Refactor `multiEnrichMap()`
+
+   * likely create new function `multienrich()` so `multiEnrichMap()` can
+   be deprecated and remain for backward compatibility.
+   * Avoid pre-calculating Cnet and Emap graphs.
+   Counterpoint: It could call `mem_plot_folio()` with defaults, and
+   store results back into the `multienrichResult`.
+   * Consider `multienrichResult` object type?
+   
+      * could hold what is now a `list` object, with proper slot names.
+      * custom `print()`/`summary()` function to display summary info
+      about number of genes, pathways, etc.
+   
+   * Consider `multienrichPlot` object type?
+   No, the decision is to re-use `multienrichResult`.
+   
+      * Benefit is simplicity: this object feeds all downstream plots.
+      * The negative is that it requires saving a separate
+      `multienrichResult` with alternative clustering if necessary.
+      * Main goal is to define the gene-pathway clustering,
+      then re-use clusters in subsequent steps without having to repeat
+      the clustering the same way. If one uses custom clustering
+      in `mem_plot_folio()` to produce gene-pathway heatmap, they have
+      to use the same arguments in subsequent steps otherwise the
+      clusters will differ, and it is not clearly indicated to be
+      a problem.
+   
+   * `mem_plot_folio()` may likely return the `multienrichResult`
+   after updating internally stored data. It should have option to
+   use existing results.
+
+* Write a more directed vignette showing at least two common use cases:
+
+   1. Enrichment using `clusterProfiler::enricher()`, then multi-enrichment.
+   2. Enrichment using Qiagen Ingenuity IPA (outside of R) then importing
+   the files produced using `"Export All"` from within the Ingenuity IPA app.
+   3. Enrichment using some other external (non-R) tool, for example DAVID.
+
+* Write a vignette focused solely on Cnet plot custom layout options.
+Background:
+
+   * Very common workflow results in Cnet plot to summarize the findings.
+   * This Cnet plot has often been included as a figure or supplementary
+   figure for a paper, therefore it requires manual adjustments to
+   increase legibility and clarity of the figure.
+   * Adjust individual nodes: `nudge_igraph_node()`. Note this function
+   can be called on a `list` of nodes using `nodes_xy`, or using vectors
+   with `nodes`, `x`, `y`.
+   * Adjust sets of nodes:
+      * `adjust_cnet_nodeset()` - Usually for sub-clusters of gene nodes,
+      move the whole group, adjust intra-group node spacing,
+      or rotate the group around the group center.
+      * `apply_nodeset_spacing()` - Apply a minimum spacing between
+      nodes, for each nodeset.
+      * `adjust_cnet_set_relayout_gene()` - Adjust "Set" nodes manually,
+      then fix them in place but allow "Gene" nodes to move during re-layout,
+      usually with `relayout_with_qfr()`
+      
+   * Adjust all nodes:
+   
+      * `layout_with_qfr()`, `layout_with_qfrf()`, `relayout_with_qfr()` -
+      All are wrappers to `qgraph::qgraph.layout.fruchtermanreingold()`
+      with convenient defaults. `layout_with_qfr()` returns coordinates;
+      `layout_with_qfrf()` returns a layout function with user-defined
+      `repulse` argument; `relayout_with_qfr()` updates layout in-place
+      for an `igraph` object, storing in `graph_attr(g, "layout")`.
+      * `rotate_igraph_layout()` - rotate the layout coordinates by some
+      user-defined degree angle.
+      * `spread_igraph_labels()` - positions node labels radially around
+      nodes, based upon the average incoming edge angle.
+      * `reorder_igraph_nodes()` - within each nodeset, reposition nodes
+      in order of node color, border color, then label.
+      A nodeset is defined as a set of nodes that all share the same
+      connections, which is mostly only useful for bipartite graphs
+      such as Cnet plots. This function performs the node re-ordering
+      for all nodesets, across the whole `igraph` object.
+   
+   * plot with `jam_igraph()`
+   
+      * Vectorized plotting when multiple shapes are used, otherwise
+      `igraph::plot()` uses a `for()` to iterate each node.
+      * Improved `pie` rendering, also vectorized.
+      * Convenience methods to adjust node size, node label font size,
+      node label distance
+      * Optional shadow text node labels
+      * Maintain aspect ratio = 1, so nodes are symmetrically spaced along
+      each axis (defined by the layout algorithm used.)
+      * optionally render node groups using `mark.groups`
+      * Call edge bundling, especially useful for bipartite graphs such
+      as Cnet plots.
+      * Optionally draw background grid with percent layout units.
+
+* add dev functions `layout_cnet()` and related iterative layout functions.
+
+
 ## 23nov2022
 
 * mechanism to store edge coordinates in `igraph` object

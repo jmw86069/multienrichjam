@@ -931,6 +931,7 @@ mem_enrichment_heatmap <- function
  row_dend_width=grid::unit(30, "mm"),
  row_fontsize=NULL,
  row_cex=1,
+ row_split=NULL,
  cluster_rows=TRUE,
  column_fontsize=NULL,
  column_cex=1,
@@ -1246,6 +1247,13 @@ mem_enrichment_heatmap <- function
             }
          }
       }
+      # validate row_split
+      if (length(row_split) > 0 && length(row_split) >= nrow(use_matrix)) {
+         if (length(names(row_split)) > 0 &&
+               all(rownames(use_matrix) %in% names(row_split))) {
+            row_split <- row_split[rownames(use_matrix)];
+         }
+      }
 
       # dot plot or heatmap style
       hm <- call_fn_ellipsis(ComplexHeatmap::Heatmap,
@@ -1257,6 +1265,7 @@ mem_enrichment_heatmap <- function
          border=TRUE,
          row_names_gp=grid::gpar(fontsize=row_fontsize),
          row_names_max_width=row_names_max_width,
+         row_split=row_split,
          column_names_gp=grid::gpar(fontsize=column_fontsize),
          column_names_max_height=column_names_max_height,
          cluster_columns=cluster_columns,

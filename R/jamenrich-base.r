@@ -1004,7 +1004,8 @@ multiEnrichMap <- function
 
    #####################################################################
    ## Subset for at least one significant enrichment P-value
-   i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols,drop=FALSE], na.rm=TRUE) <= cutoffRowMinP)];
+   # i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols,drop=FALSE], na.rm=TRUE) <= cutoffRowMinP)];
+   i1use <- rownames(enrichIMM)[(apply(enrichIMM[,useCols,drop=FALSE], 1, min, na.rm=TRUE) <= cutoffRowMinP)];
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "nrow(enrichIM):",
@@ -1503,9 +1504,11 @@ enrichList2df <- function
       }));
       if (useType %in% "lo") {
          enrichIMP[enrichIMP == 0] <- 1;
-         jamba::nameVector(matrixStats::rowMins(enrichIMP), rownames(enrichIMP));
+         # jamba::nameVector(matrixStats::rowMins(enrichIMP), rownames(enrichIMP));
+         jamba::nameVector(apply(enrichIMP, 1, min, na.rm=TRUE), rownames(enrichIMP));
       } else if (useType %in% "hi") {
-         jamba::nameVector(matrixStats::rowMaxs(enrichIMP), rownames(enrichIMP));
+         # jamba::nameVector(matrixStats::rowMaxs(enrichIMP), rownames(enrichIMP));
+         jamba::nameVector(apply(enrichIMP, 1, max, na.rm=TRUE), rownames(enrichIMP));
       }
    }));
    if (verbose) {

@@ -3,13 +3,15 @@
 
 #' Rotate igraph layout coordinates
 #'
-#' Rotate igraph layout coordinates
+#' Rotate igraph layout coordinates, optionally after reflecting coordinates
+#' along one or more coordinate axes.
 #'
 #' This function rotates igraph layout coordinates by calling
 #' the function `rotate_coordinates()`. The input can either be
 #' `g` as `igraph` object, or `layout` as a numeric `matrix`.
-#' This function also optionally reflects coordinates for
-#' one or more axes.
+#'
+#' Note that the `reflect` is applied before `degrees`. To change
+#' the order, call this function multiple times.
 #'
 #' When both `g` and `layout` are supplied, the coordinates are
 #' used from `layout`, rotated, then stored in the `g` `igraph` object
@@ -22,9 +24,6 @@
 #' When only `layout` is supplied, and no `g` `igraph` object
 #' is supplied, this function serves only as a wrapper to
 #' `rotate_coordinates()`.
-#'
-#' Note that the `reflect` is applied before `degrees`. To change
-#' the order, call this function multiple times.
 #'
 #' Rotation code kindly contributed by Don MacQueen to the `maptools`
 #' package, and is reproduced here to avoid a dependency on `maptools`
@@ -109,11 +108,16 @@ rotate_igraph_layout <- function
  degrees=0,
  reflect=c("none", "x", "y", "z"),
  center=NULL,
- center_rule=c("origin", "mean", "median", "min", "max"),
+ center_rule=c("median",
+    "origin",
+    "mean",
+    "min",
+    "max"),
  rotation_axes=c(1, 2),
  spread_labels=TRUE,
  do_reorder=FALSE,
  layout=NULL,
+ verbose=FALSE,
 ...)
 {
    if (length(layout) == 0) {
@@ -122,9 +126,24 @@ rotate_igraph_layout <- function
       }
       if ("igraph" %in% class(g)) {
          layout <- igraph::graph_attr(g, "layout");
+         # ensure rownames match node names
+         rownames(layout) <- igraph::V(g)$name;
       } else {
          stop("Input g must be an igraph object, no layout was supplied.");
       }
+   }
+   # when g and layout are supplied,
+   # make sure V(g)$name matches the order of rownames(layout)
+   if (length(g) > 0 &&
+         "igraph" %in% class(g) &&
+         all(igraph::V(g)$name %in% rownames(layout)) &&
+         !all(igraph::V(g)$name == rownames(layout))) {
+      # confirm order matches node order
+      if (verbose) {
+         jamba::printDebug("rotate_igraph_layout(): ",
+            "Re-ordered layout so rownames(layout) match V(g)$name.")
+      }
+      layout <- layout[match(igraph::V(g)$name, rownames(layout)), , drop=FALSE];
    }
    if (length(dim(layout)) < 2) {
       stop("Layout must contain at least 2 columns.");
@@ -158,11 +177,12 @@ rotate_igraph_layout <- function
 
 #' Rotate numeric coordinates
 #'
-#' Rotate numeric coordinates
+#' Rotate numeric coordinates, optionally after reflecting coordinates
+#' along one or more coordinate axes.
 #'
 #' This function rotates coordinates in two axes, by the angle
 #' defined in `degrees`. It optionally reflects coordinates in
-#' one or more axes.
+#' one or more axes, which occurs before rotation.
 #'
 #' Note that the `reflect` is applied before `degrees`.
 #'
@@ -179,12 +199,20 @@ rotate_igraph_layout <- function
 #' @param degrees numeric value indicating the degrees to rotate
 #'    layout coordinates, where 360 degrees is one complete rotation.
 #' @param reflect `character` string indicating one or more axes
-#'    to reflect coordinates; `"none"` to reflect no axis; or
-#'    `integer` vector of column index positions. When there
-#'    are no `colnames(x)`, then `c("x","y","z")` are recognized
-#'    as columns `c(1, 2, 3)` respectively. Otherwise, when
-#'    `reflect` is a `character` vector it is matched to
-#'    `colnames(x)`.
+#'    to reflect coordinates, which flips the position of coordinates
+#'    along that axis. It is usually called to flip x-axis or y-axis
+#'    coordinates, for example with `reflect="x"` or `reflect=1`.
+#'    Input is handled as follows:
+#'    * if `reflect` contains `"none"`, then reflect is applied to
+#'    none of the coordinate axes, therefore the default
+#'    `reflect=c("none", "x", "y", "z")` will apply no reflection.
+#'    * `character` input: `reflect` values are matched to `colnames(x)`.
+#'    When there are no `colnames(x)`, then `reflect` values of
+#'    `c("x", "y", "z")` are automatically recognized as columns
+#'    `c(1, 2, 3)` respectively.
+#'    * `integer` input is treated as a vector of column index positions,
+#'    for example `reflect=c(2)` will reflect values on the second
+#'    coordinate column.
 #' @param center `numeric` coordinates to use as the center, or
 #'    `center=NULL` to calculate the center using `center_rule`.
 #' @param center_rule `character` string indicating which rule to
@@ -201,9 +229,7 @@ rotate_igraph_layout <- function
 #'    coordinates to rotate, by default `c(1, 2)` uses the first
 #'    two axes in `x`. Note that `rotation_axes` must represent
 #'    columns present in x.
-#' @param ... additional arguments are passed to
-#'    `multienrichjam::spread_igraph_labels()` and
-#'    `multienrichjam::reorderIgraphNodes()`.
+#' @param ... additional arguments are ignored.
 #'
 #' @examples
 #' layout <- cbind(0:10, 0:10);
@@ -218,12 +244,20 @@ rotate_igraph_layout <- function
 #' @export
 rotate_coordinates <- function
 (x,
-   degrees=0,
-   reflect=c("none", "x", "y", "z"),
-   center=NULL,
-   center_rule=c("origin", "mean", "median", "min", "max"),
-   rotation_axes=c(1, 2),
-   ...)
+ degrees=0,
+ reflect=c("none",
+    "x",
+    "y",
+    "z"),
+ center=NULL,
+ center_rule=c("median",
+    "origin",
+    "mean",
+    "min",
+    "max"),
+ rotation_axes=c(1, 2),
+ verbose=FALSE,
+ ...)
 {
    center_rule <- match.arg(center_rule);
    degrees <- head(degrees, 1);
@@ -252,6 +286,11 @@ rotate_coordinates <- function
    }
    if (length(rotation_axes) != 2) {
       stop("rotation_axes must contain two unique non-NA columns in input x");
+   }
+   if (verbose) {
+      jamba::printDebug("rotate_coordinates(): ",
+         "center_rule: ", center_rule,
+         ", rotation_axes: ", rotation_axes)
    }
 
    ## Calculate center coordinates if not supplied

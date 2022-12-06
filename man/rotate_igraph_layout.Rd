@@ -9,11 +9,12 @@ rotate_igraph_layout(
   degrees = 0,
   reflect = c("none", "x", "y", "z"),
   center = NULL,
-  center_rule = c("origin", "mean", "median", "min", "max"),
+  center_rule = c("median", "origin", "mean", "min", "max"),
   rotation_axes = c(1, 2),
   spread_labels = TRUE,
   do_reorder = FALSE,
   layout = NULL,
+  verbose = FALSE,
   ...
 )
 }
@@ -59,14 +60,16 @@ priority.}
 \code{igraph} when input \code{g} is supplied, otherwise \verb{numeric matrix}.
 }
 \description{
-Rotate igraph layout coordinates
+Rotate igraph layout coordinates, optionally after reflecting coordinates
+along one or more coordinate axes.
 }
 \details{
 This function rotates igraph layout coordinates by calling
 the function \code{rotate_coordinates()}. The input can either be
 \code{g} as \code{igraph} object, or \code{layout} as a numeric \code{matrix}.
-This function also optionally reflects coordinates for
-one or more axes.
+
+Note that the \code{reflect} is applied before \code{degrees}. To change
+the order, call this function multiple times.
 
 When both \code{g} and \code{layout} are supplied, the coordinates are
 used from \code{layout}, rotated, then stored in the \code{g} \code{igraph} object
@@ -79,9 +82,6 @@ layout coordinates in graph attributes, obtained with
 When only \code{layout} is supplied, and no \code{g} \code{igraph} object
 is supplied, this function serves only as a wrapper to
 \code{rotate_coordinates()}.
-
-Note that the \code{reflect} is applied before \code{degrees}. To change
-the order, call this function multiple times.
 
 Rotation code kindly contributed by Don MacQueen to the \code{maptools}
 package, and is reproduced here to avoid a dependency on \code{maptools}
