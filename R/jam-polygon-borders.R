@@ -62,8 +62,6 @@
 #'
 #' xy2l <- adjust_polygon_border(x=xl, y=yl, type="inner", lwd=lwdl)
 #' xy2r <- adjust_polygon_border(x=xr, y=yr, type="inner", lwd=lwdr)
-#' points(xy2l, pch=20, cex=0.5, col="gold")
-#' points(xy2r, pch=20, cex=0.5, col="gold")
 #'
 #' # draw properly resized polygon with inner border
 #' polygon(x=xy2l$x + 25, y=xy2l$y,
@@ -91,7 +89,6 @@
 #'
 #' # adjust for outer border
 #' xy2 <- adjust_polygon_border(x=xy$x, y=xy$y, type="outer", lwd=lwdo)
-#' points(xy2$x, xy2$y, pch=20, cex=0.5, col="red")
 #' # draw properly resized polygon with inner border
 #' polygon(x=xy2l$x + 25, y=xy2l$y - 15,
 #'    col="indianred3", border="navy", lwd=lwdl)
@@ -100,8 +97,6 @@
 #' # now draw outer border
 #' polygon(x=xy2$x + 25, y=xy2$y,
 #'    col=NA, border="gold", lwd=lwdo)
-#' points(x=xy2$x + 25, y=xy2$y,
-#'    col="red", pch=20, cex=0.5)
 #' jamba::drawLabels(x=25, y=-5, adjPreset="top",
 #'    drawBox=FALSE,
 #'    labelCex=0.8,
@@ -227,9 +222,10 @@
 #' # add inner borders
 #' xy6 <- adjust_polygon_border(x=xl, y=yl, type="inner", lwd=lwdl,
 #'    lwd_buffer=lwdl)
+#' # note col="#FFFFFF01" is required for the final sharp polygon corner
 #' polygon(x=c(xy6$x, xy6$x[c(0)]) + 25,
 #'    y=c(xy6$y, xy6$y[c(0)]) - 15,
-#'    col=NA, border="yellow", lwd=lwdl)
+#'    col="#FFFFFF01", border="yellow", lwd=lwdl)
 #' points(x=c(xy6$x, xy6$x[c(0)]) + 25,lend="butt",
 #'    y=c(xy6$y, xy6$y[c(0)]) - 15,
 #'    pch=as.character(seq_along(c(xy6$x, xy6$x[c(0)]))),
@@ -238,16 +234,58 @@
 #'    lwd_buffer=lwdr)
 #' polygon(x=c(xy7$x, xy7$x[c(0)]) + 25,
 #'    y=c(xy7$y, xy7$y[c(0)]) - 15,
-#'    col=NA, border="yellow", lwd=lwdr)
+#'    col="#FFFFFF01", border="yellow", lwd=lwdr)
 #' # new outer border
 #' xy8 <- adjust_polygon_border(x=xy$x, y=xy$y, type="outer", lwd=lwdo,
 #'    lwd_buffer=lwdo)
 #' polygon(x=xy8$x + 25, y=xy8$y,
-#'    col=NA, border="red", lwd=lwdo)
+#'    col="#FFFFFF01", border="red", lwd=lwdo)
 #' jamba::drawLabels(x=25, y=-5, adjPreset="top",
 #'    drawBox=FALSE,
 #'    labelCex=0.8,
 #'    txt="Solution: Use 'lwd_buffer' with\nproper line widths.\n(red and yellow)")
+#'
+#' # show the effect of col=NA
+#' plot(NULL, bty="L",
+#'    xlim=c(-10, 25), ylim=c(-15, -5),
+#'    type="n", asp=1, xlab="", ylab="")
+#' abline(h=c(0, -15), lwd=0.5, col="black", xpd=FALSE)
+#' # note that adjusted borders must be recalculated for new xlim,ylim
+#' xy2l <- adjust_polygon_border(x=xl, y=yl, type="inner", lwd=lwdl)
+#' xy2r <- adjust_polygon_border(x=xr, y=yr, type="inner", lwd=lwdr)
+#' xy5 <- adjust_polygon_border(x=xy$x, y=xy$y, type="outer", lwd=lwdo)
+#' # draw polygons
+#' polygon(x=xy2l$x, y=xy2l$y - 15,
+#'    col="indianred3", border="navy", lwd=lwdl)
+#' polygon(x=xy2r$x, y=xy2r$y - 15,
+#'    col="dodgerblue", border="darkorchid3", lwd=lwdr)
+#' polygon(x=xy5$x, y=xy5$y,
+#'    col=NA, border="skyblue", lwd=lwdo)
+#' polygon(x=xy2l$x + 15, y=xy2l$y - 15,
+#'    col="indianred3", border="navy", lwd=lwdl)
+#' polygon(x=xy2r$x + 15, y=xy2r$y - 15,
+#'    col="dodgerblue", border="darkorchid3", lwd=lwdr)
+#' polygon(x=xy5$x + 15, y=xy5$y,
+#'    col=NA, border="skyblue", lwd=lwdo)
+#' # add inner borders
+#' xy6 <- adjust_polygon_border(x=xl, y=yl, type="inner", lwd=lwdl*2,
+#'    lwd_buffer=lwdl)
+#' # note col="#FFFFFF01" is required for the final sharp polygon corner
+#' polygon(x=c(xy6$x, xy6$x[c(0)]) + 0,
+#'    y=c(xy6$y, xy6$y[c(0)]) - 15,
+#'    col=NA, border="yellow", lwd=lwdl*2)
+#' polygon(x=c(xy6$x, xy6$x[c(0)]) + 15,
+#'    y=c(xy6$y, xy6$y[c(0)]) - 15,
+#'    col="#FFFFFF01", border="yellow", lwd=lwdl*2)
+#' jamba::drawLabels(x=0, y=-5, adjPreset="top",
+#'    drawBox=FALSE,
+#'    labelCex=0.8,
+#'    txt="Problem: Using col=NA causes the polygon corner\nto be 'ended', not 'joined'.")
+#' jamba::drawLabels(x=15, y=-5, adjPreset="top",
+#'    drawBox=FALSE,
+#'    labelCex=0.8,
+#'    txt="Solution: Use col='#FFFFFF01' to force\nproper sharp polygon corners.")
+#'
 #'
 #'
 #' # example with multiple polygons vectorized

@@ -437,7 +437,9 @@ shape.coloredrectangle.plot <- function
                ", size2v:", signif(digits=3, size2v)
             );
          }
-         kDF <- data.frame(x=c(xk, x01v),
+         kDF <- data.frame(
+            stringsAsFactors=FALSE,
+            x=c(xk, x01v),
             y=c(yk, y01v),
             bg=c("transparent", colk),
             fg=c(head(frame.color[[k]],1),
@@ -1534,14 +1536,16 @@ jam_mypie <- function
       }
 
       # original polygon
-      polydf <- data.frame(x=I(list(xvals)),
+      polydf <- data.frame(
+         stringsAsFactors=FALSE,
+         x=I(list(xvals)),
          y=I(list(yvals)),
-         density = density[i],
-         angle = angle[i],
-         border = border[i],
-         col = col[i],
-         lty = lty[i],
-         lwd = lwd[i])
+         density=density[i],
+         angle=angle[i],
+         border=border[i],
+         col=col[i],
+         lty=lty[i],
+         lwd=lwd[i])
 
       # optional inner border polygon
       if (TRUE %in% inner_pie_border &&
@@ -1565,14 +1569,18 @@ jam_mypie <- function
             xvals <- head(polym2[,1], -1);
             yvals <- head(polym2[,2], -1);
          }
-         polydf2 <- data.frame(x=I(list(xvals)),
+         # version 0.0.88.910: col=NA changed to col="#FFFFFF01"
+         polydf2 <- data.frame(
+            stringsAsFactors=FALSE,
+            x=I(list(xvals)),
             y=I(list(yvals)),
-            density = NA,
-            angle = angle[i],
-            border = border[i],
-            col = NA,
-            lty = lty[i],
-            lwd = lwd[i])
+            density=NA,
+            angle=angle[i],
+            border=border[i],
+            # col=NA,
+            col="#FFFFFF01",
+            lty=lty[i],
+            lwd=lwd[i])
          polydf[1, "border"] <- NA;
          polydf <- rbind(polydf, polydf2);
       }
@@ -1608,15 +1616,17 @@ jam_mypie <- function
       # border_x <- unlist(lapply(poly_df[[1]], function(i){head(i, -2)}));
       # border_y <- unlist(lapply(poly_df[[2]], function(i){head(i, -2)}));
       border_df <- data.frame(
+         stringsAsFactors=FALSE,
          x=I(list(border_x)),
          y=I(list(border_y)),
-         density = -1,
-         angle = 45,
-         border = head(frame.color, 1),
-         # border = frame.color[i],
-         col = NA,
-         lty = head(lty, 1),
-         lwd = head(frame.lwd, 1))
+         density=-1,
+         angle=45,
+         border=head(frame.color, 1),
+         # border=frame.color[i],
+         # col=NA,
+         col="#FFFFFF01",
+         lty=head(lty, 1),
+         lwd=head(frame.lwd, 1))
       return_df <- jamba::rbindList(list(
          poly_df,
          border_df));

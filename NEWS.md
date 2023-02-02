@@ -1,4 +1,126 @@
+# multienrichjam 0.0.68.910
+
+It turns out that `graphics::polygon()` only properly closes the
+polygon when it has a color fill with non-zero alpha transparency.
+In this case, the final "closed" corner is correctly extended
+to complete the sharp corner edge using line join `par("ljoin")`.
+With no color fill, or with completely transparent color fill,
+the final corner is not completed, the lines are "ended" using
+`par("lend")`, and therefore there is no sharp corner.
+The workaround is to apply a color with alpha transparency 1
+(on scale of 0 to 255), which causes the border to be drawn
+completely. However, some rare graphical output devices do not
+support alpha transparency, so there is the chance of rendering
+unintended opaque color fill. The situation should only affect
+node shapes `"pie"` and `"jampie"`, which
+are designed to draw the outer border then inner border, so the
+impact should be minimal. Shape `"coloredrectangle"` actually calls
+`graphics::symbols()` which avoids this issue.
+However, cases where outer border is expected to be drawn after
+the inner border, it has small risk of rendering the fill color
+fully opaque, covering the inner border.
+One day I probably need to replace `graphics::polygon()` with a
+custom function `polygon_with_borders()` that can handle inner and
+outer border properly.
+
+## updates to existing functions
+
+* `jam_mypie()` which is used to render `igraph` nodes `shape="jampie"`
+was modified to use `col="#FFFFFF01"` for color fill of polygon outer
+borders.
+* `adjust_polygon_border()` examples were modified to show the
+effect of using `col=NA` to `col="#FFFFFF01"` on polygon border rendering.
+
+## bug fixes
+
+* `jam_mypie()` and `shape.coloredrectangle.plot()` were updated to force
+`stringsAsFactors=FALSE` when creating `data.frame` objects, fixing weird
+color glitch in the examples for `shape.jampie.plot()`.
+
 # multienrichjam 0.0.68.900
+
+## Notable release notes
+
+* `igraph` nodes with `shape="pie"` and `shape="jampie"`
+
+   * New attributes `vertex.frame.lwd` and `vertex.pie.lwd`
+   to customize the respective line widths of node borders.
+   These attributes require using `jam_igraph()` for `shape="pie"`,
+   or require using `vertex.shape="jampie"` with `igraph::plot()`.
+   * `jam_igraph()` is now recommended as a more complete
+   replacement for `igraph::plot.igraph()`.
+   * `shape="jampie"` no longer uses `par("lwd")`, which was global
+   change that affected all nodes, edges, and plot features.
+   * Pie wedges use "inner borders" for each node,
+   so adjacent wedge borders will not overlap. Note that inner border
+   slightly overlaps the interior node fill color, to maintain
+   consistent node sizes.
+   * `frame.color` uses "outer borders" for each node, so these borders
+   will not overlap inner pie wedge borders. Nodes are slightly adjusted
+   smaller to maintain consistent node sizes, by default.
+   * `apply_cnet_direction()` has slightly different logic for
+   pie and frame colors, and now assigns `pie.lwd` and `frame.lwd`.
+   * `removeIgraphBlanks()` no longer changes single-color `shape="pie"`
+   nodes to `shape="circle"` by default.
+   * **Changes suggested**:
+   
+      * Prefer `jam_igraph()` over `plot()` or `igraph::plot.igraph()`.
+      * Previous use of `par("lwd")` should be removed, and replaced with
+      `vertex.pie.lwd` and `frame.lwd`.
+      * Previously, single-color `shape="pie"` or `shape="jampie"` nodes
+      were changed to `shape="circle"` by `removeIgraphBlanks()`, however
+      they now stay `shape="pie"` in order to maintain control of line widths.
+      The `igraph` nodes `shape="circle"` do not respect line width `lwd`.
+      * Use of `shape="circle"` should be changed to `vertex.shape="pie"`
+      or `vertex.shape="jampie"`, this change affects `nodeType="Gene"`
+      moreso than `nodeType="Set"`.
+   
+   * Edges are now clipped to the outer border of nodes, which helps
+   when using transparent node fill, or when using edge arrows.
+   
+      * With transparent nodes, the edge was previously shown connected
+      to the center of each node (without clipping); similarly, edge
+      arrows connected to the center of each node, effectively invisible
+      and certainly not useful. However, cnet plots do not use edge arrows.
+      * Most edges appear identical to previous rendering, however the
+      control points used during bundling are used to determine where
+      the edge connects to each node border. Thus, when edges converge
+      on one node, bundled edges appear to "merge together" at one point
+      connecting to the node. Previously nodes entered from multiple
+      angles, since they connected to the interior center of the node,
+      and showed somewhat more spacing based upon the number of edges.
+      * Future options may include retaining some edge spacing
+      based upon the intermediate edge curvature of each edge, instead of
+      using the same control point for all edges, so the
+      connection point on the central node will be slightly spaced out.
+
+* `mem2cnet()` and `memIM2cnet()` changed some default sizes.
+The new defaults should work well without adjustment.
+
+   * Node sizes are 4x larger than before, because when calling
+   downstream functions we found ourselves always scaling nodes 4x larger.
+   
+      * The defaults: `categorySize=20`, `geneSize=10` are exactly 4x larger.
+      * **Changes required**: Change previous `node_factor=4` to
+      `node_factor=1` for reproducibility; or when calling `memIM2cnet()`
+      use arguments `memIM2cnet(..., categorySize=5, geneSize=2.5)`.
+      
+   * node label sizes also have new defaults, similarly because we most
+   often applied `label_factor=1.3` by default.
+   
+      * The defaults: `categoryCex=1.2`, `geneCex=0.9` are adjusted from
+      previous `categoryCex=0.9`, `geneCex=0.7`.
+      * **Changes required**: Change `label_factor` or `label_factor_l` to 1,
+      or change the call `memIM2cnet(..., categoryCex=0.9, geneCex=0.7)`.
+
+* igraph defaults were changed when using `jam_igraph()` for plotting:
+
+   * `vertex.label.family` changed from `"serif"` to `"sans"`.
+   * `vertex.pie.border` changed to `"grey30"`, the `igraph` default
+   values were identical to `vertex.pie.color` and therefore not visible.
+   * `vertex.frame.lwd` set to 1, although this value is ignored by
+   `igraph::plot.igraph()` since it only uses `par("lwd")` for all lines.
+
 
 ## changes to dependencies
 

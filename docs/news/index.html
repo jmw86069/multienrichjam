@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.910</span>
       </span>
     </div>
 
@@ -58,7 +58,165 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.68.910" id="multienrichjam-0068910">multienrichjam 0.0.68.910<a class="anchor" aria-label="anchor" href="#multienrichjam-0068910"></a></h2>
+<p>It turns out that <code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">graphics::polygon()</a></code> only properly
+closes the polygon when it has a color fill with non-zero alpha
+transparency. In this case, the final “closed” corner is correctly
+extended to complete the sharp corner edge using line join
+<code>par("ljoin")</code>. With no color fill, or with completely
+transparent color fill, the final corner is not completed, the lines are
+“ended” using <code>par("lend")</code>, and therefore there is no sharp
+corner. The workaround is to apply a color with alpha transparency 1 (on
+scale of 0 to 255), which causes the border to be drawn completely.
+However, some rare graphical output devices do not support alpha
+transparency, so there is the chance of rendering unintended opaque
+color fill. The situation should only affect node shapes
+<code>"pie"</code> and <code>"jampie"</code>, which are designed to draw
+the outer border then inner border, so the impact should be minimal.
+Shape <code>"coloredrectangle"</code> actually calls
+<code><a href="https://rdrr.io/r/graphics/symbols.html" class="external-link">graphics::symbols()</a></code> which avoids this issue. However, cases
+where outer border is expected to be drawn after the inner border, it
+has small risk of rendering the fill color fully opaque, covering the
+inner border. One day I probably need to replace
+<code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">graphics::polygon()</a></code> with a custom function
+<code>polygon_with_borders()</code> that can handle inner and outer
+border properly.</p>
+<div class="section level3">
+<h3 id="updates-to-existing-functions-0-0-68-910">updates to existing functions<a class="anchor" aria-label="anchor" href="#updates-to-existing-functions-0-0-68-910"></a></h3>
+<ul><li>
+<code><a href="../reference/jam_mypie.html">jam_mypie()</a></code> which is used to render <code>igraph</code>
+nodes <code>shape="jampie"</code> was modified to use
+<code>col="#FFFFFF01"</code> for color fill of polygon outer
+borders.</li>
+<li>
+<code><a href="../reference/adjust_polygon_border.html">adjust_polygon_border()</a></code> examples were modified to show
+the effect of using <code>col=NA</code> to <code>col="#FFFFFF01"</code>
+on polygon border rendering.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-68-910">bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-68-910"></a></h3>
+<ul><li>
+<code><a href="../reference/jam_mypie.html">jam_mypie()</a></code> and
+<code><a href="../reference/shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> were updated to force
+<code>stringsAsFactors=FALSE</code> when creating
+<code>data.frame</code> objects, fixing weird color glitch in the
+examples for <code><a href="../reference/shape.jampie.plot.html">shape.jampie.plot()</a></code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.68.900" id="multienrichjam-0068900">multienrichjam 0.0.68.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0068900"></a></h2>
+<div class="section level3">
+<h3 id="notable-release-notes-0-0-68-900">Notable release notes<a class="anchor" aria-label="anchor" href="#notable-release-notes-0-0-68-900"></a></h3>
+<ul><li>
+<p><code>igraph</code> nodes with <code>shape="pie"</code> and
+<code>shape="jampie"</code></p>
+<ul><li><p>New attributes <code>vertex.frame.lwd</code> and
+<code>vertex.pie.lwd</code> to customize the respective line widths of
+node borders. These attributes require using <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code>
+for <code>shape="pie"</code>, or require using
+<code>vertex.shape="jampie"</code> with
+<code>igraph::plot()</code>.</p></li>
+<li><p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> is now recommended as a more complete
+replacement for <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>.</p></li>
+<li><p><code>shape="jampie"</code> no longer uses
+<code>par("lwd")</code>, which was global change that affected all
+nodes, edges, and plot features.</p></li>
+<li><p>Pie wedges use “inner borders” for each node, so adjacent wedge
+borders will not overlap. Note that inner border slightly overlaps the
+interior node fill color, to maintain consistent node sizes.</p></li>
+<li><p><code>frame.color</code> uses “outer borders” for each node, so
+these borders will not overlap inner pie wedge borders. Nodes are
+slightly adjusted smaller to maintain consistent node sizes, by
+default.</p></li>
+<li><p><code><a href="../reference/apply_cnet_direction.html">apply_cnet_direction()</a></code> has slightly different logic
+for pie and frame colors, and now assigns <code>pie.lwd</code> and
+<code>frame.lwd</code>.</p></li>
+<li><p><code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code> no longer changes single-color
+<code>shape="pie"</code> nodes to <code>shape="circle"</code> by
+default.</p></li>
+<li>
+<p><strong>Changes suggested</strong>:</p>
+<ul><li>Prefer <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> over <code><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot()</a></code> or
+<code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>.</li>
+<li>Previous use of <code>par("lwd")</code> should be removed, and
+replaced with <code>vertex.pie.lwd</code> and
+<code>frame.lwd</code>.</li>
+<li>Previously, single-color <code>shape="pie"</code> or
+<code>shape="jampie"</code> nodes were changed to
+<code>shape="circle"</code> by <code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>,
+however they now stay <code>shape="pie"</code> in order to maintain
+control of line widths. The <code>igraph</code> nodes
+<code>shape="circle"</code> do not respect line width
+<code>lwd</code>.</li>
+<li>Use of <code>shape="circle"</code> should be changed to
+<code>vertex.shape="pie"</code> or <code>vertex.shape="jampie"</code>,
+this change affects <code>nodeType="Gene"</code> moreso than
+<code>nodeType="Set"</code>.</li>
+</ul></li>
+<li>
+<p>Edges are now clipped to the outer border of nodes, which helps
+when using transparent node fill, or when using edge arrows.</p>
+<ul><li>With transparent nodes, the edge was previously shown connected to
+the center of each node (without clipping); similarly, edge arrows
+connected to the center of each node, effectively invisible and
+certainly not useful. However, cnet plots do not use edge arrows.</li>
+<li>Most edges appear identical to previous rendering, however the
+control points used during bundling are used to determine where the edge
+connects to each node border. Thus, when edges converge on one node,
+bundled edges appear to “merge together” at one point connecting to the
+node. Previously nodes entered from multiple angles, since they
+connected to the interior center of the node, and showed somewhat more
+spacing based upon the number of edges.</li>
+<li>Future options may include retaining some edge spacing based upon
+the intermediate edge curvature of each edge, instead of using the same
+control point for all edges, so the connection point on the central node
+will be slightly spaced out.</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code> and <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> changed
+some default sizes. The new defaults should work well without
+adjustment.</p>
+<ul><li>
+<p>Node sizes are 4x larger than before, because when calling
+downstream functions we found ourselves always scaling nodes 4x
+larger.</p>
+<ul><li>The defaults: <code>categorySize=20</code>, <code>geneSize=10</code>
+are exactly 4x larger.</li>
+<li>
+<strong>Changes required</strong>: Change previous
+<code>node_factor=4</code> to <code>node_factor=1</code> for
+reproducibility; or when calling <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> use arguments
+<code>memIM2cnet(..., categorySize=5, geneSize=2.5)</code>.</li>
+</ul></li>
+<li>
+<p>node label sizes also have new defaults, similarly because we
+most often applied <code>label_factor=1.3</code> by default.</p>
+<ul><li>The defaults: <code>categoryCex=1.2</code>, <code>geneCex=0.9</code>
+are adjusted from previous <code>categoryCex=0.9</code>,
+<code>geneCex=0.7</code>.</li>
+<li>
+<strong>Changes required</strong>: Change <code>label_factor</code>
+or <code>label_factor_l</code> to 1, or change the call
+<code>memIM2cnet(..., categoryCex=0.9, geneCex=0.7)</code>.</li>
+</ul></li>
+</ul></li>
+<li>
+<p>igraph defaults were changed when using <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code>
+for plotting:</p>
+<ul><li>
+<code>vertex.label.family</code> changed from <code>"serif"</code>
+to <code>"sans"</code>.</li>
+<li>
+<code>vertex.pie.border</code> changed to <code>"grey30"</code>, the
+<code>igraph</code> default values were identical to
+<code>vertex.pie.color</code> and therefore not visible.</li>
+<li>
+<code>vertex.frame.lwd</code> set to 1, although this value is
+ignored by <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> since it only uses
+<code>par("lwd")</code> for all lines.</li>
+</ul></li>
+</ul></div>
 <div class="section level3">
 <h3 id="changes-to-dependencies-0-0-68-900">changes to dependencies<a class="anchor" aria-label="anchor" href="#changes-to-dependencies-0-0-68-900"></a></h3>
 <ul><li>

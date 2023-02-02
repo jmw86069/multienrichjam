@@ -63,10 +63,12 @@ rotated the given degrees relative to the center point, with give
 x- and y-axis radius values.
 }
 \examples{
+par("mar"=c(2, 2, 2, 2));
 plot(NULL,
    type="n",
    xlim=c(-5, 20),
    ylim=c(-5, 18),
+   ylab="", xlab="", bty="L",
    asp=1);
 xy <- drawEllipse(
    x=c(1, 11, 11, 11),
@@ -83,10 +85,11 @@ xy <- drawEllipse(
 points(x=c(1, 11), y=c(1, 11), pch=20, cex=2)
 jamba::drawLabels(x=c(12, 3, 13, 5),
    y=c(14, 10, 9, 2),
-   labelCex=1.5,
+   labelCex=0.7,
+   drawBox=FALSE,
    adjPreset=c("topright", "left", "bottomright", "top"),
    txt=c("0-120 degrees,\nangle=-15,\narc.only=TRUE",
-      "120-240 degrees,\nangle=-15,\narc.only=TRUE,\nlonger radius",
+      "120-240 degrees,\nangle=-15,\narc.only=TRUE,\nlarger radius",
       "240-360 degrees,\nangle=-15,\narc.only=FALSE",
       "angle=20"))
 
