@@ -7,10 +7,16 @@
 edge_bundle_nodegroups(
   g,
   nodegroups,
+  shape = NULL,
+  params = NULL,
   midpoint = 0.5,
   detail = 10,
   draw_lines = TRUE,
   nodegroup_midpoints = NULL,
+  linear_cor_threshold = 1,
+  bundle_style = getOption("jam.bundle_style", "bezier"),
+  verbose = FALSE,
+  debug = getOption("debug", FALSE),
   ...
 )
 }
@@ -40,6 +46,26 @@ define specific coordinates to be used for any entries that
 match \code{names(nodegroups)}, and therefore does not use \code{midpoint}
 for those nodegroups. Any remaining nodegroups will use the
 normal method with \code{midpoint} as described above.}
+
+\item{linear_cor_threshold}{\code{numeric} value between 0 and 1.
+Coordinates for each edge, and intermediate control point
+coordinates are used in \code{xspline()} to create a curved spline
+from node to node. However, when the nodes and intermediate
+control points are already linear, the edge will be treated
+as a linear edge. To test for linearity, \code{cor()} correlation
+is calculated, and values at or above \code{linear_cor_threshold}
+are considered linear.
+
+The driving problem is when the control point is colinear with
+two nodes, and the control point is positioned outside the two
+nodes. Without this modification, the line would appear to pass
+from one node beyond the other node, with an arrow (if directed)
+pointing back to the other node from the opposite direction.}
+
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
+
+\item{debug}{\code{logical} indicating whether to plot debug output that
+may be helpful in understanding the edge bundle control points.}
 
 \item{...}{additional arguments are ignored.}
 }
@@ -72,7 +98,7 @@ for a longer distance.
 
 When used with bipartite nodesets, edges are bundled between
 each nodeset and individual nodes. The edge bundling rules are
-the same, with the default \code{midpoint=0.5} being exactly half
+the same, with the default \code{midpoint=c(0.4, 0.6)} being centered at half
 the distance between the nodeset center, and the single node.
 In this case, the \code{midpoint} is directional, always pointing
 from the nodeset to the single node, therefore can be adjusted
@@ -117,6 +143,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_bipartite}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

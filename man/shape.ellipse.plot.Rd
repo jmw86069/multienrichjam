@@ -17,6 +17,7 @@ shape ellipse.
 Other jam igraph shapes: 
 \code{\link{jam_mypie}()},
 \code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.clip}()},
 \code{\link{shape.jampie.plot}()}
 }
 \concept{jam igraph shapes}

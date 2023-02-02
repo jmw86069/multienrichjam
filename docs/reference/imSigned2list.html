@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -62,9 +62,23 @@
     <p>convert signed incidence matrix to list</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">x</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">x</span>, empty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">""</span>, <span class="fl">0</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
 
     <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p><code>matrix</code> or equivalent object with <code>colnames(x)</code> indicating
+list set names, and <code>rownames(x)</code> indicating list contents.</p></dd>
+<dt>empty</dt>
+<dd><p><code>character</code> vector of incidence matrix values that
+should be considered "empty" and therefore do not indicate
+the row in <code>x</code> is present for the given column in <code>x</code>.
+All other items are considered to be present, and are assigned
+direction based upon the value in that cell of <code>x</code>.</p></dd>
+<dt>...</dt>
+<dd><p>additional arguments are ignored.</p></dd>
+</dl></div>
     <div id="value">
     <h2>Value</h2>
     <p><code>list</code> of named numeric vectors, where list names
@@ -83,15 +97,16 @@ positive and negative values indicate directionality.
 When the input contains only logical values <code>c(TRUE,FALSE)</code>
 the direction is assumed to be <code>+1</code> positive.</p>
 <p>Values of <code>NA</code> are converted to zero <code>0</code> and therefore ignored.</p>
-<p>This function uses the <code>transactions</code> class from the <code>arules</code>
-R package, which in our testing is substantially faster than
-similar techniques from a variety of other R packages.</p>
+<p>Values that are <code>logical</code> with <code>TRUE</code> and <code>FALSE</code> are converted
+to <code>numeric</code> before output.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam list functions: 
 <code><a href="colors_from_list.html">colors_from_list</a>()</code>,
+<code><a href="im2list_dep.html">im2list_dep</a>()</code>,
 <code><a href="im2list.html">im2list</a>()</code>,
+<code><a href="imSigned2list_dep.html">imSigned2list_dep</a>()</code>,
 <code><a href="list2concordance.html">list2concordance</a>()</code>,
 <code><a href="list2imSigned.html">list2imSigned</a>()</code>,
 <code><a href="list2im.html">list2im</a>()</code></p></div>
@@ -111,7 +126,9 @@ similar techniques from a variety of other R packages.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> c -1 NA  1</span>
 <span class="r-in"><span class="co"># matrix input</span></span>
 <span class="r-in"><span class="fu"><a href="im2list.html">im2list</a></span><span class="op">(</span><span class="va">im</span><span class="op">)</span>;</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>matrix contains values other than 0 and 1! Setting all entries != 0 to 1.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $A</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "b" "c"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -131,8 +148,8 @@ similar techniques from a variety of other R packages.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  c  a </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1 -1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  a  c </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -1  1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">im</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span>;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $A</span>
@@ -162,7 +179,8 @@ similar techniques from a variety of other R packages.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

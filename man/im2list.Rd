@@ -4,12 +4,23 @@
 \alias{im2list}
 \title{convert incidence matrix to list}
 \usage{
-im2list(x, verbose = FALSE, ...)
+im2list(x, empty = c(NA, "", 0, FALSE), ...)
+}
+\arguments{
+\item{x}{\code{matrix} or equivalent object with \code{colnames(x)} indicating
+list set names, and \code{rownames(x)} indicating list contents.}
+
+\item{empty}{\code{character} vector of incidence matrix values that
+should be considered "empty" and therefore do not indicate
+the row in \code{x} is present for the given column in \code{x}.
+All other items are considered to be present.}
+
+\item{...}{additional arguments are ignored.}
 }
 \value{
 \code{list} of \verb{character vectors}, where list names
-are defined by \code{colnames(x)}, and vectors contain values
-from \code{rownames(x)}.
+are defined by \code{colnames(x)}, and list elements are vectors
+that contain values from \code{rownames(x)}.
 }
 \description{
 convert incidence matrix to list
@@ -26,10 +37,6 @@ and will contain members named by \code{rownames(x)} which are
 either non-zero, or contain \code{TRUE}.
 
 Values of \code{NA} are converted to zero \code{0} and therefore ignored.
-
-This function uses the \code{transactions} class from the \code{arules}
-R package, which in our testing is substantially faster than
-similar techniques from a variety of other R packages.
 }
 \examples{
 im <- matrix(c(0,1,-1,1,1,NA,-1,0,1),
@@ -54,6 +61,8 @@ im2list(imtf);
 \seealso{
 Other jam list functions: 
 \code{\link{colors_from_list}()},
+\code{\link{im2list_dep}()},
+\code{\link{imSigned2list_dep}()},
 \code{\link{imSigned2list}()},
 \code{\link{list2concordance}()},
 \code{\link{list2imSigned}()},

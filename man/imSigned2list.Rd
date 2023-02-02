@@ -4,7 +4,19 @@
 \alias{imSigned2list}
 \title{convert signed incidence matrix to list}
 \usage{
-imSigned2list(x, verbose = FALSE, ...)
+imSigned2list(x, empty = c(NA, "", 0, FALSE), ...)
+}
+\arguments{
+\item{x}{\code{matrix} or equivalent object with \code{colnames(x)} indicating
+list set names, and \code{rownames(x)} indicating list contents.}
+
+\item{empty}{\code{character} vector of incidence matrix values that
+should be considered "empty" and therefore do not indicate
+the row in \code{x} is present for the given column in \code{x}.
+All other items are considered to be present, and are assigned
+direction based upon the value in that cell of \code{x}.}
+
+\item{...}{additional arguments are ignored.}
 }
 \value{
 \code{list} of named numeric vectors, where list names
@@ -27,9 +39,8 @@ the direction is assumed to be \code{+1} positive.
 
 Values of \code{NA} are converted to zero \code{0} and therefore ignored.
 
-This function uses the \code{transactions} class from the \code{arules}
-R package, which in our testing is substantially faster than
-similar techniques from a variety of other R packages.
+Values that are \code{logical} with \code{TRUE} and \code{FALSE} are converted
+to \code{numeric} before output.
 }
 \examples{
 im <- matrix(c(0,1,-1,1,1,NA,-1,0,1),
@@ -46,7 +57,9 @@ imSigned2list(im != 0);
 \seealso{
 Other jam list functions: 
 \code{\link{colors_from_list}()},
+\code{\link{im2list_dep}()},
 \code{\link{im2list}()},
+\code{\link{imSigned2list_dep}()},
 \code{\link{list2concordance}()},
 \code{\link{list2imSigned}()},
 \code{\link{list2im}()}

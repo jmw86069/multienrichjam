@@ -2,9 +2,12 @@
 % Please edit documentation in R/jamenrich-igraphshapes.R
 \name{shape.coloredrectangle.plot}
 \alias{shape.coloredrectangle.plot}
-\title{plot function for igraph vertex shape coloredrectangle}
+\alias{shape.coloredrectangle.clip}
+\title{custom igraph vertex shape coloredrectangle}
 \usage{
 shape.coloredrectangle.plot(coords, v = NULL, params)
+
+shape.coloredrectangle.clip(coords, el, params, end = c("both", "from", "to"))
 }
 \arguments{
 \item{coords}{two-column numeric matrix with x- and y-coordinates,
@@ -20,78 +23,180 @@ the type of the parameter, the second is a character string
 giving the name of the parameter.}
 }
 \value{
-invisible \code{list} of \code{data.frame} objects which were
-used to draw the rectangle objects.
+the plot function returns an invisible \code{list} of
+\code{data.frame} objects which were used to draw the rectangle objects.
 However the purpose of this function is the by-product that it
 draws rectangles onto an igraph graph.
+The clip function returns coordinates corresponding to the outer
+node edge based upon argument \code{end}:
+\itemize{
+\item \code{end="both"} returns 4 columns, the x,y 'edge from' and
+x,y 'edge to' coordinates, respectively
+\item \code{end="from"} returns 2 columns, the x,y 'edge from' coordinates
+\item \code{end="to"} returns 2 columns, the x,y 'edge to' coordinates
+}
 }
 \description{
-plot function for igraph vertex shape coloredrectangle
+custom igraph vertex shape coloredrectangle
 }
 \details{
 This function defines the plotting function for custom igraph vertex
 shape coloredrectangle. The coloredrectangle shape is described as:
-
 \itemize{
-\item{a vertex drawn as a rectangle, filled with squares which are
-each individually colored.}
-\item{the squares are arrayed into a number of columns and rows,
+\item Each vertex is drawn as a rectangle, filled with squares which are
+each individually colored.
+\item The squares are arrayed into a number of columns and rows,
 which are defined for each vertex using \code{coloredrect.ncol} and
-\code{coloredrect.nrow}, respectively.}
-\item{the vector of colors is arrayed as values of a matrix, therefore
+\code{coloredrect.nrow}, respectively.
+\item The vector of colors is arrayed as values of a matrix, therefore
 \code{coloredrect.byrow} is logical to indicate whether colors should fill
-the matrix by row, similar to how \code{byrow=TRUE} is used.}
-\item{the colors for each vertex are defined by
-\code{coloredrect.color}. When this value does not exist, this function
-will attempt to use values from \code{pie.color} if they exist.}
-\item{the size of the rectangle is defined by \code{size2}, which is
-typically the height of a \code{rectangle} node. The intent was to use
-a size parameter which is already convenient, but which does not
-conflict with the size used for vertex shapes such as \code{"circle"}.}
-\item{when a vertex has 3 columns, and 2 rows, and only 5 colors,
-the colors are not cycled to fill the complete node. Instead, the
-last color is \code{"transparent"} to render no color in that square.}
-\item{the frame around each node is described with \code{frame.color} and
-\code{frame.lwd} which draws one rectangular border around the full
-vertex. The border around all coloredrect vertices is drawn before the
-squares are drawn for all coloredrect vertices, so that the border will
-not overlap the squares. It has the visible effect of showing vertex
-borders behind the vertex colors, while allowing for vectorized drawing,
-which is substantially more efficient than per-vertex rendering.
-The \code{graphics::symbols()} function is used to render rectangles,
-it accepts only one value for \code{lwd} and \code{lty}, so rectangles
-are split by \code{lwd} and \code{lty} and rendered in order. As a
-result, if each vertex frame had a different lwd,lty combination, the
-rendering would effectively be non-vectorized. For large numbers of
-vertices and distinct lwd values, it would be preferred to reduce the
-lwd values to limited significant digits (e.g. with
-\code{signif(...,digits=2)}). That said, line width is not an optimal
-way to convey a quantitative measurement.}
-\item{a colored border can be drawn around each square in the vertex,
-defined by \code{coloredrect.border} and \code{coloredrect.lwd},
-however it is recommended to use
-this color only as a visible break, for example the default is
-\code{"grey30"} which draws a simple border. Note that squares are
-rendered after the vertex frame color, so each square color border will
-be drawn over (on top of) the frame border.}
-\item{when \code{coloredrect.ncol} does not exist, it will attempt
-to use two rows of colors if \code{coloredrect.color} contains
-two or more values.}
-\item{when \code{coloredrect.nrow} does not exist, it will use a value
-based upon \code{coloredrect.ncol} and the length of
-\code{coloredrect.color}.}
+the matrix by row, similar to how \code{byrow=TRUE} is used.
+\item The colors for each vertex are defined by \code{coloredrect.color},
+which is a \code{list} of \code{character} color vectors.
+When \code{coloredrect.color} does not exist, values from \code{pie.color}
+will be used if they exist.
+\item Any missing colors are displayed as \code{NA} which applies no color.
+For example, when a vertex has 3 columns, 2 rows, and only 5 colors,
+the colors are not recycled. Instead, the last color is \code{NA} to
+render no color in that position.
+\item Each square may also have an optional border, defined by
+\code{coloredrect.border}, \code{coloredrect.lwd}, and \code{coloredrect.lty}.
+These borders are drawn as inner borders so they do not overlap
+optional frame border.
+\item Each node may have a frame border, defined by \code{frame.color},
+\code{frame.lwd}, and \code{frame.lty}. The frame border is drawn as an outer
+border so it does not overlap inner borders, adding some height and width
+to the final node. The frame border is drawn before the
+node squares are drawn.
+\item The size of each square inside the rectangle is defined by \code{size2},
+such that the rectangle width is \code{coloredrect.ncol * size2} and
+the rectangle height is \code{coloredrect.nrow * size2}.
+\item Node sizes may be adjusted by enabling \code{equalize_sizes}
+in one of two ways:
+\enumerate{
+\item \code{options(coloredrectangle.equalize_sizes=TRUE)}
+(priority); or
+\item \code{vertex.coloredrect.equalize_sizes=TRUE},
+which is equivalent to \code{igraph::V(g)$coloredrect.equalize_sizes=TRUE}.
+in the latter case, only the first value is recognized.
+}
+\item The behavior of \code{equalize_sizes} is described below:
+\itemize{
+\item \code{equalize_sizes=FALSE} (default), nodes are exactly \code{size2}
+multiples of \code{coloredrect.ncol} and \code{coloredrect.nrow}.
+\item \code{equalize_sizes=TRUE} or \code{1}, the shortest side of each node
+is scaled to \code{size2}. This option is useful to ensure nodes are never
+smaller than \code{size2} width or height, but can be larger.
+\item \code{equalize_sizes=2}, the longest side of each node is scaled to
+\code{size2}. This option is useful to ensure nodes fit insides a square
+with \code{size2} sides.
+}
+\item Nodes are drawn using vectorized processes where possible.
+However, the primary function \code{graphics::symbols()} only permits
+vectorized plotting for one \code{lwd}/\code{lty} combination at a time,
+so rendering is split into unique combinations of \code{lwd}/\code{lty}.
+Vectorized rendering is substantially faster than iterative rendering,
+and the majority of circumstances uses only one \code{lwd}/\code{lty} combination
+for all nodes. Line width is not an optimal way to convey a quantitative
+measurement, however it can be useful to highlight particular nodes
+of interest.
+\item When \code{coloredrect.ncol} does not exist, the \code{ncol} will be defined
+by allowing up to two rows by default, enough to accommodate
+the number of colors in \code{coloredrect.color}.
+\item When \code{coloredrect.ncol * coloredrect.nrow} will not fit all
+colors in \code{coloredrect.color}, the \code{coloredrect.ncol} will be
+extended to create enough positions to display all colors.
+\item When \code{coloredrect.nrow} does not exist, it will use a value
+based upon \code{coloredrect.ncol} and the length of \code{coloredrect.color}.
 }
 
-Currently, the plotting of coloredrectangle vertices does not define
-clipping, which means edges are drawn to the center of each vertex,
-and the coloredrectangle vertex shapes are drawn on top of the edges.
-Transparent nodes will therefore show edges beneath them.
+The values \code{coloredrect.color} and other variables described above refer to
+\code{igraph} vertex attributes, and can be accessed for a given \code{igraph}
+object \code{g} as follows:
+\itemize{
+\item \code{igraph::V(g)$coloredrect.color}
+\item \code{igraph::vertex_attr(g, "coloredrect.color")}
+\item or during plotting the value can be defined using the syntax
+\code{igraph::plot(g, vertex.coloredrect.color=list(...))}
+}
+
+Note that blank positions inside coloredrectangle nodes can be removed
+via \code{removeIgraphBlanks()}, which also has the effect of modifying the
+\code{coloredrect.ncol} and \code{coloredrect.nrow}, by applying the appropriate
+logic.
+
+Todo: The clip function should adjust the node boundary to account
+for \code{frame.color} and \code{frame.lwd} when present, since the frame is
+drawn as an outer border and slightly increases the size of the node.
+}
+\examples{
+# prepare example igraph object
+am <- matrix(ncol=5, nrow=5,
+   data=0,
+   dimnames=list(LETTERS[1:5], LETTERS[1:5]))
+am[2:5, 1] <- 1;
+g1 <- igraph::graph_from_adjacency_matrix(am)
+igraph::graph_attr(g1, "layout") <- cbind(x=c(0, 1, 1, -1, -1),
+   y=c(0, 1, -0.5, 0.5, -1))
+colorset <- c("firebrick3", "gold", "deepskyblue",
+   "mediumpurple3", "orchid1")
+colorset <- c("firebrick3", "dodgerblue3");
+vseq <- seq_len(igraph::vcount(g1));
+vsizes <- c(3, 2, 2, 2, 1);
+set.seed(1);
+igraph::V(g1)$coloredrect.border <- lapply(vseq, function(i){
+   sample(colorset,
+      replace=TRUE,
+      size=vsizes[i])
+})
+igraph::V(g1)$coloredrect.color <- lapply(vseq, function(i){
+   jamba::alpha2col(alpha=0.5,
+      igraph::V(g1)$coloredrect.border[[i]])
+})
+igraph::V(g1)$coloredrect.ncol <- c(2, 2, 2, 1, 1);
+igraph::V(g1)$coloredrect.nrow <- c(2, 1, 1, 2, 1);
+igraph::V(g1)$coloredrect.lwd <- rep(3, igraph::vcount(g1))
+igraph::V(g1)$frame.lwd <- c(2, 1, 1, 1, 1);
+igraph::V(g1)$frame.color <- "black"
+igraph::V(g1)$size2 <- 10;
+igraph::V(g1)$shape <- "coloredrectangle";
+
+plot(g1, vertex.label="")
+title(font.main=1, line=1.5, main=paste0(
+   "Each square is consistent size by vertex.size2\n"))
+title(font.main=1, cex.main=1, line=0.5, main=paste0(
+   "'vertex.coloredrect.equalize_sizes=FALSE' or\n",
+   "'options(coloredrectangle.equalize_sizes=FALSE'"))
+
+# equalize shortest side to size2
+plot(g1, vertex.label="", vertex.coloredrect.equalize_sizes=TRUE)
+title(font.main=1, line=1.5, main=paste0(
+   "The shortest side is fixed by vertex.size2\n"))
+title(font.main=1, cex.main=1, line=0.5, main=paste0(
+   "'vertex.coloredrect.equalize_sizes=TRUE' or\n",
+   "'options(coloredrectangle.equalize_sizes=TRUE'"))
+
+# equalize longest side to size2
+plot(g1, vertex.label="", vertex.coloredrect.equalize_sizes=2)
+title(font.main=1, line=1.5, main=paste0(
+   "The longest side is fixed by vertex.size2\n"))
+title(font.main=1, cex.main=1, line=0.5, main=paste0(
+   "'vertex.coloredrect.equalize_sizes=2' or\n",
+   "'options(coloredrectangle.equalize_sizes=2'"))
+
 }
 \seealso{
 \code{igraph::shapes()}
 
 Other jam igraph shapes: 
 \code{\link{jam_mypie}()},
+\code{\link{shape.ellipse.clip}()},
+\code{\link{shape.ellipse.plot}()},
+\code{\link{shape.jampie.plot}()}
+
+Other jam igraph shapes: 
+\code{\link{jam_mypie}()},
+\code{\link{shape.ellipse.clip}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{shape.jampie.plot}()}
 }

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -69,16 +69,16 @@
   p_floor <span class="op">=</span> <span class="fl">1e-06</span>,
   main <span class="op">=</span> <span class="st">""</span>,
   use_raster <span class="op">=</span> <span class="cn">TRUE</span>,
-  min_gene_ct <span class="op">=</span> <span class="fl">2</span>,
-  min_set_ct <span class="op">=</span> <span class="fl">2</span>,
+  min_gene_ct <span class="op">=</span> <span class="fl">1</span>,
+  min_set_ct <span class="op">=</span> <span class="fl">1</span>,
   min_set_ct_each <span class="op">=</span> <span class="fl">4</span>,
   column_method <span class="op">=</span> <span class="st">"euclidean"</span>,
   row_method <span class="op">=</span> <span class="st">"euclidean"</span>,
   exemplar_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,
   pathway_column_split <span class="op">=</span> <span class="cn">NULL</span>,
-  pathway_column_title <span class="op">=</span> <span class="cn">NULL</span>,
+  pathway_column_title <span class="op">=</span> <span class="va">LETTERS</span>,
   gene_row_split <span class="op">=</span> <span class="cn">NULL</span>,
-  gene_row_title <span class="op">=</span> <span class="cn">NULL</span>,
+  gene_row_title <span class="op">=</span> <span class="va">letters</span>,
   edge_color <span class="op">=</span> <span class="cn">NULL</span>,
   cex.main <span class="op">=</span> <span class="fl">2</span>,
   cex.sub <span class="op">=</span> <span class="fl">1.5</span>,
@@ -97,6 +97,7 @@
   cluster_color_min_fraction <span class="op">=</span> <span class="fl">0.4</span>,
   byCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"composite_rank"</span>, <span class="st">"minp_rank"</span>, <span class="st">"gene_count_rank"</span><span class="op">)</span>,
   edge_bundling <span class="op">=</span> <span class="st">"connections"</span>,
+  apply_direction <span class="op">=</span> <span class="cn">NULL</span>,
   do_plot <span class="op">=</span> <span class="cn">TRUE</span>,
   verbose <span class="op">=</span> <span class="cn">TRUE</span>,
   <span class="va">...</span>
@@ -190,6 +191,13 @@ to <code><a href="rank_mem_clusters.html">rank_mem_clusters()</a></code>.</p></d
 to control edge bundling. The default <code>edge_bundling="connections"</code>
 will bundle Cnet plot edges for genes that share the same pathway
 connections.</p></dd>
+<dt>apply_direction</dt>
+<dd><p><code>logical</code> or <code>NULL</code> indicating whether to
+indicate directionality in the <code><a href="mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> which is
+the first plot in the series. The default <code>apply_direction=NULL</code>
+will auto-detect whether there is directionality present in the
+data, and will set <code>apply_direction=TRUE</code> only when there are non-NA
+values that differ from zero.</p></dd>
 <dt>do_plot</dt>
 <dd><p><code>logical</code> indicating whether to render each plot.
 When <code>do_plot=FALSE</code> the plot objects will be created and returned,
@@ -334,12 +342,14 @@ of pathways in a cluster for each enrichment test.</p>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam plot functions: 
+<code><a href="adjust_polygon_border.html">adjust_polygon_border</a>()</code>,
 <code><a href="grid_with_title.html">grid_with_title</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
 <code><a href="mem_enrichment_heatmap.html">mem_enrichment_heatmap</a>()</code>,
 <code><a href="mem_gene_path_heatmap.html">mem_gene_path_heatmap</a>()</code>,
 <code><a href="mem_legend.html">mem_legend</a>()</code>,
-<code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code></p></div>
+<code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
+<code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
     </div>
 
@@ -355,7 +365,8 @@ of pathways in a cluster for each enrichment test.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

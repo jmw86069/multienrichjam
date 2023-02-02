@@ -71,11 +71,13 @@ for arranging one or more heatmaps and associated annotations.
 }
 \seealso{
 Other jam plot functions: 
+\code{\link{adjust_polygon_border}()},
 \code{\link{jam_igraph}()},
 \code{\link{mem_enrichment_heatmap}()},
 \code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()},
 \code{\link{mem_multienrichplot}()},
-\code{\link{mem_plot_folio}()}
+\code{\link{mem_plot_folio}()},
+\code{\link{plot_layout_scale}()}
 }
 \concept{jam plot functions}

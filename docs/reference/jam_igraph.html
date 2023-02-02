@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -65,8 +65,8 @@
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">jam_igraph</span><span class="op">(</span>
   <span class="va">x</span>,
   <span class="va">...</span>,
-  xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
-  ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
+  xlim <span class="op">=</span> <span class="cn">NULL</span>,
+  ylim <span class="op">=</span> <span class="cn">NULL</span>,
   expand <span class="op">=</span> <span class="fl">0.03</span>,
   rescale <span class="op">=</span> <span class="cn">FALSE</span>,
   node_factor <span class="op">=</span> <span class="fl">1</span>,
@@ -78,14 +78,24 @@
   label_dist_factor <span class="op">=</span> <span class="fl">1</span>,
   label_dist_factor_l <span class="op">=</span> <span class="fl">1</span>,
   use_shadowText <span class="op">=</span> <span class="cn">FALSE</span>,
-  plot_function <span class="op">=</span> <span class="va">jam_plot_igraph</span>,
-  edge_bundling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"connections"</span>, <span class="st">"none"</span>, <span class="st">"nodegroups"</span><span class="op">)</span>,
+  edge_bundling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"default"</span>, <span class="st">"connections"</span>, <span class="st">"none"</span>, <span class="st">"mark.groups"</span>, <span class="st">"nodegroups"</span><span class="op">)</span>,
   nodegroups <span class="op">=</span> <span class="cn">NULL</span>,
   render_nodes <span class="op">=</span> <span class="cn">TRUE</span>,
   render_edges <span class="op">=</span> <span class="cn">TRUE</span>,
   render_nodelabels <span class="op">=</span> <span class="cn">TRUE</span>,
   render_groups <span class="op">=</span> <span class="cn">TRUE</span>,
   vectorized_node_shapes <span class="op">=</span> <span class="cn">TRUE</span>,
+  plot_grid <span class="op">=</span> <span class="cn">FALSE</span>,
+  plot_function <span class="op">=</span> <span class="va">jam_plot_igraph</span>,
+  mark.groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
+  mark.shape <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">2</span>,
+  mark.col <span class="op">=</span> <span class="cn">NULL</span>,
+  mark.alpha <span class="op">=</span> <span class="fl">0.2</span>,
+  mark.border <span class="op">=</span> <span class="cn">NULL</span>,
+  mark.expand <span class="op">=</span> <span class="fl">8</span>,
+  mark.lwd <span class="op">=</span> <span class="fl">2</span>,
+  mark.lty <span class="op">=</span> <span class="fl">1</span>,
+  mark.smooth <span class="op">=</span> <span class="cn">TRUE</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
   debug <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
@@ -97,38 +107,46 @@
 <dd><p><code>igraph</code> object to be plotted</p></dd>
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code></p></dd>
-<dt>xlim, ylim</dt>
-<dd><p>default x and y axis limits</p></dd>
+<dt>xlim</dt>
+<dd><p>default x and y axis limits. When either value is <code>NULL</code>
+the range is defined by the layout coordinate ranges, respectively,
+then expanded by adding <code>expand</code> to each side of the range.</p></dd>
+<dt>ylim</dt>
+<dd><p>default x and y axis limits. When either value is <code>NULL</code>
+the range is defined by the layout coordinate ranges, respectively,
+then expanded by adding <code>expand</code> to each side of the range.</p></dd>
 <dt>expand</dt>
-<dd><p>numeric value used to expand the x and y axis ranges,
+<dd><p><code>numeric</code> value used to expand the x and y axis ranges,
 where <code>0.03</code> expands each size <code>3%</code>.</p></dd>
 <dt>rescale</dt>
-<dd><p>logical indicating whether to rescale the layout
+<dd><p><code>logical</code> indicating whether to rescale the layout
 coordinates to <code>c(-1, 1)</code>. When <code>rescale=FALSE</code> the original
 layout coordinates are used as-is without change.</p></dd>
 <dt>node_factor</dt>
-<dd><p>numeric value multiplied by <code>V(x)$size</code> to adjust
+<dd><p><code>numeric</code> value multiplied by <code>igraph::V(x)$size</code> to adjust
 the relative size of all nodes by a common numeric scalar value.</p></dd>
 <dt>node_factor_l, label_factor_l, label_dist_factor_l</dt>
 <dd><p><code>list</code>
 of vectors, where the names of the <code>list</code> are attribute
 names, and the names of each vector are attributes values.
+These values are applied in addition to <code>node_factor</code>, <code>label_factor</code>,
+<code>label_dist_factor</code>, respectively.
 The vector values are used as scalar multipliers, analogous to
 <code>node_factor</code>. The purpose is to apply scalar values to different
 subsets of nodes. For example, consider:
 <code>node_factor_l=list(nodeType=c(Gene=1, Set=2)</code>. The list name
-<code>"nodeType"</code> says to look at <code>vertex_attr(x, "nodeType")</code>. Nodes
-where <code>nodeType="Gene"</code> will use <code>1</code>, and where <code>nodeType="Set"</code>
+<code>"nodeType"</code> says to look at <code>igraph::vertex_attr(x, "nodeType")</code>.
+Nodes with <code>nodeType="Gene"</code> will use <code>1</code>, and <code>nodeType="Set"</code>
 will use <code>2</code> as the scalar value.</p></dd>
 <dt>edge_factor</dt>
-<dd><p>numeric value multiplied by <code>E(x)$width</code> to adjust
+<dd><p><code>numeric</code> value multiplied by <code>igraph::E(x)$width</code> to adjust
 the relative width of all edges by a common numeric scalar value.</p></dd>
 <dt>label_factor</dt>
-<dd><p>numeric value multiplied by <code>V(x)$label.cex</code>
+<dd><p><code>numeric</code> value multiplied by <code>igraph::V(x)$label.cex</code>
 and <code>E(x)$label.cex</code> to adjust the relative size of all labels on
 nodes and edges by a common numeric scalar value.</p></dd>
 <dt>label_dist_factor</dt>
-<dd><p>numeric value multiplied by <code>V(x)$label.dist</code>
+<dd><p><code>numeric</code> value multiplied by <code>igraph::V(x)$label.dist</code>
 to adjust the relative distance of all nodes labels from the node center
 by a common numeric scalar value.</p></dd>
 <dt>use_shadowText</dt>
@@ -138,12 +156,24 @@ to render text labels with a subtle shadow-like outline around
 each label. This change improves legibility of labels at
 the expense of slightly longer plot rendering time.</p></dd>
 <dt>edge_bundling</dt>
-<dd><p><code>character</code> string or <code>function</code>, where:</p><ul><li><p><code>"none"</code> will perform no edge bundling</p></li>
+<dd><p><code>character</code> string or <code>function</code>, where:</p><ul><li><p><code>"default"</code> will try to detect an appropriate method: when
+<code>nodegroups</code> or <code>mark.groups</code> are defined, it chooses the matching
+option (see below); otherwise it chooses <code>"connections"</code>.</p></li>
+<li><p><code>"none"</code> will perform no edge bundling. This method is best when
+rendering straight edges, or for rendering multiple identical edges
+with curvature as defined by <code><a href="https://rdrr.io/pkg/igraph/man/plot.common.html" class="external-link">igraph::igraph.plotting()</a></code>.</p></li>
 <li><p><code>"connections"</code> will perform graph edge bundling by
 shared connections by calling <code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code> then
-<code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code></p></li>
+<code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>. This option is particularly good
+for bipartite graphs such as concept networks (cnet plots).</p></li>
+<li><p><code>"mark.groups"</code> will perform graph edge bundling
+using <code>mark.groups</code> by calling <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>.
+This option is equivalent to <code>"nodegroups"</code> except that it
+uses <code>mark.groups</code> to define node groupings.</p></li>
 <li><p><code>"nodegroups"</code> will perform graph edge bundling
-using <code>nodegroups</code> by calling <code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code></p></li>
+using <code>nodegroups</code> by calling <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>.
+This option is equivalent to <code>"mark.groups"</code> except that it
+uses <code>nodegroups</code> to define node groupings.</p></li>
 <li><p><code>function</code> will call a custom edge bundling function using
 the <code>igraph</code> object <code>x</code> and the igraph parameters <code>param</code>
 as input. This output is currently untested, and is intended
@@ -190,6 +220,57 @@ order of their shape, which affects the positioning of nodes
 when there are node overlaps. This tradeoff is relatively minor,
 and it is recommended either to reposition nodes to reduce or
 prevent overlaps, or adjust node sizes to reduce overlaps.</p></dd>
+<dt>plot_grid</dt>
+<dd><p><code>logical</code> indicating whether to plot a background grid
+indicating units of 2% across the layout of the network graph. The
+units are calculated consistent with <code>nudge_igraph_nodes()</code>,
+<code><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> and other functions, scaled relative to the
+maximum x- or y-coordinate range of layout of the graph. Layout
+is obtained by <code>get_igraph_layout()</code> which by default uses
+supplied <code>layout</code>, or graph attribute <code>igraph::graph_attr(x, "layout")</code>.
+Note that by default, <code>jam_igraph()</code> represents the layout with
+aspect ratio = 1, so x-coordinates and y-coordiantes are represented
+with the same spacing per unit.
+This function calls <code><a href="plot_layout_scale.html">plot_layout_scale()</a></code> to render the grid lines.</p></dd>
+<dt>plot_function</dt>
+<dd><p><code>function</code> that renders the graph, not intended to
+be changed except for very customized uses. By default
+<code>plot_function=jam_plot_igraph()</code> which calls a modified variant of
+<code>igraph:::plot.igraph()</code>.</p></dd>
+<dt>mark.groups</dt>
+<dd><p>A list of vertex id vectors. It is interpreted as a set
+of vertex groups. Each vertex group is highlighted, by plotting a colored
+smoothed polygon around and “under” it. See the arguments below to
+control the look of the polygons.</p></dd>
+<dt>mark.shape</dt>
+<dd><p>A numeric scalar or vector. Controls the smoothness of the
+vertex group marking polygons. This is basically the ‘shape’
+parameter of the <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">xspline</a></code> function, its possible
+values are between -1 and 1. If it is a vector, then a different value is
+used for the different vertex groups.</p></dd>
+<dt>mark.col</dt>
+<dd><p>A scalar or vector giving the colors of marking the
+polygons, in any format accepted by <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">xspline</a></code>; e.g.
+numeric color ids, symbolic color names, or colors in RGB.</p></dd>
+<dt>mark.alpha</dt>
+<dd><p><code>numeric</code> value between 0 (transparent) and 1 (opaque)
+indicating the transparency of <code>mark.col</code> color fill values,
+used only when <code>mark.groups</code> is defined, and <code>mark.col</code> is not defined.</p></dd>
+<dt>mark.border</dt>
+<dd><p>A scalar or vector giving the colors of the borders of
+the vertex group marking polygons. If it is <code>NA</code>, then no border is
+drawn.</p></dd>
+<dt>mark.expand</dt>
+<dd><p>A numeric scalar or vector, the size of the border around
+the marked vertex groups. It is in the same units as the vertex sizes. If a
+vector is given, then different values are used for the different vertex
+groups.</p></dd>
+<dt>mark.lwd</dt>
+<dd><p>line with and line type parameters for each
+<code>mark.groups</code> polygon,</p></dd>
+<dt>mark.lty</dt>
+<dd><p>line with and line type parameters for each
+<code>mark.groups</code> polygon,</p></dd>
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
 <dt>debug</dt>
@@ -201,7 +282,10 @@ which debug output will be plotted onscreen.</p></dd>
     <p>This function is a drop-in replacement of <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>,
 intended to provide substantially faster vectorized plotting,
 to render bundled edges when requested, and
-to handle <code>rescale=FALSE</code> without requiring further adjustments.</p>
+to handle <code>rescale=FALSE</code> without requiring further adjustments.
+Note that this function focuses on recognizing graph options and
+settings, then passes the work off to <code><a href="jam_plot_igraph.html">jam_plot_igraph()</a></code>
+which performs the heavy work of rendering the graph.</p>
 <p>It also provides some convenient methods to adjust node
 size, label font size, and label distance from node center,
 based upon node attributes.</p><div class="section">
@@ -249,8 +333,13 @@ edge connections between nodes are rendered using a specific
 function by drawing curved splines for each bundle of edges.
 The approach in <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> only draws
 straight edges between nodes. The recommended method is
-<code>edge_bundling="connections"</code> which will bundle edges among nodes
-that share identical connections.</p>
+<code>edge_bundling="default"</code> which will try to detect an appropriate
+method to bundle edges. When <code>mark.groups</code> and <code>nodegroups</code> are not
+defined, the default method is <code>"connections"</code> which bundles edges
+only among nodes that share the same connections. The assumption is
+that nodes that share the same connections usually have very similar
+layout coordinates, so edge bundling is usually intuitive. In fact,
+for a very large set of nodes, they are often in a round cluster</p>
 </div>
 
 <div class="section">
@@ -273,9 +362,9 @@ distance from node center</p></li>
    Gene<span class="op">=</span><span class="fl">1.5</span>,
    Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre><p></p></div>
 <p>In this case, nodes with attribute
-<code>V(g)$nodeType == "Gene"</code> will use factor <code>1.5</code>
+<code>igraph::V(g)$nodeType == "Gene"</code> will use factor <code>1.5</code>
 Nodes with attribute
-<code>V(g)$nodeType == "Set"</code> will use factor <code>2</code>
+<code>igraph::V(g)$nodeType == "Set"</code> will use factor <code>2</code>
 All other nodes will not be adjusted.</p>
 </div>
 
@@ -283,6 +372,11 @@ All other nodes will not be adjusted.</p>
 <h3 id="other-features">Other features<a class="anchor" aria-label="anchor" href="#other-features"></a></h3>
 
 
+<p>The plot layout by default is <strong>not</strong> rescaled to <code>c(-1, 1)</code>, therefore
+allowing direct control over plot dimensions and node sizes.
+The plot aspect ratio is fixed at 1, which renders many network layouts
+in their intended form, as opposed to scaling each axis to <code>c(-1, 1)</code>,
+which can impose distortion of intended layout node distances.</p>
 <p>When <code>use_shadowText=TRUE</code> node labels call <code><a href="https://rdrr.io/pkg/jamba/man/shadowText.html" class="external-link">jamba::shadowText()</a></code>
 which draws a small partly transparent outline around labels, making
 them more legible when they overlap colored nodes. This step
@@ -292,15 +386,27 @@ the rendering of the overall figure.</p>
 changed to <code>shape="jampie"</code> for the purpose of rendering pie
 shapes in vectorized fashion, instead of being drawn for each
 node separately. This change is a substantial improvement in
-rendering time.</p>
-<p>Default colors for marked node groups <code>mark.col</code> and <code>mark.border</code>
+rendering time. In addition, optional node attributes are available:</p><ul><li><p><code>pie.border</code> to control individual pie wedge borders, which are
+drawn as inner borders so each pie wedge border is visible without</p></li>
+<li><p><code>pie.lwd</code> to control line width of pie wedge borders.</p></li>
+<li><p><code>pie.lty</code> to control the line type of pie wedge borders</p></li>
+<li><p><code>frame.color</code> to control the frame border color drawn around the
+full circular pie node. This border is drawn as an outer border, so
+it will not overlap any internal pie wedge border colors.</p></li>
+</ul><p>Default colors for marked node groups <code>mark.col</code> and <code>mark.border</code>
 when not defined upfront, will call <code><a href="https://rdrr.io/pkg/colorjam/man/rainbowJam.html" class="external-link">colorjam::rainbowJam()</a></code>
-and not <code>grDevices::rainbow(). The </code>colorjam::rainbowJam()<code>produces more visually distinct categorical colors. This behavior can be controlled by supplying a</code>character<code>vector with specific colors for</code>mark.col<code>and</code>mark.border<code>. Note that the border should match the colors, or it can be set to </code>"grey45"`
+and not <code><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">grDevices::rainbow()</a></code>. The <code><a href="https://rdrr.io/pkg/colorjam/man/rainbowJam.html" class="external-link">colorjam::rainbowJam()</a></code>
+produces more visually distinct categorical colors.
+This behavior can be controlled by supplying a <code>character</code>
+vector with specific colors for <code>mark.col</code> and <code>mark.border</code>. Note
+that the border should match the colors, or it can be set to <code>"grey45"</code>
 for a generally visible border.</p>
 <p>Optional argument <code>nodegroups</code> can be supplied, which is a <code>list</code>
 of vectors, where each vector represents a group of nodes. The
 <code>nodegroups</code> can be used with <code>edge_bundling="nodegroups"</code> to
-define custom edge bundling.</p>
+define custom edge bundling. This option is useful for defining a
+group of nodes for edge bundling, when those nodes should not be used
+to render group borders as with <code>mark.groups</code>.</p>
 <p>Finally, individual plot components can be individually disabled:</p><ul><li><p><code>render_nodes=FALSE</code></p></li>
 <li><p><code>render_edges=FALSE</code></p></li>
 <li><p><code>render_groups=FALSE</code></p></li>
@@ -322,6 +428,7 @@ define custom edge bundling.</p>
 <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code>,
 <code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
+<code><a href="flip_edges.html">flip_edges</a>()</code>,
 <code><a href="get_bipartite_nodeset.html">get_bipartite_nodeset</a>()</code>,
 <code><a href="igraph2pieGraph.html">igraph2pieGraph</a>()</code>,
 <code><a href="jam_plot_igraph.html">jam_plot_igraph</a>()</code>,
@@ -341,27 +448,57 @@ define custom edge bundling.</p>
 <code><a href="subset_igraph_components.html">subset_igraph_components</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p>
 <p>Other jam plot functions: 
+<code><a href="adjust_polygon_border.html">adjust_polygon_border</a>()</code>,
 <code><a href="grid_with_title.html">grid_with_title</a>()</code>,
 <code><a href="mem_enrichment_heatmap.html">mem_enrichment_heatmap</a>()</code>,
 <code><a href="mem_gene_path_heatmap.html">mem_gene_path_heatmap</a>()</code>,
 <code><a href="mem_legend.html">mem_legend</a>()</code>,
 <code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
-<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code></p></div>
+<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
+<code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
     </div>
 
     <div id="examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## example showing how to use the list form</span></span>
-<span class="r-in"><span class="co">## This form resizes nodes where V(g)$nodeType %in% "Gene" by 2x,</span></span>
-<span class="r-in"><span class="co">## and resizes nodes where V(g)$nodeType %in% "Set" by 3x.</span></span>
-<span class="r-in"><span class="va">node_factor_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">2</span>, Set<span class="op">=</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>;</span>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example with karate</span></span>
+<span class="r-in"><span class="va">karate</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span><span class="st">"Zachary"</span><span class="op">)</span>;</span>
+<span class="r-in"><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/cluster_louvain.html" class="external-link">cluster_louvain</a></span><span class="op">(</span><span class="va">karate</span><span class="op">)</span>;</span>
+<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">karate</span>,</span>
+<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span>,</span>
+<span class="r-in">   mark.groups<span class="op">=</span><span class="va">cl</span>,</span>
+<span class="r-in">  mark.lwd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span class="r-in">  mark.lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, mark.shape<span class="op">=</span><span class="fl">1</span>,</span>
+<span class="r-in">  edge_bundling<span class="op">=</span><span class="st">"default"</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'spatstat':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method     from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   print.boxx cli </span>
+<span class="r-plt img"><img src="jam_igraph-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># create example cnet data</span></span>
+<span class="r-in"><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_cnet_test.html">make_cnet_test</a></span><span class="op">(</span>num_sets<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>coercing argument of type 'list' to logical</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">## example showing how to use the list form</span></span>
+<span class="r-in"><span class="co">## This form resizes nodes where igraph::V(g)$nodeType %in% "Gene" by 2x,</span></span>
+<span class="r-in"><span class="co">## and resizes nodes where igraph::V(g)$nodeType %in% "Set" by 3x.</span></span>
+<span class="r-in"><span class="va">node_factor_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1.2</span>, Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## This form multiplies label.dist for nodeType="Gene" nodes by 1,</span></span>
 <span class="r-in"><span class="co">## and multiplies label.dist for nodeType="Set" nodes by 0.5</span></span>
 <span class="r-in"><span class="va">label_dist_factor_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1</span>, Set<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># jam_igraph(g, node_factor_l=node_factor_l, label_dist_factor_l=label_dist_factor_l);</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>;</span>
+<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">cnet</span>,</span>
+<span class="r-in">   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span class="r-in">   node_factor_l<span class="op">=</span><span class="va">node_factor_l</span>,</span>
+<span class="r-in">   label_factor<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span class="r-in">   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1</span>, Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="jam_igraph-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Example using edge bundling by community detection</span></span>
 <span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span><span class="st">"Zachary"</span><span class="op">)</span>;</span>
@@ -370,74 +507,32 @@ define custom edge bundling.</p>
 <span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
 <span class="r-in">   layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span>
 <span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
+<span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span>
 <span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
 <span class="r-in">   vertex.color<span class="op">=</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.color" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-plt img"><img src="jam_igraph-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="jam_igraph-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">cfuncs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cluster_leading_eigen<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen</a></span>,</span>
 <span class="r-in">   cluster_edge_betweenness<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_edge_betweenness.html" class="external-link">cluster_edge_betweenness</a></span>,</span>
 <span class="r-in">   cluster_fast_greedy<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_fast_greedy.html" class="external-link">cluster_fast_greedy</a></span>,</span>
 <span class="r-in">   cluster_spinglass<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_spinglass.html" class="external-link">cluster_spinglass</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mfrow"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span>
 <span class="r-in"><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">   <span class="va">cfunc</span> <span class="op">&lt;-</span> <span class="va">cfuncs</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>;</span>
 <span class="r-in">   <span class="va">gcom</span> <span class="op">&lt;-</span> <span class="fu">cfunc</span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_edges_by_nodes.html">color_edges_by_nodes</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>;</span>
 <span class="r-in">   <span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
 <span class="r-in">      layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span>
 <span class="r-in">      edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
 <span class="r-in">      nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">      mark.groups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">      mark.expand<span class="op">=</span><span class="fl">60</span>,</span>
-<span class="r-in">      vertex.color<span class="op">=</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">      mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span>
 <span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>;</span>
 <span class="r-in"><span class="op">}</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.color" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.color" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.color" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.color" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-plt img"><img src="jam_igraph-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
+<span class="r-plt img"><img src="jam_igraph-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="jam_igraph-5.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="jam_igraph-6.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="jam_igraph-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># fancy example showing mark.groups and colorizing</span></span>
 <span class="r-in"><span class="co"># edges using node colors</span></span>
@@ -445,221 +540,33 @@ define custom edge bundling.</p>
 <span class="r-in"><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span>;</span>
 <span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_edges_by_nodes.html">color_edges_by_nodes</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
 <span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span>
+<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span>
 <span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
 <span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
 <span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-plt img"><img src="jam_igraph-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cluster_spinglass()\n"</span>,</span>
+<span class="r-in">   <span class="st">"edge_bundling='nodegroups'"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="jam_igraph-8.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># same but adjust midpoint of edge bundles</span></span>
+<span class="r-in"><span class="co"># same but different edge_style</span></span>
 <span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span>
+<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span>
 <span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
 <span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
 <span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">   midpoint<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">0.6</span><span class="op">)</span>,</span>
+<span class="r-in">   bundle_style<span class="op">=</span><span class="st">"xspline"</span>,</span>
 <span class="r-in">   detail<span class="op">=</span><span class="fl">14</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-plt img"><img src="jam_igraph-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"bundle_style='xspline'"</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="jam_igraph-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># same but using node connections</span></span>
 <span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span>
+<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span>
 <span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"connections"</span>,</span>
 <span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
 <span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"layout" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-plt img"><img src="jam_igraph-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"edge_bundling='connections'"</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="jam_igraph-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -675,7 +582,8 @@ define custom edge bundling.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

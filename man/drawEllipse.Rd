@@ -23,30 +23,30 @@ drawEllipse(
 )
 }
 \arguments{
-\item{x, y}{numeric coordinates, where x can be a two-column numeric
+\item{x, y}{\code{numeric} coordinates, where x can be a two-column numeric
 matrix of x,y coordinates.}
 
-\item{a, b}{numeric values indicating x- and y-axis radius, before
+\item{a, b}{\code{numeric} values indicating x- and y-axis radius, before
 rotation if \code{angle} is non-zero.}
 
-\item{angle}{numeric value indicating the rotation of ellipse.}
+\item{angle}{\code{numeric} value indicating the rotation of ellipse.}
 
-\item{segment}{NULL or numeric vector of two values indicating the
+\item{segment}{NULL or \code{numeric} vector of two values indicating the
 start and end angles for the ellipse, prior to rotation.}
 
-\item{arc.only}{logical indicating whether to draw the ellipse
+\item{arc.only}{\code{logical} indicating whether to draw the ellipse
 arc without connecting to the center of the ellipse. Set
 \code{arc.only=FALSE} when segment does not include the full circle,
 to draw only the wedge.}
 
-\item{nv}{the number of vertices around the center to draw.}
+\item{nv}{\code{numeric} the number of vertices around the center to draw.}
 
-\item{deg}{logical indicating whether input \code{angle} and \code{segment}
+\item{deg}{\code{logical} indicating whether input \code{angle} and \code{segment}
 values are in degrees, or \code{deg=FALSE} for radians.}
 
 \item{border, col, lty, lwd}{arguments passed to \code{graphics::polygon()}.}
 
-\item{draw}{logical indicating whether to draw the ellipse.}
+\item{draw}{\code{logical} indicating whether to draw the ellipse.}
 
 \item{...}{additional arguments are passed to \code{graphics::polygon()}
 when \code{draw=TRUE}.}
@@ -62,6 +62,35 @@ This function draws an ellipse centered on the given coordinates,
 rotated the given degrees relative to the center point, with give
 x- and y-axis radius values.
 }
+\examples{
+plot(NULL,
+   type="n",
+   xlim=c(-5, 20),
+   ylim=c(-5, 18),
+   asp=1);
+xy <- drawEllipse(
+   x=c(1, 11, 11, 11),
+   y=c(1, 11, 11, 11),
+   a=c(5, 5, 5*1.5, 5),
+   b=c(2, 2, 2*1.5, 2),
+   angle=c(20, -15, -15, -15),
+   segment=c(0, 360, 0, 120, 120, 240, 240, 360),
+   arc.only=c(TRUE, FALSE, FALSE, TRUE),
+   col=jamba::alpha2col(c("red", "gold", "dodgerblue", "darkorchid"), alpha=0.5),
+   border=c("red", "gold", "dodgerblue", "darkorchid"),
+   lwd=1,
+   nv=99)
+points(x=c(1, 11), y=c(1, 11), pch=20, cex=2)
+jamba::drawLabels(x=c(12, 3, 13, 5),
+   y=c(14, 10, 9, 2),
+   labelCex=1.5,
+   adjPreset=c("topright", "left", "bottomright", "top"),
+   txt=c("0-120 degrees,\nangle=-15,\narc.only=TRUE",
+      "120-240 degrees,\nangle=-15,\narc.only=TRUE,\nlonger radius",
+      "240-360 degrees,\nangle=-15,\narc.only=FALSE",
+      "angle=20"))
+
+}
 \seealso{
 Other jam igraph functions: 
 \code{\link{cnet2df}()},
@@ -74,6 +103,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

@@ -23,24 +23,25 @@ matrix consistent with the subset of \code{igraph} nodes.
 }
 \seealso{
 Other jam utility functions: 
-\code{\link{apply_color_cap}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{call_fn_ellipsis_deprecated}()},
+\code{\link{cell_fun_bivariate}()},
 \code{\link{collapse_mem_clusters}()},
+\code{\link{colorRamp2D}()},
 \code{\link{deconcat_df2}()},
+\code{\link{display_colorRamp2D}()},
 \code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
 \code{\link{handle_igraph_param_list}()},
-\code{\link{heatmap_column_order}()},
-\code{\link{heatmap_row_order}()},
 \code{\link{isColorBlank}()},
+\code{\link{make_legend_bivariate}()},
+\code{\link{make_point_hull}()},
 \code{\link{mem_find_overlap}()},
 \code{\link{order_colors}()},
 \code{\link{rank_mem_clusters}()},
 \code{\link{rotate_coordinates}()},
-\code{\link{sort_colors_deprecated}()},
 \code{\link{xyAngle}()}
 
 Other jam igraph functions: 
@@ -55,6 +56,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

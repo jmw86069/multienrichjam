@@ -2,12 +2,17 @@
 % Please edit documentation in R/jamenrich-igraphshapes.R
 \name{shape.jampie.plot}
 \alias{shape.jampie.plot}
-\title{plot function for igraph vertex shape jampie}
+\alias{shape.jampie.clip}
+\title{custom igraph vertex shape jampie}
 \usage{
 shape.jampie.plot(coords, v = NULL, params)
+
+shape.jampie.clip(coords, el, params, end = c("both", "from", "to"))
 }
 \description{
-plot function for igraph vertex shape jampie
+custom igraph vertex shape jampie
+
+clip function for igraph vertex shape jampie
 }
 \details{
 This function is a vectorized replacement for plotting
@@ -49,11 +54,72 @@ or \code{V(g)[[2]]$pie.border <- NA}.
 
 To disable \code{frame.color} set to \code{NA} with \code{vertex.frame.color=NA}
 or \code{V(g)[2]$frame.color <- NA}.
+
+This function defines the clipping function for custom igraph vertex
+shape jampie.
+}
+\examples{
+# prepare example igraph object
+am <- matrix(ncol=5, nrow=5,
+   data=0,
+   dimnames=list(LETTERS[1:5], LETTERS[1:5]))
+am[2:5, 1] <- 1;
+g1 <- igraph::graph_from_adjacency_matrix(am)
+igraph::graph_attr(g1, "layout") <- cbind(x=c(0, 1, 1, -1, -1),
+   y=c(0, 1, -0.5, 0.5, -1))
+colorset <- c("firebrick3", "dodgerblue3");
+vseq <- seq_len(igraph::vcount(g1));
+vsizes <- c(3, 2, 2, 2, 1);
+igraph::V(g1)$pie <- lapply(vseq, function(i){
+   rep(1, vsizes[i])
+})
+set.seed(1);
+igraph::V(g1)$pie.border <- lapply(vseq, function(i){
+   sample(colorset,
+      replace=TRUE,
+      size=vsizes[i])
+})
+igraph::V(g1)$pie.color <- lapply(vseq, function(i){
+   jamba::alpha2col(alpha=0.5,
+      igraph::V(g1)$pie.border[[i]])
+})
+igraph::V(g1)$pie.lwd <- rep(5, igraph::vcount(g1))
+igraph::V(g1)$frame.lwd <- c(2, 1, 1, 1, 1)*2;
+igraph::V(g1)$frame.color <- NA
+igraph::V(g1)$size <- c(45, 25, 25, 25, 25);
+igraph::V(g1)$shape <- "jampie";
+
+par("mar"=c(2, 2, 3, 2))
+igraph::plot.igraph(g1, vertex.label="",
+   vertex.shape="pie", vertex.frame.color="grey45",
+   main="shape='pie'\nigraph::plot.igraph()")
+
+jam_igraph(g1, vertex.label="",
+   main="shape='jampie', frame.color=NA\njam_igraph()")
+
+
+jam_igraph(g1, vertex.label="",
+   vertex.frame.lwd=2,
+   main="shape='jampie', frame.color='black'\njam_igraph()",
+   vertex.shape="jampie", vertex.frame.color="black")
+
+jam_igraph(g1, vertex.label="", vertex.frame.color="black")
+
+# print pie.color data
+print(igraph::vertex_attr(g1)$pie.color);
+
 }
 \seealso{
 Other jam igraph shapes: 
 \code{\link{jam_mypie}()},
 \code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.clip}()},
+\code{\link{shape.ellipse.plot}()}
+
+Other jam igraph shapes: 
+\code{\link{jam_mypie}()},
+\code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.clip}()},
 \code{\link{shape.ellipse.plot}()}
 }
 \concept{jam igraph shapes}

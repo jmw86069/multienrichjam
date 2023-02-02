@@ -38,3 +38,11 @@ reference:
   desc: Functions to import enrichment data
   contents:
   - has_concept("jam import functions")
+- title: Internal functions
+  desc: Functions typically for internal use by other Jam functions
+  contents:
+  - has_concept("jam internal functions")
+- title: Deprecated functions
+  desc: Functions moved to the jamba package
+  contents:
+  - has_concept("jam deprecated functions")

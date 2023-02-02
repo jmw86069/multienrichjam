@@ -15,9 +15,14 @@ jam_mypie(
   density = NULL,
   border = NULL,
   frame.color = NULL,
+  frame.lwd = par("lwd"),
   lty = NULL,
+  lwd = par("lwd"),
   init.angle = 90,
-  inner_pie_border = getOption("inner_pie_border", FALSE),
+  inner_pie_border = getOption("inner_pie_border", TRUE),
+  inner_cex = 1.01,
+  xy_max = NULL,
+  overclose_polygons = FALSE,
   ...
 )
 }
@@ -49,6 +54,10 @@ only along the inside of each pie wedge polygon, so that adjacent
 colors will be seen beside each other without overlapping adjacent
 borders. This method is currently in development.}
 
+\item{overclose_polygons}{\code{logical} indicating whether to close polygon
+coordinates with an extra couple points, to ensure the line join
+\code{"ljoin"} is properly called when drawing each polygon.}
+
 \item{...}{additional arguments are passed to \code{polygon()}}
 }
 \value{
@@ -67,6 +76,8 @@ Vectorized mypie() function for igraph vertex pie polygons
 This is a function called internally by \code{shape.jampie.plot()},
 not intended for direct use.
 
+See \code{reorder_igraph_nodes()} for visual examples.
+
 This function is a light rewrite of \code{igraph:::mypie()}, except
 that this function determines polygon coordinates without
 drawing them, instead returns the polygon coordinates to
@@ -82,9 +93,14 @@ or \code{V(g)[[2]]$pie.border <- NA}.
 To disable \code{frame.color} set to \code{NA} with \code{vertex.frame.color=NA}
 or \code{V(g)[2]$frame.color <- NA}.
 }
+\examples{
+# See reorder_igraph_nodes() for visual examples.
+
+}
 \seealso{
 Other jam igraph shapes: 
 \code{\link{shape.coloredrectangle.plot}()},
+\code{\link{shape.ellipse.clip}()},
 \code{\link{shape.ellipse.plot}()},
 \code{\link{shape.jampie.plot}()}
 }

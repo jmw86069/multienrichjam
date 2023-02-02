@@ -325,9 +325,14 @@ enrichList2geneHitList <- function
    return(geneHitList);
 }
 
-#' Return Heatmap row order
+#' Return Heatmap row order (deprecated)
 #'
 #' Return Heatmap row order as a list of character vectors
+#'
+#' @family jam deprecated functions
+#'
+#' This function is deprecated, and is fully replaced
+#' by `jamba::heatmap_row_order()`.
 #'
 #' This function is a helpful utility to return the fully
 #' qualified list of rownames in a `ComplexHeatmap::Heatmap`
@@ -336,10 +341,8 @@ enrichList2geneHitList <- function
 #' This function also works with `ComplexHeatmap::HeatmapList`
 #' objects.
 #'
-#' @family jam utility functions
-#'
 #' @export
-heatmap_row_order <- function
+heatmap_row_order_deprecated <- function
 (hm)
 {
    ##
@@ -357,16 +360,19 @@ heatmap_row_order <- function
 
 #' Return Heatmap column order
 #'
-#' Return Heatmap column order as a list of character vectors
+#' Return Heatmap column order as a list of character vectors (deprecated)
+#'
+#' @family jam deprecated functions
+#'
+#' This function is deprecated, and is fully replaced
+#' by `jamba::heatmap_column_order()`.
 #'
 #' This function is a helpful utility to return the fully
 #' qualified list of colnames in a `ComplexHeatmap::Heatmap`
 #' object.
 #'
-#' @family jam utility functions
-#'
 #' @export
-heatmap_column_order <- function
+heatmap_column_order_deprecated <- function
 (hm)
 {
    ##
@@ -392,7 +398,7 @@ heatmap_column_order <- function
 #' colors, based upon hue, then chroma descending, then luminance
 #' descending.
 #'
-#' @family jam utility functions
+#' @family jam deprecated functions
 #'
 #' @examples
 #' x <- jamba::nameVector(colors());
@@ -478,66 +484,6 @@ order_colors <- function
    order(x_factor);
 }
 
-#' Apply color channel numeric range cap
-#'
-#' Apply color channel numeric range cap
-#'
-#' This function extends `farver::set_channel()` by enforcing
-#' a numeric range for any numeric channel accessible by
-#' the `farver` package. Common use is to restrict the luminance
-#' `"l"` channel of an `"hcl"` color from `c(0,100)` to `c(70,100)`
-#' in order to make all colors brighter.
-#'
-#' @family jam utility functions
-#'
-#' @param x vector colors, or list of color vectors. When input
-#'    is a `list`, the list is flattened, operations are performed,
-#'    then the result is split back into the original structure.
-#' @param channel character channel recognized by `farver::set_channel()`.
-#' @param range numeric range allowed for values returned by
-#'    `farver::get_channel()`.
-#' @param space character name of a color space recognized by
-#'    `farver::set_channel()`.
-#' @param ... additional arguments are passed to `farver::get_channel()`
-#'    and `farver::set_channel()`.
-#'
-#' @export
-apply_color_cap <- function
-(x,
- channel="l",
- range=c(0, 100),
- space="hcl",
- ...)
-{
-   if (is.list(x)) {
-      x_ext <- unlist(x);
-      x_len <- lengths(x);
-      x_fac <- rep(factor(seq_along(x)), x_len);
-      x_new <- apply_color_cap(x_ext,
-         channel=channel,
-         range=range,
-         space=space,
-         ...);
-      x_list <- split(x_new, x_fac);
-      names(x_list) <- names(x);
-      return(x_list);
-   }
-   channel_range <- range(range, na.rm=TRUE);
-   channel_values <- farver::get_channel(x,
-      channel=channel,
-      space=space,
-      ...);
-   channel_values <- jamba::noiseFloor(channel_values,
-      minimum=min(range),
-      ceiling=max(range));
-   x_new <- farver::set_channel(x,
-      channel=channel,
-      space=space,
-      value=channel_values,
-      ...);
-   names(x_new) <- names(x);
-   return(x_new);
-}
 
 #' Rank Multienrichment clusters
 #'

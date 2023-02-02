@@ -218,8 +218,38 @@ get_cnet_nodeset <- function
 (g,
  set_nodes=NULL,
  sep=",",
+ filter_set_only=TRUE,
  ...)
 {
+   # alternative approach for speed
+   # 1. assemble edgelist data.frame
+   gel1 <- igraph::as_edgelist(g);
+   gel2 <- gel1[,2:1, drop=FALSE];
+   gel <- data.frame(check.names=FALSE,
+      unique(rbind(gel1, gel2)));
+   colnames(gel) <- c("A", "B")
+
+   # optionally limit output to nodes connected to nodeType="Set" nodes
+   if (TRUE %in% filter_set_only) {
+      use_set_nodes <- igraph::V(g)[igraph::V(g)$nodeType %in% "Set"]$name;
+      gel <- subset(gel, gel[,2] %in% use_set_nodes)
+   }
+
+   gel_sorted <- jamba::mixedSortDF(gel)
+
+   # 2. cPaste() because unique and sorted are already accomplished above
+   neighbor_list <- split(gel_sorted$B, gel_sorted$A);
+   neighborG1 <- jamba::cPaste(neighbor_list,
+      sep=sep)
+   cnet_nodesets <- split(names(neighborG1), neighborG1)
+
+   if (length(set_nodes) > 0) {
+      set_nodes_v <- jamba::cPasteS(set_nodes,
+         sep=sep)
+      cnet_nodesets <- cnet_nodesets[names(cnet_nodesets) %in% set_nodes_v];
+   }
+   return(cnet_nodesets);
+
    ## comma-delimited neighboring nodes for each node
    neighborG <- jamba::cPasteS(sep=sep,
       lapply(seq_len(igraph::vcount(g)), function(v){
@@ -384,11 +414,12 @@ adjust_cnet_nodeset <- function
             set_nodes_v);
       }
    } else {
-      jamba::printDebug("cnet_nodesets:");
-      print(cnet_nodesets);
-      stop(paste0("The set_nodes '",
+      # jamba::printDebug("cnet_nodesets:");
+      # print(cnet_nodesets);
+      warning(paste0("The set_nodes '",
          set_nodes_v,
-         "' provided do not match nodeset names, nor node members."))
+         "' provided do not match nodeset names, nor node members."));
+      return(g);
    }
    if (length(useG) == 0) {
       warning(paste("No nodes found with set_nodes:", set_nodes_v));
@@ -657,7 +688,7 @@ adjust_cnet_set_relayout_gene <- function
 #'
 #' @param cnet `igraph` object that contains attribute
 #'    `"nodeType"` and values `nodeType=c("Gene", "Set")`,
-#'    consistent with use of `get_cnet_nodesets()` and
+#'    consistent with use of `get_cnet_nodeset()` and
 #'    `adjust_cnet_nodeset()`.
 #'    The node layout is expected to be stored in
 #'    `igraph::graph_attr(cnet, "layout")`.

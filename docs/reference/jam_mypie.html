@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -72,32 +72,97 @@
   angle <span class="op">=</span> <span class="fl">45</span>,
   density <span class="op">=</span> <span class="cn">NULL</span>,
   border <span class="op">=</span> <span class="cn">NULL</span>,
+  frame.color <span class="op">=</span> <span class="cn">NULL</span>,
+  frame.lwd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">)</span>,
   lty <span class="op">=</span> <span class="cn">NULL</span>,
+  lwd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">)</span>,
   init.angle <span class="op">=</span> <span class="fl">90</span>,
+  inner_pie_border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"inner_pie_border"</span>, <span class="cn">TRUE</span><span class="op">)</span>,
+  inner_cex <span class="op">=</span> <span class="fl">1.01</span>,
+  xy_max <span class="op">=</span> <span class="cn">NULL</span>,
+  overclose_polygons <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
 
     <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x, y</dt>
+<dd><p><code>numeric</code> coordinate for the center of each <code>igraph</code> node.</p></dd>
+<dt>values</dt>
+<dd><p><code>numeric</code> vector of relative pie wedge sizes.</p></dd>
+<dt>radius</dt>
+<dd><p><code>numeric</code> radius of pie</p></dd>
+<dt>edges</dt>
+<dd><p><code>integer</code> number of edges to make a circle</p></dd>
+<dt>col</dt>
+<dd><p><code>character</code> vector of R colors to fill each pie wedge, in order</p></dd>
+<dt>angle, density</dt>
+<dd><p>used to draw lines to fill each pie node, passed
+to <code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">polygon()</a></code></p></dd>
+<dt>border</dt>
+<dd><p><code>character</code> vector of R colors for each pie wedge border</p></dd>
+<dt>frame.color</dt>
+<dd><p><code>character</code> R color used around the entire pie circle.</p></dd>
+<dt>lty</dt>
+<dd><p><code>numeric</code> or <code>character</code> line type</p></dd>
+<dt>init.angle</dt>
+<dd><p><code>numeric</code> angle in degrees (0 to 360) where <code>0</code> is the
+top of the circle, proceeding clockwide.</p></dd>
+<dt>inner_pie_border</dt>
+<dd><p><code>logical</code> whether to apply <code>pie.border</code> colors
+only along the inside of each pie wedge polygon, so that adjacent
+colors will be seen beside each other without overlapping adjacent
+borders. This method is currently in development.</p></dd>
+<dt>overclose_polygons</dt>
+<dd><p><code>logical</code> indicating whether to close polygon
+coordinates with an extra couple points, to ensure the line join
+<code>"ljoin"</code> is properly called when drawing each polygon.</p></dd>
+<dt>...</dt>
+<dd><p>additional arguments are passed to <code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">polygon()</a></code></p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p><code>data.frame</code> with columns suitable for use in <code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">polygon()</a></code>after each column is expanded to vector form. Columns <code>x</code> and <code>y</code>are stored <code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">AsIs()</a></code> in <code>list</code> format, and should be combined
+with one <code>NA</code> value between each <code>numeric</code> vector. The <code>NA</code> values
+cause <code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">polygon()</a></code> to draw a series of separate polygons in
+one vectorized step, much faster than drawing a series of
+polygons in an iterative loop.</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
-    <p>This function is a light rewrite of <code>igraph:::mypie()</code>, except
+    <p>This is a function called internally by <code><a href="shape.jampie.plot.html">shape.jampie.plot()</a></code>,
+not intended for direct use.</p>
+<p>See <code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> for visual examples.</p>
+<p>This function is a light rewrite of <code>igraph:::mypie()</code>, except
 that this function determines polygon coordinates without
 drawing them, instead returns the polygon coordinates to
 the calling function <code><a href="shape.jampie.plot.html">shape.jampie.plot()</a></code> which in turn
 draws all polygons once using the vectorized approach
 described for <code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">graphics::polygon()</a></code>.</p>
-<p>One small additional change, pie shapes with only one large
-100% wedge no longer display the small line from origin.</p>
+<p>See <code><a href="shape.jampie.plot.html">shape.jampie.plot()</a></code> for more detail.</p>
+<p>To disable <code>pie.border</code> set to <code>NA</code> with <code>vertex.pie.border=NA</code>
+or <code>V(g)[[2]]$pie.border &lt;- NA</code>.</p>
+<p>To disable <code>frame.color</code> set to <code>NA</code> with <code>vertex.frame.color=NA</code>
+or <code>V(g)[2]$frame.color &lt;- NA</code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam igraph shapes: 
 <code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.plot</a>()</code>,
+<code><a href="shape.ellipse.clip.html">shape.ellipse.clip</a>()</code>,
 <code><a href="shape.ellipse.plot.html">shape.ellipse.plot</a>()</code>,
 <code><a href="shape.jampie.plot.html">shape.jampie.plot</a>()</code></p></div>
     </div>
     </div>
 
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># See reorder_igraph_nodes() for visual examples.</span></span>
+<span class="r-in"></span>
+<span class="r-in"></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -110,7 +175,8 @@ described for <code><a href="https://rdrr.io/r/graphics/polygon.html" class="ext
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

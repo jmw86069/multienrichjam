@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -79,6 +79,8 @@
   gene_im_weight <span class="op">=</span> <span class="fl">0.5</span>,
   cluster_columns <span class="op">=</span> <span class="cn">NULL</span>,
   cluster_rows <span class="op">=</span> <span class="cn">NULL</span>,
+  cluster_row_slices <span class="op">=</span> <span class="cn">TRUE</span>,
+  cluster_column_slices <span class="op">=</span> <span class="cn">TRUE</span>,
   name <span class="op">=</span> <span class="cn">NULL</span>,
   p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,
   p_floor <span class="op">=</span> <span class="fl">1e-06</span>,
@@ -87,12 +89,13 @@
   auto_split <span class="op">=</span> <span class="cn">TRUE</span>,
   column_title <span class="op">=</span> <span class="va">LETTERS</span>,
   row_title <span class="op">=</span> <span class="va">letters</span>,
-  row_title_rot <span class="op">=</span> <span class="fl">90</span>,
+  row_title_rot <span class="op">=</span> <span class="fl">0</span>,
   colorize_by_gene <span class="op">=</span> <span class="cn">TRUE</span>,
   na_col <span class="op">=</span> <span class="st">"white"</span>,
   rotate_heatmap <span class="op">=</span> <span class="cn">FALSE</span>,
   colramp <span class="op">=</span> <span class="st">"Reds"</span>,
-  column_names_max_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">12</span>, <span class="st">"cm"</span><span class="op">)</span>,
+  column_names_max_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">18</span>, <span class="st">"cm"</span><span class="op">)</span>,
+  column_names_rot <span class="op">=</span> <span class="fl">90</span>,
   show_gene_legend <span class="op">=</span> <span class="cn">FALSE</span>,
   show_pathway_legend <span class="op">=</span> <span class="cn">TRUE</span>,
   show_heatmap_legend <span class="op">=</span> <span class="fl">8</span>,
@@ -158,11 +161,18 @@ consistency with the input multienrichment analysis.</p></dd>
 <dt>column_split, row_split</dt>
 <dd><p>optional arguments passed to
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> to split the heatmap by columns
-or rows, respectively. Note that when <code>row_split</code> is <code>NULL</code>
+or rows, respectively.</p><ul><li><p>when <code>row_split</code> is <code>NULL</code>
 and <code>auto_split=TRUE</code>, it will determine an appropriate number
-of clusters based upon the number of rows. To turn off row split,
+of clusters based upon the number of rows. To turn off row <code>split</code>,
 use <code>row_split=NULL</code> or <code>row_split=0</code> or <code>row_split=1</code>;
-likewise for <code>column_split</code>.</p></dd>
+likewise for <code>column_split</code>.</p></li>
+<li><p>when <code>row_split</code> or <code>column_split</code> are supplied as a named
+vector, the names are aligned with <code>sets</code> to be displayed
+in the heatmap, and will use the <code><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect()</a></code> of the two.
+When data is clustered, <code>cluster_row_slices=FALSE</code> and
+<code>cluster_column_slices=FALSE</code> such that the dendrogram will
+be broken into separate pieces.</p></li>
+</ul></dd>
 <dt>column_title</dt>
 <dd><p>optional character string with title to display
 above the heatmap.</p></dd>
@@ -221,6 +231,23 @@ for customization. However, if <code>...</code> causes an error, the same
 which is intended to allow overloading <code>...</code> for different
 functions.</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p><code>Heatmap</code> object defined in <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>, with
+two additional attributes:</p><ul><li><p><code>"caption"</code> - a <code>character</code> string with important clustering settings.</p></li>
+<li><p><code>"draw_caption"</code> - a <code>function</code> that will draw the caption in the
+bottom-left corner of the heatmap, calling
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/grid.textbox.html" class="external-link">ComplexHeatmap::grid.textbox()</a></code>. This function should be called
+with no parameters, for example:</p><div class="sourceCode R"><pre><code><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">hm</span>, <span class="st">"draw_caption"</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></code></pre><p></p></div></li>
+</ul><p>In addition, the returned object can be interrogated with two helper
+functions that help define the row and column clusters, and the
+exact order of labels as they appear in the heatmap.</p><ol><li><p><code><a href="https://rdrr.io/pkg/jamba/man/heatmap_row_order.html" class="external-link">jamba::heatmap_row_order()</a></code> - returns a <code>list</code> of vectors of
+rownames in the order they appear in the heatmap, with list names
+defined by row split.</p></li>
+<li><p><code><a href="https://rdrr.io/pkg/jamba/man/heatmap_column_order.html" class="external-link">jamba::heatmap_column_order()</a></code> - returns a <code>list</code> of vectors of
+colnames in the order they appear in the heatmap, with list names
+defined by row split.</p></li>
+</ol></div>
     <div id="details">
     <h2>Details</h2>
     <p>This function takes the <code>mem</code> list output from
@@ -246,12 +273,14 @@ appropriately.</p></li>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam plot functions: 
+<code><a href="adjust_polygon_border.html">adjust_polygon_border</a>()</code>,
 <code><a href="grid_with_title.html">grid_with_title</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
 <code><a href="mem_enrichment_heatmap.html">mem_enrichment_heatmap</a>()</code>,
 <code><a href="mem_legend.html">mem_legend</a>()</code>,
 <code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
-<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code></p></div>
+<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
+<code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
     </div>
 
@@ -267,7 +296,8 @@ appropriately.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

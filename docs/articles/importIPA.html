@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -75,10 +75,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="importIPA_files/kePrint-0.0.1/kePrint.js"></script><link href="importIPA_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>How to import and use Ingenuity IPA enrichment data</h1>
+      <h1 data-toc-skip>How to import and use Ingenuity IPA enrichment
+data</h1>
             
       
       <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/vignettes/importIPA.Rmd" class="external-link"><code>vignettes/importIPA.Rmd</code></a></small>
@@ -91,11 +93,6 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/jmw86069/multienrichjam" class="external-link">multienrichjam</a></span><span class="op">)</span>;
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/jmw86069/jamba" class="external-link">jamba</a></span><span class="op">)</span>;
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'jamba'</span>
-<span class="co">#&gt; The following objects are masked from 'package:multienrichjam':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     heatmap_column_order, heatmap_row_order</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/jmw86069/colorjam" class="external-link">colorjam</a></span><span class="op">)</span>;
 <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jokergoo/ComplexHeatmap" class="external-link">ComplexHeatmap</a></span><span class="op">)</span><span class="op">)</span>;
 <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"stringsAsFactors"</span><span class="op">=</span><span class="cn">FALSE</span>, <span class="st">"warn"</span><span class="op">=</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>;
@@ -111,20 +108,30 @@
 <div class="section level2">
 <h2 id="import-and-use-ingenuity-ipa-enrichment-data">Import and use Ingenuity IPA enrichment data<a class="anchor" aria-label="anchor" href="#import-and-use-ingenuity-ipa-enrichment-data"></a>
 </h2>
-<p>This document describes steps recommended for using Ingenuity IPA enrichment data.</p>
-<p>Ingenuity IPA enrichment data can be exported using a function <code>"Export All"</code> which by default creates one text file, concatenating each enrichment table into one large file.</p>
-<p>This workflow demonstrates the import process using two IPA enrichment files used by Reese et al 2019 <a href="https://doi.org/10.1016/j.jaci.2018.11.043" class="external-link uri">https://doi.org/10.1016/j.jaci.2018.11.043</a> to compare enrichment results in newborns to older children.</p>
-<p>It therefore requires IPA enrichment results have already been exported in text format from IPA.</p>
+<p>This document describes steps recommended for using Ingenuity IPA
+enrichment data.</p>
+<p>Ingenuity IPA enrichment data can be exported using a function
+<code>"Export All"</code> which by default creates one text file,
+concatenating each enrichment table into one large file.</p>
+<p>This workflow demonstrates the import process using two IPA
+enrichment files used by Reese et al 2019 <a href="https://doi.org/10.1016/j.jaci.2018.11.043" class="external-link uri">https://doi.org/10.1016/j.jaci.2018.11.043</a> to compare
+enrichment results in newborns to older children.</p>
+<p>It therefore requires IPA enrichment results have already been
+exported in text format from IPA.</p>
 <div class="section level3">
 <h3 id="import-ipa-data-from-text-files">Import IPA data from text files<a class="anchor" aria-label="anchor" href="#import-ipa-data-from-text-files"></a>
 </h3>
-<p>To import an IPA text file, use <code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code>:</p>
+<p>To import an IPA text file, use
+<code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">newborn_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,
    <span class="st">"Newborns-IPA.txt"</span>,
    package<span class="op">=</span><span class="st">"multienrichjam"</span><span class="op">)</span>;
 <span class="va">newborn_dfl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/importIPAenrichment.html">importIPAenrichment</a></span><span class="op">(</span><span class="va">newborn_txt</span><span class="op">)</span>;</code></pre></div>
-<p>The result is a list of <code>data.frame</code> objects, where each <code>data.frame</code> represents one enrichment test. A convenient way to see the dimensions of each <code>data.frame</code> is with the function <code><a href="https://rdrr.io/pkg/jamba/man/sdim.html" class="external-link">jamba::sdim()</a></code>:</p>
+<p>The result is a list of <code>data.frame</code> objects, where each
+<code>data.frame</code> represents one enrichment test. A convenient way
+to see the dimensions of each <code>data.frame</code> is with the
+function <code><a href="https://rdrr.io/pkg/jamba/man/sdim.html" class="external-link">jamba::sdim()</a></code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/sdim.html" class="external-link">sdim</a></span><span class="op">(</span><span class="va">newborn_dfl</span><span class="op">)</span>;
 <span class="co">#&gt;                            rows cols      class</span>
@@ -134,7 +141,9 @@
 <span class="co">#&gt; Tox Functions                15    7 data.frame</span>
 <span class="co">#&gt; Networks                      8    7 data.frame</span>
 <span class="co">#&gt; Tox Lists                    19    6 data.frame</span></code></pre></div>
-<p>For MultiEnrichMap, we typically want to analyze multiple IPA enrichment files, so we can wrap the call in an <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply()</a></code> function:</p>
+<p>For MultiEnrichMap, we typically want to analyze multiple IPA
+enrichment files, so we can wrap the call in an <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply()</a></code>
+function:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">newborn_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,
    <span class="st">"Newborns-IPA.txt"</span>,
@@ -146,7 +155,8 @@
    OlderChildren<span class="op">=</span><span class="va">olderchildren_txt</span><span class="op">)</span>
 
 <span class="va">ipa_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ipa_files</span>, <span class="va">importIPAenrichment</span><span class="op">)</span>;</code></pre></div>
-<p>Now we can check the dimensions within each list using <code><a href="https://rdrr.io/pkg/jamba/man/ssdim.html" class="external-link">jamba::ssdim()</a></code>:</p>
+<p>Now we can check the dimensions within each list using
+<code><a href="https://rdrr.io/pkg/jamba/man/ssdim.html" class="external-link">jamba::ssdim()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/ssdim.html" class="external-link">ssdim</a></span><span class="op">(</span><span class="va">ipa_l</span><span class="op">)</span>;
 <span class="co">#&gt; $Newborns</span>
@@ -166,16 +176,33 @@
 <span class="co">#&gt; Tox Functions               118    7 data.frame</span>
 <span class="co">#&gt; Networks                     10    7 data.frame</span>
 <span class="co">#&gt; Tox Lists                    36    6 data.frame</span></code></pre></div>
-<p>In most cases, each IPA file should contain the same enrichment tests, for example <code>"Canonical Pathways"</code>, <code>"Upstream Regulators"</code>, <code>"Diseases and Bio Functions"</code>, etc. However, it is not always the case, so it is recommended to check and verify each IPA file contains at least the enrichment tests needed for downstream analysis.</p>
+<p>In most cases, each IPA file should contain the same enrichment
+tests, for example <code>"Canonical Pathways"</code>,
+<code>"Upstream Regulators"</code>,
+<code>"Diseases and Bio Functions"</code>, etc. However, it is not
+always the case, so it is recommended to check and verify each IPA file
+contains at least the enrichment tests needed for downstream
+analysis.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="analyze-ipa-enrichments-from-one-enrichment-test">Analyze IPA enrichments from one enrichment test<a class="anchor" aria-label="anchor" href="#analyze-ipa-enrichments-from-one-enrichment-test"></a>
 </h2>
-<p>IPA performs multiple enrichment tests, which are done independently and with unique assumptions and caveats. Therefore, I recommend using one enrichment test at a time in MultiEnrichMap.</p>
+<p>IPA performs multiple enrichment tests, which are done independently
+and with unique assumptions and caveats. Therefore, I recommend using
+one enrichment test at a time in MultiEnrichMap.</p>
 <p>Extract one <code>data.frame</code> from each result:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">## Take only the Ingenuity Canonical Pathways</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'igraph'</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     decompose, spectrum</span>
+<span class="co">#&gt; The following object is masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     union</span>
+<span class="co">## Take only the Ingenuity Canonical Pathways</span>
 <span class="va">enrichList_canonical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ipa_l</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span>
    <span class="va">i</span><span class="op">[[</span><span class="st">"Canonical Pathways"</span><span class="op">]</span><span class="op">]</span>;
 <span class="op">}</span><span class="op">)</span>;
@@ -198,138 +225,626 @@
 <span class="co">#&gt;               rows cols        class</span>
 <span class="co">#&gt; Newborns       113   11 enrichResult</span>
 <span class="co">#&gt; OlderChildren  237   11 enrichResult</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">er_canonical</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>;
-<span class="co">#&gt;                                                                                                                                                            ID</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                                                                       Neuroinflammation Signaling Pathway</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                                                                           Sirtuin Signaling Pathway</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                                                                     G-Protein Coupled Receptor Signaling</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                                                                 Protein Ubiquitination Pathway</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                                                               Signaling by Rho Family GTPases</span>
-<span class="co">#&gt;                                                                                                                                  Ingenuity Canonical Pathways</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                                                                       Neuroinflammation Signaling Pathway</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                                                                           Sirtuin Signaling Pathway</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                                                                     G-Protein Coupled Receptor Signaling</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                                                                 Protein Ubiquitination Pathway</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                                                               Signaling by Rho Family GTPases</span>
-<span class="co">#&gt;                                                                                -log(p-value)</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis         0.405</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                                    0.406</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                              0.428</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                                   0.447</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                         0.461</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                        0.478</span>
-<span class="co">#&gt;                                                                                zScore</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis    NaN</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                               NaN</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                         NaN</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                              NaN</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                    NaN</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                   NaN</span>
-<span class="co">#&gt;                                                                                GeneRatio</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis   0.00321</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                              0.00322</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                        0.00344</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                             0.00362</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                   0.00377</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                  0.00397</span>
-<span class="co">#&gt;                                                                                  geneID</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis TNFSF13B</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                               CASP8</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                      HIST1H1D</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                            PRKAR2B</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                     TAP2</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                     RDX</span>
-<span class="co">#&gt;                                                                                   pvalue</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis 0.3935501</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                            0.3926449</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                      0.3732502</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                           0.3572728</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                 0.3459394</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                0.3326596</span>
-<span class="co">#&gt;                                                                                                                                                   Description</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                                                                       Neuroinflammation Signaling Pathway</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                                                                           Sirtuin Signaling Pathway</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                                                                     G-Protein Coupled Receptor Signaling</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                                                                 Protein Ubiquitination Pathway</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                                                               Signaling by Rho Family GTPases</span>
-<span class="co">#&gt;                                                                                 p.adjust</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis 0.3935501</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                            0.3926449</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                      0.3732502</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                           0.3572728</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                 0.3459394</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                0.3326596</span>
-<span class="co">#&gt;                                                                                Count</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis     1</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                                1</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                          1</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                               1</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                     1</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                    1</span>
-<span class="co">#&gt;                                                                                setSize</span>
-<span class="co">#&gt; Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis     312</span>
-<span class="co">#&gt; Neuroinflammation Signaling Pathway                                                311</span>
-<span class="co">#&gt; Sirtuin Signaling Pathway                                                          291</span>
-<span class="co">#&gt; G-Protein Coupled Receptor Signaling                                               276</span>
-<span class="co">#&gt; Protein Ubiquitination Pathway                                                     265</span>
-<span class="co">#&gt; Signaling by Rho Family GTPases                                                    252</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/jamba/man/kable_coloring.html" class="external-link">kable_coloring</a></span><span class="op">(</span>
+   <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">er_canonical</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+   caption<span class="op">=</span><span class="st">"Top 10 rows of enrichment data"</span>,
+   row.names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/column_spec.html" class="external-link">column_spec</a></span><span class="op">(</span>column<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">er_canonical</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+      border_left<span class="op">=</span><span class="st">"1px solid #DDDDDD"</span>,
+      extra_css<span class="op">=</span><span class="st">"white-space: nowrap;"</span><span class="op">)</span></code></pre></div>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Top 10 rows of enrichment data
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+ID
+</th>
+<th style="text-align:left;">
+Ingenuity Canonical Pathways
+</th>
+<th style="text-align:right;">
+-log(p-value)
+</th>
+<th style="text-align:right;">
+zScore
+</th>
+<th style="text-align:right;">
+GeneRatio
+</th>
+<th style="text-align:left;">
+geneID
+</th>
+<th style="text-align:right;">
+pvalue
+</th>
+<th style="text-align:left;">
+Description
+</th>
+<th style="text-align:right;">
+p.adjust
+</th>
+<th style="text-align:right;">
+Count
+</th>
+<th style="text-align:right;">
+setSize
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid
+Arthritis
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid
+Arthritis
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.405
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+NaN
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.00321
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+TNFSF13B
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3935501
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid
+Arthritis
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3935501
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+312
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Neuroinflammation Signaling Pathway
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Neuroinflammation Signaling Pathway
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.406
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+NaN
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.00322
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+CASP8
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3926449
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Neuroinflammation Signaling Pathway
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3926449
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+311
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Sirtuin Signaling Pathway
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Sirtuin Signaling Pathway
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.428
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+NaN
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.00344
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+HIST1H1D
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3732502
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Sirtuin Signaling Pathway
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3732502
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+291
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+G-Protein Coupled Receptor Signaling
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+G-Protein Coupled Receptor Signaling
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.447
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+NaN
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.00362
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+PRKAR2B
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3572728
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+G-Protein Coupled Receptor Signaling
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3572728
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+276
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Protein Ubiquitination Pathway
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Protein Ubiquitination Pathway
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.461
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+NaN
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.00377
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+TAP2
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3459394
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Protein Ubiquitination Pathway
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3459394
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+265
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Signaling by Rho Family GTPases
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Signaling by Rho Family GTPases
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.478
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+NaN
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.00397
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+RDX
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3326596
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+Signaling by Rho Family GTPases
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+0.3326596
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+252
+</td>
+</tr>
+</tbody>
+</table>
 <div class="section level3">
 <h3 id="run-multienrichmap">run multiEnrichMap()<a class="anchor" aria-label="anchor" href="#run-multienrichmap"></a>
 </h3>
-<p>Now given a list of <code>data.frame</code> results, we can run <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code>:</p>
+<p>Now given a list of <code>data.frame</code> results, we can run
+<code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mem_canonical</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/multiEnrichMap.html">multiEnrichMap</a></span><span class="op">(</span><span class="va">er_canonical</span>,
    enrichBaseline<span class="op">=</span><span class="fl">1</span>,
    cutoffRowMinP<span class="op">=</span><span class="fl">0.05</span>,
    colorV<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"purple"</span>, <span class="st">"orange"</span><span class="op">)</span>,
    topEnrichN<span class="op">=</span><span class="fl">20</span><span class="op">)</span></code></pre></div>
-<p>The output <code>mem_canonical</code> is a list containing various results.</p>
+<p>The output <code>mem_canonical</code> is a list containing various
+results.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/sdim.html" class="external-link">sdim</a></span><span class="op">(</span><span class="va">mem_canonical</span><span class="op">)</span>;
-<span class="co">#&gt;                   rows cols        class</span>
-<span class="co">#&gt; enrichLabels         2         character</span>
-<span class="co">#&gt; colorV               2         character</span>
-<span class="co">#&gt; geneHitList          2              list</span>
-<span class="co">#&gt; geneIM              34    2       matrix</span>
-<span class="co">#&gt; geneIMcolors        34    2       matrix</span>
-<span class="co">#&gt; enrichIMgeneCount   30    2       matrix</span>
-<span class="co">#&gt; enrichIMdirection   30    2       matrix</span>
-<span class="co">#&gt; enrichList           2              list</span>
-<span class="co">#&gt; enrichIM            30    2       matrix</span>
-<span class="co">#&gt; enrichIMcolors      30    2       matrix</span>
-<span class="co">#&gt; multiEnrichDF       30   12   data.frame</span>
-<span class="co">#&gt; multiEnrichResult   30   14 enrichResult</span>
-<span class="co">#&gt; memIM               34   30       matrix</span>
-<span class="co">#&gt; multiEnrichMap      30  220       igraph</span>
-<span class="co">#&gt; multiEnrichMap2     30  220       igraph</span>
-<span class="co">#&gt; multiCnetPlot       64  110       igraph</span>
-<span class="co">#&gt; multiCnetPlot1      64  110       igraph</span>
-<span class="co">#&gt; multiCnetPlot1b     64  110       igraph</span>
-<span class="co">#&gt; multiCnetPlot2      64  110       igraph</span>
-<span class="co">#&gt; colnames             5              list</span>
-<span class="co">#&gt; p_cutoff             1           numeric</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/kable_coloring.html" class="external-link">kable_coloring</a></span><span class="op">(</span>
+   <span class="fu"><a href="https://rdrr.io/pkg/jamba/man/sdim.html" class="external-link">sdim</a></span><span class="op">(</span><span class="va">mem_canonical</span><span class="op">)</span>,
+   caption<span class="op">=</span><span class="st">"sdim(mem_canonical)"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
+   <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/column_spec.html" class="external-link">column_spec</a></span><span class="op">(</span>column<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>,
+      border_left<span class="op">=</span><span class="st">"1px solid #DDDDDD"</span>,
+      extra_css<span class="op">=</span><span class="st">"white-space: nowrap;"</span><span class="op">)</span></code></pre></div>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<caption>
+sdim(mem_canonical)
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+rows
+</th>
+<th style="text-align:left;">
+cols
+</th>
+<th style="text-align:left;">
+class
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+enrichLabels
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+character
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+colorV
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+character
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+geneHitList
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+list
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+geneIM
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+34
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+geneIMcolors
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+34
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+enrichIMgeneCount
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+enrichIMdirection
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+enrichList
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+list
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+enrichIM
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+enrichIMcolors
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiEnrichDF
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+12
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+data.frame
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiEnrichResult
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+14
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+enrichResult
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+memIM
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+34
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiEnrichMap
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+220
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+igraph
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiEnrichMap2
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+30
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+220
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+igraph
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiCnetPlot
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+64
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+110
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+igraph
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiCnetPlot1
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+64
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+110
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+igraph
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiCnetPlot1b
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+64
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+110
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+igraph
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+multiCnetPlot2
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+64
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+110
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+igraph
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+colnames
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+5
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+list
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+p_cutoff
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+1
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+numeric
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="create-a-mem-plot-folio-new-apr2020">Create a “Mem Plot Folio” (new Apr2020)<a class="anchor" aria-label="anchor" href="#create-a-mem-plot-folio-new-apr2020"></a>
 </h3>
-<p>The other analysis steps describe in this vignette are valid options, however in recent work with <code>multienrichjam</code> we have developed a new function to create a small folio of relates plots that we call a “mem plot folio”, and the function is <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>.</p>
-<p>The <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> function creates the following plots by default:</p>
+<p>The other analysis steps describe in this vignette are valid options,
+however in recent work with <code>multienrichjam</code> we have
+developed a new function to create a small folio of relates plots that
+we call a “mem plot folio”, and the function is
+<code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>.</p>
+<p>The <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> function creates the following
+plots by default:</p>
 <ol style="list-style-type: decimal">
 <li><p>Enrichment P-value heatmap (optionally colored by group)</p></li>
-<li><p>Gene-pathway incidence matrix, clustered by column and by row</p></li>
+<li><p>Gene-pathway incidence matrix, clustered by column and by
+row</p></li>
 <li>
 <p>Cnet plot including all collapsed pathway clusters</p>
 <ul>
-<li>The first plot labels clusters by <code>LETTERS</code>, “A”, “B”, “C”, “D”, etc.</li>
-<li>The second plot labels clusters by the top <code>n</code> pathway names</li>
-<li>The third plot labels clusters by the top <code>n</code> pathway names, but hides gene labels. This plot is best when there are too many genes to label.</li>
+<li>The first plot labels clusters by <code>LETTERS</code>, “A”, “B”,
+“C”, “D”, etc.</li>
+<li>The second plot labels clusters by the top <code>n</code> pathway
+names</li>
+<li>The third plot labels clusters by the top <code>n</code> pathway
+names, but hides gene labels. This plot is best when there are too many
+genes to label.</li>
 </ul>
 </li>
 <li>
-<p>Cnet plot using 1,2,3 exemplars per pathway cluster (configurable)</p>
+<p>Cnet plot using 1,2,3 exemplars per pathway cluster
+(configurable)</p>
 <ul>
 <li>The first plot uses 1 exemplar per cluster.</li>
 <li>The second plot uses 2 exemplars per cluster.</li>
@@ -344,126 +859,220 @@
 </li>
 </ol>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mem_canonical_plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_plot_folio.html">mem_plot_folio</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
+<code class="sourceCode R"><span class="va">mem_canonical_plots</span> <span class="op">&lt;-</span> <span class="fu">multienrichjam</span><span class="fu">::</span><span class="fu"><a href="../reference/mem_plot_folio.html">mem_plot_folio</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
    pathway_column_split<span class="op">=</span><span class="fl">4</span>,
-   node_factor<span class="op">=</span><span class="fl">5</span>,
+   node_factor<span class="op">=</span><span class="fl">1</span>,
    use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,
-   label_factor<span class="op">=</span><span class="fl">1.5</span>,
+   label_factor<span class="op">=</span><span class="fl">1.2</span>,
+   do_which<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>,
+   verbose<span class="op">=</span><span class="cn">TRUE</span>,
    main<span class="op">=</span><span class="st">"Canonical Pathways"</span><span class="op">)</span>;
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:06</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Enrichment P-value heatmap</span> </span>
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:06</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">1</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Enrichment P-value Heatmap</span></span></code></pre></div>
+<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:13</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">1</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Enrichment P-value Heatmap</span></span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_folio-1.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:08</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Gene-pathway heatmap</span> </span>
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:08</span>) 23Mar2022:  <span style="color: #FF8700;">length(col_hm_at): </span><span style="color: #00AFFF;">2</span><span style="color: #FF8700;">, show_heatmap_legend: </span><span style="color: #00AFFF;">8</span> </span>
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:08</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">2</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Gene-Pathway Heatmap</span></span></code></pre>
+<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:15</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Gene-pathway heatmap</span> </span>
+<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:15</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">2</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Gene-Pathway Heatmap</span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-2.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:11</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Defined </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;"> pathway clusters.</span> </span>
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:11</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Preparing Cnet collapsed</span> </span>
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:11</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">subsetCnetIgraph()</span> </span>
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:11</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">3</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and cluster labels</span></span></code></pre>
+<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:18</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Defined </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;"> pathway clusters.</span> </span>
+<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:18</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Preparing Cnet collapsed</span> </span>
+<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:18</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">subsetCnetIgraph()</span> </span>
+<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:18</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">3</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and cluster labels</span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-3.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:12</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and set labels</span></span></code></pre>
+<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:20</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and set labels</span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-4.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:12</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">5</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with set labels, without gene labels</span></span></code></pre>
+<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">23:54:20</span>) 01Feb2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">5</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with set labels, without gene labels</span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-5.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:12</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Preparing cnet for subsetting with memIM2cnet().</span> </span>
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:12</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">6</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet with </span><span style="color: #FFAF5F;">1</span><span style="color: #FF8700;"> exemplar</span></span></code></pre>
-<p><img src="importIPA_files/figure-html/mem_folio-6.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:13</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">7</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet with </span><span style="color: #FFAF5F;">2</span><span style="color: #FF8700;"> exemplars</span></span></code></pre>
-<p><img src="importIPA_files/figure-html/mem_folio-7.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:13</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">8</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet with </span><span style="color: #FFAF5F;">3</span><span style="color: #FF8700;"> exemplars</span></span></code></pre>
-<p><img src="importIPA_files/figure-html/mem_folio-8.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:14</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">9</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet cluster </span><span style="color: #FFAF5F;">A</span></span></code></pre>
-<p><img src="importIPA_files/figure-html/mem_folio-9.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:14</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">10</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet cluster </span><span style="color: #FFAF5F;">B</span></span></code></pre>
-<p><img src="importIPA_files/figure-html/mem_folio-10.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:14</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">11</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet cluster </span><span style="color: #FFAF5F;">C</span></span></code></pre>
-<p><img src="importIPA_files/figure-html/mem_folio-11.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:15</span>) 23Mar2022:  <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">12</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet cluster </span><span style="color: #FFAF5F;">D</span></span></code></pre>
-<p><img src="importIPA_files/figure-html/mem_folio-12.png" width="960" style="display: block; margin: auto;"></p>
-<p>The object returned <code>mem_canonical_plots</code> will contain a list of the graphical objects for each plot requested. For example, each Cnet plot returns an <code>igraph</code> object which can be customized.</p>
+<p>The object returned <code>mem_canonical_plots</code> will contain a
+list of the graphical objects for each plot requested. For example, each
+Cnet plot returns an <code>igraph</code> object which can be
+customized.</p>
 <div class="section level4">
 <h4 id="commentary-on-the-plot-folio">Commentary on the “Plot Folio”<a class="anchor" aria-label="anchor" href="#commentary-on-the-plot-folio"></a>
 </h4>
-<p>In practice, we rarely found much benefit from the multi-enrichment map, which shows pathways connected to pathways based upon Jaccard overlap. This network view was often disorganized, not clearly clustered, and lacked ability to see which genes drive the overlaps between pathways. Perhaps it works best for the highly structured Gene Ontology (GO), but in our hands GO was just not insightful for the broad range of experiments we were analyzing.</p>
-<p>Instead, we almost always gravitated toward the Cnet plot, a clever idea by Dr. Guangchang Yu that connects pathways to genes, where genes also connect naturally to other pathways. This plot for many of our collaborators has seemed more intuitive, and answers the next question people often have: “What are the shared genes?” Our subtle addition to this plot is to color-code genes by the enrichment experiment, so you can see which genes are shared or unique by experiment.</p>
-<p>Since most enrichment results have far more pathways than can be shown in one Cnet plot, we tried to prioritize which pathways to display. The logic in Dr. Yu’s <code>enrichplot</code> is to take the top <code>n</code> pathways by P-value, however we noticed for our data this logic often shows redundant pathways and misses orthologous biological functions, which might be enriched to a lesser degree. So we started clustering pathways by P-value, then by using the pathway-gene incidence matrix.</p>
-<p>The pathway-gene incidence matrix worked best in our hands for this clustering, partly because it clusters pathways by the genes involved, and not by the pattern of enrichment across the enrichment tests (which may not be related to the underlying genes.) So we cluster pathways, then choose an arbitrary number of clusters, and took one “exemplar” from each cluster to represent each cluster. This practice is mostly effective, especially when the clusters are well-defined, and when members of each cluster have relatively similar function. We can increase the exemplars per cluster as needed. This strategy is helpful because each pathway is very clearly labeled.</p>
-<p>Most recently, we experimented with collapsing each pathway_cluster, so each pathway_cluster includes all genes implicated by pathways contained in the pathway_cluster. The benefit here is that no genes are lost by selecting a subset of “exemplar” pathways – all genes are retained per cluster. Then instead of plotting pathway-gene network, we plot a pathway_cluster-gene network. Each pathway_cluster is labeled using the top <code>n</code> pathway names – which is configurable, and is only a visible label. Each pathway_cluster contains all the pathways in the cluster.</p>
+<p>In practice, we rarely found much benefit from the multi-enrichment
+map, which shows pathways connected to pathways based upon Jaccard
+overlap. This network view was often disorganized, not clearly
+clustered, and lacked ability to see which genes drive the overlaps
+between pathways. Perhaps it works best for the highly structured Gene
+Ontology (GO), but in our hands GO was just not insightful for the broad
+range of experiments we were analyzing.</p>
+<p>Instead, we almost always gravitated toward the Cnet plot, a clever
+idea by Dr. Guangchang Yu that connects pathways to genes, where genes
+also connect naturally to other pathways. This plot for many of our
+collaborators has seemed more intuitive, and answers the next question
+people often have: “What are the shared genes?” Our subtle addition to
+this plot is to color-code genes by the enrichment experiment, so you
+can see which genes are shared or unique by experiment.</p>
+<p>Since most enrichment results have far more pathways than can be
+shown in one Cnet plot, we tried to prioritize which pathways to
+display. The logic in Dr. Yu’s <code>enrichplot</code> is to take the
+top <code>n</code> pathways by P-value, however we noticed for our data
+this logic often shows redundant pathways and misses orthologous
+biological functions, which might be enriched to a lesser degree. So we
+started clustering pathways by P-value, then by using the pathway-gene
+incidence matrix.</p>
+<p>The pathway-gene incidence matrix worked best in our hands for this
+clustering, partly because it clusters pathways by the genes involved,
+and not by the pattern of enrichment across the enrichment tests (which
+may not be related to the underlying genes.) So we cluster pathways,
+then choose an arbitrary number of clusters, and took one “exemplar”
+from each cluster to represent each cluster. This practice is mostly
+effective, especially when the clusters are well-defined, and when
+members of each cluster have relatively similar function. We can
+increase the exemplars per cluster as needed. This strategy is helpful
+because each pathway is very clearly labeled.</p>
+<p>Most recently, we experimented with collapsing each pathway_cluster,
+so each pathway_cluster includes all genes implicated by pathways
+contained in the pathway_cluster. The benefit here is that no genes are
+lost by selecting a subset of “exemplar” pathways – all genes are
+retained per cluster. Then instead of plotting pathway-gene network, we
+plot a pathway_cluster-gene network. Each pathway_cluster is labeled
+using the top <code>n</code> pathway names – which is configurable, and
+is only a visible label. Each pathway_cluster contains all the pathways
+in the cluster.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="directly-create-each-individual-plot">Directly create each individual plot<a class="anchor" aria-label="anchor" href="#directly-create-each-individual-plot"></a>
 </h3>
-<p>The plots in <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> are also available as individual functions.</p>
-<p>In general, it is most convenient to call <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> and use the output <code>list</code> to create custom plots, however the functions are also available to be called independently.</p>
+<p>The plots in <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> are also available as
+individual functions.</p>
+<p>In general, it is most convenient to call
+<code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> and use the output <code>list</code> to
+create custom plots, however the functions are also available to be
+called independently.</p>
 <div class="section level4">
 <h4 id="plot-the-multienrichmap-network">Plot the MultiEnrichMap network<a class="anchor" aria-label="anchor" href="#plot-the-multienrichmap-network"></a>
 </h4>
-<p>We can view the “Multi Enrichment Map” itself with <code><a href="../reference/mem_multienrichplot.html">mem_multienrichplot()</a></code>.</p>
-<p>This network connects pathways when they meet a Jaccard overlap coefficient threshold based upon the shared genes between the pathways. The default overlap is stored by <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> in the output object <code>mem_canonical</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<p>We can view the “Multi Enrichment Map” itself with
+<code><a href="../reference/mem_multienrichplot.html">mem_multienrichplot()</a></code>.</p>
+<p>This network connects pathways when they meet a Jaccard overlap
+coefficient threshold based upon the shared genes between the pathways.
+The default overlap is stored by <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> in the
+output object <code>mem_canonical</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_multienrichplot.html">mem_multienrichplot</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
-   node_factor<span class="op">=</span><span class="fl">3</span>,
-   repulse<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span></code></pre></div>
+   do_plot<span class="op">=</span><span class="cn">FALSE</span>,
+   overlap<span class="op">=</span><span class="fl">0.3</span>,
+   node_factor<span class="op">=</span><span class="fl">2</span>,
+   repulse<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span>
+<span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g</span>,
+   node_factor<span class="op">=</span><span class="fl">2</span>,
+   use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_plot_1-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>The overlap threshold can be customized manually, or through the helper function <code><a href="../reference/mem_find_overlap.html">mem_find_overlap()</a></code>. This function attempts to guess a reasonable overlap threshold based upon the network connectivity, by optimizing the cluster size and total nodes involved.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<p>The overlap threshold can be customized manually, or through the
+helper function <code><a href="../reference/mem_find_overlap.html">mem_find_overlap()</a></code>. This function attempts
+to guess a reasonable overlap threshold based upon the network
+connectivity, by optimizing the cluster size and total nodes
+involved.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_multienrichplot.html">mem_multienrichplot</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
    overlap<span class="op">=</span><span class="fu"><a href="../reference/mem_find_overlap.html">mem_find_overlap</a></span><span class="op">(</span><span class="va">mem_canonical</span><span class="op">)</span>,
+   do_plot<span class="op">=</span><span class="cn">FALSE</span>,
    node_factor<span class="op">=</span><span class="fl">3</span>,
-   repulse<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span></code></pre></div>
+   repulse<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span>
+<span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g</span>,
+   node_factor<span class="op">=</span><span class="fl">3</span>,
+   use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_plot_1b-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Notice there are distinct subnetworks, called “components”, which are not connected to each other. A useful follow-up technique is to graph one component at a time, which we do using the helper function <code><a href="../reference/subset_igraph_components.html">subset_igraph_components()</a></code>. Components are ordered by size, largest to smallest, so you can keep the largest using argument <code>keep=1</code>, or the second largest with <code>keep=2</code>, and so on.</p>
+<p>Notice there are distinct subnetworks, called “components”, which are
+not connected to each other. A useful follow-up technique is to graph
+one component at a time, which we do using the helper function
+<code><a href="../reference/subset_igraph_components.html">subset_igraph_components()</a></code>. Components are ordered by size,
+largest to smallest, so you can keep the largest using argument
+<code>keep=1</code>, or the second largest with <code>keep=2</code>, and
+so on.</p>
 <p>We also call two other helper functions:</p>
 <ol style="list-style-type: decimal">
 <li>
-<code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code> removes blank colors from multi-color nodes, such as pie nodes, or colored rectangle nodes. It helps show only the remaining colors without the whitespace.</li>
+<code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code> removes blank colors from
+multi-color nodes, such as pie nodes, or colored rectangle nodes. It
+helps show only the remaining colors without the whitespace.</li>
 <li>
-<code><a href="../reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> applies Fruchterman-Reingold layout to an <code>igraph</code> object. It’s convenient to adjust <code>repulse</code> here, which is the recommended method for adjusting the spacing between nodes. This function also updates other useful attributes such as the node label angle, which makes labels appear offset away from the majority of edges. (It helps more with Cnet plots below.)</li>
+<code><a href="../reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> applies Fruchterman-Reingold layout
+to an <code>igraph</code> object. It’s convenient to adjust
+<code>repulse</code> here, which is the recommended method for adjusting
+the spacing between nodes. This function also updates other useful
+attributes such as the node label angle, which makes labels appear
+offset away from the majority of edges. (It helps more with Cnet plots
+below.)</li>
 </ol>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## You can alternatively pull out any other component</span>
 <span class="va">g_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subset_igraph_components.html">subset_igraph_components</a></span><span class="op">(</span><span class="va">g</span>, keep<span class="op">=</span><span class="fl">1</span><span class="op">)</span>;
 
 <span class="co">## Re-apply network layout, and remove blank colors</span>
 <span class="va">g_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/relayout_with_qfr.html">relayout_with_qfr</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.5</span>,
-      <span class="fu"><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks</a></span><span class="op">(</span><span class="va">g_sub</span><span class="op">)</span><span class="op">)</span>
+   <span class="fu"><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks</a></span><span class="op">(</span><span class="va">g_sub</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co">## Plot</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g_sub</span>,
-   vertex.size<span class="op">=</span><span class="fl">15</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g_sub</span>,
+   node_factor<span class="op">=</span><span class="fl">3</span>,
+   use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_plot_2-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="plot-the-enrichment-p-value-matrix">Plot the enrichment P-value matrix<a class="anchor" aria-label="anchor" href="#plot-the-enrichment-p-value-matrix"></a>
 </h4>
-<p>A useful overview of the enrichment results, including the overlaps across datasets, is shown in a heatmap of <code>-log10(Pvalue)</code>. The helper function <code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> is used here.</p>
-<p>The argument <code>p_cutoff</code> is used to set the Pvalue below which cells are colorized – every P-value above this threshold is not colored, and displayed as white, even when the P-value is less than 1.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>, p_cutoff<span class="op">=</span><span class="fl">0.05</span><span class="op">)</span>;</code></pre></div>
-<p><img src="importIPA_files/figure-html/enrich_hm-1.png" width="960" style="display: block; margin: auto;"><img src="importIPA_files/figure-html/enrich_hm-2.png" width="960" style="display: block; margin: auto;"></p>
-<p>The argument <code>color_by_column=TRUE</code> will optionally apply a color gradient to each column, using the same P-value threshold defined by <code>p_cutoff</code>. In this case, cells are labeled to indicate the actual enrichment P-value.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>, color_by_column<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</code></pre></div>
+<p>A useful overview of the enrichment results, including the overlaps
+across datasets, is shown in a heatmap of <code>-log10(Pvalue)</code>.
+The helper function <code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> is used
+here.</p>
+<p>The argument <code>p_cutoff</code> is used to set the Pvalue below
+which cells are colorized – every P-value above this threshold is not
+colored, and displayed as white, even when the P-value is less than
+1.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
+   p_cutoff<span class="op">=</span><span class="fl">0.05</span><span class="op">)</span>;</code></pre></div>
+<p><img src="importIPA_files/figure-html/enrich_hm-1.png" width="960" style="display: block; margin: auto;"></p>
+<p>The same data can be plotted as a heatmap.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
+   style<span class="op">=</span><span class="st">"heatmap"</span>,
+   p_cutoff<span class="op">=</span><span class="fl">0.05</span><span class="op">)</span>;</code></pre></div>
+<p><img src="importIPA_files/figure-html/enrich_hm_1-1.png" width="960" style="display: block; margin: auto;"></p>
+<p>The argument <code>color_by_column=TRUE</code> will optionally apply
+a color gradient to each column, using the same P-value threshold
+defined by <code>p_cutoff</code>. In this case, cells are labeled to
+indicate the actual enrichment P-value.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
+   style<span class="op">=</span><span class="st">"heatmap"</span>,
+   color_by_column<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</code></pre></div>
 <p><img src="importIPA_files/figure-html/enrich_hm_2-1.png" width="960" style="display: block; margin: auto;"><img src="importIPA_files/figure-html/enrich_hm_2-2.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="plot-the-pathway-gene-incidence-matrix">Plot the pathway-gene incidence matrix<a class="anchor" aria-label="anchor" href="#plot-the-pathway-gene-incidence-matrix"></a>
 </h4>
-<p>We can view the pathway-gene matrix using the function <code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>. This function uses data in the <code>mem</code> object: <code>"memIM"</code> which contains the gene-pathway incidence matrix, <code>"geneIM"</code> which contains the gene-dataset incidence matrix, and <code>"enrichIM"</code> which contains the pathway-dataset matrix.</p>
-<p>This function attempts to “guess” a reasonable number of column and row splits – which breaks the column and row dendrograms into separate sub-clusters. These breaks are visual only, but can be useful in follow-up analyses shown later. You can override these numbers with arguments <code>column_split</code> and <code>row_split</code>.</p>
-<p>Also, the colors used across the top of the heatmap indicate the enrichment P-value, and are intentionally scaled so all P-values above the P-value threshold are not colored, and are therefore white.</p>
-<p>This function uses the amazing <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> function, which enables many awesome customizable features. The <code>...</code> argument is passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>, so you can use those features as needed.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<p>We can view the pathway-gene matrix using the function
+<code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>. This function uses data in the
+<code>mem</code> object: <code>"memIM"</code> which contains the
+gene-pathway incidence matrix, <code>"geneIM"</code> which contains the
+gene-dataset incidence matrix, and <code>"enrichIM"</code> which
+contains the pathway-dataset matrix.</p>
+<p>This function attempts to “guess” a reasonable number of column and
+row splits – which breaks the column and row dendrograms into separate
+sub-clusters. These breaks are visual only, but can be useful in
+follow-up analyses shown later. You can override these numbers with
+arguments <code>column_split</code> and <code>row_split</code>.</p>
+<p>Also, the colors used across the top of the heatmap indicate the
+enrichment P-value, and are intentionally scaled so all P-values above
+the P-value threshold are not colored, and are therefore white.</p>
+<p>This function uses the amazing <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
+function, which enables many awesome customizable features. The
+<code>...</code> argument is passed to
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>, so you can use those features as
+needed.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,
+   column_cex<span class="op">=</span><span class="fl">0.5</span>,
    row_cex<span class="op">=</span><span class="fl">0.6</span><span class="op">)</span>;
-<span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">18:57:23</span>) 23Mar2022:  <span style="color: #FF8700;">length(col_hm_at): </span><span style="color: #00AFFF;">2</span><span style="color: #FF8700;">, show_heatmap_legend: </span><span style="color: #00AFFF;">8</span></span>
 <span class="va">hm</span>;</code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_hm-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>As a follow-up analysis, you can pull out each pathway cluster from the heatmap itself, using <code><a href="../reference/heatmap_column_order.html">heatmap_column_order()</a></code>:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">hm_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heatmap_column_order.html">heatmap_column_order</a></span><span class="op">(</span><span class="va">hm</span><span class="op">)</span>;
+<p>As a follow-up analysis, you can pull out each pathway cluster from
+the heatmap itself, using <code><a href="https://rdrr.io/pkg/jamba/man/heatmap_column_order.html" class="external-link">heatmap_column_order()</a></code>:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hm_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/jamba/man/heatmap_column_order.html" class="external-link">heatmap_column_order</a></span><span class="op">(</span><span class="va">hm</span><span class="op">)</span>;
 <span class="va">hm_sets</span>;
 <span class="co">#&gt; $A</span>
 <span class="co">#&gt;                                eNOS Signaling </span>
@@ -491,17 +1100,22 @@
 <div class="section level3">
 <h3 id="plot-the-pathway-gene-concept-network-cnet-plot">Plot the Pathway-Gene Concept network (Cnet plot)<a class="anchor" aria-label="anchor" href="#plot-the-pathway-gene-concept-network-cnet-plot"></a>
 </h3>
-<p>We can view the Cnet plot (concept network plot) which shows the pathway-gene relationship.</p>
-<p>The helper function <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> creates a Cnet plot from the <code>mem_canonical</code> output. Here, we also pipe the result through other helper functions:</p>
+<p>We can view the Cnet plot (concept network plot) which shows the
+pathway-gene relationship.</p>
+<p>The helper function <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> creates a Cnet plot
+from the <code>mem_canonical</code> output. Here, we also pipe the
+result through other helper functions:</p>
 <ul>
 <li>
 <code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code> applies pathway label word wrap</li>
 <li>
-<code><a href="../reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> applies network layout and adjusts node labels</li>
+<code><a href="../reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> applies network layout and adjusts
+node labels</li>
 <li>
-<code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code> removes blank colors from the <code>igraph</code> nodes</li>
+<code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code> removes blank colors from the
+<code>igraph</code> nodes</li>
 </ul>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#cnet &lt;- mem_canonical$multiCnetPlot1b;</span>
 <span class="va">cnet</span> <span class="op">&lt;-</span> <span class="va">mem_canonical</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span> 
    <span class="fu"><a href="../reference/memIM2cnet.html">memIM2cnet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
@@ -509,35 +1123,38 @@
    <span class="fu"><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/igraph/man/pipe.html" class="external-link">%&gt;%</a></span>
    <span class="fu"><a href="../reference/relayout_with_qfr.html">relayout_with_qfr</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">4</span><span class="op">)</span>;
 <span class="co">#plot(cnet, vertex.label.cex=0.6);</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">2</span><span class="op">)</span><span class="op">+</span><span class="fl">0.1</span><span class="op">)</span>
 <span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet</span>,
-   edge_bundling<span class="op">=</span><span class="st">"connections"</span>,
    use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,
-   node_factor<span class="op">=</span><span class="fl">3</span>,
+   node_factor<span class="op">=</span><span class="fl">0.5</span>,
    vertex.label.cex<span class="op">=</span><span class="fl">0.6</span><span class="op">)</span>;
 <span class="fu"><a href="../reference/mem_legend.html">mem_legend</a></span><span class="op">(</span><span class="va">mem_canonical</span><span class="op">)</span>;</code></pre></div>
 <p><img src="importIPA_files/figure-html/cnet_plot_1-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>You can extract the largest connected subnetwork to plot, as before.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<p>You can extract the largest connected subnetwork to plot, as
+before.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="va">cnet</span>;
 <span class="va">g2_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subset_igraph_components.html">subset_igraph_components</a></span><span class="op">(</span><span class="va">cnet</span>, keep<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 
 <span class="co">#plot(g2_sub);</span>
 <span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2_sub</span>,
-   edge_bundling<span class="op">=</span><span class="st">"connections"</span>,
    use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,
-   node_factor<span class="op">=</span><span class="fl">3</span><span class="op">)</span>;</code></pre></div>
+   label_factor<span class="op">=</span><span class="fl">0.5</span>,
+   node_factor<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span>;</code></pre></div>
 <p><img src="importIPA_files/figure-html/cnet_plot_2-1.png" width="960" style="display: block; margin: auto;"></p>
 <div class="section level4">
 <h4 id="customizing-the-cnet-plot">Customizing the Cnet plot<a class="anchor" aria-label="anchor" href="#customizing-the-cnet-plot"></a>
 </h4>
 <p>The most useful customization is to subset the pathway nodes.</p>
-<p>One useful method to choose a subset of pathways is to view one heatmap cluster at a time. Here we will use <code>hm_sets</code> made previously.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<p>One useful method to choose a subset of pathways is to view one
+heatmap cluster at a time. Here we will use <code>hm_sets</code> made
+previously.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cnet_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsetCnetIgraph.html">subsetCnetIgraph</a></span><span class="op">(</span><span class="va">cnet</span>,
    repulse<span class="op">=</span><span class="fl">3.5</span>,
    includeSets<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">hm_sets</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>;
 <span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet_sub</span>,
-   node_factor<span class="op">=</span><span class="fl">3</span>,
+   node_factor<span class="op">=</span><span class="fl">1</span>,
    use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,
    label_dist_factor<span class="op">=</span><span class="fl">3</span>,
    label_factor<span class="op">=</span><span class="fl">1.3</span><span class="op">)</span>;
@@ -547,28 +1164,39 @@
 <div class="section level4">
 <h4 id="subset-the-pathway-gene-cnet-plot">Subset the Pathway-Gene Cnet plot<a class="anchor" aria-label="anchor" href="#subset-the-pathway-gene-cnet-plot"></a>
 </h4>
-<p>You can also subset the Pathway-Gene Cnet plot using specific names, or by some network criteria, using the function <code><a href="../reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>.</p>
-<p>Pathways are subsetted to require at least 6 genes, using the argument <code>minSetDegree</code>, which can be useful to help simplify the graph structure.</p>
-<p>Similarly, the <code>minGeneDegree=2</code> argument can be used to display only genes present in 2 or more pathways, but for now we will not use that argument.</p>
-<p>During the subset operation, some convenient default operations are also performed, controlled by function arguments:</p>
+<p>You can also subset the Pathway-Gene Cnet plot using specific names,
+or by some network criteria, using the function
+<code><a href="../reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>.</p>
+<p>Pathways are subsetted to require at least 6 genes, using the
+argument <code>minSetDegree</code>, which can be useful to help simplify
+the graph structure.</p>
+<p>Similarly, the <code>minGeneDegree=2</code> argument can be used to
+display only genes present in 2 or more pathways, but for now we will
+not use that argument.</p>
+<p>During the subset operation, some convenient default operations are
+also performed, controlled by function arguments:</p>
 <ul>
-<li>singlet nodes (with no connection to any other) are removed, <code>remove_singlets=TRUE</code>
+<li>singlet nodes (with no connection to any other) are removed,
+<code>remove_singlets=TRUE</code>
 </li>
 <li>the layout is re-calculated, <code>force_relayout=TRUE</code>
 </li>
 <li>nodes are re-ordered by color, <code>do_reorder=TRUE</code>
 </li>
-<li>labels are re-positioned to have proper angle offset away from the edges entering each node, <code>spread_labels=TRUE</code>
+<li>labels are re-positioned to have proper angle offset away from the
+edges entering each node, <code>spread_labels=TRUE</code>
 </li>
-<li>blank colors are not removed from pie and colored rectangle nodes, <code>remove_blanks=FALSE</code>, but can be during this step by <code>remove_blanks=TRUE</code>.</li>
+<li>blank colors are not removed from pie and colored rectangle nodes,
+<code>remove_blanks=FALSE</code>, but can be during this step by
+<code>remove_blanks=TRUE</code>.</li>
 </ul>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cnet3</span> <span class="op">&lt;-</span> <span class="fu">multienrichjam</span><span class="fu">::</span><span class="fu"><a href="../reference/subsetCnetIgraph.html">subsetCnetIgraph</a></span><span class="op">(</span><span class="va">cnet</span>,
    repulse<span class="op">=</span><span class="fl">5</span>,
    minSetDegree<span class="op">=</span><span class="fl">6</span>,
    minGeneDegree<span class="op">=</span><span class="fl">1</span><span class="op">)</span>;
 <span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3</span>,
-   node_factor<span class="op">=</span><span class="fl">3</span>,
+   node_factor<span class="op">=</span><span class="fl">0.7</span>,
    use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;
 <span class="fu"><a href="../reference/mem_legend.html">mem_legend</a></span><span class="op">(</span><span class="va">mem_canonical</span><span class="op">)</span>;</code></pre></div>
 <p><img src="importIPA_files/figure-html/subnet-1.png" width="672" style="display: block; margin: auto;"></p>
@@ -576,49 +1204,65 @@
 <div class="section level4">
 <h4 id="custom-igraph-plot-function-jam_igraph">Custom igraph plot function jam_igraph()<a class="anchor" aria-label="anchor" href="#custom-igraph-plot-function-jam_igraph"></a>
 </h4>
-<p>The <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> function is a custom version of <code>igraph::plot()</code> intended to enhance the base function in a few ways:</p>
+<p>The <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> function is a custom version of
+<code>igraph::plot()</code> intended to enhance the base function in a
+few ways:</p>
 <ul>
-<li><p><code>edge_bundling="connections"</code> improves the rendering of edges by bundling edges from node clusters, so they are drawn with a bezier curve</p></li>
-<li><p><code>use_shadowText=TRUE</code> will draw labels with a contrasting border to improve legibility of text labels</p></li>
-<li><p><code>rescale=FALSE</code> keeps the network layout aspect ratio instead of scaling the coordinates to fit the size of the plot window. It also properly scales the node and edge sizes.</p></li>
+<li><p><code>edge_bundling="connections"</code> improves the rendering
+of edges by bundling edges from node clusters, so they are drawn with a
+bezier curve</p></li>
+<li><p><code>use_shadowText=TRUE</code> will draw labels with a
+contrasting border to improve legibility of text labels</p></li>
+<li><p><code>rescale=FALSE</code> keeps the network layout aspect ratio
+instead of scaling the coordinates to fit the size of the plot window.
+It also properly scales the node and edge sizes.</p></li>
 <li>
 <p>new arguments to help resize existing values:</p>
 <ul>
 <li>
-<code>label_factor</code> re-scales the <code>label.cex</code> values by a multiplier</li>
+<code>label_factor</code> re-scales the <code>label.cex</code>
+values by a multiplier</li>
 <li>
-<code>node_factor</code>, <code>edge_factor</code> re-scales the <code>node.size</code> and <code>edge.width</code> by a multiplier</li>
+<code>node_factor</code>, <code>edge_factor</code> re-scales the
+<code>node.size</code> and <code>edge.width</code> by a multiplier</li>
 <li>
-<code>label_dist_factor</code> re-scales the <code>label.dist</code> values by a multiplier</li>
+<code>label_dist_factor</code> re-scales the <code>label.dist</code>
+values by a multiplier</li>
 </ul>
 </li>
 </ul>
-<p>The function below replicates the previous Cnet plot, with these changes:</p>
+<p>The function below replicates the previous Cnet plot, with these
+changes:</p>
 <ul>
 <li>
 <code>node_factor=2</code> makes the nodes 2x larger</li>
 <li>
-<code>label_factor=1.2</code> makes the <code>label.cex</code> values 1.2x larger</li>
+<code>label_factor=1.2</code> makes the <code>label.cex</code>
+values 1.2x larger</li>
 <li>
-<code>label_dist_factor=3</code> makes the label distance from the node center 3x larger, which emphasizes the label placement at an angle away from the edges of each node.</li>
+<code>label_dist_factor=3</code> makes the label distance from the
+node center 3x larger, which emphasizes the label placement at an angle
+away from the edges of each node.</li>
 </ul>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3</span>,
-   edge_bundling<span class="op">=</span><span class="st">"connections"</span>,
    edge_factor<span class="op">=</span><span class="fl">2</span>,
-   node_factor<span class="op">=</span><span class="fl">2</span>, 
+   node_factor<span class="op">=</span><span class="fl">1.2</span>,
    label_factor<span class="op">=</span><span class="fl">1.2</span>, 
    use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,
    label_dist_factor<span class="op">=</span><span class="fl">3</span><span class="op">)</span>;</code></pre></div>
 <p><img src="importIPA_files/figure-html/jam_igraph_1-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>One more fancy alternative, you can colorize the edges based upon the node colors, a great idea inspired by the Gephi netowrk visualization tool.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<p>One more fancy alternative, you can colorize the edges based upon the
+node colors, a great idea inspired by the Gephi netowrk visualization
+tool.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu"><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes</a></span><span class="op">(</span><span class="va">cnet3</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span>,
    edge_bundling<span class="op">=</span><span class="st">"connections"</span>,
    edge_factor<span class="op">=</span><span class="fl">2</span>,
-   node_factor<span class="op">=</span><span class="fl">2</span>, 
+   node_factor<span class="op">=</span><span class="fl">1</span>,
    label_factor<span class="op">=</span><span class="fl">1.2</span>, 
-   label_dist_factor<span class="op">=</span><span class="fl">3</span><span class="op">)</span>;</code></pre></div>
+   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,
+   label_dist_factor<span class="op">=</span><span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/jam_igraph_2-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -642,7 +1286,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer>

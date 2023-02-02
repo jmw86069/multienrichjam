@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -58,58 +58,126 @@
 
 <div id="todo" class="section level1">
 
-<p>This document describes plans for enhancements to the multienrichjam R package.</p>
+<p>This document describes plans for enhancements to the multienrichjam
+R package.</p>
 <div class="section level2">
 <h2 id="freshen-gene-symbols">Freshen gene symbols<a class="anchor" aria-label="anchor" href="#freshen-gene-symbols"></a></h2>
-<p>The <code>genejam</code> R package provides <code>freshenGenes()</code> to update gene symbols to the most current nomenclature per gene.</p>
-<p>Current recommendation is to run <code><a href="https://rdrr.io/pkg/genejam/man/freshenGenes.html" class="external-link">genejam::freshenGenes()</a></code> before running pathway enrichment. Install from Github:</p>
+<p>The <code>genejam</code> R package provides
+<code>freshenGenes()</code> to update gene symbols to the most current
+nomenclature per gene.</p>
+<p>Current recommendation is to run <code><a href="https://rdrr.io/pkg/genejam/man/freshenGenes.html" class="external-link">genejam::freshenGenes()</a></code>
+before running pathway enrichment. Install from Github:</p>
 <blockquote>
 <p><code>devtools::install_github("jmw86069/genejam")</code></p>
 </blockquote>
-<ul><li>The goal is to ensure each input data is using the same gene nomenclature, so genes are comparable.</li>
-<li>Running <code>freshenGenes()</code> is most useful when combining pathway enrichment results from different source data, for example two different platforms, or from two different studies.</li>
+<ul><li>The goal is to ensure each input data is using the same gene
+nomenclature, so genes are comparable.</li>
+<li>Running <code>freshenGenes()</code> is most useful when combining
+pathway enrichment results from different source data, for example two
+different platforms, or from two different studies.</li>
 </ul><div class="section level3">
 <h3 id="why-use-gene-symbol">Why use gene symbol?<a class="anchor" aria-label="anchor" href="#why-use-gene-symbol"></a></h3>
-<p>There are multiple strategies widely used that attempt to maintain stable references to genes, such as using an authoritative gene identifier like NCBI Entrez Gene ID, or EnsEMBL Gene ID. In these cases, the official gene symbol can be obtained from resources like HGNC (Human Genome Nomenclature Committee). No solution is perfect, but the current rationale for using gene symbol in <code>multienrichjam</code>:</p>
+<p>There are multiple strategies widely used that attempt to maintain
+stable references to genes, such as using an authoritative gene
+identifier like NCBI Entrez Gene ID, or EnsEMBL Gene ID. In these cases,
+the official gene symbol can be obtained from resources like HGNC (Human
+Genome Nomenclature Committee). No solution is perfect, but the current
+rationale for using gene symbol in <code>multienrichjam</code>:</p>
 <ul><li>
-<p>NCBI Entrez Gene ID is an integer numeric value, and sometimes multiple numbers refer to the same official gene symbol.</p>
-<ul><li>An integer value is risky as a primary identifier, because it is not individually recognizable as a gene identifier, for example the number <code>348</code> is not itself recognized as the identifier for gene <code>"APOE"</code>, and in fact the number <code>348</code> could mean anything by itself. However <code>"APOE"</code> is more recognizable as a gene symbol.</li>
+<p>NCBI Entrez Gene ID is an integer numeric value, and sometimes
+multiple numbers refer to the same official gene symbol.</p>
+<ul><li>An integer value is risky as a primary identifier, because it is not
+individually recognizable as a gene identifier, for example the number
+<code>348</code> is not itself recognized as the identifier for gene
+<code>"APOE"</code>, and in fact the number <code>348</code> could mean
+anything by itself. However <code>"APOE"</code> is more recognizable as
+a gene symbol.</li>
 </ul></li>
-<li><p>Sometimes multiple EnsEMBL Gene ID values refer to the same official gene symbol. Note: EnsEMBL Gene ID values are individually unique, using the format <code>"ENSG00000000"</code> that is not represented anywhere in the world except by EnsEMBL Genes. However, few people in the world recognize <code>"ENSG00000130203"</code> as the gene <code>"APOE"</code>.</p></li>
-<li><p>There is not a clean 1-to-1 mapping from NCBI Entrez Gene ID to EnsEMBL Gene ID – there are one-to-many, many-to-one, and many-to-many relationships. In most cases, using official gene symbol resolves these disputes, and reduces the need to investigate these differences in detail.</p></li>
-<li><p>For cases where multiple Gene ID values refer to the same official gene symbol, conversion to gene symbol is beneficial to the outcome, because it ensures two alternate possible input Gene ID values are converted to the same gene symbol before comparisons.</p></li>
-<li><p>In general, gene sets are defined at the level of gene product (often an expressed protein), and therefore most frequently at the level of gene symbol. Most exceptions to this rule are even less specific than one gene, for example KEGG defines its own concept of a “gene” which may include multiple possible gene symbols. Ingenuity IPA also converts some gene symbols to a small group of “equivalent genes” for their purposes.</p></li>
-<li><p>Most gene set enrichment tools provide the list of genes involved in each enrichment. If gene symbols are not provided, the very next step is almost always to convert the ID values to gene symbol for human interpretation. However, many tools already provide gene symbols, which must be compared back to the source data.</p></li>
+<li><p>Sometimes multiple EnsEMBL Gene ID values refer to the same
+official gene symbol. Note: EnsEMBL Gene ID values are individually
+unique, using the format <code>"ENSG00000000"</code> that is not
+represented anywhere in the world except by EnsEMBL Genes. However, few
+people in the world recognize <code>"ENSG00000130203"</code> as the gene
+<code>"APOE"</code>.</p></li>
+<li><p>There is not a clean 1-to-1 mapping from NCBI Entrez Gene ID to
+EnsEMBL Gene ID – there are one-to-many, many-to-one, and many-to-many
+relationships. In most cases, using official gene symbol resolves these
+disputes, and reduces the need to investigate these differences in
+detail.</p></li>
+<li><p>For cases where multiple Gene ID values refer to the same
+official gene symbol, conversion to gene symbol is beneficial to the
+outcome, because it ensures two alternate possible input Gene ID values
+are converted to the same gene symbol before comparisons.</p></li>
+<li><p>In general, gene sets are defined at the level of gene product
+(often an expressed protein), and therefore most frequently at the level
+of gene symbol. Most exceptions to this rule are even less specific than
+one gene, for example KEGG defines its own concept of a “gene” which may
+include multiple possible gene symbols. Ingenuity IPA also converts some
+gene symbols to a small group of “equivalent genes” for their
+purposes.</p></li>
+<li><p>Most gene set enrichment tools provide the list of genes involved
+in each enrichment. If gene symbols are not provided, the very next step
+is almost always to convert the ID values to gene symbol for human
+interpretation. However, many tools already provide gene symbols, which
+must be compared back to the source data.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="desired-outcomes">Desired Outcomes<a class="anchor" aria-label="anchor" href="#desired-outcomes"></a></h3>
-<ul><li>The major goal is to ensure GeneA in one dataset is also called GeneA in another dataset.</li>
-<li>Follow-up goal is to enable tracking from enrichment results to the source data, for example seeing the fold change of genes involved in enrichment results, which requires using the correct gene identifier.</li>
+<ul><li>The major goal is to ensure GeneA in one dataset is also called
+GeneA in another dataset.</li>
+<li>Follow-up goal is to enable tracking from enrichment results to the
+source data, for example seeing the fold change of genes involved in
+enrichment results, which requires using the correct gene
+identifier.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="ideal-strategy-run-freshengenes-upfront">Ideal Strategy: Run freshenGenes() upfront<a class="anchor" aria-label="anchor" href="#ideal-strategy-run-freshengenes-upfront"></a></h3>
-<ul><li>Potential “ideal strategy” is to run <code>freshenGenes()</code> on each source data <strong>before</strong> running pathway enrichment. The major benefit is that the source data would therefore already be consistent across comparisons.</li>
+<ul><li>Potential “ideal strategy” is to run <code>freshenGenes()</code> on
+each source data <strong>before</strong> running pathway enrichment. The
+major benefit is that the source data would therefore already be
+consistent across comparisons.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="follow-up-strategy-run-freshengenes-on-each-enrichment-table">Follow-up Strategy: Run freshenGenes() on each enrichment table<a class="anchor" aria-label="anchor" href="#follow-up-strategy-run-freshengenes-on-each-enrichment-table"></a></h3>
-<ul><li>The strategy would be to convert recognized gene symbols to the most current annotation, with option to leave unrecognized gene symbols as-is with no conversion.</li>
-<li>Option to provide a custom set of gene symbol curation events, for example to reverse known conversions performed by software such as Ingenuity IPA.</li>
+<ul><li>The strategy would be to convert recognized gene symbols to the most
+current annotation, with option to leave unrecognized gene symbols as-is
+with no conversion.</li>
+<li>Option to provide a custom set of gene symbol curation events, for
+example to reverse known conversions performed by software such as
+Ingenuity IPA.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="specific-challenges">Specific Challenges<a class="anchor" aria-label="anchor" href="#specific-challenges"></a></h3>
 <ul><li>
-<p>Some gene symbols will be split or duplicated after conversion.</p>
-<ul><li>A “split” occurs when one gene symbol refers to two actual genes, for example input gene <code>HSPA1</code> may ultimately refer to both <code>HSPA1A</code> and <code>HSPA1B</code>.</li>
-<li>A duplication occurs when two different original gene symbols are resolved to the same final gene symbol, for example <code>HIST1H2BC</code>, and <code>HIST1H2BD</code> both refer to current official gene symbol <code>H2BC5</code>.</li>
+<p>Some gene symbols will be split or duplicated after
+conversion.</p>
+<ul><li>A “split” occurs when one gene symbol refers to two actual genes,
+for example input gene <code>HSPA1</code> may ultimately refer to both
+<code>HSPA1A</code> and <code>HSPA1B</code>.</li>
+<li>A duplication occurs when two different original gene symbols are
+resolved to the same final gene symbol, for example
+<code>HIST1H2BC</code>, and <code>HIST1H2BD</code> both refer to current
+official gene symbol <code>H2BC5</code>.</li>
 <li>When a split or duplication occurs, it must be recorded.</li>
 </ul></li>
 <li>
-<p>When a gene split or duplication occurs, it will affect the number of genes returned in the enrichment result, and is therefore not the same number used in the enrichment calculation.</p>
-<ul><li>This effect is another reason to support converting gene symbols before running gene set enrichment.</li>
-<li>However, the enrichment tool should only count each unique gene once, so the correct methodology is to accept the outcome of the enrichment tool within the caveats and limitations of using that tool. The purpose of modifying the gene symbol afterward is to facilitate comparison to the source data, and comparison across enrichment results. The underlying statistical enrichment test should remain unchanged.</li>
+<p>When a gene split or duplication occurs, it will affect the
+number of genes returned in the enrichment result, and is therefore not
+the same number used in the enrichment calculation.</p>
+<ul><li>This effect is another reason to support converting gene symbols
+before running gene set enrichment.</li>
+<li>However, the enrichment tool should only count each unique gene
+once, so the correct methodology is to accept the outcome of the
+enrichment tool within the caveats and limitations of using that tool.
+The purpose of modifying the gene symbol afterward is to facilitate
+comparison to the source data, and comparison across enrichment results.
+The underlying statistical enrichment test should remain unchanged.</li>
 </ul></li>
-<li><p>Each enrichment table may have its own distinct original annotation. Therefore, each enrichment must record the gene update process, in order to trace back to the source gene symbol.</p></li>
-<li><p>The “Use Case”: given a gene involved in pathway enrichment, find the source data from each input dataset.</p></li>
+<li><p>Each enrichment table may have its own distinct original
+annotation. Therefore, each enrichment must record the gene update
+process, in order to trace back to the source gene symbol.</p></li>
+<li><p>The “Use Case”: given a gene involved in pathway enrichment, find
+the source data from each input dataset.</p></li>
 </ul></div>
 </div>
 </div>
@@ -129,7 +197,8 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

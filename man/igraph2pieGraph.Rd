@@ -56,6 +56,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},

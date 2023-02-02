@@ -13,7 +13,7 @@ removeIgraphBlanks(
   constrain = c("nrow", "ncol", "none"),
   resizeNodes = TRUE,
   applyToPie = TRUE,
-  pie_to_circle = TRUE,
+  pie_to_circle = FALSE,
   pieAttrs = c("pie", "pie.value", "pie.names", "pie.color"),
   verbose = FALSE,
   ...
@@ -85,8 +85,7 @@ resulting node coloration, these blank colors can be removed in order to
 make the remaining colors more visibly distinct.
 }
 \examples{
-library(igraph);
-library(multienrichjam);
+require(igraph);
 g <- graph.full(n=3);
 V(g)$name <- c("nodeA", "nodeB", "nodeC");
 V(g)$shape <- "coloredrectangle";
@@ -98,7 +97,7 @@ V(g)$coloredrect.nrow <- rep(3, 3);
 V(g)$coloredrect.ncol <- c(2,3,2);
 V(g)$label.degree <- pi*3/2;
 V(g)$label.dist <- 3;
-V(g)$size2 <- c(20,30,20);
+V(g)$size2 <- c(3, 3, 3);
 
 color_v <- rep("white", 21);
 color_v[c(1,3,7,9,15,19,20,21)] <- colorjam::rainbowJam(5);
@@ -107,17 +106,20 @@ V(g)$coloredrect.color <- split(
    rep(V(g)$name, c(2,3,2)*3));
 par("mfrow"=c(2,2));
 lg <- layout_nicely(g);
-plot(g, layout=lg);
+jam_igraph(g, layout=lg, use_shadowText=TRUE);
 
 g2 <- removeIgraphBlanks(g, constrain="none");
 V(g2)$size2 <- V(g2)$size2 / 3;
-plot(g2, layout=lg, main="constrain='none'");
+jam_igraph(g2, layout=lg, use_shadowText=TRUE,
+   main="constrain='none'");
 
 g3 <- removeIgraphBlanks(g, constrain="nrow");
-plot(g3, layout=lg, main="constrain='nrow'");
+jam_igraph(g3, layout=lg, use_shadowText=TRUE,
+   main="constrain='nrow'");
 
 g4 <- removeIgraphBlanks(g, constrain="ncol");
-plot(g4, layout=lg, main="constrain='ncol'");
+jam_igraph(g4, layout=lg, use_shadowText=TRUE,
+   main="constrain='ncol'");
 
 #
 g7 <- graph.full(n=7);
@@ -128,12 +130,11 @@ V(g7)$coloredrect.nrow <- c(1,2,3,4,1,1,1);
 V(g7)$coloredrect.names <- V(g7)$coloredrect.color;
 V(g7)$shape <- "coloredrectangle";
 V(g7)$size <- 10;
-V(g7)$size2 <- V(g7)$coloredrect.ncol * 10;
+V(g7)$size2 <- V(g7)$coloredrect.ncol * 1;
 lg7 <- layout_nicely(g7);
-par("mfrow"=c(2,2));
-plot(g7, layout=lg7, vertez.size2=10);
-plot(g7, layout=lg7, vertex.size2=V(g7)$coloredrect.ncol*10);
-plot(g7, layout=lg7, vertex.size2=V(g7)$coloredrect.nrow*10);
+jam_igraph(g7, layout=lg7,
+   use_shadowText=TRUE,
+   vertex.size2=5);
 
 }
 \seealso{
@@ -149,6 +150,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

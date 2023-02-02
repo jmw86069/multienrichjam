@@ -131,8 +131,10 @@ if (require(igraph)) {
 Other jam cnet igraph functions: 
 \code{\link{adjust_cnet_nodeset}()},
 \code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_cnet_direction}()},
 \code{\link{apply_nodeset_spacing}()},
 \code{\link{get_cnet_nodeset}()},
+\code{\link{make_cnet_test}()},
 \code{\link{nudge_igraph_node}()}
 
 Other jam igraph functions: 
@@ -147,6 +149,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

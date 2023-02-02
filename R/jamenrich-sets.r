@@ -325,27 +325,8 @@ list2concordance <- function
 #'    are defined by `colnames(x)`, and vectors contain values
 #'    from `rownames(x)`.
 #'
-#' @examples
-#' im <- matrix(c(0,1,-1,1,1,NA,-1,0,1),
-#'    ncol=3,
-#'    nrow=3,
-#'    dimnames=list(letters[1:3], LETTERS[1:3]))
-#' print(im);
-#' # matrix input
-#' im2list(im);
 #'
-#' # data.frame
-#' imdf <- data.frame(im);
-#' print(imdf);
-#' im2list(im);
-#'
-#' # logical input
-#' imtf <- (!im == 0);
-#' print(imtf);
-#' im2list(imtf);
-#'
-#' @export
-im2list <- function
+im2list_dep <- function
 (x,
  verbose=FALSE,
  ...)
@@ -371,6 +352,72 @@ im2list <- function
       x <- jamba::rmNA(naValue=0, x);
    }
    as(as(t(x), "transactions"), "list");
+}
+
+#' convert incidence matrix to list
+#'
+#' convert incidence matrix to list
+#'
+#' This function converts an incidence `matrix`, or equivalent
+#' `data.frame`, to a list. The `matrix` should contain either
+#' numeric values such as `c(0, 1)`, or logical values such
+#' as `c(TRUE,FALSE)`, otherwise values are considered either
+#' zero == `FALSE`, or non-zero == `TRUE`.
+#'
+#' The resulting list will be named by `colnames(x)` of the input,
+#' and will contain members named by `rownames(x)` which are
+#' either non-zero, or contain `TRUE`.
+#'
+#' Values of `NA` are converted to zero `0` and therefore ignored.
+#'
+#' @family jam list functions
+#'
+#' @param x `matrix` or equivalent object with `colnames(x)` indicating
+#'    list set names, and `rownames(x)` indicating list contents.
+#' @param empty `character` vector of incidence matrix values that
+#'    should be considered "empty" and therefore do not indicate
+#'    the row in `x` is present for the given column in `x`.
+#'    All other items are considered to be present.
+#' @param ... additional arguments are ignored.
+#'
+#' @return `list` of `character vectors`, where list names
+#'    are defined by `colnames(x)`, and list elements are vectors
+#'    that contain values from `rownames(x)`.
+#'
+#' @examples
+#' im <- matrix(c(0,1,-1,1,1,NA,-1,0,1),
+#'    ncol=3,
+#'    nrow=3,
+#'    dimnames=list(letters[1:3], LETTERS[1:3]))
+#' print(im);
+#' # matrix input
+#' im2list(im);
+#'
+#' # data.frame
+#' imdf <- data.frame(im);
+#' print(imdf);
+#' im2list(im);
+#'
+#' # logical input
+#' imtf <- (!im == 0);
+#' print(imtf);
+#' im2list(imtf);
+#'
+#' @export
+im2list <- function
+(x,
+ empty=c(NA, "", 0, FALSE),
+ ...)
+{
+   # the reciprocal of list2im()
+   x_rows <- rownames(x);
+   x_cols <- colnames(x);
+   l <- lapply(jamba::nameVector(x_cols), function(i){
+      i_empty <- as(empty, class(x[,i]));
+      has_value <- (!x[,i] %in% i_empty);
+      x_rows[has_value];
+   });
+   return(l);
 }
 
 #' convert signed incidence matrix to list
@@ -399,6 +446,63 @@ im2list <- function
 #'    from `rownames(x)`. Values in each vector indicate the
 #'    signed direction, `c(-1,1)`.
 #'
+#'
+imSigned2list_dep <- function
+(x,
+ verbose=FALSE,
+ ...)
+   {
+   ## The reciprocal of list2im, it takes an incidence matrix,
+   ## and returns a list, named by colnames(x), of rownames(x)
+   ## where the value is not zero
+   if (!suppressWarnings(suppressPackageStartupMessages(require(arules)))) {
+      stop("The arules package is required for imSigned2list_dep().");
+   }
+   if (any(is.na(x))) {
+      x <- jamba::rmNA(naValue=0, x);
+   }
+   xUp <- as(as(t(x > 0), "transactions"), "list");
+   xDn <- as(as(t(x < 0), "transactions"), "list");
+   lapply(jamba::nameVector(colnames(x)), function(i){
+      c(jamba::nameVector(rep(1, length.out=length(xUp[[i]])), xUp[[i]]),
+         jamba::nameVector(rep(-1, length.out=length(xDn[[i]])), xDn[[i]]));
+   });
+}
+
+#' convert signed incidence matrix to list
+#'
+#' convert signed incidence matrix to list
+#'
+#' This function converts an signed incidence `matrix`
+#' that contains positive and negative values, or equivalent
+#' `data.frame`, to a list of named vectors containing values
+#' `c(-1, 1)` to indicate signed direction.
+#' The input `matrix` should contain numeric values where
+#' positive and negative values indicate directionality.
+#' When the input contains only logical values `c(TRUE,FALSE)`
+#' the direction is assumed to be `+1` positive.
+#'
+#' Values of `NA` are converted to zero `0` and therefore ignored.
+#'
+#' Values that are `logical` with `TRUE` and `FALSE` are converted
+#' to `numeric` before output.
+#'
+#' @family jam list functions
+#'
+#' @return `list` of named numeric vectors, where list names
+#'    are defined by `colnames(x)`, and vector names are derived
+#'    from `rownames(x)`. Values in each vector indicate the
+#'    signed direction, `c(-1,1)`.
+#'
+#' @param x `matrix` or equivalent object with `colnames(x)` indicating
+#'    list set names, and `rownames(x)` indicating list contents.
+#' @param empty `character` vector of incidence matrix values that
+#'    should be considered "empty" and therefore do not indicate
+#'    the row in `x` is present for the given column in `x`.
+#'    All other items are considered to be present, and are assigned
+#'    direction based upon the value in that cell of `x`.
+#' @param ... additional arguments are ignored.
+#'
 #' @examples
 #' im <- matrix(c(0,1,-1,1,1,NA,-1,0,1),
 #'    ncol=3,
@@ -413,22 +517,24 @@ im2list <- function
 #' @export
 imSigned2list <- function
 (x,
- verbose=FALSE,
+ empty=c(NA, "", 0, FALSE),
  ...)
-   {
-   ## The reciprocal of list2im, it takes an incidence matrix,
-   ## and returns a list, named by colnames(x), of rownames(x)
-   ## where the value is not zero
-   if (!suppressWarnings(suppressPackageStartupMessages(require(arules)))) {
-      stop("The arules package is required for imSigned2list().");
-   }
-   if (any(is.na(x))) {
-      x <- jamba::rmNA(naValue=0, x);
-   }
-   xUp <- as(as(t(x > 0), "transactions"), "list");
-   xDn <- as(as(t(x < 0), "transactions"), "list");
-   lapply(jamba::nameVector(colnames(x)), function(i){
-      c(jamba::nameVector(rep(1, length.out=length(xUp[[i]])), xUp[[i]]),
-         jamba::nameVector(rep(-1, length.out=length(xDn[[i]])), xDn[[i]]));
+{
+   # the reciprocal of list2im_value()
+   x_rows <- rownames(x);
+   x_cols <- colnames(x);
+   l <- lapply(jamba::nameVector(x_cols), function(i){
+      has_value <- (!x[,i] %in% empty);
+      if (is.logical(x[,i])) {
+         jamba::nameVector(
+            as.numeric(x[has_value,i]),
+            x_rows[has_value],
+            makeNamesFunc=c);
+      } else {
+         jamba::nameVector(x[has_value,i],
+            x_rows[has_value],
+            makeNamesFunc=c);
+      }
    });
+   return(l);
 }

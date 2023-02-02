@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -78,6 +78,8 @@
   row_dend_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span>,
   row_fontsize <span class="op">=</span> <span class="cn">NULL</span>,
   row_cex <span class="op">=</span> <span class="fl">1</span>,
+  row_split <span class="op">=</span> <span class="cn">NULL</span>,
+  cluster_rows <span class="op">=</span> <span class="cn">TRUE</span>,
   column_fontsize <span class="op">=</span> <span class="cn">NULL</span>,
   column_cex <span class="op">=</span> <span class="fl">1</span>,
   cluster_columns <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -96,6 +98,7 @@
   gene_count_max <span class="op">=</span> <span class="cn">NULL</span>,
   top_annotation <span class="op">=</span> <span class="cn">NULL</span>,
   show <span class="op">=</span> <span class="cn">NULL</span>,
+  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
 
@@ -182,6 +185,10 @@ above the heatmap.</p></dd>
 <dd><p><code>HeatmapAnnotation</code> as produced by
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapAnnotation.html" class="external-link">ComplexHeatmap::HeatmapAnnotation()</a></code> or <code>NULL</code>, used to display
 annotation at the top of the heatmap.</p></dd>
+<dt>do_plot</dt>
+<dd><p><code>logical</code> indicating whether to display the plot with
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">ComplexHeatmap::draw()</a></code> or <code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code> as relevant.
+The underlying data is returned invisibly.</p></dd>
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
 for customization.</p></dd>
@@ -206,12 +213,14 @@ use this form:</p><div class="sourceCode R"><pre><code><span class="fu">ComplexH
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam plot functions: 
+<code><a href="adjust_polygon_border.html">adjust_polygon_border</a>()</code>,
 <code><a href="grid_with_title.html">grid_with_title</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
 <code><a href="mem_gene_path_heatmap.html">mem_gene_path_heatmap</a>()</code>,
 <code><a href="mem_legend.html">mem_legend</a>()</code>,
 <code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
-<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code></p></div>
+<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
+<code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
     </div>
 
@@ -227,7 +236,8 @@ use this form:</p><div class="sourceCode R"><pre><code><span class="fu">ComplexH
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

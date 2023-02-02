@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -59,22 +59,767 @@
 <div id="todo" class="section level1">
 
 <div class="section level2">
-<h2 id="23mar2022-issue-7-passing-arguments-through--in-mem_plot_folio">23mar2022 issue #7 passing arguments through … in <code>mem_plot_folio()</code>
+<h2 id="26jan2023">26jan2023<a class="anchor" aria-label="anchor" href="#26jan2023"></a></h2>
+<ul><li>
+<p>Low priority: It may be useful to create vectorized
+functions:</p>
+<ul><li>
+<p><code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">polygon()</a></code></p>
+<ul><li>enable multiple line widths for multiple polygons split by
+<code>NA</code> coordinates.</li>
+<li>enable optional inner and outer borders with varying widths</li>
+</ul></li>
+<li><p><code><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text()</a></code>: enable multiple family, srt</p></li>
+<li><p><code><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines()</a></code>: enable multiple col, lty, lwd for split
+lines, similar to <code><a href="https://rdrr.io/r/graphics/segments.html" class="external-link">segments()</a></code> except enabled for multiple
+lines split by <code>NA</code> coordinates.</p></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="23jan203">23jan203<a class="anchor" aria-label="anchor" href="#23jan203"></a></h2>
+<ul><li>
+<p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>Return the input <code>igraph</code> object with all relevant object
+attributes updated to reflect the plot parameters. The returned object
+could be plotted directly without any customization.</li>
+<li>Consider storing/using edge coordinates inside the
+<code>igraph</code> object. However, whenever layout is re-calculated,
+edge coordinates would likely become invalid. It would be tricky to
+handle.</li>
+</ul></li>
+<li>
+<p>edge bundling and edge clipping integration</p>
+<ul><li><p>DONE: Most scenarios described below.</p></li>
+<li><p>Currently, linear edges are clipped at connected node
+boundaries.</p></li>
+<li><p>When edges are slightly curved, the start and end positions are
+reasonable.</p></li>
+<li><p>When edges are bundled, and especially when nodes are relatively
+large, the edge curves through the node in a different direction than a
+linear edge.</p></li>
+<li>
+<p>This situation is not a visualization problem when:</p>
+<ol style="list-style-type: decimal"><li>nodes are not filled with transparent color, and</li>
+<li>edges are not drawn with arrows.</li>
+</ol></li>
+<li>
+<p>The situation is only a visible problem when:</p>
+<ol style="list-style-type: decimal"><li>edges have arrows that would now be partly or fully covered by the
+node, or</li>
+<li>nodes that are filled with partial or fully transparent color, thus
+showing the edge underneath.</li>
+</ol></li>
+<li><p>Proper edge clipping would probably be done by calculating the
+edge from the node actual center point, then clipping edge where it
+exits the node shape border.</p></li>
+<li>
+<p>Implementation may benefit from storing the edge coordinates as
+an edge attribute, to be used by the clipping function when present.
+Absence of custom edge coordinates would cause the clipping function to
+use linear edge coordinates.</p>
+<ul><li>The plot function could also use stored edge coordinates as opposed
+to calling edge bundling function; alternatively the edge bundling
+function could simply re-use existing edge coordinates as well.</li>
+</ul></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="18jan2023">18jan2023<a class="anchor" aria-label="anchor" href="#18jan2023"></a></h2>
+<ul><li>
+<p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code>, proposed drop-in replacement for
+<code>igraph:::plot.igraph()</code>:</p>
+<ul><li>FIXED: This function does not seem to handle edge arrows, nor does
+it shorten edges based upon node sizes.</li>
+<li>bonus points for node/edge legend functions</li>
+<li>When layout is not defined, the xlim/ylim values sometimes do not
+match the dynamic layout calculated on the fly.</li>
+</ul></li>
+<li>
+<p>igraph shape “ellipse”</p>
+<ul><li>DONE: it should have a proper “clip” function, in order for edge
+arrows to appear at the border of each node</li>
+</ul></li>
+<li>
+<p>igraph “coloredrectangle” shape</p>
+<ul><li>DONE: The coloredrect.border should also be capable of adjacent
+lines that do not overlap.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="30nov2022">30nov2022<a class="anchor" aria-label="anchor" href="#30nov2022"></a></h2>
+<ul><li>
+<p><code><a href="reference/reorderIgraphNodes.html">reorder_igraph_nodes()</a></code></p>
+<ul><li>DONE: to be fancy, it should also propagate changes to
+<code>label.dist</code> and <code>label.degree</code>, as created by
+<code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code>, since switching coordinates for two
+nodes should also switch the <code>label.degree</code> and
+<code>label.dist</code> associated with those coordinates.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>It shows some lag before plotting all nodes vectorized, check if the
+edge bundling is the slow step, and optimize as needed. UPDATE: Yes the
+edge bundling step is introducing lag; or the resulting curved lines are
+being plotted slowly? Another good reason to store edge bundle
+coordinates in the <code>igraph</code>.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_legend.html">mem_legend()</a></code></p>
+<ul><li>consider using <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legend.html" class="external-link">ComplexHeatmap::Legend()</a></code> for consistency
+with future Cnet-Heatmap usage, and because that mechanism is really
+nice.</li>
+</ul></li>
+<li>
+<p>Refactor <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li><p>likely create new function <code>multienrich()</code> so
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> can be deprecated and remain for backward
+compatibility.</p></li>
+<li><p>Avoid pre-calculating Cnet and Emap graphs. Counterpoint: It
+could call <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> with defaults, and store
+results back into the <code>multienrichResult</code>.</p></li>
+<li>
+<p>Consider <code>multienrichResult</code> object type?</p>
+<ul><li>could hold what is now a <code>list</code> object, with proper slot
+names.</li>
+<li>custom <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function to
+display summary info about number of genes, pathways, etc.</li>
+</ul></li>
+<li>
+<p>Consider <code>multienrichPlot</code> object type? No, the
+decision is to re-use <code>multienrichResult</code>.</p>
+<ul><li>Benefit is simplicity: this object feeds all downstream plots.</li>
+<li>The negative is that it requires saving a separate
+<code>multienrichResult</code> with alternative clustering if
+necessary.</li>
+<li>Main goal is to define the gene-pathway clustering, then re-use
+clusters in subsequent steps without having to repeat the clustering the
+same way. If one uses custom clustering in <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>
+to produce gene-pathway heatmap, they have to use the same arguments in
+subsequent steps otherwise the clusters will differ, and it is not
+clearly indicated to be a problem.</li>
+</ul></li>
+<li><p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> may likely return the
+<code>multienrichResult</code> after updating internally stored data. It
+should have option to use existing results.</p></li>
+</ul></li>
+<li>
+<p>Write a more directed vignette showing at least two common use
+cases:</p>
+<ol style="list-style-type: decimal"><li>Enrichment using <code><a href="https://rdrr.io/pkg/clusterProfiler/man/enricher.html" class="external-link">clusterProfiler::enricher()</a></code>, then
+multi-enrichment.</li>
+<li>Enrichment using Qiagen Ingenuity IPA (outside of R) then importing
+the files produced using <code>"Export All"</code> from within the
+Ingenuity IPA app.</li>
+<li>Enrichment using some other external (non-R) tool, for example
+DAVID.</li>
+</ol></li>
+<li>
+<p>Write a vignette focused solely on Cnet plot custom layout
+options. Background:</p>
+<ul><li><p>Very common workflow results in Cnet plot to summarize the
+findings.</p></li>
+<li><p>This Cnet plot has often been included as a figure or
+supplementary figure for a paper, therefore it requires manual
+adjustments to increase legibility and clarity of the figure.</p></li>
+<li><p>Adjust individual nodes: <code><a href="reference/nudge_igraph_node.html">nudge_igraph_node()</a></code>. Note
+this function can be called on a <code>list</code> of nodes using
+<code>nodes_xy</code>, or using vectors with <code>nodes</code>,
+<code>x</code>, <code>y</code>.</p></li>
+<li>
+<p>Adjust sets of nodes:</p>
+<ul><li>
+<code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> - Usually for sub-clusters of
+gene nodes, move the whole group, adjust intra-group node spacing, or
+rotate the group around the group center.</li>
+<li>
+<code><a href="reference/apply_nodeset_spacing.html">apply_nodeset_spacing()</a></code> - Apply a minimum spacing
+between nodes, for each nodeset.</li>
+<li>
+<code><a href="reference/adjust_cnet_set_relayout_gene.html">adjust_cnet_set_relayout_gene()</a></code> - Adjust “Set” nodes
+manually, then fix them in place but allow “Gene” nodes to move during
+re-layout, usually with <code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code>
+</li>
+</ul></li>
+<li>
+<p>Adjust all nodes:</p>
+<ul><li>
+<code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code>, <code><a href="reference/layout_with_qfrf.html">layout_with_qfrf()</a></code>,
+<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> - All are wrappers to
+<code><a href="https://rdrr.io/pkg/qgraph/man/qgraph.layout.fruchtermanreingold.html" class="external-link">qgraph::qgraph.layout.fruchtermanreingold()</a></code> with convenient
+defaults. <code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code> returns coordinates;
+<code><a href="reference/layout_with_qfrf.html">layout_with_qfrf()</a></code> returns a layout function with
+user-defined <code>repulse</code> argument;
+<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> updates layout in-place for an
+<code>igraph</code> object, storing in
+<code>graph_attr(g, "layout")</code>.</li>
+<li>
+<code><a href="reference/rotate_igraph_layout.html">rotate_igraph_layout()</a></code> - rotate the layout coordinates
+by some user-defined degree angle.</li>
+<li>
+<code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> - positions node labels radially
+around nodes, based upon the average incoming edge angle.</li>
+<li>
+<code><a href="reference/reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> - within each nodeset,
+reposition nodes in order of node color, border color, then label. A
+nodeset is defined as a set of nodes that all share the same
+connections, which is mostly only useful for bipartite graphs such as
+Cnet plots. This function performs the node re-ordering for all
+nodesets, across the whole <code>igraph</code> object.</li>
+</ul></li>
+<li>
+<p>plot with <code><a href="reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>Vectorized plotting when multiple shapes are used, otherwise
+<code>igraph::plot()</code> uses a <code>for()</code> to iterate each
+node.</li>
+<li>Improved <code>pie</code> rendering, also vectorized.</li>
+<li>Convenience methods to adjust node size, node label font size, node
+label distance</li>
+<li>Optional shadow text node labels</li>
+<li>Maintain aspect ratio = 1, so nodes are symmetrically spaced along
+each axis (defined by the layout algorithm used.)</li>
+<li>optionally render node groups using <code>mark.groups</code>
+</li>
+<li>Call edge bundling, especially useful for bipartite graphs such as
+Cnet plots.</li>
+<li>Optionally draw background grid with percent layout units.</li>
+</ul></li>
+</ul></li>
+<li><p>add dev functions <code>layout_cnet()</code> and related
+iterative layout functions.</p></li>
+</ul></div>
+<div class="section level2">
+<h2 id="23nov2022">23nov2022<a class="anchor" aria-label="anchor" href="#23nov2022"></a></h2>
+<ul><li>
+<p>mechanism to store edge coordinates in <code>igraph</code>
+object</p>
+<ul><li><p>to my knowledge, this functionality does not exist in
+<code>igraph</code>, nor is it represented in <code>ggraph</code> or
+<code>tidygraph</code> objects. However <code>tidygraph</code> may have
+capability to supply specific edge coordinates if they exist, so it
+might be the closest to implementing this feature.</p></li>
+<li><p><code>igraph::plot()</code> is not equipped to use edge
+coordinates</p></li>
+<li><p><code>ggraph</code> is not equipped to use edge coordinates, it
+only creates edge coordinates based upon the edge <code>geom_</code>
+being used.</p></li>
+<li>
+<p>The driving use case is to define edge coordinates to handle:</p>
+<ol style="list-style-type: decimal"><li>edge bundling, a procedure that could be done dynamically, but is
+computationally expensive for large numbers of nodes;</li>
+<li>custom edge pathing, specifically for pathway schematics, such as
+those generated when using GraphViz DOT format. While the DOT format
+generates and stores edge coordinates, I could not find examples in R
+that import a fully-described DOT file (with edge coordinates embedded)
+that also imported edge coordinates.</li>
+</ol></li>
+<li>
+<p>Reasons to want edge coordinates upfront:</p>
+<ul><li>pre-calculate edge bundling, saving time during rendering</li>
+<li>allow custom definition of edges, for example in a pathway schematic
+where edges are positioned to avoid overlaps.</li>
+<li>calculate better label placement by using the angle of incoming
+edges, not limited to the linear vector from node1 to node2.</li>
+</ul></li>
+<li>
+<p>Issues raised when storing edge coordinates:</p>
+<ul><li>Obviously, whenever the node layout coordinates are changed, the
+edges also need to be changed.</li>
+<li>
+<code><a href="reference/rotate_igraph_layout.html">rotate_igraph_layout()</a></code> could rotate nodes and all edges
+together.</li>
+<li>
+<code><a href="reference/nudge_igraph_node.html">nudge_igraph_node()</a></code> and
+<code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> must decide whether to adjust edges
+by simple scaling, or simply invalidate all edges, then force the user
+to re-calculate edge coordinates.</li>
+</ul></li>
+<li>
+<p>useful helper functions</p>
+<ul><li>
+<code>validate_edge_coords()</code> - Test whether edge coordinates
+match node coordinates. If not, then delete or replace edges with linear
+equivalent.</li>
+<li>
+<code>adjust_edge()</code> - Wrapper function to adjust the
+curvature, placement, rotation, of edges. Could be called when rotating
+node layout, to rotate edges accordingly.</li>
+<li>
+<code>bundle_edges()</code> - Wrapper to apply bundling to one set
+of edges together as a group. Optionally define specific coordinate(s)
+through which the bundling loess curve is routed.</li>
+<li>fancy options like routing edges with preference for
+vertical/horizontal pathing, with slight curvature at right angle turns.
+Often used in schematic diagrams.</li>
+<li>fancy “subway” style options, where bundled edges are allowed to
+remain visible adjacent to other edges along their path. Edges could
+“snap” to nearby edges in the same bundle.</li>
+</ul></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="17nov2022">17nov2022<a class="anchor" aria-label="anchor" href="#17nov2022"></a></h2>
+<ul><li>
+<p><code><a href="reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code></p>
+<ul><li>This function is called several times by internal functions, and
+could therefore be much faster than currently.</li>
+<li>Refactor by using <code><a href="https://rdrr.io/pkg/igraph/man/as_adjacency_matrix.html" class="external-link">igraph::as_adjacency_matrix()</a></code>. Subset
+rows for <code>nodeType="Gene"</code> and columns for
+<code>nodeType="Set"</code>. Then should be able to convert rapidly by
+<code><a href="https://rdrr.io/pkg/venndir/man/im2list.html" class="external-link">venndir::im2list()</a></code> or some <code>pasteByRow()</code> magic,
+produce nodeset per node (row). Finally, split node names by
+nodeset.</li>
+</ul></li>
+<li>
+<p>node adjustment to prevent label overlaps</p>
+<ul><li>Idea: “stretch” out nodeset nodes “to the right”, which fixes the
+left edge of the nodeset, then expands the node spacing outward as
+fraction of current range of nodeset nodes. For example, expand to the
+right by 10%, to improve side-to-side spacing, since label overlaps
+typically occur with nodes at the same y-level.</li>
+<li>Stretch nodes “to the left” would work the same, but fixes the right
+x-coordinate range, and expands the left x-coordinate range.</li>
+<li>Stretch nodes “to the top”, and “to the bottom” work similarly.</li>
+<li>Future idea to reduce node label overlap is to treat it like biscuit
+dough under a rolling pin. Stretch subset of nodes in each direction
+until the labels no longer overlap. The trick is to stretch nodes away
+from other nodesets, so it does not cause new overlaps with other
+nodes.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code></p>
+<ul><li>Consider option to restrict “expand” to x- or y-axis expansion.
+Basic idea is to limit expansion to “widen” the node spacing, or to make
+node spacing “taller”. The “widen” option is helpful to reduce label
+overlaps for nodes directly beside each other.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></p>
+<ul><li>ideal case: somehow take into account the edge bundling to calculate
+input angle to each node, rather than straight vector from node to
+node.</li>
+<li>
+<code>node_groups</code> - spread labels relative to node group
+centroid, so labels in this cluster of nodes will be spaced out from
+each other. Bonus points for taking into account the overall average
+input angle to nodes in each group, and applying a fraction of that
+offset along with the node-to-group offset. For example, for a node
+group in the top right, they generally point to the top-right, but are
+fanned out slightly so the bottom-left-most node is not fanned out to
+bottom-left, but maybe center, or only slightly bottom-left of the
+node.</li>
+</ul></li>
+<li>
+<p>new layout functions specific for Cnet plots</p>
+<ul><li><p><code>iterate_qfr_layout()</code> - R code version of
+<code><a href="https://rdrr.io/pkg/qgraph/man/qgraph.layout.fruchtermanreingold.html" class="external-link">qgraph::qgraph.layout.fruchtermanreingold()</a></code> with custom
+addition of node “shells”, and option to call
+<code>iterate_node_group_distance()</code></p></li>
+<li><p><code>iterate_node_group_distance()</code> - R layout intended
+only to enforce separation across node groups (defined by
+<code><a href="reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code>) so there is additional space between
+nodesets in the layout.</p></li>
+<li>
+<p><code>layout_cnet()</code> - wrapper function that calls rounds
+of layouts. This series of steps is currently the best default layout to
+generate the most readable Cnet plot possible.</p>
+<ol style="list-style-type: decimal"><li>initial node placement - qfr layout without node/group distance</li>
+<li>node spacing - qfr with node distance</li>
+<li>node/group spacing - qfr with node and group distance 4a. imposed
+nodeset percent spacing</li>
+<li>group spacing - “fix” node layout per nodeset, then layout
+nodesets</li>
+<li>detect best rotation to place first “Set” node top-left, then
+rotate</li>
+<li>spread labels, re-order nodes by color/border.</li>
+</ol></li>
+<li>
+<p>Other ideas:</p>
+<ol style="list-style-type: decimal"><li>Try the new <code>bubble_force()</code> calculation for minimum
+distance, instead of the linear desired distance force.</li>
+<li>Consider constraining all Gene nodes, then allow only Set nodes to
+move. Goal is to prevent Set nodes from being embedded inside Gene nodes
+due to overall net forces.</li>
+<li>Optional fixed coordinate range, to prevent layouts from becoming
+infinitely large, thus endless cycle of imposing minimum precent
+spacing, making the range larger, thus making the spacing smaller, etc.
+etc. It means when a force would push a node/group out of bounds, it
+gets stopped at the boundary/boundaries. Hopefully because forces are
+applied to both node1 and node2, when node1 cannot move, node2 should
+still move albeit at half speed.</li>
+<li>Really pie in the sky: Use the node size and shape to calculate
+distance between nodes, nearest polygon distance for example. Probably
+also a processing non-starter since it would add overhead to the
+calculations, however it is the type of thing that could be parallelized
+during each iteration. No idea how efficient it would be to split
+threads during each iteration.</li>
+</ol></li>
+<li>
+<p>Code it in Rust, use R package <code>expandr</code> to integrate
+the Rust function into the package via an R function. Follow C++ code
+steps used by <code>qgraph:::qgraph_layout_Cpp()</code>. It doesn’t seem
+that these layout iterations are particularly good for multi-threading,
+however.</p>
+<ul><li>each iteration could be multi-threaded. Threads could share one
+distance matrix, the extract values when needed. Or threads could share
+node coordinates, then calculate distance when needed on the fly. If
+fast enough, distance matrix (and memory allocation) could be avoided,
+just do the math when needed.</li>
+<li>Look for Rust libraries for geometric calculations.</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>add option to display gene incidence matrix (left annotation) using
+<code>geneIMdirection</code> colors, to represent up/down.</li>
+</ul></li>
+<li>
+<p>add <code>plot_cnet_heatmaps()</code></p>
+<ul><li>make default arguments as minimal and close to default settings as
+possible</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="10nov2022">10nov2022<a class="anchor" aria-label="anchor" href="#10nov2022"></a></h2>
+<ul><li>
+<p><code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code></p>
+<ul><li>COMPLETE: add minimum percent spacing, similar to
+<code><a href="reference/apply_nodeset_spacing.html">apply_nodeset_spacing()</a></code> except to operate on only one
+nodeset at a time.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="04nov2022">04nov2022<a class="anchor" aria-label="anchor" href="#04nov2022"></a></h2>
+<ul><li>
+<p><code><a href="reference/shape.jampie.plot.html">shape.jampie.plot()</a></code> which calls
+<code><a href="reference/jam_mypie.html">jam_mypie()</a></code>:</p>
+<ul><li><p>When drawing borders for multiple pie shapes, the overlapping
+border are overdrawn, hiding all but the last border drawn.</p></li>
+<li><p>Instead, draw border inside the polygon edge, so the borders are
+adjacent and not overlapping.</p></li>
+<li><p>Quick survey revealed no drop-in replacement
+<code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">polygon()</a></code> functions.</p></li>
+<li>
+<p>Workaround involves <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_buffer()</a></code> to calculate a
+buffer inside each polygon, creating a “donut” filled with the border
+color. In principle, this issue tends to occur in relatively few nodes
+for typical Cnet plots, however it could be substantial performance
+hit.</p>
+<ol style="list-style-type: decimal"><li>Each polygon, convert to corresponding <code><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">sf::st_polygon</a></code>
+object</li>
+<li>Call <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_buffer()</a></code>.</li>
+<li>Create polygon from original border, inner buffer border. Or split
+the original polygon at this border, apply color to the outer and inner
+polygons. This way the border and fill colors are drawn together so
+nodes are “complete”.</li>
+</ol></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="26oct2022">26oct2022<a class="anchor" aria-label="anchor" href="#26oct2022"></a></h2>
+<ul><li>
+<p><code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>accept <code>p_cutoff</code> and deprecate
+<code>cutoffRowMinP</code> for future removal. <code>p_cutoff</code> is
+used in other package functions, as is <code>min_count</code>.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code></p>
+<ul><li>problem: <code>style="dotplot"</code> and
+<code>style="heatmap"</code> have very different visual effects, the
+dotplot de-emphasizes significance in favor of gene count (point size) -
+smaller gene count hides significance. The pale bivalent colors are very
+close to white, while <code>"Reds"</code> color gradient is much more
+distinctive.</li>
+<li>Can try transforming point size, so the minimum size starts out
+larger? Arguments <code>point_size_min=3</code> and
+<code>point_size_max=10</code> may help?</li>
+<li>Another more dramatic option is to create normal heatmap, then just
+draw points on top of the already-filled cells. Note the points would be
+inside the boxes, instead of connected by lines through the center of
+each box. Could test with <code>style="hybrid"</code> and implement
+both.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="13oct2022">13oct2022<a class="anchor" aria-label="anchor" href="#13oct2022"></a></h2>
+<ul><li>
+<p>S4 objects?</p>
+<ul><li>
+<p><code>mem</code>:</p>
+<ul><li>Idea is to have one object type to handle output from
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>
+</li>
+<li>benefit is mostly to have default behaviors for things like
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> but also for clarity during the workflow. The
+<code>mem</code> object can be clear input to other functions.</li>
+</ul></li>
+<li>
+<p><code>cnet</code>:</p>
+<ul><li>inherits <code>igraph</code> and extends assumptions, again mainly
+for clarity as input argument to other functions</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>option to display dot plot format at the top of heatmaps, equivalent
+to calling <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>. Benefit would be to
+indicate direction (color) and number of genes (size) in addition to
+P-value (intensity).</li>
+</ul></li>
+<li>
+<p>fix <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code></p>
+<ul><li><p>DONE: add “frame.color”:
+<code>sortAttributes=c("pie.color", "pie.color.length", "coloredrect.color", "color", "pie.border", "frame.color", "label", "name")</code></p></li>
+<li>
+<p>future: make sort more intelligent, so it uses appropriate color
+based upon node shape during the sort.</p>
+<ul><li>
+<code>shape="pie"</code>: use “pie.color”, “pie.border”,
+“frame.color”, “label”, “name”</li>
+<li>
+<code>shape="coloredrect"</code>: use “coloredrect.color”,
+“coloredrect.border”, “frame.color”, “label”, “name”</li>
+<li>all others assumed to be <code>shape="circle"</code> or similar: use
+“color”, “frame.color” and ignore “pie.color”, “pie.border”,
+“coloredrect.color”, “coloredrect.border”, “label”, “name”</li>
+</ul></li>
+</ul></li>
+<li>
+<p>DONE: Include gene direction in the workflow:</p>
+<ul><li>
+<p>DONE: Add <code>geneIMdirection</code> to mem object.</p>
+<ul><li>Requires <code>geneHitIM</code> input to
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>.</li>
+<li>Alternate backwards compatibility is function to add
+<code>geneIMdirection</code> to <code>mem</code> object, and/or
+<code>cnet</code> <code>igraph</code> object.</li>
+<li>DONE: <code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code> should optionally use
+<code>enrichIMdirection</code> to apply border color.</li>
+</ul></li>
+<li><p>DONE: <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code> as its own function, minor
+variation and extension to <code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code> which only uses the
+<code>memIM</code> portion of the data.</p></li>
+<li><p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code> should recognize <code>lwd</code> when
+plotting nodes. This change diverges from default behavior in
+<code>igraph</code> which only uses <code>par("lwd")</code> as a global
+adjustment for all lines while plotting nodes, therefore does not allow
+any nodes to have different line widths.</p></li>
+<li><p>DONE: Outline of Cnet gene nodes by direction.</p></li>
+<li><p>Gene-Path heatmap rows should optionally indicate direction,
+possibly another stripe using geneIMdirection.</p></li>
+</ul></li>
+<li>
+<p><code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>should call <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code> - or just avoid this step
+altogether since the <code>cnet</code> process is better done with
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>
+</li>
+<li>consider removing the <code>enrichMap</code> and <code>cnet</code>
+steps altogether.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="26sep2022">26sep2022<a class="anchor" aria-label="anchor" href="#26sep2022"></a></h2>
+<ul><li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li>FIXED: <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> does not honor
+<code>do_plot=FALSE</code>.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code></p>
+<ul><li>DONE: add argument <code>cluster_rows</code> to allow
+<code>cluster_rows=FALSE</code>.</li>
+<li>DONE for manual plot calls: one goal is to draw this heatmap using
+the order from the gene-pathway heatmap clustering.</li>
+<li>Future idea: allow plotting this data using the same order as the
+gene-pathway heatmap. This process would require running the
+gene-pathway clustering first, determining the column order, then using
+it to order the rows in this heatmap.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="31aug2022">31aug2022<a class="anchor" aria-label="anchor" href="#31aug2022"></a></h2>
+<ul><li>
+<p>Now that <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> and node shapes
+<code>"jampie"</code> render the <code>pie.border</code> and
+<code>frame.color</code>, which can indicate the direction of change for
+each gene, in context of each enrichment test, some other changes should
+be made to the workflow:</p>
+<ul><li><p>Consider adding <code>pie.lwd</code> to recognized attributes in
+<code><a href="reference/shape.jampie.plot.html">shape.jampie.plot()</a></code>, but confirm that this argument can be
+used when rendering <code>"jampie"</code> node shapes. Currently the
+line width can only be adjusted with <code>par("lwd")</code> which is a
+global setting.</p></li>
+<li><p>The default <code>frame.color</code>
+(<code>vertex.frame.color</code>) should probably be set to
+<code>NA</code> or <code>"transparent"</code> so the frame color is not
+visible for pie nodes. It shows up as a small white line now, which was
+not visible previously.</p></li>
+<li><p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> should include
+<code>pie.border</code> and <code>frame.color</code> in sensible default
+locations, so nodes will also be sorted by these values when relevant,
+without the user having to add these columns.</p></li>
+<li>
+<p>New function to populate <code>frame.color</code> and
+<code>pie.border</code> for Cnet plots.</p>
+<ul><li>When <code>pie</code> has only one value, apply color to
+<code>frame.color</code>
+</li>
+<li>When <code>pie</code> has multiple values, and different directions,
+apply colors to <code>pie.border</code>
+</li>
+<li>When <code>pie</code> has multiple values, and all have the same
+direction, apply colors to <code>frame.color</code>
+</li>
+<li>In absence of any directional data, set all <code>frame.color</code>
+to default, and set all <code>pie.border</code> to
+<code>"transparent"</code> or <code>NA</code>.</li>
+</ul></li>
+</ul></li>
+<li>
+<p>Need to include gene direction of change in the workflow:</p>
+<ul><li>Some easy method to include direction of change in the
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> workflow, for example argument
+<code>geneHitList</code> currently uses a <code>character</code> vector,
+but could accept <code>integer</code> vector direction with genes stored
+as <code>character</code> labels, same as used with <code>venndir</code>
+signed input lists.</li>
+<li>When gene direction is available, the <code>frame.color</code>
+and/or <code>pie.border</code> colors are defined.</li>
+<li>
+<code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> option to represent direction
+of change in the <code>gene_im</code> incidence matrix.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="aug2022">aug2022<a class="anchor" aria-label="anchor" href="#aug2022"></a></h2>
+<ul><li>
+<p>Edge bundling makes assumptions for bipartite graphs (cnet) that
+are difficult to use with normal graphs.</p>
+<ul><li>
+<code><a href="reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code> probably needs to subset edges
+involved in each nodegroup before bundling all edges connected to these
+nodes. Currently, nodes are assumed to share all connections, but the
+effect should occur for edges where both ends of the edge are contained
+in the nodegroup entries.</li>
+<li>consider node attribute “<code>nodegroup</code>”.</li>
+<li>consider edge attribute <code>"edgegroup"</code>, which would
+probably be the optimal approach for edge bundling, apart from
+implementing another technique similar to force-directed,
+hierarchically-defined, or density-directed edge bundling.</li>
+<li>consider an option to specify the “midpoint” for a nodegroup, to
+allow some control on the spline curvature. Bonus points for allowing
+multiple points in order, to influence a path.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>fancy effect: allow edge colors to have multiple values, then
+interpolate color along each edge. For bundled edges, make a gradient
+equal to the number of line segments. For straight edges, break into
+<code>detail</code> number of pieces. The <code>detail</code> argument
+is also used by the <code>edge_bundle_*()</code> functions.</li>
+</ul></li>
+<li><p>subset <code>igraph</code> object by nodes, with added benefit
+that the <code>graph_attr(g, "layout")</code> will also be subset, if
+present. It is odd that the default <code><a href="https://rdrr.io/pkg/igraph/man/subgraph.html" class="external-link">igraph::subgraph()</a></code>
+function would subset the graph, leaving the layout which inevitably
+causes an error.</p></li>
+</ul></div>
+<div class="section level2">
+<h2 id="13jul2022">13jul2022<a class="anchor" aria-label="anchor" href="#13jul2022"></a></h2>
+<ul><li>
+<p><code>mem_gene_pathway_heatmap()</code></p>
+<ul><li>would be useful to have an option to subset enrichments, this option
+would likely be useful to <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, and
+<code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, so the effect could cascade to
+subsequent functions.</li>
+</ul></li>
+<li>
+<p>new function idea? <code>subset_mem()</code></p>
+<ul><li><p>Could be useful to accomplish the item above, to subset by
+enrichments prior to <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> related
+functions.</p></li>
+<li><p>The challenge is that subsetting only <code>enrichIM</code> does
+not also update corresponding <code>memIM</code> data. Data to be
+updated:</p></li>
+<li><p><code>geneIM</code>, <code>geneIMcolors</code>,
+<code>geneIMdirection</code> - simple subset by colnames</p></li>
+<li><p><code>enrichIM</code>, <code>enrichIMcolors</code>,
+<code>enrichIMgeneCount</code> - simple subset by colnames</p></li>
+<li><p><code>memIM</code> - re-create after updating
+<code>geneIM</code></p></li>
+<li><p><code>enrichList</code> - simple subset by name</p></li>
+<li>
+<p>Others not necessary for <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>:</p>
+<ul><li>
+<code>multiEnrichMap</code>, <code>multiCnetPlot</code> should be
+re-created using methods in <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>. To be fair,
+these objects are not that useful anymore, since
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> is generally preferred.</li>
+</ul></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="05jul2022">05jul2022<a class="anchor" aria-label="anchor" href="#05jul2022"></a></h2>
+<ul><li>
+<p><code>mem_gene_pathway_heatmap()</code> when supplied with custom
+<code>column_split</code> throws an error when
+<code>cluster_columns=TRUE</code>.</p>
+<ul><li>internally it uses <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code> to generate a
+dendrogram/hclust</li>
+<li>using split and dendrogram together is not allowed by
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
+</li>
+<li>this clustering also uses the incidence matrix combined with the
+pathway enrichment annotation displayed along the top, and these values
+are weighted with <code>pathway_column_weight</code>.</li>
+<li>A proper solution would be to provide a custom function for
+<code>cluster_columns</code> that internally combined the incidence
+matrix and enrichment matrix data together prior to clustering. If this
+function receives a numeric matrix with proper colnames, it should
+work.</li>
+</ul></li>
+<li><p>COMPLETE: <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> argument
+<code>gene_row_title=NULL</code> is being passed to
+<code>mem_gene_pathway_heatmap()</code> and is therefore not using the
+default <code>row_title=letters</code>.</p></li>
+</ul></div>
+<div class="section level2">
+<h2 id="23mar2022-issue-7-passing-arguments-through--in-mem_plot_folio">23mar2022 issue #7 passing arguments through … in
+<code>mem_plot_folio()</code>
 <a class="anchor" aria-label="anchor" href="#23mar2022-issue-7-passing-arguments-through--in-mem_plot_folio"></a></h2>
-<ul><li>User reported an error when calling <code>mem_plot_folio(mem, node_factor=5, label_factor=1.5)</code>
+<ul><li>User reported an error when calling
+<code>mem_plot_folio(mem, node_factor=5, label_factor=1.5)</code>
 </li>
 <li>
-<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> is passing <code>...</code> to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> which does not accept <code>...</code> and throws an error when receiving extra arguments.</li>
-<li>I need to limit <code>...</code> to arguments accepted by <code>Heatmap()</code>. I feel like there is an R package function to handle this scenario, so I can avoid writing <code>do.call(Heatmap, custom_args)</code>.</li>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> is passing <code>...</code> to
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> which does not accept
+<code>...</code> and throws an error when receiving extra
+arguments.</li>
+<li>I need to limit <code>...</code> to arguments accepted by
+<code>Heatmap()</code>. I feel like there is an R package function to
+handle this scenario, so I can avoid writing
+<code>do.call(Heatmap, custom_args)</code>.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="04feb2022">04feb2022<a class="anchor" aria-label="anchor" href="#04feb2022"></a></h2>
-<p>Workflow that starts with pathway-gene incidence matrix upfront, bypassing the <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> workflow altogether.</p>
+<p>Workflow that starts with pathway-gene incidence matrix upfront,
+bypassing the <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> workflow altogether.</p>
 <ul><li>
-<p><code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code> to convert pathway-to-gene incidence matrix to Cnet <code>igraph</code>.</p>
-<ul><li>Requires <code>geneIM</code> which is the enrichment-to-gene incidence matrix. In the driving example, each enrichment would represent a disease subgroup, with the full set of differential genes associated to each subgroup.</li>
-<li>Requires <code>enrichIM</code> which contains enrichment-to-pathway whose values are P-values. When this data is not supplied, it should use 0.001 by default. I think these values are only used as an optional gradient color for the pathway nodes.</li>
-<li>Optional <code>geneIMcolors</code> which is the same as <code>geneIM</code> except the cells contain colors to use for each gene. Currently the function does not fill these colors, the best method is to use <code><a href="https://rdrr.io/pkg/colorjam/man/matrix2heatColors.html" class="external-link">colorjam::matrix2heatColors()</a></code>
+<p><code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code> to convert pathway-to-gene incidence
+matrix to Cnet <code>igraph</code>.</p>
+<ul><li>Requires <code>geneIM</code> which is the enrichment-to-gene
+incidence matrix. In the driving example, each enrichment would
+represent a disease subgroup, with the full set of differential genes
+associated to each subgroup.</li>
+<li>Requires <code>enrichIM</code> which contains enrichment-to-pathway
+whose values are P-values. When this data is not supplied, it should use
+0.001 by default. I think these values are only used as an optional
+gradient color for the pathway nodes.</li>
+<li>Optional <code>geneIMcolors</code> which is the same as
+<code>geneIM</code> except the cells contain colors to use for each
+gene. Currently the function does not fill these colors, the best method
+is to use <code><a href="https://rdrr.io/pkg/colorjam/man/matrix2heatColors.html" class="external-link">colorjam::matrix2heatColors()</a></code>
 </li>
 </ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">geneIMcolors</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/matrix2heatColors.html" class="external-link">matrix2heatColors</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">geneIM</span>,
@@ -84,129 +829,224 @@
 <div class="section level2">
 <h2 id="03feb2022">03feb2022<a class="anchor" aria-label="anchor" href="#03feb2022"></a></h2>
 <ul><li>
-<p>option to assign pathways to “functional themes” based upon presentation by Adeline Chin in Dr. Hanna Kim’ group.</p>
-<ul><li>This step may “collapse” multiple pathways together, similar to grouping functional groups: union of genes, lowest enrichment P-value.</li>
+<p>option to assign pathways to “functional themes” based upon
+presentation by Adeline Chin in Dr. Hanna Kim’ group.</p>
+<ul><li>This step may “collapse” multiple pathways together, similar to
+grouping functional groups: union of genes, lowest enrichment
+P-value.</li>
 </ul></li>
 </ul></div>
 <div class="section level2">
 <h2 id="25jan2021">25jan2021<a class="anchor" aria-label="anchor" href="#25jan2021"></a></h2>
 <ul><li>
-<p><code><a href="reference/heatmap_row_order.html">heatmap_row_order()</a></code>, <code><a href="reference/heatmap_column_order.html">heatmap_column_order()</a></code> should return a flat vector when there are no row_split or column_split, respectively. Currently data is returned as a list of one-length vectors.</p>
-<ul><li>Consider moving into <code>jamba</code> package, in case this function needs to be re-used, it should not require loading the full <code>multienrichjam</code> package, which itself requires things like <code>igraph</code>, <code>clusterProfiler</code>, <code>qgraph</code>, <code>DOSE</code>, <code>matrixStats</code>.</li>
-<li>Import <code><a href="https://rdrr.io/pkg/jamba/man/heatmap_row_order.html" class="external-link">jamba::heatmap_row_order()</a></code> and <code><a href="https://rdrr.io/pkg/jamba/man/heatmap_column_order.html" class="external-link">jamba::heatmap_column_order()</a></code> to ensure any functions or packages calling this function will succeed without error.</li>
+<p><code>heatmap_row_order()</code>,
+<code>heatmap_column_order()</code> should return a flat vector when
+there are no row_split or column_split, respectively. Currently data is
+returned as a list of one-length vectors.</p>
+<ul><li>Consider moving into <code>jamba</code> package, in case this
+function needs to be re-used, it should not require loading the full
+<code>multienrichjam</code> package, which itself requires things like
+<code>igraph</code>, <code>clusterProfiler</code>, <code>qgraph</code>,
+<code>DOSE</code>, <code>matrixStats</code>.</li>
+<li>Import <code><a href="https://rdrr.io/pkg/jamba/man/heatmap_row_order.html" class="external-link">jamba::heatmap_row_order()</a></code> and
+<code><a href="https://rdrr.io/pkg/jamba/man/heatmap_column_order.html" class="external-link">jamba::heatmap_column_order()</a></code> to ensure any functions or
+packages calling this function will succeed without error.</li>
 </ul></li>
-</ul><p>This document describes plans for enhancements to the multienrichjam R package.</p>
+</ul><p>This document describes plans for enhancements to the multienrichjam
+R package.</p>
 </div>
 <div class="section level2">
 <h2 id="05nov2021">05nov2021<a class="anchor" aria-label="anchor" href="#05nov2021"></a></h2>
-<p>Now that directional z-score can also be associated with enrichment P-values, heatmaps might need to use a bivariate color scale, to indicate enrichment and directionality. See “stevens.bluered”. For example the <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> colors nodes by enrichment P-value, more intense is more significant enrichment. The z-score direction is used to apply red “activated” or blue “inhibited”. However, pathways with no z-score, or z-score below the threshold are colored red by default. They should use a neutral color.</p>
+<p>Now that directional z-score can also be associated with enrichment
+P-values, heatmaps might need to use a bivariate color scale, to
+indicate enrichment and directionality. See “stevens.bluered”. For
+example the <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> colors nodes by
+enrichment P-value, more intense is more significant enrichment. The
+z-score direction is used to apply red “activated” or blue “inhibited”.
+However, pathways with no z-score, or z-score below the threshold are
+colored red by default. They should use a neutral color.</p>
 </div>
 <div class="section level2">
 <h2 id="04nov2021">04nov2021<a class="anchor" aria-label="anchor" href="#04nov2021"></a></h2>
-<p>For IPA “Upstream Regulators” it sometimes offers a direction implied by the <code>activation z-score</code>. Design idea is to implement the directionality so it can be included in downstream analyses.</p>
+<p>For IPA “Upstream Regulators” it sometimes offers a direction implied
+by the <code>activation z-score</code>. Design idea is to implement the
+directionality so it can be included in downstream analyses.</p>
 <ul><li>
-<code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> - currently shades by the <code>-log10(pvalue)</code> however if there is directionality, it could be signed <code>+</code> for activated, <code>-</code> for inhibited. Then the heatmap color scale would use blue-white-red color gradient.</li>
+<code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> - currently shades by the
+<code>-log10(pvalue)</code> however if there is directionality, it could
+be signed <code>+</code> for activated, <code>-</code> for inhibited.
+Then the heatmap color scale would use blue-white-red color
+gradient.</li>
 <li>
-<code>mem$enrichIMdirection</code> contains matrix of direction, by default <code>1</code> means all have same direction.</li>
-</ul><p>During <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> it filters for <code>topEnrichN</code> entries for each enrichment. It might be useful to retain the rank number for each enrichment, to review when setting a different <code>topEnrichN</code> threshold.</p>
+<code>mem$enrichIMdirection</code> contains matrix of direction, by
+default <code>1</code> means all have same direction.</li>
+</ul><p>During <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> it filters for
+<code>topEnrichN</code> entries for each enrichment. It might be useful
+to retain the rank number for each enrichment, to review when setting a
+different <code>topEnrichN</code> threshold.</p>
 <ul><li>
-<code>mem$enrichIMgeneCount</code> contains matrix of gene counts</li>
+<code>mem$enrichIMgeneCount</code> contains matrix of gene
+counts</li>
 <li>
-<code>mem$enrichIMrank</code> contains matrix of pathway rank (after filtering gene count)</li>
+<code>mem$enrichIMrank</code> contains matrix of pathway rank (after
+filtering gene count)</li>
 </ul></div>
 <div class="section level2">
 <h2 id="01nov2021">01nov2021<a class="anchor" aria-label="anchor" href="#01nov2021"></a></h2>
 <ul><li>
-<p>COMPLETE: <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> - the heatmap circles and legend circles are not the same size - they should be fixed to the same absolute size.</p>
-<ul><li>COMPLETE: Optionally label each heatmap cell with the number of genes for visual reinforcement.</li>
+<p>COMPLETE: <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> - the heatmap
+circles and legend circles are not the same size - they should be fixed
+to the same absolute size.</p>
+<ul><li>COMPLETE: Optionally label each heatmap cell with the number of
+genes for visual reinforcement.</li>
 </ul></li>
 <li>
-<p>COMPLETE: When there are more than 3 enrichments, the color legend on the gene-pathway heatmap becomes unwieldy - taking over the whole figure.</p>
-<ul><li>Optionally (and by default) hide color legend for the gene-pathway heatmap.</li>
+<p>COMPLETE: When there are more than 3 enrichments, the color
+legend on the gene-pathway heatmap becomes unwieldy - taking over the
+whole figure.</p>
+<ul><li>Optionally (and by default) hide color legend for the gene-pathway
+heatmap.</li>
 </ul></li>
 <li>
-<p>COMPLETE: The gene-pathway heatmap use_raster=TRUE causes artifacts in output, it should be disabled by default. In future, debug why things go wrong.</p>
-<ul><li>I think the bug is caused by rasterization being done on underlying numbers before the color ramp is applied, in which case this problem cannot be solved when <code>colorize_by_gene=TRUE</code> since categorical values are assigned numbers which are not a proper color gradient.</li>
+<p>COMPLETE: The gene-pathway heatmap use_raster=TRUE causes
+artifacts in output, it should be disabled by default. In future, debug
+why things go wrong.</p>
+<ul><li>I think the bug is caused by rasterization being done on underlying
+numbers before the color ramp is applied, in which case this problem
+cannot be solved when <code>colorize_by_gene=TRUE</code> since
+categorical values are assigned numbers which are not a proper color
+gradient.</li>
 </ul></li>
 </ul></div>
 <div class="section level2">
 <h2 id="20jul2021">20jul2021<a class="anchor" aria-label="anchor" href="#20jul2021"></a></h2>
 <ul><li>
-<p>Replace <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> with <code>multienrichjam()</code> and simplify the arguments:</p>
+<p>Replace <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> with
+<code>multienrichjam()</code> and simplify the arguments:</p>
 <ul><li>p_cutoff</li>
 <li>min_gene_count</li>
 <li>top_enrich_n</li>
 <li>colnames: id, name, description, pvalue, gene</li>
 <li>color_sub</li>
 </ul></li>
-<li><p>Port <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> argument <code>colorize_by_gene=TRUE</code> to use <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> instead of <code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code> for consistency, also so it can support <code>style="dotplot"</code>.</p></li>
+<li><p>Port <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> argument
+<code>colorize_by_gene=TRUE</code> to use
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> instead of
+<code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code> for consistency, also so it can
+support <code>style="dotplot"</code>.</p></li>
 </ul></div>
 <div class="section level2">
 <h2 id="19jul2021">19jul2021<a class="anchor" aria-label="anchor" href="#19jul2021"></a></h2>
 <ul><li>
-<code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with <code>rescale=TRUE</code> should also scale igraph vertex size and igraph label size according to the new axis ranges.</li>
-<li>Debug <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> when <code>vertex.size</code> is defined alongside V(g)$size, and <code>node_factor</code>. It appears not to apply the size properly.</li>
-<li>COMPLETE: <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> new option for dot plot format, based upon <code><a href="https://rdrr.io/pkg/enrichplot/man/dotplot.html" class="external-link">enrichplot::dotplot()</a></code> that sizes each dot by the number of genes present.</li>
+<code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with <code>rescale=TRUE</code> should also
+scale igraph vertex size and igraph label size according to the new axis
+ranges.</li>
+<li>Debug <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> when <code>vertex.size</code> is
+defined alongside V(g)$size, and <code>node_factor</code>. It appears
+not to apply the size properly.</li>
+<li>COMPLETE: <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> new option for dot
+plot format, based upon <code><a href="https://rdrr.io/pkg/enrichplot/man/dotplot.html" class="external-link">enrichplot::dotplot()</a></code> that sizes
+each dot by the number of genes present.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="24jun2021">24jun2021<a class="anchor" aria-label="anchor" href="#24jun2021"></a></h2>
-<ul><li>In <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> remove default <code>topEnrichSources</code> and <code>topEnrichSourceSubset</code> which throw errors when not using MSigDB data.</li>
+<ul><li>In <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> remove default
+<code>topEnrichSources</code> and <code>topEnrichSourceSubset</code>
+which throw errors when not using MSigDB data.</li>
 <li>
-<code><a href="reference/topEnrichBySource.html">topEnrichBySource()</a></code> and <code><a href="reference/topEnrichBySource.html">topEnrichListBySource()</a></code> should be able to accept <code>enrichResult</code> as input, and return <code>enrichResult</code> and not <code>data.frame</code> which is understandably lossy. I need to understand the proper method for creating a subset of an <code>enrichList</code> object, including its internal data.</li>
+<code><a href="reference/topEnrichBySource.html">topEnrichBySource()</a></code> and
+<code><a href="reference/topEnrichBySource.html">topEnrichListBySource()</a></code> should be able to accept
+<code>enrichResult</code> as input, and return <code>enrichResult</code>
+and not <code>data.frame</code> which is understandably lossy. I need to
+understand the proper method for creating a subset of an
+<code>enrichList</code> object, including its internal data.</li>
 <li>Streamline the <code><a href="reference/topEnrichBySource.html">topEnrichListBySource()</a></code> workflow.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="21jun2021">21jun2021<a class="anchor" aria-label="anchor" href="#21jun2021"></a></h2>
-<ul><li>COMPLETE: Allow rotating gene-pathway incidence matrix when using <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, so the pathway names are rows.</li>
-<li>Add test data object <code>mem</code> to be convenient for function examples, and testthis test suite.</li>
+<ul><li>COMPLETE: Allow rotating gene-pathway incidence matrix when using
+<code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, so the pathway names are
+rows.</li>
+<li>Add test data object <code>mem</code> to be convenient for function
+examples, and testthis test suite.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="smaller-usability-items">Smaller usability items<a class="anchor" aria-label="anchor" href="#smaller-usability-items"></a></h2>
 <ul><li>
-<p>edge_bundling=“connections” should also allow <code>render_groups=TRUE</code> to work, by returning the <code>"nodegroups"</code> required for that step.</p>
-<ul><li>It should probably filter out singlet nodes by default, since the typical use case is “nodeset-to-node” for Cnet plots.</li>
-<li>Main use case is with a Cnet plot, edge bundling by connected nodes should allow drawing an optional border around each group of nodes.</li>
+<p>edge_bundling=“connections” should also allow
+<code>render_groups=TRUE</code> to work, by returning the
+<code>"nodegroups"</code> required for that step.</p>
+<ul><li>It should probably filter out singlet nodes by default, since the
+typical use case is “nodeset-to-node” for Cnet plots.</li>
+<li>Main use case is with a Cnet plot, edge bundling by connected nodes
+should allow drawing an optional border around each group of nodes.</li>
 </ul></li>
 </ul></div>
 <div class="section level2">
 <h2 id="complete-10apr2021-implement-edge-bundling-techniques">COMPLETE: 10apr2021: implement edge bundling techniques<a class="anchor" aria-label="anchor" href="#complete-10apr2021-implement-edge-bundling-techniques"></a></h2>
 <p>Priority: high</p>
-<p>Status: Implemented, early active testing of usability and functionality</p>
-<ul><li>“connections” - Cnet edge bundles - special case of nodeset-to-node edge bundling</li>
-<li>“nodegroups”: Node group bundles - general case of nodeset-to-nodeset edge bundling</li>
-</ul><p>Useful to improve readability/aesthetics of collapsed Cnet plots, especially Cnet plots with many gene nodes where it is difficult to tell which pathway clusters are connected to each gene.</p>
+<p>Status: Implemented, early active testing of usability and
+functionality</p>
+<ul><li>“connections” - Cnet edge bundles - special case of nodeset-to-node
+edge bundling</li>
+<li>“nodegroups”: Node group bundles - general case of
+nodeset-to-nodeset edge bundling</li>
+</ul><p>Useful to improve readability/aesthetics of collapsed Cnet plots,
+especially Cnet plots with many gene nodes where it is difficult to tell
+which pathway clusters are connected to each gene.</p>
 </div>
 <div class="section level2">
-<h2 id="10apr2021-enhancements-to-jam_igraph-must-be-done-inside-jam_plot_igraph">10apr2021: enhancements to <code>jam_igraph()</code> (must be done inside <code>jam_plot_igraph()</code>)<a class="anchor" aria-label="anchor" href="#10apr2021-enhancements-to-jam_igraph-must-be-done-inside-jam_plot_igraph"></a></h2>
-<ul><li><p>Consider silently returning the <code>igraph</code> object plotted where the vertex, edge, and graph attributes are updated to the values used at runtime. For example, if user overrides any attributes, those attributes will be present in the object returned, so the next iteration someone could just call <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> without any custom attributes and it would produce the same plot again.</p></li>
-<li><p>See <a href="https://igraph.org/r/doc/plot.common.html" class="external-link uri">https://igraph.org/r/doc/plot.common.html</a> and <code><a href="https://rdrr.io/pkg/igraph/man/igraph_options.html" class="external-link">igraph::igraph_options()</a></code></p></li>
+<h2 id="10apr2021-enhancements-to-jam_igraph-must-be-done-inside-jam_plot_igraph">10apr2021: enhancements to <code>jam_igraph()</code> (must be done
+inside <code>jam_plot_igraph()</code>)<a class="anchor" aria-label="anchor" href="#10apr2021-enhancements-to-jam_igraph-must-be-done-inside-jam_plot_igraph"></a></h2>
+<ul><li><p>Consider silently returning the <code>igraph</code> object
+plotted where the vertex, edge, and graph attributes are updated to the
+values used at runtime. For example, if user overrides any attributes,
+those attributes will be present in the object returned, so the next
+iteration someone could just call <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> without any
+custom attributes and it would produce the same plot again.</p></li>
+<li><p>See <a href="https://igraph.org/r/doc/plot.common.html" class="external-link uri">https://igraph.org/r/doc/plot.common.html</a> and
+<code><a href="https://rdrr.io/pkg/igraph/man/igraph_options.html" class="external-link">igraph::igraph_options()</a></code></p></li>
 </ul></div>
 <div class="section level2">
-<h2 id="10apr2021-implement-edge-bundling-in-jam_igraph-and-jam_plot_igraph">10apr2021: implement edge bundling in <code>jam_igraph()</code> and <code>jam_plot_igraph()</code>
+<h2 id="10apr2021-implement-edge-bundling-in-jam_igraph-and-jam_plot_igraph">10apr2021: implement edge bundling in <code>jam_igraph()</code> and
+<code>jam_plot_igraph()</code>
 <a class="anchor" aria-label="anchor" href="#10apr2021-implement-edge-bundling-in-jam_igraph-and-jam_plot_igraph"></a></h2>
 <p>Priority: high</p>
 <p>Status: Implemented</p>
 <ul><li>
-<p>This task involves making edge bundling accessible as a simple option during plotting, to prevent having to run 3 or 4 functions:</p>
+<p>This task involves making edge bundling accessible as a simple
+option during plotting, to prevent having to run 3 or 4 functions:</p>
 <ul><li>
 <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges</li>
 <li>
-<code>bundle_node_edges()</code> to display edges on top of nodes</li>
-<li>(optional) <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges, nodes with solid white color so they fully cover edges.</li>
+<code>bundle_node_edges()</code> to display edges on top of
+nodes</li>
+<li>(optional) <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges, nodes with
+solid white color so they fully cover edges.</li>
 <li>
-<code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges, to display nodes on top of bundled edges while allowing nodes to have alpha transparency</li>
+<code><a href="reference/jam_igraph.html">jam_igraph()</a></code> with hidden edges, to display nodes on top
+of bundled edges while allowing nodes to have alpha transparency</li>
 </ul></li>
 <li>
-<p>Note there is a package based on <code>ggraph</code> that implements edge bundling - if <code>jam_ggraph()</code> is going to be our future, maybe we should implement edge bundling using a similar approach used by that R package.</p>
+<p>Note there is a package based on <code>ggraph</code> that
+implements edge bundling - if <code>jam_ggraph()</code> is going to be
+our future, maybe we should implement edge bundling using a similar
+approach used by that R package.</p>
 <ul><li><a href="https://github.com/schochastics/edgebundle" class="external-link uri">https://github.com/schochastics/edgebundle</a></li>
 </ul></li>
 </ul></div>
 <div class="section level2">
-<h2 id="10apr2021-add-plot_cnet_heatmaps-to-multienrichjam">10apr2021: add <code>plot_cnet_heatmaps()</code> to multienrichjam<a class="anchor" aria-label="anchor" href="#10apr2021-add-plot_cnet_heatmaps-to-multienrichjam"></a></h2>
+<h2 id="10apr2021-add-plot_cnet_heatmaps-to-multienrichjam">10apr2021: add <code>plot_cnet_heatmaps()</code> to
+multienrichjam<a class="anchor" aria-label="anchor" href="#10apr2021-add-plot_cnet_heatmaps-to-multienrichjam"></a></h2>
 <p>Priority: high</p>
 <ul><li>
-<code>plot_cnet_heatmaps()</code> is in development, and arranges expression heatmaps around a central Cnet plot, using genes in each cnet cluster. It is intended to be used with Cnet clusters from <code><a href="reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code>, by-product of <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>.</li>
-</ul><p>This figure seems very useful because it integrates expression changes alongside gene-pathway connections.</p>
+<code>plot_cnet_heatmaps()</code> is in development, and arranges
+expression heatmaps around a central Cnet plot, using genes in each cnet
+cluster. It is intended to be used with Cnet clusters from
+<code><a href="reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code>, by-product of
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>.</li>
+</ul><p>This figure seems very useful because it integrates expression
+changes alongside gene-pathway connections.</p>
 <p>The multienrichment workflow would likely become:</p>
 <ul><li>Prepare enrichment data</li>
 <li><code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></li>
@@ -214,34 +1054,48 @@
 <li><code>plot_cnet_heatmap()</code></li>
 </ul></div>
 <div class="section level2">
-<h2 id="10apr2021-enable-plotting-node-community-data-in-jam_igraph">10apr2021: enable plotting node community data in <code>jam_igraph()</code>
+<h2 id="10apr2021-enable-plotting-node-community-data-in-jam_igraph">10apr2021: enable plotting node community data in
+<code>jam_igraph()</code>
 <a class="anchor" aria-label="anchor" href="#10apr2021-enable-plotting-node-community-data-in-jam_igraph"></a></h2>
 <p>Priority: low</p>
-<ul><li>Analogous to <code>igraph:::plot.communities()</code> with <code>mark.groups</code>
+<ul><li>Analogous to <code>igraph:::plot.communities()</code> with
+<code>mark.groups</code>
 </li>
-<li>for edge bundling, this step could optionally display boundaries around each node group.</li>
-</ul><p>Value is reinforcing node groups with a boundary. In testing, the boundary actually made plots look more complex. And with simple plots, it does not seem necessary since nodes are already well-spaced.</p>
+<li>for edge bundling, this step could optionally display boundaries
+around each node group.</li>
+</ul><p>Value is reinforcing node groups with a boundary. In testing, the
+boundary actually made plots look more complex. And with simple plots,
+it does not seem necessary since nodes are already well-spaced.</p>
 </div>
 <div class="section level2">
-<h2 id="10apr2021-include-genecount-matrix-output-from-multienrichmap">10apr2021: include geneCount matrix output from <code>multiEnrichMap()</code>
+<h2 id="10apr2021-include-genecount-matrix-output-from-multienrichmap">10apr2021: include geneCount matrix output from
+<code>multiEnrichMap()</code>
 <a class="anchor" aria-label="anchor" href="#10apr2021-include-genecount-matrix-output-from-multienrichmap"></a></h2>
 <p>Priority: medium</p>
-<ul><li><p>Purpose is to complement the “enrichIM” matrix, with P-values for each set. However “dysregulated pathways” may also be required to have N number of genes, yet this data is not easily available.</p></li>
+<ul><li><p>Purpose is to complement the “enrichIM” matrix, with P-values for
+each set. However “dysregulated pathways” may also be required to have N
+number of genes, yet this data is not easily available.</p></li>
 <li>
-<p>Rows are pathways, columns are enrichments, values are the number of genes involved in enrichment.</p>
+<p>Rows are pathways, columns are enrichments, values are the number
+of genes involved in enrichment.</p>
 <ul><li>Consider a matrix whose cells contain delimited gene symbols</li>
 </ul></li>
-</ul><p>Useful to apply filtering at matrix-level for pathways that meet enrichment P-value and gene count thresholds.</p>
+</ul><p>Useful to apply filtering at matrix-level for pathways that meet
+enrichment P-value and gene count thresholds.</p>
 </div>
 <div class="section level2">
 <h2 id="2020-apply-node-color-order-based-upon-shape-of-node-cluster">2020: apply node color order based upon shape of node cluster<a class="anchor" aria-label="anchor" href="#2020-apply-node-color-order-based-upon-shape-of-node-cluster"></a></h2>
 <p>Priority: medium</p>
 <p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code></p>
-<ul><li><p>when a cluster of nodes is short-wide, the order should be left-to-right</p></li>
-<li><p>when a cluster of nodes is tall-skinny, the order should be top-to-bottom</p></li>
+<ul><li><p>when a cluster of nodes is short-wide, the order should be
+left-to-right</p></li>
+<li><p>when a cluster of nodes is tall-skinny, the order should be
+top-to-bottom</p></li>
 <li>
-<p>all else should be sorted left-to-right (or user-defined default order)</p>
-<ul><li>it is visually confusing when tall-skinny nodes are sorted left-to-right</li>
+<p>all else should be sorted left-to-right (or user-defined default
+order)</p>
+<ul><li>it is visually confusing when tall-skinny nodes are sorted
+left-to-right</li>
 </ul></li>
 </ul><p>Useful to automate the ordering of node colors</p>
 </div>
@@ -249,34 +1103,58 @@
 <h2 id="2020-apply-subsetsets-in-multienrichmap">2020: apply subsetSets in <code>multiEnrichMap()</code>
 <a class="anchor" aria-label="anchor" href="#2020-apply-subsetsets-in-multienrichmap"></a></h2>
 <p>Priority: low</p>
-<ul><li>apparently it had never been implemented? User-defined subset of pathways/sets to include in <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>, as an alternative to using <code><a href="reference/topEnrichBySource.html">topEnrichBySource()</a></code>.</li>
-</ul><p>Users can currently perform this subset step before running <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>.</p>
+<ul><li>apparently it had never been implemented? User-defined subset of
+pathways/sets to include in <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>, as an
+alternative to using <code><a href="reference/topEnrichBySource.html">topEnrichBySource()</a></code>.</li>
+</ul><p>Users can currently perform this subset step before running
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="complete-apply-min_count-in-multienrichmap">COMPLETE: Apply min_count in <code>multiEnrichMap()</code>
 <a class="anchor" aria-label="anchor" href="#complete-apply-min_count-in-multienrichmap"></a></h2>
-<ul><li>Currently <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> does not filter by number of genes involved in enrichment, it only filters by enrichment P-value. New argument <code>min_count</code> is applied only when <code>topEnrichN</code> is used, but nothing else downstream is aware of filtering by <code>min_count</code>. The corresponding argument in <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> is <code>min_set_ct_each</code>, which requires a set (pathway) to contain at least this many entries in at least one enrichment result which also meets <code>p_cutoff</code> criteria for enrichment P-value.</li>
+<ul><li>Currently <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> does not filter by number of
+genes involved in enrichment, it only filters by enrichment P-value. New
+argument <code>min_count</code> is applied only when
+<code>topEnrichN</code> is used, but nothing else downstream is aware of
+filtering by <code>min_count</code>. The corresponding argument in
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> is <code>min_set_ct_each</code>, which
+requires a set (pathway) to contain at least this many entries in at
+least one enrichment result which also meets <code>p_cutoff</code>
+criteria for enrichment P-value.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="2020-optional-highlight-genes">2020: Optional highlight genes<a class="anchor" aria-label="anchor" href="#2020-optional-highlight-genes"></a></h2>
 <p>Priority: low</p>
 <ul><li>
-<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> and subsequent plots, optional argument <code>highlight_genes</code> which would effectively hide all gene labels except <code>highlight_genes</code> – to help especially crowded plots.</p>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> and subsequent plots, optional
+argument <code>highlight_genes</code> which would effectively hide all
+gene labels except <code>highlight_genes</code> – to help especially
+crowded plots.</p>
 <ul><li>Option 1: User-supplied genes</li>
-<li>Option 2: Genes defined by one or more pathways/sets to highlight</li>
-<li>Implement as wrapper to <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> to hide/display relevant node labels</li>
+<li>Option 2: Genes defined by one or more pathways/sets to
+highlight</li>
+<li>Implement as wrapper to <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> to hide/display
+relevant node labels</li>
 <li>
-<code>plot_cnet_heatmap()</code> could label the heatmap rows using <code>anno_mark()</code>
+<code>plot_cnet_heatmap()</code> could label the heatmap rows using
+<code>anno_mark()</code>
 </li>
 </ul></li>
-</ul><p>Useful in Cnet plots with too many genes to label, it allows only a subset of genes to be highlighted. Will become high priority if a manuscript decides to use this technique.</p>
+</ul><p>Useful in Cnet plots with too many genes to label, it allows only a
+subset of genes to be highlighted. Will become high priority if a
+manuscript decides to use this technique.</p>
 </div>
 <div class="section level2">
-<h2 id="consider-a-strict-output-format-for-mem_plot_folio">Consider a strict output format for <code>mem_plot_folio()</code>
+<h2 id="consider-a-strict-output-format-for-mem_plot_folio">Consider a strict output format for
+<code>mem_plot_folio()</code>
 <a class="anchor" aria-label="anchor" href="#consider-a-strict-output-format-for-mem_plot_folio"></a></h2>
 <p>Priority: medium</p>
-<ul><li><p>Goal is to run <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> once then be able to plot any component separately. Would help keep all plots in sync with the settings used.</p></li>
-<li><p>Benefit: Always have ability to see the exact gene-pathway incidence matrix heatmap, and its clustering, which is used for a collapsed Cnet plots.</p></li>
+<ul><li><p>Goal is to run <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> once then be able to
+plot any component separately. Would help keep all plots in sync with
+the settings used.</p></li>
+<li><p>Benefit: Always have ability to see the exact gene-pathway
+incidence matrix heatmap, and its clustering, which is used for a
+collapsed Cnet plots.</p></li>
 <li>
 <p>Design idea: List format</p>
 <ul><li>
@@ -307,30 +1185,49 @@
 <li>…</li>
 </ul></li>
 </ul></li>
-<li><p>Each type of output contains a <code>list</code> of relevant components</p></li>
+<li><p>Each type of output contains a <code>list</code> of relevant
+components</p></li>
 </ul></li>
 </ul></div>
 <div class="section level2">
 <h2 id="10apr2021-make-plot-commands-word-for-ggraph">10apr2021: make plot commands word for ggraph<a class="anchor" aria-label="anchor" href="#10apr2021-make-plot-commands-word-for-ggraph"></a></h2>
 <p>Priority: low</p>
-<ul><li><p>Goal is to use ggraph for ggplot2-type plotting instead of using base R for <code>igraph</code> plots.</p></li>
+<ul><li><p>Goal is to use ggraph for ggplot2-type plotting instead of using
+base R for <code>igraph</code> plots.</p></li>
 <li>
 <p><code>jam_ggraph()</code> ?</p>
-<ul><li>Test <code>scatterpie</code> R package which implements pie node shapes for use in ggraph. Unsure the data content requirement.</li>
+<ul><li>Test <code>scatterpie</code> R package which implements pie node
+shapes for use in ggraph. Unsure the data content requirement.</li>
 </ul></li>
 </ul></div>
 <div class="section level2">
-<h2 id="10apr2021-document-examples-for-reorderigraphnotes">10apr2021: document examples for <code>reorderIgraphNotes()</code>
+<h2 id="10apr2021-document-examples-for-reorderigraphnotes">10apr2021: document examples for
+<code>reorderIgraphNotes()</code>
 <a class="anchor" aria-label="anchor" href="#10apr2021-document-examples-for-reorderigraphnotes"></a></h2>
-<ul><li>Examples should show how to specify color order, or change the order if necessary.</li>
+<ul><li>Examples should show how to specify color order, or change the order
+if necessary.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="complete-2020-improve-reorderigraphnotes">COMPLETE: 2020: Improve <code>reorderIgraphNotes()</code>
 <a class="anchor" aria-label="anchor" href="#complete-2020-improve-reorderigraphnotes"></a></h2>
 <ul><li>
-<code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> when it encounters attributes with multiple colors per node, such as <code>"pie.colors"</code> and <code>"coloredrect.colors"</code>, calls <code><a href="reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> to generate one blended color per node, then it sorts those colors using <code><a href="reference/sort_colors.html">sort_colors()</a></code>. However, the color order ultimately does not match the order in the color legend, and other plots such as heatmaps.</li>
-<li>Future idea is to convert node attributes with multiple colors per node into a <code>data.frame</code> where each color is in a separate column. Then convert each column to a factor whose levels match the color order from <code>colorV</code> (argument to <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>). The end result should sort nodes consistent with the order of colors.</li>
-<li>Note this process assumes that all node colors are from a limited set, which ideally should match <code>colorV</code>. Therefore if any color gradient is applied to nodes with <code>nodeType="gene"</code>, this process will not work.</li>
+<code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> when it encounters attributes with
+multiple colors per node, such as <code>"pie.colors"</code> and
+<code>"coloredrect.colors"</code>, calls
+<code><a href="reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> to generate one blended color per
+node, then it sorts those colors using <code>sort_colors()</code>.
+However, the color order ultimately does not match the order in the
+color legend, and other plots such as heatmaps.</li>
+<li>Future idea is to convert node attributes with multiple colors per
+node into a <code>data.frame</code> where each color is in a separate
+column. Then convert each column to a factor whose levels match the
+color order from <code>colorV</code> (argument to
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>). The end result should sort nodes
+consistent with the order of colors.</li>
+<li>Note this process assumes that all node colors are from a limited
+set, which ideally should match <code>colorV</code>. Therefore if any
+color gradient is applied to nodes with <code>nodeType="gene"</code>,
+this process will not work.</li>
 </ul></div>
 </div>
 
@@ -349,7 +1246,8 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

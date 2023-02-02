@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -68,7 +68,9 @@
   x <span class="op">=</span> <span class="fl">0</span>,
   y <span class="op">=</span> <span class="fl">0</span>,
   expand <span class="op">=</span> <span class="fl">0</span>,
+  percent_spacing <span class="op">=</span> <span class="cn">NULL</span>,
   rotate_degrees <span class="op">=</span> <span class="fl">0</span>,
+  cnet_nodesets <span class="op">=</span> <span class="cn">NULL</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
@@ -101,6 +103,9 @@ distance to the center.</p></dd>
 <dd><p><code>numeric</code> value indicating the rotation in
 degrees to adjust the node coordinates, relative to the center of
 the coordinates.</p></dd>
+<dt>cnet_nodesets</dt>
+<dd><p><code>list</code> optional to provide the known nodesets
+upfront, in order to avoid re-determining the nodesets.</p></dd>
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
 <dt>...</dt>
@@ -124,8 +129,10 @@ overlaps.</p>
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam cnet igraph functions: 
 <code><a href="adjust_cnet_set_relayout_gene.html">adjust_cnet_set_relayout_gene</a>()</code>,
+<code><a href="apply_cnet_direction.html">apply_cnet_direction</a>()</code>,
 <code><a href="apply_nodeset_spacing.html">apply_nodeset_spacing</a>()</code>,
 <code><a href="get_cnet_nodeset.html">get_cnet_nodeset</a>()</code>,
+<code><a href="make_cnet_test.html">make_cnet_test</a>()</code>,
 <code><a href="nudge_igraph_node.html">nudge_igraph_node</a>()</code>,
 <code><a href="rotate_igraph_layout.html">rotate_igraph_layout</a>()</code></p></div>
     </div>
@@ -166,7 +173,8 @@ overlaps.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

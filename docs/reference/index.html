@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -58,7 +58,8 @@
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
           <h2 id="enrichment-functions">Enrichment functions <a href="#enrichment-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Functions that manipulate enrichment or multiple enrichment results.</p>
+          <p class="section-desc"></p><p>Functions that manipulate enrichment or multiple enrichment
+results.</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="multiEnrichMap.html">multiEnrichMap()</a></code> </p>
@@ -73,6 +74,10 @@
           <p class="section-desc"></p><p>Functions to plot MultiEnrichment results</p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="adjust_polygon_border.html">adjust_polygon_border()</a></code> </p>
+        </td>
+        <td><p>Adjust polygon border to inner or outer edge</p></td>
+      </tr><tr><td>
           <p><code><a href="grid_with_title.html">grid_with_title()</a></code> </p>
         </td>
         <td><p>Draw Heatmap with title and subtitle using grid viewports</p></td>
@@ -100,6 +105,10 @@
           <p><code><a href="mem_plot_folio.html">mem_plot_folio()</a></code> </p>
         </td>
         <td><p>Multienrichment folio of summary plots</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_layout_scale.html">plot_layout_scale()</a></code> </p>
+        </td>
+        <td><p>Plot layout scale by percentage of coordinate range</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="conversion-functions">Conversion functions <a href="#conversion-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Functions to convert data types</p>
@@ -177,6 +186,10 @@
         </td>
         <td><p>Fix Set labels for legibility</p></td>
       </tr><tr><td>
+          <p><code><a href="flip_edges.html">flip_edges()</a></code> </p>
+        </td>
+        <td><p>Flip direction of igraph edges</p></td>
+      </tr><tr><td>
           <p><code><a href="get_bipartite_nodeset.html">get_bipartite_nodeset()</a></code> </p>
         </td>
         <td><p>Get partite/connected graph nodesets</p></td>
@@ -201,7 +214,7 @@
         </td>
         <td><p>igraph layout function using qgraph Fruchterman-Reingold</p></td>
       </tr><tr><td>
-          <p><code><a href="memIM2cnet.html">memIM2cnet()</a></code> </p>
+          <p><code><a href="memIM2cnet.html">memIM2cnet()</a></code> <code><a href="memIM2cnet.html">mem2cnet()</a></code> </p>
         </td>
         <td><p>Convert MultiEnrichment incidence matrix to Cnet plot</p></td>
       </tr><tr><td>
@@ -229,7 +242,7 @@
         </td>
         <td><p>Remove igraph singlet nodes</p></td>
       </tr><tr><td>
-          <p><code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code> </p>
+          <p><code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code> <code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> </p>
         </td>
         <td><p>Re-order igraph nodes</p></td>
       </tr><tr><td>
@@ -269,6 +282,10 @@
         </td>
         <td><p>Adjust Set nodes then relayout Gene nodes</p></td>
       </tr><tr><td>
+          <p><code><a href="apply_cnet_direction.html">apply_cnet_direction()</a></code> </p>
+        </td>
+        <td><p>Apply Cnet border color by directionality</p></td>
+      </tr><tr><td>
           <p><code><a href="apply_nodeset_spacing.html">apply_nodeset_spacing()</a></code> </p>
         </td>
         <td><p>Apply minimum node spacing for each Cnet node set</p></td>
@@ -276,6 +293,10 @@
           <p><code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code> </p>
         </td>
         <td><p>Get Cnet node set by connected Sets</p></td>
+      </tr><tr><td>
+          <p><code><a href="make_cnet_test.html">make_cnet_test()</a></code> </p>
+        </td>
+        <td><p>Make Cnet test igraph</p></td>
       </tr><tr><td>
           <p><code><a href="nudge_igraph_node.html">nudge_igraph_node()</a></code> </p>
         </td>
@@ -293,17 +314,21 @@
         </td>
         <td><p>Vectorized mypie() function for igraph vertex pie polygons</p></td>
       </tr><tr><td>
-          <p><code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> </p>
+          <p><code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> <code><a href="shape.coloredrectangle.plot.html">shape.coloredrectangle.clip()</a></code> </p>
         </td>
-        <td><p>plot function for igraph vertex shape coloredrectangle</p></td>
+        <td><p>custom igraph vertex shape coloredrectangle</p></td>
+      </tr><tr><td>
+          <p><code><a href="shape.ellipse.clip.html">shape.ellipse.clip()</a></code> </p>
+        </td>
+        <td><p>clip function for igraph vertex shape ellipse</p></td>
       </tr><tr><td>
           <p><code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code> </p>
         </td>
         <td><p>plot function for igraph vertex shape ellipse</p></td>
       </tr><tr><td>
-          <p><code><a href="shape.jampie.plot.html">shape.jampie.plot()</a></code> </p>
+          <p><code><a href="shape.jampie.plot.html">shape.jampie.plot()</a></code> <code><a href="shape.jampie.plot.html">shape.jampie.clip()</a></code> </p>
         </td>
-        <td><p>plot function for igraph vertex shape jampie</p></td>
+        <td><p>custom igraph vertex shape jampie</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="list-functions">list functions <a href="#list-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Functions that operate on list objects</p>
@@ -317,7 +342,15 @@
         </td>
         <td><p>convert incidence matrix to list</p></td>
       </tr><tr><td>
+          <p><code><a href="im2list_dep.html">im2list_dep()</a></code> </p>
+        </td>
+        <td><p>convert incidence matrix to list</p></td>
+      </tr><tr><td>
           <p><code><a href="imSigned2list.html">imSigned2list()</a></code> </p>
+        </td>
+        <td><p>convert signed incidence matrix to list</p></td>
+      </tr><tr><td>
+          <p><code><a href="imSigned2list_dep.html">imSigned2list_dep()</a></code> </p>
         </td>
         <td><p>convert signed incidence matrix to list</p></td>
       </tr><tr><td>
@@ -337,10 +370,6 @@
           <p class="section-desc"></p><p>Functions used by other multienrichjam functions</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="apply_color_cap.html">apply_color_cap()</a></code> </p>
-        </td>
-        <td><p>Apply color channel numeric range cap</p></td>
-      </tr><tr><td>
           <p><code><a href="avg_angles.html">avg_angles()</a></code> </p>
         </td>
         <td><p>Average geometric angles</p></td>
@@ -349,17 +378,29 @@
         </td>
         <td><p>Average colors by list</p></td>
       </tr><tr><td>
-          <p><code><a href="call_fn_ellipsis.html">call_fn_ellipsis()</a></code> </p>
+          <p><code><a href="call_fn_ellipsis_deprecated.html">call_fn_ellipsis_deprecated()</a></code> </p>
         </td>
         <td><p>Call function using safe ellipsis arguments</p></td>
+      </tr><tr><td>
+          <p><code><a href="cell_fun_bivariate.html">cell_fun_bivariate()</a></code> </p>
+        </td>
+        <td><p>ComplexHeatmap cell function with bivariant color</p></td>
       </tr><tr><td>
           <p><code><a href="collapse_mem_clusters.html">collapse_mem_clusters()</a></code> </p>
         </td>
         <td><p>Collapse Multienrichment clusters</p></td>
       </tr><tr><td>
+          <p><code><a href="colorRamp2D.html">colorRamp2D()</a></code> </p>
+        </td>
+        <td><p>Color ramp for bivariate colors</p></td>
+      </tr><tr><td>
           <p><code><a href="deconcat_df2.html">deconcat_df2()</a></code> </p>
         </td>
         <td><p>Deconcatenate delimited column values in a data.frame</p></td>
+      </tr><tr><td>
+          <p><code><a href="display_colorRamp2D.html">display_colorRamp2D()</a></code> </p>
+        </td>
+        <td><p>Display colors from bivariate color function</p></td>
       </tr><tr><td>
           <p><code><a href="enrichList2geneHitList.html">enrichList2geneHitList()</a></code> </p>
         </td>
@@ -377,17 +418,17 @@
         </td>
         <td><p>Handle igraph attribute parameter list</p></td>
       </tr><tr><td>
-          <p><code><a href="heatmap_column_order.html">heatmap_column_order()</a></code> </p>
-        </td>
-        <td><p>Return Heatmap column order</p></td>
-      </tr><tr><td>
-          <p><code><a href="heatmap_row_order.html">heatmap_row_order()</a></code> </p>
-        </td>
-        <td><p>Return Heatmap row order</p></td>
-      </tr><tr><td>
           <p><code><a href="isColorBlank.html">isColorBlank()</a></code> </p>
         </td>
         <td><p>Determine if colors are blank colors</p></td>
+      </tr><tr><td>
+          <p><code><a href="make_legend_bivariate.html">make_legend_bivariate()</a></code> </p>
+        </td>
+        <td><p>Display colors from bivariate color function</p></td>
+      </tr><tr><td>
+          <p><code><a href="make_point_hull.html">make_point_hull()</a></code> </p>
+        </td>
+        <td><p>Make alpha hull from points</p></td>
       </tr><tr><td>
           <p><code><a href="mem_find_overlap.html">mem_find_overlap()</a></code> </p>
         </td>
@@ -404,10 +445,6 @@
           <p><code><a href="rotate_coordinates.html">rotate_coordinates()</a></code> </p>
         </td>
         <td><p>Rotate numeric coordinates</p></td>
-      </tr><tr><td>
-          <p><code><a href="sort_colors.html">sort_colors()</a></code> </p>
-        </td>
-        <td><p>Sort colors</p></td>
       </tr><tr><td>
           <p><code><a href="subgraph_jam.html">subgraph_jam()</a></code> </p>
         </td>
@@ -428,6 +465,26 @@
           <p><code><a href="importIPAenrichment.html">importIPAenrichment()</a></code> </p>
         </td>
         <td><p>Import Ingenuity IPA enrichment results</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="internal-functions">Internal functions <a href="#internal-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Functions typically for internal use by other Jam functions</p>
+        </th>
+      </tr></tbody><tbody></tbody><tbody><tr><th colspan="2">
+          <h2 id="deprecated-functions">Deprecated functions <a href="#deprecated-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Functions moved to the jamba package</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="heatmap_column_order_deprecated.html">heatmap_column_order_deprecated()</a></code> </p>
+        </td>
+        <td><p>Return Heatmap column order</p></td>
+      </tr><tr><td>
+          <p><code><a href="heatmap_row_order_deprecated.html">heatmap_row_order_deprecated()</a></code> </p>
+        </td>
+        <td><p>Return Heatmap row order (deprecated)</p></td>
+      </tr><tr><td>
+          <p><code><a href="sort_colors_deprecated.html">sort_colors_deprecated()</a></code> </p>
+        </td>
+        <td><p>Sort colors (deprecated)</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -441,7 +498,8 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

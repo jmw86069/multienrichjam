@@ -97,6 +97,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

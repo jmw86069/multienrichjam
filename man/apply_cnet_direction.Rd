@@ -8,8 +8,11 @@ apply_cnet_direction(
   cnet,
   hitim,
   col = colorjam::col_div_xf(1.2),
+  col_l_max = 65,
   hide_solo_pie = TRUE,
-  frame_blank = "#FFFFFF00",
+  frame_blank = default_igraph_values()$vertex$frame.color,
+  frame_lwd_blank = 1,
+  border_lwd = 2,
   do_reorder = FALSE,
   ...
 )
@@ -27,13 +30,28 @@ converted to color using color function \code{col}.}
 \item{col}{\code{function} that takes \code{numeric} input and assigns
 a color. The default assigns red for positive values, blue
 for negative values, and white for zero, using
-\code{colorjam::col_div_xf(1.5)}.}
+\code{colorjam::col_div_xf(1.2)}.}
+
+\item{col_l_max}{\code{numeric} maximum HCL Lightness permitted for
+output colors, for example because the middle color in \code{"RdBu_r"}
+is nearly white, it may be preferable to apply a darker grey
+color.}
 
 \item{hide_solo_pie}{\code{logical} indicating whether a single-color
 border should only be applied to \code{"frame.color"} and not to
-individual \code{"pie.border"} entries. When \code{hide_solo_pie=FALSE}
-the border color is applied to each pie wedge, and if all
-pie wedges are identical, it is also applied as \code{"frame.color"}.}
+individual \code{"pie.border"} entries.
+\itemize{
+\item When \code{hide_solo_pie=TRUE} and all wedges (one or more) will
+have the same \code{pie.border} color, then \code{pie.border} is defined
+as \code{NA}, and instead the \code{frame.color} is assigned to this color.
+Both \code{pie.lwd} and \code{frame.lwd} will be assigned \code{border_lwd},
+since \code{pie.border} is \code{NA} it will not be rendered, only the
+\code{frame.color} will be rendered.
+\item When \code{hide_solo_pie=FALSE} each pie wedge border color is assigned
+to \code{pie.border}, \code{frame.color} will be assigned \code{frame_blank},
+and \code{frame.lwd} will be assigned \code{frame_lwd_blank} which is useful
+for displaying a small outer frame for each node.
+}}
 
 \item{frame_blank}{\code{character} string to define the color used
 for \code{"frame.color"} when there are multiple colors in \code{"pie.border"}
@@ -76,3 +94,14 @@ of each node.
 Instead the attribute \code{"frame.color"} is populated with the
 one unique border color, so that only the outer border is colorized.
 }
+\seealso{
+Other jam cnet igraph functions: 
+\code{\link{adjust_cnet_nodeset}()},
+\code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_nodeset_spacing}()},
+\code{\link{get_cnet_nodeset}()},
+\code{\link{make_cnet_test}()},
+\code{\link{nudge_igraph_node}()},
+\code{\link{rotate_igraph_layout}()}
+}
+\concept{jam cnet igraph functions}

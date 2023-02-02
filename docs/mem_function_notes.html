@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -58,7 +58,8 @@
 
 
 <div class="section level2">
-<h2 id="keep-track-of-igraph-related-functions-that-call-other-functions">Keep track of igraph-related functions that call other functions<a class="anchor" aria-label="anchor" href="#keep-track-of-igraph-related-functions-that-call-other-functions"></a></h2>
+<h2 id="keep-track-of-igraph-related-functions-that-call-other-functions">Keep track of igraph-related functions that call other
+functions<a class="anchor" aria-label="anchor" href="#keep-track-of-igraph-related-functions-that-call-other-functions"></a></h2>
 <p><code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code></p>
 <ul><li>
 <code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code> - optional, default=TRUE</li>
@@ -70,77 +71,104 @@
 <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> - optional, default=TRUE</li>
 </ul><p><code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></p>
 <ul><li>
-<p><code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code> - called if force_relayout=TRUE, OR (layout=NULL and g$layout=NULL)</p>
+<p><code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code> - called if force_relayout=TRUE,
+OR (layout=NULL and g$layout=NULL)</p>
 <ul><li>
 <code><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout()</a></code> - only called if force_relayout=TRUE</li>
 </ul></li>
-<li><p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> - optional, default=TRUE</p></li>
+<li><p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code> - optional,
+default=TRUE</p></li>
 </ul><p><code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code></p>
-<ul><li>returns g which always includes <code>g$layout</code> with layout coordinates</li>
+<ul><li>returns g which always includes <code>g$layout</code> with layout
+coordinates</li>
 <li>
 <code><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout()</a></code> - called if layout is a function</li>
 <li>
-<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> - called if <code>layout=NULL, g$layout=NULL</code>
+<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> - called if
+<code>layout=NULL, g$layout=NULL</code>
 </li>
 <li>
-<code><a href="reference/isColorBlank.html">isColorBlank()</a></code> - called with <code>isColorBlank(...)</code>
+<code><a href="reference/isColorBlank.html">isColorBlank()</a></code> - called with
+<code>isColorBlank(...)</code>
 </li>
 </ul></div>
 <div class="section level2">
 <h2 id="re-consider-function-name-style">Re-consider function name style<a class="anchor" aria-label="anchor" href="#re-consider-function-name-style"></a></h2>
-<p>Re-consider whether renaming functions with some consistent and intuitive naming scheme could be beneficial. I actually complain about my own inconsistency so I think it best to rename functions sooner than later. Old functions will be deprecated and aliased to the new function names.</p>
+<p>Re-consider whether renaming functions with some consistent and
+intuitive naming scheme could be beneficial. I actually complain about
+my own inconsistency so I think it best to rename functions sooner than
+later. Old functions will be deprecated and aliased to the new function
+names.</p>
 <div class="section level3">
 <h3 id="function-style-option-a-type_verb_subtype">Function Style Option A: <code>type_verb_subtype()</code>
 <a class="anchor" aria-label="anchor" href="#function-style-option-a-type_verb_subtype"></a></h3>
-<p>For me it is sometimes helpful to see the relevant object type first in the function name, however this style may not be idea. For example:</p>
+<p>For me it is sometimes helpful to see the relevant object type first
+in the function name, however this style may not be idea. For
+example:</p>
 <ul><li><code>input_method_subtype()</code></li>
 <li>
-<code>igraph_reorder_nodes()</code> instead of <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>
+<code>igraph_reorder_nodes()</code> instead of
+<code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>
 </li>
 <li>
-<code>igraph_spread_labels()</code> instead of <code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code>
+<code>igraph_spread_labels()</code> instead of
+<code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code>
 </li>
 <li>
-<code>igraph_subset_cnet()</code> instead of <code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>
+<code>igraph_subset_cnet()</code> instead of
+<code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>
 </li>
 <li>
-<code>igraph_remove_singlets()</code> instead of <code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code>
+<code>igraph_remove_singlets()</code> instead of
+<code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code>
 </li>
 <li>
-<code>igraph_remove_blanks()</code> instead of <code><a href="reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>
+<code>igraph_remove_blanks()</code> instead of
+<code><a href="reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>
 </li>
 <li>
-<code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code> for consistency with <code>igraph::layout_with_()</code> convention.</li>
+<code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code> for consistency with
+<code>igraph::layout_with_()</code> convention.</li>
 <li>
-<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> consistent with <code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code>
+<code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code> consistent with
+<code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code>
 </li>
 <li>
-<code>color_is_blank()</code> possible instead of <code><a href="reference/isColorBlank.html">isColorBlank()</a></code>
+<code>color_is_blank()</code> possible instead of
+<code><a href="reference/isColorBlank.html">isColorBlank()</a></code>
 </li>
 </ul></div>
 <div class="section level3">
 <h3 id="function-style-option-b-verb_type_subtype">Function Style Option B: <code>verb_type_subtype()</code>
 <a class="anchor" aria-label="anchor" href="#function-style-option-b-verb_type_subtype"></a></h3>
-<p><strong>This option is preferred because it matches Tidyverse convention</strong></p>
-<p>A counter point, the tidyverse style guide suggests using verbs, all lowercase with underscore ’_’ between words (not camelCase). For example:</p>
+<p><strong>This option is preferred because it matches Tidyverse
+convention</strong></p>
+<p>A counter point, the tidyverse style guide suggests using verbs, all
+lowercase with underscore ’_’ between words (not camelCase). For
+example:</p>
 <ul><li><code>method_input_typeaffected()</code></li>
 <li>
-<code>reorder_igraph_nodes()</code> instead of <code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>
+<code><a href="reference/reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> instead of
+<code><a href="reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>
 </li>
 <li><code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></li>
 <li>
-<code>subset_cnet_igraph()</code> instead of <code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>
+<code>subset_cnet_igraph()</code> instead of
+<code><a href="reference/subsetCnetIgraph.html">subsetCnetIgraph()</a></code>
 </li>
 <li>
-<code>remove_igraph_singlets()</code> instead of <code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code>
+<code>remove_igraph_singlets()</code> instead of
+<code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code>
 </li>
 <li>
-<code>remove_igraph_blanks()</code> instead of <code><a href="reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>
+<code>remove_igraph_blanks()</code> instead of
+<code><a href="reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>
 </li>
 <li><code><a href="reference/layout_with_qfr.html">layout_with_qfr()</a></code></li>
 <li><code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code></li>
 <li>
-<code>is_color_blank()</code> instead of <code><a href="reference/isColorBlank.html">isColorBlank()</a></code>
+<code>is_color_blank()</code> instead of
+<code><a href="reference/isColorBlank.html">isColorBlank()</a></code>
 </li>
 </ul></div>
 </div>
@@ -152,19 +180,25 @@
 </ul><p>One common function:</p>
 <ul><li>
 <p><code>subset_igraph()</code></p>
-<p><em>-</em> or <code>prune_igraph()</code> or <code>filter_igraph()</code></p>
+<p><em>-</em> or <code>prune_igraph()</code> or
+<code>filter_igraph()</code></p>
 <ul><li><code>remove_singlets=FALSE</code></li>
 <li><code>remove_blanks=FALSE</code></li>
 </ul></li>
 <li>
 <p><code>subset_cnet_igraph()</code></p>
-<ul><li>same as above except option to subset by specific entries by <code>V(g)$nodeType</code>.</li>
+<ul><li>same as above except option to subset by specific entries by
+<code>V(g)$nodeType</code>.</li>
 </ul></li>
 </ul></div>
 <div class="section level2">
 <h2 id="tidyverse--and-r-41--pipe-compatibility">Tidyverse %&gt;% and R-4.1 &gt; pipe compatibility<a class="anchor" aria-label="anchor" href="#tidyverse--and-r-41--pipe-compatibility"></a></h2>
-<p>Where possible and where relevant the functions should be compatible with tidyverse pipe <code>%&gt;%</code> and the new R-4.1 operator pipe <code>\&gt;</code></p>
-<p>In practice when functions are called for their side-effects, the function should return the same object supplied after applying modifications.</p>
+<p>Where possible and where relevant the functions should be compatible
+with tidyverse pipe <code>%&gt;%</code> and the new R-4.1 operator pipe
+<code>\&gt;</code></p>
+<p>In practice when functions are called for their side-effects, the
+function should return the same object supplied after applying
+modifications.</p>
 <ul><li><code><a href="reference/relayout_with_qfr.html">relayout_with_qfr()</a></code></li>
 <li><code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></li>
 <li><code>subset_cnet_igraph()</code></li>
@@ -173,7 +207,8 @@
 </ul></div>
 <div class="section level2">
 <h2 id="finding-relevant-functions">Finding relevant functions<a class="anchor" aria-label="anchor" href="#finding-relevant-functions"></a></h2>
-<p>For convenience one can use <code>jamba::grepls("igraph.")</code> to find functions relevant to <code>igraph</code> objects.</p>
+<p>For convenience one can use <code>jamba::grepls("igraph.")</code> to
+find functions relevant to <code>igraph</code> objects.</p>
 </div>
 
 
@@ -192,7 +227,8 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

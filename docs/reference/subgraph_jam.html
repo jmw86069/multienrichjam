@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -70,7 +70,7 @@
     <dl><dt>graph</dt>
 <dd><p><code>igraph</code> object</p></dd>
 <dt>v</dt>
-<dd><p>integer or logical vector indicating the nodes to
+<dd><p><code>integer</code> or <code>logical</code> vector indicating the nodes to
 retain in the final <code>igraph</code> object.</p></dd>
 </dl></div>
     <div id="details">
@@ -83,24 +83,25 @@ matrix consistent with the subset of <code>igraph</code> nodes.</p>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam utility functions: 
-<code><a href="apply_color_cap.html">apply_color_cap</a>()</code>,
 <code><a href="avg_angles.html">avg_angles</a>()</code>,
 <code><a href="avg_colors_by_list.html">avg_colors_by_list</a>()</code>,
-<code><a href="call_fn_ellipsis.html">call_fn_ellipsis</a>()</code>,
+<code><a href="call_fn_ellipsis_deprecated.html">call_fn_ellipsis_deprecated</a>()</code>,
+<code><a href="cell_fun_bivariate.html">cell_fun_bivariate</a>()</code>,
 <code><a href="collapse_mem_clusters.html">collapse_mem_clusters</a>()</code>,
+<code><a href="colorRamp2D.html">colorRamp2D</a>()</code>,
 <code><a href="deconcat_df2.html">deconcat_df2</a>()</code>,
+<code><a href="display_colorRamp2D.html">display_colorRamp2D</a>()</code>,
 <code><a href="enrichList2geneHitList.html">enrichList2geneHitList</a>()</code>,
 <code><a href="find_colname.html">find_colname</a>()</code>,
 <code><a href="gsubs.html">gsubs</a>()</code>,
 <code><a href="handle_igraph_param_list.html">handle_igraph_param_list</a>()</code>,
-<code><a href="heatmap_column_order.html">heatmap_column_order</a>()</code>,
-<code><a href="heatmap_row_order.html">heatmap_row_order</a>()</code>,
 <code><a href="isColorBlank.html">isColorBlank</a>()</code>,
+<code><a href="make_legend_bivariate.html">make_legend_bivariate</a>()</code>,
+<code><a href="make_point_hull.html">make_point_hull</a>()</code>,
 <code><a href="mem_find_overlap.html">mem_find_overlap</a>()</code>,
 <code><a href="order_colors.html">order_colors</a>()</code>,
 <code><a href="rank_mem_clusters.html">rank_mem_clusters</a>()</code>,
 <code><a href="rotate_coordinates.html">rotate_coordinates</a>()</code>,
-<code><a href="sort_colors.html">sort_colors</a>()</code>,
 <code><a href="xyAngle.html">xyAngle</a>()</code></p>
 <p>Other jam igraph functions: 
 <code><a href="cnet2df.html">cnet2df</a>()</code>,
@@ -114,6 +115,7 @@ matrix consistent with the subset of <code>igraph</code> nodes.</p>
 <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code>,
 <code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
+<code><a href="flip_edges.html">flip_edges</a>()</code>,
 <code><a href="get_bipartite_nodeset.html">get_bipartite_nodeset</a>()</code>,
 <code><a href="igraph2pieGraph.html">igraph2pieGraph</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
@@ -147,7 +149,8 @@ matrix consistent with the subset of <code>igraph</code> nodes.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

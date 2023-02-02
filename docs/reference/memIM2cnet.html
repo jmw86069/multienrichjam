@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -54,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Convert MultiEnrichment incidence matrix to Cnet plot</h1>
-    <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamenrich-igraph.r" class="external-link"><code>R/jamenrich-igraph.r</code></a></small>
+    <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamenrich-mem2cnet.R" class="external-link"><code>R/jamenrich-mem2cnet.R</code></a></small>
     <div class="hidden name"><code>memIM2cnet.Rd</code></div>
     </div>
 
@@ -68,25 +68,125 @@
   geneShape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie"</span>, <span class="st">"coloredrectangle"</span>, <span class="st">"circle"</span>, <span class="st">"ellipse"</span><span class="op">)</span>,
   categoryColor <span class="op">=</span> <span class="st">"#E5C494"</span>,
   geneColor <span class="op">=</span> <span class="st">"#B3B3B3"</span>,
-  categoryLabelColor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue3"</span><span class="op">)</span>,
-  geneLabelColor <span class="op">=</span> <span class="st">"grey40"</span>,
-  categorySize <span class="op">=</span> <span class="fl">5</span>,
-  geneSize <span class="op">=</span> <span class="fl">2.5</span>,
-  categoryCex <span class="op">=</span> <span class="fl">0.9</span>,
-  geneCex <span class="op">=</span> <span class="fl">0.7</span>,
-  frame_darkFactor <span class="op">=</span> <span class="fl">1.4</span>,
+  categoryLabelColor <span class="op">=</span> <span class="st">"darkblue"</span>,
+  geneLabelColor <span class="op">=</span> <span class="st">"grey25"</span>,
+  categorySize <span class="op">=</span> <span class="fl">20</span>,
+  geneSize <span class="op">=</span> <span class="fl">10</span>,
+  categoryCex <span class="op">=</span> <span class="fl">1.2</span>,
+  geneCex <span class="op">=</span> <span class="fl">0.9</span>,
+  frame_darkFactor <span class="op">=</span> <span class="cn">NULL</span>,
   geneIM <span class="op">=</span> <span class="cn">NULL</span>,
   geneIMcolors <span class="op">=</span> <span class="cn">NULL</span>,
+  geneIMdirection <span class="op">=</span> <span class="cn">NULL</span>,
   enrichIM <span class="op">=</span> <span class="cn">NULL</span>,
   enrichIMcolors <span class="op">=</span> <span class="cn">NULL</span>,
+  enrichIMdirection <span class="op">=</span> <span class="cn">NULL</span>,
   coloredrect_nrow <span class="op">=</span> <span class="fl">1</span>,
   coloredrect_ncol <span class="op">=</span> <span class="cn">NULL</span>,
   coloredrect_byrow <span class="op">=</span> <span class="cn">TRUE</span>,
+  colorV <span class="op">=</span> <span class="cn">NULL</span>,
+  direction_col <span class="op">=</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/col_div_xf.html" class="external-link">col_div_xf</a></span><span class="op">(</span><span class="fl">1.2</span><span class="op">)</span>,
+  hide_solo_pie <span class="op">=</span> <span class="cn">TRUE</span>,
+  remove_blanks <span class="op">=</span> <span class="cn">TRUE</span>,
+  spread_labels <span class="op">=</span> <span class="cn">FALSE</span>,
+  repulse <span class="op">=</span> <span class="fl">3.5</span>,
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
+  <span class="va">...</span>
+<span class="op">)</span>
+
+<span class="fu">mem2cnet</span><span class="op">(</span>
+  <span class="va">memIM</span>,
+  categoryShape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie"</span>, <span class="st">"coloredrectangle"</span>, <span class="st">"circle"</span>, <span class="st">"ellipse"</span><span class="op">)</span>,
+  geneShape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie"</span>, <span class="st">"coloredrectangle"</span>, <span class="st">"circle"</span>, <span class="st">"ellipse"</span><span class="op">)</span>,
+  categoryColor <span class="op">=</span> <span class="st">"#E5C494"</span>,
+  geneColor <span class="op">=</span> <span class="st">"#B3B3B3"</span>,
+  categoryLabelColor <span class="op">=</span> <span class="st">"darkblue"</span>,
+  geneLabelColor <span class="op">=</span> <span class="st">"grey25"</span>,
+  categorySize <span class="op">=</span> <span class="fl">20</span>,
+  geneSize <span class="op">=</span> <span class="fl">10</span>,
+  categoryCex <span class="op">=</span> <span class="fl">1.2</span>,
+  geneCex <span class="op">=</span> <span class="fl">0.9</span>,
+  frame_darkFactor <span class="op">=</span> <span class="cn">NULL</span>,
+  geneIM <span class="op">=</span> <span class="cn">NULL</span>,
+  geneIMcolors <span class="op">=</span> <span class="cn">NULL</span>,
+  geneIMdirection <span class="op">=</span> <span class="cn">NULL</span>,
+  enrichIM <span class="op">=</span> <span class="cn">NULL</span>,
+  enrichIMcolors <span class="op">=</span> <span class="cn">NULL</span>,
+  enrichIMdirection <span class="op">=</span> <span class="cn">NULL</span>,
+  coloredrect_nrow <span class="op">=</span> <span class="fl">1</span>,
+  coloredrect_ncol <span class="op">=</span> <span class="cn">NULL</span>,
+  coloredrect_byrow <span class="op">=</span> <span class="cn">TRUE</span>,
+  colorV <span class="op">=</span> <span class="cn">NULL</span>,
+  direction_col <span class="op">=</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/col_div_xf.html" class="external-link">col_div_xf</a></span><span class="op">(</span><span class="fl">1.2</span><span class="op">)</span>,
+  hide_solo_pie <span class="op">=</span> <span class="cn">TRUE</span>,
+  remove_blanks <span class="op">=</span> <span class="cn">TRUE</span>,
+  spread_labels <span class="op">=</span> <span class="cn">FALSE</span>,
+  repulse <span class="op">=</span> <span class="fl">3.5</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
 
     <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>memIM</dt>
+<dd><p><code>numeric</code> matrix, or <code>mem</code> output in <code>list</code> format. When
+<code>mem</code> format is supplied, relevant arguments which are empty will
+use corresponding data from <code>mem</code>, for example <code>geneIM</code>, <code>geneIMcolors</code>,
+<code>enrichIM</code>, <code>enrichIMcolors</code>.</p></dd>
+<dt>categoryShape, geneShape</dt>
+<dd><p><code>character</code> string indicating the
+preferred default node shape. In general, <code>pie</code> shapes with one segment
+are converted to <code>circle</code> for simplicity during plot functions,
+although when using <code><a href="jam_igraph.html">jam_igraph()</a></code> to plot, it will treat single-segment
+pie nodes as circle anyway, and vectorizes pie node plotting to
+make the overall rendering time substantially faster.</p></dd>
+<dt>categoryColor, geneColor</dt>
+<dd><p><code>character</code> R color for default node colors,
+used when <code>geneIMcolors</code>,<code>enrichIMcolors</code> is not supplied, respectively.</p></dd>
+<dt>categoryLabelColor, geneLabelColor</dt>
+<dd><p><code>character</code> R color used as
+default node label color.</p></dd>
+<dt>categorySize, geneSize</dt>
+<dd><p><code>numeric</code> default node size.</p></dd>
+<dt>categoryCex, geneCex</dt>
+<dd><p><code>numeric</code> adjustment to default node label
+font size.</p></dd>
+<dt>frame_darkFactor</dt>
+<dd><p><code>numeric</code> passed to <code><a href="https://rdrr.io/pkg/jamba/man/makeColorDarker.html" class="external-link">jamba::makeColorDarker()</a></code>
+so the frame color is slightly darker than the node fill color.</p></dd>
+<dt>geneIM, geneIMcolors, geneIMdirection, enrichIM, enrichIMcolors, enrichIMdirection</dt>
+<dd><p><code>matrix</code> objects typically associated with <code>mem</code> output from
+<code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>, however they are optional so this function
+can be applied broadly to any incidence matrix.</p><ul><li><p><code>geneIMcolors</code> is used to define gene (row) node colors</p></li>
+<li><p><code>enrichIMcolors</code> is used to define set (column) node colors</p></li>
+<li><p><code>geneIMdirection</code>,<code>enrichIMdirection</code> is used to define optional
+border colors defined by the direction, where -1 is down, 0 is no change, and
++1 is up. Use <code>direction_col</code> to define a custom color function.</p></li>
+</ul></dd>
+<dt>coloredrect_nrow, coloredrect_ncol, coloredrect_byrow</dt>
+<dd><p>arguments
+used when <code>geneShape="coloredrectangle"</code>, to define layout and
+placement of colors across columns in <code>geneIMcolors</code>. By default,
+one row of colors is used.</p></dd>
+<dt>colorV</dt>
+<dd><p><code>character</code> optional vector of R colors, named by enrichment
+names that appear in <code>colnames(enrichIM)</code> when supplied. When
+defined, these colors override those defined in <code>enrichIMcolors</code>.</p></dd>
+<dt>remove_blanks</dt>
+<dd><p><code>logical</code> indicating whether to remove blank
+subsections from each node, by calling <code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code>.</p></dd>
+<dt>spread_labels</dt>
+<dd><p><code>logical</code> indicating whether to call
+<code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code> to orient labels radially away from incoming
+edges.</p></dd>
+<dt>verbose</dt>
+<dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+<dt>...</dt>
+<dd><p>additional arguments are passed to downstream functions:</p><ul><li><p>when <code>remove_blanks=TRUE</code> it is passed to <code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code></p></li>
+<li><p>when <code>spread_labels=TRUE</code> it is passed to <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code></p></li>
+</ul></dd>
+</dl></div>
     <div id="value">
     <h2>Value</h2>
     <p><code>igraph</code> object with Concept network data, containing
@@ -113,6 +213,7 @@ and uses three elements to create a Cnet plot:</p><ol><li><p><code>"memIM"</code
 <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code>,
 <code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
+<code><a href="flip_edges.html">flip_edges</a>()</code>,
 <code><a href="get_bipartite_nodeset.html">get_bipartite_nodeset</a>()</code>,
 <code><a href="igraph2pieGraph.html">igraph2pieGraph</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
@@ -146,7 +247,8 @@ and uses three elements to create a Cnet plot:</p><ol><li><p><code>"memIM"</code
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

@@ -37,6 +37,12 @@
     <loc>/reference/adjust_cnet_set_relayout_gene.html</loc>
   </url>
   <url>
+    <loc>/reference/adjust_polygon_border.html</loc>
+  </url>
+  <url>
+    <loc>/reference/apply_cnet_direction.html</loc>
+  </url>
+  <url>
     <loc>/reference/apply_color_cap.html</loc>
   </url>
   <url>
@@ -50,6 +56,9 @@
   </url>
   <url>
     <loc>/reference/call_fn_ellipsis.html</loc>
+  </url>
+  <url>
+    <loc>/reference/call_fn_ellipsis_deprecated.html</loc>
   </url>
   <url>
     <loc>/reference/cell_fun_bivariate.html</loc>
@@ -88,6 +97,9 @@
     <loc>/reference/deconcat_df2.html</loc>
   </url>
   <url>
+    <loc>/reference/default_igraph_values.html</loc>
+  </url>
+  <url>
     <loc>/reference/display_colorRamp2D.html</loc>
   </url>
   <url>
@@ -121,10 +133,16 @@
     <loc>/reference/fixSetLabels.html</loc>
   </url>
   <url>
+    <loc>/reference/flip_edges.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_bipartite_nodeset.html</loc>
   </url>
   <url>
     <loc>/reference/get_cnet_nodeset.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_igraph_arrow_mode.html</loc>
   </url>
   <url>
     <loc>/reference/grid_with_title.html</loc>
@@ -139,7 +157,13 @@
     <loc>/reference/heatmap_column_order.html</loc>
   </url>
   <url>
+    <loc>/reference/heatmap_column_order_deprecated.html</loc>
+  </url>
+  <url>
     <loc>/reference/heatmap_row_order.html</loc>
+  </url>
+  <url>
+    <loc>/reference/heatmap_row_order_deprecated.html</loc>
   </url>
   <url>
     <loc>/reference/igraph2pieGraph.html</loc>
@@ -148,7 +172,13 @@
     <loc>/reference/im2list.html</loc>
   </url>
   <url>
+    <loc>/reference/im2list_dep.html</loc>
+  </url>
+  <url>
     <loc>/reference/imSigned2list.html</loc>
+  </url>
+  <url>
+    <loc>/reference/imSigned2list_dep.html</loc>
   </url>
   <url>
     <loc>/reference/importIPAenrichment.html</loc>
@@ -161,6 +191,9 @@
   </url>
   <url>
     <loc>/reference/jam_igraph.html</loc>
+  </url>
+  <url>
+    <loc>/reference/jam_igraph_arrows.html</loc>
   </url>
   <url>
     <loc>/reference/jam_mypie.html</loc>
@@ -184,7 +217,13 @@
     <loc>/reference/list2imSigned.html</loc>
   </url>
   <url>
+    <loc>/reference/make_cnet_test.html</loc>
+  </url>
+  <url>
     <loc>/reference/make_legend_bivariate.html</loc>
+  </url>
+  <url>
+    <loc>/reference/make_point_hull.html</loc>
   </url>
   <url>
     <loc>/reference/memIM2cnet.html</loc>
@@ -220,6 +259,12 @@
     <loc>/reference/order_colors.html</loc>
   </url>
   <url>
+    <loc>/reference/parse_igraph_plot_params.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_layout_scale.html</loc>
+  </url>
+  <url>
     <loc>/reference/rank_mem_clusters.html</loc>
   </url>
   <url>
@@ -247,6 +292,9 @@
     <loc>/reference/shape.coloredrectangle.plot.html</loc>
   </url>
   <url>
+    <loc>/reference/shape.ellipse.clip.html</loc>
+  </url>
+  <url>
     <loc>/reference/shape.ellipse.plot.html</loc>
   </url>
   <url>
@@ -254,6 +302,9 @@
   </url>
   <url>
     <loc>/reference/sort_colors.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sort_colors_deprecated.html</loc>
   </url>
   <url>
     <loc>/reference/spread_igraph_labels.html</loc>

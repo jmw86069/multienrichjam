@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -60,7 +60,10 @@
 <h2 id="brief-steps-to-produce-a-cnet-heatmap-plot">Brief steps to produce a Cnet-Heatmap plot<a class="anchor" aria-label="anchor" href="#brief-steps-to-produce-a-cnet-heatmap-plot"></a></h2>
 <ol style="list-style-type: decimal"><li>
 <p>Run multiEnrichMap()</p>
-<ul><li>Apply appropriate p_cutoff, and topEnrichN to reduce the number of pathways per enrichment result, topEnrichN from 10 to 20 for two enrichment results; topEnrichN 4 to 10 for four or more enrichment results.</li>
+<ul><li>Apply appropriate p_cutoff, and topEnrichN to reduce the number of
+pathways per enrichment result, topEnrichN from 10 to 20 for two
+enrichment results; topEnrichN 4 to 10 for four or more enrichment
+results.</li>
 </ul></li>
 <li><p>Run mem_plot_folio()</p></li>
 </ol><pre class="{r}"><code><span class="fu"><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">cairo_pdf</a></span><span class="op">(</span>file<span class="op">=</span><span class="st">"folio_mem_DM_AffySoma_top20_23apr2020.pdf"</span>,
@@ -70,21 +73,43 @@
    pathway_column_split<span class="op">=</span><span class="fl">4</span>,
    main<span class="op">=</span><span class="st">"Dermatomyositis Affy-SomaLogic"</span><span class="op">)</span>;
 <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span>;</code></pre>
-<ul><li><p>Make sure <code>do_which</code> includes <code>c(2,4)</code>, which produces cnet_collapsed_set</p></li>
+<ul><li><p>Make sure <code>do_which</code> includes <code>c(2,4)</code>,
+which produces cnet_collapsed_set</p></li>
 <li>
-<p>Review the gene-protein heatmap to ensure the clusters are representative of the underlying content of the data. Adjust clustering parameters as needed, for example:</p>
+<p>Review the gene-protein heatmap to ensure the clusters are
+representative of the underlying content of the data. Adjust clustering
+parameters as needed, for example:</p>
 <ul><li>
-<code>column_method="correlation"</code> changes column clustering to use correlation, instead of euclidean distance, which can emphasize the top annotation enrichment colors, slightly more than the gene-protein matrix.</li>
+<code>column_method="correlation"</code> changes column clustering
+to use correlation, instead of euclidean distance, which can emphasize
+the top annotation enrichment colors, slightly more than the
+gene-protein matrix.</li>
 <li>
-<code>min_gene_ct=1</code>, <code>min_sample_ct=1</code> filters pathways and genes to require more than one gene per pathway, or more than one pathway per gene. Sometimes this filtering helps the clustering focus on genes/pathways which are shared rather than random singlet genes.</li>
+<code>min_gene_ct=1</code>, <code>min_sample_ct=1</code> filters
+pathways and genes to require more than one gene per pathway, or more
+than one pathway per gene. Sometimes this filtering helps the clustering
+focus on genes/pathways which are shared rather than random singlet
+genes.</li>
 <li>
-<code>pathway_column_split=4</code> to adjust the number of pathway clusters, can be helpful if there are more or fewer clusters visible in the gene-pathway heatmap than are being produced by the automatic process. For large number of pathways, sometimes more clusters are necessary.</li>
+<code>pathway_column_split=4</code> to adjust the number of pathway
+clusters, can be helpful if there are more or fewer clusters visible in
+the gene-pathway heatmap than are being produced by the automatic
+process. For large number of pathways, sometimes more clusters are
+necessary.</li>
 <li>
-<code>p_floor</code> especially when <code>p_cutoff</code> is lower than 0.01, the <code>p_floor</code> should be set appropriately to represent the range of enrichment P-values in the top annotation color bar. Note that it may not be useful to show P-values of 1e-100 – anything less than 1e-10 should in theory be equivalent.</li>
+<code>p_floor</code> especially when <code>p_cutoff</code> is lower
+than 0.01, the <code>p_floor</code> should be set appropriately to
+represent the range of enrichment P-values in the top annotation color
+bar. Note that it may not be useful to show P-values of 1e-100 –
+anything less than 1e-10 should in theory be equivalent.</li>
 </ul></li>
-<li><p>Note the location of Cnet clusters, <code>c("A", "B", "C", "D")</code> because they need to be defined manually in the Cnet-Heatmap.</p></li>
-</ul><ol start="3" style="list-style-type: decimal"><li><strong>(Omit this step – now these steps are performed inside <code>plot_cnet_heatmaps()</code>)</strong></li>
-</ol><p>Extract <code>cnet_collapsed_set</code> as the Cnet plot to use for the Cnet-Heatmap.</p>
+<li><p>Note the location of Cnet clusters,
+<code>c("A", "B", "C", "D")</code> because they need to be defined
+manually in the Cnet-Heatmap.</p></li>
+</ul><ol start="3" style="list-style-type: decimal"><li><strong>(Omit this step – now these steps are performed inside
+<code>plot_cnet_heatmaps()</code>)</strong></li>
+</ol><p>Extract <code>cnet_collapsed_set</code> as the Cnet plot to use for
+the Cnet-Heatmap.</p>
 <pre class="{r}"><code><span class="fu">ht_opt</span><span class="op">(</span><span class="st">"legend_border"</span><span class="op">=</span><span class="st">"black"</span><span class="op">)</span>;
 <span class="va">cnet_collapsed_set</span> <span class="op">&lt;-</span> <span class="va">mem_dm_plots</span><span class="op">$</span><span class="va">cnet_collapsed_set</span>;
 
@@ -106,26 +131,56 @@
 <span class="fu">V</span><span class="op">(</span><span class="va">cnet_collapsed_set</span><span class="op">)</span><span class="op">$</span><span class="va">label.dist</span> <span class="op">&lt;-</span> <span class="fl">0.8</span>;
 <span class="fu">V</span><span class="op">(</span><span class="va">cnet_collapsed_set</span><span class="op">)</span><span class="op">$</span><span class="va">label.dist</span><span class="op">[</span><span class="fu">igrep</span><span class="op">(</span><span class="st">"^PR"</span>, <span class="fu">V</span><span class="op">(</span><span class="va">cnet_collapsed_set</span><span class="op">)</span><span class="op">$</span><span class="va">name</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">2</span>;</code></pre>
 <ul><li>
-<p>Optionally adjust the network layout using some helpful functions:</p>
+<p>Optionally adjust the network layout using some helpful
+functions:</p>
 <ul><li>
-<code><a href="reference/rotate_igraph_layout.html">rotate_igraph_layout()</a></code> - rotate the layout so the clusters can be aligned with heatmaps on the outer edges.</li>
+<code><a href="reference/rotate_igraph_layout.html">rotate_igraph_layout()</a></code> - rotate the layout so the
+clusters can be aligned with heatmaps on the outer edges.</li>
 <li>
-<code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> - spreads out igraph labels based upon the angle of incoming edges, it does pretty well at reducing overlapping labels. Use <code>nodeSortBy</code> to change color-sorting from “left-to-right” with <code>nodeSortBy="x"</code>, to “top-to-bottom” with <code>nodeSortBy="-y"</code>. Use <code>label_min_dist</code> to increase the distance of labels from the node, where <code>0.5</code> is roughly half the node diameter, which is of course 1x radius. Use <code>force_relayout</code> and <code>repulse</code> to force a new layout with different repulse adjustment, higher repulse makes nodes more tightly grouped.</li>
+<code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> - spreads out igraph labels
+based upon the angle of incoming edges, it does pretty well at reducing
+overlapping labels. Use <code>nodeSortBy</code> to change color-sorting
+from “left-to-right” with <code>nodeSortBy="x"</code>, to
+“top-to-bottom” with <code>nodeSortBy="-y"</code>. Use
+<code>label_min_dist</code> to increase the distance of labels from the
+node, where <code>0.5</code> is roughly half the node diameter, which is
+of course 1x radius. Use <code>force_relayout</code> and
+<code>repulse</code> to force a new layout with different repulse
+adjustment, higher repulse makes nodes more tightly grouped.</li>
 </ul></li>
 </ul><ol start="4" style="list-style-type: decimal"><li>
-<p>Prepare centered expression data, whose rownames are genes that are present in the gene-pathway data above.</p>
+<p>Prepare centered expression data, whose rownames are genes that
+are present in the gene-pathway data above.</p>
 <ul><li>
-<p>Typically data should be log2-transformed, and row-centered, which can be done using <code><a href="https://rdrr.io/pkg/jamma/man/centerGeneData.html" class="external-link">jamma::centerGeneData()</a></code>.</p>
-<ul><li>Center each group by its associated control group, using <code>centerGroups</code> and <code>controlSamples</code> arguments. It is not recommended to scale the data, but that is available with <code>scale="row"</code>.</li>
-<li>Optionally omit control groups from the heatmaps to maximize plot space. You may want to create a plot with control groups to verify that the control groups have low variability, then re-create the plot without control groups for the final figure.</li>
+<p>Typically data should be log2-transformed, and row-centered,
+which can be done using <code><a href="https://rdrr.io/pkg/jamma/man/centerGeneData.html" class="external-link">jamma::centerGeneData()</a></code>.</p>
+<ul><li>Center each group by its associated control group, using
+<code>centerGroups</code> and <code>controlSamples</code> arguments. It
+is not recommended to scale the data, but that is available with
+<code>scale="row"</code>.</li>
+<li>Optionally omit control groups from the heatmaps to maximize plot
+space. You may want to create a plot with control groups to verify that
+the control groups have low variability, then re-create the plot without
+control groups for the final figure.</li>
 </ul></li>
-<li><p>Define <code>isamples</code> using <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> of the expression matrix.</p></li>
-<li><p>Define <code>igroups</code> to be a vector of group labels, named by <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> of the expression matrix.</p></li>
+<li><p>Define <code>isamples</code> using <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> of the
+expression matrix.</p></li>
+<li><p>Define <code>igroups</code> to be a vector of group labels, named
+by <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> of the expression matrix.</p></li>
 <li>
-<p>Define <code>colorV</code> whose names are unique values from <code>igroups</code>.</p>
-<ul><li>These <code>colorV</code> values are shown at the top of each heatmap as annotations to represent the groups in <code>igroups</code>. The names are displayed below the heatmap, should they should be small enough to fit in a limited space. Use <code>legend_labels</code> below to use a different label for the color legend.</li>
-<li>Ideally these colors should also match the colors from <code>colorV</code> produced by <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>, but it is not required.</li>
-<li>Note that when the color is matched between the sample group and the gene node, a box is drawn around the heatmap panel to indicate these genes were used in the enrichment test.</li>
+<p>Define <code>colorV</code> whose names are unique values from
+<code>igroups</code>.</p>
+<ul><li>These <code>colorV</code> values are shown at the top of each
+heatmap as annotations to represent the groups in <code>igroups</code>.
+The names are displayed below the heatmap, should they should be small
+enough to fit in a limited space. Use <code>legend_labels</code> below
+to use a different label for the color legend.</li>
+<li>Ideally these colors should also match the colors from
+<code>colorV</code> produced by <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>, but it is
+not required.</li>
+<li>Note that when the color is matched between the sample group and the
+gene node, a box is drawn around the heatmap panel to indicate these
+genes were used in the enrichment test.</li>
 </ul></li>
 </ul></li>
 <li><p>Run <code>plot_cnet_heatmap()</code>.</p></li>
@@ -148,24 +203,52 @@
    strwrap_width<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">33</span>, <span class="fl">36</span>, <span class="fl">36</span><span class="op">)</span>,
    colorV<span class="op">=</span><span class="va">colorV_dlgp</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span>;<span class="op">}</span></code></pre>
-<ul><li>There are numerous arguments to this function, intended to help configure the many details of the figure.</li>
+<ul><li>There are numerous arguments to this function, intended to help
+configure the many details of the figure.</li>
 <li>
-<code>iexprs_ctr</code> - the expression data matrix, intended to show centered data, but in fact any numeric data is accepted.</li>
+<code>iexprs_ctr</code> - the expression data matrix, intended to
+show centered data, but in fact any numeric data is accepted.</li>
 <li>
-<code>allowed_degree=c(1,2)</code> uses any gene node with 1 or 2 connections for each cluster heatmap. When <code>allowed_degree=1</code> the heatmap will include genes that connect <em>only</em> to that pathway cluster, and no other pathway clusters. Sometimes it is useful to focus on specific genes, to make sure there are no changes visible in the heatmap across the other groups. If there are changes across other groups, the specificity may be an artifact of choosing too stringent a statistical threshold for gene hits prior to running the enrichment test.</li>
+<code>allowed_degree=c(1,2)</code> uses any gene node with 1 or 2
+connections for each cluster heatmap. When <code>allowed_degree=1</code>
+the heatmap will include genes that connect <em>only</em> to that
+pathway cluster, and no other pathway clusters. Sometimes it is useful
+to focus on specific genes, to make sure there are no changes visible in
+the heatmap across the other groups. If there are changes across other
+groups, the specificity may be an artifact of choosing too stringent a
+statistical threshold for gene hits prior to running the enrichment
+test.</li>
 <li>
-<code>legend_labels</code> are used to provide a custom label for the colors, helpful when <code>colorV</code> has abbreviated labels.</li>
+<code>legend_labels</code> are used to provide a custom label for
+the colors, helpful when <code>colorV</code> has abbreviated
+labels.</li>
 <li>
-<code>cnet_mar</code> - adjust margins <code>c(bottom, left, top, right)</code> around the central Cnet plot, to reduce overlaps across labels.</li>
+<code>cnet_mar</code> - adjust margins
+<code>c(bottom, left, top, right)</code> around the central Cnet plot,
+to reduce overlaps across labels.</li>
 <li>
-<code>vjust</code> - vertical justification of pathway labels for each cluster, where <code>1</code> positions labels at the top of the top layout cell, <code>0</code> positions labels at the top of the next layout cell lower, and <code>-1</code> positions labels at the top of the layout cell two cells lower.</li>
+<code>vjust</code> - vertical justification of pathway labels for
+each cluster, where <code>1</code> positions labels at the top of the
+top layout cell, <code>0</code> positions labels at the top of the next
+layout cell lower, and <code>-1</code> positions labels at the top of
+the layout cell two cells lower.</li>
 <li>
-<code>strwrap_width</code> is used to define the word wrap width for each pathway cluster. Sometimes it helps to make some sections wider or narrower than others, to reduce label overlaps.</li>
+<code>strwrap_width</code> is used to define the word wrap width for
+each pathway cluster. Sometimes it helps to make some sections wider or
+narrower than others, to reduce label overlaps.</li>
 <li>
-<code>set_names</code> vector of pathway clusters to use, in order. These names should reflect the cluster names such as <code>c("A", "B", "C", "D")</code>, but should be in order they appear in the Cnet layout.</li>
-<li>Define <code>set_panel_row</code> and <code>set_panel_col</code> as the range of rows and columns for each heatmap. They should be positioned relatively close to the Cnet pathway clusters, with height relative to the number of genes.</li>
+<code>set_names</code> vector of pathway clusters to use, in order.
+These names should reflect the cluster names such as
+<code>c("A", "B", "C", "D")</code>, but should be in order they appear
+in the Cnet layout.</li>
+<li>Define <code>set_panel_row</code> and <code>set_panel_col</code> as
+the range of rows and columns for each heatmap. They should be
+positioned relatively close to the Cnet pathway clusters, with height
+relative to the number of genes.</li>
 <li>
-<code>use_shadowText=TRUE</code> uses a slight outline effect around node labels, which makes it easier to read over light/dark background colors.</li>
+<code>use_shadowText=TRUE</code> uses a slight outline effect around
+node labels, which makes it easier to read over light/dark background
+colors.</li>
 </ul><ol start="6" style="list-style-type: decimal"><li>Save the same data to Excel:</li>
 </ol><pre class="{r}"><code><span class="co">## Convert to data.frame format</span>
 <span class="va">dlgp_df_cnet</span> <span class="op">&lt;-</span> <span class="fu">get_shared_pathways</span><span class="op">(</span><span class="va">ipa_pathways_all</span>,
@@ -194,7 +277,8 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

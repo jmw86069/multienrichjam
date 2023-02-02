@@ -3,6 +3,8 @@
 #'
 #' Color ramp for bivariate colors
 #'
+#' @family jam utility functions
+#'
 #' @examples
 #' mcolor <- matrix(ncol=3,
 #'    c("seashell", "salmon1", "firebrick3",
@@ -118,6 +120,8 @@ colorRamp2D <- function
 #' This function provides a very rudimentary method for displaying
 #' a bivariate 2-D color matrix out from `colorRamp2D()`.
 #'
+#' @family jam utility functions
+#'
 #' @param col_fun `function` output from `colorRamp2D()`.
 #' @param pretty.n `numeric` passed to `pretty()` to determine the
 #'    y-axis and x-axis label breaks, respectively, or
@@ -175,6 +179,8 @@ display_colorRamp2D <- function
 #' This function can also optionally display a text label
 #' inside each heatmap cell, use argument `show` to indicate which matrix
 #' or matrices in `m` to use for the label.
+#'
+#' @family jam utility functions
 #'
 #' @param m `list` of 2 or more `matrix` objects. The first two
 #'    `matrix` objects are used for the bivariate color.
@@ -448,6 +454,8 @@ cell_fun_bivariate <- function
 
 
 #' Display colors from bivariate color function
+#'
+#' @family jam utility functions
 #'
 #' @examples
 #' mcolor <- matrix(ncol=3,

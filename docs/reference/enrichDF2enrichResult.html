@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -86,45 +86,45 @@
 <dd><p><code>data.frame</code> representing gene set enrichment
 results.</p></dd>
 <dt>pvalueCutoff</dt>
-<dd><p>numeric value range 0 to 1, to define the
+<dd><p><code>numeric</code> value range 0 to 1, to define the
 P-value threshold for enrichment results to be considered
 in downstream processing.</p></dd>
 <dt>pAdjustMethod</dt>
-<dd><p>character string to define the P-value
+<dd><p><code>character</code> string to define the P-value
 adjustment method, or <code>"none"</code> for no additional adjustment.
 See <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">stats::p.adjust()</a></code> for valid values.</p></dd>
 <dt>keyColname</dt>
-<dd><p>character value of the <code>colname(enrichDF)</code>
+<dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing the unique row identifier. It can be a pathway_ID
 or any uniquely identifying value.</p></dd>
 <dt>pathGenes</dt>
-<dd><p>character or value of the <code>colname(enrichDF)</code>
+<dd><p><code>character</code> or value of the <code>colname(enrichDF)</code>
 containing the number of genes in each pathway. This value will be
 derived from <code>geneRatioColname</code> if needed.</p></dd>
 <dt>geneColname</dt>
-<dd><p>character value of the <code>colname(enrichDF)</code>
+<dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing delimiited genes in each pathway.</p></dd>
 <dt>geneHits</dt>
-<dd><p>character value of the <code>colname(enrichDF)</code>
+<dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing the integer count of the gene hits in each pathway.
 This value will be derived from <code>geneRatioColname</code> if needed.</p></dd>
 <dt>geneRatioColname</dt>
-<dd><p>character value of the <code>colname(enrichDF)</code>
+<dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing the character ratio of gene hits to pathway size,
 in format "50/100". This value is used when either <code>"pathGenes"</code>
 or <code>"geneHits"</code> are not supplied.</p></dd>
 <dt>geneDelim</dt>
-<dd><p>regular expression pattern used to separate
+<dd><p><code>character</code> regular expression pattern used to separate
 genes in the <code>pathGenes</code> column into a vector of character
 values.</p></dd>
 <dt>pvalueColname</dt>
-<dd><p>character value of the <code>colname(enrichDF)</code>
+<dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing enrichment P-values to use in downstream processing.</p></dd>
 <dt>msigdbGmtT</dt>
 <dd><p>optional gmtT object, a representation of
 <code>arules::transactions-class</code>. (Not currently implemented.)</p></dd>
 <dt>verbose</dt>
-<dd><p>logical indicating whether to print verbose output.</p></dd>
+<dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
 </dl></div>
@@ -158,7 +158,8 @@ package.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

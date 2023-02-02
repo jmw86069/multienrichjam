@@ -123,6 +123,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
@@ -143,12 +144,14 @@ Other jam igraph functions:
 \code{\link{with_qfr}()}
 
 Other jam plot functions: 
+\code{\link{adjust_polygon_border}()},
 \code{\link{grid_with_title}()},
 \code{\link{jam_igraph}()},
 \code{\link{mem_enrichment_heatmap}()},
 \code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()},
-\code{\link{mem_plot_folio}()}
+\code{\link{mem_plot_folio}()},
+\code{\link{plot_layout_scale}()}
 }
 \concept{jam igraph functions}
 \concept{jam plot functions}

@@ -1,10 +1,87 @@
 # TODO
 
+## 26jan2023
+
+* Low priority: It may be useful to create vectorized functions:
+
+   * `polygon()`
+   
+      * enable multiple line widths for multiple polygons
+      split by `NA` coordinates.
+      * enable optional inner and outer borders with varying widths
+   
+   * `text()`: enable multiple family, srt
+   * `lines()`: enable multiple col, lty, lwd for split lines, similar
+   to `segments()` except enabled for multiple lines split by `NA` coordinates.
+
+## 23jan203
+
+* `jam_igraph()`
+
+   * Return the input `igraph` object with all relevant object attributes
+   updated to reflect the plot parameters.
+   The returned object could be plotted directly without any customization.
+   * Consider storing/using edge coordinates inside the `igraph` object.
+   However, whenever layout is re-calculated, edge coordinates would likely
+   become invalid. It would be tricky to handle.
+
+* edge bundling and edge clipping integration
+
+   * DONE: Most scenarios described below.
+   * Currently, linear edges are clipped at connected node boundaries.
+   * When edges are slightly curved, the start and end positions are reasonable.
+   * When edges are bundled, and especially when nodes are relatively large,
+   the edge curves through the node in a different direction than a linear edge.
+   * This situation is not a visualization problem when:
+   
+      1. nodes are not filled with transparent color, and
+      2. edges are not drawn with arrows.
+   
+   * The situation is only a visible problem when:
+   
+      1. edges have arrows that would now be partly or fully covered by the
+      node, or
+      2. nodes that are filled with partial or fully transparent color,
+      thus showing the edge underneath.
+
+   * Proper edge clipping would probably be done by calculating the edge
+   from the node actual center point, then clipping edge where it exits the
+   node shape border.
+   * Implementation may benefit from storing the edge coordinates as
+   an edge attribute, to be used by the clipping function when present.
+   Absence of custom edge coordinates would cause the clipping function to
+   use linear edge coordinates.
+   
+      * The plot function could also use stored edge coordinates as opposed
+      to calling edge bundling function; alternatively the edge bundling
+      function could simply re-use existing edge coordinates as well.
+
+
+## 18jan2023
+
+* `jam_igraph()`, proposed drop-in replacement for `igraph:::plot.igraph()`:
+
+   * FIXED: This function does not seem to handle edge arrows,
+   nor does it shorten edges based upon node sizes.
+   * bonus points for node/edge legend functions
+   * When layout is not defined, the xlim/ylim values sometimes do not
+   match the dynamic layout calculated on the fly.
+
+* igraph shape "ellipse"
+
+   * DONE: it should have a proper "clip" function, in order for edge arrows
+   to appear at the border of each node
+
+* igraph "coloredrectangle" shape
+
+   * DONE: The coloredrect.border should also be capable of adjacent lines that
+   do not overlap.
+
 ## 30nov2022
 
 * `reorder_igraph_nodes()`
 
-   * to be fancy, it should also propagate changes to `label.dist`
+   * DONE: to be fancy, it should also propagate changes to `label.dist`
    and `label.degree`, as created by `spread_igraph_labels()`,
    since switching coordinates for two nodes should also switch
    the `label.degree` and `label.dist` associated with those

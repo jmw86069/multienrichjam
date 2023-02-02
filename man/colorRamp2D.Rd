@@ -59,3 +59,27 @@ col_fun1 <- colorRamp2D(column_breaks=column_breaks1,
 display_colorRamp2D(col_fun1);
 
 }
+\seealso{
+Other jam utility functions: 
+\code{\link{avg_angles}()},
+\code{\link{avg_colors_by_list}()},
+\code{\link{call_fn_ellipsis_deprecated}()},
+\code{\link{cell_fun_bivariate}()},
+\code{\link{collapse_mem_clusters}()},
+\code{\link{deconcat_df2}()},
+\code{\link{display_colorRamp2D}()},
+\code{\link{enrichList2geneHitList}()},
+\code{\link{find_colname}()},
+\code{\link{gsubs}()},
+\code{\link{handle_igraph_param_list}()},
+\code{\link{isColorBlank}()},
+\code{\link{make_legend_bivariate}()},
+\code{\link{make_point_hull}()},
+\code{\link{mem_find_overlap}()},
+\code{\link{order_colors}()},
+\code{\link{rank_mem_clusters}()},
+\code{\link{rotate_coordinates}()},
+\code{\link{subgraph_jam}()},
+\code{\link{xyAngle}()}
+}
+\concept{jam utility functions}

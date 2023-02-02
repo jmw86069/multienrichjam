@@ -38,7 +38,7 @@ This argument elongates the circle surrounding a node into
 an ellipse with this ratio.}
 
 \item{update_g_coords}{logical indicating whether the layout
-coordinates will be stored in \code{V(g)$x} and \code{V(g)$y}.}
+coordinates will be stored in \code{graph_attr(g, "layout")}.}
 
 \item{do_reorder}{logical indicating whether to call
 \code{reorderIgraphNodes()} which re-distributes equivalent nodes
@@ -101,6 +101,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

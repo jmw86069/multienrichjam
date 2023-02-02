@@ -63,7 +63,9 @@ list2imSigned(l123);
 \seealso{
 Other jam list functions: 
 \code{\link{colors_from_list}()},
+\code{\link{im2list_dep}()},
 \code{\link{im2list}()},
+\code{\link{imSigned2list_dep}()},
 \code{\link{imSigned2list}()},
 \code{\link{list2imSigned}()},
 \code{\link{list2im}()}

@@ -47,30 +47,31 @@ new_mean(x, na.rm=TRUE);
 # throws an error as expected (below)
 # new_mean(x, na.rm=TRUE, color="red");
 
-call_fn_ellipsis(new_mean, x=x, na.rm=TRUE, color="red")
+call_fn_ellipsis_deprecated(new_mean, x=x, na.rm=TRUE, color="red")
 # throws an error as expected (below)
-# call_fn_ellipsis(new_mean, x=x, color="red")
+# call_fn_ellipsis_deprecated(new_mean, x=x, color="red")
 
 }
 \seealso{
 Other jam utility functions: 
-\code{\link{apply_color_cap}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
+\code{\link{cell_fun_bivariate}()},
 \code{\link{collapse_mem_clusters}()},
+\code{\link{colorRamp2D}()},
 \code{\link{deconcat_df2}()},
+\code{\link{display_colorRamp2D}()},
 \code{\link{enrichList2geneHitList}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
 \code{\link{handle_igraph_param_list}()},
-\code{\link{heatmap_column_order}()},
-\code{\link{heatmap_row_order}()},
 \code{\link{isColorBlank}()},
+\code{\link{make_legend_bivariate}()},
+\code{\link{make_point_hull}()},
 \code{\link{mem_find_overlap}()},
 \code{\link{order_colors}()},
 \code{\link{rank_mem_clusters}()},
 \code{\link{rotate_coordinates}()},
-\code{\link{sort_colors_deprecated}()},
 \code{\link{subgraph_jam}()},
 \code{\link{xyAngle}()}
 }

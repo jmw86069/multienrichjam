@@ -64,17 +64,24 @@
 #' @export
 memIM2cnet <- function
 (memIM,
- categoryShape=c("pie","coloredrectangle", "circle", "ellipse"),
- geneShape=c("pie","coloredrectangle", "circle", "ellipse"),
+ categoryShape=c("pie",
+    "coloredrectangle",
+    "circle",
+    "ellipse"),
+ geneShape=c("pie",
+    "coloredrectangle",
+    "circle",
+    "ellipse"),
  categoryColor="#E5C494",
  geneColor="#B3B3B3",
- categoryLabelColor=c("blue3"),
- geneLabelColor="grey40",
- categorySize=5,
- geneSize=2.5,
- categoryCex=0.9,
- geneCex=0.7,
- frame_darkFactor=1.4,
+ categoryLabelColor="darkblue",
+ geneLabelColor="grey25",
+ categorySize=20,
+ geneSize=10,
+ categoryCex=1.2,
+ geneCex=0.9,
+ # frame_darkFactor=1.4,
+ frame_darkFactor=NULL,
  geneIM=NULL,
  geneIMcolors=NULL,
  geneIMdirection=NULL,
@@ -86,8 +93,10 @@ memIM2cnet <- function
  coloredrect_byrow=TRUE,
  colorV=NULL,
  direction_col=colorjam::col_div_xf(1.2),
+ hide_solo_pie=TRUE,
  remove_blanks=TRUE,
  spread_labels=FALSE,
+ repulse=3.5,
  verbose=FALSE,
  ...)
 {
@@ -123,6 +132,76 @@ memIM2cnet <- function
       memIM <- memIM[["memIM"]];
    }
 
+   # Confirm rownames and colnames do not contain duplicate values.
+   # If so, make them unique.
+   make_unique_im_dims <- function
+   (memIM,
+    warn=TRUE)
+   {
+      #
+      if (length(rownames(memIM)) == 0) {
+         rownames(memIM) <- paste0("row", seq_len(nrow(memIM)));
+      }
+      if (length(colnames(memIM)) == 0) {
+         colnames(memIM) <- paste0("set", seq_len(ncol(memIM)));
+      }
+      rcnames <- c(rownames(memIM),
+         colnames(memIM));
+      if (any(duplicated(rcnames))) {
+         # duplicated rownames
+         if (any(duplicated(rownames(memIM)))) {
+            rownames(memIM) <- jamba::makeNames(rownames(memIM),
+               suffix="_r");
+         }
+         # duplicated colnames
+         if (any(duplicated(rownames(memIM)))) {
+            colnames(memIM) <- jamba::makeNames(colnames(memIM),
+               suffix="_c");
+         }
+         # duplicated across rownames and colnames
+         rcnames <- c(rownames(memIM),
+            colnames(memIM));
+         if (any(duplicated(rcnames))) {
+            new_rc <- jamba::makeNames(rcnames,
+               suffix="_v");
+            rownames(memIM) <- head(rcnames,
+               nrow(memIM));
+            colnames(memIM) <- tail(rcnames,
+               -nrow(memIM));
+         }
+         # very rare change the versioned rownames/colnames are duplicated
+         rcnames <- c(rownames(memIM),
+            colnames(memIM));
+         if (any(duplicated(rcnames))) {
+            memIM <- make_unique_im_dims(memIM,
+               warn=FALSE)
+         }
+         # optionally print a warning
+         if (TRUE %in% warn) {
+            warning(paste0("Note from mem2cnet(): ",
+               "The input incidence matrix contained some",
+               " duplicated rownames/colnames. They were",
+               " made unique."))
+         }
+      }
+      return(memIM);
+   }
+   memIMdimnames <- dimnames(memIM);
+   memIM <- make_unique_im_dims(memIM,
+      warn=TRUE);
+   if (!identical(memIMdimnames, dimnames(memIM))) {
+      if (length(geneIM) > 0) {
+         gmatch <- match(rownames(geneIM),
+            memIMdimnames[[1]]);
+         rownames(geneIM) <- memIMdimnames[[1]][gmatch]
+      }
+      if (length(geneIMcolors) > 0) {
+         gmatch <- match(rownames(geneIMcolors),
+            memIMdimnames[[1]]);
+         rownames(geneIMcolors) <- memIMdimnames[[1]][gmatch]
+      }
+   }
+
    ## Convert to igraph
    if (verbose) {
       jamba::printDebug("memIM2cnet(): ",
@@ -135,19 +214,21 @@ memIM2cnet <- function
       jamba::printDebug("memIM2cnet(): ",
          "basic aesthetics");
    }
-   igraph::V(g)$nodeType <- "Set";
-   igraph::V(g)$nodeType[match(rownames(memIM), igraph::V(g)$name)] <- "Gene";
-   # table(igraph::V(g)$nodeType);
-   isset <- igraph::V(g)$nodeType %in% "Set";
+   # nodeType
+   isset <- igraph::V(g)$name %in% colnames(memIM);
+   igraph::V(g)$nodeType <- ifelse(isset, "Set", "Gene");
    igraph::V(g)$size <- ifelse(isset, categorySize, geneSize);
    igraph::V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
    igraph::V(g)$label.color <- ifelse(isset, categoryLabelColor, geneLabelColor);
    igraph::V(g)$color <- ifelse(isset, categoryColor, geneColor);
+   igraph::V(g)$frame.lwd <- 1;
    if (length(frame_darkFactor) > 0 && frame_darkFactor != 1) {
       igraph::V(g)$frame.color <- jamba::makeColorDarker(
          igraph::V(g)$color,
          darkFactor=frame_darkFactor,
          ...);
+   } else {
+      igraph::V(g)$frame.color <- default_igraph_values()$vertex$frame.color;
    }
 
    ## Optionally apply gene node coloring
@@ -155,21 +236,62 @@ memIM2cnet <- function
       jamba::printDebug("memIM2cnet(): ",
          "applying node colors");
    }
-   if (length(geneIM) > 0 && length(geneIMcolors) > 0) {
+   if (length(geneIM) > 0) {
+      if (length(geneIMcolors) == 0) {
+         if (length(colorV) < ncol(geneIM)) {
+            colorV <- colorjam::rainbowJam(ncol(geneIM),
+               Crange=c(70, 110))
+            names(colorV) <- colnames(geneIM);
+         }
+         if (!all(names(colorV) %in% colnames(geneIM))) {
+            names(colorV) <- colnames(geneIM);
+         } else {
+            colorV <- colorV[colnames(geneIM)];
+         }
+         # make gene color incidence matrix
+         geneIMcolors <- do.call(rbind, lapply(rownames(geneIM), function(i){
+            j <- geneIM[match(i, rownames(geneIM)),];
+            ifelse(j > 0,
+               colorV,
+               "#FFFFFF")
+         }))
+         rownames(geneIMcolors) <- rownames(geneIM);
+         colnames(geneIMcolors) <- colnames(geneIM);
+
+      }
       geneIM <- subset(geneIM, rownames(geneIM) %in% igraph::V(g)$name[!isset]);
+      geneIMcolors <- subset(geneIMcolors, rownames(geneIMcolors) %in% igraph::V(g)$name[!isset]);
+
+      # # enrichIM
+      # if (length(enrichIM) == 0) {
+      #    # derive from geneIM
+      #    lapply(colnames(geneIM), function(i){
+      #       j <- rownames(geneIM)[abs(geneIM[,i]) > 0]
+      #    })
+      # }
       gene_match <- match(rownames(geneIM),
          igraph::V(g)$name[!isset]);
       gene_which <- which(!isset)[gene_match];
+      vseq <- seq_len(igraph::vcount(g));
       for (j in c("pie", "pie.value", "pie.color", "pie.names",
          "coloredrect.color", "coloredrect.nrow",
          "coloredrect.byrow", "coloredrect.value",
          "coloredrect.names")) {
          if (!j %in% igraph::list.vertex.attributes(g)) {
-            if (jamba::igrepHas("color$", j)) {
+            if (jamba::igrepHas("[.]color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
+               # igraph::vertex_attr(g, j) <- lapply(vseq, function(i){
+               #    if (isset[i]) {
+               #       geneIM[i,];
+               #    } else {
+               #       colorV[igraph::V(g)$name[i]]
+               #    }
+               # })
             } else if (jamba::igrepHas("byrow", j)) {
                igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_byrow),
                   length.out=igraph::vcount(g));
+            } else if (jamba::igrepHas("[.]names$", j)) {
+               igraph::vertex_attr(g, j) <- colnames(geneIM);
             } else if (jamba::igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
                igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_ncol),
                   length.out=igraph::vcount(g));
@@ -185,10 +307,10 @@ memIM2cnet <- function
          rep(1, ncol(geneIM));
       });
       igraph::V(g)$pie.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
-         geneIM[i,,drop=FALSE];
+         geneIM[match(i, rownames(geneIM)),,drop=FALSE];
       });
       igraph::V(g)$pie.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
-         jamba::nameVector(geneIMcolors[i,],
+         jamba::nameVector(geneIMcolors[match(i, rownames(geneIMcolors)),],
             colnames(geneIMcolors));
       });
       igraph::V(g)$pie.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
@@ -196,11 +318,11 @@ memIM2cnet <- function
       });
       ## Now do the same for coloredrectangle node shapes
       igraph::V(g)$coloredrect.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
-         jamba::nameVector(geneIMcolors[i,],
+         jamba::nameVector(geneIMcolors[match(i, rownames(geneIMcolors)),],
             colnames(geneIMcolors));
       });
       igraph::V(g)$coloredrect.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
-         geneIM[i,,drop=FALSE];
+         geneIM[match(i, rownames(geneIM)),,drop=FALSE];
       });
       if (length(coloredrect_byrow) > 0) {
          igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_byrow, length.out=length(gene_which));
@@ -317,6 +439,7 @@ memIM2cnet <- function
       g <- apply_cnet_direction(cnet=g,
          hitim=geneIMdirection,
          col=direction_col,
+         hide_solo_pie=hide_solo_pie,
          ...);
    }
    if (length(enrichIMdirection) > 0 && !all(enrichIMdirection %in% c(0, NA))) {
@@ -327,6 +450,7 @@ memIM2cnet <- function
       g <- apply_cnet_direction(cnet=g,
          hitim=enrichIMdirection,
          col=direction_col,
+         hide_solo_pie=hide_solo_pie,
          ...);
    }
 
@@ -337,9 +461,9 @@ memIM2cnet <- function
             "applying spread_igraph_labels()");
       }
       g <- spread_igraph_labels(g,
-         do_reorder=FALSE,
+         do_reorder=TRUE,
          # y_bias=y_bias,
-         # repulse=repulse,
+         repulse=repulse,
          ...);
    }
 

@@ -38,3 +38,15 @@ A grey grid is drawn on a base R plot to indicate the big
 and small steps across the range, using \code{big_tick} and \code{small_tick},
 respectively.
 }
+\seealso{
+Other jam plot functions: 
+\code{\link{adjust_polygon_border}()},
+\code{\link{grid_with_title}()},
+\code{\link{jam_igraph}()},
+\code{\link{mem_enrichment_heatmap}()},
+\code{\link{mem_gene_path_heatmap}()},
+\code{\link{mem_legend}()},
+\code{\link{mem_multienrichplot}()},
+\code{\link{mem_plot_folio}()}
+}
+\concept{jam plot functions}

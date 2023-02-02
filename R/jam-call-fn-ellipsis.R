@@ -39,9 +39,9 @@
 #' # throws an error as expected (below)
 #' # new_mean(x, na.rm=TRUE, color="red");
 #'
-#' call_fn_ellipsis(new_mean, x=x, na.rm=TRUE, color="red")
+#' call_fn_ellipsis_deprecated(new_mean, x=x, na.rm=TRUE, color="red")
 #' # throws an error as expected (below)
-#' # call_fn_ellipsis(new_mean, x=x, color="red")
+#' # call_fn_ellipsis_deprecated(new_mean, x=x, color="red")
 #'
 #' @export
 call_fn_ellipsis_deprecated <- function

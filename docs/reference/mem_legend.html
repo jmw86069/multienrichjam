@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,6 +74,10 @@
   pch <span class="op">=</span> <span class="fl">21</span>,
   pt.cex <span class="op">=</span> <span class="fl">2</span>,
   inset <span class="op">=</span> <span class="fl">0</span>,
+  do_directional <span class="op">=</span> <span class="cn">FALSE</span>,
+  directional_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"same"</span>, <span class="st">"added-bottom"</span>, <span class="st">"added-top"</span><span class="op">)</span>,
+  directional_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`up-regulated` <span class="op">=</span> <span class="st">"firebrick3"</span>, `down-regulated` <span class="op">=</span>
+    <span class="st">"dodgerblue3"</span><span class="op">)</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
 
@@ -83,9 +87,28 @@
     <dl><dt>mem</dt>
 <dd><p><code>list</code> object output from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>, specifically
 expected to contain element <code>"colorV"</code>.</p></dd>
-<dt>x, y, bg, box.col, title, cex, ncol, pch, pt.cex</dt>
+<dt>x, y, bg, box.col, title, cex, ncol, pch, pt.cex, inset</dt>
 <dd><p>arguments passed
-to <code><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend()</a></code>.</p></dd>
+to <code><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">graphics::legend()</a></code>.</p></dd>
+<dt>do_directional</dt>
+<dd><p><code>logical</code> indicating whether to include
+directional colors defined in <code>directional_colors</code>, indicated only
+as the border color of nodes.</p></dd>
+<dt>directional_column</dt>
+<dd><p><code>character</code> indicating how to add the
+directional colors to columns of legend, with two options:</p><ul><li><p>"same": appends <code>directional_colors</code> to legend colors using
+the defined <code>ncol</code> number of columns.</p></li>
+<li><p>"added-bottom": appends <code>directional_colors</code> as a new column
+so the resulting legend with have <code>ncol+1</code> columns.
+In this case, intervening empty rows are filled with blank space,
+and the <code>directional_colors</code> are shown in the bottom-most rows in the
+far right column of the legend.</p></li>
+<li><p>"added-top": appends <code>directional_colors</code> as a new column
+so the resulting legend with have <code>ncol+1</code> columns.
+In this case, intervening empty rows are filled with blank space,
+and the <code>directional_colors</code> are shown in the top-most rows in the
+far right column of the legend.</p></li>
+</ul></dd>
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend()</a></code>.</p></dd>
 </dl></div>
@@ -97,12 +120,14 @@ a color key to a plot, typically for <code>igraph</code> plots.</p>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam plot functions: 
+<code><a href="adjust_polygon_border.html">adjust_polygon_border</a>()</code>,
 <code><a href="grid_with_title.html">grid_with_title</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
 <code><a href="mem_enrichment_heatmap.html">mem_enrichment_heatmap</a>()</code>,
 <code><a href="mem_gene_path_heatmap.html">mem_gene_path_heatmap</a>()</code>,
 <code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
-<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code></p></div>
+<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
+<code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
     </div>
 
@@ -118,7 +143,8 @@ a color key to a plot, typically for <code>igraph</code> plots.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

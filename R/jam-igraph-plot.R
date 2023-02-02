@@ -56,8 +56,15 @@
 #' function by drawing curved splines for each bundle of edges.
 #' The approach in `igraph::plot.igraph()` only draws
 #' straight edges between nodes. The recommended method is
-#' `edge_bundling="connections"` which will bundle edges among nodes
-#' that share identical connections.
+#' `edge_bundling="default"` which will try to detect an appropriate
+#' method to bundle edges. When `mark.groups` and `nodegroups` are not
+#' defined, the default method is `"connections"` which bundles edges
+#' only among nodes that share the same connections. The assumption is
+#' that nodes that share the same connections usually have very similar
+#' layout coordinates, so edge bundling is usually intuitive. In fact,
+#' for a very large set of nodes, they are often in a round cluster
+#  in the layout, so the edges bundle together and result in a much
+#  cleaner overall visualization.
 #'
 #' ## Adjust node size, label size, label distance
 #'
@@ -92,12 +99,18 @@
 #' ```
 #'
 #' In this case, nodes with attribute
-#' `V(g)$nodeType == "Gene"` will use factor `1.5`
+#' `igraph::V(g)$nodeType == "Gene"` will use factor `1.5`
 #' Nodes with attribute
-#' `V(g)$nodeType == "Set"` will use factor `2`
+#' `igraph::V(g)$nodeType == "Set"` will use factor `2`
 #' All other nodes will not be adjusted.
 #'
 #' ## Other features
+#'
+#' The plot layout by default is **not** rescaled to `c(-1, 1)`, therefore
+#' allowing direct control over plot dimensions and node sizes.
+#' The plot aspect ratio is fixed at 1, which renders many network layouts
+#' in their intended form, as opposed to scaling each axis to `c(-1, 1)`,
+#' which can impose distortion of intended layout node distances.
 #'
 #' When `use_shadowText=TRUE` node labels call `jamba::shadowText()`
 #' which draws a small partly transparent outline around labels, making
@@ -109,11 +122,19 @@
 #' changed to `shape="jampie"` for the purpose of rendering pie
 #' shapes in vectorized fashion, instead of being drawn for each
 #' node separately. This change is a substantial improvement in
-#' rendering time.
+#' rendering time. In addition, optional node attributes are available:
+#' * `pie.border` to control individual pie wedge borders, which are
+#' drawn as inner borders so each pie wedge border is visible without
+#  overlap.
+#' * `pie.lwd` to control line width of pie wedge borders.
+#' * `pie.lty` to control the line type of pie wedge borders
+#' * `frame.color` to control the frame border color drawn around the
+#' full circular pie node. This border is drawn as an outer border, so
+#' it will not overlap any internal pie wedge border colors.
 #'
 #' Default colors for marked node groups `mark.col` and `mark.border`
 #' when not defined upfront, will call `colorjam::rainbowJam()`
-#' and not `grDevices::rainbow(). The `colorjam::rainbowJam()`
+#' and not `grDevices::rainbow()`. The `colorjam::rainbowJam()`
 #' produces more visually distinct categorical colors.
 #' This behavior can be controlled by supplying a `character`
 #' vector with specific colors for `mark.col` and `mark.border`. Note
@@ -123,7 +144,9 @@
 #' Optional argument `nodegroups` can be supplied, which is a `list`
 #' of vectors, where each vector represents a group of nodes. The
 #' `nodegroups` can be used with `edge_bundling="nodegroups"` to
-#' define custom edge bundling.
+#' define custom edge bundling. This option is useful for defining a
+#' group of nodes for edge bundling, when those nodes should not be used
+#' to render group borders as with `mark.groups`.
 #'
 #' Finally, individual plot components can be individually disabled:
 #'
@@ -138,31 +161,32 @@
 #' @inheritParams jam_plot_igraph
 #' @param x `igraph` object to be plotted
 #' @param ... additional arguments are passed to `igraph::plot.igraph()`
-#' @param xlim,ylim default x and y axis limits
-#' @param expand numeric value used to expand the x and y axis ranges,
+#' @param expand `numeric` value used to expand the x and y axis ranges,
 #'    where `0.03` expands each size `3%`.
-#' @param rescale logical indicating whether to rescale the layout
+#' @param rescale `logical` indicating whether to rescale the layout
 #'    coordinates to `c(-1, 1)`. When `rescale=FALSE` the original
 #'    layout coordinates are used as-is without change.
-#' @param node_factor numeric value multiplied by `V(x)$size` to adjust
+#' @param node_factor `numeric` value multiplied by `igraph::V(x)$size` to adjust
 #'    the relative size of all nodes by a common numeric scalar value.
-#' @param edge_factor numeric value multiplied by `E(x)$width` to adjust
+#' @param edge_factor `numeric` value multiplied by `igraph::E(x)$width` to adjust
 #'    the relative width of all edges by a common numeric scalar value.
-#' @param label_factor numeric value multiplied by `V(x)$label.cex`
+#' @param label_factor `numeric` value multiplied by `igraph::V(x)$label.cex`
 #'    and `E(x)$label.cex` to adjust the relative size of all labels on
 #'    nodes and edges by a common numeric scalar value.
-#' @param label_dist_factor numeric value multiplied by `V(x)$label.dist`
+#' @param label_dist_factor `numeric` value multiplied by `igraph::V(x)$label.dist`
 #'    to adjust the relative distance of all nodes labels from the node center
 #'    by a common numeric scalar value.
 #' @param node_factor_l,label_factor_l,label_dist_factor_l `list`
 #'    of vectors, where the names of the `list` are attribute
 #'    names, and the names of each vector are attributes values.
+#'    These values are applied in addition to `node_factor`, `label_factor`,
+#'    `label_dist_factor`, respectively.
 #'    The vector values are used as scalar multipliers, analogous to
 #'    `node_factor`. The purpose is to apply scalar values to different
 #'    subsets of nodes. For example, consider:
 #'    `node_factor_l=list(nodeType=c(Gene=1, Set=2)`. The list name
-#'    `"nodeType"` says to look at `vertex_attr(x, "nodeType")`. Nodes
-#'    where `nodeType="Gene"` will use `1`, and where `nodeType="Set"`
+#'    `"nodeType"` says to look at `igraph::vertex_attr(x, "nodeType")`.
+#'    Nodes with `nodeType="Gene"` will use `1`, and `nodeType="Set"`
 #'    will use `2` as the scalar value.
 #' @param plot_function `function` that renders the graph, not intended to
 #'    be changed except for very customized uses. By default
@@ -170,16 +194,35 @@
 #'    `igraph:::plot.igraph()`.
 #'
 #' @examples
+#' # Example with karate
+#' karate <- igraph::make_graph("Zachary");
+#' cl <- igraph::cluster_louvain(karate);
+#' jam_igraph(karate,
+#'    layout=layout_with_qfrf(repulse=3.5),
+#'    mark.groups=cl,
+#'   mark.lwd=c(1:4),
+#'   mark.lty=1:4, mark.shape=1,
+#'   edge_bundling="default")
+#'
+#' # create example cnet data
+#' cnet <- make_cnet_test(num_sets=3)
+#'
 #' ## example showing how to use the list form
-#' ## This form resizes nodes where V(g)$nodeType %in% "Gene" by 2x,
-#' ## and resizes nodes where V(g)$nodeType %in% "Set" by 3x.
-#' node_factor_l <- list(nodeType=c(Gene=2, Set=3));
+#' ## This form resizes nodes where igraph::V(g)$nodeType %in% "Gene" by 2x,
+#' ## and resizes nodes where igraph::V(g)$nodeType %in% "Set" by 3x.
+#' node_factor_l <- list(nodeType=c(Gene=1.2, Set=2));
 #'
 #' ## This form multiplies label.dist for nodeType="Gene" nodes by 1,
 #' ## and multiplies label.dist for nodeType="Set" nodes by 0.5
 #' label_dist_factor_l <- list(nodeType=c(Gene=1, Set=0.5))
 #'
-#' # jam_igraph(g, node_factor_l=node_factor_l, label_dist_factor_l=label_dist_factor_l);
+#' par("mar"=c(0, 0, 0, 0) + 0.5);
+#' jam_igraph(cnet,
+#'    use_shadowText=TRUE,
+#'    node_factor_l=node_factor_l,
+#'    label_factor=0.6,
+#'    label_factor_l=list(nodeType=c(Gene=1, Set=2)))
+#' par("mar"=c(2, 2, 2, 2));
 #'
 #' # Example using edge bundling by community detection
 #' g <- igraph::make_graph("Zachary");
@@ -188,6 +231,7 @@
 #' jam_igraph(g,
 #'    layout=layout_with_qfr,
 #'    edge_bundling="nodegroups",
+#'    mark.groups=gcom,
 #'    nodegroups=gcom,
 #'    vertex.color=colorjam::group2colors(gcom$membership))
 #'
@@ -195,20 +239,19 @@
 #'    cluster_edge_betweenness=igraph::cluster_edge_betweenness,
 #'    cluster_fast_greedy=igraph::cluster_fast_greedy,
 #'    cluster_spinglass=igraph::cluster_spinglass)
-#' opar <- par("mfrow"=c(2, 2));
 #' for (i in seq_along(cfuncs)) {
 #'    cfunc <- cfuncs[[i]];
 #'    gcom <- cfunc(g);
+#'    igraph::V(g)$color <- colorjam::group2colors(gcom$membership);
+#'    g <- color_edges_by_nodes(g);
+#'    set.seed(123);
 #'    jam_igraph(g,
 #'       layout=layout_with_qfr,
 #'       edge_bundling="nodegroups",
 #'       nodegroups=gcom,
-#'       mark.groups=gcom,
-#'       mark.expand=60,
-#'       vertex.color=colorjam::group2colors(gcom$membership))
+#'       mark.groups=gcom)
 #'    title(main=names(cfuncs)[i]);
 #' }
-#' par(opar);
 #'
 #' # fancy example showing mark.groups and colorizing
 #' # edges using node colors
@@ -216,33 +259,37 @@
 #' igraph::V(g)$color <- colorjam::group2colors(gcom$membership);
 #' g <- color_edges_by_nodes(g);
 #' jam_igraph(g,
-#'    layout=layout_with_qfr,
+#'    layout=layout_with_qfrf(repulse=3.2),
 #'    edge_bundling="nodegroups",
 #'    nodegroups=gcom,
 #'    mark.groups=gcom)
+#' title(main=paste0("cluster_spinglass()\n",
+#'    "edge_bundling='nodegroups'"))
 #'
-#' # same but adjust midpoint of edge bundles
+#' # same but different edge_style
 #' jam_igraph(g,
-#'    layout=layout_with_qfr,
+#'    layout=layout_with_qfrf(repulse=3.2),
 #'    edge_bundling="nodegroups",
 #'    nodegroups=gcom,
 #'    mark.groups=gcom,
-#'    midpoint=c(0.4, 0.6),
+#'    bundle_style="xspline",
 #'    detail=14)
+#' title(main="bundle_style='xspline'")
 #'
 #' # same but using node connections
 #' jam_igraph(g,
-#'    layout=layout_with_qfr,
+#'    layout=layout_with_qfrf(repulse=3.2),
 #'    edge_bundling="connections",
 #'    nodegroups=gcom,
 #'    mark.groups=gcom)
+#' title(main="edge_bundling='connections'")
 #'
 #' @export
 jam_igraph <- function
 (x,
  ...,
- xlim=c(-1, 1),
- ylim=c(-1, 1),
+ xlim=NULL,
+ ylim=NULL,
  expand=0.03,
  rescale=FALSE,
  node_factor=1,
@@ -254,7 +301,12 @@ jam_igraph <- function
  label_dist_factor=1,
  label_dist_factor_l=1,
  use_shadowText=FALSE,
- edge_bundling=c("connections", "none", "nodegroups"),
+ edge_bundling=c(
+    "default",
+    "connections",
+    "none",
+    "mark.groups",
+    "nodegroups"),
  nodegroups=NULL,
  render_nodes=TRUE,
  render_edges=TRUE,
@@ -263,6 +315,15 @@ jam_igraph <- function
  vectorized_node_shapes=TRUE,
  plot_grid=FALSE,
  plot_function=jam_plot_igraph,
+ mark.groups=list(),
+ mark.shape=1/2,
+ mark.col=NULL,
+ mark.alpha=0.2,
+ mark.border=NULL,
+ mark.expand=8,
+ mark.lwd=2,
+ mark.lty=1,
+ mark.smooth=TRUE,
  verbose=FALSE,
  debug=NULL)
 {
@@ -281,28 +342,39 @@ jam_igraph <- function
       edge_bundling <- "function";
    }
 
-   params <- igraph:::i.parse.plot.params(x, list(...));
+   # params <- igraph:::i.parse.plot.params(x, list(...));
+   params <- parse_igraph_plot_params(x, list(...));
+
+   # create layout coordinates
    layout <- params("plot", "layout");
+   # store back in params object environment for persistence
+   environment(params)$p$plot$layout <- layout;
+
    vertex.size <- params("vertex", "size");
    vertex.size2 <- params("vertex", "size2");
-   vertex.label.dist <- params("vertex", "label.dist") * label_dist_factor;
-   edge.width <- params("edge", "width") * edge_factor;
 
+   vertex.label.cex <- params("vertex", "label.cex");
+   edge.label.cex <- params("edge", "label.cex");
    if (is.function(label_factor)) {
+      vertex.label.cex <- label_factor(vertex.label.cex);
+      edge.label.cex <- label_factor(edge.label.cex);
       if (verbose) {
          jamba::printDebug("jam_igraph(): ",
-            "Applying ", "label_factor(label.cex)");
+            "Applying: ", "label_factor(label.cex)");
+         jamba::printDebug("jam_igraph(): ",
+            "vertex.label.cex: ", head(vertex.label.cex, 10));
+         jamba::printDebug("jam_igraph(): ",
+            "edge.label.cex: ", head(edge.label.cex, 10));
       }
-      vertex.label.cex <- label_factor(params("vertex", "label.cex"));
-      edge.label.cex <- label_factor(params("edge", "label.cex"));
    } else {
       if (verbose) {
          jamba::printDebug("jam_igraph(): ",
-            "Applying ", "label.cex * label_factor");
+            "Applying: ", "label.cex * label_factor");
       }
-      vertex.label.cex <- params("vertex", "label.cex") * label_factor;
-      edge.label.cex <- params("edge", "label.cex") * label_factor;
+      vertex.label.cex <- vertex.label.cex * label_factor;
+      edge.label.cex <- edge.label.cex * label_factor;
    }
+
    if (is.function(node_factor)) {
       vertex.size <- node_factor(vertex.size);
       vertex.size2 <- node_factor(vertex.size2);
@@ -311,45 +383,79 @@ jam_igraph <- function
       vertex.size2 <- vertex.size2 * node_factor;
    }
 
+   vertex.label.dist <- params("vertex", "label.dist");
+   if (is.function(label_dist_factor)) {
+      vertex.label.dist <- label_dist_factor(vertex.label.dist);
+   } else {
+      vertex.label.dist <- vertex.label.dist * label_dist_factor;
+   }
 
    ## label_factor_l=list(nodeType=c(Gene=1, Set=2))
    if (length(label_factor_l) > 0) {
       vertex.label.cex <- handle_igraph_param_list(x,
          attr="label.cex",
-         label_factor_l,
+         factor_l=label_factor_l,
          i_values=vertex.label.cex,
          attr_type="node")
    }
    if (length(label_dist_factor_l) > 0) {
       vertex.label.dist <- handle_igraph_param_list(x,
          attr="label.dist",
-         label_dist_factor_l,
+         factor_l=label_dist_factor_l,
          i_values=vertex.label.dist,
          attr_type="node");
    }
    if (length(node_factor_l) > 0) {
+      if (verbose) {
+         jamba::printDebug("jam_igraph(): ",
+            "Applying: ", "node_factor_l to vertex.size");
+         jamba::printDebug("jam_igraph(): ",
+            "vertex.size: ");print(head(vertex.size, 10));
+      }
       vertex.size <- handle_igraph_param_list(x,
          attr="size",
-         node_factor_l,
+         factor_l=node_factor_l,
          i_values=vertex.size,
          attr_type="node");
+      vertex.size2 <- handle_igraph_param_list(x,
+         attr="size2",
+         factor_l=node_factor_l,
+         i_values=vertex.size2,
+         attr_type="node");
    }
+
+   edge.width <- params("edge", "width");
+   if (is.function(edge_factor)) {
+      edge.width <- edge_factor(edge.width);
+   } else {
+      edge.width <- edge.width * edge_factor;
+   }
+
    if (length(edge_factor_l) > 0) {
-      vertex.size <- handle_igraph_param_list(x,
-         attr="size",
+      edge.width <- handle_igraph_param_list(x,
+         attr="width",
          edge_factor_l,
          i_values=edge.width,
          attr_type="edge");
    }
 
    ## Optional axis range scaling
-   if (!rescale) {
+   if (!TRUE %in% rescale) {
       dist_factor <- 4;
-      if (min(xlim) <= min(layout[,1]) && max(xlim) >= max(layout[,1])) {
-         xlim_asis <- TRUE;
-      } else {
-         xlim <- range(layout[,1]);
+      x_range <- range(layout[,1], na.rm=TRUE);
+      y_range <- range(layout[,2], na.rm=TRUE);
+      max_xy_range <- max(c(
+         diff(x_range),
+         diff(y_range)));
+      xlim_asis <- TRUE;
+      if (length(xlim) == 0) {
+         xlim <- x_range;
          xlim_asis <- FALSE;
+      }
+      ylim_asis <- TRUE;
+      if (length(ylim) == 0) {
+         ylim <- y_range;
+         ylim_asis <- FALSE;
       }
       if (length(debug) > 0 && any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
          jamba::printDebug("jam_igraph(): ",
@@ -359,20 +465,35 @@ jam_igraph <- function
             "head(vertex.size, 20) before:",
             head(vertex.size, 20));
       }
-      vertex.size <- vertex.size * diff(xlim) / 2;
-      vertex.size2 <- vertex.size2 * diff(xlim) / 2;
-      vertex.label.dist <- vertex.label.dist * diff(xlim) / dist_factor;
+      vertex.size <- vertex.size * (max_xy_range) / 2;
+      vertex.size2 <- vertex.size2 * (max_xy_range) / 2;
+      vertex.label.dist <- vertex.label.dist * (max_xy_range) / dist_factor;
       if (!xlim_asis) {
-         xlim <- xlim + diff(xlim) * c(-1,1) * expand;
+         xlim <- xlim + diff(xlim) * c(-1, 1) * expand;
       }
-      if (min(ylim) <= min(layout[,2]) && max(ylim) >= max(layout[,2])) {
-         ylim_asis <- TRUE;
-      } else {
-         ylim <- range(layout[,2]);
-         ylim_asis <- FALSE;
-         ylim <- ylim + diff(ylim) * c(-1,1) * expand;
+      if (!ylim_asis) {
+         ylim <- ylim + diff(ylim) * c(-1, 1) * expand;
+      }
+   } else {
+      if (length(xlim) == 0) {
+         xlim <- c(-1, 1);
+      }
+      if (length(ylim) == 0) {
+         ylim <- c(-1, 1);
       }
    }
+
+   # store back in params object environment for persistence
+   # vertex attributes
+   # size, size2, label.cex, label.dist
+   environment(params)$p$vertex$size <- vertex.size;
+   environment(params)$p$vertex$size2 <- vertex.size2;
+   environment(params)$p$vertex$label.cex <- vertex.label.cex;
+   environment(params)$p$vertex$label.dist <- vertex.label.dist;
+   # edge attributes
+   # label.cex, width
+   environment(params)$p$edge$width <- edge.width;
+   environment(params)$p$edge$label.cex <- edge.label.cex;
 
    if (length(debug) > 0 && any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
       jamba::printDebug("jam_igraph(): ",
@@ -388,12 +509,22 @@ jam_igraph <- function
    plot_function(x=x,
       ...,
       rescale=rescale,
-      vertex.size=vertex.size,
-      vertex.size2=vertex.size2,
-      vertex.label.dist=vertex.label.dist,
-      vertex.label.cex=vertex.label.cex,
-      edge.label.cex=edge.label.cex,
-      edge.width=edge.width,
+      ## the following parameters are now included inside params
+      # vertex.size=vertex.size,
+      # vertex.size2=vertex.size2,
+      # vertex.label.dist=vertex.label.dist,
+      # vertex.label.cex=vertex.label.cex,
+      # edge.label.cex=edge.label.cex,
+      # edge.width=edge.width,
+      mark.groups=mark.groups,
+      mark.shape=mark.shape,
+      mark.col=mark.col,
+      mark.alpha=mark.alpha,
+      mark.border=mark.border,
+      mark.expand=mark.expand,
+      mark.lwd=mark.lwd,
+      mark.lty=mark.lty,
+      mark.smooth=mark.smooth,
       use_shadowText=use_shadowText,
       xlim=xlim,
       ylim=ylim,
@@ -405,6 +536,7 @@ jam_igraph <- function
       nodegroups=nodegroups,
       vectorized_node_shapes=vectorized_node_shapes,
       plot_grid=plot_grid,
+      params=params,
       debug=debug);
 }
 
@@ -474,14 +606,24 @@ handle_igraph_param_list <- function
 {
    attr_type <- match.arg(attr_type);
    if (attr_type %in% c("node", "vertex")) {
+      vct <- igraph::vcount(x);
       x_attr_names <- igraph::list.vertex.attributes(x);
       if (length(i_values) == 0) {
          i_values <- igraph::vertex_attr(x, attr);
       }
+      if (length(i_values) > 0 && length(i_values) < vct) {
+         i_values <- rep(i_values,
+            length.out=vct);
+      }
    } else if (attr_type %in% c("edge")) {
+      ect <- igraph::ecount(x);
       x_attr_names <- igraph::list.edge.attributes(x);
       if (length(i_values) == 0) {
          i_values <- igraph::edge_attr(x, attr);
+      }
+      if (length(i_values) > 0 && length(i_values) < ect) {
+         i_values <- rep(i_values,
+            length.out=ect);
       }
    }
    if (is.numeric(factor_l)) {
@@ -551,6 +693,8 @@ handle_igraph_param_list <- function
 #' and small steps across the range, using `big_tick` and `small_tick`,
 #' respectively.
 #'
+#' @family jam plot functions
+#'
 #' @param layout `matrix` or `data.frame` with at least two columns,
 #'    only the first two columns are used for the grid.
 #' @param grid_colors `character` colors used for the small and big grid
@@ -612,3 +756,4 @@ plot_layout_scale <- function
       col=NA, border=grid_colors[[2]])
 
 }
+

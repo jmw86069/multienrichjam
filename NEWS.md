@@ -1,3 +1,306 @@
+# multienrichjam 0.0.68.900
+
+## changes to dependencies
+
+* `arules` was removed as a dependency, as two functions that used
+its class `"transactions"` were rewritten to remove the requirement.
+The previous version of those functions are internal and renamed
+from: `im2list()` to `im2list_dep()`; and `imSigned2list()` to
+`imSigned2list_dep()`. The replacement functions should return identical
+data.
+* `bezier` was added as dependency to generate edge bundling curves,
+in head-to-head tests, it out-performed `graphics::xspline()`, and
+produced identical results to internal function `ggforce::bezierPath()`.
+Since `bezier` has no dependencies, this addition should feel small.
+* `jamba` was bumped to version `0.0.88.900` for an important fix to
+`mixedSort()`.
+* `colorjam` was bumped to version `0.0.23.900` for consistency.
+
+## changes to existing functions
+
+* `adjust_cnet_nodeset()`
+
+   * When nodesets are not matched in the data, it prints a `warning()`
+   then returns the input graph without change. Previously it called
+   `stop()`, which is problematic for relevant workflows.
+
+* `removeIgraphBlanks()`
+
+   * default argument changed to `pie_to_circle=FALSE` so single-item
+   nodes `shape="pie"` are no longer converted to `shape="circle"`, since
+   `"jampie"` nodes are rendered much better. Haha.
+
+* `drawEllipse()`
+
+   * now accepts vectorized input and processes accordingly.
+   * New examples show the varied features, many of which are not used
+   for `igraph` node shape="ellipse", but they could be used in future.
+
+* `shape.jampie.plot()`, `shape.coloredrectangle.plot()`
+
+   * These functions draw custom `igraph` node shapes.
+   
+      * `shape="jampie"` draws a pie node shape with more features
+      than vanilla igraph pie shape. Each pie wedge is color filled
+      with `pie.color`, with new optional inner border `pie.border`,
+      `pie.lwd`. The pie node overall can have an outer border defined by
+      `frame.color` and `frame.lwd`. Also, pie nodes with only one color
+      are rendered as a circle, with no tiny internal line.
+      * `shape="coloredrectangle"` draws a series of square boxes
+      with color fill `coloredrect.color`, and optional inner border
+      `coloredrect.border`. The node overall can have an outer border
+      defined by `frame.color`, and `frame.lwd`.
+      
+   * Both functions now use inner and outer borders via
+   `adjust_polygon_border()`, so the various borders no longer overlap.
+   Previously, pie nodes drew each wedge with default `graphics::polygon()`,
+   which allows adjacent borders to overlap 100%.
+   * Note that nodes are resized internally so the rendered node size
+   is equal across all nodes even when the line widths (lwd) vary.
+   * There are some idiosyncracies from calling `graphics::polygon()` to
+   render pie wedges, since it does not by default allow vectorized
+   plotting of multiple polygons with different line widths.
+   Therefore `shape="jampie"` renders line widths in subsets with identical
+   line widths for vectorized plotting, which is 10-100x faster than
+   plotting each pie node individually as done by `igraph::plot.igraph()`.
+   The main potential issue would be seen with partially overlapping nodes,
+   with the potential to display inconsistent overlap order.
+   * It seems hopeless to evaluate ggraph/tidygraph to render visualizations,
+   in part due to visualization and rendering details. Also, ggraph/tidygraph
+   does not store nor recognize many `igraph` visualization details in the
+   `igraph` object, instead they must be encoded as `ggplot2` visualization
+   options and settings. Using that ecosystem would also require creating
+   new ggplot2 node geom types, and edge bundling functions.
+
+* `edge_bundle_nodegroups()`
+
+   * This update represents a substantial refactor of logic.
+   * Edge bundles can be "invalid", which causes edges to be drawn as
+   linear edges between nodes. The criteria were based upon a series of
+   test cases which were all so common that they warranted being fixed.
+   
+      * Bundling usually occurs along the line between two nodegroup
+      center points, calculated as mean node coordinates in each nodegroup.
+      Sometimes the configuration of the center points, or the line itself,
+      cause edge bundling to become unnecessary or ineffective.
+      * Co-linear control points: When the edge and control points are
+      co-linear (along the same line), the edge is drawn as a line.
+      The criteria uses correlation above 0.99 for node and control points
+      of each edge.
+      This criteria affects indiviual edges, so nodes in the same nodegroup
+      may be rendered differently based upon the specific position.
+      The problem is clear when one control point appears beyond the path
+      between two nodes. For non-linear edges, the path would curve around
+      to the far side of the node. For linear edges, it appears as a line
+      that extends beyond one node with optional arrow pointing backward.
+      The solution effectively draws the same edge, except clips the edge
+      at the first node boundary.
+      * Both nodegroups contain only one node: with only one node in each
+      group, there is nothing to "bundle".
+      * Both nodegroups have identical center points, within some small
+      tolerance as a small percentage (0.5%) of the overall layout range.
+      * When one nodegroup contains only one node, and the other nodegroup
+      center point sits inside the node boundary, there is no bundling.
+      Note this criteria is dependent upon node size during rendering.
+      The problem is the edge spline control point is inside the node,
+      so the spline would curve inside the node boundary, then point
+      back out to the node border from the inside. Instead, the edge
+      is drawn as a straight line to the node boundary from the outside.
+      This situation occurs when one nodegroup fully surrounds a
+      central node, so edges are drawn directly to the central node.
+   
+   * Edge bundling "midpoint" represents the position along the line between
+   two nodegroups.
+   
+      * When one nodegroup contains only one node, this line
+      is clipped to the node boundary, so the midpoint is defined
+      beginning at the outer edge of the node, toward the center of the
+      other nodegroup.
+      * Note that when both nodegroups contain only one node, edge bundling
+      is already invalid (see above).
+      * Note than when the other nodegroup center sits inside the node
+      boundary, the edge bundling is also invalid.
+      * Therefore this situation only occurs when one nodegroup center
+      is already outside the border of the single-node nodegroup.
+   
+   * Edges are properly clipped using the relevant `igraph` shape
+   clip function. See `igraph::shapes()`, and `igraph::shapes("circle")$clip`
+   for specific examples.
+   * Edge labels are rendered along edges as follows:
+   Linear edges are encoded with three coordinates: start, middle, end.
+   Spline edges are encoded using default `graphics::xspline()` which
+   returns 100 points by default.
+   Edge labels are placed using the coordinate most distant from the
+   start and end node. For linear edges, the middle coordinate is used,
+   for splines a point very near the middle of the edge is used.
+
+* `jam_igraph()`
+
+   * This function is intended as an enhanced drop-in replacement for
+   `igraph::plot.igraph()`. It was updated to fulfill previously
+   un-implemented features, so fulfill the promise of being a replacement.
+   * New arguments, formally passed to internal `jam_plot_igraph()`:
+   
+      * `mark.groups`, `mark.shape`, `mark.col`, `mark.border`, `mark.expand`,
+      `mark.lwd`, `mark.lty`, `mark.smooth` - arguments to enable and
+      customize the rendering of nodes within clusters or groups.
+      * Note the new options: `mark.lwd`, `mark.lty` for each group border;
+      `mark.smooth` to control whether the group polygon is smoothed;
+      `mark.alpha` to control alpha transparency of fill colors when not
+      already defined.
+      * `mark.expand` is now expected to be provided as a fraction of plot
+      layout range, which is very close to default behavior in `igraph`
+      since the default `rescale=TRUE` forced all layout ranges between
+      `c(-1, 1)`.
+   
+   * `edge_bundling` new option `"default"` will try to detect the
+   most appropriate bunding method, based upon whether `nodegroups`,
+   `mark.groups` are defined, otherwise it chooses `"connections"`.
+   * Edge labels are now rendered for straight edges and edge bundled edges.
+   * Edge labels can now accept multiple `"edge.family"` values,
+   in the unlikely event of multiple fonts on the same plot. This scenario
+   will cause an error with `igraph::plot.igraph()`.
+   * Edges are properly clipped based upon the `igraph` node shape.
+   * Internal adjustments to `node_factor`, `edge_factor`, `node_factor_l`,
+   `edge_factor_l`, `label_factor`, `label_factor_l`, `label_dist_factor`,
+   and `label_dist_factor_l` were adjusted to be applied more consistently.
+   * Undefined layout is now properly calculated dynamically and passed
+   to the internal rendering function `jam_plot_igraph()`, so the values
+   for `xlim`,`ylim` are now properly calculated.
+
+
+## new functions
+
+* `make_cnet_test()` to create Cnet plot `igraph` data for testing.
+* `adjust_polygon_border()` defines inner and outer borders for polygons.
+
+   * Using inner borders allows adjacent polygons to have their borders
+   visible beside each other, without overlap.
+   * Using an outer border allows the display of a border around a collection
+   of polygons without overlapping their inner borders.
+   * Borders can be layered inside or outside existing borders.
+   * There are extensive examples showing various combinations of borders.
+
+* `shape.jampie.clip()`, `shape.coloredrectangle.clip()`
+
+   * Invisible to the user, however they are called for igraph shapes
+   `"jampie"` and `"coloredrectangle"`, respectively.
+   * These functions now properly clip edges to the outer border of each
+   node, including optional inner and outer borders.
+
+* `shape.ellipse.clip()`
+
+   * calculates the optional rotation and size of the ellipse and adjusts
+   the edge endpoints accordingly.
+
+* `parse_igraph_plot_params()`
+
+   * reproduces an internal `igraph` function, which cannot be called by
+   CRAN-approved R packages.
+
+* `default_igraph_values()`
+
+   * reproduces internal `igraph` package data in a function call, for
+   CRAN compliance.
+
+* `jam_igraph_arrows()`
+
+   * Mimics and extends internal `igraph:::igraph.Arrows()` for CRAN
+   compliance.
+   * It also optionally only renders edge arrows, useful when an edge
+   bundling function renders edges itself.
+
+* `get_igraph_arrow_mode()`
+
+   * Another mimic of internal `igraph:::i.get.arrow.mode()` for
+   CRAN compliance.
+
+
+# multienrichjam 0.0.67.900
+
+* added packages to Suggests to support new functions for node layout,
+and creation of more "correct" alpha hull polygons around points.
+
+   * `alphahull` - best implementation of alpha hull. However, it also
+   requires `sp` package, a heavy install which not advised because it
+   is being retired in 2023 in favor of `sf`. Slight risk that the
+   `alphahull` package is removed from CRAN if it is not updated.
+
+* Added to Depends
+
+   * `sf` - lightweight replacement of `sp` that provides useful
+   geometric functions. It is added primarily because it improves
+   rendering pie node borders, which are resized by the exact line
+   width determined at the time of plotting pie nodes.
+
+## new functions
+
+* `make_point_hull()`
+
+   * This function is in active development, and is not yet used
+   in other functions, but will be used in the next version.
+   * takes set of points, makes an alpha hull using `alphahull::ashape()`,
+   then expands using `sf::st_buffer()`.
+   * If `alphahull` is not available, it uses `grDevices::chull()` which
+   does not produce the "ideal" shape but has no additional R depedencies.
+   It is also identical to output from `igraph` and `sf` packages for
+   point hulls, so it has strong precedent.
+
+## changes to existing functions
+
+* `get_cnet_nodeset()`
+
+   * Refactored for greater speed, in test cases with 585 nodes, previous
+   output took 1.28 seconds, the new output takes 0.025 seconds,
+   50x speed increase. This function is called in numerous places in this
+   package, so this improvement will also positively affect all sorts of
+   other functions.
+
+* `colors_from_list()`
+
+   * The sort algorithm was improved in cases where the color order were
+   ambiguous, but including names in the tiebreak, before using `H,C,L`
+   values.
+   * Note: This function is used by `reorder_igraph_nodes()` when `colorV`
+   is not explicitly provided, by detecting the probable order of colors
+   based upon order of colors in multi-color nodes.
+
+* `reorder_igraph_nodes()`
+
+   * The sort order was updated to be more efficient, and to use better
+   logic when following `colorV` or when defining `colorV` ad hoc.
+   * When sorting by `"color"` the order will be defined by `colorV`
+   whenever colors are aligned by `colorV`, otherwise colors are generally
+   sorted by hue `"H"` in HCL space.
+   * Examples were added to show clearly the different options for ordering,
+   including visual examples of the `jam_mypie()` rendering of pie nodes.
+
+* `jam_mypie()`
+
+   * Visual examples are in `reorderIgraphNodes()`, since the `jam_mypie()`
+   function is internal to the igraph plotting scheme.
+   * This function draws pie nodes in vectorized fashion, properly drawing
+   each set of pie polygons per node, then the appropriate borders defined
+   by `pie.border` and `frame.color`.
+   * `pie.border` has the option to be drawn inside the border of the polygon,
+   so that adjacent Venn wedges will have the entire outer border color visible
+   without overlapping the adjacent Venn wedge. To enable, set:
+   `options("inner_pie_border"=TRUE)`
+   * `frame.color` also has the option to be drawn in a manner that does
+   not overlap `pie.border`, it will be drawn just outside the `pie.border`.
+   * In cases where `frame.color` is not drawn, the `pie.border` radius is
+   adjusted to exactly the line width of the `frame.color` border, so nodes
+   will always be exactly the same sizes with or without the `frame.border`.
+   * In most cases there should either be `pie.border` *or* `frame.color`,
+   however it is possible at some point that `frame.color` and `pie.border`
+   will both need to be applied, and this function can handle it.
+   * Note this process now draws three layers of polygons:
+   
+      1. each `pie.color` wedge fill color and no border
+      2. each `pie.border` wedge border color with no fill
+      3. overall `frame.color` border color with no fill
+
+
 # multienrichjam 0.0.66.900
 
 ## changes to existing functions

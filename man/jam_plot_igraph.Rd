@@ -9,22 +9,27 @@ jam_plot_igraph(
   ...,
   axes = FALSE,
   add = FALSE,
-  xlim = c(-1, 1),
-  ylim = c(-1, 1),
+  xlim = NULL,
+  ylim = NULL,
   mark.groups = list(),
   mark.shape = 1/2,
   mark.col = NULL,
+  mark.alpha = 0.2,
   mark.border = NULL,
   mark.expand = 8,
+  mark.lwd = 2,
+  mark.lty = 1,
+  mark.smooth = TRUE,
   pie_to_jampie = TRUE,
   use_shadowText = FALSE,
   vectorized_node_shapes = TRUE,
-  edge_bundling = c("none", "connections", "nodegroups"),
+  edge_bundling = c("default", "connections", "none", "mark.groups", "nodegroups"),
   nodegroups = NULL,
   render_nodes = TRUE,
   render_edges = TRUE,
   render_groups = TRUE,
   render_nodelabels = TRUE,
+  params = NULL,
   plot_grid = FALSE,
   verbose = FALSE,
   debug = NULL
@@ -41,11 +46,9 @@ the complete list.}
 \item{add}{Logical scalar, whether to add the plot to the current device, or
 delete the device's current contents first.}
 
-\item{xlim}{The limits for the horizontal axis, it is unlikely that you want
-to modify this.}
-
-\item{ylim}{The limits for the vertical axis, it is unlikely that you want
-to modify this.}
+\item{xlim, ylim}{default x and y axis limits. When either value is \code{NULL}
+the range is defined by the layout coordinate ranges, respectively,
+then expanded by adding \code{expand} to each side of the range.}
 
 \item{mark.groups}{A list of vertex id vectors. It is interpreted as a set
 of vertex groups. Each vertex group is highlighted, by plotting a colored
@@ -62,6 +65,10 @@ used for the different vertex groups.}
 polygons, in any format accepted by \code{\link[graphics]{xspline}}; e.g.
 numeric color ids, symbolic color names, or colors in RGB.}
 
+\item{mark.alpha}{\code{numeric} value between 0 (transparent) and 1 (opaque)
+indicating the transparency of \code{mark.col} color fill values,
+used only when \code{mark.groups} is defined, and \code{mark.col} is not defined.}
+
 \item{mark.border}{A scalar or vector giving the colors of the borders of
 the vertex group marking polygons. If it is \code{NA}, then no border is
 drawn.}
@@ -70,6 +77,9 @@ drawn.}
 the marked vertex groups. It is in the same units as the vertex sizes. If a
 vector is given, then different values are used for the different vertex
 groups.}
+
+\item{mark.lwd, mark.lty}{line with and line type parameters for each
+\code{mark.groups} polygon,}
 
 \item{pie_to_jampie}{\code{logical} indicating whether to convert
 vertex shape \code{"pie"} to \code{"jampie"} in order to use vectorized
@@ -91,12 +101,24 @@ prevent overlaps, or adjust node sizes to reduce overlaps.}
 
 \item{edge_bundling}{\code{character} string or \code{function}, where:
 \itemize{
-\item \code{"none"} will perform no edge bundling
+\item \code{"default"} will try to detect an appropriate method: when
+\code{nodegroups} or \code{mark.groups} are defined, it chooses the matching
+option (see below); otherwise it chooses \code{"connections"}.
+\item \code{"none"} will perform no edge bundling. This method is best when
+rendering straight edges, or for rendering multiple identical edges
+with curvature as defined by \code{igraph::igraph.plotting()}.
 \item \code{"connections"} will perform graph edge bundling by
 shared connections by calling \code{edge_bundle_bipartite()} then
-\code{edge_bundle_nodegroups()}
+\code{edge_bundle_nodegroups()}. This option is particularly good
+for bipartite graphs such as concept networks (cnet plots).
+\item \code{"mark.groups"} will perform graph edge bundling
+using \code{mark.groups} by calling \code{edge_bundle_nodegroups()}.
+This option is equivalent to \code{"nodegroups"} except that it
+uses \code{mark.groups} to define node groupings.
 \item \code{"nodegroups"} will perform graph edge bundling
-using \code{nodegroups} by calling \code{edge_bundle_bipartite()}
+using \code{nodegroups} by calling \code{edge_bundle_nodegroups()}.
+This option is equivalent to \code{"mark.groups"} except that it
+uses \code{nodegroups} to define node groupings.
 \item \code{function} will call a custom edge bundling function using
 the \code{igraph} object \code{x} and the igraph parameters \code{param}
 as input. This output is currently untested, and is intended
@@ -147,13 +169,19 @@ This function calls \code{plot_layout_scale()} to render the grid lines.}
 which debug output will be plotted onscreen.}
 }
 \description{
-Jam igraph vectorized plot function called by \code{jam_igraph()}
+Jam igraph vectorized plot internal function called by \code{jam_igraph()}
 }
 \details{
 Note that this function is intended to be called by \code{jam_igraph()},
-which handles the overall plot equivalent of \code{igraph::plot.igraph()},
-but calculates layout coordinates, x- and y-axis ranges, and
-adjusts node and label sizes.
+and is an internal function not intended to be called directly.
+
+The \code{jam_igraph()} handles the overall plot equivalent of
+\code{igraph::plot.igraph()}, however it calculates layout coordinates,
+and defines more useful x- and y-axis ranges, and then
+adjusts node and label sizes relevant to the layout data range.
+Specifically \code{vertex.size=15} is only useful when the layout range
+is rescaled between -1 and 1; however when using \code{jam_igraph()}
+the vertex is scaled relative to the actual layout ranges.
 
 The steps here are a reproduction of \code{igraph:::plot.igraph()} with
 four changes:
@@ -248,6 +276,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

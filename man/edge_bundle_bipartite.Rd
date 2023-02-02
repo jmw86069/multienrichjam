@@ -6,6 +6,14 @@
 \usage{
 edge_bundle_bipartite(g, type = "nodeType", ...)
 }
+\arguments{
+\item{g}{\code{igraph} object}
+
+\item{type}{\code{character} name of vertex attribute that defines the
+node type.}
+
+\item{...}{additional arguments are ignored.}
+}
 \description{
 Bundle edges in a bipartite graph
 }
@@ -30,6 +38,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

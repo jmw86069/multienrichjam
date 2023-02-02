@@ -20,7 +20,7 @@ apply_nodeset_spacing(
 \arguments{
 \item{cnet}{\code{igraph} object that contains attribute
 \code{"nodeType"} and values \code{nodeType=c("Gene", "Set")},
-consistent with use of \code{get_cnet_nodesets()} and
+consistent with use of \code{get_cnet_nodeset()} and
 \code{adjust_cnet_nodeset()}.
 The node layout is expected to be stored in
 \code{igraph::graph_attr(cnet, "layout")}.}
@@ -123,7 +123,9 @@ so that no subsequent adjustments are performed on the nodeset.
 Other jam cnet igraph functions: 
 \code{\link{adjust_cnet_nodeset}()},
 \code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_cnet_direction}()},
 \code{\link{get_cnet_nodeset}()},
+\code{\link{make_cnet_test}()},
 \code{\link{nudge_igraph_node}()},
 \code{\link{rotate_igraph_layout}()}
 }

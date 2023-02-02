@@ -8,9 +8,10 @@
 reorderIgraphNodes(
   g,
   sortAttributes = c("pie.color", "pie.color.length", "coloredrect.color", "color",
-    "pie.border", "frame.color", "label", "name"),
-  nodeSortBy = c("x", "y"),
+    "frame.color", "pie.border", "pie.border.length", "label", "name"),
+  nodeSortBy = c("x", "-y"),
   layout = NULL,
+  nodesets = NULL,
   colorV = NULL,
   verbose = FALSE,
   ...
@@ -19,9 +20,10 @@ reorderIgraphNodes(
 reorder_igraph_nodes(
   g,
   sortAttributes = c("pie.color", "pie.color.length", "coloredrect.color", "color",
-    "pie.border", "frame.color", "label", "name"),
-  nodeSortBy = c("x", "y"),
+    "frame.color", "pie.border", "pie.border.length", "label", "name"),
+  nodeSortBy = c("x", "-y"),
   layout = NULL,
+  nodesets = NULL,
   colorV = NULL,
   verbose = FALSE,
   ...
@@ -36,13 +38,19 @@ or supplied via \code{layout} argument.}
 names, to be applied in order when sorting nodes.}
 
 \item{nodeSortBy}{\code{character} vector containing \code{"x"} and
-\code{"y"} indicating the primary axis used to sort nodes.}
+\code{"y"} indicating the primary axis used to sort nodes.
+Note that sort order can be reversed by prepending "-",
+for example \code{"-x"} or \code{"-y"}.}
 
 \item{layout}{\code{numeric} matrix of node coordinates, or
 function used to produce layout coordinates. When layout
 is \code{NULL}, this function tries to use graph attribute
 \code{igraph::graph_attr(g, "layout")}, otherwise
 the \code{relayout_with_qfr()} is called.}
+
+\item{nodesets}{\code{character} with optional subset of nodesets to
+apply re-ordering. Each value must match names generated
+by \code{get_cnet_nodeset()}, otherwise it will be ignored.}
 
 \item{colorV}{optional \code{character} vector that contains R colors,
 used to order the colors in attributes such as \code{"pie.color"}
@@ -104,10 +112,97 @@ if (require(igraph)) {
    V(g2)$pie <- lapply(lengths(V(g2)$pie.color), function(i){
       rep(1, i)
    });
+   V(g2)$frame.color <- "grey80";
+   V(g2)$pie.border <- NA;
+   V(g2)$color <- lapply(V(g2)$pie.color, colorjam::blend_colors)
+
    g2 <- relayout_with_qfr(g2, repulse=7, do_reorder=FALSE);
-   jam_igraph(g2, main="Unordered", vertex.label="");
-   jam_igraph(reorderIgraphNodes(g2), main="reorderIgraphNodes()", vertex.label="");
-   jam_igraph(reorderIgraphNodes(g2, nodeSortBy=c("-y","x")), main="reorderIgraphNodes()", vertex.label="");
+   g2b <- nudge_igraph_node(g2, nodes_xy=list(Pathway=c(0, -0.2)));
+   g2b <- spread_igraph_labels(g2b, do_reorder=FALSE)
+   igraph::V(g2b)$label.family <- "Arial"
+
+   opar <- par("mar"=c(1, 1, 4, 1), xpd=TRUE);
+   jam_igraph(g2b,
+      main="Unordered",
+      label_dist_factor=3,
+      label_factor=0.7,
+      node_factor=2,
+      use_shadowText=TRUE)
+   jam_igraph(reorderIgraphNodes(g2b),
+      main="reorder_igraph_nodes()",
+      label_dist_factor=3,
+      label_factor=0.7,
+      node_factor=2,
+      use_shadowText=TRUE);
+   jam_igraph(reorderIgraphNodes(g2b, nodeSortBy=c("-y","x")),
+      main="reorderIgraphNodes(nodeSortBy=c(\"-y\",\"x\"))",
+      label_dist_factor=3,
+      label_factor=0.7,
+      node_factor=2,
+      use_shadowText=TRUE);
+
+   jam_igraph(
+      reorderIgraphNodes(g2b,
+         nodeSortBy=c("-y", "x"),
+         sortAttributes=c("-pie.color.length", "pie.color", "color", "label", "name")),
+      main="reorder_igraph_nodes() by pie.color.length",
+      label_dist_factor=3,
+      label_factor=0.7,
+      node_factor=2,
+      use_shadowText=TRUE);
+   par(opar);
+
+   g2c <- g2b;
+   set.seed(12)
+   V(g2c)$frame.color <- sample(c("firebrick3", "#DDDDDD", "dodgerblue3"),
+      replace=TRUE, size=igraph::vcount(g2c))
+   opar <- par("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE);
+   jam_igraph(reorderIgraphNodes(g2c,
+      nodeSortBy=c("-y", "x")),
+      main="reorder_igraph_nodes() including frame.color",
+      label_dist_factor=3,
+      label_factor=0.7,
+      node_factor=2,
+      use_shadowText=TRUE);
+   par(opar);
+
+   g2d <- reorderIgraphNodes(g2b);
+   set.seed(12)
+   mn <- (lengths(V(g2d)$pie.color) > 1);
+   V(g2d)[!mn]$frame.color <- sample(c("firebrick3", "#DDDDDD", "dodgerblue3"),
+      replace=TRUE, size=sum(!mn))
+   V(g2d)$pie.border <- rep(list(character(0)), vcount(g2d))
+   V(g2d)[mn]$pie.border <- lapply(which(mn), function(i){
+      jamba::nameVector(
+         sample(c("firebrick3", "#DDDDDD", "dodgerblue3"),
+            replace=TRUE, size=lengths(V(g2d)[i]$pie.color)),
+         names(V(g2d)[i]$pie.color[[1]]))
+   })
+   g2e <- reorderIgraphNodes(g2d,
+      nodeSortBy=c("-y", "x"));
+   opar <- par("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE);
+   options("inner_pie_border"=TRUE);
+   jam_igraph(g2e,
+      main="reorder_igraph_nodes() including frame.color",
+      label_dist_factor=3,
+      label_factor=0.7,
+      node_factor=2,
+      use_shadowText=TRUE);
+   par(opar);
+
+   g2f <- g2e;
+   igraph::V(g2f)["GeneV"]$frame.color <- "green";
+   igraph::V(g2f)["GeneE"]$frame.color <- "green";
+   opar <- par("lwd"=5, mar=c(1, 1, 4, 1), xpd=TRUE);
+   options("inner_pie_border"=TRUE);
+   jam_igraph(g2f,
+      main="reorder_igraph_nodes() including frame.color",
+      label_dist_factor=3,
+      label_factor=0.7,
+      node_factor=2,
+      use_shadowText=TRUE);
+   par(opar);
+
 }
 
 }
@@ -124,6 +219,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},

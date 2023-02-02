@@ -6,17 +6,19 @@
 {
    ## define new igraph vertex shape "coloredrectangle"
    igraph::add_shape("coloredrectangle",
-      clip=igraph::shape_noclip,
+      # clip=igraph::shape_noclip,
+      clip=shape.coloredrectangle.clip,
       plot=shape.coloredrectangle.plot);
 
    ## define new igraph vertex shape "coloredrectangle"
    igraph::add_shape("ellipse",
-      clip=igraph::shape_noclip,
+      clip=shape.ellipse.clip,
+      # clip=igraph::shape_noclip,
       plot=shape.ellipse.plot);
 
    ## define new igraph vertex shape "jampie"
    igraph::add_shape("jampie",
-      clip=get("pie", envir=igraph:::.igraph.shapes)$clip,
+      clip=shape.jampie.clip,
       plot=shape.jampie.plot);
 }
 
@@ -1279,7 +1281,7 @@ multiEnrichMap <- function
 #'    `emptyValue=1` is used with the assumption that `valueColname`
 #'    refers to P-values.
 #' @param verbose `logical` indicating whether to print verbose output.
-#' @param GmtT not implemented here, experimental gene set object
+#' @param GmtT (not currently implemented), alternative gene set object
 #'    format that uses `arules::transactions` class, an efficient
 #'    object with robust access functions in `arules`.
 #' @param ... additional arguments are ignored.

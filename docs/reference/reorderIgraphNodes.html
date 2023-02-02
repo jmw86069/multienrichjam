@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.56.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.900</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -65,9 +65,22 @@
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">reorderIgraphNodes</span><span class="op">(</span>
   <span class="va">g</span>,
   sortAttributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie.color"</span>, <span class="st">"pie.color.length"</span>, <span class="st">"coloredrect.color"</span>, <span class="st">"color"</span>,
-    <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span>,
-  nodeSortBy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>,
+    <span class="st">"frame.color"</span>, <span class="st">"pie.border"</span>, <span class="st">"pie.border.length"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span>,
+  nodeSortBy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"-y"</span><span class="op">)</span>,
   layout <span class="op">=</span> <span class="cn">NULL</span>,
+  nodesets <span class="op">=</span> <span class="cn">NULL</span>,
+  colorV <span class="op">=</span> <span class="cn">NULL</span>,
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
+  <span class="va">...</span>
+<span class="op">)</span>
+
+<span class="fu">reorder_igraph_nodes</span><span class="op">(</span>
+  <span class="va">g</span>,
+  sortAttributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie.color"</span>, <span class="st">"pie.color.length"</span>, <span class="st">"coloredrect.color"</span>, <span class="st">"color"</span>,
+    <span class="st">"frame.color"</span>, <span class="st">"pie.border"</span>, <span class="st">"pie.border.length"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span>,
+  nodeSortBy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"-y"</span><span class="op">)</span>,
+  layout <span class="op">=</span> <span class="cn">NULL</span>,
+  nodesets <span class="op">=</span> <span class="cn">NULL</span>,
   colorV <span class="op">=</span> <span class="cn">NULL</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>
@@ -77,21 +90,29 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
-<dd><p>igraph object</p></dd>
+<dd><p><code>igraph</code> object, typically expected to have a fixed
+graph layout stored as <code>igraph::graph_attr(g, "layout")</code>,
+or supplied via <code>layout</code> argument.</p></dd>
 <dt>sortAttributes</dt>
-<dd><p>character vector of node attribute
+<dd><p><code>character</code> vector of node attribute
 names, to be applied in order when sorting nodes.</p></dd>
 <dt>nodeSortBy</dt>
-<dd><p>character vector containing <code>"x"</code> and
-<code>"y"</code> indicating the primary axis used to sort nodes.</p></dd>
+<dd><p><code>character</code> vector containing <code>"x"</code> and
+<code>"y"</code> indicating the primary axis used to sort nodes.
+Note that sort order can be reversed by prepending "-",
+for example <code>"-x"</code> or <code>"-y"</code>.</p></dd>
 <dt>layout</dt>
-<dd><p>numeric matrix of node coordinates, or
+<dd><p><code>numeric</code> matrix of node coordinates, or
 function used to produce layout coordinates. When layout
 is <code>NULL</code>, this function tries to use graph attribute
-<code>"layout"</code>, otherwise
-the <code>relayout_with_qfr</code> is called.</p></dd>
+<code>igraph::graph_attr(g, "layout")</code>, otherwise
+the <code><a href="relayout_with_qfr.html">relayout_with_qfr()</a></code> is called.</p></dd>
+<dt>nodesets</dt>
+<dd><p><code>character</code> with optional subset of nodesets to
+apply re-ordering. Each value must match names generated
+by <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>, otherwise it will be ignored.</p></dd>
 <dt>colorV</dt>
-<dd><p>optional <code>character vector</code> that contains R colors,
+<dd><p>optional <code>character</code> vector that contains R colors,
 used to order the colors in attributes such as <code>"pie.color"</code>
 and <code>"coloredrect.color"</code>.</p></dd>
 <dt>verbose</dt>
@@ -142,6 +163,7 @@ are sorted to group the colors.</p>
 <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code>,
 <code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
+<code><a href="flip_edges.html">flip_edges</a>()</code>,
 <code><a href="get_bipartite_nodeset.html">get_bipartite_nodeset</a>()</code>,
 <code><a href="igraph2pieGraph.html">igraph2pieGraph</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
@@ -184,44 +206,959 @@ are sorted to group the colors.</p>
 <span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span>
 <span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">i</span><span class="op">)</span></span>
 <span class="r-in">   <span class="op">}</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"grey80"</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="cn">NA</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span>, <span class="fu">colorjam</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html" class="external-link">blend_colors</a></span><span class="op">)</span></span>
+<span class="r-in"></span>
 <span class="r-in">   <span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu"><a href="relayout_with_qfr.html">relayout_with_qfr</a></span><span class="op">(</span><span class="va">g2</span>, repulse<span class="op">=</span><span class="fl">7</span>, do_reorder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2</span>, main<span class="op">=</span><span class="st">"Unordered"</span>, vertex.label<span class="op">=</span><span class="st">""</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2</span><span class="op">)</span>, main<span class="op">=</span><span class="st">"reorderIgraphNodes()"</span>, vertex.label<span class="op">=</span><span class="st">""</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2</span>, nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>,<span class="st">"x"</span><span class="op">)</span><span class="op">)</span>, main<span class="op">=</span><span class="st">"reorderIgraphNodes()"</span>, vertex.label<span class="op">=</span><span class="st">""</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="va">g2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="nudge_igraph_node.html">nudge_igraph_node</a></span><span class="op">(</span><span class="va">g2</span>, nodes_xy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Pathway<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="va">g2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="spread_igraph_labels.html">spread_igraph_labels</a></span><span class="op">(</span><span class="va">g2b</span>, do_reorder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span><span class="op">$</span><span class="va">label.family</span> <span class="op">&lt;-</span> <span class="st">"Arial"</span></span>
+<span class="r-in"></span>
+<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2b</span>,</span>
+<span class="r-in">      main<span class="op">=</span><span class="st">"Unordered"</span>,</span>
+<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
+<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
+<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span>,</span>
+<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes()"</span>,</span>
+<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
+<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
+<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span>, nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>,<span class="st">"x"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">      main<span class="op">=</span><span class="st">"reorderIgraphNodes(nodeSortBy=c(\"-y\",\"x\"))"</span>,</span>
+<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
+<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
+<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in"></span>
+<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span></span>
+<span class="r-in">      <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span>,</span>
+<span class="r-in">         nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span>,</span>
+<span class="r-in">         sortAttributes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-pie.color.length"</span>, <span class="st">"pie.color"</span>, <span class="st">"color"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() by pie.color.length"</span>,</span>
+<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
+<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
+<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
+<span class="r-in"></span>
+<span class="r-in">   <span class="va">g2c</span> <span class="op">&lt;-</span> <span class="va">g2b</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2c</span><span class="op">)</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span>
+<span class="r-in">      replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g2c</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">4</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2c</span>,</span>
+<span class="r-in">      nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span>
+<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
+<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
+<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
+<span class="r-in"></span>
+<span class="r-in">   <span class="va">g2d</span> <span class="op">&lt;-</span> <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
+<span class="r-in">   <span class="va">mn</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="op">!</span><span class="va">mn</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span>
+<span class="r-in">      replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="va">mn</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">mn</span><span class="op">]</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">mn</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span>
+<span class="r-in">      <span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nameVector.html" class="external-link">nameVector</a></span><span class="op">(</span></span>
+<span class="r-in">         <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span>
+<span class="r-in">            replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">         <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">$</span><span class="va">pie.color</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">   <span class="op">}</span><span class="op">)</span></span>
+<span class="r-in">   <span class="va">g2e</span> <span class="op">&lt;-</span> <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2d</span>,</span>
+<span class="r-in">      nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">4</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"inner_pie_border"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2e</span>,</span>
+<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span>
+<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
+<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
+<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
+<span class="r-in"></span>
+<span class="r-in">   <span class="va">g2f</span> <span class="op">&lt;-</span> <span class="va">g2e</span>;</span>
+<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2f</span><span class="op">)</span><span class="op">[</span><span class="st">"GeneV"</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"green"</span>;</span>
+<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2f</span><span class="op">)</span><span class="op">[</span><span class="st">"GeneE"</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"green"</span>;</span>
+<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">5</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"inner_pie_border"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2f</span>,</span>
+<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span>
+<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
+<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
+<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
+<span class="r-in"></span>
 <span class="r-in"><span class="op">}</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
 <span class="r-plt img"><img src="reorderIgraphNodes-1.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
 <span class="r-plt img"><img src="reorderIgraphNodes-2.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"rescale" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.size2" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.dist" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"vertex.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.label.cex" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>"edge.width" is not a graphical parameter</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
 <span class="r-plt img"><img src="reorderIgraphNodes-3.png" alt="" width="700" height="433"></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-plt img"><img src="reorderIgraphNodes-4.png" alt="" width="700" height="433"></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-plt img"><img src="reorderIgraphNodes-5.png" alt="" width="700" height="433"></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-plt img"><img src="reorderIgraphNodes-6.png" alt="" width="700" height="433"></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
+<span class="r-plt img"><img src="reorderIgraphNodes-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -237,7 +1174,8 @@ are sorted to group the colors.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

@@ -7,8 +7,8 @@
 jam_igraph(
   x,
   ...,
-  xlim = c(-1, 1),
-  ylim = c(-1, 1),
+  xlim = NULL,
+  ylim = NULL,
   expand = 0.03,
   rescale = FALSE,
   node_factor = 1,
@@ -20,7 +20,7 @@ jam_igraph(
   label_dist_factor = 1,
   label_dist_factor_l = 1,
   use_shadowText = FALSE,
-  edge_bundling = c("connections", "none", "nodegroups"),
+  edge_bundling = c("default", "connections", "none", "mark.groups", "nodegroups"),
   nodegroups = NULL,
   render_nodes = TRUE,
   render_edges = TRUE,
@@ -29,6 +29,15 @@ jam_igraph(
   vectorized_node_shapes = TRUE,
   plot_grid = FALSE,
   plot_function = jam_plot_igraph,
+  mark.groups = list(),
+  mark.shape = 1/2,
+  mark.col = NULL,
+  mark.alpha = 0.2,
+  mark.border = NULL,
+  mark.expand = 8,
+  mark.lwd = 2,
+  mark.lty = 1,
+  mark.smooth = TRUE,
   verbose = FALSE,
   debug = NULL
 )
@@ -38,37 +47,45 @@ jam_igraph(
 
 \item{...}{additional arguments are passed to \code{igraph::plot.igraph()}}
 
-\item{xlim, ylim}{default x and y axis limits}
+\item{xlim}{default x and y axis limits. When either value is \code{NULL}
+the range is defined by the layout coordinate ranges, respectively,
+then expanded by adding \code{expand} to each side of the range.}
 
-\item{expand}{numeric value used to expand the x and y axis ranges,
+\item{ylim}{default x and y axis limits. When either value is \code{NULL}
+the range is defined by the layout coordinate ranges, respectively,
+then expanded by adding \code{expand} to each side of the range.}
+
+\item{expand}{\code{numeric} value used to expand the x and y axis ranges,
 where \code{0.03} expands each size \verb{3\%}.}
 
-\item{rescale}{logical indicating whether to rescale the layout
+\item{rescale}{\code{logical} indicating whether to rescale the layout
 coordinates to \code{c(-1, 1)}. When \code{rescale=FALSE} the original
 layout coordinates are used as-is without change.}
 
-\item{node_factor}{numeric value multiplied by \code{V(x)$size} to adjust
+\item{node_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$size} to adjust
 the relative size of all nodes by a common numeric scalar value.}
 
 \item{node_factor_l, label_factor_l, label_dist_factor_l}{\code{list}
 of vectors, where the names of the \code{list} are attribute
 names, and the names of each vector are attributes values.
+These values are applied in addition to \code{node_factor}, \code{label_factor},
+\code{label_dist_factor}, respectively.
 The vector values are used as scalar multipliers, analogous to
 \code{node_factor}. The purpose is to apply scalar values to different
 subsets of nodes. For example, consider:
 \verb{node_factor_l=list(nodeType=c(Gene=1, Set=2)}. The list name
-\code{"nodeType"} says to look at \code{vertex_attr(x, "nodeType")}. Nodes
-where \code{nodeType="Gene"} will use \code{1}, and where \code{nodeType="Set"}
+\code{"nodeType"} says to look at \code{igraph::vertex_attr(x, "nodeType")}.
+Nodes with \code{nodeType="Gene"} will use \code{1}, and \code{nodeType="Set"}
 will use \code{2} as the scalar value.}
 
-\item{edge_factor}{numeric value multiplied by \code{E(x)$width} to adjust
+\item{edge_factor}{\code{numeric} value multiplied by \code{igraph::E(x)$width} to adjust
 the relative width of all edges by a common numeric scalar value.}
 
-\item{label_factor}{numeric value multiplied by \code{V(x)$label.cex}
+\item{label_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$label.cex}
 and \code{E(x)$label.cex} to adjust the relative size of all labels on
 nodes and edges by a common numeric scalar value.}
 
-\item{label_dist_factor}{numeric value multiplied by \code{V(x)$label.dist}
+\item{label_dist_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$label.dist}
 to adjust the relative distance of all nodes labels from the node center
 by a common numeric scalar value.}
 
@@ -80,12 +97,24 @@ the expense of slightly longer plot rendering time.}
 
 \item{edge_bundling}{\code{character} string or \code{function}, where:
 \itemize{
-\item \code{"none"} will perform no edge bundling
+\item \code{"default"} will try to detect an appropriate method: when
+\code{nodegroups} or \code{mark.groups} are defined, it chooses the matching
+option (see below); otherwise it chooses \code{"connections"}.
+\item \code{"none"} will perform no edge bundling. This method is best when
+rendering straight edges, or for rendering multiple identical edges
+with curvature as defined by \code{igraph::igraph.plotting()}.
 \item \code{"connections"} will perform graph edge bundling by
 shared connections by calling \code{edge_bundle_bipartite()} then
-\code{edge_bundle_nodegroups()}
+\code{edge_bundle_nodegroups()}. This option is particularly good
+for bipartite graphs such as concept networks (cnet plots).
+\item \code{"mark.groups"} will perform graph edge bundling
+using \code{mark.groups} by calling \code{edge_bundle_nodegroups()}.
+This option is equivalent to \code{"nodegroups"} except that it
+uses \code{mark.groups} to define node groupings.
 \item \code{"nodegroups"} will perform graph edge bundling
-using \code{nodegroups} by calling \code{edge_bundle_bipartite()}
+using \code{nodegroups} by calling \code{edge_bundle_nodegroups()}.
+This option is equivalent to \code{"mark.groups"} except that it
+uses \code{nodegroups} to define node groupings.
 \item \code{function} will call a custom edge bundling function using
 the \code{igraph} object \code{x} and the igraph parameters \code{param}
 as input. This output is currently untested, and is intended
@@ -150,6 +179,40 @@ be changed except for very customized uses. By default
 \code{plot_function=jam_plot_igraph()} which calls a modified variant of
 \code{igraph:::plot.igraph()}.}
 
+\item{mark.groups}{A list of vertex id vectors. It is interpreted as a set
+of vertex groups. Each vertex group is highlighted, by plotting a colored
+smoothed polygon around and \dQuote{under} it. See the arguments below to
+control the look of the polygons.}
+
+\item{mark.shape}{A numeric scalar or vector. Controls the smoothness of the
+vertex group marking polygons. This is basically the \sQuote{shape}
+parameter of the \code{\link[graphics]{xspline}} function, its possible
+values are between -1 and 1. If it is a vector, then a different value is
+used for the different vertex groups.}
+
+\item{mark.col}{A scalar or vector giving the colors of marking the
+polygons, in any format accepted by \code{\link[graphics]{xspline}}; e.g.
+numeric color ids, symbolic color names, or colors in RGB.}
+
+\item{mark.alpha}{\code{numeric} value between 0 (transparent) and 1 (opaque)
+indicating the transparency of \code{mark.col} color fill values,
+used only when \code{mark.groups} is defined, and \code{mark.col} is not defined.}
+
+\item{mark.border}{A scalar or vector giving the colors of the borders of
+the vertex group marking polygons. If it is \code{NA}, then no border is
+drawn.}
+
+\item{mark.expand}{A numeric scalar or vector, the size of the border around
+the marked vertex groups. It is in the same units as the vertex sizes. If a
+vector is given, then different values are used for the different vertex
+groups.}
+
+\item{mark.lwd}{line with and line type parameters for each
+\code{mark.groups} polygon,}
+
+\item{mark.lty}{line with and line type parameters for each
+\code{mark.groups} polygon,}
+
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{debug}{\code{logical} or \code{character} vector of attributes for
@@ -212,8 +275,13 @@ edge connections between nodes are rendered using a specific
 function by drawing curved splines for each bundle of edges.
 The approach in \code{igraph::plot.igraph()} only draws
 straight edges between nodes. The recommended method is
-\code{edge_bundling="connections"} which will bundle edges among nodes
-that share identical connections.
+\code{edge_bundling="default"} which will try to detect an appropriate
+method to bundle edges. When \code{mark.groups} and \code{nodegroups} are not
+defined, the default method is \code{"connections"} which bundles edges
+only among nodes that share the same connections. The assumption is
+that nodes that share the same connections usually have very similar
+layout coordinates, so edge bundling is usually intuitive. In fact,
+for a very large set of nodes, they are often in a round cluster
 }
 
 \subsection{Adjust node size, label size, label distance}{
@@ -246,13 +314,19 @@ A specific example:\if{html}{\out{<div class="sourceCode R">}}\preformatted{node
 }\if{html}{\out{</div>}}
 
 In this case, nodes with attribute
-\code{V(g)$nodeType == "Gene"} will use factor \code{1.5}
+\code{igraph::V(g)$nodeType == "Gene"} will use factor \code{1.5}
 Nodes with attribute
-\code{V(g)$nodeType == "Set"} will use factor \code{2}
+\code{igraph::V(g)$nodeType == "Set"} will use factor \code{2}
 All other nodes will not be adjusted.
 }
 
 \subsection{Other features}{
+
+The plot layout by default is \strong{not} rescaled to \code{c(-1, 1)}, therefore
+allowing direct control over plot dimensions and node sizes.
+The plot aspect ratio is fixed at 1, which renders many network layouts
+in their intended form, as opposed to scaling each axis to \code{c(-1, 1)},
+which can impose distortion of intended layout node distances.
 
 When \code{use_shadowText=TRUE} node labels call \code{jamba::shadowText()}
 which draws a small partly transparent outline around labels, making
@@ -264,17 +338,32 @@ When \code{pie_to_jampie=TRUE}, any nodes with \code{shape="pie"} are
 changed to \code{shape="jampie"} for the purpose of rendering pie
 shapes in vectorized fashion, instead of being drawn for each
 node separately. This change is a substantial improvement in
-rendering time.
+rendering time. In addition, optional node attributes are available:
+\itemize{
+\item \code{pie.border} to control individual pie wedge borders, which are
+drawn as inner borders so each pie wedge border is visible without
+\item \code{pie.lwd} to control line width of pie wedge borders.
+\item \code{pie.lty} to control the line type of pie wedge borders
+\item \code{frame.color} to control the frame border color drawn around the
+full circular pie node. This border is drawn as an outer border, so
+it will not overlap any internal pie wedge border colors.
+}
 
 Default colors for marked node groups \code{mark.col} and \code{mark.border}
 when not defined upfront, will call \code{colorjam::rainbowJam()}
-and not \verb{grDevices::rainbow(). The }colorjam::rainbowJam()\verb{produces more visually distinct categorical colors. This behavior can be controlled by supplying a}character\verb{vector with specific colors for}mark.col\code{and}mark.border\verb{. Note that the border should match the colors, or it can be set to }"grey45"`
+and not \code{grDevices::rainbow()}. The \code{colorjam::rainbowJam()}
+produces more visually distinct categorical colors.
+This behavior can be controlled by supplying a \code{character}
+vector with specific colors for \code{mark.col} and \code{mark.border}. Note
+that the border should match the colors, or it can be set to \code{"grey45"}
 for a generally visible border.
 
 Optional argument \code{nodegroups} can be supplied, which is a \code{list}
 of vectors, where each vector represents a group of nodes. The
 \code{nodegroups} can be used with \code{edge_bundling="nodegroups"} to
-define custom edge bundling.
+define custom edge bundling. This option is useful for defining a
+group of nodes for edge bundling, when those nodes should not be used
+to render group borders as with \code{mark.groups}.
 
 Finally, individual plot components can be individually disabled:
 \itemize{
@@ -286,16 +375,35 @@ Finally, individual plot components can be individually disabled:
 }
 }
 \examples{
+# Example with karate
+karate <- igraph::make_graph("Zachary");
+cl <- igraph::cluster_louvain(karate);
+jam_igraph(karate,
+   layout=layout_with_qfrf(repulse=3.5),
+   mark.groups=cl,
+  mark.lwd=c(1:4),
+  mark.lty=1:4, mark.shape=1,
+  edge_bundling="default")
+
+# create example cnet data
+cnet <- make_cnet_test(num_sets=3)
+
 ## example showing how to use the list form
-## This form resizes nodes where V(g)$nodeType \%in\% "Gene" by 2x,
-## and resizes nodes where V(g)$nodeType \%in\% "Set" by 3x.
-node_factor_l <- list(nodeType=c(Gene=2, Set=3));
+## This form resizes nodes where igraph::V(g)$nodeType \%in\% "Gene" by 2x,
+## and resizes nodes where igraph::V(g)$nodeType \%in\% "Set" by 3x.
+node_factor_l <- list(nodeType=c(Gene=1.2, Set=2));
 
 ## This form multiplies label.dist for nodeType="Gene" nodes by 1,
 ## and multiplies label.dist for nodeType="Set" nodes by 0.5
 label_dist_factor_l <- list(nodeType=c(Gene=1, Set=0.5))
 
-# jam_igraph(g, node_factor_l=node_factor_l, label_dist_factor_l=label_dist_factor_l);
+par("mar"=c(0, 0, 0, 0) + 0.5);
+jam_igraph(cnet,
+   use_shadowText=TRUE,
+   node_factor_l=node_factor_l,
+   label_factor=0.6,
+   label_factor_l=list(nodeType=c(Gene=1, Set=2)))
+par("mar"=c(2, 2, 2, 2));
 
 # Example using edge bundling by community detection
 g <- igraph::make_graph("Zachary");
@@ -304,6 +412,7 @@ gcom <- igraph::cluster_leading_eigen(g);
 jam_igraph(g,
    layout=layout_with_qfr,
    edge_bundling="nodegroups",
+   mark.groups=gcom,
    nodegroups=gcom,
    vertex.color=colorjam::group2colors(gcom$membership))
 
@@ -311,20 +420,19 @@ cfuncs <- list(cluster_leading_eigen=igraph::cluster_leading_eigen,
    cluster_edge_betweenness=igraph::cluster_edge_betweenness,
    cluster_fast_greedy=igraph::cluster_fast_greedy,
    cluster_spinglass=igraph::cluster_spinglass)
-opar <- par("mfrow"=c(2, 2));
 for (i in seq_along(cfuncs)) {
    cfunc <- cfuncs[[i]];
    gcom <- cfunc(g);
+   igraph::V(g)$color <- colorjam::group2colors(gcom$membership);
+   g <- color_edges_by_nodes(g);
+   set.seed(123);
    jam_igraph(g,
       layout=layout_with_qfr,
       edge_bundling="nodegroups",
       nodegroups=gcom,
-      mark.groups=gcom,
-      mark.expand=60,
-      vertex.color=colorjam::group2colors(gcom$membership))
+      mark.groups=gcom)
    title(main=names(cfuncs)[i]);
 }
-par(opar);
 
 # fancy example showing mark.groups and colorizing
 # edges using node colors
@@ -332,26 +440,30 @@ gcom <- igraph::cluster_spinglass(g);
 igraph::V(g)$color <- colorjam::group2colors(gcom$membership);
 g <- color_edges_by_nodes(g);
 jam_igraph(g,
-   layout=layout_with_qfr,
+   layout=layout_with_qfrf(repulse=3.2),
    edge_bundling="nodegroups",
    nodegroups=gcom,
    mark.groups=gcom)
+title(main=paste0("cluster_spinglass()\n",
+   "edge_bundling='nodegroups'"))
 
-# same but adjust midpoint of edge bundles
+# same but different edge_style
 jam_igraph(g,
-   layout=layout_with_qfr,
+   layout=layout_with_qfrf(repulse=3.2),
    edge_bundling="nodegroups",
    nodegroups=gcom,
    mark.groups=gcom,
-   midpoint=c(0.4, 0.6),
+   bundle_style="xspline",
    detail=14)
+title(main="bundle_style='xspline'")
 
 # same but using node connections
 jam_igraph(g,
-   layout=layout_with_qfr,
+   layout=layout_with_qfrf(repulse=3.2),
    edge_bundling="connections",
    nodegroups=gcom,
    mark.groups=gcom)
+title(main="edge_bundling='connections'")
 
 }
 \seealso{
@@ -367,6 +479,7 @@ Other jam igraph functions:
 \code{\link{edge_bundle_nodegroups}()},
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
+\code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_plot_igraph}()},
@@ -387,12 +500,14 @@ Other jam igraph functions:
 \code{\link{with_qfr}()}
 
 Other jam plot functions: 
+\code{\link{adjust_polygon_border}()},
 \code{\link{grid_with_title}()},
 \code{\link{mem_enrichment_heatmap}()},
 \code{\link{mem_gene_path_heatmap}()},
 \code{\link{mem_legend}()},
 \code{\link{mem_multienrichplot}()},
-\code{\link{mem_plot_folio}()}
+\code{\link{mem_plot_folio}()},
+\code{\link{plot_layout_scale}()}
 }
 \concept{jam igraph functions}
 \concept{jam plot functions}

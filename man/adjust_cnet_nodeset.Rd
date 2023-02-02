@@ -91,8 +91,10 @@ jam_igraph(g2)
 \seealso{
 Other jam cnet igraph functions: 
 \code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_cnet_direction}()},
 \code{\link{apply_nodeset_spacing}()},
 \code{\link{get_cnet_nodeset}()},
+\code{\link{make_cnet_test}()},
 \code{\link{nudge_igraph_node}()},
 \code{\link{rotate_igraph_layout}()}
 }

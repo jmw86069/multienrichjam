@@ -111,6 +111,7 @@ enrichment test at a time in MultiEnrichMap.
 Extract one `data.frame` from each result:
 
 ```{r, extract_canonical}
+library(igraph)
 ## Take only the Ingenuity Canonical Pathways
 enrichList_canonical <- lapply(ipa_l, function(i){
    i[["Canonical Pathways"]];
@@ -128,7 +129,14 @@ er_canonical <- lapply(enrichList_canonical, function(i){
       pvalueCutoff=1)
 });
 sdim(er_canonical);
-head(as.data.frame(er_canonical[[1]]));
+kable_coloring(
+   head(as.data.frame(er_canonical[[1]])),
+   caption="Top 10 rows of enrichment data",
+   row.names=FALSE) %>%
+   kableExtra::column_spec(column=seq_len(ncol(er_canonical[[1]])),
+      border_left="1px solid #DDDDDD",
+      extra_css="white-space: nowrap;")
+
 ```
 
 ### run multiEnrichMap()
@@ -148,7 +156,12 @@ The output `mem_canonical` is a list containing various
 results.
 
 ```{r, mem_sdim}
-sdim(mem_canonical);
+kable_coloring(
+   sdim(mem_canonical),
+   caption="sdim(mem_canonical)") %>%
+   kableExtra::column_spec(column=seq_len(4),
+      border_left="1px solid #DDDDDD",
+      extra_css="white-space: nowrap;")
 ```
 
 ### Create a "Mem Plot Folio" (new Apr2020)
@@ -181,11 +194,13 @@ The `mem_plot_folio()` function creates the following plots by default:
     * The number of plots is the number of heatmap pathway_clusters.
 
 ```{r, mem_folio, fig.height=10, fig.width=10}
-mem_canonical_plots <- mem_plot_folio(mem_canonical,
+mem_canonical_plots <- multienrichjam::mem_plot_folio(mem_canonical,
    pathway_column_split=4,
-   node_factor=5,
+   node_factor=1,
    use_shadowText=TRUE,
-   label_factor=1.5,
+   label_factor=1.2,
+   do_which=c(1:5),
+   verbose=TRUE,
    main="Canonical Pathways");
 ```
 
@@ -264,8 +279,14 @@ by `multiEnrichMap()` in the output object `mem_canonical`.
 
 ```{r, mem_plot_1}
 g <- mem_multienrichplot(mem_canonical,
-   node_factor=3,
+   do_plot=FALSE,
+   overlap=0.3,
+   node_factor=2,
    repulse=3.5)
+jam_igraph(g,
+   node_factor=2,
+   use_shadowText=TRUE)
+
 ```
 
 The overlap threshold can be customized manually,
@@ -277,8 +298,12 @@ by optimizing the cluster size and total nodes involved.
 ```{r, mem_plot_1b}
 g <- mem_multienrichplot(mem_canonical,
    overlap=mem_find_overlap(mem_canonical),
+   do_plot=FALSE,
    node_factor=3,
    repulse=3.5)
+jam_igraph(g,
+   node_factor=3,
+   use_shadowText=TRUE)
 ```
 
 
@@ -309,11 +334,12 @@ g_sub <- subset_igraph_components(g, keep=1);
 
 ## Re-apply network layout, and remove blank colors
 g_sub <- relayout_with_qfr(repulse=3.5,
-      removeIgraphBlanks(g_sub))
+   removeIgraphBlanks(g_sub))
 
 ## Plot
-plot(g_sub,
-   vertex.size=15)
+jam_igraph(g_sub,
+   node_factor=3,
+   use_shadowText=TRUE)
 ```
 
 
@@ -331,8 +357,18 @@ this threshold is not colored, and displayed as white,
 even when the P-value is less than 1.
 
 ```{r, enrich_hm}
-mem_enrichment_heatmap(mem_canonical, p_cutoff=0.05);
+mem_enrichment_heatmap(mem_canonical,
+   p_cutoff=0.05);
 ```
+
+The same data can be plotted as a heatmap.
+
+```{r, enrich_hm_1}
+mem_enrichment_heatmap(mem_canonical,
+   style="heatmap",
+   p_cutoff=0.05);
+```
+
 
 The argument `color_by_column=TRUE` will optionally apply
 a color gradient to each column, using the same P-value
@@ -340,7 +376,9 @@ threshold defined by `p_cutoff`. In this case, cells are
 labeled to indicate the actual enrichment P-value.
 
 ```{r, enrich_hm_2}
-mem_enrichment_heatmap(mem_canonical, color_by_column=TRUE);
+mem_enrichment_heatmap(mem_canonical,
+   style="heatmap",
+   color_by_column=TRUE);
 ```
 
 
@@ -372,6 +410,7 @@ so you can use those features as needed.
 
 ```{r, mem_hm}
 hm <- mem_gene_path_heatmap(mem_canonical,
+   column_cex=0.5,
    row_cex=0.6);
 hm;
 ```
@@ -405,10 +444,10 @@ cnet <- mem_canonical %>%
    removeIgraphBlanks() %>%
    relayout_with_qfr(repulse=4);
 #plot(cnet, vertex.label.cex=0.6);
+par("mar"=c(5,4,4,2)+0.1)
 jam_igraph(cnet,
-   edge_bundling="connections",
    use_shadowText=TRUE,
-   node_factor=3,
+   node_factor=0.5,
    vertex.label.cex=0.6);
 mem_legend(mem_canonical);
 ```
@@ -421,9 +460,9 @@ g2_sub <- subset_igraph_components(cnet, keep=1)
 
 #plot(g2_sub);
 jam_igraph(g2_sub,
-   edge_bundling="connections",
    use_shadowText=TRUE,
-   node_factor=3);
+   label_factor=0.5,
+   node_factor=0.5);
 ```
 
 #### Customizing the Cnet plot
@@ -440,7 +479,7 @@ cnet_sub <- subsetCnetIgraph(cnet,
    repulse=3.5,
    includeSets=unlist(hm_sets[c("A")]));
 jam_igraph(cnet_sub,
-   node_factor=3,
+   node_factor=1,
    use_shadowText=TRUE,
    label_dist_factor=3,
    label_factor=1.3);
@@ -481,7 +520,7 @@ cnet3 <- multienrichjam::subsetCnetIgraph(cnet,
    minSetDegree=6,
    minGeneDegree=1);
 jam_igraph(cnet3,
-   node_factor=3,
+   node_factor=0.7,
    use_shadowText=TRUE);
 mem_legend(mem_canonical);
 ```
@@ -517,9 +556,8 @@ the edges of each node.
 
 ```{r, jam_igraph_1, fig.height=8, fig.width=7}
 jam_igraph(cnet3,
-   edge_bundling="connections",
    edge_factor=2,
-   node_factor=2, 
+   node_factor=1.2,
    label_factor=1.2, 
    use_shadowText=TRUE,
    label_dist_factor=3);
@@ -533,8 +571,9 @@ netowrk visualization tool.
 jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
    edge_bundling="connections",
    edge_factor=2,
-   node_factor=2, 
+   node_factor=1,
    label_factor=1.2, 
-   label_dist_factor=3);
+   use_shadowText=TRUE,
+   label_dist_factor=3)
 ```
 
