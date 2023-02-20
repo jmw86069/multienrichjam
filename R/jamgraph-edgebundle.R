@@ -261,20 +261,34 @@ edge_bundle_bipartite <- function
 #'    class `"communities"` as produced by `igraph::cluster_*`
 #'    methods such as `igraph::cluster_walktrap()`. Note that
 #'    every node must be represented.
-#' @param midpoint `numeric` vector of one or two values ranging
-#'    from `0` to `1` that define control point positions between
-#'    each node group center, used to create each edge spline.
+#' @param shape `character` (optional) used to override the `vertex.shape`
+#'    passed in `params`. It is recycled to the number of nodes,
+#'    for example by `igraph::vcount(g)`.
+#' @param params `function` representing `igraph` plotting parameters
+#'    used at rendering time. The output is also produced by
+#'    `parse_igraph_plot_params()` for use in `jam_igraph()`
+#'    plotting, and is passed to other node and edge rendering
+#'    functions.
+#' @param midpoint `numeric` vector of one or more values ranging
+#'    from `0` to `1` that define control point positions along the
+#'    line between two nodegroup center coordinates. When one nodegroup
+#'    contains only one node, this line segment is shortened to end
+#'    at that node border after clipping the corresponding node shape.
+#'    The position along the line is defined relative to the first node
+#'    in the edge, toward the second node in the edge.
+#'    Using `midpoint=0.5` guarantees the control point is the exact middle,
+#'    while `midpoint=c(0.2, 0.8)` will use two control points at 20% and
+#'    80% distance along the line segment resulting in an edge that more
+#'    closely follows the line segment.
 #' @param detail `integer` number of intermediate points along
 #'    the spline to render for each edge.
 #' @param draw_lines `logical` indicating whether to render the edge
 #'    splines after calculating them.
-#' @param nodegroup_midpoints `list` with list names that
-#'    match `names(nodegroups)`. Each `list` element contains one or
-#'    more x,y coordinates as a `numeric` matrix. This option will
-#'    define specific coordinates to be used for any entries that
-#'    match `names(nodegroups)`, and therefore does not use `midpoint`
-#'    for those nodegroups. Any remaining nodegroups will use the
-#'    normal method with `midpoint` as described above.
+#' @param nodegroup_midpoints `list` experimental support for defining
+#'    specific control points used by bundled edges. Not fully implemented
+#'    as yet. In future, it will require two nodegroups to be defined
+#'    for each set of control point coordinates, with no requirement
+#'    for the location of control points.
 #' @param linear_cor_threshold `numeric` value between 0 and 1.
 #'    Coordinates for each edge, and intermediate control point
 #'    coordinates are used in `xspline()` to create a curved spline
@@ -289,9 +303,43 @@ edge_bundle_bipartite <- function
 #'    nodes. Without this modification, the line would appear to pass
 #'    from one node beyond the other node, with an arrow (if directed)
 #'    pointing back to the other node from the opposite direction.
+#' @param bundle_style `character` string describing the type of curvature
+#'    to use for edge bundles:
+#'    * `"bezier"`: (default) calls `bezier::bezier()` to define a bezier
+#'    curve using the edge control points.
+#'    * `"xspline"`: calls `graphics::xspline()` to define an XSpline curve
+#'    using the edge control points, however the method is  customized
+#'    to include each edge endpoint twice, which makes the intermediate
+#'    curve much rounder than normal.
+#'    * `"angular"`: calls `graphics::xspline()` to define an XSpline curve
+#'    using the edge control points. This shape tends to appear angular,
+#'    thus the name.
+#'    * `"bezierPath"`: calls `ggforce:::bezierPath()` when `ggforce` is
+#'    available, producing a bezier curve using the edge control points.
+#'    Note this method appears identical to `"bezier"` above, and will
+#'    likely be removed in a future release.
+#'    * `"subway"`: experimental method that uses the `"angular"` appearance,
+#'    with more repeated intermediate control points intended to group
+#'    all bundled edges to the same linear segment. The intent is to "dodge"
+#'    edges along the line segment, similar to the appearance of subway maps,
+#'    however it is not fully implemented.
+#' @param bundle_self `logical` to indicate whether edges that begin and
+#'    end in the same nodegroup should be bundled through the nodegroup
+#'    center coordinate.
+#'    * `bundle_self=FALSE` forces all edges within a nodegroup to be
+#'    rendered as straight lines, therefore not using the nodegroup center
+#'    as the control point.
+#'    * `bundle_self=TRUE` overrides the validation check that
+#'    requires the distance between center points of two nodegroups to
+#'    have distance at least 0.5% the layout coordinate span. It can
+#'    be a visual aid to have connections bundle through the center
+#'    of the nodegroup, especially when the nodegroup is almost fully
+#'    connected.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param debug `logical` indicating whether to plot debug output that
 #'    may be helpful in understanding the edge bundle control points.
+#'    To specify debug only for edge bundling, use the substring "bundl",
+#'    for example `options("debug"="bundling")`.
 #' @param ... additional arguments are ignored.
 #'
 #' @return `data.frame` with each edge spline point represented
@@ -303,13 +351,13 @@ edge_bundle_nodegroups <- function
  nodegroups,
  shape=NULL,
  params=NULL,
- # midpoint=c(0.1, 0.9),
  midpoint=0.5,
  detail=10,
  draw_lines=TRUE,
  nodegroup_midpoints=NULL,
  linear_cor_threshold=1,
  bundle_style=getOption("jam.bundle_style", "bezier"),
+ bundle_self=FALSE,
  verbose=FALSE,
  debug=getOption("debug", FALSE),
  ...)
@@ -490,7 +538,16 @@ edge_bundle_nodegroups <- function
             "valid", "not valid"))
       print(midpoint_df);
    }
-   midpoint_df$valid <- (dist13 >= (layout_scale * 0.005))
+   midpoint_df$valid <- (dist13 >= (layout_scale * 0.005) |
+      midpoint_df$nodegroup1 == midpoint_df$nodegroup2)
+
+   # optionally do not bundle edges in the same nodegroup
+   if (!TRUE %in% bundle_self) {
+      same_nodegroup <- (midpoint_df$nodegroup1 == midpoint_df$nodegroup2)
+      if (any(same_nodegroup)) {
+         midpoint_df$valid[same_nodegroup] <- FALSE;
+      }
+   }
 
    # when one nodegroup is a single node
    # clip this line to the edge of that node boundary
@@ -560,17 +617,10 @@ edge_bundle_nodegroups <- function
                "clip_xy2:");
             print(clip_xy);
          }
-         # midpoint_df$x3init <- midpoint_df$x3;
-         # midpoint_df$y3init <- midpoint_df$y3;
-         # midpoint_df[doclip2, c("x3", "y3")] <- clip_xy;
          newclip_ec_dist <- sqrt(
             (clip_xy[,1] - midclip_ec[,"x3"])^2 +
             (clip_xy[,2] - midclip_ec[,"y3"])^2);
          doclip2_invalid <- (newclip_ec_dist > midclip_ec_dist);
-         # midpoint_df$midclip_ec_dist <- 0;
-         # midpoint_df$midclip_ec_dist[doclip2] <- midclip_ec_dist;
-         # midpoint_df$newclip_ec_dist <- 0;
-         # midpoint_df$newclip_ec_dist[doclip2] <- newclip_ec_dist;
          if (any(doclip2_invalid)) {
             midpoint_df$valid[doclip2 & doclip2_invalid] <- FALSE;
          }
@@ -706,11 +756,11 @@ edge_bundle_nodegroups <- function
          ec[, 1:2] <- t(sapply(seq_len(nrow(el)), function(ix1) {
             ematch <- match(edge_df$nodegroup1_2[ix1], midpoints_df$nodegroup1_2);
             use_ec <- edge.coords[ix1, 1:4, drop=FALSE];
-            use_ec[,3] <- ifelse(midpoints_df[ematch, "valid"] %in% TRUE &
+            use_ec[,3] <- ifelse(midpoints_df$valid[ematch] %in% TRUE &
                   edgetest_cor_valid[ix1] %in% TRUE,
                midpoints_df[ematch, xcp1],
                use_ec[,3])
-            use_ec[,4] <- ifelse(midpoints_df[ematch, "valid"] %in% TRUE &
+            use_ec[,4] <- ifelse(midpoints_df$valid[ematch] %in% TRUE &
                   edgetest_cor_valid[ix1] %in% TRUE,
                midpoints_df[ematch, ycp1],
                use_ec[,4])
@@ -763,14 +813,18 @@ edge_bundle_nodegroups <- function
 
    use_xcols <- jamba::vigrep("^x[123]", colnames(edge_df));
    use_ycols <- jamba::vigrep("^y[123]", colnames(edge_df));
+   # propagate valid from midpoints_df
+   edge_df$valid <- midpoints_df$valid[ematch];
 
+   # print("head(edge_df):");print(head(edge_df));
    # calculate each spline
    edge_splines <- lapply(seq_len(nrow(edge_df)), function(n){
       x1 <- unlist(edge_df[n, use_xcols]);
       y1 <- unlist(edge_df[n, use_ycols]);
 
       # test correlation for perfect linearity
-      if (!edgetest_cor_valid[n] %in% TRUE) {
+      if (FALSE %in% edgetest_cor_valid[n] ||
+            FALSE %in% edge_df$valid[n]) {
          # linear segment
          x1c <- c(head(x1, 1),
             tail(x1, 1));

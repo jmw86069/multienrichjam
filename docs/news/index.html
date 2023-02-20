@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.910</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
       </span>
     </div>
 
@@ -57,6 +57,87 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.69.900" id="multienrichjam-0069900">multienrichjam 0.0.69.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0069900"></a></h2>
+<div class="section level3">
+<h3 id="new-functions-0-0-69-900">new functions<a class="anchor" aria-label="anchor" href="#new-functions-0-0-69-900"></a></h3>
+<ul><li><p><code><a href="../reference/color_edges_by_nodegroups.html">color_edges_by_nodegroups()</a></code></p></li>
+<li>
+<p><code><a href="../reference/communities2nodegroups.html">communities2nodegroups()</a></code>,
+<code><a href="../reference/nodegroups2communities.html">nodegroups2communities()</a></code></p>
+<ul><li>conversion functions that help interconvert between
+<code>igraph</code> <code>communities</code> objects, and
+<code>nodegroups</code> which is a <code>list</code> of node names.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/mem2emap.html">mem2emap()</a></code></p>
+<ul><li>replacement for <code><a href="../reference/enrichMapJam.html">enrichMapJam()</a></code>
+</li>
+<li>converts <code>mem</code> output to an <code>igraph</code> object
+with multienrichment features, such as <code>pie</code> nodes with
+appropriate color fill, <code>pie.border</code> colored by direction
+when <code>enrichIMdirection</code> is defined.</li>
+<li>by default, the resulting network has community detection called,
+then visualized with boundaries around the various nodes.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-69-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-69-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>,
+<code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code></p>
+<ul><li>Updated to pass <code>raster_device</code> to
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> to work around temporary error
+when the <code>"magick"</code> package is not available,
+<code>use_raster=TRUE</code>, which causes an error during
+rasterization. The error is resolved when changing from default raster
+device to <code>raster_device="agg_png"</code>, although this change
+requires the <code>"ragg"</code> R package is installed. So the change
+tests if <code>"ragg"</code> is available, and if so it passes
+<code>raster_device="agg_png"</code>. The change should not affect any
+other scenarios.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code></p>
+<ul><li>New argument <code>bundle_self=FALSE</code> changes previous default
+behavior by not bundling nodes that connect from and to the same
+nodegroups. Previously, nodes connecting within the same nodegroup would
+bundle through the center point of the cluster, which does minimize the
+busy edge lines, but makes it difficult to follow any paths.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/make_point_hull.html">make_point_hull()</a></code></p>
+<ul><li>new arguments <code>label</code>, <code>label_preset</code>,
+<code>label_adj_preset</code> are ussed to define optional label to
+appear outside the resulting hull. The label is intended to be used for
+network communities, to allow a label associated with each community
+when relevant.</li>
+<li>Label placement is experimental and could change in future.</li>
+<li>Labels are placed relative to the center of the layout, using the
+angle from layout center to hull center. Labels are placed outside the
+rectangular bounding box of the point hull, with text aligned to the
+outer edge based upon the nearest 45 degree angle from layout center to
+hull center.</li>
+</ul></li>
+<li><p><code><a href="../reference/apply_cnet_direction.html">apply_cnet_direction()</a></code> default
+<code>frame_lwd=0.2</code> changed from
+<code>frame_lwd=1</code>.</p></li>
+<li>
+<p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code>, <code><a href="../reference/jam_plot_igraph.html">jam_plot_igraph()</a></code></p>
+<ul><li>new argument <code>bundle_self=FALSE</code> passed to
+<code><a href="../reference/jam_plot_igraph.html">jam_plot_igraph()</a></code> and ultimately to
+<code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>. When TRUE any edges that connect
+from and to the same nodegroup will be bundled through the nodegroup
+center. The default FALSE does not bundle within nodegroup, so edges are
+only bundled when connecting two different nodegroups.</li>
+</ul></li>
+<li><p><code><a href="../reference/shape.jampie.plot.html">shape.jampie.plot()</a></code> now handles various combinations
+of missing <code>pie.lwd</code> and <code>frame.lwd</code> more
+gracefully.</p></li>
+<li><p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code> uses smaller node size by
+default.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.68.910" id="multienrichjam-0068910">multienrichjam 0.0.68.910<a class="anchor" aria-label="anchor" href="#multienrichjam-0068910"></a></h2>
 <p>It turns out that <code><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">graphics::polygon()</a></code> only properly

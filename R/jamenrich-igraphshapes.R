@@ -1102,6 +1102,9 @@ shape.jampie.plot <- function
    }
 
    vertex.pie.lwd <- getparam("pie.lwd")
+   if (length(vertex.pie.lwd) == 0) {
+      vertex.pie.lwd <- default_igraph_values()$vertex$pie.lwd;
+   }
    if (!is.list(vertex.pie.lwd)) {
       if (length(vertex.pie.lwd) == 1) {
          vertex.pie.lwd <- rep(vertex.pie.lwd,
@@ -1493,6 +1496,13 @@ jam_mypie <- function
       lwd.max,
       frame.lwd)
    frame.lwd <- new.frame.lwd;
+   # frame border is adjusted based upon frame.lwd
+   # however for frame border to be drawn with proper vectorization
+   # order alongside pie wedges, it should share the same wedge lwd
+   # since the wedge is drawn over the frame border, hiding all
+   # but the effective frame.lwd.
+   use.frame.lwd <- ifelse(lwd.max > 0 & frame.lwd < lwd.max,
+      lwd.max, frame.lwd);
 
    if (TRUE %in% inner_pie_border) {
       # assume line width is "point"
@@ -1626,10 +1636,12 @@ jam_mypie <- function
          # col=NA,
          col="#FFFFFF01",
          lty=head(lty, 1),
-         lwd=head(frame.lwd, 1))
+         lwd=head(use.frame.lwd, 1))
+         # lwd=head(frame.lwd, 1))
       return_df <- jamba::rbindList(list(
-         poly_df,
-         border_df));
+         border_df,
+         poly_df
+         ));
       return(return_df);
    }
    # more bonus points: optionally draw frame.color around each circle

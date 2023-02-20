@@ -15,8 +15,11 @@ Other jam igraph functions:
 \code{\link{cnet2im}()},
 \code{\link{cnetplotJam}()},
 \code{\link{cnetplot_internalJam}()},
+\code{\link{color_edges_by_nodegroups}()},
 \code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_edges_by_nodes}()},
+\code{\link{color_nodes_by_nodegroups}()},
+\code{\link{communities2nodegroups}()},
 \code{\link{drawEllipse}()},
 \code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
@@ -27,10 +30,13 @@ Other jam igraph functions:
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},
+\code{\link{label_communities}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{layout_with_qfr}()},
+\code{\link{mem2emap}()},
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
+\code{\link{nodegroups2communities}()},
 \code{\link{rectifyPiegraph}()},
 \code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
@@ -40,6 +46,7 @@ Other jam igraph functions:
 \code{\link{spread_igraph_labels}()},
 \code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()}
+\code{\link{subset_igraph_components}()},
+\code{\link{sync_igraph_communities}()}
 }
 \concept{jam igraph functions}

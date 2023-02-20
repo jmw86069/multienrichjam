@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.910</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
       </span>
     </div>
 
@@ -98,6 +98,7 @@
   gene_count_max <span class="op">=</span> <span class="cn">NULL</span>,
   top_annotation <span class="op">=</span> <span class="cn">NULL</span>,
   show <span class="op">=</span> <span class="cn">NULL</span>,
+  use_raster <span class="op">=</span> <span class="cn">FALSE</span>,
   do_plot <span class="op">=</span> <span class="cn">TRUE</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
@@ -185,6 +186,11 @@ above the heatmap.</p></dd>
 <dd><p><code>HeatmapAnnotation</code> as produced by
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapAnnotation.html" class="external-link">ComplexHeatmap::HeatmapAnnotation()</a></code> or <code>NULL</code>, used to display
 annotation at the top of the heatmap.</p></dd>
+<dt>use_raster</dt>
+<dd><p><code>logical</code> passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
+indicating whether to rasterize the heatmap output, used when
+<code>style="heatmap"</code>, since dotplot output is always drawn with
+individual circles in each heatmap cell.</p></dd>
 <dt>do_plot</dt>
 <dd><p><code>logical</code> indicating whether to display the plot with
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">ComplexHeatmap::draw()</a></code> or <code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code> as relevant.

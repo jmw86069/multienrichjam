@@ -40,6 +40,7 @@ mem_enrichment_heatmap(
   gene_count_max = NULL,
   top_annotation = NULL,
   show = NULL,
+  use_raster = FALSE,
   do_plot = TRUE,
   ...
 )
@@ -124,6 +125,11 @@ above the heatmap.}
 \item{top_annotation}{\code{HeatmapAnnotation} as produced by
 \code{ComplexHeatmap::HeatmapAnnotation()} or \code{NULL}, used to display
 annotation at the top of the heatmap.}
+
+\item{use_raster}{\code{logical} passed to \code{ComplexHeatmap::Heatmap()}
+indicating whether to rasterize the heatmap output, used when
+\code{style="heatmap"}, since dotplot output is always drawn with
+individual circles in each heatmap cell.}
 
 \item{do_plot}{\code{logical} indicating whether to display the plot with
 \code{ComplexHeatmap::draw()} or \code{jamba::imageByColors()} as relevant.

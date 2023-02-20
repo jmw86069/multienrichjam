@@ -637,6 +637,12 @@ mem_gene_path_heatmap <- function
          jamba::formatInt(length(sets)), " set columns");
    }
 
+   # raster_device workaround
+   if (jamba::check_pkg_installed("ragg")) {
+      raster_device <- "agg_png"
+   } else {
+      raster_device <- "png"
+   }
 
    # default orientation, gene rows, pathway columns
    if (!rotate_heatmap) {
@@ -687,6 +693,7 @@ mem_gene_path_heatmap <- function
             row_split=row_split,
             column_split=column_split,
             use_raster=use_raster,
+            raster_device=raster_device,
             ...);
       }, error=function(e){
          # same as above but without ...
@@ -695,7 +702,7 @@ mem_gene_path_heatmap <- function
                "Error in Heatmap(), calling without '...', error is shown below:");
             print(e);
          }
-         ComplexHeatmap::Heatmap(memIM[genes,sets,drop=FALSE],
+         ComplexHeatmap::Heatmap(memIM[genes, sets, drop=FALSE],
             border=TRUE,
             name=name,
             na_col=na_col,
@@ -712,6 +719,8 @@ mem_gene_path_heatmap <- function
             column_title=column_title,
             row_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
+            use_raster=use_raster,
+            raster_device=raster_device,
             row_title_rot=row_title_rot,
             row_split=row_split,
             column_split=column_split);
@@ -762,7 +771,8 @@ mem_gene_path_heatmap <- function
          gap=grid::unit(0, "mm")
       );
       hm <- tryCatch({
-         ComplexHeatmap::Heatmap(t(memIM[genes,sets,drop=FALSE]),
+         call_fn_ellipsis(ComplexHeatmap::Heatmap,
+            t(memIM[genes,sets,drop=FALSE]),
             border=TRUE,
             name=name,
             na_col=na_col,
@@ -782,6 +792,8 @@ mem_gene_path_heatmap <- function
             row_title_rot=row_title_rot,
             column_split=row_split,
             row_split=column_split,
+            use_raster=use_raster,
+            raster_device=raster_device,
             ...);
       }, error=function(e){
          # same as above but without ...
@@ -790,7 +802,8 @@ mem_gene_path_heatmap <- function
                "Error in Heatmap(), calling without '...', error is shown below:");
             print(e);
          }
-         ComplexHeatmap::Heatmap(t(memIM[genes,sets,drop=FALSE]),
+         ComplexHeatmap::Heatmap(
+            t(memIM[genes,sets,drop=FALSE]),
             border=TRUE,
             name=name,
             na_col=na_col,
@@ -807,6 +820,8 @@ mem_gene_path_heatmap <- function
             row_title=column_title,
             column_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
+            use_raster=use_raster,
+            raster_device=raster_device,
             row_title_rot=row_title_rot,
             column_split=row_split,
             row_split=column_split);
@@ -907,6 +922,10 @@ mem_gene_path_heatmap <- function
 #' @param top_annotation `HeatmapAnnotation` as produced by
 #'    `ComplexHeatmap::HeatmapAnnotation()` or `NULL`, used to display
 #'    annotation at the top of the heatmap.
+#' @param use_raster `logical` passed to `ComplexHeatmap::Heatmap()`
+#'    indicating whether to rasterize the heatmap output, used when
+#'    `style="heatmap"`, since dotplot output is always drawn with
+#'    individual circles in each heatmap cell.
 #' @param do_plot `logical` indicating whether to display the plot with
 #'    `ComplexHeatmap::draw()` or `jamba::imageByColors()` as relevant.
 #'    The underlying data is returned invisibly.
@@ -951,6 +970,7 @@ mem_enrichment_heatmap <- function
  gene_count_max=NULL,
  top_annotation=NULL,
  show=NULL,
+ use_raster=FALSE,
  do_plot=TRUE,
  ...)
 {
@@ -1053,6 +1073,13 @@ mem_enrichment_heatmap <- function
       apply_direction <- FALSE;
    }
 
+   # raster_device workaround
+   if (jamba::check_pkg_installed("ragg")) {
+      raster_device <- "agg_png"
+   } else {
+      raster_device <- "png"
+   }
+
    if ("heatmap" %in% style) {
       pch <- NULL;
    } else {
@@ -1074,6 +1101,8 @@ mem_enrichment_heatmap <- function
          row_dend_width=row_dend_width,
          column_title=column_title,
          heatmap_legend_param=heatmap_legend_param,
+         use_raster=use_raster,
+         raster_device=raster_device,
          ...);
    } else {
       if (length(gene_count_max) == 0) {
@@ -1255,6 +1284,10 @@ mem_enrichment_heatmap <- function
          }
       }
 
+      if ("dotplot" %in% style) {
+         use_raster <- FALSE
+      }
+
       # dot plot or heatmap style
       hm <- call_fn_ellipsis(ComplexHeatmap::Heatmap,
          matrix=use_matrix,
@@ -1276,6 +1309,8 @@ mem_enrichment_heatmap <- function
          cell_fun=cell_fun_custom,
          show_heatmap_legend=show_heatmap_legend,
          top_annotation=top_annotation,
+         use_raster=use_raster,
+         raster_device=raster_device,
          ...);
       attr(hm,
          "annotation_legend_list") <- anno_legends;
@@ -1343,6 +1378,8 @@ mem_enrichment_heatmap <- function
 #' MultiEnrichMap plot
 #'
 #' MultiEnrichMap plot
+#'
+#' This function is likely to be replaced by `mem2emap()`.
 #'
 #' This function takes output from `multiEnrichMap()` and produces
 #' customized "multiple enrichMap" plots using an igraph network.
@@ -1976,6 +2013,7 @@ mem_plot_folio <- function
          column_method=column_method,
          style=style,
          apply_direction=apply_direction,
+         use_raster=use_raster,
          do_plot=do_plot,
          ...);
       # mem_hm <- mem_enrichment_heatmap(mem,
@@ -2099,13 +2137,6 @@ mem_plot_folio <- function
          sep="");
    }
 
-   #############################################################
-   ## Optional shadowText
-   ## 11mar2021 - disabled in favor of jam_igraph(..., use_shadowText=TRUE)
-   #if (use_shadowText) {
-   #   text <- jamba::shadowText;
-   #   on.exit(rm(text));
-   #}
 
    #############################################################
    ## Cnet collapsed

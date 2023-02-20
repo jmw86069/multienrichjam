@@ -107,6 +107,9 @@ make_point_hull <- function
     "chull"),
  smooth=TRUE,
  shape=1/2,
+ label=NULL,
+ label_preset="bottom",
+ label_adj_preset=label_preset,
  verbose=FALSE,
  ...)
 {
@@ -369,6 +372,58 @@ make_point_hull <- function
          lwd=lwd,
          lty=lty,
          ...)
+      if (length(label) > 0) {
+         if (length(label) > 1) {
+            label <- jamba::cPaste(label, sep="\n")
+         }
+         # determine the hull placement from plot center
+         parusr <- par("usr");
+         hull_center <- c(x=mean(range(mxys[,1], na.rm=TRUE)),
+            y=mean(range(mxys[,2], na.rm=TRUE)));
+         plot_center <- c(x=mean(parusr[1:2], na.rm=TRUE),
+            y=mean(parusr[3:4], na.rm=TRUE));
+         hull_degree <- 360 - (round(
+            jamba::rad2deg(atan2(
+               y=(hull_center[2] - plot_center[2]),
+               x=(hull_center[1] - plot_center[1]))) + 270) %% 360);
+         if (hull_degree >= 315 || hull_degree <= 45) {
+            label_preset <- "top";
+            use_mxys <- which.max(mxys[,2]);
+         } else if (hull_degree >= 135 && hull_degree <= 225) {
+            label_preset <- "bottom";
+            use_mxys <- which.min(mxys[,2]);
+         } else if (hull_degree <= 135) {
+            label_preset <- "right"
+            use_mxys <- which.max(mxys[,1]);
+         } else {
+            label_preset <- "left"
+            use_mxys <- which.min(mxys[,1]);
+         }
+         label_adj_preset <- label_preset;
+         # calculate preset position
+         label_xy <- jamba::coordPresets(
+            preset=label_preset,
+            adjPreset=label_adj_preset);
+         # now scale relative to polygon and not plot coordinates
+         if (FALSE) {
+            label_x <- jamba::normScale(x=label_xy[,1],
+               low=parusr[1], high=parusr[2],
+               from=min(mxys[,1], na.rm=TRUE),
+               to=max(mxys[,1], na.rm=TRUE))
+            label_y <- jamba::normScale(x=label_xy[,2],
+               low=parusr[3], high=parusr[4],
+               from=min(mxys[,2], na.rm=TRUE),
+               to=max(mxys[,2], na.rm=TRUE))
+         } else {
+            label_x <- mxys[use_mxys, 1];
+            label_y <- mxys[use_mxys, 2];
+         }
+         jamba::drawLabels(txt=label,
+            x=label_x, y=label_y,
+            adjX=label_xy$adjX,
+            adjY=label_xy$adjY,
+            drawSegments=FALSE,drawBox=FALSE)
+      }
    }
 
    return(invisible(mxys))

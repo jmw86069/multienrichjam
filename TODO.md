@@ -1,5 +1,19 @@
 # TODO
 
+## 02feb2023
+
+* Low priority visual enhancement, color Cnet edges by Set.
+
+   * Consider coloring Cnet edges by categorical color, by Set
+   It may help clarify node groupings, while also reinforcing
+   which edges connect to particular nodesets.
+   Unclear whether added color would be confusing or beneficial.
+   * Referring to Neely et al paper in ACR Open Rheumatology:
+   "Gene Expression Meta-Analysis Reveals Concordance in Gene Activation,
+   Pathway and Cell-Type Enrichment in Dermatomyositis (DM) Target Tissues"
+   * They show Cnet-type plot in Figure 4A, where connections from each set
+   were categorically colored
+
 ## 26jan2023
 
 * Low priority: It may be useful to create vectorized functions:

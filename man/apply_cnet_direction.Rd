@@ -11,7 +11,7 @@ apply_cnet_direction(
   col_l_max = 65,
   hide_solo_pie = TRUE,
   frame_blank = default_igraph_values()$vertex$frame.color,
-  frame_lwd_blank = 1,
+  frame_lwd_blank = 0.2,
   border_lwd = 2,
   do_reorder = FALSE,
   ...

@@ -1,3 +1,70 @@
+# multienrichjam 0.0.69.900
+
+## new functions
+
+* `color_edges_by_nodegroups()`
+* `communities2nodegroups()`, `nodegroups2communities()`
+
+   * conversion functions that help interconvert between `igraph`
+   `communities` objects, and `nodegroups` which is a `list` of
+   node names.
+
+* `mem2emap()`
+
+   * replacement for `enrichMapJam()`
+   * converts `mem` output to an `igraph` object with multienrichment
+   features, such as `pie` nodes with appropriate color fill,
+   `pie.border` colored by direction when `enrichIMdirection` is defined.
+   * by default, the resulting network has community detection called,
+   then visualized with boundaries around the various nodes.
+
+## changes to existing functions
+
+* `mem_gene_path_heatmap()`, `mem_enrichment_heatmap()`
+
+   * Updated to pass `raster_device` to `ComplexHeatmap::Heatmap()` to
+   work around temporary error when the `"magick"` package is not
+   available, `use_raster=TRUE`, which causes an error during rasterization.
+   The error is resolved when changing from default raster device to
+   `raster_device="agg_png"`, although this change requires the `"ragg"`
+   R package is installed. So the change tests if `"ragg"` is available,
+   and if so it passes `raster_device="agg_png"`. The change should not
+   affect any other scenarios.
+
+* `edge_bundle_nodegroups()`
+
+   * New argument `bundle_self=FALSE` changes previous default behavior
+   by not bundling nodes that connect from and to the same nodegroups.
+   Previously, nodes connecting within the same nodegroup would bundle
+   through the center point of the cluster, which does minimize the
+   busy edge lines, but makes it difficult to follow any paths.
+
+* `make_point_hull()`
+
+   * new arguments `label`, `label_preset`, `label_adj_preset` are ussed
+   to define optional label to appear outside the resulting hull.
+   The label is intended to be used for network communities, to
+   allow a label associated with each community when relevant.
+   * Label placement is experimental and could change in future.
+   * Labels are placed relative to the center of the layout, using
+   the angle from layout center to hull center. Labels are placed outside
+   the rectangular bounding box of the point hull, with text aligned
+   to the outer edge based upon the nearest 45 degree angle from
+   layout center to hull center.
+
+* `apply_cnet_direction()` default `frame_lwd=0.2` changed from `frame_lwd=1`.
+* `jam_igraph()`, `jam_plot_igraph()`
+
+   * new argument `bundle_self=FALSE` passed to `jam_plot_igraph()` and
+   ultimately to `edge_bundle_nodegroups()`. When TRUE any edges that
+   connect from and to the same nodegroup will be bundled through the
+   nodegroup center. The default FALSE does not bundle within nodegroup,
+   so edges are only bundled when connecting two different nodegroups.
+
+* `shape.jampie.plot()` now handles various combinations of missing
+`pie.lwd` and `frame.lwd` more gracefully.
+* `mem2cnet()` uses smaller node size by default.
+
 # multienrichjam 0.0.68.910
 
 It turns out that `graphics::polygon()` only properly closes the

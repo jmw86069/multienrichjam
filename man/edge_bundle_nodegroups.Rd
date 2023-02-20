@@ -15,6 +15,7 @@ edge_bundle_nodegroups(
   nodegroup_midpoints = NULL,
   linear_cor_threshold = 1,
   bundle_style = getOption("jam.bundle_style", "bezier"),
+  bundle_self = FALSE,
   verbose = FALSE,
   debug = getOption("debug", FALSE),
   ...
@@ -29,9 +30,27 @@ class \code{"communities"} as produced by \verb{igraph::cluster_*}
 methods such as \code{igraph::cluster_walktrap()}. Note that
 every node must be represented.}
 
-\item{midpoint}{\code{numeric} vector of one or two values ranging
-from \code{0} to \code{1} that define control point positions between
-each node group center, used to create each edge spline.}
+\item{shape}{\code{character} (optional) used to override the \code{vertex.shape}
+passed in \code{params}. It is recycled to the number of nodes,
+for example by \code{igraph::vcount(g)}.}
+
+\item{params}{\code{function} representing \code{igraph} plotting parameters
+used at rendering time. The output is also produced by
+\code{parse_igraph_plot_params()} for use in \code{jam_igraph()}
+plotting, and is passed to other node and edge rendering
+functions.}
+
+\item{midpoint}{\code{numeric} vector of one or more values ranging
+from \code{0} to \code{1} that define control point positions along the
+line between two nodegroup center coordinates. When one nodegroup
+contains only one node, this line segment is shortened to end
+at that node border after clipping the corresponding node shape.
+The position along the line is defined relative to the first node
+in the edge, toward the second node in the edge.
+Using \code{midpoint=0.5} guarantees the control point is the exact middle,
+while \code{midpoint=c(0.2, 0.8)} will use two control points at 20\% and
+80\% distance along the line segment resulting in an edge that more
+closely follows the line segment.}
 
 \item{detail}{\code{integer} number of intermediate points along
 the spline to render for each edge.}
@@ -39,13 +58,11 @@ the spline to render for each edge.}
 \item{draw_lines}{\code{logical} indicating whether to render the edge
 splines after calculating them.}
 
-\item{nodegroup_midpoints}{\code{list} with list names that
-match \code{names(nodegroups)}. Each \code{list} element contains one or
-more x,y coordinates as a \code{numeric} matrix. This option will
-define specific coordinates to be used for any entries that
-match \code{names(nodegroups)}, and therefore does not use \code{midpoint}
-for those nodegroups. Any remaining nodegroups will use the
-normal method with \code{midpoint} as described above.}
+\item{nodegroup_midpoints}{\code{list} experimental support for defining
+specific control points used by bundled edges. Not fully implemented
+as yet. In future, it will require two nodegroups to be defined
+for each set of control point coordinates, with no requirement
+for the location of control points.}
 
 \item{linear_cor_threshold}{\code{numeric} value between 0 and 1.
 Coordinates for each edge, and intermediate control point
@@ -62,10 +79,50 @@ nodes. Without this modification, the line would appear to pass
 from one node beyond the other node, with an arrow (if directed)
 pointing back to the other node from the opposite direction.}
 
+\item{bundle_style}{\code{character} string describing the type of curvature
+to use for edge bundles:
+\itemize{
+\item \code{"bezier"}: (default) calls \code{bezier::bezier()} to define a bezier
+curve using the edge control points.
+\item \code{"xspline"}: calls \code{graphics::xspline()} to define an XSpline curve
+using the edge control points, however the method is  customized
+to include each edge endpoint twice, which makes the intermediate
+curve much rounder than normal.
+\item \code{"angular"}: calls \code{graphics::xspline()} to define an XSpline curve
+using the edge control points. This shape tends to appear angular,
+thus the name.
+\item \code{"bezierPath"}: calls \code{ggforce:::bezierPath()} when \code{ggforce} is
+available, producing a bezier curve using the edge control points.
+Note this method appears identical to \code{"bezier"} above, and will
+likely be removed in a future release.
+\item \code{"subway"}: experimental method that uses the \code{"angular"} appearance,
+with more repeated intermediate control points intended to group
+all bundled edges to the same linear segment. The intent is to "dodge"
+edges along the line segment, similar to the appearance of subway maps,
+however it is not fully implemented.
+}}
+
+\item{bundle_self}{\code{logical} to indicate whether edges that begin and
+end in the same nodegroup should be bundled through the nodegroup
+center coordinate.
+\itemize{
+\item \code{bundle_self=FALSE} forces all edges within a nodegroup to be
+rendered as straight lines, therefore not using the nodegroup center
+as the control point.
+\item \code{bundle_self=TRUE} overrides the validation check that
+requires the distance between center points of two nodegroups to
+have distance at least 0.5\% the layout coordinate span. It can
+be a visual aid to have connections bundle through the center
+of the nodegroup, especially when the nodegroup is almost fully
+connected.
+}}
+
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{debug}{\code{logical} indicating whether to plot debug output that
-may be helpful in understanding the edge bundle control points.}
+may be helpful in understanding the edge bundle control points.
+To specify debug only for edge bundling, use the substring "bundl",
+for example \code{options("debug"="bundling")}.}
 
 \item{...}{additional arguments are ignored.}
 }
@@ -137,8 +194,11 @@ Other jam igraph functions:
 \code{\link{cnet2im}()},
 \code{\link{cnetplotJam}()},
 \code{\link{cnetplot_internalJam}()},
+\code{\link{color_edges_by_nodegroups}()},
 \code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_edges_by_nodes}()},
+\code{\link{color_nodes_by_nodegroups}()},
+\code{\link{communities2nodegroups}()},
 \code{\link{drawEllipse}()},
 \code{\link{edge_bundle_bipartite}()},
 \code{\link{enrichMapJam}()},
@@ -148,10 +208,13 @@ Other jam igraph functions:
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},
+\code{\link{label_communities}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{layout_with_qfr}()},
+\code{\link{mem2emap}()},
 \code{\link{memIM2cnet}()},
 \code{\link{mem_multienrichplot}()},
+\code{\link{nodegroups2communities}()},
 \code{\link{rectifyPiegraph}()},
 \code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
@@ -162,6 +225,7 @@ Other jam igraph functions:
 \code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
 \code{\link{subset_igraph_components}()},
+\code{\link{sync_igraph_communities}()},
 \code{\link{with_qfr}()}
 }
 \concept{jam igraph functions}

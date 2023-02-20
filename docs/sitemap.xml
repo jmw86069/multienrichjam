@@ -82,13 +82,22 @@
     <loc>/reference/colorRamp2D.html</loc>
   </url>
   <url>
+    <loc>/reference/color_edges_by_nodegroups.html</loc>
+  </url>
+  <url>
     <loc>/reference/color_edges_by_nodes.html</loc>
   </url>
   <url>
     <loc>/reference/color_edges_by_nodes_deprecated.html</loc>
   </url>
   <url>
+    <loc>/reference/color_nodes_by_nodegroups.html</loc>
+  </url>
+  <url>
     <loc>/reference/colors_from_list.html</loc>
+  </url>
+  <url>
+    <loc>/reference/communities2nodegroups.html</loc>
   </url>
   <url>
     <loc>/reference/curateIPAcolnames.html</loc>
@@ -202,6 +211,9 @@
     <loc>/reference/jam_plot_igraph.html</loc>
   </url>
   <url>
+    <loc>/reference/label_communities.html</loc>
+  </url>
+  <url>
     <loc>/reference/layout_with_qfr.html</loc>
   </url>
   <url>
@@ -224,6 +236,9 @@
   </url>
   <url>
     <loc>/reference/make_point_hull.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mem2emap.html</loc>
   </url>
   <url>
     <loc>/reference/memIM2cnet.html</loc>
@@ -251,6 +266,9 @@
   </url>
   <url>
     <loc>/reference/multiEnrichMap.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nodegroups2communities.html</loc>
   </url>
   <url>
     <loc>/reference/nudge_igraph_node.html</loc>
@@ -317,6 +335,9 @@
   </url>
   <url>
     <loc>/reference/subset_igraph_components.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sync_igraph_communities.html</loc>
   </url>
   <url>
     <loc>/reference/topEnrichBySource.html</loc>

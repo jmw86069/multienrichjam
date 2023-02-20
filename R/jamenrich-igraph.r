@@ -2943,6 +2943,7 @@ jam_plot_igraph <- function
     "none",
     "mark.groups",
     "nodegroups"),
+ bundle_self=FALSE,
  nodegroups=NULL,
  render_nodes=TRUE,
  render_edges=TRUE,
@@ -3154,6 +3155,15 @@ jam_plot_igraph <- function
             length.out=length(mark.groups));
          expand.by <- (mark.expand / 200) * max_xy_range;
 
+         # optional text labels
+         mark.group.cluster.names <- NULL;
+         if (length(names(mark.groups)) > 0) {
+            if (!"membership" %in% names(mark.groups)) {
+               mark.group.cluster.names <- names(mark.groups)
+            } else if ("cluster_names" %in% names(mark.groups)) {
+               mark.group.cluster.names <- mark.groups$cluster_names;
+            }
+         }
          for (g in seq_along(mark.groups)) {
             v <- igraph::V(graph)[mark.groups[[g]]]
             if (length(vertex.size) == 1) {
@@ -3163,6 +3173,7 @@ jam_plot_igraph <- function
                   length=igraph::vcount(graph))[v]
             }
             # use new method make_point_hull()
+            hull_label <- mark.group.cluster.names[g];
             phxy <- make_point_hull(
                x=layout[v, , drop=FALSE],
                buffer=expand.by[g] * 2,
@@ -3175,7 +3186,8 @@ jam_plot_igraph <- function
                lwd=mark.lwd[g],
                lty=mark.lty[g],
                smooth=mark.smooth,
-               shape=mark.shape[g]);
+               shape=mark.shape[g],
+               label=hull_label);
          }
       }
    }
@@ -3575,6 +3587,7 @@ jam_plot_igraph <- function
             nodegroups=nodegroups,
             shape=shape,
             params=params,
+            bundle_self=bundle_self,
             ...);
 
       } else if (any(c("mark.groups", "nodegroups") %in% edge_bundling)) {
@@ -3588,10 +3601,14 @@ jam_plot_igraph <- function
          if ("nodegroups" %in% edge_bundling) {
             edge_bundle_nodegroups(graph,
                nodegroups=nodegroups,
+               params=params,
+               bundle_self=bundle_self,
                ...);
          } else {
             edge_bundle_nodegroups(graph,
                nodegroups=mark.groups,
+               params=params,
+               bundle_self=bundle_self,
                ...);
          }
       } else if ("function" %in% edge_bundling) {
@@ -3853,118 +3870,6 @@ colors_from_list <- function
 }
 
 
-#' Colorize igraph edges by nodes
-#'
-#' Colorize igraph edges using node colors
-#'
-#' This function colorizes edges by blending colors for the
-#' nodes involved, by calling `colorjam::blend_colors()`.
-#'
-#' The color for each node depends upon the node shape, so
-#' the color or colors used to render each node shape will
-#' be used for the edge. For example:
-#'
-#' * `shape="pie"` uses the average color from `V(g)$pie.color`
-#' * `shape="coloredrectangle"` uses the avereage color from
-#' `V(g)$coloredrect.color`
-#' * everything else uses `V(g)$color`
-#'
-#' @family jam igraph functions
-#'
-#' @return `igraph` object with edge color attribute updated to
-#'    represent the result of blending node colors, seen by
-#'    `igraph::edge_attr(g)$color`.
-#'
-#' @param g `igraph` object that contains vertex node attribute `"color"`
-#'    as seen with `igraph::vertex_attr(g, "color")`.
-#' @param edge_alpha `numeric` or `NULL`, where numeric value sets
-#'    the edge alpha transparency, where `edge_alpha=0` is completely
-#'    transparent, `edge_alpha=0.5` is 50% transparent, and `edge_alpha=1`
-#'    is completely not transparent, and is opaque. When `edge_alpha=NULL`
-#'    the alpha values are supplied by `colorjam::blend_colors()`
-#'    which blends the two values.
-#' @param ... additional arguments are passed to `colorjam::blend_colors()`.
-#'
-#' @export
-color_edges_by_nodes <- function
-(g,
- edge_alpha=NULL,
- Crange=c(0, 200),
- Lrange=c(0, 65),
- ...)
-{
-   # confirm color is present
-   if (!"igraph" %in% class(g)) {
-      stop("Input must be class 'igraph'");
-   }
-   if (!"color" %in% igraph::list.vertex.attributes(g)) {
-      stop("Node attributes must contain 'color' in V(g)$color");
-   }
-   # get edge data.frame
-   if (!"name" %in% igraph::list.vertex.attributes(g)) {
-      vname <- as.character(seq_len(igraph::vcount(g)));
-   } else {
-      vname <- igraph::V(g)$name;
-   }
-
-   edge_df <- data.frame(check.names=FALSE,
-      stringsAsFactors=FALSE,
-      igraph::as_edgelist(g));
-
-   # fix bug when shape is not defined
-   if (length(igraph::V(g)$shape) == 0) {
-      igraph::V(g)$shape <- "circle";
-   }
-   node_colors_list <- ifelse(
-      igraph::V(g)$shape %in% "pie",
-      igraph::V(g)$pie.color,
-      ifelse(
-         igraph::V(g)$shape %in% "coloredrectangle",
-         igraph::V(g)$coloredrect.color,
-         igraph::V(g)$color))
-   if (!is.list(node_colors_list)) {
-      node_colors <- node_colors_list;
-      node_alphas <- jamba::col2alpha(
-         jamba::rmNA(naValue=0.01, node_colors));
-   } else {
-      node_colors <- colorjam::blend_colors(node_colors_list);
-      node_alphas <- sapply(node_colors_list, function(i){
-         mean(jamba::col2alpha(jamba::rmNA(naValue=0.01, i)))
-      })
-   }
-   if (any(node_alphas < 1)) {
-      newalpha <- (node_alphas < 1);
-      node_colors[newalpha] <- jamba::alpha2col(node_colors[newalpha],
-         alpha=node_alphas[newalpha]);
-   }
-
-   edge_df$color1 <- node_colors[match(edge_df[,1], vname)];
-   edge_df$color2 <- node_colors[match(edge_df[,2], vname)];
-
-   color1_2 <- split(
-      c(edge_df$color1, edge_df$color2),
-      rep(seq_len(nrow(edge_df)), 2));
-   blended1_2 <- colorjam::blend_colors(color1_2,
-      ...);
-
-   # apply Crange and Lrange to restrict output chroma and luminance
-   if (max(Crange) < 200 || max(Lrange) < 100) {
-      blended1_2 <- jamba::applyCLrange(blended1_2,
-         Crange=Crange,
-         Lrange=Lrange,
-         CLmethod="floor");
-   }
-
-   # apply edge alpha transparency
-   if (length(edge_alpha) > 0) {
-      igraph::E(g)$color <- jamba::alpha2col(blended1_2,
-         alpha=rep(edge_alpha,
-            length.out=length(blended1_2)));
-   } else {
-      igraph::E(g)$color <- blended1_2;
-   }
-   return(g);
-}
 
 #' Flip direction of igraph edges
 #'

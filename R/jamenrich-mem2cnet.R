@@ -76,10 +76,10 @@ memIM2cnet <- function
  geneColor="#B3B3B3",
  categoryLabelColor="darkblue",
  geneLabelColor="grey25",
- categorySize=20,
- geneSize=10,
- categoryCex=1.2,
- geneCex=0.9,
+ categorySize=6,
+ geneSize=3,
+ categoryCex=0.8,
+ geneCex=0.5,
  # frame_darkFactor=1.4,
  frame_darkFactor=NULL,
  geneIM=NULL,
@@ -273,20 +273,23 @@ memIM2cnet <- function
          igraph::V(g)$name[!isset]);
       gene_which <- which(!isset)[gene_match];
       vseq <- seq_len(igraph::vcount(g));
-      for (j in c("pie", "pie.value", "pie.color", "pie.names",
-         "coloredrect.color", "coloredrect.nrow",
-         "coloredrect.byrow", "coloredrect.value",
-         "coloredrect.names")) {
+
+      # iterate node attributes
+      i_node_attributes <- c(
+         "pie",
+         "pie.value",
+         "pie.color",
+         "pie.names",
+         "coloredrect.color",
+         "coloredrect.nrow",
+         "coloredrect.byrow",
+         "coloredrect.value",
+         "coloredrect.names")
+
+      for (j in i_node_attributes) {
          if (!j %in% igraph::list.vertex.attributes(g)) {
             if (jamba::igrepHas("[.]color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
-               # igraph::vertex_attr(g, j) <- lapply(vseq, function(i){
-               #    if (isset[i]) {
-               #       geneIM[i,];
-               #    } else {
-               #       colorV[igraph::V(g)$name[i]]
-               #    }
-               # })
             } else if (jamba::igrepHas("byrow", j)) {
                igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_byrow),
                   length.out=igraph::vcount(g));
@@ -348,9 +351,17 @@ memIM2cnet <- function
       enrich_match <- match(rownames(enrichIM),
          igraph::V(g)$name[isset]);
       enrich_which <- which(isset)[enrich_match];
-      for (j in c("pie", "pie.value", #"pie.color",
-         "coloredrect.color", "coloredrect.nrow",
-         "coloredrect.byrow", "coloredrect.value")) {
+
+      # iterate set-relevant attributes
+      i_set_attributes <- c("pie",
+         "pie.value",
+         #"pie.color",
+         "coloredrect.color",
+         "coloredrect.nrow",
+         "coloredrect.byrow",
+         "coloredrect.value")
+
+      for (j in i_set_attributes) {
          if (!j %in% list.vertex.attributes(g)) {
             if (jamba::igrepHas("color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);

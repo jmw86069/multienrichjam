@@ -20,6 +20,9 @@ make_point_hull(
   hull_method = c("default", "alphahull", "igraph", "sf", "chull"),
   smooth = TRUE,
   shape = 1/2,
+  label = NULL,
+  label_preset = "bottom",
+  label_adj_preset = label_preset,
   verbose = FALSE,
   ...
 )

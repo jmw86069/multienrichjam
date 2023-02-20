@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.68.910</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
       </span>
     </div>
 
@@ -73,6 +73,7 @@
   nodegroup_midpoints <span class="op">=</span> <span class="cn">NULL</span>,
   linear_cor_threshold <span class="op">=</span> <span class="fl">1</span>,
   bundle_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"jam.bundle_style"</span>, <span class="st">"bezier"</span><span class="op">)</span>,
+  bundle_self <span class="op">=</span> <span class="cn">FALSE</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>,
   debug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"debug"</span>, <span class="cn">FALSE</span><span class="op">)</span>,
   <span class="va">...</span>
@@ -89,10 +90,28 @@ graph attributes, stored as <code>igraph::graph_attr(g, "layout")</code>.</p></d
 class <code>"communities"</code> as produced by <code>igraph::cluster_*</code>
 methods such as <code><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">igraph::cluster_walktrap()</a></code>. Note that
 every node must be represented.</p></dd>
+<dt>shape</dt>
+<dd><p><code>character</code> (optional) used to override the <code>vertex.shape</code>
+passed in <code>params</code>. It is recycled to the number of nodes,
+for example by <code>igraph::vcount(g)</code>.</p></dd>
+<dt>params</dt>
+<dd><p><code>function</code> representing <code>igraph</code> plotting parameters
+used at rendering time. The output is also produced by
+<code><a href="parse_igraph_plot_params.html">parse_igraph_plot_params()</a></code> for use in <code><a href="jam_igraph.html">jam_igraph()</a></code>
+plotting, and is passed to other node and edge rendering
+functions.</p></dd>
 <dt>midpoint</dt>
-<dd><p><code>numeric</code> vector of one or two values ranging
-from <code>0</code> to <code>1</code> that define control point positions between
-each node group center, used to create each edge spline.</p></dd>
+<dd><p><code>numeric</code> vector of one or more values ranging
+from <code>0</code> to <code>1</code> that define control point positions along the
+line between two nodegroup center coordinates. When one nodegroup
+contains only one node, this line segment is shortened to end
+at that node border after clipping the corresponding node shape.
+The position along the line is defined relative to the first node
+in the edge, toward the second node in the edge.
+Using <code>midpoint=0.5</code> guarantees the control point is the exact middle,
+while <code>midpoint=c(0.2, 0.8)</code> will use two control points at 20% and
+80% distance along the line segment resulting in an edge that more
+closely follows the line segment.</p></dd>
 <dt>detail</dt>
 <dd><p><code>integer</code> number of intermediate points along
 the spline to render for each edge.</p></dd>
@@ -100,13 +119,11 @@ the spline to render for each edge.</p></dd>
 <dd><p><code>logical</code> indicating whether to render the edge
 splines after calculating them.</p></dd>
 <dt>nodegroup_midpoints</dt>
-<dd><p><code>list</code> with list names that
-match <code>names(nodegroups)</code>. Each <code>list</code> element contains one or
-more x,y coordinates as a <code>numeric</code> matrix. This option will
-define specific coordinates to be used for any entries that
-match <code>names(nodegroups)</code>, and therefore does not use <code>midpoint</code>
-for those nodegroups. Any remaining nodegroups will use the
-normal method with <code>midpoint</code> as described above.</p></dd>
+<dd><p><code>list</code> experimental support for defining
+specific control points used by bundled edges. Not fully implemented
+as yet. In future, it will require two nodegroups to be defined
+for each set of control point coordinates, with no requirement
+for the location of control points.</p></dd>
 <dt>linear_cor_threshold</dt>
 <dd><p><code>numeric</code> value between 0 and 1.
 Coordinates for each edge, and intermediate control point
@@ -121,11 +138,47 @@ two nodes, and the control point is positioned outside the two
 nodes. Without this modification, the line would appear to pass
 from one node beyond the other node, with an arrow (if directed)
 pointing back to the other node from the opposite direction.</p></dd>
+<dt>bundle_style</dt>
+<dd><p><code>character</code> string describing the type of curvature
+to use for edge bundles:</p><ul><li><p><code>"bezier"</code>: (default) calls <code><a href="https://rdrr.io/pkg/bezier/man/bezier.html" class="external-link">bezier::bezier()</a></code> to define a bezier
+curve using the edge control points.</p></li>
+<li><p><code>"xspline"</code>: calls <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code> to define an XSpline curve
+using the edge control points, however the method is  customized
+to include each edge endpoint twice, which makes the intermediate
+curve much rounder than normal.</p></li>
+<li><p><code>"angular"</code>: calls <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code> to define an XSpline curve
+using the edge control points. This shape tends to appear angular,
+thus the name.</p></li>
+<li><p><code>"bezierPath"</code>: calls <code>ggforce:::bezierPath()</code> when <code>ggforce</code> is
+available, producing a bezier curve using the edge control points.
+Note this method appears identical to <code>"bezier"</code> above, and will
+likely be removed in a future release.</p></li>
+<li><p><code>"subway"</code>: experimental method that uses the <code>"angular"</code> appearance,
+with more repeated intermediate control points intended to group
+all bundled edges to the same linear segment. The intent is to "dodge"
+edges along the line segment, similar to the appearance of subway maps,
+however it is not fully implemented.</p></li>
+</ul></dd>
+<dt>bundle_self</dt>
+<dd><p><code>logical</code> to indicate whether edges that begin and
+end in the same nodegroup should be bundled through the nodegroup
+center coordinate.</p><ul><li><p><code>bundle_self=FALSE</code> forces all edges within a nodegroup to be
+rendered as straight lines, therefore not using the nodegroup center
+as the control point.</p></li>
+<li><p><code>bundle_self=TRUE</code> overrides the validation check that
+requires the distance between center points of two nodegroups to
+have distance at least 0.5% the layout coordinate span. It can
+be a visual aid to have connections bundle through the center
+of the nodegroup, especially when the nodegroup is almost fully
+connected.</p></li>
+</ul></dd>
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
 <dt>debug</dt>
 <dd><p><code>logical</code> indicating whether to plot debug output that
-may be helpful in understanding the edge bundle control points.</p></dd>
+may be helpful in understanding the edge bundle control points.
+To specify debug only for edge bundling, use the substring "bundl",
+for example <code>options("debug"="bundling")</code>.</p></dd>
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
 </dl></div>
@@ -168,8 +221,11 @@ the single node with <code>midpoint=0.8</code>.</p>
 <code><a href="cnet2im.html">cnet2im</a>()</code>,
 <code><a href="cnetplotJam.html">cnetplotJam</a>()</code>,
 <code><a href="cnetplot_internalJam.html">cnetplot_internalJam</a>()</code>,
+<code><a href="color_edges_by_nodegroups.html">color_edges_by_nodegroups</a>()</code>,
 <code><a href="color_edges_by_nodes_deprecated.html">color_edges_by_nodes_deprecated</a>()</code>,
 <code><a href="color_edges_by_nodes.html">color_edges_by_nodes</a>()</code>,
+<code><a href="color_nodes_by_nodegroups.html">color_nodes_by_nodegroups</a>()</code>,
+<code><a href="communities2nodegroups.html">communities2nodegroups</a>()</code>,
 <code><a href="drawEllipse.html">drawEllipse</a>()</code>,
 <code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code>,
@@ -179,10 +235,13 @@ the single node with <code>midpoint=0.8</code>.</p>
 <code><a href="igraph2pieGraph.html">igraph2pieGraph</a>()</code>,
 <code><a href="jam_igraph.html">jam_igraph</a>()</code>,
 <code><a href="jam_plot_igraph.html">jam_plot_igraph</a>()</code>,
+<code><a href="label_communities.html">label_communities</a>()</code>,
 <code><a href="layout_with_qfrf.html">layout_with_qfrf</a>()</code>,
 <code><a href="layout_with_qfr.html">layout_with_qfr</a>()</code>,
+<code><a href="mem2emap.html">mem2emap</a>()</code>,
 <code><a href="memIM2cnet.html">memIM2cnet</a>()</code>,
 <code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
+<code><a href="nodegroups2communities.html">nodegroups2communities</a>()</code>,
 <code><a href="rectifyPiegraph.html">rectifyPiegraph</a>()</code>,
 <code><a href="relayout_with_qfr.html">relayout_with_qfr</a>()</code>,
 <code><a href="removeIgraphBlanks.html">removeIgraphBlanks</a>()</code>,
@@ -193,6 +252,7 @@ the single node with <code>midpoint=0.8</code>.</p>
 <code><a href="subgraph_jam.html">subgraph_jam</a>()</code>,
 <code><a href="subsetCnetIgraph.html">subsetCnetIgraph</a>()</code>,
 <code><a href="subset_igraph_components.html">subset_igraph_components</a>()</code>,
+<code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
     </div>

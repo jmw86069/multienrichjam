@@ -307,6 +307,7 @@ jam_igraph <- function
     "none",
     "mark.groups",
     "nodegroups"),
+ bundle_self=FALSE,
  nodegroups=NULL,
  render_nodes=TRUE,
  render_edges=TRUE,
@@ -465,9 +466,9 @@ jam_igraph <- function
             "head(vertex.size, 20) before:",
             head(vertex.size, 20));
       }
-      vertex.size <- vertex.size * (max_xy_range) / 2;
-      vertex.size2 <- vertex.size2 * (max_xy_range) / 2;
-      vertex.label.dist <- vertex.label.dist * (max_xy_range) / dist_factor;
+      vertex.size <- vertex.size * (max_xy_range) / 1.8;
+      vertex.size2 <- vertex.size2 * (max_xy_range) / 1.8;
+      vertex.label.dist <- vertex.label.dist * (max_xy_range) / dist_factor / 1.8;
       if (!xlim_asis) {
          xlim <- xlim + diff(xlim) * c(-1, 1) * expand;
       }
@@ -533,6 +534,7 @@ jam_igraph <- function
       render_nodelabels=render_nodelabels,
       render_groups=render_groups,
       edge_bundling=edge_bundling,
+      bundle_self=bundle_self,
       nodegroups=nodegroups,
       vectorized_node_shapes=vectorized_node_shapes,
       plot_grid=plot_grid,
