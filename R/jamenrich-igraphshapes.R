@@ -1066,6 +1066,14 @@ shape.jampie.plot <- function
 
    vertex.pie.color <- getparam("pie.color")
 
+   # fill empty vertex.pie with uniform value=1
+   if (length(vertex.pie) == 0 &&
+         length(vertex.pie.color) > 0) {
+      vertex.pie <- lapply(vertex.pie.color, function(i){
+         rep(1, length(i))
+      })
+   }
+
    vertex.pie.border <- getparam("pie.border")
    if (!is.list(vertex.pie.border)) {
       if (length(vertex.pie.border) == 1) {
@@ -1086,6 +1094,9 @@ shape.jampie.plot <- function
    vertex.pie.density <- getparam("pie.density")
 
    vertex.pie.lty <- getparam("pie.lty")
+   if (length(vertex.pie.lty) == 0) {
+      vertex.pie.lty <- default_igraph_values()$vertex$pie.lty;
+   }
    if (!is.list(vertex.pie.lty)) {
       if (length(vertex.pie.lty) == 1) {
          vertex.pie.lty <- rep(vertex.pie.lty,

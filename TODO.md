@@ -1,5 +1,28 @@
 # TODO
 
+## 26feb2023
+
+* `reorder_igraph_nodes()`, `reorderIgraphNodes()`
+
+   * method to specify specific nodes or nodesets to be reordered
+   * motivation is to allow sorting based upon relative aspect ratio of nodes,
+   so a nodeset whose nodes are "tall-skinny" can be sorted top-to-bottom,
+   and nodeset whose nodes are "short-wide" can be sorted left-to-right.
+   Frankly, not sure if the inconsistency works for all network layouts,
+   but for sure the top-to-bottom is not ideal for "tall-skinny" nodesets,
+   it is not visually intuitive.
+
+* consider new igraph shapes, intended to enable inner/outer border, `frame.lwd`
+
+   * Do these make sense?
+      * `shape.jamcircle.plot()` - enable custom `frame.lwd` for shape="circle"
+      * others: square, csquare, rectangle, vrectangle
+
+* `label_communities()`
+
+   * generalize this method to determine keywords most represented in any
+   set of pathway names.
+
 ## 02feb2023
 
 * Low priority visual enhancement, color Cnet edges by Set.

@@ -117,8 +117,7 @@ default_igraph_values <- function
          if ("layout" %in% igraph::graph_attr_names(graph)) {
             lay <- igraph::graph_attr(graph, "layout")
             if (is.function(lay)) {
-               lay <- lay(graph,
-                  ...)
+               lay <- lay(graph)
             } else {
                lay
             }

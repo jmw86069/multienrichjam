@@ -1,3 +1,20 @@
+# multienrichjam 0.0.70.900
+
+## bug fixes
+
+* `shape.jampie.plot()`
+
+   * Rare scenario using jampie nodes, when vertex.pie.lty is not defined,
+   the default was not properly expanded to vcount, causing error
+   `"subscript out of bounds"` when referencing `vertex.pie.lty[[i]]`.
+   * Error above is caused by missing node attribute `"pie"`, which
+   are now filled in with uniform values of 1 based upon
+   `lengths(vertex.pie.color)`. This scenario usually occurs when
+   trying to create pie nodes outside the "typical" scenarios,
+   for example manually assigning attributes and not populating
+   all the necessary values.
+
+
 # multienrichjam 0.0.69.900
 
 ## new functions
