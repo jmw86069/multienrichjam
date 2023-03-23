@@ -152,7 +152,7 @@ allows one to define a specific subset of sets to use in the
 gene-pathway heatmap.}
 }
 \value{
-\code{list} is returned via invisible, which contains each
+\code{list} is returned via \code{invisible()}, which contains each
 plot object enabled by the argument \code{do_which}:
 \itemize{
 \item \code{enrichment_hm} is a Heatmap object from \code{ComplexHeatmap}
@@ -236,24 +236,39 @@ plot, where Cnet clusters are based upon the gene-pathway heatmap.
 The key step in the workflow is the gene-pathway incidence matrix
 heatmap. This step also clusters the pathways using a combination
 of the pathway-gene incidence matrix results, and a weighted
-matrix of enrichment \code{-log10(Pvalue)} from \code{mem$enrichIM}.
-The pathway clusters are used in subsequent Cnet plots. Our
-experience is that the pathway clustering does not need to
+matrix of enrichment \code{-log10(Pvalue)} from \code{mem$enrichIM}.Note: The pathway clusters are used in subsequent Cnet plots,so all filters and clustering scores should be consistentacross all plots.
+
+The arguments \code{p_cutoff} and \code{min_set_ct_each} can be used to
+apply more stringent thresholds than the original \code{mem} data.
+For example, applying \code{p_cutoff=0.05} during \code{multiEnrichMap()}
+will colorize pathways in \code{mem$enrichIMcolors}, however when
+calling \code{mem_plot_folio()} with \code{p_cutoff=0.001} will change
+\code{mem$enrichIMcolors} to blank for any pathway that does not
+have \code{mem$enrichIM} value at or below \code{0.001}.
+
+Our experience is that the pathway clustering does not need to
 be perfect to be useful and valid. The pathway clusters
 are valid based upon the parameters used for clustering,
 and provide insight into the genes that help define each
-cluster distinct from other clusters. Sometimes with clustering
-techniques, the results are more or less effective
+cluster distinct from other clusters.
+Sometimes the clustering results are more or less effective
 based upon the type of pattern observed in the data, so it
 can be helpful to adjust parameters to drill down to
 the most effective patterns.
+\subsection{Gene-Pathway clustering}{
 
-The balance of weighting between the incidence matrix and enrichment
-P-values is controlled by \code{enrich_im_weight}: where \code{enrich_im_weight=0}
-will only cluster pathways using the enrichment P-values,
-and \code{enrich_im_weight=1} will only cluster pathways using the
-gene-pathway incidence matrix. The default \code{enrich_im_weight=0.3}
-is the recommended starting value based upon our experience.
+The clustering is performed by combining the gene-pathway incidence
+matrix \code{mem$memIM} with the \code{-log10(mem$enrichIM)} enrichment P-values.
+The relative weight of each matrix is controlled by
+\code{enrich_im_weight}, where \code{enrich_im_weight=0} assigns weight=0
+to the enrichment P-values, and thus clusters only using the
+gene-pathway matrix. Similarly, \code{enrich_im_weight=1} will assign
+full weight to the enrichment P-value matrix, and will ignore
+the gene-pathway matrix data.
+
+The corresponding weight for gene (rows) is controlled by
+\code{gene_im_weight}, which balances row clustering with the
+\code{mem$geneIM} matrix, and the gene-pathway matrix \code{mem$memIM}.
 
 The argument \code{column_method} defines the distance method,
 for example \code{"euclidean"} and \code{"binary"} are two immediate choices.
@@ -264,23 +279,27 @@ The number of pathway clusters can be controlled with
 \code{pathway_column_split}, by default when \code{pathway_column_split=NULL}
 and \code{auto_cluster=TRUE} the number of clusters is defined based
 upon the total number of pathways. In practice, \code{pathway_column_split=4}
-is almost always a good choice, partly because this number of
-clusters is the easiest to visualize in a Cnet plot.
+or \code{pathway_column_split=3} is usually a default, partly because
+this number of clusters is the easiest to visualize in a Cnet plot.
 
 To define your own pathway cluster names, define \code{pathway_column_title}
-as a vector with length equal to \code{pathway_column_split}.
+as a vector with length equal to \code{pathway_column_split}. These names
+will appear as node names in subsequent plots, and will be the node name
+of the resulting \code{igraph} object.
 
 The pathway clusters are dependent upon the genes and pathways
 used during clustering, which are also controlled by
-\code{min_set_ct} and \code{min_gene_ct}.
+\code{min_set_ct} and \code{min_gene_ct}. These filters are only recommended
+when the gene-pathway matrix is very large, perhaps 100 pathways
+or more.
 
 Pathways are also filtered with \code{min_set_ct_each} which requires
 each pathway to contain at least this many genes from at least
-one enrichment test. Said another way, if \code{min_set_ct_each=4} it
-requires each pathway to contain \code{4} or more genes, and at least
-\code{4} genes must be present in the same enrichment test as defined in
-\code{mem$geneIM}. If there are \code{4} genes but each gene was present in
-only one enrichment test, this pathway would be filtered out.
+one enrichment test. In contrast, \code{min_set_ct} requires each
+pathway to contain this many genes from one \emph{or more} pathways.
+}
+
+\subsection{Cnet pathway clusters}{
 
 The resulting Cnet pathway clusters are single nodes in the
 network, and these nodes are colorized based upon the enrichment
@@ -288,12 +307,23 @@ tests involved. The threshold for including the color for
 each enrichment test is defined by \code{cluster_color_min_fraction},
 which requires at least this fraction of pathways in a
 pathway cluster meets the significance criteria for that
-enrichment test. To reduce this filter to include any enrichment
+enrichment test.
+
+Note that significance can be controlled with \code{p_cutoff} and
+\code{min_set_ct_each} which require a pathway to meet \code{p_cutoff}
+maximum enrichment P-value, and have at least \code{min_set_ct_each}
+genes involved in the enrichment. These values can be more stringent
+than the original values used in \code{multiEnrichMap()} but cannot
+be less stringent.
+
+To adjust the coloration filter to include any enrichment
 test with at least one significant result, use
-\code{cluster_color_min_fraction=0.01}. In the gene-pathway heatmap,
+\code{cluster_color_min_fraction=0.01}.
+In the gene-pathway heatmap,
 these colors are shown across the top of the heatmap.
 The default \code{cluster_color_min_fraction=0.4} requires 40\%
 of pathways in a cluster for each enrichment test.
+}
 }
 \seealso{
 Other jam plot functions: 

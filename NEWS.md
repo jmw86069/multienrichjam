@@ -1,3 +1,19 @@
+# multienrichjam 0.0.71.900
+
+## changes to existing functions
+
+* `mem_plot_folio()`
+
+   * After gene-pathway heatmap clustering, a collapsed Cnet `igraph`
+   is created using pathway column clusters. The pathway cluster nodes
+   are colorized based upon the proportion of each enrichment in that
+   cluster, however it uses `mem$enrichIMcolors` by default.
+   This function now applies statistical thresholds `p_cutoff` and
+   `min_set_ct_each` prior to this step so the resulting colors will
+   reflect those thresholds.
+   * Help documentation was updated to include this information.
+
+
 # multienrichjam 0.0.70.900
 
 ## bug fixes

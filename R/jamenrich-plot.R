@@ -1734,23 +1734,43 @@ mem_legend <- function
 #' heatmap. This step also clusters the pathways using a combination
 #' of the pathway-gene incidence matrix results, and a weighted
 #' matrix of enrichment `-log10(Pvalue)` from `mem$enrichIM`.
-#' The pathway clusters are used in subsequent Cnet plots. Our
-#' experience is that the pathway clustering does not need to
+#'
+#' Note: The pathway clusters are used in subsequent Cnet plots,
+#' so all filters and clustering scores should be consistent
+#' across all plots.
+#'
+#' The arguments `p_cutoff` and `min_set_ct_each` can be used to
+#' apply more stringent thresholds than the original `mem` data.
+#' For example, applying `p_cutoff=0.05` during `multiEnrichMap()`
+#' will colorize pathways in `mem$enrichIMcolors`, however when
+#' calling `mem_plot_folio()` with `p_cutoff=0.001` will change
+#' `mem$enrichIMcolors` to blank for any pathway that does not
+#' have `mem$enrichIM` value at or below `0.001`.
+#'
+#' Our experience is that the pathway clustering does not need to
 #' be perfect to be useful and valid. The pathway clusters
 #' are valid based upon the parameters used for clustering,
 #' and provide insight into the genes that help define each
-#' cluster distinct from other clusters. Sometimes with clustering
-#' techniques, the results are more or less effective
+#' cluster distinct from other clusters.
+#' Sometimes the clustering results are more or less effective
 #' based upon the type of pattern observed in the data, so it
 #' can be helpful to adjust parameters to drill down to
 #' the most effective patterns.
 #'
-#' The balance of weighting between the incidence matrix and enrichment
-#' P-values is controlled by `enrich_im_weight`: where `enrich_im_weight=0`
-#' will only cluster pathways using the enrichment P-values,
-#' and `enrich_im_weight=1` will only cluster pathways using the
-#' gene-pathway incidence matrix. The default `enrich_im_weight=0.3`
-#' is the recommended starting value based upon our experience.
+#' ## Gene-Pathway clustering
+#'
+#' The clustering is performed by combining the gene-pathway incidence
+#' matrix `mem$memIM` with the `-log10(mem$enrichIM)` enrichment P-values.
+#' The relative weight of each matrix is controlled by
+#' `enrich_im_weight`, where `enrich_im_weight=0` assigns weight=0
+#' to the enrichment P-values, and thus clusters only using the
+#' gene-pathway matrix. Similarly, `enrich_im_weight=1` will assign
+#' full weight to the enrichment P-value matrix, and will ignore
+#' the gene-pathway matrix data.
+#'
+#' The corresponding weight for gene (rows) is controlled by
+#' `gene_im_weight`, which balances row clustering with the
+#' `mem$geneIM` matrix, and the gene-pathway matrix `mem$memIM`.
 #'
 #' The argument `column_method` defines the distance method,
 #' for example `"euclidean"` and `"binary"` are two immediate choices.
@@ -1761,23 +1781,26 @@ mem_legend <- function
 #' `pathway_column_split`, by default when `pathway_column_split=NULL`
 #' and `auto_cluster=TRUE` the number of clusters is defined based
 #' upon the total number of pathways. In practice, `pathway_column_split=4`
-#' is almost always a good choice, partly because this number of
-#' clusters is the easiest to visualize in a Cnet plot.
+#' or `pathway_column_split=3` is usually a default, partly because
+#' this number of clusters is the easiest to visualize in a Cnet plot.
 #'
 #' To define your own pathway cluster names, define `pathway_column_title`
-#' as a vector with length equal to `pathway_column_split`.
+#' as a vector with length equal to `pathway_column_split`. These names
+#' will appear as node names in subsequent plots, and will be the node name
+#' of the resulting `igraph` object.
 #'
 #' The pathway clusters are dependent upon the genes and pathways
 #' used during clustering, which are also controlled by
-#' `min_set_ct` and `min_gene_ct`.
+#' `min_set_ct` and `min_gene_ct`. These filters are only recommended
+#' when the gene-pathway matrix is very large, perhaps 100 pathways
+#' or more.
 #'
 #' Pathways are also filtered with `min_set_ct_each` which requires
 #' each pathway to contain at least this many genes from at least
-#' one enrichment test. Said another way, if `min_set_ct_each=4` it
-#' requires each pathway to contain `4` or more genes, and at least
-#' `4` genes must be present in the same enrichment test as defined in
-#' `mem$geneIM`. If there are `4` genes but each gene was present in
-#' only one enrichment test, this pathway would be filtered out.
+#' one enrichment test. In contrast, `min_set_ct` requires each
+#' pathway to contain this many genes from one *or more* pathways.
+#'
+#' ## Cnet pathway clusters
 #'
 #' The resulting Cnet pathway clusters are single nodes in the
 #' network, and these nodes are colorized based upon the enrichment
@@ -1785,16 +1808,26 @@ mem_legend <- function
 #' each enrichment test is defined by `cluster_color_min_fraction`,
 #' which requires at least this fraction of pathways in a
 #' pathway cluster meets the significance criteria for that
-#' enrichment test. To reduce this filter to include any enrichment
+#' enrichment test.
+#'
+#' Note that significance can be controlled with `p_cutoff` and
+#' `min_set_ct_each` which require a pathway to meet `p_cutoff`
+#' maximum enrichment P-value, and have at least `min_set_ct_each`
+#' genes involved in the enrichment. These values can be more stringent
+#' than the original values used in `multiEnrichMap()` but cannot
+#' be less stringent.
+#'
+#' To adjust the coloration filter to include any enrichment
 #' test with at least one significant result, use
-#' `cluster_color_min_fraction=0.01`. In the gene-pathway heatmap,
+#' `cluster_color_min_fraction=0.01`.
+#' In the gene-pathway heatmap,
 #' these colors are shown across the top of the heatmap.
 #' The default `cluster_color_min_fraction=0.4` requires 40%
 #' of pathways in a cluster for each enrichment test.
 #'
 #' @family jam plot functions
 #'
-#' @return `list` is returned via invisible, which contains each
+#' @return `list` is returned via `invisible()`, which contains each
 #'    plot object enabled by the argument `do_which`:
 #'    * `enrichment_hm` is a Heatmap object from `ComplexHeatmap`
 #'    that contains the enrichment P-value heatmap. Note that this
@@ -2145,6 +2178,18 @@ mem_plot_folio <- function
          jamba::printDebug("mem_plot_folio(): ",
             "Preparing Cnet collapsed");
       }
+      # first apply stat cutoffs to temporary enrichIMcolors matrix
+      # to ensure colors use the defined cutoffs
+      # NOTE: Consider updating mem$enrichIMcolors to add missing colors
+      # where the p_cutoff, min_set_ct_each are more lenient than the
+      # original data. For now it is acceptable to force this step to use
+      # thresholds at least as stringent as the original.
+      blank_hit_matrix <- (mem$enrichIM > p_cutoff |
+            mem$enrichIMgeneCount < min_set_ct_each)
+      if (any(blank_hit_matrix)) {
+         mem$enrichIMcolors[blank_hit_matrix] <- "#FFFFFF";
+      }
+
       cnet_collapsed <- tryCatch({
          collapse_mem_clusters(mem=mem,
             clusters=clusters_mem,
