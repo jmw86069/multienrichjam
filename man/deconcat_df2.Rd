@@ -51,6 +51,8 @@ Other jam utility functions:
 \code{\link{colorRamp2D}()},
 \code{\link{display_colorRamp2D}()},
 \code{\link{enrichList2geneHitList}()},
+\code{\link{filter_mem_genes}()},
+\code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
 \code{\link{gsubs}()},
 \code{\link{handle_igraph_param_list}()},
@@ -62,6 +64,7 @@ Other jam utility functions:
 \code{\link{rank_mem_clusters}()},
 \code{\link{rotate_coordinates}()},
 \code{\link{subgraph_jam}()},
+\code{\link{subset_mem}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

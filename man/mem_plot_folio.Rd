@@ -236,7 +236,11 @@ plot, where Cnet clusters are based upon the gene-pathway heatmap.
 The key step in the workflow is the gene-pathway incidence matrix
 heatmap. This step also clusters the pathways using a combination
 of the pathway-gene incidence matrix results, and a weighted
-matrix of enrichment \code{-log10(Pvalue)} from \code{mem$enrichIM}.Note: The pathway clusters are used in subsequent Cnet plots,so all filters and clustering scores should be consistentacross all plots.
+matrix of enrichment \code{-log10(Pvalue)} from \code{mem$enrichIM}.
+
+Note: The pathway clusters are used in subsequent Cnet plots,
+so all filters and clustering scores should be consistent
+across all plots.
 
 The arguments \code{p_cutoff} and \code{min_set_ct_each} can be used to
 apply more stringent thresholds than the original \code{mem} data.

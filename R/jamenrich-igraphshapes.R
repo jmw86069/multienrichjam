@@ -1498,6 +1498,13 @@ jam_mypie <- function
          y=radius * sin(t2p))
    }
 
+   # extra adjustment for frame.color
+   # when frame.lwd=0, the frame.color is set to NA to prevent
+   # rendering any color
+   frame.color <- ifelse(frame.lwd <= 0 | is.na(frame.lwd),
+      NA,
+      frame.color)
+
    # special adjustment for frame.lwd
    frame.lwd <- ifelse(
       is.na(frame.color) | jamba::col2alpha(frame.color) < 0.01,

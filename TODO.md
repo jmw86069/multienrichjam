@@ -1,10 +1,33 @@
 # TODO
 
+## 31mar2023
+
+* Nodes with `shape="jampie"` and `frame.lwd=0` are still rendering the
+frame color outside the inner borders. When `frame.lwd=0` there should
+be no frame drawn even when `frame.color` is defined with a color.
+
+* Big picture musing: Consider replacing base R plotting functions
+with corresponding `grid` functions.
+
+   * The `vwline` R package (P. Murrell) is capable of drawing
+   internal/external lines.
+   * The `gridGraphics` package also provides better methods of
+   clipping curved lines to the edge of a node border for example.
+   * Major downside, it would likely involve rewriting all the `igraph`
+   node shape functions into corresponding `grid` format. It is effectively
+   similar to repeating much of `ggraph`, except that this approach
+   can be customized. The `ggraph` approach in `ggplot2` is more or
+   less untouchable in terms of providing customization. Ugh.
+   * Another option may be to figure out how to add custom node shapes
+   to `ggraph`, then use `vwline`/`gridGraphics` for rendering. Also
+   need to write custom edge bundling function, since those in `ggraph`
+   are wholly insufficient. Yeah, this is a no for now.
+
 ## 26feb2023
 
 * `reorder_igraph_nodes()`, `reorderIgraphNodes()`
 
-   * method to specify specific nodes or nodesets to be reordered
+   * DONE: method to specify specific nodes or nodesets to be reordered
    * motivation is to allow sorting based upon relative aspect ratio of nodes,
    so a nodeset whose nodes are "tall-skinny" can be sorted top-to-bottom,
    and nodeset whose nodes are "short-wide" can be sorted left-to-right.

@@ -1,3 +1,41 @@
+# multienrichjam 0.0.72.900
+
+## new functions
+
+* `subset_mem()`
+
+   * convenience function to subset an entire `mem` object by sets (pathways)
+   or genes. It will subset all internal incidence matrix objects for
+   consistency.
+   * This approach will become the preferred approach to display
+   a specific set of pathways in a Cnet plot, by calling `subset_mem()`
+   then `mem2cnet()`.
+   * `mem_gene_path_heatmap()` currently subsets `mem` data internally,
+   but for consistency may call `subset_mem()` instead. The arguments
+   are designed to be very similar.
+
+* `get_igraph_layout()`
+
+   * simple helper function to retrieve or define layout coordinates
+   for an `igraph` object. Because there is some logic to the process,
+   it makes sense to put into its own function.
+
+## changes to existing functions
+
+* `apply_cnet_direction()`
+
+   * when `frame_blank=NULL` is passed as an argument, it is interpreted
+   as `frame_blank=NA` which uses no `frame.color` for blank nodes.
+
+## bug fixes
+
+* `jam_mypie()` is called when rendering `shape="jampie"` nodes.
+
+   * Previously when `frame.lwd=0` and `frame.color="black"` a small
+   black border was drawn around the node. The new behavior when
+   `frame.lwd=0` is to replace the color with `NA` so no outer border
+   is drawn.
+
 # multienrichjam 0.0.71.900
 
 ## changes to existing functions

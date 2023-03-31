@@ -83,6 +83,10 @@ apply_cnet_direction <- function
 {
    #
    frame_blank <- head(frame_blank, 1);
+   if (length(frame_blank) == 0) {
+      # when supplied as NULL, interpret as NA for no frame.color
+      frame_blank <- NA
+   }
    # pie.border, coloredrect.border
    attr_names <- c("pie.border",
       "pie.lwd",
