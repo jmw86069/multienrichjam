@@ -1700,6 +1700,22 @@ rectifyPiegraph <- function
 #'    `"y"` indicating the primary axis used to sort nodes.
 #'    Note that sort order can be reversed by prepending "-",
 #'    for example `"-x"` or `"-y"`.
+#' @param orderByAspect `logical` indicating whether the aspect ratio
+#'    of each nodeset determines the sort order. When `orderByAspect=TRUE`
+#'    it ignores `nodeSortBy` and uses each nodeset aspect ratio
+#'    to determine the order. Note that the original values for `nodeSortOrder`
+#'    are retained, specifically the directional sign for each axis,
+#'    such that `"x"` and `"-y"` will either become `c("x", "-y")` or
+#'    `c("-y", "x")`. This way, other locales for which bottom-right
+#'    to top-left ordering is more natural, use `nodeSortBy=c("-x", "y")`
+#'    to preserve that order. It will become `c("y", "-x")` for tall
+#'    aspect nodesets. See `aspectThreshold` below.
+#' @param aspectThreshold `numeric` indicating the aspect ratio
+#'    threshold below which nodes are sorted `c("-y", "x")` top to bottom.
+#'    All aspect ratios (x/y) above this threshold are sorted
+#'    `c("x", "-y")` left to right. Aspect ratios with x < y are
+#'    internally converted to negative ratios (-y/x) such that -1.25
+#'    is equivalent to x/y=0.8 for example.
 #' @param layout `numeric` matrix of node coordinates, or
 #'    function used to produce layout coordinates. When layout
 #'    is `NULL`, this function tries to use graph attribute
@@ -1832,15 +1848,18 @@ reorderIgraphNodes <- function
 (g,
  sortAttributes=c("pie.color",
     "pie.color.length",
-    "coloredrect.color",
-    "color",
-    "frame.color",
     "pie.border",
     "pie.border.length",
+    "coloredrect.color",
+    "coloredrect.border",
+    "color",
+    "frame.color",
     "label",
     "name"),
  nodeSortBy=c("x",
     "-y"),
+ orderByAspect=TRUE,
+ aspectThreshold=-1.25,
  layout=NULL,
  nodesets=NULL,
  colorV=NULL,
@@ -1860,67 +1879,16 @@ reorderIgraphNodes <- function
    ## The desired result for example, if a set of nodes are colored
    ## red or blue, they should be visibly grouped together by that color.
    ##
-   if (length(layout) == 0) {
-      if (!"layout" %in% names(igraph::graph_attr(g)) ||
-            nrow(igraph::graph_attr(g, "layout")) != igraph::vcount(g)) {
-         if (all(c("x","y") %in% igraph::vertex_attr_names(g))) {
-            layout <- cbind(igraph::V(g)$x, igraph::V(g)$y);
-            g <- igraph::set_graph_attr(g, "layout", layout)
-            if (verbose) {
-               jamba::printDebug("reorderIgraphNodes(): ",
-                  "used x,y from V(g) and added to graph_attr(g, 'layout')")
-            }
-         } else {
-            g <- relayout_with_qfr(g, ...);
-            if (verbose) {
-               jamba::printDebug("reorderIgraphNodes(): ",
-                  "Defined layout using relayout_with_qfr(g, ...) and added to graph_attr(g, 'layout')")
-            }
-         }
-      }
-   } else if (is.function(layout)) {
-      g2 <- layout(g);
-      # in future we could pass ...,
-      # only if the first named arg of layout() is 'g'
-      # g2 <- jamba::call_fn_ellipsis(layout,
-      #    g=g,
-      #    ...);
-      if (verbose) {
-         jamba::printDebug("reorderIgraphNodes(): ",
-            "applied layout(g)")
-      }
-      if ("igraph" %in% class(g2)) {
-         g <- g2;
-      } else {
-         g <- igraph::set_graph_attr(graph=g,
-            name="layout",
-            value=g2);
-      }
-   } else if (jamba::igrepHas("data.*frame|matrix", class(layout))) {
-      if (verbose) {
-         jamba::printDebug("reorderIgraphNodes(): ",
-            "Used layout as provided, and added to graph_attr(g, 'layout')")
-      }
-      if (all(igraph::V(g)$name %in% rownames(layout)) &&
-         !all(igraph::V(g)$name == rownames(layout))) {
-         # confirm order matches node order
-         if (verbose) {
-            jamba::printDebug("reorderIgraphNodes(): ",
-               "Re-ordered layout so rownames(layout) match V(g)$name.")
-         }
-         layout <- layout[match(igraph::V(g)$name, rownames(layout)), , drop=FALSE];
-      }
-      g <- igraph::set_graph_attr(graph=g,
-         name="layout",
-         value=layout);
-   } else {
-      stop("reorderIgraphNodes() could not determine the layout from the given input.");
-   }
 
-   # confirm layout is numeric matrix
-   layout <- igraph::graph_attr(g, "layout");
-   # rownames(layout) <- seq_len(igraph::vcount(g));
-   rownames(layout) <- igraph::V(g)$name;
+   # use wrapper function to determine layout
+   layout <- get_igraph_layout(g,
+      layout=layout,
+      verbose=verbose,
+      ...)
+   # ensure layout is stored in the resulting igraph object
+   g <- igraph::set_graph_attr(graph=g,
+      name="layout",
+      value=layout);
    if (verbose) {
       jamba::printDebug("head(layout, 10):");
       print(head(layout, 10));
@@ -1928,7 +1896,7 @@ reorderIgraphNodes <- function
 
    ## comma-delimited neighboring nodes for each node
    g_nodesets <- get_cnet_nodeset(g, filter_set_only=FALSE);
-   names(g_nodesets) <- jamba::makeNames(substr(names(g_nodesets), 1, 25));
+   # names(g_nodesets) <- jamba::makeNames(substr(names(g_nodesets), 1, 25));
    g_nodesets_v <- jamba::nameVector(
       rep(names(g_nodesets), lengths(g_nodesets)),
       unlist(g_nodesets));
@@ -2148,48 +2116,6 @@ reorderIgraphNodes <- function
                jamba::printDebug("reorderIgraphNodes(): ",
                   c("head(j_sorted):", head(j_sorted)));
             }
-            # 0.0.67.900 - ignore this section bc other sortAttributes
-            # should already cover what is being attempted here
-            if (FALSE) {
-               jString <- sapply(seq_along(j), function(j1){
-                  if ("coloredrect.nrow" %in% igraph::list.vertex.attributes(g)) {
-                     cnrow <- igraph::V(g)[j1]$coloredrect.nrow;
-                     cbyrow <- jamba::rmNA(rmNULL=TRUE,
-                        naValue=TRUE,
-                        nullValue=TRUE,
-                        igraph::V(g)[j1]$coloredrect.byrow);
-                  } else {
-                     cnrow <- 1;
-                     cbyrow <- TRUE;
-                  }
-                  j2 <- matrix(
-                     data=j[[j1]],
-                     nrow=cnrow,
-                     byrow=cbyrow);
-                  j3 <- matrix(
-                     data=1*(!isColorBlank(j2, ...)),
-                     nrow=cnrow,
-                     byrow=cbyrow);
-                  j3blendByRow <- tryCatch({
-                     apply(j2, 1, function(i){avg_colors_by_list(list(i))});
-                  }, error=function(e) {
-                     ""
-                  });
-                  if (verbose && j1 == 1) {
-                     jamba::printDebug("head(rowSums(j3)):");print(head(rowSums(j3), 10));
-                     jamba::printDebug("head(j3blendByRow):");print(head(j3blendByRow, 10));
-                     jamba::printDebug("head(j2):");print(head(j2, 10));
-                     jamba::printDebug("head(j3):");print(head(j3, 10));
-                  }
-                  paste(c(
-                     j_rank[j1],
-                     -rowSums(j3),
-                     j3blendByRow,
-                     jamba::pasteByRow(j3, sep=""),
-                     jamba::pasteByRow(j2)),
-                     collapse="_")
-               });
-            }
             if (verbose) {
                jamba::printDebug("reorderIgraphNodes(): ",
                   "head(jString):",
@@ -2298,10 +2224,45 @@ reorderIgraphNodes <- function
          paste0('"', nodesets, '"'));
    }
 
+   if (!any(grepl("x", nodeSortBy))) {
+      nodeSortBy <- c(nodeSortBy, "x");
+   }
+   if (!any(grepl("y", nodeSortBy))) {
+      nodeSortBy <- c(nodeSortBy, "-y");
+   }
+   use_nodeSortBy <- nodeSortBy;
    newDF <- jamba::rbindList(lapply(names(neighborGct), function(Gname){
       iDF <- subset(neighborDF, edgeGroup %in% Gname);
       if (!Gname %in% nodesets) {
          return(iDF)
+      }
+      if (TRUE %in% orderByAspect && length(aspectThreshold) > 0) {
+         if (nrow(iDF) <= 2) {
+            xyaspect <- NA;
+            nodeSortBy <- jamba::provigrep(c("x", "y"),
+               use_nodeSortBy)
+         } else {
+            xyrange <- apply(iDF[,c("x", "y")], 2, range, na.rm=TRUE)
+            j <- apply(xyrange, 2, diff, na.rm=TRUE)
+            xyaspect <- unname(ifelse(j[1] >= j[2],
+               j[1] / j[2],
+               -j[2] / j[1]));
+            if (xyaspect >= aspectThreshold) {
+               nodeSortBy <- jamba::provigrep(c("x", "y", "."),
+                  use_nodeSortBy)
+            } else {
+               nodeSortBy <- jamba::provigrep(c("y", "x", "."),
+                  use_nodeSortBy)
+            }
+         }
+         if (verbose) {
+            jamba::printDebug("reorderIgraphNodes(): ",
+               iDF[1, "edgeGroup"],
+               " xyaspect: ",
+               format(xyaspect, digits=3),
+               ", nodeSortBy: ",
+               nodeSortBy);
+         }
       }
       xyOrder <- jamba::mixedSortDF(iDF,
          byCols=nodeSortBy);

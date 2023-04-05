@@ -52,6 +52,21 @@
    * when `frame_blank=NULL` is passed as an argument, it is interpreted
    as `frame_blank=NA` which uses no `frame.color` for blank nodes.
 
+* `reorder_igraph_nodes()`, `reorderIgraphNodes()`
+
+   * The following change was made to default behavior, so any method
+   that reorders igraph nodes by color/border/name will be affected.
+   Nodes will by default be sorted left-right when the nodes in a nodeset
+   have less than 25% the x-span (width) compared to y-span (height),
+   otherwise nodes will be sorted top-bottom. The direction along each
+   axis respects the original argument `nodeSortBy`, to allow specific
+   order based upon the data, or the natural order per the locale.
+   * new arguments `orderByAspect` and `aspectThreshold` control when
+   to sort left-right or top-bottom.
+   * When the nodeset coordinate aspect ratio is taller
+   (25% higher y-span than x-span) the nodes are sorted top-bottom,
+   otherwise nodes are sorted left-right.
+
 ## bug fixes
 
 * `mem2cnet()` threw an error for certain custom input that did not
@@ -63,6 +78,12 @@ errors and to be more robust to this type of issue.
    black border was drawn around the node. The new behavior when
    `frame.lwd=0` is to replace the color with `NA` so no outer border
    is drawn.
+
+* `reorder_igraph_nodes()`, `reorderIgraphNodes()`
+
+   * Fixed bug where `nodesets` argument was not always matched due
+   to truncating the nodeset label to 25 characters. Now the nodeset
+   label is not truncated.
 
 # multienrichjam 0.0.71.900
 

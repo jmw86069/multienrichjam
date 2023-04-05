@@ -7,9 +7,11 @@
 \usage{
 reorderIgraphNodes(
   g,
-  sortAttributes = c("pie.color", "pie.color.length", "coloredrect.color", "color",
-    "frame.color", "pie.border", "pie.border.length", "label", "name"),
+  sortAttributes = c("pie.color", "pie.color.length", "pie.border", "pie.border.length",
+    "coloredrect.color", "coloredrect.border", "color", "frame.color", "label", "name"),
   nodeSortBy = c("x", "-y"),
+  orderByAspect = TRUE,
+  aspectThreshold = -1.25,
   layout = NULL,
   nodesets = NULL,
   colorV = NULL,
@@ -19,9 +21,11 @@ reorderIgraphNodes(
 
 reorder_igraph_nodes(
   g,
-  sortAttributes = c("pie.color", "pie.color.length", "coloredrect.color", "color",
-    "frame.color", "pie.border", "pie.border.length", "label", "name"),
+  sortAttributes = c("pie.color", "pie.color.length", "pie.border", "pie.border.length",
+    "coloredrect.color", "coloredrect.border", "color", "frame.color", "label", "name"),
   nodeSortBy = c("x", "-y"),
+  orderByAspect = TRUE,
+  aspectThreshold = -1.25,
   layout = NULL,
   nodesets = NULL,
   colorV = NULL,
@@ -41,6 +45,24 @@ names, to be applied in order when sorting nodes.}
 \code{"y"} indicating the primary axis used to sort nodes.
 Note that sort order can be reversed by prepending "-",
 for example \code{"-x"} or \code{"-y"}.}
+
+\item{orderByAspect}{\code{logical} indicating whether the aspect ratio
+of each nodeset determines the sort order. When \code{orderByAspect=TRUE}
+it ignores \code{nodeSortBy} and uses each nodeset aspect ratio
+to determine the order. Note that the original values for \code{nodeSortOrder}
+are retained, specifically the directional sign for each axis,
+such that \code{"x"} and \code{"-y"} will either become \code{c("x", "-y")} or
+\code{c("-y", "x")}. This way, other locales for which bottom-right
+to top-left ordering is more natural, use \code{nodeSortBy=c("-x", "y")}
+to preserve that order. It will become \code{c("y", "-x")} for tall
+aspect nodesets. See \code{aspectThreshold} below.}
+
+\item{aspectThreshold}{\code{numeric} indicating the aspect ratio
+threshold below which nodes are sorted \code{c("-y", "x")} top to bottom.
+All aspect ratios (x/y) above this threshold are sorted
+\code{c("x", "-y")} left to right. Aspect ratios with x < y are
+internally converted to negative ratios (-y/x) such that -1.25
+is equivalent to x/y=0.8 for example.}
 
 \item{layout}{\code{numeric} matrix of node coordinates, or
 function used to produce layout coordinates. When layout
