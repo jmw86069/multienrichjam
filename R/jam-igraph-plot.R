@@ -76,10 +76,22 @@
 #' * `label_dist_factor` - `numeric` multiplied by label distance from
 #' node center
 #'
+#' New attributes `vertex.label.fontsize` and `edge.label.fontsize`
+#' which define fixed fontsize in points for nodes and edges, respectively.
+#' These values are not modified by `vertex.label.cex` nor `edge.label.cex`
+#' and are intended to allow control over specific fonts used in the final
+#' figure. Note their calculations are based upon `par("ps")` which should
+#' represent device-dependent point size. If this value is inappropriate,
+#' it should be adjusted to control the font sizing.
+#'
 #' The following arguments apply scale factor based upon node attribute:
 #'
 #' * `node_factor_l` - `list` of named vectors applied to node size
-#' * `label_factor_l` - `list` of named vectors applied to label font size
+#' * `label_factor_l` - `list` of named vectors applied as `label_factor`
+#'.   as a multiplier to label font size.
+#' * `label_fontsize_l` - `list` of named vectors applied to define a
+#'    specific, fixed label fontsize in points, which is not modified
+#'.   by `vertex.label.cex` nor `label_factor`.
 #' * `label_dist_factor_l` - `list` of named vectors applied to label
 #' distance from node center
 #'
@@ -298,6 +310,7 @@ jam_igraph <- function
  edge_factor_l=NULL,
  label_factor=1,
  label_factor_l=NULL,
+ label_fontsize_l=NULL,
  label_dist_factor=1,
  label_dist_factor_l=1,
  use_shadowText=FALSE,
@@ -389,6 +402,17 @@ jam_igraph <- function
       vertex.label.dist <- label_dist_factor(vertex.label.dist);
    } else {
       vertex.label.dist <- vertex.label.dist * label_dist_factor;
+   }
+
+   ## label_fontsize_l=list(nodeType=c(Gene=1, Set=2))
+   if (length(label_fontsize_l) > 0) {
+      vertex.label.fontsize <- handle_igraph_param_list(x,
+         attr="label.fontsize",
+         factor_l=label_fontsize_l,
+         i_values=1,
+         attr_type="node")
+      jamba::printDebug("vertex.label.fontsize: ",
+         vertex.label.fontsize);
    }
 
    ## label_factor_l=list(nodeType=c(Gene=1, Set=2))
@@ -491,12 +515,19 @@ jam_igraph <- function
    environment(params)$p$vertex$size2 <- vertex.size2;
    environment(params)$p$vertex$label.cex <- vertex.label.cex;
    environment(params)$p$vertex$label.dist <- vertex.label.dist;
+   if (length(vertex.label.fontsize) > 0) {
+      environment(params)$p$vertex$label.fontsize <- vertex.label.fontsize;
+   }
    # edge attributes
    # label.cex, width
    environment(params)$p$edge$width <- edge.width;
    environment(params)$p$edge$label.cex <- edge.label.cex;
+   if (length(edge.label.fontsize) > 0) {
+      environment(params)$p$edge$label.fontsize <- edge.label.fontsize;
+   }
 
-   if (length(debug) > 0 && any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
+   if (length(debug) > 0 &&
+         any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
       jamba::printDebug("jam_igraph(): ",
          "xlim after:",
          xlim);

@@ -271,6 +271,13 @@ jam_plot_igraph <- function
    vertex.size <- 1/200 * params("vertex", "size")
    label.family <- params("vertex", "label.family")
    label.font <- params("vertex", "label.font")
+   label.fontsize <- params("vertex", "label.fontsize")
+   if (verbose &&
+         length(label.fontsize) > 0 &&
+         any(!is.na(label.fontsize))) {
+      jamba::printDebug("jam_plot_igraph(): ",
+         "Applying fixed fontsize: ", "label.fontsize");
+   }
    label.cex <- params("vertex", "label.cex")
    label.degree <- params("vertex", "label.degree")
    label.color <- params("vertex", "label.color")
@@ -316,6 +323,13 @@ jam_plot_igraph <- function
    edge.label.font <- params("edge", "label.font")
    edge.label.family <- params("edge", "label.family")
    edge.label.cex <- params("edge", "label.cex")
+   edge.label.fontsize <- params("edge", "label.fontsize")
+   if (verbose &&
+         length(edge.label.fontsize) > 0 &&
+         any(!is.na(edge.label.fontsize))) {
+      jamba::printDebug("jam_plot_igraph(): ",
+         "Applying fixed fontsize: ", "edge.label.fontsize");
+   }
    edge.label.color <- params("edge", "label.color")
    elab.x <- params("edge", "label.x")
    elab.y <- params("edge", "label.y")
@@ -661,6 +675,14 @@ jam_plot_igraph <- function
                   }
                   text_subsets <- rep(edge.label.family,
                      length.out=length(lx));
+                  if (length(edge.label.fontsize) > 0) {
+                     new.edge.label.cex <- edge.label.fontsize /
+                        (par("ps") * par("cex"));
+                     edge.label.cex <- ifelse(
+                        is.na(new.edge.label.cex),
+                        edge.label.cex,
+                        new.edge.label.cex)
+                  }
                   for (k in split(seq_along(text_subsets), text_subsets)) {
                      text(lx[k],
                         ly[k],
@@ -817,6 +839,14 @@ jam_plot_igraph <- function
                   length(edge.labels) > 0) {
                text_subsets <- rep(edge.label.family,
                   length.out=length(lc.x));
+               if (length(edge.label.fontsize) > 0) {
+                  new.edge.label.cex <- edge.label.fontsize /
+                     (par("ps") * par("cex"));
+                  edge.label.cex <- ifelse(
+                     is.na(new.edge.label.cex),
+                     edge.label.cex,
+                     new.edge.label.cex)
+               }
                for (k in split(seq_along(text_subsets), text_subsets)) {
                   text(lc.x[k],
                      lc.y[k],
@@ -956,6 +986,19 @@ jam_plot_igraph <- function
             jamba::printDebug("jam_plot_igraph(): ",
                "labels all have one font family, one call to text()");
          }
+         # Note the actual font size in points is derived by
+         # multiplying par("ps") * par("cex") * vertex.label.cex.
+         # So it is possible to define an absolute font size in points
+         # but it would need to be an alternative to using the ps*cex method.
+         if (length(label.fontsize) > 0) {
+            # Logic to apply fontsize:
+            # - NA values use original label.cex
+            # - any non-NA values override label.cex
+            vertex.label.cex <- label.fontsize / (par("ps") * par("cex"))
+            label.cex <- ifelse(is.na(vertex.label.cex),
+               label.cex,
+               vertex.label.cex)
+         }
          text(x,
             y,
             labels=labels,
@@ -978,28 +1021,26 @@ jam_plot_igraph <- function
          label.family <- rep(label.family,
             length.out=igraph::vcount(graph));
          nodes_by_family <- split(seq_len(igraph::vcount(graph)), label.family);
-         if (1 == 1) {
-            sapply(nodes_by_family, function(v){
-               family1 <- label.family[v[1]];
-               text(
-                  x[v],
-                  y[v],
-                  labels=if1(labels, v),
-                  col=if1(label.color, v),
-                  family=family1,
-                  font=if1(label.font, v),
-                  cex=if1(label.cex, v))
-            })
-         } else {
-            sapply(seq_len(igraph::vcount(graph)), function(v) {
-               text(x[v],
-                  y[v],
-                  labels=if1(labels, v),
-                  col=if1(label.color, v),
-                  family=if1(label.family, v),
-                  font=if1(label.font, v),
-                  cex=if1(label.cex, v))
-            })
+         if (length(label.fontsize) > 0) {
+            # Logic to apply fontsize:
+            # - NA values use original label.cex
+            # - any non-NA values override label.cex
+            vertex.label.cex <- label.fontsize / (par("ps") * par("cex"))
+            label.cex <- ifelse(is.na(vertex.label.cex),
+               label.cex,
+               vertex.label.cex)
+         }
+         # iterate each font family
+         for (v in nodes_by_family) {
+            family1 <- label.family[head(v, 1)];
+            text(
+               x[v],
+               y[v],
+               labels=if1(labels, v),
+               col=if1(label.color, v),
+               family=family1,
+               font=if1(label.font, v),
+               cex=if1(label.cex, v))
          }
       }
       par(opar)

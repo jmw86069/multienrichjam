@@ -219,7 +219,9 @@ memIM2cnet <- function
    igraph::V(g)$nodeType <- ifelse(isset, "Set", "Gene");
    igraph::V(g)$size <- ifelse(isset, categorySize, geneSize);
    igraph::V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
-   igraph::V(g)$label.color <- ifelse(isset, categoryLabelColor, geneLabelColor);
+   igraph::V(g)$label.color <- ifelse(isset,
+      categoryLabelColor,
+      geneLabelColor);
    igraph::V(g)$color <- ifelse(isset, categoryColor, geneColor);
    igraph::V(g)$frame.lwd <- 1;
    if (length(frame_darkFactor) > 0 && frame_darkFactor != 1) {

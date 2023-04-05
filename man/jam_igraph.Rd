@@ -17,6 +17,7 @@ jam_igraph(
   edge_factor_l = NULL,
   label_factor = 1,
   label_factor_l = NULL,
+  label_fontsize_l = NULL,
   label_dist_factor = 1,
   label_dist_factor_l = 1,
   use_shadowText = FALSE,
@@ -282,10 +283,22 @@ The following arguments apply scaling to all nodes or edges:
 node center
 }
 
+New attributes \code{vertex.label.fontsize} and \code{edge.label.fontsize}
+which define fixed fontsize in points for nodes and edges, respectively.
+These values are not modified by \code{vertex.label.cex} nor \code{edge.label.cex}
+and are intended to allow control over specific fonts used in the final
+figure. Note their calculations are based upon \code{par("ps")} which should
+represent device-dependent point size. If this value is inappropriate,
+it should be adjusted to control the font sizing.
+
 The following arguments apply scale factor based upon node attribute:
 \itemize{
 \item \code{node_factor_l} - \code{list} of named vectors applied to node size
-\item \code{label_factor_l} - \code{list} of named vectors applied to label font size
+\item \code{label_factor_l} - \code{list} of named vectors applied as \code{label_factor}
+.   as a multiplier to label font size.
+\item \code{label_fontsize_l} - \code{list} of named vectors applied to define a
+specific, fixed label fontsize in points, which is not modified
+.   by \code{vertex.label.cex} nor \code{label_factor}.
 \item \code{label_dist_factor_l} - \code{list} of named vectors applied to label
 distance from node center
 }

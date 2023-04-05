@@ -22,6 +22,31 @@
 
 ## changes to existing functions
 
+* `jam_igraph()`, `jam_plot_igraph()`
+
+   * recognizes new `igraph` attributes: `vertex.label.fontsize`,
+   `edge.label.fontsize`.
+   
+      * These are not standard `igraph` attributes and will not be honored
+      by default `igraph::plot.igraph()` functions.
+      * When `vertex.label.fontsize` is specified as a font size in points,
+      this font size is used with no modification by `vertex.label.cex`.
+      * When any `vertex.label.fontsize` value is `NA`, the default behavior
+      is used to calculate font size, which uses `vertex.label.cex`.
+      Therefore the `vertex.label.fontsize` can be defined for a single
+      node, as long as all other node values are `NA`, and only the one
+      node font size will be adjusted to this specific fontsize.
+      * The `igraph` labels are drawn using `text()`, and the final exact
+      font size is calculated for nodes:
+      `par("ps") * par("cex") * vertex.label.cex`
+      and for edges:
+      `par("ps") * par("cex") * edge.label.cex`
+   
+   * new argument `label_fontsize_l` used to apply specific
+   `vertex.label.fontsize` based upon node attribute values. For example
+   `label_fontsize_l=list(nodeType=c(Gene=10, Set=14))` will define
+   Gene nodes with fontsize 10, Set nodes with fontsize 14.
+
 * `apply_cnet_direction()`
 
    * when `frame_blank=NULL` is passed as an argument, it is interpreted
@@ -29,6 +54,9 @@
 
 ## bug fixes
 
+* `mem2cnet()` threw an error for certain custom input that did not
+meet expected constraints. The function was updated to prevent these
+errors and to be more robust to this type of issue.
 * `jam_mypie()` is called when rendering `shape="jampie"` nodes.
 
    * Previously when `frame.lwd=0` and `frame.color="black"` a small
