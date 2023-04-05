@@ -411,8 +411,6 @@ jam_igraph <- function
          factor_l=label_fontsize_l,
          i_values=1,
          attr_type="node")
-      jamba::printDebug("vertex.label.fontsize: ",
-         vertex.label.fontsize);
    }
 
    ## label_factor_l=list(nodeType=c(Gene=1, Set=2))
@@ -522,9 +520,9 @@ jam_igraph <- function
    # label.cex, width
    environment(params)$p$edge$width <- edge.width;
    environment(params)$p$edge$label.cex <- edge.label.cex;
-   if (length(edge.label.fontsize) > 0) {
-      environment(params)$p$edge$label.fontsize <- edge.label.fontsize;
-   }
+   # if (length(edge.label.fontsize) > 0) {
+   #    environment(params)$p$edge$label.fontsize <- edge.label.fontsize;
+   # }
 
    if (length(debug) > 0 &&
          any(c("vertex.label.dist","label.dist","labels") %in% debug)) {
