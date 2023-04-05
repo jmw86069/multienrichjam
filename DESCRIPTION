@@ -38,4 +38,4 @@ URL: http://github.com/jmw86069/multienrichjam
 BugReports: http://github.com/jmw86069/multienrichjam/issues
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

@@ -171,7 +171,7 @@
 #' @param edge_factor `numeric` value multiplied by `igraph::E(x)$width` to adjust
 #'    the relative width of all edges by a common numeric scalar value.
 #' @param label_factor `numeric` value multiplied by `igraph::V(x)$label.cex`
-#'    and `E(x)$label.cex` to adjust the relative size of all labels on
+#'    and `igraph::E(x)$label.cex` to adjust the relative size of all labels on
 #'    nodes and edges by a common numeric scalar value.
 #' @param label_dist_factor `numeric` value multiplied by `igraph::V(x)$label.dist`
 #'    to adjust the relative distance of all nodes labels from the node center

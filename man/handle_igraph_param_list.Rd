@@ -59,12 +59,14 @@ nodes or edges. Most commonly, the argument \code{factor_l} is
 multiplied by numeric attributes to scale attribute values,
 for example label font size, or node size.
 
-For example:\preformatted{handle_igraph_param_list(x,
+For example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{handle_igraph_param_list(x,
    attr="size",
    factor_l=list(nodeType=c(Gene=1, Set=2)),
    i_values=rep(1, igraph::vcount(x)),
    attr_type="node")
-}
+}\if{html}{\out{</div>}}
 
 This function call will match node attribute \code{nodeType},
 the size of nodes with attribute value
@@ -85,6 +87,7 @@ Other jam utility functions:
 \code{\link{filter_mem_genes}()},
 \code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
+\code{\link{get_igraph_layout}()},
 \code{\link{gsubs}()},
 \code{\link{isColorBlank}()},
 \code{\link{make_legend_bivariate}()},
@@ -95,6 +98,7 @@ Other jam utility functions:
 \code{\link{rotate_coordinates}()},
 \code{\link{subgraph_jam}()},
 \code{\link{subset_mem}()},
+\code{\link{summarize_node_spacing}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

@@ -156,7 +156,9 @@ is used for this step, a separate point legend is returned
 as an attribute of the heatmap object.
 
 To draw the dotplot heatmap including the point legend,
-use this form:\if{html}{\out{<div class="sourceCode R">}}\preformatted{ComplexHeatmap::draw(hm,
+use this form:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{ComplexHeatmap::draw(hm,
    annotation_legend_list=attr(hm, "annotation_legend_list"))
 }\if{html}{\out{</div>}}
 }

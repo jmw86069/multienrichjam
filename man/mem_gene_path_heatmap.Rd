@@ -182,7 +182,9 @@ two additional attributes:
 \item \code{"draw_caption"} - a \code{function} that will draw the caption in the
 bottom-left corner of the heatmap, calling
 \code{ComplexHeatmap::grid.textbox()}. This function should be called
-with no parameters, for example:\if{html}{\out{<div class="sourceCode R">}}\preformatted{attr(hm, "draw_caption")()
+with no parameters, for example:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{attr(hm, "draw_caption")()
 }\if{html}{\out{</div>}}
 }
 

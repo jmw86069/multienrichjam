@@ -106,6 +106,7 @@ Other jam utility functions:
 \code{\link{filter_mem_genes}()},
 \code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
+\code{\link{get_igraph_layout}()},
 \code{\link{gsubs}()},
 \code{\link{handle_igraph_param_list}()},
 \code{\link{isColorBlank}()},
@@ -116,6 +117,7 @@ Other jam utility functions:
 \code{\link{rank_mem_clusters}()},
 \code{\link{subgraph_jam}()},
 \code{\link{subset_mem}()},
+\code{\link{summarize_node_spacing}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

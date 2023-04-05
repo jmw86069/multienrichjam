@@ -18,8 +18,7 @@ mem_legend(
   inset = 0,
   do_directional = FALSE,
   directional_column = c("same", "added-bottom", "added-top"),
-  directional_colors = c(`up-regulated` = "firebrick3", `down-regulated` =
-    "dodgerblue3"),
+  directional_colors = c(`up-regulated` = "firebrick3", `down-regulated` = "dodgerblue3"),
   ...
 )
 }

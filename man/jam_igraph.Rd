@@ -48,11 +48,7 @@ jam_igraph(
 
 \item{...}{additional arguments are passed to \code{igraph::plot.igraph()}}
 
-\item{xlim}{default x and y axis limits. When either value is \code{NULL}
-the range is defined by the layout coordinate ranges, respectively,
-then expanded by adding \code{expand} to each side of the range.}
-
-\item{ylim}{default x and y axis limits. When either value is \code{NULL}
+\item{xlim, ylim}{default x and y axis limits. When either value is \code{NULL}
 the range is defined by the layout coordinate ranges, respectively,
 then expanded by adding \code{expand} to each side of the range.}
 
@@ -83,7 +79,7 @@ will use \code{2} as the scalar value.}
 the relative width of all edges by a common numeric scalar value.}
 
 \item{label_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$label.cex}
-and \code{E(x)$label.cex} to adjust the relative size of all labels on
+and \code{igraph::E(x)$label.cex} to adjust the relative size of all labels on
 nodes and edges by a common numeric scalar value.}
 
 \item{label_dist_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$label.dist}
@@ -132,14 +128,7 @@ attribute exists, then integer index values are used as names.
 Note that all vertex nodes must be represented in \code{nodegroup}
 in order for the corresponding edges to be plotted.}
 
-\item{render_nodes}{\code{logical} indicating whether to
-render vertex nodes, or edges, respectively. Sometimes it can
-be useful to call this function for other byproduct outputs,
-for example, \code{jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)}
-will create a new plot device with appropriate axis ranges,
-and can be used to render edge bundling results for example.}
-
-\item{render_edges}{\code{logical} indicating whether to
+\item{render_nodes, render_edges}{\code{logical} indicating whether to
 render vertex nodes, or edges, respectively. Sometimes it can
 be useful to call this function for other byproduct outputs,
 for example, \code{jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)}
@@ -187,12 +176,12 @@ control the look of the polygons.}
 
 \item{mark.shape}{A numeric scalar or vector. Controls the smoothness of the
 vertex group marking polygons. This is basically the \sQuote{shape}
-parameter of the \code{\link[graphics]{xspline}} function, its possible
+parameter of the \code{\link[graphics:xspline]{graphics::xspline()}} function, its possible
 values are between -1 and 1. If it is a vector, then a different value is
 used for the different vertex groups.}
 
 \item{mark.col}{A scalar or vector giving the colors of marking the
-polygons, in any format accepted by \code{\link[graphics]{xspline}}; e.g.
+polygons, in any format accepted by \code{\link[graphics:xspline]{graphics::xspline()}}; e.g.
 numeric color ids, symbolic color names, or colors in RGB.}
 
 \item{mark.alpha}{\code{numeric} value between 0 (transparent) and 1 (opaque)
@@ -208,10 +197,7 @@ the marked vertex groups. It is in the same units as the vertex sizes. If a
 vector is given, then different values are used for the different vertex
 groups.}
 
-\item{mark.lwd}{line with and line type parameters for each
-\code{mark.groups} polygon,}
-
-\item{mark.lty}{line with and line type parameters for each
+\item{mark.lwd, mark.lty}{line with and line type parameters for each
 \code{mark.groups} polygon,}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
@@ -304,12 +290,16 @@ The following arguments apply scale factor based upon node attribute:
 distance from node center
 }
 
-The \code{factor_l} technique is as follows:\if{html}{\out{<div class="sourceCode R">}}\preformatted{node_factor_l = list(node_attr_name = c(
+The \code{factor_l} technique is as follows:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{node_factor_l = list(node_attr_name = c(
    attr_value1 = factor1,
    attr_value2 = factor2))
 }\if{html}{\out{</div>}}
 
-A specific example:\if{html}{\out{<div class="sourceCode R">}}\preformatted{node_factor_l = list(nodeType = c(
+A specific example:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{node_factor_l = list(nodeType = c(
    Gene=1.5,
    Set=2))
 }\if{html}{\out{</div>}}

@@ -288,13 +288,18 @@ memIM2cnet <- function
 
       for (j in i_node_attributes) {
          if (!j %in% igraph::list.vertex.attributes(g)) {
+            if (verbose) {
+               jamba::printDebug("mem2cnet(): ",
+                  "Adding vertex attribute '", j, "'");
+            }
             if (jamba::igrepHas("[.]color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
             } else if (jamba::igrepHas("byrow", j)) {
                igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_byrow),
                   length.out=igraph::vcount(g));
             } else if (jamba::igrepHas("[.]names$", j)) {
-               igraph::vertex_attr(g, j) <- colnames(geneIM);
+               igraph::vertex_attr(g, j) <- rep(j,
+                  length.out=igraph::vcount(g));
             } else if (jamba::igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
                igraph::vertex_attr(g, j) <- rep(unlist(coloredrect_ncol),
                   length.out=igraph::vcount(g));
@@ -306,6 +311,7 @@ memIM2cnet <- function
             }
          }
       }
+      # propagate gene-related attributes
       igraph::V(g)$pie[gene_which] <- lapply(gene_which, function(i){
          rep(1, ncol(geneIM));
       });
@@ -339,9 +345,10 @@ memIM2cnet <- function
       igraph::V(g)$coloredrect.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
          colnames(geneIM);
       });
-      igraph::V(g)$shape[gene_which] <- geneShape;
+      igraph::V(g)$shape <- ifelse(isset, categoryShape, geneShape);
    }
-   ## Optionally apply category/set node coloring
+
+   # Optionally apply category/set node coloring
    if (verbose) {
       jamba::printDebug("memIM2cnet(): ",
          "applying category/set node colors");
