@@ -405,6 +405,7 @@ jam_igraph <- function
    }
 
    ## label_fontsize_l=list(nodeType=c(Gene=1, Set=2))
+   vertex.label.fontsize <- NULL;
    if (length(label_fontsize_l) > 0) {
       vertex.label.fontsize <- handle_igraph_param_list(x,
          attr="label.fontsize",
