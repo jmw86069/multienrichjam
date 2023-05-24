@@ -581,7 +581,10 @@ rank_mem_clusters <- function
          list(
             rank(floor(log10(minp))),
             gene_count_rank)));
-      ijdf <- data.frame(cluster=iname,
+      ijdf <- data.frame(
+         stringsAsFactors=FALSE,
+         check.names=FALSE,
+         cluster=iname,
          set=i,
          gene_count=gene_count,
          pval_m,

@@ -1,5 +1,45 @@
 # TODO
 
+## 24may2023
+
+* DONE: Fix bug with node rendering, caused by recent version of `igraph`
+adding `vertex.frame.width` (and not `vertex.frame.lwd` ugh).
+
+   * `NULL` or missing `vertex.frame.width` causes an error.
+   Ultimately caused by no default value defined in the custom function
+   `default_igraph_values()`, which was necessary to create since
+   `igraph` does not export that function.
+   * FIXED by adding `vertex.frame.width` to default values.
+   * Longer term fix is to replace all references to `vertex.frame.lwd`
+   with `vertex.frame.width`, before the precedent is set.
+
+* Fix errors caused by `"stringsAsFactors=TRUE"`
+
+   * DONE: `rank_mem_clusters()`
+
+* Fix errors caused when there is only one (or zero) genes.
+
+   * `mem_gene_path_heatmap()` and `mem_plot_folio()`
+
+
+## 20apr2023
+
+* `mem_enrichment_heatmap()` color legend changes:
+
+   * Show actual P-value `c(1, 0.05, 0.01, 0.001, 10^-4, etc.)` using
+   `expression` for labels, and continue using `-log10(p)` for color
+   assignment.
+   * Add this argument `heatmap_legend_param=list(break_dist=1)` which
+   causes the numeric labels to be evenly spaced, instead of having the
+   labels at uneven intervals, often with angled lines connecting to
+   the color legend.
+   * Option for discrete color legend? I.e. Show colors only at the labels,
+   and not show the intervening gradient. It is more difficult to show
+   abrupt transitions, e.g. it would need to show `c(1, 0.051, 0.05, 0.01)`
+   in order to show that `0.051` is not colorized, but `0.05` is colorized.
+   The smooth gradient is actually more effective at conveying that effect
+   without additional labels.
+
 ## 31mar2023
 
 * Nodes with `shape="jampie"` and `frame.lwd=0` are still rendering the

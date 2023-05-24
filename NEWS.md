@@ -1,3 +1,32 @@
+# multienrichjam 0.0.73.900
+
+## bug fixes
+
+* Fixed errors rendering `igraph` nodes with `shape="circle"`
+only when called by `jam_igraph()`, and only with newer
+versions of `igraph` R package that expect the new attribute
+`vertex.frame.width` (not `vertex.frame.lwd` as I had hoped).
+
+   * `default_igraph_values()` now defines `vertex.frame.width` and
+   `vertex.frame.lwd`.
+   * Note: `vertex.frame.lwd` is very likely to be removed from
+   this package altogether, for compliance with `igraph`. However, I will
+   do proper testing before making the change.
+
+* Bug in `rank_mem_clusters()` which created a `data.frame`,
+and did not specify `stringsAsFactos=FALSE`, is fixed. Possibly similar
+bugs in other functions.
+* Bug in `mem_plot_folio()` and `mem_gene_path_heatmap()` when enrichment
+only involves one gene, causing the `row_split` and `row_title` values
+to be incorrect. It is not a useful workflow, but the functions should
+handle the error edge case.
+* `apply_cnet_direction()` now checks input argument `cnet` and `hitim`
+to make sure they are non-empty before processing. In theory it should
+not happen, but apparently it does when enrichment results are sparse
+or possibly empty.
+* `jam_plot_igraph()` internal function uses proper `igraph::shapes(shape)`
+instead of previously internal `list` object `igraph:::.igraph.shapes[[shape]]`.
+
 # multienrichjam 0.0.72.900
 
 ## new functions

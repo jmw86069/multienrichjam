@@ -6,7 +6,7 @@
 \usage{
 apply_cnet_direction(
   cnet,
-  hitim,
+  hitim = NULL,
   col = colorjam::col_div_xf(1.2),
   col_l_max = 65,
   hide_solo_pie = TRUE,

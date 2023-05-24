@@ -191,6 +191,7 @@ default_igraph_values <- function
       label.cex=1,
       frame.color="black",
       frame.lwd=1,
+      frame.width=1,
       shape="circle",
       pie=1,
       pie.color=list("white",

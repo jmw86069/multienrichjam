@@ -920,7 +920,8 @@ jam_plot_igraph <- function
    ## plot vertex/node shapes
    if (render_nodes) {
       if (length(unique(shape)) == 1) {
-         igraph:::.igraph.shapes[[shape[1]]]$plot(
+         # igraph:::.igraph.shapes[[shape[1]]]$plot(
+         igraph::shapes(shape[1])$plot(
             layout,
             params=params)
       } else {
@@ -934,7 +935,8 @@ jam_plot_igraph <- function
             }
             sapply(nodes_by_shape, function(x){
                shape1 <- shape[x[1]];
-               igraph:::.igraph.shapes[[shape1]]$plot(
+               # igraph:::.igraph.shapes[[shape1]]$plot(
+               igraph::shapes(shape1)$plot(
                   layout[x, , drop=FALSE],
                   v=x,
                   params=params)
@@ -945,7 +947,8 @@ jam_plot_igraph <- function
                   "Using linear non-vectorized node shape plotting.");
             }
             sapply(seq_len(igraph::vcount(graph)), function(x) {
-               igraph:::.igraph.shapes[[shape[x]]]$plot(
+               # igraph:::.igraph.shapes[[shape[x]]]$plot(
+               igraph::shapes(shape[x])$plot(
                   layout[x, , drop=FALSE],
                   v=x,
                   params=params)

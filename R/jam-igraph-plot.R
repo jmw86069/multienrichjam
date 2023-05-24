@@ -537,6 +537,7 @@ jam_igraph <- function
          "head(vertex.size, 20) after:",
          head(vertex.size, 20));
    }
+
    plot_function(x=x,
       ...,
       rescale=rescale,

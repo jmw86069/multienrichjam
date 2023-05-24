@@ -71,7 +71,7 @@
 #' @export
 apply_cnet_direction <- function
 (cnet,
- hitim,
+ hitim=NULL,
  col=colorjam::col_div_xf(1.2),
  col_l_max=65,
  hide_solo_pie=TRUE,
@@ -81,7 +81,14 @@ apply_cnet_direction <- function
  do_reorder=FALSE,
  ...)
 {
-   #
+   # if input hit incidence matrix is empty, return input cnet
+   if (length(hitim) == 0) {
+      return(cnet)
+   }
+   # if input cnet is not "igraph" then return unchanged
+   if (!"igraph" %in% class(cnet)) {
+      return(cnet)
+   }
    frame_blank <- head(frame_blank, 1);
    if (length(frame_blank) == 0) {
       # when supplied as NULL, interpret as NA for no frame.color
