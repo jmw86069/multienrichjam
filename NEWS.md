@@ -1,3 +1,25 @@
+# multienrichjam 0.0.74.900
+
+## updates to existing functions
+
+* `apply_cnet_direction()`
+
+   * argument docs were updated
+   * default colors in `col` were defined with more saturated default
+   colors: `c("blue", "grey80", "firebrick3")`
+   * argument default changed to `col_l_max=80` to accommodate higher
+   `"grey80"` middle color.
+
+* `mem_legend()`
+
+   * new argument `pt.lwd=2` to control line width of open circles,
+   used when `do_direction=TRUE`. The previous alternative was to define
+   `par(lwd=2)` prior to calling `mem_legend()`, then setting
+   `par(lwd=1)` afterwards.
+   * `directional_colors` use the same default colors used by
+   `apply_cnet_direction()`; and now includes `"no change"` as
+   a specific legend entry.
+
 # multienrichjam 0.0.73.900
 
 ## bug fixes

@@ -15,10 +15,12 @@ mem_legend(
   ncol = 1,
   pch = 21,
   pt.cex = 2,
+  pt.lwd = 2,
   inset = 0,
   do_directional = FALSE,
   directional_column = c("same", "added-bottom", "added-top"),
-  directional_colors = c(`up-regulated` = "firebrick3", `down-regulated` = "dodgerblue3"),
+  directional_colors = c(`up-regulated` = "firebrick3", `no change` = "grey80",
+    `down-regulated` = "blue"),
   ...
 )
 }
@@ -26,8 +28,11 @@ mem_legend(
 \item{mem}{\code{list} object output from \code{multiEnrichMap()}, specifically
 expected to contain element \code{"colorV"}.}
 
-\item{x, y, bg, box.col, title, cex, ncol, pch, pt.cex, inset}{arguments passed
-to \code{graphics::legend()}.}
+\item{x, y, bg, box.col, title, cex, ncol, pch, pt.cex, pt.lwd, inset}{arguments
+are passed to \code{graphics::legend()}.
+Note \code{pt.lwd} is mostly relevant with \code{do_direction=TRUE}, which
+adds open circles to the legend, whose line width has default
+\code{pt.lwd=2}.}
 
 \item{do_directional}{\code{logical} indicating whether to include
 directional colors defined in \code{directional_colors}, indicated only
@@ -49,6 +54,12 @@ In this case, intervening empty rows are filled with blank space,
 and the \code{directional_colors} are shown in the top-most rows in the
 far right column of the legend.
 }}
+
+\item{directional_colors}{\code{character} vector of R colors, named by
+the label to be shown in the legend, displayed in order (top to bottom,
+left to right) they appear in this vector.
+To remove the entry \code{"no change"}, supply a new vector:
+\code{directional_colors=c(up.regulated="firebrick3", down.regulated="blue")}}
 
 \item{...}{additional arguments are passed to \code{legend()}.}
 }

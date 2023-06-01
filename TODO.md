@@ -1,5 +1,51 @@
 # TODO
 
+## 01jun2023
+
+* `apply_cnet_direction()`
+
+   * DONE: changed default `col` to use colors:
+   `c("blue", "grey80", "firebrick3")` with breaks `c(-1, 0, 1)`.
+
+* change all `frame.lwd` to `frame.width` before `frame.lwd` is widely used.
+
+   * consider backward compatibility: when `frame.lwd` is defined in an
+   `igraph` object, copy its values into `frame.width`, then proceed
+   using `frame.width` for all other operations.
+
+* `mem_legend()`
+
+   * DONE: new argument `pt.lwd=2` to control the line width used only for point
+   borders, useful when `do_direction=TRUE`. The argument `pt.lwd` already
+   gets passed to `legend()` however making it a formal argument here
+   helps make the option more clear for users.
+   * Auto-detect whether to enable `do_direction=TRUE`, by checking if
+   any `frame.color` or `pie.border` are defined with red/blue colors.
+   Bonus points for using the same colors defined in `frame.color` or
+   `pie.border`, however that may be risky if those colors vary based
+   upon some fold change value, or vary based upon contrasting with
+   the node or pie fill color.
+
+* `jam_igraph()`
+
+   * Consider handling `V(g)$shape="circle"` as shape `"jampie"` during
+   rendering. Certain older Cnet plot `igraph` objects appear to break
+   the default `shape="circle"` rendering, some cryptic error about
+   `names()` not being defined when expected. The error does not appear
+   with `igraph::plot.igraph()`, so it is specific to `jam_igraph()`.
+   
+      * Possible workaround is to sidestep the problem by re-using the
+      same `shape="jampie"` rendering method already implemented, which
+      would keep all borders consistent when displaying a mixture of
+      `shape="circle"` and `shape="jampie"` nodes.
+      * Problem with that workaround, if a node has `pie.color` defined
+      it will be used when `shape="jampie"` even if the user specified
+      `shape="circle"` (which should only use `color`).
+      In that case, when a `shape="circle"` node is being rendered internally
+      as `shape="jampie"` it should first copy `color` into `pie.color` for
+      those nodes; `frame.color` to `pie.border`; and
+      `frame.lwd` (`frame.width`) to `pie.lwd`.
+
 ## 24may2023
 
 * DONE: Fix bug with node rendering, caused by recent version of `igraph`

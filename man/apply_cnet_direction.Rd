@@ -7,8 +7,9 @@
 apply_cnet_direction(
   cnet,
   hitim = NULL,
-  col = colorjam::col_div_xf(1.2),
-  col_l_max = 65,
+  col = circlize::colorRamp2(breaks = c(-1, 0, 1), colors = c("blue", "grey80",
+    "firebrick3")),
+  col_l_max = 80,
   hide_solo_pie = TRUE,
   frame_blank = default_igraph_values()$vertex$frame.color,
   frame_lwd_blank = 0.2,
@@ -54,14 +55,42 @@ for displaying a small outer frame for each node.
 }}
 
 \item{frame_blank}{\code{character} string to define the color used
-for \code{"frame.color"} when there are multiple colors in \code{"pie.border"}
-and therefore there should be no visible \code{"frame.color"}.}
+for \code{"frame.color"} when colors are defined in \code{"pie.border"}.
+In this case, the frame is drawn around the inner \code{pie.border}
+colors, and only serves to add visual clarity. The frame border
+can be blank (\code{frame_blank="transparent"}) or can be a thinner line,
+controlled with \code{frame_lwd_blank=0.2}.
+By default, the default igraph vertex \code{frame.color} is used,
+defined by \code{default_igraph_values()$vertex$frame.color}.}
+
+\item{frame_lwd_blank}{\code{numeric} line width for nodes that have "blank"
+frame, which means the \code{pie.border} colors are defined. In this case
+the frame border can be invisible (\code{frame_lwd_blank=0}) or
+a very thin line (default \code{frame_lwd_blank=0.2}) to surround the
+inner borders drawn with \code{pie.border}.}
+
+\item{border_lwd}{\code{numeric} line width used whenever a node is matched
+with \code{rownames(hitim)}. When the colors are applied to \code{pie.color},
+the border is defined with \code{pie.lwd}. When colors are applied to
+\code{frame.color}, the border is defined with \code{frame.lwd}.
+(Soon to become \code{frame.width}.)}
 
 \item{do_reorder}{\code{logical} indicating whether to call
 \code{reorder_igraph_nodes()} on the resulting \code{igraph}, so that
-the border color can be used in the sort conditions.}
+the border color can be used in the sort conditions.
+Note that when \code{do_reorder=TRUE}, other relevant arguments are passed
+through \code{...} to \code{reorder_igraph_nodes()} such as:
+\itemize{
+\item \code{colorV} - which controls the expected order of colors, and
+should be supplied if known upfront.
+\item \code{sortAttributes} - usually contains appropriate default values
+\item \code{nodeSortBy} - usually contains appropriate default values
+\item \code{orderByAspect=TRUE} - controls whether left-right and top-bottom
+order is affected by the aspect ratio of each nodeset.
+}}
 
-\item{...}{additional arguments are ignored.}
+\item{...}{additional arguments are passed to \code{reorder_igraph_nodes()}
+when \code{do_reorder=TRUE}.}
 }
 \description{
 Apply Cnet border color by directionality

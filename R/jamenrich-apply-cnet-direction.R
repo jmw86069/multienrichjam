@@ -61,19 +61,44 @@
 #'    and `frame.lwd` will be assigned `frame_lwd_blank` which is useful
 #'    for displaying a small outer frame for each node.
 #' @param frame_blank `character` string to define the color used
-#'    for `"frame.color"` when there are multiple colors in `"pie.border"`
-#'    and therefore there should be no visible `"frame.color"`.
+#'    for `"frame.color"` when colors are defined in `"pie.border"`.
+#'    In this case, the frame is drawn around the inner `pie.border`
+#'    colors, and only serves to add visual clarity. The frame border
+#'    can be blank (`frame_blank="transparent"`) or can be a thinner line,
+#'    controlled with `frame_lwd_blank=0.2`.
+#'    By default, the default igraph vertex `frame.color` is used,
+#'    defined by `default_igraph_values()$vertex$frame.color`.
+#' @param frame_lwd_blank `numeric` line width for nodes that have "blank"
+#'    frame, which means the `pie.border` colors are defined. In this case
+#'    the frame border can be invisible (`frame_lwd_blank=0`) or
+#'    a very thin line (default `frame_lwd_blank=0.2`) to surround the
+#'    inner borders drawn with `pie.border`.
+#' @param border_lwd `numeric` line width used whenever a node is matched
+#'    with `rownames(hitim)`. When the colors are applied to `pie.color`,
+#'    the border is defined with `pie.lwd`. When colors are applied to
+#'    `frame.color`, the border is defined with `frame.lwd`.
+#'    (Soon to become `frame.width`.)
 #' @param do_reorder `logical` indicating whether to call
 #'    `reorder_igraph_nodes()` on the resulting `igraph`, so that
 #'    the border color can be used in the sort conditions.
-#' @param ... additional arguments are ignored.
+#'    Note that when `do_reorder=TRUE`, other relevant arguments are passed
+#'    through `...` to `reorder_igraph_nodes()` such as:
+#'    * `colorV` - which controls the expected order of colors, and
+#'    should be supplied if known upfront.
+#'    * `sortAttributes` - usually contains appropriate default values
+#'    * `nodeSortBy` - usually contains appropriate default values
+#'    * `orderByAspect=TRUE` - controls whether left-right and top-bottom
+#'    order is affected by the aspect ratio of each nodeset.
+#' @param ... additional arguments are passed to `reorder_igraph_nodes()`
+#'    when `do_reorder=TRUE`.
 #'
 #' @export
 apply_cnet_direction <- function
 (cnet,
  hitim=NULL,
- col=colorjam::col_div_xf(1.2),
- col_l_max=65,
+ col=circlize::colorRamp2(breaks=c(-1, 0, 1),
+    colors=c("blue", "grey80", "firebrick3")),
+ col_l_max=80,
  hide_solo_pie=TRUE,
  frame_blank=default_igraph_values()$vertex$frame.color,
  frame_lwd_blank=0.2,
@@ -238,7 +263,7 @@ apply_cnet_direction <- function
    # optionally reorder nodes using new border color
    if (TRUE %in% do_reorder) {
       # apply node re-ordering step
-      cnet <- reorderIgraphNodes(cnet,
+      cnet <- reorder_igraph_nodes(cnet,
          ...);
    }
 

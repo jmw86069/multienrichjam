@@ -1578,8 +1578,11 @@ mem_multienrichplot <- function
 #'
 #' @param mem `list` object output from `multiEnrichMap()`, specifically
 #'    expected to contain element `"colorV"`.
-#' @param x,y,bg,box.col,title,cex,ncol,pch,pt.cex,inset arguments passed
-#'    to `graphics::legend()`.
+#' @param x,y,bg,box.col,title,cex,ncol,pch,pt.cex,pt.lwd,inset arguments
+#'    are passed to `graphics::legend()`.
+#'    Note `pt.lwd` is mostly relevant with `do_direction=TRUE`, which
+#'    adds open circles to the legend, whose line width has default
+#'    `pt.lwd=2`.
 #' @param do_directional `logical` indicating whether to include
 #'    directional colors defined in `directional_colors`, indicated only
 #'    as the border color of nodes.
@@ -1597,6 +1600,11 @@ mem_multienrichplot <- function
 #'    In this case, intervening empty rows are filled with blank space,
 #'    and the `directional_colors` are shown in the top-most rows in the
 #'    far right column of the legend.
+#' @param directional_colors `character` vector of R colors, named by
+#'    the label to be shown in the legend, displayed in order (top to bottom,
+#'    left to right) they appear in this vector.
+#'    To remove the entry `"no change"`, supply a new vector:
+#'    `directional_colors=c(up.regulated="firebrick3", down.regulated="blue")`
 #' @param ... additional arguments are passed to `legend()`.
 #'
 #' @export
@@ -1611,6 +1619,7 @@ mem_legend <- function
  ncol=1,
  pch=21,
  pt.cex=2,
+ pt.lwd=2,
  inset=0,
  do_directional=FALSE,
  directional_column=c("same",
@@ -1618,7 +1627,8 @@ mem_legend <- function
     "added-top"),
  directional_colors=c(
     `up-regulated`="firebrick3",
-    `down-regulated`="dodgerblue3"),
+    `no change`="grey80",
+    `down-regulated`="blue"),
  ...)
 {
    ##
