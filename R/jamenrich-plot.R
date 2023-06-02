@@ -296,6 +296,11 @@ mem_gene_path_heatmap <- function
       }
    }
    if (length(row_split) == 1 && is.numeric(row_split)) {
+      if (row_split > length(genes)) {
+         row_split <- min(c(
+            ceiling(length(genes)^(1/3)),
+            10));
+      }
       if (row_split <= 1) {
          row_split <- NULL;
          if (length(row_title) > 1) {
@@ -338,6 +343,9 @@ mem_gene_path_heatmap <- function
    }
 
    if (length(column_split) == 1 && is.numeric(column_split)) {
+      if (column_split > length(sets)) {
+         column_split <- length(sets);
+      }
       if (column_split <= 1) {
          column_split <- NULL;
          if (length(column_title) > 1) {

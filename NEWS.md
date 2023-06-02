@@ -28,6 +28,15 @@ default value.
    now it properly ignores pie attributes which were previously empty,
    and only updates entries with non-zero results.
 
+* `mem_gene_path_heatmap()`
+
+   * Fixed longstanding errors when trying to split the heatmap
+   by row or column into more pieces than the data will allow.
+   The current workaround is almost complete, covers obvious cases
+   where the requested number is higher than the number of columns
+   or rows. It does not determine if there can only be one or two clusters
+   but there are more columns or rows present. In future.
+
 ## other changes
 
 * moved `enrichDF2enrichResult()` to a separate R file, for future
