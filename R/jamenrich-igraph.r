@@ -1559,23 +1559,42 @@ removeIgraphBlanks <- function
          ## Iterate each pie attribute
          for (pieAttr in pieAttrs) {
             pieAttrL <- igraph::get.vertex.attribute(g, pieAttr);
-            ## Confirm each attribute has the same lengths() as pieColorL
-            if (!all(lengths(pieAttrL) == pieLengths)) {
-               # Skip this pieAttr since its values are not in sync with "pie.color"
-               if (verbose) {
-                  jamba::printDebug("removeIgraphBlanks(): ",
-                     "Skipped pie attribute '",
-                     pieAttr,
-                     "' because its lengths() were not consistent with ",
-                     "'pie.color'");
+            if (length(pieAttrL) > 0) {
+               ## Confirm each attribute has the same lengths() as pieColorL
+               if (!all(lengths(pieAttrL) == pieLengths)) {
+                  # Skip this pieAttr since its values are not in sync with "pie.color"
+                  if (verbose) {
+                     jamba::printDebug("removeIgraphBlanks(): ",
+                        "Skipped pie attribute '",
+                        pieAttr,
+                        "' because its lengths() were not consistent with ",
+                        "'pie.color'");
+                  }
+               } else {
+                  pieL <- split(unlist(pieAttrL)[!pieBlanksV],
+                     pieSplitV[!pieBlanksV]);
+                  if (verbose > 1) {
+                     jamba::printDebug("length(pieL):", length(pieL),
+                        ", vcount(g):", vcount(g),
+                        ", length(unique(pieSplitV)):", length(unique(pieSplitV)),
+                        ", length(unique(pieSplitV[!pieBlanksV])):", length(unique(pieSplitV[!pieBlanksV])),
+                        ", sum(!pieBlanksV):", sum(!pieBlanksV)); ## debug
+                  }
+                  if (length(unique(pieSplitV[!pieBlanksV])) < igraph::vcount(g)) {
+                     missing_x <- setdiff(seq_len(igraph::vcount(g)), unique(pieSplitV[!pieBlanksV]));
+                     if (verbose > 1) {
+                        print(missing_x);
+                     }
+                     # print(head(igraph::V(g)$name[missing_x]))
+                     # print(head(igraph::V(g)$pie.color[missing_x]))
+                     # print(head(igraph::V(g)$pie.border[missing_x]))
+                  }
+                  ## TODO: only update nodes that change
+                  g <- igraph::set.vertex.attribute(g,
+                     index=unique(pieSplitV[!pieBlanksV]),
+                     name=pieAttr,
+                     value=pieL);
                }
-            } else {
-               pieL <- split(unlist(pieAttrL)[!pieBlanksV],
-                  pieSplitV[!pieBlanksV]);
-               ## TODO: only update nodes that change
-               g <- igraph::set.vertex.attribute(g,
-                  name=pieAttr,
-                  value=pieL);
             }
          }
       }

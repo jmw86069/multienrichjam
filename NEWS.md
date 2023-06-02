@@ -23,6 +23,11 @@ already defined in `igraph` vertex attributes. When there is no `size2`
 it now calls `default_igraph_values()$vertex$size2` to use the appropriate
 default value.
 
+   * other related errors are now caught and avoided, relating to steps
+   that avoid updating empty entries in `list` vertex attributes,
+   now it properly ignores pie attributes which were previously empty,
+   and only updates entries with non-zero results.
+
 ## other changes
 
 * moved `enrichDF2enrichResult()` to a separate R file, for future
