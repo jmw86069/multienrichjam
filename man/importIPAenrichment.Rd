@@ -11,7 +11,7 @@ importIPAenrichment(
   ipaNameGrep = c("Pathway", "Regulator$", "Regulators", "Regulator", "Disease",
     "Toxicity", "Category", "Categories", "Function", "Symbol$", "^ID$",
     "My.(Lists|Pathways)"),
-  geneGrep = c("Molecules in Network", "Molecules"),
+  geneGrep = c("Molecules in Network", "Target molecules", "Molecules", "Symbol"),
   geneCurateFrom = c("[ ]*[(](complex|includes others)[)][ ]*", "^[, ]+|[, ]+$"),
   geneCurateTo = c("", ""),
   method = 1,
@@ -20,6 +20,8 @@ importIPAenrichment(
   xlsxMultiSheet = TRUE,
   useXlsxSheetNames = FALSE,
   remove_blank_colnames = TRUE,
+  convert_ipa_slash = TRUE,
+  ipa_slash_sep = ":",
   verbose = FALSE,
   ...
 )
@@ -83,6 +85,25 @@ you would still like to retain the column for consistency
 with other data. We found that IPA does not report \code{zScore}
 values when there are only 4 or fewer genes involved in
 each enrichment result.}
+
+\item{convert_ipa_slash}{\code{logical} indicating whether to convert
+IPA gene naming conventions, currently some genes are considered
+one entity in the IPA system, for example \code{"HSPA1A/HSPA1B"} is
+considered one gene, even though two Entrez gene entries
+\code{"HSPA1A"} and \code{"HSPA1B"} can be represented. Regardless whether
+one or both genes are provided to IPA, it considers it one
+entity for the purpose of pathway enrichment hypergeometric testing.
+Unfortunately, the forward slash \code{"/"} is also used by
+\code{clusterProfiler} object \code{enrichResult} as gene delimiter, and
+is hard-coded and cannot be changed. So it will automatically
+consider \code{"HSPA1A/HSPA1B"} as two genes, causing a mismatch with
+the IPA results.
+When \code{convert_ipa_slash=TRUE} by default, it converts the
+forward slash \code{"/"} to the value of argument \code{ipa_slash_sep}.}
+
+\item{ipa_slash_sep}{\code{character} string used as a delimited when
+\code{convert_ipa_slash=TRUE}, used to replace genes that contain
+forward slash \code{"/"} to use another character.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 

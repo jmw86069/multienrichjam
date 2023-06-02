@@ -1,3 +1,34 @@
+# multienrichjam 0.0.75.900
+
+## bug fixes
+
+* `importIPAenrichment()`
+
+   * New arguments to handle forward-slash delimited gene symbols used
+   by IPA to indicate two or more genes they consider to be one biomolecule
+   for the purpose of pathway enrichment. The forward-slash "/" is also
+   the delimiter user in `clusterProfiler` object `enrichResult` which
+   causes these genes to break that compatibility. The new arguments
+   represent a workaround to handle IPA data, so that downstream
+   functions do not require changes.
+   * `convert_ipa_slash=TRUE` enables the workaround, which converts
+   forward-slash "/" to another delimiter.
+   * `ipa_slash_sep=":"` defines the alternate delimiter to use, the default
+   `":"` was chosed because it does not interfere with other common delimiters
+   used in gene symbols, and does not cause problems with regular expressions,
+   which would have been a risk with using `"|"`.
+
+* `removeIgraphBlanks()` was throwing an error when `size2` was not
+already defined in `igraph` vertex attributes. When there is no `size2`
+it now calls `default_igraph_values()$vertex$size2` to use the appropriate
+default value.
+
+## other changes
+
+* moved `enrichDF2enrichResult()` to a separate R file, for future
+maintenance.
+
+
 # multienrichjam 0.0.74.900
 
 ## updates to existing functions
@@ -19,6 +50,7 @@
    * `directional_colors` use the same default colors used by
    `apply_cnet_direction()`; and now includes `"no change"` as
    a specific legend entry.
+
 
 # multienrichjam 0.0.73.900
 

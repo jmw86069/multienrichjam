@@ -1,6 +1,41 @@
 # TODO
 
+## 02jun2023
+
+* `mem_plot_folio()`
+
+   * Debug edge cases where `pathway_column_split=4` does not match
+   the output number of column split following hierarchical clustering.
+   * Debug edge case where there are not enough pathways or genes
+   to support the gene-pathway heatmap workflow. E.g. only 1 or 2 pathways,
+   or only 1 or 2 genes.
+
+* `multiEnrichMap()`
+
+   * Debug error "multiEnrichMap(): geneHitIM does not contain 5 
+   rows present in geneIM, default values will use 1."
+   
+      * Apparently when some `rownames(mem$geneIM)` are not found in
+      `rownames(geneHitIM)`.
+      * Ideally change `geneIMdirection` so it does not store "+1"
+      and instead shows zero or NA. Genes should be shown but without
+      associated direction.
+      * The message should describe how to find missing values so the
+      user can debug the error.
+
+
 ## 01jun2023
+
+* `reorder_igraph_nodes()`
+
+   * Currently `orderByAspect=TRUE` will order nodes based upon the
+   aspect ratio of each nodeset.
+   * Ideal world: when nodes are sorted by something like color,
+   calculate the aspect ratio of nodes within that color.
+   Situation: Assume a tall-skinny nodeset, sorted top-to-bottom by
+   different colors. One color has 12 entries, the nodeset is 12 nodes wide,
+   so this color appears horizontal among the other nodes. When sorting
+   by border color, it goes top-to-bottom, which is not visually intuitive.
 
 * `apply_cnet_direction()`
 

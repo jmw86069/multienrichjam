@@ -1334,6 +1334,11 @@ removeIgraphBlanks <- function
          #########################################
          ## Handle each constraint properly
          if ("none" %in% constrain) {
+            if (verbose) {
+               jamba::printDebug("removeIgraphBlanks(): ",
+                  "Applying constrain ",
+                  "'none'");
+            }
             ########################################
             ## constrain "none"
             crL <- unname(split(unlist(crAttrL)[!crBlanksV],
@@ -1504,13 +1509,19 @@ removeIgraphBlanks <- function
          nrowVafter <- igraph::get.vertex.attribute(g, "coloredrect.nrow");
          resizeWhich <- (ncolVbefore != ncolVafter) |  (nrowVbefore != nrowVafter);
          if (any(resizeWhich)) {
-            new_size2 <-nrowVbefore / nrowVafter *
-               igraph::get.vertex.attribute(g,
-                  name="size2");
-            if (verbose) {
+            new_size2 <- nrowVbefore / nrowVafter *
+               jamba::rmNULL(igraph::get.vertex.attribute(g, name="size2"),
+                  nullValue=default_igraph_values()$vertex$size2)
+            if (length(new_size2) == 0) {
+               new_size2 <- nrowVbefore / nrowVafter *
+                  default_igraph_values()$vertex$size2;
+            }
+            if (verbose > 1) {
                print(data.frame(ncolVbefore,
                   ncolVafter,
-                  size2=igraph::V(g)$size2,
+                  size2=jamba::rmNULL(
+                     igraph::V(g)$size2,
+                     nullValue=default_igraph_values()$vertex$size2),
                   new_size2));
             }
             g <- igraph::set.vertex.attribute(g,

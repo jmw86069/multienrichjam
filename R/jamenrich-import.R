@@ -91,6 +91,23 @@
 #'    with other data. We found that IPA does not report `zScore`
 #'    values when there are only 4 or fewer genes involved in
 #'    each enrichment result.
+#' @param convert_ipa_slash `logical` indicating whether to convert
+#'    IPA gene naming conventions, currently some genes are considered
+#'    one entity in the IPA system, for example `"HSPA1A/HSPA1B"` is
+#'    considered one gene, even though two Entrez gene entries
+#'    `"HSPA1A"` and `"HSPA1B"` can be represented. Regardless whether
+#'    one or both genes are provided to IPA, it considers it one
+#'    entity for the purpose of pathway enrichment hypergeometric testing.
+#'    Unfortunately, the forward slash `"/"` is also used by
+#'    `clusterProfiler` object `enrichResult` as gene delimiter, and
+#'    is hard-coded and cannot be changed. So it will automatically
+#'    consider `"HSPA1A/HSPA1B"` as two genes, causing a mismatch with
+#'    the IPA results.
+#'    When `convert_ipa_slash=TRUE` by default, it converts the
+#'    forward slash `"/"` to the value of argument `ipa_slash_sep`.
+#' @param ipa_slash_sep `character` string used as a delimited when
+#'    `convert_ipa_slash=TRUE`, used to replace genes that contain
+#'    forward slash `"/"` to use another character.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -110,7 +127,10 @@ importIPAenrichment <- function
     "Symbol$",
     "^ID$",
     "My.(Lists|Pathways)"),
- geneGrep=c("Molecules in Network", "Molecules"),
+ geneGrep=c("Molecules in Network",
+    "Target molecules",
+    "Molecules",
+    "Symbol"),
  geneCurateFrom=c("[ ]*[(](complex|includes others)[)][ ]*",
     "^[, ]+|[, ]+$"),
  geneCurateTo=c("",
@@ -121,6 +141,8 @@ importIPAenrichment <- function
  xlsxMultiSheet=TRUE,
  useXlsxSheetNames=FALSE,
  remove_blank_colnames=TRUE,
+ convert_ipa_slash=TRUE,
+ ipa_slash_sep=":",
  verbose=FALSE,
  ...)
 {
@@ -162,6 +184,8 @@ importIPAenrichment <- function
             geneGrep=geneGrep,
             geneCurateFrom=geneCurateFrom,
             geneCurateTo=geneCurateTo,
+            convert_ipa_slash=convert_ipa_slash,
+            ipa_slash_sep=ipa_slash_sep,
             verbose=verbose);
          jDF;
       });
@@ -178,6 +202,8 @@ importIPAenrichment <- function
             sheet=sheet,
             sep=sep,
             xlsxMultiSheet=xlsxMultiSheet,
+            convert_ipa_slash=convert_ipa_slash,
+            ipa_slash_sep=ipa_slash_sep,
             verbose=verbose,
             ...);
       });
@@ -208,6 +234,8 @@ importIPAenrichment <- function
                geneGrep=geneGrep,
                geneCurateFrom=geneCurateFrom,
                geneCurateTo=geneCurateTo,
+               convert_ipa_slash=convert_ipa_slash,
+               ipa_slash_sep=ipa_slash_sep,
                verbose=verbose);
             jDF;
          } else {
@@ -221,6 +249,8 @@ importIPAenrichment <- function
                sheet=sheet,
                sep=sep,
                xlsxMultiSheet=FALSE,
+               convert_ipa_slash=convert_ipa_slash,
+               ipa_slash_sep=ipa_slash_sep,
                verbose=verbose,
                ...);
          }
@@ -366,6 +396,8 @@ importIPAenrichment <- function
             geneGrep=geneGrep,
             geneCurateFrom=geneCurateFrom,
             geneCurateTo=geneCurateTo,
+            convert_ipa_slash=convert_ipa_slash,
+            ipa_slash_sep=ipa_slash_sep,
             verbose=verbose);
          jDF;
       });
@@ -441,11 +473,14 @@ curateIPAcolnames <- function
     "My Pathways"),
  geneGrep=c("Molecules in Network",
     "Target molecules",
-    "Molecules"),
+    "Molecules",
+    "Symbol"),
  geneCurateFrom=c(" [(](complex|includes others)[)]",
     "^[,]+|[,]+$"),
  geneCurateTo=c("",
     ""),
+ convert_ipa_slash=TRUE,
+ ipa_slash_sep=":",
  verbose=TRUE,
  ...)
 {
@@ -471,18 +506,42 @@ curateIPAcolnames <- function
    ## Determine which column contains the genes of interest
    geneCol <- head(jamba::provigrep(geneGrep, colnames(jDF)), 1);
    if (length(geneCol) == 1) {
-      jDF <- jamba::renameColumn(jDF,
-         from=geneCol,
-         to="geneNames");
-      if (verbose) {
-         jamba::printDebug("importIPAenrichment(): ",
-            "created ", "'geneNames'", " column from:",
-            geneCol);
+      if ("Symbol" == geneCol) {
+         geneNamesColumn <- "Symbol";
+      } else {
+         jDF <- jamba::renameColumn(jDF,
+            from=geneCol,
+            to="geneNames");
+         geneNamesColumn <- "geneNames";
+         if (verbose) {
+            jamba::printDebug("importIPAenrichment(): ",
+               "created ", "'geneNames'", " column from:",
+               geneCol);
+         }
       }
       ## Curate gene column values
-      jDF[["geneNames"]] <- gsubs(geneCurateFrom,
+      jDF[[geneNamesColumn]] <- gsubs(geneCurateFrom,
          geneCurateTo,
-         jDF[["geneNames"]]);
+         jDF[[geneNamesColumn]]);
+
+      ## Optionally convert IPA delimiter forward slash "/"
+      if (TRUE %in% convert_ipa_slash) {
+         if (length(ipa_slash_sep) == 0) {
+            ipa_slash_sep <- ""
+         }
+         if (any(grepl("/", fixed=TRUE, jDF[[geneNamesColumn]]))) {
+            if (verbose) {
+               jamba::printDebug("importIPAenrichment(): ",
+                  "converting IPA multi-gene delimiter from '", "/",
+                  "' to: '", ipa_slash_sep, "'.")
+            }
+            jDF[[geneNamesColumn]] <- gsub("/",
+               ipa_slash_sep,
+               fixed=TRUE,
+               jDF[[geneNamesColumn]])
+         }
+      }
+
    }
 
    ## Convert -log(p-value) columns to P-value for compatibility

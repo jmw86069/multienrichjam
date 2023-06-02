@@ -9,9 +9,11 @@ curateIPAcolnames(
   ipaNameGrep = c("^Name$", "^ID$", "Canonical Pathways", "Upstream Regulator",
     "Diseases or Functions Annotation", "Diseases . Functions", "My Lists",
     "Ingenuity Toxicity Lists", "My Pathways"),
-  geneGrep = c("Molecules in Network", "Target molecules", "Molecules"),
+  geneGrep = c("Molecules in Network", "Target molecules", "Molecules", "Symbol"),
   geneCurateFrom = c(" [(](complex|includes others)[)]", "^[,]+|[,]+$"),
   geneCurateTo = c("", ""),
+  convert_ipa_slash = TRUE,
+  ipa_slash_sep = ":",
   verbose = TRUE,
   ...
 )
