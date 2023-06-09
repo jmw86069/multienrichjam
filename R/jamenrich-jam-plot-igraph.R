@@ -105,7 +105,14 @@
 #'    indicating the transparency of `mark.col` color fill values,
 #'    used only when `mark.groups` is defined, and `mark.col` is not defined.
 #' @param mark.lwd,mark.lty line with and line type parameters for each
-#'    `mark.groups` polygon,
+#'    `mark.groups` polygon.
+#' @param mark.cex `numeric` adjustment for mark label font size, used
+#'    when `mark.groups` is supplied and has `names(mark.groups)`.
+#' @param mark.x.nudge,mark.y.nudge `numeric` values in units of the
+#'    maximum x-axis or y-axis range for the layout coordinates,
+#'    used to adjust each label displayed when `names(mark.groups)`
+#'    is defined. These arguments are passed to `make_point_hull()`
+#'    as `label.x.nudge`, `label.y.nudge`, respectively.
 #' @param pie_to_jampie `logical` indicating whether to convert
 #'    vertex shape `"pie"` to `"jampie"` in order to use vectorized
 #'    plotting.
@@ -197,6 +204,9 @@ jam_plot_igraph <- function
  mark.lwd=2,
  mark.lty=1,
  mark.smooth=TRUE,
+ mark.cex=1,
+ mark.x.nudge=0,
+ mark.y.nudge=0,
  pie_to_jampie=TRUE,
  use_shadowText=FALSE,
  vectorized_node_shapes=TRUE,
@@ -424,13 +434,22 @@ jam_plot_igraph <- function
             length.out=length(mark.groups));
          mark.lty <- rep(mark.lty,
             length.out=length(mark.groups));
+         mark.cex <- rep(mark.cex,
+            length.out=length(mark.groups));
 
+         # mark.expand is scaled relative to the maximum x-/y-axis range
          max_xy_range <- max(c(
             abs(diff(range(xlim))),
             abs(diff(range(ylim)))));
          mark.expand <- rep(mark.expand,
             length.out=length(mark.groups));
          expand.by <- (mark.expand / 200) * max_xy_range;
+
+         # scale relative to max x-/y-axis range
+         mark.x.nudge <- rep(mark.x.nudge,
+            length.out=length(mark.groups)) * max_xy_range;
+         mark.y.nudge <- rep(mark.y.nudge,
+            length.out=length(mark.groups)) * max_xy_range;
 
          # optional text labels
          mark.group.cluster.names <- NULL;
@@ -464,6 +483,9 @@ jam_plot_igraph <- function
                lty=mark.lty[g],
                smooth=mark.smooth,
                shape=mark.shape[g],
+               label.cex=mark.cex[g],
+               label.x.nudge=mark.x.nudge[g],
+               label.y.nudge=mark.y.nudge[g],
                label=hull_label);
          }
       }

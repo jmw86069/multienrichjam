@@ -9,10 +9,10 @@ mem_enrichment_heatmap(
   style = c("dotplot", "heatmap"),
   p_cutoff = mem$p_cutoff,
   min_count = 1,
-  p_floor = 1e-06,
+  p_floor = 1e-10,
   point_size_factor = 1,
   point_size_max = 8,
-  point_size_min = 1,
+  point_size_min = 2,
   row_method = "euclidean",
   column_method = "euclidean",
   name = "-log10P",
@@ -79,57 +79,67 @@ since the heatmap point size is dependent upon the number of rows,
 the legend may require some manual adjustment to make sure the
 legend matches the heatmap.}
 
-\item{row_method}{character string of the distance method
+\item{point_size_min, point_size_max}{\code{numeric} values which define
+the minimum and maximum point sizes, effectively defining the range
+permitted when \code{style="dotplot"}.}
+
+\item{row_method}{\code{character} string of the distance method
 to use for row and column clustering. The clustering is performed
 by \code{amap::hcluster()}.}
 
-\item{name}{character value passed to \code{ComplexHeatmap::Heatmap()},
+\item{name}{\code{character} value passed to \code{ComplexHeatmap::Heatmap()},
 used as a label above the heatmap color legend.}
 
-\item{row_dend_reorder}{logical indicating whether to reorder the
+\item{row_dend_reorder}{\code{logical} indicating whether to reorder the
 row dendrogram using the method described in
 \code{ComplexHeatmap::Heatmap()}. The end result is minor reshuffling of
 leaf nodes on the dendrogram based upon mean signal in each row,
 which can sometimes look cleaner.}
 
-\item{row_fontsize, column_fontsize}{arguments passed to
+\item{row_fontsize, column_fontsize}{optional \code{numeric} arguments passed to
 \code{ComplexHeatmap::Heatmap()} to size row and column labels.}
 
-\item{cluster_columns}{logical indicating whether to cluster heatmap
+\item{cluster_columns}{\code{logical} indicating whether to cluster heatmap
 columns, by default columns are not clustered.}
 
-\item{sets}{character vector of sets (pathways) to include in the heatmap,
+\item{sets}{\code{character} vector of sets (pathways) to include in the heatmap,
 all other sets will be excluded.}
 
-\item{color_by_column}{logical indicating whether to colorize the
+\item{color_by_column}{\code{logical} indicating whether to colorize the
 heatmap using \code{mem$colorV} as defined for each comparison. This
 option is currently experimental, and produces a base R heatmap
 using \code{jamba::imageByColors()}.}
 
-\item{cex.axis}{sent to \code{jamba::imageByColors()} only when
-\code{color_by_column=TRUE}.}
+\item{cex.axis}{\code{numeric} adjustment for axis labels, passed to
+\code{jamba::imageByColors()} only when \code{color_by_column=TRUE}.}
 
-\item{lens}{\code{numeric} value used in color gradients, to define whether
-the color gradient should be enhanced in the mid-ranges (positive \code{lens}),
-or diminished in the mid-ranges (negative \code{lens}).}
+\item{lens}{\code{numeric} value used in color gradients, defining the extent
+the color gradient is enhanced in the mid-ranges (positive \code{lens}),
+or diminished in the mid-ranges (negative \code{lens}). There is no
+quantitative standard measure for color gradient changes, so this
+option is intended to help adjust and improve the visual perception
+of the current data.}
 
-\item{cexCellnote}{numeric character expansion value used only
+\item{cexCellnote}{\code{numeric} character expansion value used only
 when \code{color_by_column=TRUE}, used to adjust the P-value label size
 inside each heatmap cell.}
 
-\item{column_title}{optional character string with title to display
+\item{column_title}{optional \code{character} string with title to display
 above the heatmap.}
 
-\item{row_names_max_width, column_names_max_height, heatmap_legend_param}{arguments passed to \code{ComplexHeatmap::Heatmap()}.}
+\item{row_names_max_width, column_names_max_height, heatmap_legend_param}{arguments passed to \code{ComplexHeatmap::Heatmap()} and provided here
+for convenience.}
 
 \item{top_annotation}{\code{HeatmapAnnotation} as produced by
 \code{ComplexHeatmap::HeatmapAnnotation()} or \code{NULL}, used to display
-annotation at the top of the heatmap.}
+customized annotation at the top of the heatmap. The order of
+columns must match the order of columns in the data displayed
+in the heatmap.}
 
 \item{use_raster}{\code{logical} passed to \code{ComplexHeatmap::Heatmap()}
 indicating whether to rasterize the heatmap output, used when
-\code{style="heatmap"}, since dotplot output is always drawn with
-individual circles in each heatmap cell.}
+\code{style="heatmap"}. Rasterization is not relevant to dotplot output
+since dotplot is drawn using an individual circle in each heatmap cell.}
 
 \item{do_plot}{\code{logical} indicating whether to display the plot with
 \code{ComplexHeatmap::draw()} or \code{jamba::imageByColors()} as relevant.
@@ -161,6 +171,17 @@ use this form:
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{ComplexHeatmap::draw(hm,
    annotation_legend_list=attr(hm, "annotation_legend_list"))
 }\if{html}{\out{</div>}}
+
+Note that this function may be more easily applied through the
+wrapper function with the format \code{mem_plot_folio(mem, do_which=1, ...)}.
+The wrapper function \code{mem_plot_folio()} performs hierarchical
+clustering of the underlying gene-pathway incidence matrix, which
+informs the clustering of enrichment results shown
+in this function \code{mem_enrichment_heatmap()}. Otherwise, this
+function will cluster pathways using only the enrichment
+P-values transformed with \code{-log10(p)}. Generally, the clustering
+using the gene-pathway incidence matrix is more effective at
+representing biologically-driven pathway clusters.
 }
 \seealso{
 Other jam plot functions: 

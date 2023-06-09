@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Jam igraph vectorized plot function (internal)</h1>
-    <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamenrich-igraph.r" class="external-link"><code>R/jamenrich-igraph.r</code></a></small>
+    <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamenrich-jam-plot-igraph.R" class="external-link"><code>R/jamenrich-jam-plot-igraph.R</code></a></small>
     <div class="hidden name"><code>jam_plot_igraph.Rd</code></div>
     </div>
 
@@ -62,96 +62,125 @@
     <p>Jam igraph vectorized plot internal function called by <code><a href="jam_igraph.html">jam_igraph()</a></code></p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">jam_plot_igraph</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">...</span>,
-  axes <span class="op">=</span> <span class="cn">FALSE</span>,
-  add <span class="op">=</span> <span class="cn">FALSE</span>,
-  xlim <span class="op">=</span> <span class="cn">NULL</span>,
-  ylim <span class="op">=</span> <span class="cn">NULL</span>,
-  mark.groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  mark.shape <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">2</span>,
-  mark.col <span class="op">=</span> <span class="cn">NULL</span>,
-  mark.alpha <span class="op">=</span> <span class="fl">0.2</span>,
-  mark.border <span class="op">=</span> <span class="cn">NULL</span>,
-  mark.expand <span class="op">=</span> <span class="fl">8</span>,
-  mark.lwd <span class="op">=</span> <span class="fl">2</span>,
-  mark.lty <span class="op">=</span> <span class="fl">1</span>,
-  mark.smooth <span class="op">=</span> <span class="cn">TRUE</span>,
-  pie_to_jampie <span class="op">=</span> <span class="cn">TRUE</span>,
-  use_shadowText <span class="op">=</span> <span class="cn">FALSE</span>,
-  vectorized_node_shapes <span class="op">=</span> <span class="cn">TRUE</span>,
-  edge_bundling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"default"</span>, <span class="st">"connections"</span>, <span class="st">"none"</span>, <span class="st">"mark.groups"</span>, <span class="st">"nodegroups"</span><span class="op">)</span>,
-  bundle_self <span class="op">=</span> <span class="cn">FALSE</span>,
-  nodegroups <span class="op">=</span> <span class="cn">NULL</span>,
-  render_nodes <span class="op">=</span> <span class="cn">TRUE</span>,
-  render_edges <span class="op">=</span> <span class="cn">TRUE</span>,
-  render_groups <span class="op">=</span> <span class="cn">TRUE</span>,
-  render_nodelabels <span class="op">=</span> <span class="cn">TRUE</span>,
-  params <span class="op">=</span> <span class="cn">NULL</span>,
-  plot_grid <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  debug <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">jam_plot_igraph</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  axes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mark.groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  mark.shape <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">2</span>,</span>
+<span>  mark.col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mark.alpha <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  mark.border <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mark.expand <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  mark.lwd <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  mark.lty <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  mark.smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pie_to_jampie <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  use_shadowText <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  vectorized_node_shapes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  edge_bundling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"default"</span>, <span class="st">"connections"</span>, <span class="st">"none"</span>, <span class="st">"mark.groups"</span>, <span class="st">"nodegroups"</span><span class="op">)</span>,</span>
+<span>  bundle_self <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  nodegroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  render_nodes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  render_edges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  render_groups <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  render_nodelabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  params <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plot_grid <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>The graph to plot.</p></dd>
+
+
 <dt>...</dt>
-<dd><p>Additional plotting parameters. See <a href="https://rdrr.io/pkg/igraph/man/plot.common.html" class="external-link">igraph.plotting</a> for
+<dd><p>Additional plotting parameters. See <a href="https://r.igraph.org/reference/plot.common.html" class="external-link">igraph.plotting</a> for
 the complete list.</p></dd>
+
+
 <dt>axes</dt>
 <dd><p>Logical, whether to plot axes, defaults to FALSE.</p></dd>
+
+
 <dt>add</dt>
 <dd><p>Logical scalar, whether to add the plot to the current device, or
 delete the device's current contents first.</p></dd>
+
+
 <dt>xlim, ylim</dt>
 <dd><p>default x and y axis limits. When either value is <code>NULL</code>
 the range is defined by the layout coordinate ranges, respectively,
 then expanded by adding <code>expand</code> to each side of the range.</p></dd>
+
+
 <dt>mark.groups</dt>
 <dd><p>A list of vertex id vectors. It is interpreted as a set
 of vertex groups. Each vertex group is highlighted, by plotting a colored
 smoothed polygon around and “under” it. See the arguments below to
 control the look of the polygons.</p></dd>
+
+
 <dt>mark.shape</dt>
 <dd><p>A numeric scalar or vector. Controls the smoothness of the
 vertex group marking polygons. This is basically the ‘shape’
-parameter of the <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">xspline</a></code> function, its possible
+parameter of the <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code> function, its possible
 values are between -1 and 1. If it is a vector, then a different value is
 used for the different vertex groups.</p></dd>
+
+
 <dt>mark.col</dt>
 <dd><p>A scalar or vector giving the colors of marking the
-polygons, in any format accepted by <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">xspline</a></code>; e.g.
+polygons, in any format accepted by <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code>; e.g.
 numeric color ids, symbolic color names, or colors in RGB.</p></dd>
+
+
 <dt>mark.alpha</dt>
 <dd><p><code>numeric</code> value between 0 (transparent) and 1 (opaque)
 indicating the transparency of <code>mark.col</code> color fill values,
 used only when <code>mark.groups</code> is defined, and <code>mark.col</code> is not defined.</p></dd>
+
+
 <dt>mark.border</dt>
 <dd><p>A scalar or vector giving the colors of the borders of
 the vertex group marking polygons. If it is <code>NA</code>, then no border is
 drawn.</p></dd>
+
+
 <dt>mark.expand</dt>
 <dd><p>A numeric scalar or vector, the size of the border around
 the marked vertex groups. It is in the same units as the vertex sizes. If a
 vector is given, then different values are used for the different vertex
 groups.</p></dd>
+
+
 <dt>mark.lwd, mark.lty</dt>
 <dd><p>line with and line type parameters for each
 <code>mark.groups</code> polygon,</p></dd>
+
+
 <dt>pie_to_jampie</dt>
 <dd><p><code>logical</code> indicating whether to convert
 vertex shape <code>"pie"</code> to <code>"jampie"</code> in order to use vectorized
 plotting.</p></dd>
+
+
 <dt>use_shadowText</dt>
 <dd><p><code>logical</code> indicating whether to use
 <code><a href="https://rdrr.io/pkg/jamba/man/shadowText.html" class="external-link">jamba::shadowText()</a></code> instead of <code><a href="https://rdrr.io/r/graphics/text.html" class="external-link">graphics::text()</a></code>, in order
 to render text labels with a subtle shadow-like outline around
 each label. This change improves legibility of labels at
 the expense of slightly longer plot rendering time.</p></dd>
+
+
 <dt>vectorized_node_shapes</dt>
 <dd><p><code>logical</code> indicating whether to plot
 vertex node shapes using vectorized operations. It is substantially
@@ -160,13 +189,15 @@ order of their shape, which affects the positioning of nodes
 when there are node overlaps. This tradeoff is relatively minor,
 and it is recommended either to reposition nodes to reduce or
 prevent overlaps, or adjust node sizes to reduce overlaps.</p></dd>
+
+
 <dt>edge_bundling</dt>
 <dd><p><code>character</code> string or <code>function</code>, where:</p><ul><li><p><code>"default"</code> will try to detect an appropriate method: when
 <code>nodegroups</code> or <code>mark.groups</code> are defined, it chooses the matching
 option (see below); otherwise it chooses <code>"connections"</code>.</p></li>
 <li><p><code>"none"</code> will perform no edge bundling. This method is best when
 rendering straight edges, or for rendering multiple identical edges
-with curvature as defined by <code><a href="https://rdrr.io/pkg/igraph/man/plot.common.html" class="external-link">igraph::igraph.plotting()</a></code>.</p></li>
+with curvature as defined by <code><a href="https://r.igraph.org/reference/plot.common.html" class="external-link">igraph::igraph.plotting()</a></code>.</p></li>
 <li><p><code>"connections"</code> will perform graph edge bundling by
 shared connections by calling <code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code> then
 <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>. This option is particularly good
@@ -187,6 +218,8 @@ outside this package. The custom function should be able
 to use the node layout coordinates in <code>graph_attr(x, "layout")</code>,
 and render edges between nodes.</p></li>
 </ul></dd>
+
+
 <dt>nodegroups</dt>
 <dd><p><code>list</code> object as output by <code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code>
 where each list element is a <code>character</code> vector of vertex node
@@ -194,6 +227,8 @@ names present in <code>igraph::V(x)$name</code>. If no <code>"name"</code> verte
 attribute exists, then integer index values are used as names.
 Note that all vertex nodes must be represented in <code>nodegroup</code>
 in order for the corresponding edges to be plotted.</p></dd>
+
+
 <dt>render_nodes, render_edges</dt>
 <dd><p><code>logical</code> indicating whether to
 render vertex nodes, or edges, respectively. Sometimes it can
@@ -201,39 +236,50 @@ be useful to call this function for other byproduct outputs,
 for example, <code>jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)</code>
 will create a new plot device with appropriate axis ranges,
 and can be used to render edge bundling results for example.</p></dd>
+
+
 <dt>render_groups</dt>
 <dd><p><code>logical</code> indicating whether to render groups
 when <code>mark.groups</code> is supplied. Groups are rendered with a
 shaded polygon and border.</p></dd>
+
+
 <dt>render_nodelabels</dt>
 <dd><p><code>logical</code> indicating whether to draw node
 labels, which is typically the last operation in the plot sequence.
 Note that node labels can be rendered without also rendering
 the nodes or edges.</p></dd>
+
+
 <dt>plot_grid</dt>
 <dd><p><code>logical</code> indicating whether to plot a background grid
 indicating units of 2% across the layout of the network graph. The
 units are calculated consistent with <code>nudge_igraph_nodes()</code>,
 <code><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> and other functions, scaled relative to the
 maximum x- or y-coordinate range of layout of the graph. Layout
-is obtained by <code>get_igraph_layout()</code> which by default uses
+is obtained by <code><a href="get_igraph_layout.html">get_igraph_layout()</a></code> which by default uses
 supplied <code>layout</code>, or graph attribute <code>igraph::graph_attr(x, "layout")</code>.
 Note that by default, <code><a href="jam_igraph.html">jam_igraph()</a></code> represents the layout with
 aspect ratio = 1, so x-coordinates and y-coordiantes are represented
 with the same spacing per unit.
 This function calls <code><a href="plot_layout_scale.html">plot_layout_scale()</a></code> to render the grid lines.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p><code>logical</code> or <code>character</code> vector of attributes for
 which debug output will be plotted onscreen.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>Note that this function is intended to be called by <code><a href="jam_igraph.html">jam_igraph()</a></code>,
 and is an internal function not intended to be called directly.</p>
 <p>The <code><a href="jam_igraph.html">jam_igraph()</a></code> handles the overall plot equivalent of
-<code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, however it calculates layout coordinates,
+<code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, however it calculates layout coordinates,
 and defines more useful x- and y-axis ranges, and then
 adjusts node and label sizes relevant to the layout data range.
 Specifically <code>vertex.size=15</code> is only useful when the layout range
@@ -242,7 +288,7 @@ the vertex is scaled relative to the actual layout ranges.</p>
 <p>The steps here are a reproduction of <code>igraph:::plot.igraph()</code> with
 four changes:</p><ol><li><p>Default <code>rescale=FALSE</code>, and <code>asp=1</code> which means igraph layout is
 drawn true to the layout coordinates without distortion. To use
-default <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> behavior, use <code>rescale=TRUE</code>.
+default <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> behavior, use <code>rescale=TRUE</code>.
 The new default may not be appropriate for bipartite layout
 algorithms that generate two columns, and seems most useful
 with organic layouts where aspect ratio 1 helps convey important
@@ -256,7 +302,7 @@ are not known until the plot rendering step.</p></li>
 </ul></li>
 </ol><p>When <code>vectorized_node_shapes=TRUE</code> by default:</p><ol><li><p>When there are multiple different vertex <code>"shape"</code> attributes, the
 nodes are rendered vectorized one shape at a time. The original
-<code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> draws each individual vertex one by one,
+<code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> draws each individual vertex one by one,
 which is substantially slower (minutes compared to 1-2 seconds)
 for large <code>igraph</code> objects.</p></li>
 <li><p>When there are multiple font families, the default plot function
@@ -266,7 +312,7 @@ in <code><a href="https://rdrr.io/r/graphics/text.html" class="external-link">gr
 the speed improvement is substantial, again roughly minutes down
 to 1-2 seconds.</p></li>
 </ol><p>The fourth difference involves edge bundling:</p><ol><li><p>When <code>edge_bundling</code> is used, it renders edges differently
-than the approach in <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, by drawing curved
+than the approach in <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, by drawing curved
 splines for each bundle of edges.</p></li>
 </ol><p>Some other distinctive features include:</p>
 <p>When <code>use_shadowText=TRUE</code> node labels call <code><a href="https://rdrr.io/pkg/jamba/man/shadowText.html" class="external-link">jamba::shadowText()</a></code>
@@ -293,7 +339,7 @@ define custom edge bundling.</p>
 <li><p><code>render_nodelabels=FALSE</code></p></li>
 </ul><p>Note that this function is not called by default, and is only called
 by <code><a href="jam_igraph.html">multienrichjam::jam_igraph()</a></code>.</p>
-<p>All other arguments are documented in <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>.</p>
+<p>All other arguments are documented in <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -336,7 +382,6 @@ by <code><a href="jam_igraph.html">multienrichjam::jam_igraph()</a></code>.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -350,8 +395,7 @@ by <code><a href="jam_igraph.html">multienrichjam::jam_igraph()</a></code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

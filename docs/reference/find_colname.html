@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,32 +62,41 @@
     <p>Find colname by character string or pattern matching</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">find_colname</span><span class="op">(</span>
-  <span class="va">pattern</span>,
-  <span class="va">x</span>,
-  max <span class="op">=</span> <span class="fl">1</span>,
-  index <span class="op">=</span> <span class="cn">FALSE</span>,
-  require_non_na <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">find_colname</span><span class="op">(</span></span>
+<span>  <span class="va">pattern</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  max <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  index <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  require_non_na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>pattern</dt>
 <dd><p>character vector containing text strings or
 regular expression patterns.</p></dd>
+
+
 <dt>x</dt>
 <dd><p>input <code>data.frame</code> or other R object that
 contains colnames.</p></dd>
+
+
 <dt>max</dt>
 <dd><p>integer maximum number of results to return.</p></dd>
+
+
 <dt>index</dt>
 <dd><p>logical indicating whether to return the column
 index as an integer vector. When <code>index=FALSE</code> it returns
 the matching <code>colnames(x)</code>; when <code>index=TRUE</code> it returns
 the matching column numbers as an integer vector.</p></dd>
+
+
 <dt>require_non_na</dt>
 <dd><p>logical indicating whether to require the
 column to contain non-NA values, default is TRUE. The intent
@@ -95,12 +104,17 @@ of this function is to find colnames whose data will match
 expectations, and when require_non_na is TRUE, this
 function will continue until it finds a column with non-NA
 values.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/jamba/man/provigrep.html" class="external-link">jamba::provigrep()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>character vector with length <code>max</code>, or if no pattern
+    
+
+<p>character vector with length <code>max</code>, or if no pattern
 match is found it returns <code>NULL</code>. Also if there are no
 <code>colnames(x)</code> then it returns <code>NULL</code>.</p>
     </div>
@@ -132,6 +146,9 @@ unique name is returned.</p>
 <code><a href="deconcat_df2.html">deconcat_df2</a>()</code>,
 <code><a href="display_colorRamp2D.html">display_colorRamp2D</a>()</code>,
 <code><a href="enrichList2geneHitList.html">enrichList2geneHitList</a>()</code>,
+<code><a href="filter_mem_genes.html">filter_mem_genes</a>()</code>,
+<code><a href="filter_mem_sets.html">filter_mem_sets</a>()</code>,
+<code><a href="get_igraph_layout.html">get_igraph_layout</a>()</code>,
 <code><a href="gsubs.html">gsubs</a>()</code>,
 <code><a href="handle_igraph_param_list.html">handle_igraph_param_list</a>()</code>,
 <code><a href="isColorBlank.html">isColorBlank</a>()</code>,
@@ -142,8 +159,9 @@ unique name is returned.</p>
 <code><a href="rank_mem_clusters.html">rank_mem_clusters</a>()</code>,
 <code><a href="rotate_coordinates.html">rotate_coordinates</a>()</code>,
 <code><a href="subgraph_jam.html">subgraph_jam</a>()</code>,
+<code><a href="subset_mem.html">subset_mem</a>()</code>,
+<code><a href="summarize_node_spacing.html">summarize_node_spacing</a>()</code>,
 <code><a href="xyAngle.html">xyAngle</a>()</code></p></div>
-    </div>
     </div>
 
   </div>
@@ -158,8 +176,7 @@ unique name is returned.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

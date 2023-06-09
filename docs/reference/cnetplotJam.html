@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,67 +62,93 @@
     <p>Create a cnetplot igraph object</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">cnetplotJam</span><span class="op">(</span>
-  <span class="va">x</span>,
-  showCategory <span class="op">=</span> <span class="fl">5</span>,
-  categorySize <span class="op">=</span> <span class="st">"geneNum"</span>,
-  nodeLabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"Description"</span>, <span class="st">"ID"</span><span class="op">)</span>,
-  foldChange <span class="op">=</span> <span class="cn">NULL</span>,
-  fixed <span class="op">=</span> <span class="cn">TRUE</span>,
-  doPlot <span class="op">=</span> <span class="cn">FALSE</span>,
-  categoryColor <span class="op">=</span> <span class="st">"#E5C494"</span>,
-  geneColor <span class="op">=</span> <span class="st">"#B3B3B3"</span>,
-  normalizeGeneSize <span class="op">=</span> <span class="cn">TRUE</span>,
-  labelCex <span class="op">=</span> <span class="fl">0.45</span>,
-  colorSub <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cnetplotJam</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  showCategory <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  categorySize <span class="op">=</span> <span class="st">"geneNum"</span>,</span>
+<span>  nodeLabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"Description"</span>, <span class="st">"ID"</span><span class="op">)</span>,</span>
+<span>  foldChange <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fixed <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  doPlot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  categoryColor <span class="op">=</span> <span class="st">"#E5C494"</span>,</span>
+<span>  geneColor <span class="op">=</span> <span class="st">"#B3B3B3"</span>,</span>
+<span>  normalizeGeneSize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labelCex <span class="op">=</span> <span class="fl">0.45</span>,</span>
+<span>  colorSub <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>enrichResults object</p></dd>
+
+
 <dt>showCategory</dt>
 <dd><p>integer number of categories to include in the
 resulting Cnet plot.</p></dd>
+
+
 <dt>categorySize</dt>
 <dd><p>character value indicating how to size the pathway
 nodes, where <code>"geneNum"</code> sizes nodes by the number of genes in that
 pathway, and <code>"pvalue"</code> sizes nodes by the enrichment P-value using
 the format <code>-log10(pvalue)</code>.</p></dd>
+
+
 <dt>nodeLabel</dt>
 <dd><p>character value indicating which colname in
 <code>as.data.frame(x)</code> to use as a node label. Depending upon the source
 of data, there may be alternative colnames that are more suitable
 as node labels.</p></dd>
+
+
 <dt>foldChange</dt>
 <dd><p>numeric vector named by gene, or NULL. When supplied,
 the vector names must use the same nomenclature as the <code>x</code> input
 object, which can be inspected with <code>print(head(x@gene))</code>.</p></dd>
+
+
 <dt>fixed</dt>
 <dd><p>optional argument passed to <code>netplot</code>.</p></dd>
+
+
 <dt>doPlot</dt>
 <dd><p>logical indicating whether to plot the result.</p></dd>
+
+
 <dt>categoryColor, geneColor</dt>
 <dd><p>character color, used to colorize
 category (pathway) nodes, or gene nodes, respectively.</p></dd>
+
+
 <dt>normalizeGeneSize</dt>
 <dd><p>logical indicating whether to re-scale the
 gene node sizes so the mean gene node size is no larger than the
 median category node size. This option is intended to help gene
 and category node sizes to be in relative proportion.</p></dd>
+
+
 <dt>labelCex</dt>
 <dd><p>numeric value to re-scale label text in the igraph
 object, and is applied directly to the igraph object.</p></dd>
+
+
 <dt>colorSub</dt>
 <dd><p>character vector of valid R colors, whose names
 are compared to node names, for example <code>V(g)$name %in% names(colorSub)</code>.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -174,7 +200,6 @@ identifies pathway/gene set nodes.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -188,8 +213,7 @@ identifies pathway/gene set nodes.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

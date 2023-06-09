@@ -1,5 +1,94 @@
 # TODO
 
+## 05jun2023
+
+* `mem_plot_folio()`
+
+   * DONE: The enrichment dot plot (or enrichment heatmap) should be created
+   after the gene-path heatmap is created, in order to define
+   pathway clusters using gene content, rather than defining pathway
+   clusters using the `-log10(Pvalue)` matrix.
+   
+      * The clusters derived from the P-value matrix are sometimes
+      not very similar to the gene-pathway clustering result.
+      * For this workflow, it makes the most sense to define pathway clusters
+      upfront, then share those pathway clusters with all downstream
+      visualizations.
+      * Consider creating object class "mem_plots".
+
+* consider new function to convert IPA enrichment data to `geneHitList`
+
+   * list element `"Analysis Ready Molecules"` is provided in the IPA output,
+   and this data can be used to re-create the directional hit matrix used
+   during import (if directionality such as fold change was provided to IPA).
+
+* consider new function to evaluate gene-pathway heatmap output
+
+   * The driving use case is selecting `pathway_column_split=5` upfront,
+   but realizing perhaps 3 clusters would be preferred based upon the
+   content.
+   
+      * Criteria for collapsing two pathway clusters together:
+      either Jaccard similarity above 0.4, or correlation above 0.6.
+      * Definitely requires more testing to determine appropriate
+      default thresholds, or whether a reasonable data-driven threshold
+      can be defined.
+   
+   * sometimes two clusters can and perhaps should be merged together
+   
+      * Create collapsed incidence matrix,
+      * Calculate correlation,
+      * Any two clusters with correlation >= 0.2 could be merged?
+      * Alternatively, if more than 3 clusters would be merged, cancel
+      to prevent merging too many clusters together.
+
+* consider new function to edit vertex attributes?
+
+   * use case: existing `igraph` object nodes have attributes to modify:
+   
+      * sometimes modify only certain nodes: `nodeType="Set"` to edit labels
+      * attributes in atomic vector form
+      * attributes (`pie.color`, `pie.border`) in `list` form
+      * also sometimes want to adjust colors - probably separate function
+      * function returns `igraph` object with attribute modified and stored
+      in the same state as present originally (e.g. atomic remains atomic;
+      list remains list).
+   
+   * Which format seems most reasonable?
+   
+      * ```
+      gsub_vertex(g,
+         pattern_l=list(
+            nodeType=c(Set="^(WP|KEGG|BIOCARTA|GO|REACTOME)_")),
+         replacement_l=list(
+            nodeType=c(Set="")))
+      ```
+      
+      * ```
+      gsub_vertex(g,
+         subset_attr="nodeType",
+         subset_attr_value="Set",
+         pattern="^(WP|KEGG|BIOCARTA|GO|REACTOME)_",
+         replacement="")
+      ```
+      
+      * ```
+      gsub_vertex(g,
+         subset_attr_l=list(nodeType=c("Set")),
+         pattern="^(WP|KEGG|BIOCARTA|GO|REACTOME)_",
+         replacement="")
+      ```
+
+* consider new function to adjust `igraph` node colors in all forms
+
+   * modify all fill color attributes `color`, `pie.color`, `coloredrect.color`
+   * modify all border attributes `frame.color`, `pie.border`,
+   `coloredrect.border`
+   * adjust `frame.width`, `pie.lwd`, `coloredrect.lwd` relative to each other.
+   For example when `pie.lwd` and `pie.border` are both defined
+   (and not transparent), `frame.width=0.1`, otherwise `frame.width=2`.
+
+
 ## 02jun2023
 
 * `mem_plot_folio()`

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,67 +62,111 @@
     <p>Re-order igraph nodes</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">reorderIgraphNodes</span><span class="op">(</span>
-  <span class="va">g</span>,
-  sortAttributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie.color"</span>, <span class="st">"pie.color.length"</span>, <span class="st">"coloredrect.color"</span>, <span class="st">"color"</span>,
-    <span class="st">"frame.color"</span>, <span class="st">"pie.border"</span>, <span class="st">"pie.border.length"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span>,
-  nodeSortBy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"-y"</span><span class="op">)</span>,
-  layout <span class="op">=</span> <span class="cn">NULL</span>,
-  nodesets <span class="op">=</span> <span class="cn">NULL</span>,
-  colorV <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reorderIgraphNodes</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  sortAttributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie.color"</span>, <span class="st">"pie.color.length"</span>, <span class="st">"pie.border"</span>, <span class="st">"pie.border.length"</span>,</span>
+<span>    <span class="st">"coloredrect.color"</span>, <span class="st">"coloredrect.border"</span>, <span class="st">"color"</span>, <span class="st">"frame.color"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span>,</span>
+<span>  nodeSortBy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"-y"</span><span class="op">)</span>,</span>
+<span>  orderByAspect <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  aspectThreshold <span class="op">=</span> <span class="op">-</span><span class="fl">1.25</span>,</span>
+<span>  layout <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nodesets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colorV <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">reorder_igraph_nodes</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  sortAttributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie.color"</span>, <span class="st">"pie.color.length"</span>, <span class="st">"pie.border"</span>, <span class="st">"pie.border.length"</span>,</span>
+<span>    <span class="st">"coloredrect.color"</span>, <span class="st">"coloredrect.border"</span>, <span class="st">"color"</span>, <span class="st">"frame.color"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span>,</span>
+<span>  nodeSortBy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"-y"</span><span class="op">)</span>,</span>
+<span>  orderByAspect <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  aspectThreshold <span class="op">=</span> <span class="op">-</span><span class="fl">1.25</span>,</span>
+<span>  layout <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nodesets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colorV <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-<span class="fu">reorder_igraph_nodes</span><span class="op">(</span>
-  <span class="va">g</span>,
-  sortAttributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie.color"</span>, <span class="st">"pie.color.length"</span>, <span class="st">"coloredrect.color"</span>, <span class="st">"color"</span>,
-    <span class="st">"frame.color"</span>, <span class="st">"pie.border"</span>, <span class="st">"pie.border.length"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span>,
-  nodeSortBy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"-y"</span><span class="op">)</span>,
-  layout <span class="op">=</span> <span class="cn">NULL</span>,
-  nodesets <span class="op">=</span> <span class="cn">NULL</span>,
-  colorV <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
-
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> object, typically expected to have a fixed
 graph layout stored as <code>igraph::graph_attr(g, "layout")</code>,
 or supplied via <code>layout</code> argument.</p></dd>
+
+
 <dt>sortAttributes</dt>
 <dd><p><code>character</code> vector of node attribute
 names, to be applied in order when sorting nodes.</p></dd>
+
+
 <dt>nodeSortBy</dt>
 <dd><p><code>character</code> vector containing <code>"x"</code> and
 <code>"y"</code> indicating the primary axis used to sort nodes.
 Note that sort order can be reversed by prepending "-",
 for example <code>"-x"</code> or <code>"-y"</code>.</p></dd>
+
+
+<dt>orderByAspect</dt>
+<dd><p><code>logical</code> indicating whether the aspect ratio
+of each nodeset determines the sort order. When <code>orderByAspect=TRUE</code>
+it ignores <code>nodeSortBy</code> and uses each nodeset aspect ratio
+to determine the order. Note that the original values for <code>nodeSortOrder</code>
+are retained, specifically the directional sign for each axis,
+such that <code>"x"</code> and <code>"-y"</code> will either become <code>c("x", "-y")</code> or
+<code>c("-y", "x")</code>. This way, other locales for which bottom-right
+to top-left ordering is more natural, use <code>nodeSortBy=c("-x", "y")</code>
+to preserve that order. It will become <code>c("y", "-x")</code> for tall
+aspect nodesets. See <code>aspectThreshold</code> below.</p></dd>
+
+
+<dt>aspectThreshold</dt>
+<dd><p><code>numeric</code> indicating the aspect ratio
+threshold below which nodes are sorted <code>c("-y", "x")</code> top to bottom.
+All aspect ratios (x/y) above this threshold are sorted
+<code>c("x", "-y")</code> left to right. Aspect ratios with x &lt; y are
+internally converted to negative ratios (-y/x) such that -1.25
+is equivalent to x/y=0.8 for example.</p></dd>
+
+
 <dt>layout</dt>
 <dd><p><code>numeric</code> matrix of node coordinates, or
 function used to produce layout coordinates. When layout
 is <code>NULL</code>, this function tries to use graph attribute
 <code>igraph::graph_attr(g, "layout")</code>, otherwise
 the <code><a href="relayout_with_qfr.html">relayout_with_qfr()</a></code> is called.</p></dd>
+
+
 <dt>nodesets</dt>
 <dd><p><code>character</code> with optional subset of nodesets to
 apply re-ordering. Each value must match names generated
 by <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>, otherwise it will be ignored.</p></dd>
+
+
 <dt>colorV</dt>
 <dd><p>optional <code>character</code> vector that contains R colors,
 used to order the colors in attributes such as <code>"pie.color"</code>
 and <code>"coloredrect.color"</code>.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>igraph with nodes positioned to order
+    
+
+<p>igraph with nodes positioned to order
 nodes by color. The layout coordinates are stored in
 the graph attribute <code>"layout"</code>, accessible with
 <code>g$layout</code> or <code>graph_attr(g, "layout")</code>.
@@ -190,121 +234,120 @@ are sorted to group the colors.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">   <span class="va">c3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"gold"</span>, <span class="st">"blue"</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="va">c3l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">c3</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
-<span class="r-in">      <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>,</span>
-<span class="r-in">      <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">c3l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">c3l</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>,<span class="fl">5</span>,<span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">   <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span>
-<span class="r-in">      <span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nameVector.html" class="external-link">nameVector</a></span><span class="op">(</span><span class="va">i</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"group_"</span>, <span class="va">i</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">   <span class="op">}</span><span class="op">)</span></span>
-<span class="r-in">   <span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/graph_from_edgelist.html" class="external-link">graph_from_edgelist</a></span><span class="op">(</span>directed<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span class="r-in">         node1<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Pathway"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">         node2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/colNum2excelName.html" class="external-link">colNum2excelName</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"pie"</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">i</span><span class="op">)</span></span>
-<span class="r-in">   <span class="op">}</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"grey80"</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="cn">NA</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span>, <span class="fu">colorjam</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html" class="external-link">blend_colors</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">   <span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu"><a href="relayout_with_qfr.html">relayout_with_qfr</a></span><span class="op">(</span><span class="va">g2</span>, repulse<span class="op">=</span><span class="fl">7</span>, do_reorder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="va">g2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="nudge_igraph_node.html">nudge_igraph_node</a></span><span class="op">(</span><span class="va">g2</span>, nodes_xy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Pathway<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="va">g2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="spread_igraph_labels.html">spread_igraph_labels</a></span><span class="op">(</span><span class="va">g2b</span>, do_reorder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span><span class="op">$</span><span class="va">label.family</span> <span class="op">&lt;-</span> <span class="st">"Arial"</span></span>
-<span class="r-in"></span>
-<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2b</span>,</span>
-<span class="r-in">      main<span class="op">=</span><span class="st">"Unordered"</span>,</span>
-<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
-<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span>,</span>
-<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes()"</span>,</span>
-<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
-<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span>, nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>,<span class="st">"x"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">      main<span class="op">=</span><span class="st">"reorderIgraphNodes(nodeSortBy=c(\"-y\",\"x\"))"</span>,</span>
-<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
-<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span></span>
-<span class="r-in">      <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span>,</span>
-<span class="r-in">         nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span>,</span>
-<span class="r-in">         sortAttributes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-pie.color.length"</span>, <span class="st">"pie.color"</span>, <span class="st">"color"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() by pie.color.length"</span>,</span>
-<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
-<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in">   <span class="va">g2c</span> <span class="op">&lt;-</span> <span class="va">g2b</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2c</span><span class="op">)</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span>
-<span class="r-in">      replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g2c</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">4</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2c</span>,</span>
-<span class="r-in">      nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span>
-<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
-<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in">   <span class="va">g2d</span> <span class="op">&lt;-</span> <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
-<span class="r-in">   <span class="va">mn</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="op">!</span><span class="va">mn</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span>
-<span class="r-in">      replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="va">mn</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">mn</span><span class="op">]</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">mn</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span>
-<span class="r-in">      <span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nameVector.html" class="external-link">nameVector</a></span><span class="op">(</span></span>
-<span class="r-in">         <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span>
-<span class="r-in">            replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">         <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">$</span><span class="va">pie.color</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">   <span class="op">}</span><span class="op">)</span></span>
-<span class="r-in">   <span class="va">g2e</span> <span class="op">&lt;-</span> <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2d</span>,</span>
-<span class="r-in">      nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">4</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"inner_pie_border"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2e</span>,</span>
-<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span>
-<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
-<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in">   <span class="va">g2f</span> <span class="op">&lt;-</span> <span class="va">g2e</span>;</span>
-<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2f</span><span class="op">)</span><span class="op">[</span><span class="st">"GeneV"</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"green"</span>;</span>
-<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2f</span><span class="op">)</span><span class="op">[</span><span class="st">"GeneE"</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"green"</span>;</span>
-<span class="r-in">   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">5</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"inner_pie_border"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2f</span>,</span>
-<span class="r-in">      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span>
-<span class="r-in">      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span class="r-in">      node_factor<span class="op">=</span><span class="fl">2</span>,</span>
-<span class="r-in">      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="va">c3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"gold"</span>, <span class="st">"blue"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="va">c3l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">c3</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>      <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>, <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>      <span class="va">c3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">c3l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">c3l</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>,<span class="fl">5</span>,<span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">pc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>      <span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nameVector.html" class="external-link">nameVector</a></span><span class="op">(</span><span class="va">i</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"group_"</span>, <span class="va">i</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/graph_from_edgelist.html" class="external-link">graph_from_edgelist</a></span><span class="op">(</span>directed<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>         node1<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Pathway"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         node2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/colNum2excelName.html" class="external-link">colNum2excelName</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"pie"</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">i</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="op">}</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"grey80"</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="cn">NA</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span>, <span class="fu">colorjam</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html" class="external-link">blend_colors</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu"><a href="relayout_with_qfr.html">relayout_with_qfr</a></span><span class="op">(</span><span class="va">g2</span>, repulse<span class="op">=</span><span class="fl">7</span>, do_reorder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="va">g2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="nudge_igraph_node.html">nudge_igraph_node</a></span><span class="op">(</span><span class="va">g2</span>, nodes_xy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Pathway<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="va">g2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="spread_igraph_labels.html">spread_igraph_labels</a></span><span class="op">(</span><span class="va">g2b</span>, do_reorder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span><span class="op">$</span><span class="va">label.family</span> <span class="op">&lt;-</span> <span class="st">"Arial"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2b</span>,</span></span>
+<span class="r-in"><span>      main<span class="op">=</span><span class="st">"Unordered"</span>,</span></span>
+<span class="r-in"><span>      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span></span>
+<span class="r-in"><span>      node_factor<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      main<span class="op">=</span><span class="st">"reorder_igraph_nodes()"</span>,</span></span>
+<span class="r-in"><span>      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span></span>
+<span class="r-in"><span>      node_factor<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span>, nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>,<span class="st">"x"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      main<span class="op">=</span><span class="st">"reorderIgraphNodes(nodeSortBy=c(\"-y\",\"x\"))"</span>,</span></span>
+<span class="r-in"><span>      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span></span>
+<span class="r-in"><span>      node_factor<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span>,</span></span>
+<span class="r-in"><span>         nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         sortAttributes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-pie.color.length"</span>, <span class="st">"pie.color"</span>, <span class="st">"color"</span>, <span class="st">"label"</span>, <span class="st">"name"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() by pie.color.length"</span>,</span></span>
+<span class="r-in"><span>      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span></span>
+<span class="r-in"><span>      node_factor<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="va">g2c</span> <span class="op">&lt;-</span> <span class="va">g2b</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2c</span><span class="op">)</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g2c</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">4</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2c</span>,</span></span>
+<span class="r-in"><span>      nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span></span>
+<span class="r-in"><span>      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span></span>
+<span class="r-in"><span>      node_factor<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="va">g2d</span> <span class="op">&lt;-</span> <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2b</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="va">mn</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="op">!</span><span class="va">mn</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="va">mn</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://r.igraph.org/reference/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">mn</span><span class="op">]</span><span class="op">$</span><span class="va">pie.border</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">mn</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>      <span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nameVector.html" class="external-link">nameVector</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>         <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"#DDDDDD"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>            replace<span class="op">=</span><span class="cn">TRUE</span>, size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2d</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">$</span><span class="va">pie.color</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="va">g2e</span> <span class="op">&lt;-</span> <span class="fu">reorderIgraphNodes</span><span class="op">(</span><span class="va">g2d</span>,</span></span>
+<span class="r-in"><span>      nodeSortBy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-y"</span>, <span class="st">"x"</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">4</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"inner_pie_border"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2e</span>,</span></span>
+<span class="r-in"><span>      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span></span>
+<span class="r-in"><span>      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span></span>
+<span class="r-in"><span>      node_factor<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="va">g2f</span> <span class="op">&lt;-</span> <span class="va">g2e</span>;</span></span>
+<span class="r-in"><span>   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2f</span><span class="op">)</span><span class="op">[</span><span class="st">"GeneV"</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"green"</span>;</span></span>
+<span class="r-in"><span>   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2f</span><span class="op">)</span><span class="op">[</span><span class="st">"GeneE"</span><span class="op">]</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"green"</span>;</span></span>
+<span class="r-in"><span>   <span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"lwd"</span><span class="op">=</span><span class="fl">5</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"inner_pie_border"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2f</span>,</span></span>
+<span class="r-in"><span>      main<span class="op">=</span><span class="st">"reorder_igraph_nodes() including frame.color"</span>,</span></span>
+<span class="r-in"><span>      label_dist_factor<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>      label_factor<span class="op">=</span><span class="fl">0.7</span>,</span></span>
+<span class="r-in"><span>      node_factor<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>      use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
@@ -1166,7 +1209,7 @@ are sorted to group the colors.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>longer object length is not a multiple of shorter object length</span>
 <span class="r-plt img"><img src="reorderIgraphNodes-7.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -1181,8 +1224,7 @@ are sorted to group the colors.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

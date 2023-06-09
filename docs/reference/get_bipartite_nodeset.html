@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,33 +62,42 @@
     <p>Get partite/connected graph nodesets defined by shared connections</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">get_bipartite_nodeset</span><span class="op">(</span>
-  <span class="va">g</span>,
-  type <span class="op">=</span> <span class="st">"nodeType"</span>,
-  set_nodes <span class="op">=</span> <span class="cn">NULL</span>,
-  sep <span class="op">=</span> <span class="st">","</span>,
-  return_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="st">"df"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_bipartite_nodeset</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"nodeType"</span>,</span>
+<span>  set_nodes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sep <span class="op">=</span> <span class="st">","</span>,</span>
+<span>  return_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="st">"df"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> object that contains one attribute column with
 node type.</p></dd>
+
+
 <dt>type</dt>
 <dd><p><code>character</code> string of the node/vertex attribute that
 represents the node type.</p></dd>
+
+
 <dt>set_nodes</dt>
 <dd><p><code>character</code> or <code>NULL</code>, which contains the set
 of node neighbors for the requested nodeset. For example,
 one might want all nodes that connect with <code>c("A", "B", "C")</code>.
 When <code>set_nodes=NULL</code> then all nodesets are returned.</p></dd>
+
+
 <dt>sep</dt>
 <dd><p><code>character</code> string used as a delimiter between
 node names when defining a nodeset name</p></dd>
+
+
 <dt>return_type</dt>
 <dd><p><code>character</code> string indicating the type of
 data to return:</p><ul><li><p><code>"list"</code> returns a list of nodesets, each element in the <code>list</code>
@@ -96,10 +105,15 @@ is a <code>character</code> vector with node names.</p></li>
 <li><p><code>"df"</code> returns a <code>data.frame</code> with more detailed annotation
 for each node, including nodesets, neighbor nodes, etc.</p></li>
 </ul></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -165,7 +179,6 @@ multiple nodesets</p></li>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -179,8 +192,7 @@ multiple nodesets</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

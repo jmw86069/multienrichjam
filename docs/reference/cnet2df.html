@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,28 +62,38 @@
     <p>Summarize Cnet igraph as a data.frame</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">cnet2df</span><span class="op">(</span><span class="va">g</span>, getNeighbors <span class="op">=</span> <span class="cn">TRUE</span>, checkSubsets <span class="op">=</span> <span class="va">getNeighbors</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cnet2df</span><span class="op">(</span><span class="va">g</span>, getNeighbors <span class="op">=</span> <span class="cn">TRUE</span>, checkSubsets <span class="op">=</span> <span class="va">getNeighbors</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p>igraph object containing Cnet data, specifically vertex
 attribute name "nodeType" with values "Set" and "Gene", and
 where "Set" nodes are only connected to "Gene" nodes.</p></dd>
+
+
 <dt>getNeighbors</dt>
 <dd><p>logical indicating whether to include
 the connected neighbor node names.</p></dd>
+
+
 <dt>checkSubsets</dt>
 <dd><p>logical indicating whether to test "Set"
 nodes to determine if the neighbors are all represented by
 another "Set" node.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>data.frame with the node name, label, degree (number of
+    
+
+<p>data.frame with the node name, label, degree (number of
 edges), membership (based upon connected component), and
 if <code>getNeighbors=TRUE</code> it includes comma-delimited names
 of neighboring nodes.</p>
@@ -147,7 +157,6 @@ filter for <code>"Set"</code> nodes with more than one <code>"Gene"</code>.</p>
 <code><a href="enrichList2df.html">enrichList2df</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -161,8 +170,7 @@ filter for <code>"Set"</code> nodes with more than one <code>"Gene"</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

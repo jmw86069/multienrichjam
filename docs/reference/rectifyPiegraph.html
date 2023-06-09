@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,30 +62,37 @@
     <p>Convert pie igraph node shapes to coloredrectangle</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">rectifyPiegraph</span><span class="op">(</span>
-  <span class="va">g</span>,
-  nrow <span class="op">=</span> <span class="fl">2</span>,
-  ncol <span class="op">=</span> <span class="fl">5</span>,
-  byrow <span class="op">=</span> <span class="cn">TRUE</span>,
-  whichNodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rectifyPiegraph</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  ncol <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  byrow <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  whichNodes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p>igraph object, expected to contain one or more
 nodes with shape <code>"pie"</code>.</p></dd>
+
+
 <dt>nrow, ncol</dt>
 <dd><p>integer values indicating the default
 number of rows and columns to use when displaying
 the colors for each node.</p></dd>
+
+
 <dt>byrow</dt>
 <dd><p>logical indicating whether each vector
 of node colors should fill the nrow,ncol matrix
 by each row, similar to how values are filled
 in <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">base::matrix()</a></code> with argument <code>byrow</code>.</p></dd>
+
+
 <dt>whichNodes</dt>
 <dd><p>integer vector of nodes in <code>g</code>
 which should be considered. Only nodes with shape
@@ -93,12 +100,17 @@ which should be considered. Only nodes with shape
 the <code>whichNodes</code> vector. By default, all nodes
 are converted, but <code>whichNodes</code> allows converting
 only a subset of nodes.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>igraph object where node shapes were changed
+    
+
+<p>igraph object where node shapes were changed
 from <code>"pie"</code> to <code>"coloredrectangle"</code>.</p>
     </div>
     <div id="details">
@@ -154,7 +166,6 @@ define the size of coloredrectangle nodes.</p></li>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -168,8 +179,7 @@ define the size of coloredrectangle nodes.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

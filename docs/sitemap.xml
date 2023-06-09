@@ -136,6 +136,12 @@
     <loc>/reference/enrichMapJam.html</loc>
   </url>
   <url>
+    <loc>/reference/filter_mem_genes.html</loc>
+  </url>
+  <url>
+    <loc>/reference/filter_mem_sets.html</loc>
+  </url>
+  <url>
     <loc>/reference/find_colname.html</loc>
   </url>
   <url>
@@ -152,6 +158,9 @@
   </url>
   <url>
     <loc>/reference/get_igraph_arrow_mode.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_igraph_layout.html</loc>
   </url>
   <url>
     <loc>/reference/grid_with_title.html</loc>
@@ -335,6 +344,12 @@
   </url>
   <url>
     <loc>/reference/subset_igraph_components.html</loc>
+  </url>
+  <url>
+    <loc>/reference/subset_mem.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summarize_node_spacing.html</loc>
   </url>
   <url>
     <loc>/reference/sync_igraph_communities.html</loc>

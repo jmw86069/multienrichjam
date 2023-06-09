@@ -25,7 +25,7 @@ mem_gene_path_heatmap(
   cluster_column_slices = TRUE,
   name = NULL,
   p_cutoff = mem$p_cutoff,
-  p_floor = 1e-06,
+  p_floor = 1e-10,
   row_split = NULL,
   column_split = NULL,
   auto_split = TRUE,

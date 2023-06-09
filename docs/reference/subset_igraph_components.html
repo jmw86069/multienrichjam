@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,35 +62,45 @@
     <p>Subset igraph by connected components</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">subset_igraph_components</span><span class="op">(</span>
-  <span class="va">g</span>,
-  keep <span class="op">=</span> <span class="cn">NULL</span>,
-  min_size <span class="op">=</span> <span class="fl">1</span>,
-  order_by_size <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">subset_igraph_components</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  keep <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  order_by_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p>igraph object</p></dd>
+
+
 <dt>keep</dt>
 <dd><p>numeric vector indicating which component or components
 to keep in the final output. When <code>order_by_size=TRUE</code>, components
 are ordered by size, from largest to smallest, in that case
 <code>keep=1</code> will return only the one largest connected subgraph.</p></dd>
+
+
 <dt>min_size</dt>
 <dd><p>numeric value indicating the number of nodes required
 in all connected components returned. This filter is applied after
 the <code>keep</code> argument.</p></dd>
+
+
 <dt>order_by_size</dt>
 <dd><p>logical indicating whether the connected components
 are sorted by size, largest to smallest, and therefore re-numbered.
 Otherwise, the components are somewhat randomly labeled based
-upon the output of <code><a href="https://rdrr.io/pkg/igraph/man/components.html" class="external-link">igraph::components()</a></code>.</p></dd>
+upon the output of <code><a href="https://r.igraph.org/reference/components.html" class="external-link">igraph::components()</a></code>.</p></dd>
+
+
 <dt>...</dt>
-<dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/igraph/man/components.html" class="external-link">igraph::components()</a></code>.</p></dd>
+<dd><p>additional arguments are passed to <code><a href="https://r.igraph.org/reference/components.html" class="external-link">igraph::components()</a></code>.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -101,8 +111,8 @@ to smallest, which helps choose the largest connected component,
 or subsequent components in size order.</p>
 <p>The components can also be filtered to require a minimum number
 of connected nodes.</p>
-<p>At its core, this function is a wrapper to <code><a href="https://rdrr.io/pkg/igraph/man/components.html" class="external-link">igraph::components()</a></code>
-and <code><a href="https://rdrr.io/pkg/igraph/man/subgraph.html" class="external-link">igraph::subgraph()</a></code>.</p>
+<p>At its core, this function is a wrapper to <code><a href="https://r.igraph.org/reference/components.html" class="external-link">igraph::components()</a></code>
+and <code><a href="https://r.igraph.org/reference/subgraph.html" class="external-link">igraph::subgraph()</a></code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -145,7 +155,6 @@ and <code><a href="https://rdrr.io/pkg/igraph/man/subgraph.html" class="external
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -159,8 +168,7 @@ and <code><a href="https://rdrr.io/pkg/igraph/man/subgraph.html" class="external
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

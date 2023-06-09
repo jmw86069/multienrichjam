@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,70 +62,80 @@
     <p>Jam wrapper to plot igraph</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">jam_igraph</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">...</span>,
-  xlim <span class="op">=</span> <span class="cn">NULL</span>,
-  ylim <span class="op">=</span> <span class="cn">NULL</span>,
-  expand <span class="op">=</span> <span class="fl">0.03</span>,
-  rescale <span class="op">=</span> <span class="cn">FALSE</span>,
-  node_factor <span class="op">=</span> <span class="fl">1</span>,
-  node_factor_l <span class="op">=</span> <span class="cn">NULL</span>,
-  edge_factor <span class="op">=</span> <span class="fl">1</span>,
-  edge_factor_l <span class="op">=</span> <span class="cn">NULL</span>,
-  label_factor <span class="op">=</span> <span class="fl">1</span>,
-  label_factor_l <span class="op">=</span> <span class="cn">NULL</span>,
-  label_dist_factor <span class="op">=</span> <span class="fl">1</span>,
-  label_dist_factor_l <span class="op">=</span> <span class="fl">1</span>,
-  use_shadowText <span class="op">=</span> <span class="cn">FALSE</span>,
-  edge_bundling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"default"</span>, <span class="st">"connections"</span>, <span class="st">"none"</span>, <span class="st">"mark.groups"</span>, <span class="st">"nodegroups"</span><span class="op">)</span>,
-  bundle_self <span class="op">=</span> <span class="cn">FALSE</span>,
-  nodegroups <span class="op">=</span> <span class="cn">NULL</span>,
-  render_nodes <span class="op">=</span> <span class="cn">TRUE</span>,
-  render_edges <span class="op">=</span> <span class="cn">TRUE</span>,
-  render_nodelabels <span class="op">=</span> <span class="cn">TRUE</span>,
-  render_groups <span class="op">=</span> <span class="cn">TRUE</span>,
-  vectorized_node_shapes <span class="op">=</span> <span class="cn">TRUE</span>,
-  plot_grid <span class="op">=</span> <span class="cn">FALSE</span>,
-  plot_function <span class="op">=</span> <span class="va">jam_plot_igraph</span>,
-  mark.groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  mark.shape <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">2</span>,
-  mark.col <span class="op">=</span> <span class="cn">NULL</span>,
-  mark.alpha <span class="op">=</span> <span class="fl">0.2</span>,
-  mark.border <span class="op">=</span> <span class="cn">NULL</span>,
-  mark.expand <span class="op">=</span> <span class="fl">8</span>,
-  mark.lwd <span class="op">=</span> <span class="fl">2</span>,
-  mark.lty <span class="op">=</span> <span class="fl">1</span>,
-  mark.smooth <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  debug <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">jam_igraph</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  expand <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span>  rescale <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  node_factor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  node_factor_l <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  edge_factor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  edge_factor_l <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  label_factor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  label_factor_l <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  label_fontsize_l <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  label_dist_factor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  label_dist_factor_l <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  use_shadowText <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  edge_bundling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"default"</span>, <span class="st">"connections"</span>, <span class="st">"none"</span>, <span class="st">"mark.groups"</span>, <span class="st">"nodegroups"</span><span class="op">)</span>,</span>
+<span>  bundle_self <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  nodegroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  render_nodes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  render_edges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  render_nodelabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  render_groups <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  vectorized_node_shapes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plot_grid <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  plot_function <span class="op">=</span> <span class="va">jam_plot_igraph</span>,</span>
+<span>  mark.groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  mark.shape <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">2</span>,</span>
+<span>  mark.col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mark.alpha <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  mark.border <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mark.expand <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  mark.lwd <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  mark.lty <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  mark.smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p><code>igraph</code> object to be plotted</p></dd>
+
+
 <dt>...</dt>
-<dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code></p></dd>
-<dt>xlim</dt>
+<dd><p>additional arguments are passed to <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code></p></dd>
+
+
+<dt>xlim, ylim</dt>
 <dd><p>default x and y axis limits. When either value is <code>NULL</code>
 the range is defined by the layout coordinate ranges, respectively,
 then expanded by adding <code>expand</code> to each side of the range.</p></dd>
-<dt>ylim</dt>
-<dd><p>default x and y axis limits. When either value is <code>NULL</code>
-the range is defined by the layout coordinate ranges, respectively,
-then expanded by adding <code>expand</code> to each side of the range.</p></dd>
+
+
 <dt>expand</dt>
 <dd><p><code>numeric</code> value used to expand the x and y axis ranges,
 where <code>0.03</code> expands each size <code>3%</code>.</p></dd>
+
+
 <dt>rescale</dt>
 <dd><p><code>logical</code> indicating whether to rescale the layout
 coordinates to <code>c(-1, 1)</code>. When <code>rescale=FALSE</code> the original
 layout coordinates are used as-is without change.</p></dd>
+
+
 <dt>node_factor</dt>
 <dd><p><code>numeric</code> value multiplied by <code>igraph::V(x)$size</code> to adjust
 the relative size of all nodes by a common numeric scalar value.</p></dd>
+
+
 <dt>node_factor_l, label_factor_l, label_dist_factor_l</dt>
 <dd><p><code>list</code>
 of vectors, where the names of the <code>list</code> are attribute
@@ -139,30 +149,40 @@ subsets of nodes. For example, consider:
 <code>"nodeType"</code> says to look at <code>igraph::vertex_attr(x, "nodeType")</code>.
 Nodes with <code>nodeType="Gene"</code> will use <code>1</code>, and <code>nodeType="Set"</code>
 will use <code>2</code> as the scalar value.</p></dd>
+
+
 <dt>edge_factor</dt>
 <dd><p><code>numeric</code> value multiplied by <code>igraph::E(x)$width</code> to adjust
 the relative width of all edges by a common numeric scalar value.</p></dd>
+
+
 <dt>label_factor</dt>
 <dd><p><code>numeric</code> value multiplied by <code>igraph::V(x)$label.cex</code>
-and <code>E(x)$label.cex</code> to adjust the relative size of all labels on
+and <code>igraph::E(x)$label.cex</code> to adjust the relative size of all labels on
 nodes and edges by a common numeric scalar value.</p></dd>
+
+
 <dt>label_dist_factor</dt>
 <dd><p><code>numeric</code> value multiplied by <code>igraph::V(x)$label.dist</code>
 to adjust the relative distance of all nodes labels from the node center
 by a common numeric scalar value.</p></dd>
+
+
 <dt>use_shadowText</dt>
 <dd><p><code>logical</code> indicating whether to use
 <code><a href="https://rdrr.io/pkg/jamba/man/shadowText.html" class="external-link">jamba::shadowText()</a></code> instead of <code><a href="https://rdrr.io/r/graphics/text.html" class="external-link">graphics::text()</a></code>, in order
 to render text labels with a subtle shadow-like outline around
 each label. This change improves legibility of labels at
 the expense of slightly longer plot rendering time.</p></dd>
+
+
 <dt>edge_bundling</dt>
 <dd><p><code>character</code> string or <code>function</code>, where:</p><ul><li><p><code>"default"</code> will try to detect an appropriate method: when
 <code>nodegroups</code> or <code>mark.groups</code> are defined, it chooses the matching
 option (see below); otherwise it chooses <code>"connections"</code>.</p></li>
 <li><p><code>"none"</code> will perform no edge bundling. This method is best when
 rendering straight edges, or for rendering multiple identical edges
-with curvature as defined by <code><a href="https://rdrr.io/pkg/igraph/man/plot.common.html" class="external-link">igraph::igraph.plotting()</a></code>.</p></li>
+with curvature as defined by <code><a href="https://r.igraph.org/reference/plot.common.html" class="external-link">igraph::igraph.plotting()</a></code>.</p></li>
 <li><p><code>"connections"</code> will perform graph edge bundling by
 shared connections by calling <code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code> then
 <code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>. This option is particularly good
@@ -183,6 +203,8 @@ outside this package. The custom function should be able
 to use the node layout coordinates in <code>graph_attr(x, "layout")</code>,
 and render edges between nodes.</p></li>
 </ul></dd>
+
+
 <dt>nodegroups</dt>
 <dd><p><code>list</code> object as output by <code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code>
 where each list element is a <code>character</code> vector of vertex node
@@ -190,29 +212,30 @@ names present in <code>igraph::V(x)$name</code>. If no <code>"name"</code> verte
 attribute exists, then integer index values are used as names.
 Note that all vertex nodes must be represented in <code>nodegroup</code>
 in order for the corresponding edges to be plotted.</p></dd>
-<dt>render_nodes</dt>
+
+
+<dt>render_nodes, render_edges</dt>
 <dd><p><code>logical</code> indicating whether to
 render vertex nodes, or edges, respectively. Sometimes it can
 be useful to call this function for other byproduct outputs,
 for example, <code>jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)</code>
 will create a new plot device with appropriate axis ranges,
 and can be used to render edge bundling results for example.</p></dd>
-<dt>render_edges</dt>
-<dd><p><code>logical</code> indicating whether to
-render vertex nodes, or edges, respectively. Sometimes it can
-be useful to call this function for other byproduct outputs,
-for example, <code>jam_plot_igraph(graph, add=FALSE, render_nodes=FALSE, render_edges=FALSE)</code>
-will create a new plot device with appropriate axis ranges,
-and can be used to render edge bundling results for example.</p></dd>
+
+
 <dt>render_nodelabels</dt>
 <dd><p><code>logical</code> indicating whether to draw node
 labels, which is typically the last operation in the plot sequence.
 Note that node labels can be rendered without also rendering
 the nodes or edges.</p></dd>
+
+
 <dt>render_groups</dt>
 <dd><p><code>logical</code> indicating whether to render groups
 when <code>mark.groups</code> is supplied. Groups are rendered with a
 shaded polygon and border.</p></dd>
+
+
 <dt>vectorized_node_shapes</dt>
 <dd><p><code>logical</code> indicating whether to plot
 vertex node shapes using vectorized operations. It is substantially
@@ -221,66 +244,86 @@ order of their shape, which affects the positioning of nodes
 when there are node overlaps. This tradeoff is relatively minor,
 and it is recommended either to reposition nodes to reduce or
 prevent overlaps, or adjust node sizes to reduce overlaps.</p></dd>
+
+
 <dt>plot_grid</dt>
 <dd><p><code>logical</code> indicating whether to plot a background grid
 indicating units of 2% across the layout of the network graph. The
 units are calculated consistent with <code>nudge_igraph_nodes()</code>,
 <code><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> and other functions, scaled relative to the
 maximum x- or y-coordinate range of layout of the graph. Layout
-is obtained by <code>get_igraph_layout()</code> which by default uses
+is obtained by <code><a href="get_igraph_layout.html">get_igraph_layout()</a></code> which by default uses
 supplied <code>layout</code>, or graph attribute <code>igraph::graph_attr(x, "layout")</code>.
 Note that by default, <code>jam_igraph()</code> represents the layout with
 aspect ratio = 1, so x-coordinates and y-coordiantes are represented
 with the same spacing per unit.
 This function calls <code><a href="plot_layout_scale.html">plot_layout_scale()</a></code> to render the grid lines.</p></dd>
+
+
 <dt>plot_function</dt>
 <dd><p><code>function</code> that renders the graph, not intended to
 be changed except for very customized uses. By default
 <code>plot_function=jam_plot_igraph()</code> which calls a modified variant of
 <code>igraph:::plot.igraph()</code>.</p></dd>
+
+
 <dt>mark.groups</dt>
 <dd><p>A list of vertex id vectors. It is interpreted as a set
 of vertex groups. Each vertex group is highlighted, by plotting a colored
 smoothed polygon around and “under” it. See the arguments below to
 control the look of the polygons.</p></dd>
+
+
 <dt>mark.shape</dt>
 <dd><p>A numeric scalar or vector. Controls the smoothness of the
 vertex group marking polygons. This is basically the ‘shape’
-parameter of the <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">xspline</a></code> function, its possible
+parameter of the <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code> function, its possible
 values are between -1 and 1. If it is a vector, then a different value is
 used for the different vertex groups.</p></dd>
+
+
 <dt>mark.col</dt>
 <dd><p>A scalar or vector giving the colors of marking the
-polygons, in any format accepted by <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">xspline</a></code>; e.g.
+polygons, in any format accepted by <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code>; e.g.
 numeric color ids, symbolic color names, or colors in RGB.</p></dd>
+
+
 <dt>mark.alpha</dt>
 <dd><p><code>numeric</code> value between 0 (transparent) and 1 (opaque)
 indicating the transparency of <code>mark.col</code> color fill values,
 used only when <code>mark.groups</code> is defined, and <code>mark.col</code> is not defined.</p></dd>
+
+
 <dt>mark.border</dt>
 <dd><p>A scalar or vector giving the colors of the borders of
 the vertex group marking polygons. If it is <code>NA</code>, then no border is
 drawn.</p></dd>
+
+
 <dt>mark.expand</dt>
 <dd><p>A numeric scalar or vector, the size of the border around
 the marked vertex groups. It is in the same units as the vertex sizes. If a
 vector is given, then different values are used for the different vertex
 groups.</p></dd>
-<dt>mark.lwd</dt>
+
+
+<dt>mark.lwd, mark.lty</dt>
 <dd><p>line with and line type parameters for each
 <code>mark.groups</code> polygon,</p></dd>
-<dt>mark.lty</dt>
-<dd><p>line with and line type parameters for each
-<code>mark.groups</code> polygon,</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p><code>logical</code> or <code>character</code> vector of attributes for
 which debug output will be plotted onscreen.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>This function is a drop-in replacement of <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>,
+    <p>This function is a drop-in replacement of <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>,
 intended to provide substantially faster vectorized plotting,
 to render bundled edges when requested, and
 to handle <code>rescale=FALSE</code> without requiring further adjustments.
@@ -294,10 +337,10 @@ based upon node attributes.</p><div class="section">
 
 
 <p>This function calls <code><a href="jam_plot_igraph.html">jam_plot_igraph()</a></code> as a replacement for
-<code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, and that function implements vectorized
+<code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, and that function implements vectorized
 plot features when <code>vectorized_node_shapes=TRUE</code> by default:</p><ol><li><p>When there are multiple different vertex <code>"shape"</code> attributes,
 this function renders nodes vectorized, one shape at a time.
-In this scenario, the original <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> draws
+In this scenario, the original <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> draws
 each individual vertex,
 which is substantially slower (minutes compared to 1-2 seconds)
 for large <code>igraph</code> objects.</p></li>
@@ -305,7 +348,7 @@ for large <code>igraph</code> objects.</p></li>
 groups by font family, in order to comply with limitations
 in <code><a href="https://rdrr.io/r/graphics/text.html" class="external-link">graphics::text()</a></code>. This situation is fairly rare, however
 the speed improvement is substantial, again roughly minutes down
-to 1-2 seconds. The <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> renders each node label
+to 1-2 seconds. The <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> renders each node label
 individually when there are multiple font families.</p></li>
 </ol></div>
 
@@ -313,7 +356,7 @@ individually when there are multiple font families.</p></li>
 <h3 id="rescale-false">rescale=FALSE<a class="anchor" aria-label="anchor" href="#rescale-false"></a></h3>
 
 
-<p>The default <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> uses <code>rescale=TRUE</code>, which
+<p>The default <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> uses <code>rescale=TRUE</code>, which
 can distort the layout coordinates to fit within a fixed
 x- and y-axis range <code>c(-1, 1)</code>. When using <code>rescale=FALSE</code> the
 <code>xlim</code> and <code>ylim</code> values are not adjusted to the actual coordinate
@@ -332,7 +375,7 @@ proportionally.</p>
 <p>When <code>edge_bundling</code> is something other than <code>edge_bundling="none"</code>,
 edge connections between nodes are rendered using a specific
 function by drawing curved splines for each bundle of edges.
-The approach in <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> only draws
+The approach in <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> only draws
 straight edges between nodes. The recommended method is
 <code>edge_bundling="default"</code> which will try to detect an appropriate
 method to bundle edges. When <code>mark.groups</code> and <code>nodegroups</code> are not
@@ -352,16 +395,29 @@ for a very large set of nodes, they are often in a round cluster</p>
 <li><p><code>label_factor</code> - <code>numeric</code> multiplied by label font size</p></li>
 <li><p><code>label_dist_factor</code> - <code>numeric</code> multiplied by label distance from
 node center</p></li>
-</ul><p>The following arguments apply scale factor based upon node attribute:</p><ul><li><p><code>node_factor_l</code> - <code>list</code> of named vectors applied to node size</p></li>
-<li><p><code>label_factor_l</code> - <code>list</code> of named vectors applied to label font size</p></li>
+</ul><p>New attributes <code>vertex.label.fontsize</code> and <code>edge.label.fontsize</code>
+which define fixed fontsize in points for nodes and edges, respectively.
+These values are not modified by <code>vertex.label.cex</code> nor <code>edge.label.cex</code>
+and are intended to allow control over specific fonts used in the final
+figure. Note their calculations are based upon <code>par("ps")</code> which should
+represent device-dependent point size. If this value is inappropriate,
+it should be adjusted to control the font sizing.</p>
+<p>The following arguments apply scale factor based upon node attribute:</p><ul><li><p><code>node_factor_l</code> - <code>list</code> of named vectors applied to node size</p></li>
+<li><p><code>label_factor_l</code> - <code>list</code> of named vectors applied as <code>label_factor</code>
+.   as a multiplier to label font size.</p></li>
+<li><p><code>label_fontsize_l</code> - <code>list</code> of named vectors applied to define a
+specific, fixed label fontsize in points, which is not modified
+.   by <code>vertex.label.cex</code> nor <code>label_factor</code>.</p></li>
 <li><p><code>label_dist_factor_l</code> - <code>list</code> of named vectors applied to label
 distance from node center</p></li>
-</ul><p>The <code>factor_l</code> technique is as follows:</p><div class="sourceCode R"><pre><code><span class="va">node_factor_l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>node_attr_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
-   attr_value1 <span class="op">=</span> <span class="va">factor1</span>,
-   attr_value2 <span class="op">=</span> <span class="va">factor2</span><span class="op">)</span><span class="op">)</span></code></pre><p></p></div>
-<p>A specific example:</p><div class="sourceCode R"><pre><code><span class="va">node_factor_l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
-   Gene<span class="op">=</span><span class="fl">1.5</span>,
-   Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre><p></p></div>
+</ul><p>The <code>factor_l</code> technique is as follows:</p>
+<p></p><div class="sourceCode R"><pre><code><span><span class="va">node_factor_l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>node_attr_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>   attr_value1 <span class="op">=</span> <span class="va">factor1</span>,</span>
+<span>   attr_value2 <span class="op">=</span> <span class="va">factor2</span><span class="op">)</span><span class="op">)</span></span></code></pre><p></p></div>
+<p>A specific example:</p>
+<p></p><div class="sourceCode R"><pre><code><span><span class="va">node_factor_l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>   Gene<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span>   Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre><p></p></div>
 <p>In this case, nodes with attribute
 <code>igraph::V(g)$nodeType == "Gene"</code> will use factor <code>1.5</code>
 Nodes with attribute
@@ -465,117 +521,110 @@ to render group borders as with <code>mark.groups</code>.</p>
 <code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
 <code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example with karate</span></span>
-<span class="r-in"><span class="va">karate</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span><span class="st">"Zachary"</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/cluster_louvain.html" class="external-link">cluster_louvain</a></span><span class="op">(</span><span class="va">karate</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">karate</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span>,</span>
-<span class="r-in">   mark.groups<span class="op">=</span><span class="va">cl</span>,</span>
-<span class="r-in">  mark.lwd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span class="r-in">  mark.lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, mark.shape<span class="op">=</span><span class="fl">1</span>,</span>
-<span class="r-in">  edge_bundling<span class="op">=</span><span class="st">"default"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'spatstat':</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   method     from</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   print.boxx cli </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example with karate</span></span></span>
+<span class="r-in"><span><span class="va">karate</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span><span class="st">"Zachary"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/cluster_louvain.html" class="external-link">cluster_louvain</a></span><span class="op">(</span><span class="va">karate</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">karate</span>,</span></span>
+<span class="r-in"><span>   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.5</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">cl</span>,</span></span>
+<span class="r-in"><span>  mark.lwd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  mark.lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, mark.shape<span class="op">=</span><span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  edge_bundling<span class="op">=</span><span class="st">"default"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create example cnet data</span></span>
-<span class="r-in"><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_cnet_test.html">make_cnet_test</a></span><span class="op">(</span>num_sets<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create example cnet data</span></span></span>
+<span class="r-in"><span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_cnet_test.html">make_cnet_test</a></span><span class="op">(</span>num_sets<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>coercing argument of type 'list' to logical</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## example showing how to use the list form</span></span>
-<span class="r-in"><span class="co">## This form resizes nodes where igraph::V(g)$nodeType %in% "Gene" by 2x,</span></span>
-<span class="r-in"><span class="co">## and resizes nodes where igraph::V(g)$nodeType %in% "Set" by 3x.</span></span>
-<span class="r-in"><span class="va">node_factor_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1.2</span>, Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## This form multiplies label.dist for nodeType="Gene" nodes by 1,</span></span>
-<span class="r-in"><span class="co">## and multiplies label.dist for nodeType="Set" nodes by 0.5</span></span>
-<span class="r-in"><span class="va">label_dist_factor_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1</span>, Set<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">cnet</span>,</span>
-<span class="r-in">   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span class="r-in">   node_factor_l<span class="op">=</span><span class="va">node_factor_l</span>,</span>
-<span class="r-in">   label_factor<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span class="r-in">   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1</span>, Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## example showing how to use the list form</span></span></span>
+<span class="r-in"><span><span class="co">## This form resizes nodes where igraph::V(g)$nodeType %in% "Gene" by 2x,</span></span></span>
+<span class="r-in"><span><span class="co">## and resizes nodes where igraph::V(g)$nodeType %in% "Set" by 3x.</span></span></span>
+<span class="r-in"><span><span class="va">node_factor_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1.2</span>, Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## This form multiplies label.dist for nodeType="Gene" nodes by 1,</span></span></span>
+<span class="r-in"><span><span class="co">## and multiplies label.dist for nodeType="Set" nodes by 0.5</span></span></span>
+<span class="r-in"><span><span class="va">label_dist_factor_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1</span>, Set<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">cnet</span>,</span></span>
+<span class="r-in"><span>   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   node_factor_l<span class="op">=</span><span class="va">node_factor_l</span>,</span></span>
+<span class="r-in"><span>   label_factor<span class="op">=</span><span class="fl">0.6</span>,</span></span>
+<span class="r-in"><span>   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1</span>, Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Example using edge bundling by community detection</span></span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span><span class="st">"Zachary"</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="va">gcom</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span>
-<span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
-<span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">   vertex.color<span class="op">=</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example using edge bundling by community detection</span></span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span><span class="st">"Zachary"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">gcom</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span></span>
+<span class="r-in"><span>   layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span></span>
+<span class="r-in"><span>   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span></span>
+<span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span></span>
+<span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
+<span class="r-in"><span>   vertex.color<span class="op">=</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">cfuncs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cluster_leading_eigen<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen</a></span>,</span>
-<span class="r-in">   cluster_edge_betweenness<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_edge_betweenness.html" class="external-link">cluster_edge_betweenness</a></span>,</span>
-<span class="r-in">   cluster_fast_greedy<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_fast_greedy.html" class="external-link">cluster_fast_greedy</a></span>,</span>
-<span class="r-in">   cluster_spinglass<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_spinglass.html" class="external-link">cluster_spinglass</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">   <span class="va">cfunc</span> <span class="op">&lt;-</span> <span class="va">cfuncs</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>;</span>
-<span class="r-in">   <span class="va">gcom</span> <span class="op">&lt;-</span> <span class="fu">cfunc</span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_edges_by_nodes.html">color_edges_by_nodes</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>;</span>
-<span class="r-in">   <span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">      layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span>
-<span class="r-in">      edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
-<span class="r-in">      nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">      mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cfuncs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cluster_leading_eigen<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen</a></span>,</span></span>
+<span class="r-in"><span>   cluster_edge_betweenness<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_edge_betweenness.html" class="external-link">cluster_edge_betweenness</a></span>,</span></span>
+<span class="r-in"><span>   cluster_fast_greedy<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_fast_greedy.html" class="external-link">cluster_fast_greedy</a></span>,</span></span>
+<span class="r-in"><span>   cluster_spinglass<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_spinglass.html" class="external-link">cluster_spinglass</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="va">cfunc</span> <span class="op">&lt;-</span> <span class="va">cfuncs</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>;</span></span>
+<span class="r-in"><span>   <span class="va">gcom</span> <span class="op">&lt;-</span> <span class="fu">cfunc</span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_edges_by_nodes.html">color_edges_by_nodes</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span></span>
+<span class="r-in"><span>      layout<span class="op">=</span><span class="va">layout_with_qfr</span>,</span></span>
+<span class="r-in"><span>      edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span></span>
+<span class="r-in"><span>      nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
+<span class="r-in"><span>      mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-4.png" alt="" width="700" height="433"></span>
 <span class="r-plt img"><img src="jam_igraph-5.png" alt="" width="700" height="433"></span>
 <span class="r-plt img"><img src="jam_igraph-6.png" alt="" width="700" height="433"></span>
 <span class="r-plt img"><img src="jam_igraph-7.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># fancy example showing mark.groups and colorizing</span></span>
-<span class="r-in"><span class="co"># edges using node colors</span></span>
-<span class="r-in"><span class="va">gcom</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/cluster_spinglass.html" class="external-link">cluster_spinglass</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_edges_by_nodes.html">color_edges_by_nodes</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span>
-<span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
-<span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cluster_spinglass()\n"</span>,</span>
-<span class="r-in">   <span class="st">"edge_bundling='nodegroups'"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># fancy example showing mark.groups and colorizing</span></span></span>
+<span class="r-in"><span><span class="co"># edges using node colors</span></span></span>
+<span class="r-in"><span><span class="va">gcom</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/cluster_spinglass.html" class="external-link">cluster_spinglass</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_edges_by_nodes.html">color_edges_by_nodes</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span></span>
+<span class="r-in"><span>   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span></span>
+<span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
+<span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cluster_spinglass()\n"</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"edge_bundling='nodegroups'"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-8.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># same but different edge_style</span></span>
-<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span>
-<span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span>
-<span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">   bundle_style<span class="op">=</span><span class="st">"xspline"</span>,</span>
-<span class="r-in">   detail<span class="op">=</span><span class="fl">14</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"bundle_style='xspline'"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># same but different edge_style</span></span></span>
+<span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span></span>
+<span class="r-in"><span>   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span></span>
+<span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
+<span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span></span>
+<span class="r-in"><span>   bundle_style<span class="op">=</span><span class="st">"xspline"</span>,</span></span>
+<span class="r-in"><span>   detail<span class="op">=</span><span class="fl">14</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"bundle_style='xspline'"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-9.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># same but using node connections</span></span>
-<span class="r-in"><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span>
-<span class="r-in">   edge_bundling<span class="op">=</span><span class="st">"connections"</span>,</span>
-<span class="r-in">   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span>
-<span class="r-in">   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"edge_bundling='connections'"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># same but using node connections</span></span></span>
+<span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span></span>
+<span class="r-in"><span>   layout<span class="op">=</span><span class="fu"><a href="layout_with_qfrf.html">layout_with_qfrf</a></span><span class="op">(</span>repulse<span class="op">=</span><span class="fl">3.2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   edge_bundling<span class="op">=</span><span class="st">"connections"</span>,</span></span>
+<span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
+<span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"edge_bundling='connections'"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-10.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -590,8 +639,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,49 +62,60 @@
     <p>igraph layout using qgraph Fruchterman-Reingold</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">layout_with_qfr</span><span class="op">(</span>
-  <span class="va">g</span>,
-  repulse <span class="op">=</span> <span class="fl">3.5</span>,
-  area <span class="op">=</span> <span class="fl">8</span> <span class="op">*</span> <span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,
-  repulse.rad <span class="op">=</span> <span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">^</span><span class="va">repulse</span><span class="op">)</span>,
-  constraints <span class="op">=</span> <span class="cn">NULL</span>,
-  constrain <span class="op">=</span> <span class="cn">NULL</span>,
-  seed <span class="op">=</span> <span class="fl">123</span>,
-  weights <span class="op">=</span> <span class="cn">NULL</span>,
-  niter <span class="op">=</span> <span class="cn">NULL</span>,
-  max.delta <span class="op">=</span> <span class="cn">NULL</span>,
-  cool.exp <span class="op">=</span> <span class="cn">NULL</span>,
-  init <span class="op">=</span> <span class="cn">NULL</span>,
-  groups <span class="op">=</span> <span class="cn">NULL</span>,
-  rotation <span class="op">=</span> <span class="cn">NULL</span>,
-  layout.control <span class="op">=</span> <span class="fl">0.5</span>,
-  round <span class="op">=</span> <span class="cn">TRUE</span>,
-  digits <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">layout_with_qfr</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  repulse <span class="op">=</span> <span class="fl">3.5</span>,</span>
+<span>  area <span class="op">=</span> <span class="fl">8</span> <span class="op">*</span> <span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>  repulse.rad <span class="op">=</span> <span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">^</span><span class="va">repulse</span><span class="op">)</span>,</span>
+<span>  constraints <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  constrain <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  niter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max.delta <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cool.exp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  init <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  layout.control <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  round <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  digits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p>igraph object</p></dd>
+
+
 <dt>repulse</dt>
 <dd><p>exponent power used to scale the radius effect around
 each vertex. The default is slightly higher than the cube of
 the number of vertices, but as the number of vertices increases,
 values from 3.5 to 4 and higher are more effective for layout.</p></dd>
+
+
 <dt>area</dt>
 <dd><p>The area of the plot, default is the square of the number of
 vertices times 8. Changes to plot area will also affect values of
 <code>repulse</code> and <code>repulse.rad</code>.</p></dd>
+
+
 <dt>repulse.rad</dt>
 <dd><p>Repulse radius, defaults to the the number of
 vertices raised to the <code>repulse</code> power.</p></dd>
+
+
 <dt>constraints</dt>
 <dd><p>optional two-column matrix with the coordinates of
 nodes which should not be modified, and NA values for nodes where
 the position can be modified.</p></dd>
+
+
 <dt>constrain</dt>
 <dd><p><code>character</code> optional vector of node names that should
 be constrained. This argument is a convenient shortcut for defining
@@ -113,13 +124,18 @@ on each row where the coordinate is free to move, and <code>numeric</code>
 values where the coordinate is fixed. For graph <code>g</code> that contains layout
 in <code>igraph::graph_attr(g, "layout")</code>, the <code>init</code> can be defined with
 this layout, then <code>constraints</code> is defined using <code>constrain</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other arguments are sent to
 <code><a href="https://rdrr.io/pkg/qgraph/man/qgraph.layout.fruchtermanreingold.html" class="external-link">qgraph::qgraph.layout.fruchtermanreingold()</a></code></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>two-column numeric matrix with coordinates for each vertex.</p>
+    
+
+<p>two-column numeric matrix with coordinates for each vertex.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -172,31 +188,29 @@ vertices, and lower values allows greater spacing between vertices.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">g</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">A</span><span class="op">-</span><span class="va">B</span><span class="op">-</span><span class="va">C</span><span class="op">-</span><span class="va">D</span><span class="op">-</span><span class="va">A</span>, <span class="va">E</span><span class="op">-</span><span class="va">A</span><span class="op">:</span><span class="va">B</span><span class="op">:</span><span class="va">C</span><span class="op">:</span><span class="va">D</span>,</span>
-<span class="r-in">   <span class="cn">F</span><span class="op">-</span><span class="va">G</span><span class="op">-</span><span class="va">H</span><span class="op">-</span><span class="va">I</span><span class="op">-</span><span class="cn">F</span>, <span class="va">J</span><span class="op">-</span><span class="cn">F</span><span class="op">:</span><span class="va">G</span><span class="op">:</span><span class="va">H</span><span class="op">:</span><span class="va">I</span>,</span>
-<span class="r-in">   <span class="va">K</span><span class="op">-</span><span class="va">L</span><span class="op">-</span><span class="va">M</span><span class="op">-</span><span class="va">N</span><span class="op">-</span><span class="va">K</span>, <span class="va">O</span><span class="op">-</span><span class="va">K</span><span class="op">:</span><span class="va">L</span><span class="op">:</span><span class="va">M</span><span class="op">:</span><span class="va">N</span>,</span>
-<span class="r-in">   <span class="va">P</span><span class="op">-</span><span class="va">Q</span><span class="op">-</span><span class="va">R</span><span class="op">-</span><span class="va">S</span><span class="op">-</span><span class="va">P</span>, <span class="cn">T</span><span class="op">-</span><span class="va">P</span><span class="op">:</span><span class="va">Q</span><span class="op">:</span><span class="va">R</span><span class="op">:</span><span class="va">S</span>,</span>
-<span class="r-in">   <span class="va">B</span><span class="op">-</span><span class="cn">F</span>, <span class="va">E</span><span class="op">-</span><span class="va">J</span>, <span class="va">C</span><span class="op">-</span><span class="va">I</span>, <span class="va">L</span><span class="op">-</span><span class="cn">T</span>, <span class="va">O</span><span class="op">-</span><span class="cn">T</span>, <span class="va">M</span><span class="op">-</span><span class="va">S</span>,</span>
-<span class="r-in">   <span class="va">C</span><span class="op">-</span><span class="va">P</span>, <span class="va">C</span><span class="op">-</span><span class="va">L</span>, <span class="va">I</span><span class="op">-</span><span class="va">L</span>, <span class="va">I</span><span class="op">-</span><span class="va">P</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mfrow"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"default layout\n(igraph)"</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"layout_with_fr\n(igraph)"</span>, layout<span class="op">=</span><span class="va">layout_with_fr</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"layout_with_qfr\n(qgraph default)"</span>, layout<span class="op">=</span><span class="va">layout_with_qfr</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"layout_with_qfr, repulse=6\n(qgraph custom)"</span>,</span>
-<span class="r-in">   layout<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="fu">layout_with_qfr</span><span class="op">(</span><span class="va">g</span>, repulse<span class="op">=</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>package ‘igraph’ was built under R version 3.6.2</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">g</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/make_graph.html" class="external-link">make_graph</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">A</span><span class="op">-</span><span class="va">B</span><span class="op">-</span><span class="va">C</span><span class="op">-</span><span class="va">D</span><span class="op">-</span><span class="va">A</span>, <span class="va">E</span><span class="op">-</span><span class="va">A</span><span class="op">:</span><span class="va">B</span><span class="op">:</span><span class="va">C</span><span class="op">:</span><span class="va">D</span>,</span></span>
+<span class="r-in"><span>   <span class="cn">F</span><span class="op">-</span><span class="va">G</span><span class="op">-</span><span class="va">H</span><span class="op">-</span><span class="va">I</span><span class="op">-</span><span class="cn">F</span>, <span class="va">J</span><span class="op">-</span><span class="cn">F</span><span class="op">:</span><span class="va">G</span><span class="op">:</span><span class="va">H</span><span class="op">:</span><span class="va">I</span>,</span></span>
+<span class="r-in"><span>   <span class="va">K</span><span class="op">-</span><span class="va">L</span><span class="op">-</span><span class="va">M</span><span class="op">-</span><span class="va">N</span><span class="op">-</span><span class="va">K</span>, <span class="va">O</span><span class="op">-</span><span class="va">K</span><span class="op">:</span><span class="va">L</span><span class="op">:</span><span class="va">M</span><span class="op">:</span><span class="va">N</span>,</span></span>
+<span class="r-in"><span>   <span class="va">P</span><span class="op">-</span><span class="va">Q</span><span class="op">-</span><span class="va">R</span><span class="op">-</span><span class="va">S</span><span class="op">-</span><span class="va">P</span>, <span class="cn">T</span><span class="op">-</span><span class="va">P</span><span class="op">:</span><span class="va">Q</span><span class="op">:</span><span class="va">R</span><span class="op">:</span><span class="va">S</span>,</span></span>
+<span class="r-in"><span>   <span class="va">B</span><span class="op">-</span><span class="cn">F</span>, <span class="va">E</span><span class="op">-</span><span class="va">J</span>, <span class="va">C</span><span class="op">-</span><span class="va">I</span>, <span class="va">L</span><span class="op">-</span><span class="cn">T</span>, <span class="va">O</span><span class="op">-</span><span class="cn">T</span>, <span class="va">M</span><span class="op">-</span><span class="va">S</span>,</span></span>
+<span class="r-in"><span>   <span class="va">C</span><span class="op">-</span><span class="va">P</span>, <span class="va">C</span><span class="op">-</span><span class="va">L</span>, <span class="va">I</span><span class="op">-</span><span class="va">L</span>, <span class="va">I</span><span class="op">-</span><span class="va">P</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mfrow"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"default layout\n(igraph)"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"layout_with_fr\n(igraph)"</span>, layout<span class="op">=</span><span class="va">layout_with_fr</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"layout_with_qfr\n(qgraph default)"</span>, layout<span class="op">=</span><span class="va">layout_with_qfr</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, main<span class="op">=</span><span class="st">"layout_with_qfr, repulse=6\n(qgraph custom)"</span>,</span></span>
+<span class="r-in"><span>   layout<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="fu">layout_with_qfr</span><span class="op">(</span><span class="va">g</span>, repulse<span class="op">=</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="layout_with_qfr-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -211,8 +225,7 @@ vertices, and lower values allows greater spacing between vertices.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

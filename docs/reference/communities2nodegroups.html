@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,25 +62,36 @@
     <p>Convert communities object to nodegroups list format</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">communities2nodegroups</span><span class="op">(</span><span class="va">wc</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">communities2nodegroups</span><span class="op">(</span><span class="va">wc</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>wc</dt>
 <dd><p><code>communities</code> object as returned by <code>igraph</code> functions
 such as <code>cluster_optimal()</code>, <code>cluster_walktrap()</code>, or
 <code>cluster_leading_eigen()</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>list</code> of <code>character</code> vectors, where each vector contains
+    
+
+<p><code>list</code> of <code>character</code> vectors, where each vector contains
 names of <code>igraph</code> nodes. When <code>algorithm</code> is defined in the
 input object, it is included as an attribute of the output <code>list</code>,
-accessible with <code>attr(out, "algorithm")</code>.
-When optional value <code>"cluster_names"</code> is present in the <code>communities</code>object, they are used to define the output <code>list</code> names.</p>
+accessible with <code>attr(out, "algorithm")</code>.</p>
+
+
+<p>When optional value <code>"cluster_names"</code> is present in the <code>communities</code></p>
+
+
+<p>object, they are used to define the output <code>list</code> names.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -132,7 +143,6 @@ that object type as an input value.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -146,8 +156,7 @@ that object type as an input value.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

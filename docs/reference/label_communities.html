@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,42 +62,56 @@
     <p>Assign labels to igraph communities</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">label_communities</span><span class="op">(</span>
-  <span class="va">wc</span>,
-  labels <span class="op">=</span> <span class="cn">NULL</span>,
-  add_catchwords <span class="op">=</span> <span class="cn">NULL</span>,
-  num_keep_terms <span class="op">=</span> <span class="fl">3</span>,
-  keep_terms_sep <span class="op">=</span> <span class="st">",\n"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">label_communities</span><span class="op">(</span></span>
+<span>  <span class="va">wc</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  add_catchwords <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  num_keep_terms <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  keep_terms_sep <span class="op">=</span> <span class="st">",\n"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>wc</dt>
 <dd><p><code>communities</code> object, or <code>list</code> in form of nodegroups,
 which is a <code>list</code> of <code>character</code> vectors that contain <code>igraph</code>
 node names.</p></dd>
+
+
 <dt>labels</dt>
 <dd><p><code>character</code> vector of optional labels to assign directly
 to community clusters. When not defined, the auto-detection method
 is used.</p></dd>
+
+
 <dt>add_catchwords</dt>
 <dd><p><code>character</code> of optional words to include as
 catchwords, to be excluded from use in the final label.</p></dd>
+
+
 <dt>num_keep_terms</dt>
 <dd><p><code>integer</code> maximum number of terms to be included
 in the final output label, when auto-detection is used.</p></dd>
+
+
 <dt>keep_terms_sep</dt>
 <dd><p><code>character</code> string used as a delimited to separate
 each term when multiple terms are concatenated together to form
 the cluster label.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>communities</code> or <code>list</code> format matching the input <code>wc</code> format.</p><ul><li><p>When <code>communities</code> is input, additional value <code>cluster_names</code>
+    
+
+<p><code>communities</code> or <code>list</code> format matching the input <code>wc</code> format.</p><ul><li><p>When <code>communities</code> is input, additional value <code>cluster_names</code>
 will contain a <code>character</code> vector of names corresponding to each
 integer index in <code>wc$membership</code>.</p></li>
 <li><p>When <code>nodegroups</code> is input, the <code>list</code> names will be a <code>character</code>
@@ -144,7 +158,6 @@ vector of cluster labels.</p></li>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -158,8 +171,7 @@ vector of cluster labels.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

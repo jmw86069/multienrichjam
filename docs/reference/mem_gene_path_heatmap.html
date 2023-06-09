@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,71 +62,84 @@
     <p>MultiEnrichment Heatmap of Genes and Pathways</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">mem_gene_path_heatmap</span><span class="op">(</span>
-  <span class="va">mem</span>,
-  genes <span class="op">=</span> <span class="cn">NULL</span>,
-  sets <span class="op">=</span> <span class="cn">NULL</span>,
-  min_gene_ct <span class="op">=</span> <span class="fl">1</span>,
-  min_set_ct <span class="op">=</span> <span class="fl">1</span>,
-  min_set_ct_each <span class="op">=</span> <span class="fl">4</span>,
-  column_fontsize <span class="op">=</span> <span class="cn">NULL</span>,
-  column_cex <span class="op">=</span> <span class="fl">1</span>,
-  row_fontsize <span class="op">=</span> <span class="cn">NULL</span>,
-  row_cex <span class="op">=</span> <span class="fl">1</span>,
-  row_method <span class="op">=</span> <span class="st">"binary"</span>,
-  column_method <span class="op">=</span> <span class="st">"binary"</span>,
-  enrich_im_weight <span class="op">=</span> <span class="fl">0.3</span>,
-  gene_im_weight <span class="op">=</span> <span class="fl">0.5</span>,
-  cluster_columns <span class="op">=</span> <span class="cn">NULL</span>,
-  cluster_rows <span class="op">=</span> <span class="cn">NULL</span>,
-  cluster_row_slices <span class="op">=</span> <span class="cn">TRUE</span>,
-  cluster_column_slices <span class="op">=</span> <span class="cn">TRUE</span>,
-  name <span class="op">=</span> <span class="cn">NULL</span>,
-  p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,
-  p_floor <span class="op">=</span> <span class="fl">1e-06</span>,
-  row_split <span class="op">=</span> <span class="cn">NULL</span>,
-  column_split <span class="op">=</span> <span class="cn">NULL</span>,
-  auto_split <span class="op">=</span> <span class="cn">TRUE</span>,
-  column_title <span class="op">=</span> <span class="va">LETTERS</span>,
-  row_title <span class="op">=</span> <span class="va">letters</span>,
-  row_title_rot <span class="op">=</span> <span class="fl">0</span>,
-  colorize_by_gene <span class="op">=</span> <span class="cn">TRUE</span>,
-  na_col <span class="op">=</span> <span class="st">"white"</span>,
-  rotate_heatmap <span class="op">=</span> <span class="cn">FALSE</span>,
-  colramp <span class="op">=</span> <span class="st">"Reds"</span>,
-  column_names_max_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">18</span>, <span class="st">"cm"</span><span class="op">)</span>,
-  column_names_rot <span class="op">=</span> <span class="fl">90</span>,
-  show_gene_legend <span class="op">=</span> <span class="cn">FALSE</span>,
-  show_pathway_legend <span class="op">=</span> <span class="cn">TRUE</span>,
-  show_heatmap_legend <span class="op">=</span> <span class="fl">8</span>,
-  use_raster <span class="op">=</span> <span class="cn">FALSE</span>,
-  seed <span class="op">=</span> <span class="fl">123</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mem_gene_path_heatmap</span><span class="op">(</span></span>
+<span>  <span class="va">mem</span>,</span>
+<span>  genes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min_gene_ct <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  min_set_ct <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  min_set_ct_each <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  column_fontsize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column_cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  row_fontsize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row_cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  row_method <span class="op">=</span> <span class="st">"binary"</span>,</span>
+<span>  column_method <span class="op">=</span> <span class="st">"binary"</span>,</span>
+<span>  enrich_im_weight <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>  gene_im_weight <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  cluster_columns <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cluster_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cluster_row_slices <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cluster_column_slices <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,</span>
+<span>  p_floor <span class="op">=</span> <span class="fl">1e-10</span>,</span>
+<span>  row_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  auto_split <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  column_title <span class="op">=</span> <span class="va">LETTERS</span>,</span>
+<span>  row_title <span class="op">=</span> <span class="va">letters</span>,</span>
+<span>  row_title_rot <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  colorize_by_gene <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  na_col <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>  rotate_heatmap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  colramp <span class="op">=</span> <span class="st">"Reds"</span>,</span>
+<span>  column_names_max_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">18</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
+<span>  column_names_rot <span class="op">=</span> <span class="fl">90</span>,</span>
+<span>  show_gene_legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  show_pathway_legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  show_heatmap_legend <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  use_raster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mem</dt>
 <dd><p><code>list</code> object created by <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>. Specifically
 the object is expected to contain <code>colorV</code>, <code>enrichIM</code>,
 <code>memIM</code>, <code>geneIM</code>.</p></dd>
+
+
 <dt>genes</dt>
 <dd><p>character vector of genes to include in the heatmap,
 all other genes will be excluded.</p></dd>
+
+
 <dt>sets</dt>
 <dd><p>character vector of sets (pathways) to include in the heatmap,
 all other sets will be excluded.</p></dd>
+
+
 <dt>min_gene_ct</dt>
 <dd><p>minimum number of occurrences of each gene
 across the pathways, all other genes are excluded.</p></dd>
+
+
 <dt>min_set_ct</dt>
 <dd><p>minimum number of genes required for each set,
 all other sets are excluded.</p></dd>
+
+
 <dt>min_set_ct_each</dt>
 <dd><p>minimum number of genes required for each set,
 required for at least one enrichment test.</p></dd>
+
+
 <dt>column_fontsize, row_fontsize</dt>
 <dd><p><code>numeric</code>
 passed as <code>fontsize</code> to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
@@ -134,10 +147,14 @@ to define a specific fontsize for column and row labels. When
 <code>NULL</code> the nrow/ncol of the heatmap are used to infer a reasonable
 starting point fontsize, which can be adjusted with <code>column_cex</code>
 and <code>row_cex</code>.</p></dd>
+
+
 <dt>row_method, column_method</dt>
 <dd><p>character string of the distance method
 to use for row and column clustering. The clustering is performed
 by <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code>.</p></dd>
+
+
 <dt>enrich_im_weight</dt>
 <dd><p><code>numeric</code> value between 0 and 1 indicating
 the relative weight of enrichment <code>-log10 P-value</code> and gene
@@ -147,9 +164,13 @@ the data is scaled using zero weight for enrichment and therefore
 only uses the gene incidence matrix; when <code>enrich_im_weight=1</code>
 the gene incidence matrix is scaled using zero weight and
 therefore clustering only uses the <code>-log10 P-value</code> values.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>character value passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>,
 used as a label above the heatmap color legend.</p></dd>
+
+
 <dt>p_cutoff</dt>
 <dd><p>numeric value of the enrichment P-value cutoff,
 above which P-values are not colored, and are therefore white.
@@ -158,6 +179,8 @@ at the top of the main heatmap. Any cell that has a color meets
 at least the minimum P-value threshold. This value by default
 is taken from input <code>mem</code>, using <code>mem$p_cutoff</code>, for
 consistency with the input multienrichment analysis.</p></dd>
+
+
 <dt>column_split, row_split</dt>
 <dd><p>optional arguments passed to
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> to split the heatmap by columns
@@ -173,28 +196,40 @@ When data is clustered, <code>cluster_row_slices=FALSE</code> and
 <code>cluster_column_slices=FALSE</code> such that the dendrogram will
 be broken into separate pieces.</p></li>
 </ul></dd>
+
+
 <dt>column_title</dt>
 <dd><p>optional character string with title to display
 above the heatmap.</p></dd>
+
+
 <dt>row_title</dt>
 <dd><p>optional character string with title to display
 beside the heatmap. Note when <code>row_split</code> is defined, the
 <code>row_title</code> is applied to each heatmap section.</p></dd>
+
+
 <dt>row_title_rot</dt>
 <dd><p><code>numeric</code> value indicating the rotation of
 <code>row_title</code> text, where <code>0</code> is not rotated, and <code>90</code> is rotated
 90 degrees.</p></dd>
+
+
 <dt>colorize_by_gene</dt>
 <dd><p><code>logical</code> indicating whether to color the
 main heatmap body using the colors from <code>geneIM</code> which represents
 each enrichment in which a given gene is involved. Colors are
 blended using <code><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code>, using colors from
 <code>mem$colorV</code>, applied to <code>mem$geneIM</code>.</p></dd>
+
+
 <dt>na_col</dt>
 <dd><p><code>character</code> string indicating the color to use for
 NA or missing values. Typically this argument is only used
 when <code>colorize_by_gene=TRUE</code>, where entries with no color are
 recognized as <code>NA</code> by <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>.</p></dd>
+
+
 <dt>rotate_heatmap</dt>
 <dd><p><code>logical</code> indicating whether the entire heatmap
 should be rotated so that pathway names are displayed as rows,
@@ -215,30 +250,42 @@ refer to the output heatmap options.</p></li>
 are applied directly to heatmap rows since they
 refer to the output heatmap options.</p></li>
 </ul></dd>
+
+
 <dt>colramp</dt>
 <dd><p><code>character</code> name of color, color gradient, or a
 vector of colors, anything compatible with input to
 <code><a href="https://rdrr.io/pkg/jamba/man/getColorRamp.html" class="external-link">jamba::getColorRamp()</a></code>.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p><code>numeric</code> value passed to <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> to allow
 reproducible results, typically with clustering operations.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
 for customization. However, if <code>...</code> causes an error, the same
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> function is called without <code>...</code>,
 which is intended to allow overloading <code>...</code> for different
 functions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>Heatmap</code> object defined in <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>, with
+    
+
+<p><code>Heatmap</code> object defined in <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>, with
 two additional attributes:</p><ul><li><p><code>"caption"</code> - a <code>character</code> string with important clustering settings.</p></li>
 <li><p><code>"draw_caption"</code> - a <code>function</code> that will draw the caption in the
 bottom-left corner of the heatmap, calling
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/grid.textbox.html" class="external-link">ComplexHeatmap::grid.textbox()</a></code>. This function should be called
-with no parameters, for example:</p><div class="sourceCode R"><pre><code><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">hm</span>, <span class="st">"draw_caption"</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></code></pre><p></p></div></li>
+with no parameters, for example:</p>
+<p></p><div class="sourceCode R"><pre><code><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">hm</span>, <span class="st">"draw_caption"</span><span class="op">)</span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div></li>
 </ul><p>In addition, the returned object can be interrogated with two helper
 functions that help define the row and column clusters, and the
 exact order of labels as they appear in the heatmap.</p><ol><li><p><code><a href="https://rdrr.io/pkg/jamba/man/heatmap_row_order.html" class="external-link">jamba::heatmap_row_order()</a></code> - returns a <code>list</code> of vectors of
@@ -282,7 +329,6 @@ appropriately.</p></li>
 <code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
 <code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -296,8 +342,7 @@ appropriately.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

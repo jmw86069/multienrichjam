@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,68 +62,92 @@
     <p>Remove igraph blank wedges</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">removeIgraphBlanks</span><span class="op">(</span>
-  <span class="va">g</span>,
-  blankColor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#FFFFFF"</span>, <span class="st">"#FFFFFFFF"</span>, <span class="st">"transparent"</span><span class="op">)</span>,
-  c_max <span class="op">=</span> <span class="fl">7</span>,
-  l_min <span class="op">=</span> <span class="fl">95</span>,
-  alpha_max <span class="op">=</span> <span class="fl">0.1</span>,
-  constrain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nrow"</span>, <span class="st">"ncol"</span>, <span class="st">"none"</span><span class="op">)</span>,
-  resizeNodes <span class="op">=</span> <span class="cn">TRUE</span>,
-  applyToPie <span class="op">=</span> <span class="cn">TRUE</span>,
-  pie_to_circle <span class="op">=</span> <span class="cn">FALSE</span>,
-  pieAttrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie"</span>, <span class="st">"pie.value"</span>, <span class="st">"pie.names"</span>, <span class="st">"pie.color"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">removeIgraphBlanks</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  blankColor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#FFFFFF"</span>, <span class="st">"#FFFFFFFF"</span>, <span class="st">"transparent"</span><span class="op">)</span>,</span>
+<span>  c_max <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  l_min <span class="op">=</span> <span class="fl">95</span>,</span>
+<span>  alpha_max <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  constrain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nrow"</span>, <span class="st">"ncol"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
+<span>  resizeNodes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  applyToPie <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pie_to_circle <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  pieAttrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pie"</span>, <span class="st">"pie.value"</span>, <span class="st">"pie.names"</span>, <span class="st">"pie.color"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p>igraph object containing one or more attributes from
 <code>"pie.color"</code> or <code>"coloredrect.color"</code>.</p></dd>
+
+
 <dt>blankColor</dt>
 <dd><p>character vector of R colors directly matched to
 the input <code>x</code> vector. The value <code>"transparent"</code> is useful here,
 because it is not easily converted to HCL color space.</p></dd>
+
+
 <dt>c_max</dt>
 <dd><p>maximum chroma as determined by HCL color space, in
 range of no color 0 to maximum color 100.</p></dd>
+
+
 <dt>l_min</dt>
 <dd><p>numeric minimum luminance required for a color to be
 considered blank, combined with the <code>c_max</code> argument. This
 threshold prevents grey colors from being considered blank,
 unless their luminance is above this threshold.</p></dd>
+
+
 <dt>alpha_max</dt>
 <dd><p>numeric value indicating the alpha transparency
 below which a color is considered blank, in range of fully
 transparent 0, to fully non-transparent 1.</p></dd>
+
+
 <dt>constrain</dt>
 <dd><p>character value indicating for node shape
 <code>"coloredrectangle"</code> whether to constrain the <code>"coloredrect.nrow"</code>
 or <code>"coloredrect.ncol"</code> values. When <code>"none"</code> the nrow is usually
 dropped to nrow=1 whenever colors are removed.</p></dd>
+
+
 <dt>resizeNodes</dt>
 <dd><p>logical indicating whether to resize the resulting
 nodes to maintain roughly proportional size to the number of
 colored wedges.</p></dd>
+
+
 <dt>applyToPie</dt>
 <dd><p>logical indicating whether to apply the logic to
 nodes with shape <code>"pie"</code>.</p></dd>
+
+
 <dt>pie_to_circle</dt>
 <dd><p>logical indicating whether node shapes for
 single-color nodes should be changed from <code>"pie"</code> to <code>"circle"</code>
 in order to remove the small wedge line in each pie node.</p></dd>
+
+
 <dt>pieAttrs</dt>
 <dd><p>character vector of <code>vertex.attributes</code> from <code>g</code>
 to be adjusted when <code>applyToPie=TRUE</code>. Note that <code>"pie.color"</code>
 is required, and other attributes are only adjusted when
 they are present in the input graph <code>g</code>.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="isColorBlank.html">isColorBlank()</a></code>.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -182,66 +206,65 @@ make the remaining colors more visibly distinct.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span>;</span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/make_full_graph.html" class="external-link">graph.full</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">3</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nodeA"</span>, <span class="st">"nodeB"</span>, <span class="st">"nodeC"</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"coloredrectangle"</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"up"</span>,<span class="st">"no"</span>, <span class="st">"dn"</span><span class="op">)</span>, <span class="fl">7</span><span class="op">)</span>,</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.byrow</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.nrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.ncol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">label.degree</span> <span class="op">&lt;-</span> <span class="va">pi</span><span class="op">*</span><span class="fl">3</span><span class="op">/</span><span class="fl">2</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">label.dist</span> <span class="op">&lt;-</span> <span class="fl">3</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">color_v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="fl">21</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="va">color_v</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">7</span>,<span class="fl">9</span>,<span class="fl">15</span>,<span class="fl">19</span>,<span class="fl">20</span>,<span class="fl">21</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/rainbowJam.html" class="external-link">rainbowJam</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>;</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/make_full_graph.html" class="external-link">graph.full</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">3</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nodeA"</span>, <span class="st">"nodeB"</span>, <span class="st">"nodeC"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"coloredrectangle"</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"up"</span>,<span class="st">"no"</span>, <span class="st">"dn"</span><span class="op">)</span>, <span class="fl">7</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.byrow</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.nrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.ncol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">label.degree</span> <span class="op">&lt;-</span> <span class="va">pi</span><span class="op">*</span><span class="fl">3</span><span class="op">/</span><span class="fl">2</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">label.dist</span> <span class="op">&lt;-</span> <span class="fl">3</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">color_v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="fl">21</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">color_v</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">7</span>,<span class="fl">9</span>,<span class="fl">15</span>,<span class="fl">19</span>,<span class="fl">20</span>,<span class="fl">21</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/rainbowJam.html" class="external-link">rainbowJam</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>;</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span>
-<span class="r-in">   <span class="va">color_v</span>,</span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mfrow"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="va">lg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/layout_nicely.html" class="external-link">layout_nicely</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">removeIgraphBlanks</span><span class="op">(</span><span class="va">g</span>, constrain<span class="op">=</span><span class="st">"none"</span><span class="op">)</span>;</span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>   <span class="va">color_v</span>,</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mfrow"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">lg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/layout_nicely.html" class="external-link">layout_nicely</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">removeIgraphBlanks</span><span class="op">(</span><span class="va">g</span>, constrain<span class="op">=</span><span class="st">"none"</span><span class="op">)</span>;</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>coercing argument of type 'list' to logical</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">/</span> <span class="fl">3</span>;</span>
-<span class="r-in"><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span class="r-in">   main<span class="op">=</span><span class="st">"constrain='none'"</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">g3</span> <span class="op">&lt;-</span> <span class="fu">removeIgraphBlanks</span><span class="op">(</span><span class="va">g</span>, constrain<span class="op">=</span><span class="st">"nrow"</span><span class="op">)</span>;</span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">/</span> <span class="fl">3</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   main<span class="op">=</span><span class="st">"constrain='none'"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">g3</span> <span class="op">&lt;-</span> <span class="fu">removeIgraphBlanks</span><span class="op">(</span><span class="va">g</span>, constrain<span class="op">=</span><span class="st">"nrow"</span><span class="op">)</span>;</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>coercing argument of type 'list' to logical</span>
-<span class="r-in"><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g3</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span class="r-in">   main<span class="op">=</span><span class="st">"constrain='nrow'"</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">g4</span> <span class="op">&lt;-</span> <span class="fu">removeIgraphBlanks</span><span class="op">(</span><span class="va">g</span>, constrain<span class="op">=</span><span class="st">"ncol"</span><span class="op">)</span>;</span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g3</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   main<span class="op">=</span><span class="st">"constrain='nrow'"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">g4</span> <span class="op">&lt;-</span> <span class="fu">removeIgraphBlanks</span><span class="op">(</span><span class="va">g</span>, constrain<span class="op">=</span><span class="st">"ncol"</span><span class="op">)</span>;</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>coercing argument of type 'list' to logical</span>
-<span class="r-in"><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g4</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span class="r-in">   main<span class="op">=</span><span class="st">"constrain='ncol'"</span><span class="op">)</span>;</span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g4</span>, layout<span class="op">=</span><span class="va">lg</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   main<span class="op">=</span><span class="st">"constrain='ncol'"</span><span class="op">)</span>;</span></span>
 <span class="r-plt img"><img src="removeIgraphBlanks-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#</span></span>
-<span class="r-in"><span class="va">g7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/make_full_graph.html" class="external-link">graph.full</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">7</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>,</span>
-<span class="r-in">   <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/rainbowJam.html" class="external-link">rainbowJam</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.ncol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.nrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.color</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"coloredrectangle"</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">size</span> <span class="op">&lt;-</span> <span class="fl">10</span>;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.ncol</span> <span class="op">*</span> <span class="fl">1</span>;</span>
-<span class="r-in"><span class="va">lg7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/layout_nicely.html" class="external-link">layout_nicely</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g7</span>, layout<span class="op">=</span><span class="va">lg7</span>,</span>
-<span class="r-in">   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span class="r-in">   vertex.size2<span class="op">=</span><span class="fl">5</span><span class="op">)</span>;</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="va">g7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/make_full_graph.html" class="external-link">graph.full</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">7</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">{</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/rainbowJam.html" class="external-link">rainbowJam</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.ncol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.nrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.color</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"coloredrectangle"</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">size</span> <span class="op">&lt;-</span> <span class="fl">10</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.ncol</span> <span class="op">*</span> <span class="fl">1</span>;</span></span>
+<span class="r-in"><span><span class="va">lg7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/layout_nicely.html" class="external-link">layout_nicely</a></span><span class="op">(</span><span class="va">g7</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g7</span>, layout<span class="op">=</span><span class="va">lg7</span>,</span></span>
+<span class="r-in"><span>   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   vertex.size2<span class="op">=</span><span class="fl">5</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span></span></span>
 <span class="r-plt img"><img src="removeIgraphBlanks-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -257,8 +280,7 @@ make the remaining colors more visibly distinct.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

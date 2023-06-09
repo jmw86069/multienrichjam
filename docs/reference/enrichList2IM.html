@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,46 +62,62 @@
     <p>Convert enrichList to IM incidence matrix</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">enrichList2IM</span><span class="op">(</span>
-  <span class="va">enrichList</span>,
-  addAnnotations <span class="op">=</span> <span class="cn">TRUE</span>,
-  keyColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"pathway"</span>, <span class="st">"itemsetID"</span><span class="op">)</span>,
-  valueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qvalue"</span>, <span class="st">"q.value"</span>, <span class="st">"pvalue"</span>, <span class="st">"p.value"</span><span class="op">)</span>,
-  emptyValue <span class="op">=</span> <span class="cn">NA</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  GmtT <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">enrichList2IM</span><span class="op">(</span></span>
+<span>  <span class="va">enrichList</span>,</span>
+<span>  addAnnotations <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keyColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"pathway"</span>, <span class="st">"itemsetID"</span><span class="op">)</span>,</span>
+<span>  valueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qvalue"</span>, <span class="st">"q.value"</span>, <span class="st">"pvalue"</span>, <span class="st">"p.value"</span><span class="op">)</span>,</span>
+<span>  emptyValue <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  GmtT <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>enrichList</dt>
 <dd><p><code>list</code> of <code>enrichResult</code> objects</p></dd>
+
+
 <dt>addAnnotations</dt>
 <dd><p><code>logical</code> not implemented, this argument
 is paired with <code>GmtT</code>.</p></dd>
+
+
 <dt>keyColname</dt>
 <dd><p><code>character</code> used to match colnames, referring
 to the unique identifier. Values in this column will become
 the column headers in the resulting incidence matrix.</p></dd>
+
+
 <dt>valueColname</dt>
 <dd><p><code>character</code> used to match colnames to determine
 the value to place in each cell of the incidence matrix.</p></dd>
+
+
 <dt>emptyValue</dt>
 <dd><p><code>numeric</code> value used to fill empty cells in the
 incidence matrix. When <code>NULL</code> and <code>valueColname</code> contains
 "gene", "count", "num", "hit" then <code>emptyValue=0</code>, otherwise
 <code>emptyValue=1</code> is used with the assumption that <code>valueColname</code>
 refers to P-values.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>GmtT</dt>
 <dd><p>(not currently implemented), alternative gene set object
 format that uses <code><a href="https://rdrr.io/pkg/arules/man/transactions-class.html" class="external-link">arules::transactions</a></code> class, an efficient
 object with robust access functions in <code>arules</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -121,7 +137,6 @@ manipulation, without the dependencies incurred by <code>venndir</code>.</p>
 <code><a href="enrichList2df.html">enrichList2df</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -135,8 +150,7 @@ manipulation, without the dependencies incurred by <code>venndir</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

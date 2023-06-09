@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -83,49 +83,34 @@
 <div class="section level1">
 <div class="page-header"><h1 id="multienrichjam">multienrichjam<a class="anchor" aria-label="anchor" href="#multienrichjam"></a>
 </h1></div>
-<p>The goal of multienrichjam is to implement MultiEnrichMap, an
-extension to EnrichMap and Enrichment Map, originally envisioned and
-implemented as a Cytoscape plugin by the lab of Dr. Gary Bader</p>
+<p>The goal of multienrichjam is to implement MultiEnrichMap, an extension to EnrichMap and Enrichment Map, originally envisioned and implemented as a Cytoscape plugin by the lab of Dr. Gary Bader</p>
 <ul>
-<li>Bader lab <a href="https://www.baderlab.org/Software/EnrichmentMap" class="external-link">EnrichmentMap</a>,
-and</li>
-<li>reference: <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0013984" class="external-link">Merico,et
-al, PLoS One, 2010</a>),</li>
+<li>Bader lab <a href="https://www.baderlab.org/Software/EnrichmentMap" class="external-link">EnrichmentMap</a>, and</li>
+<li>reference: <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0013984" class="external-link">Merico,et al, PLoS One, 2010</a>),</li>
 </ul>
-<p>and re-implemented into a larger analysis workflow in R by
-Dr. Guangchuang Yu in the R packages:</p>
+<p>and re-implemented into a larger analysis workflow in R by Dr. Guangchuang Yu in the R packages:</p>
 <ul>
 <li>
-<a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html" class="external-link">clusterProfiler</a>,
-and</li>
+<a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html" class="external-link">clusterProfiler</a>, and</li>
 <li>
 <a href="https://bioconductor.org/packages/release/bioc/html/enrichplot.html" class="external-link">enrichplot</a>.</li>
 </ul>
-<p>The MultiEnrichMap extension is a relatively straightforward set of
-functions to help enable comparison of enrichment results from multiple
-gene set enrichment tests.</p>
+<p>The MultiEnrichMap extension is a relatively straightforward set of functions to help enable comparison of enrichment results from multiple gene set enrichment tests.</p>
 <div class="section level2">
 <h2 id="package-reference">Package Reference<a class="anchor" aria-label="anchor" href="#package-reference"></a>
 </h2>
-<p>A full online function reference is available via the pkgdown
-documentation:</p>
-<p><a href="https://jmw86069.github.io/multienrichjam" class="external-link">Full
-multienrichjam command reference</a></p>
+<p>A full online function reference is available via the pkgdown documentation:</p>
+<p><a href="https://jmw86069.github.io/multienrichjam" class="external-link">Full multienrichjam command reference</a></p>
 </div>
 <div class="section level2">
 <h2 id="how-to-install">How to install<a class="anchor" aria-label="anchor" href="#how-to-install"></a>
 </h2>
-<p>Install using the R package <code>remotes</code> and this
-command:</p>
+<p>Install using the R package <code>remotes</code> and this command:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"jmw86069/multienrichjam"</span>,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">dependencies=</span><span class="cn">TRUE</span>);</span></code></pre></div>
-<p>If you do not have the <code>remotes</code> package, you can install
-it from CRAN:</p>
+<p>If you do not have the <code>remotes</code> package, you can install it from CRAN:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>);</span></code></pre></div>
-<p>Note that we changed the recommended installation from using
-<code>devtools</code> to using <code>remotes</code> because the
-<code>remotes</code> package is much smaller with fewer
-dependencies.</p>
+<p>Note that we changed the recommended installation from using <code>devtools</code> to using <code>remotes</code> because the <code>remotes</code> package is much smaller with fewer dependencies.</p>
 </div>
 </div>
   </div>
@@ -147,6 +132,13 @@ dependencies.</p>
 </div>
 
 
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing multienrichjam</a></li>
+</ul>
+</div>
+
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
@@ -167,8 +159,7 @@ dependencies.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,9 +62,10 @@
     <p>Convert nodegroups list to communities object</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">nodegroups2communities</span><span class="op">(</span><span class="va">nodegroups</span>, algorithm <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nodegroups2communities</span><span class="op">(</span><span class="va">nodegroups</span>, algorithm <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>algorithm</dt>
@@ -74,16 +75,23 @@ community detection algorithm used.</p><ul><li><p>When <code>algorithm</code> is
 <li><p>When <code>algorithm</code> is <code>NULL</code>, <code>attribute(nodegroups, "algorithm")</code> is
 used if defined, otherwise <code>algorithm="nodegroups"</code>.</p></li>
 </ul></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
+
 <dt>wc</dt>
 <dd><p><code>communities</code> object as returned by <code>igraph</code> functions
-such as <code><a href="https://rdrr.io/pkg/igraph/man/cluster_optimal.html" class="external-link">cluster_optimal()</a></code>, <code><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">cluster_walktrap()</a></code>, or
-<code><a href="https://rdrr.io/pkg/igraph/man/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen()</a></code>.</p></dd>
+such as <code><a href="https://r.igraph.org/reference/cluster_optimal.html" class="external-link">cluster_optimal()</a></code>, <code><a href="https://r.igraph.org/reference/cluster_walktrap.html" class="external-link">cluster_walktrap()</a></code>, or
+<code><a href="https://r.igraph.org/reference/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>community</code> object, which is essentially a <code>list</code> with
+    
+
+<p><code>community</code> object, which is essentially a <code>list</code> with
 specific required elements:</p><ul><li><p><code>"membership"</code> - <code>integer</code> assignment of nodes to clusters</p></li>
 <li><p><code>"names"</code> - <code>character</code> list of node names</p></li>
 <li><p><code>"vcount"</code> - <code>integer</code> number of nodes</p></li>
@@ -152,7 +160,6 @@ names to label each cluster during plotting.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -166,8 +173,7 @@ names to label each cluster during plotting.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

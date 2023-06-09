@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,62 +62,81 @@
     <p>Subset Cnet igraph</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">subsetCnetIgraph</span><span class="op">(</span>
-  <span class="va">gCnet</span>,
-  includeSets <span class="op">=</span> <span class="cn">NULL</span>,
-  includeGenes <span class="op">=</span> <span class="cn">NULL</span>,
-  remove_singlets <span class="op">=</span> <span class="cn">TRUE</span>,
-  minSetDegree <span class="op">=</span> <span class="fl">1</span>,
-  minGeneDegree <span class="op">=</span> <span class="fl">1</span>,
-  remove_blanks <span class="op">=</span> <span class="cn">FALSE</span>,
-  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,
-  force_relayout <span class="op">=</span> <span class="cn">TRUE</span>,
-  do_reorder <span class="op">=</span> <span class="cn">TRUE</span>,
-  repulse <span class="op">=</span> <span class="fl">4</span>,
-  layout <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">subsetCnetIgraph</span><span class="op">(</span></span>
+<span>  <span class="va">gCnet</span>,</span>
+<span>  includeSets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  includeGenes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  remove_singlets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  minSetDegree <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  minGeneDegree <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  remove_blanks <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  force_relayout <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  do_reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  repulse <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  layout <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>gCnet</dt>
 <dd><p>igraph object representing Cnet concept network data</p></dd>
+
+
 <dt>includeSets</dt>
 <dd><p>character vector, or NULL, containing the set
 names or labels to retain.</p></dd>
+
+
 <dt>includeGenes</dt>
 <dd><p>character vector, or NULL, containing the gene
 names or labels to retain.</p></dd>
+
+
 <dt>remove_singlets</dt>
 <dd><p>logical whether to remove singlet graph nodes,
 which are nodes that have no remaining edges. Note that
 argument <code>"removeSinglets"</code> is deprecated but will be recognized
 with preference, support will be removed in future versions.</p></dd>
+
+
 <dt>minSetDegree</dt>
 <dd><p>integer value indicating the minimum number
 of edges each Set node must have to be retained in the resulting
 igraph. Use <code>minSetDegree=2</code> to retain only Set nodes that
 have multiple connected Gene nodes.</p></dd>
+
+
 <dt>minGeneDegree</dt>
 <dd><p>integer value indicating the minimum number
 of edges each Gene node must have to be retained in the resulting
 igraph. Use <code>minGeneDegree=2</code> to retain only Gene nodes that
 connect to multiple Set nodes.</p></dd>
+
+
 <dt>remove_blanks</dt>
 <dd><p>logical indicating whether to call
 <code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code>, which removes blank colors from
 <code>"pie.color"</code> and <code>"coloredrect.color"</code> attributes.</p></dd>
+
+
 <dt>spread_labels</dt>
 <dd><p>logical indicating whether to call
 <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>, which re-orients the node labels
 after the <code>igraph</code> object has been subsetted. When <code>TRUE</code>,
 the arguments <code>force_relayout</code>, and <code>do_reorder</code> are passed
 to that function.</p></dd>
+
+
 <dt>force_relayout</dt>
 <dd><p>logical indicating whether to re-apply
 the <code>igraph</code> layout function.</p></dd>
+
+
 <dt>do_reorder</dt>
 <dd><p>logical indicating whether to call
 <code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code>, which sorts equivalent nodes by
@@ -125,6 +144,8 @@ color then label, intended when there are large numbers of
 nodes with the same edges, typically most common in a cnet
 plot where many gene nodes may be connected to the same
 pathway set nodes.</p></dd>
+
+
 <dt>layout</dt>
 <dd><p>function that takes <code>igraph</code> object and returns a
 numeric matrix of node coordinates. This function is only
@@ -132,10 +153,15 @@ called when <code>force_relayout=TRUE</code>, and must be supplied as
 a function in order to be applied properly to the subset
 Cnet <code>igraph</code>. To apply layout before the subset operation,
 do so with <code>igraph::set_graph_attr(g, "layout", layout)</code>.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -201,7 +227,6 @@ nodes.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -215,8 +240,7 @@ nodes.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

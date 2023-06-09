@@ -371,7 +371,7 @@ memIM2cnet <- function
          "coloredrect.value")
 
       for (j in i_set_attributes) {
-         if (!j %in% list.vertex.attributes(g)) {
+         if (!j %in% igraph::list.vertex.attributes(g)) {
             if (jamba::igrepHas("color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
             } else if (jamba::igrepHas("byrow", j)) {

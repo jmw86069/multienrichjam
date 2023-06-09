@@ -40,6 +40,9 @@ jam_igraph(
   mark.lwd = 2,
   mark.lty = 1,
   mark.smooth = TRUE,
+  mark.cex = 1,
+  mark.x.nudge = 0,
+  mark.y.nudge = 0,
   verbose = FALSE,
   debug = NULL
 )
@@ -199,7 +202,16 @@ vector is given, then different values are used for the different vertex
 groups.}
 
 \item{mark.lwd, mark.lty}{line with and line type parameters for each
-\code{mark.groups} polygon,}
+\code{mark.groups} polygon.}
+
+\item{mark.cex}{\code{numeric} adjustment for mark label font size, used
+when \code{mark.groups} is supplied and has \code{names(mark.groups)}.}
+
+\item{mark.x.nudge, mark.y.nudge}{\code{numeric} values in units of the
+maximum x-axis or y-axis range for the layout coordinates,
+used to adjust each label displayed when \code{names(mark.groups)}
+is defined. These arguments are passed to \code{make_point_hull()}
+as \code{label.x.nudge}, \code{label.y.nudge}, respectively.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
@@ -361,6 +373,13 @@ This behavior can be controlled by supplying a \code{character}
 vector with specific colors for \code{mark.col} and \code{mark.border}. Note
 that the border should match the colors, or it can be set to \code{"grey45"}
 for a generally visible border.
+
+When \code{names(mark.groups)} is defined, the values are used as
+labels, positioned at the outer edge of each polygon. The label
+text size is adjusted with \code{label.cex}, and the position can
+be adjusted with \code{mark.x.nudge}, \code{mark.y.nudge}, in units of
+fraction of the maximum x- or y-axis range (effectively fraction
+of the layout size).
 
 Optional argument \code{nodegroups} can be supplied, which is a \code{list}
 of vectors, where each vector represents a group of nodes. The

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,49 +62,67 @@
     <p>Adjust Cnet Set nodes then relayout Gene nodes</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">adjust_cnet_set_relayout_gene</span><span class="op">(</span>
-  <span class="va">g</span>,
-  nodes <span class="op">=</span> <span class="cn">NULL</span>,
-  x <span class="op">=</span> <span class="fl">0</span>,
-  y <span class="op">=</span> <span class="fl">0</span>,
-  use_grep <span class="op">=</span> <span class="cn">TRUE</span>,
-  do_reorder <span class="op">=</span> <span class="cn">TRUE</span>,
-  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,
-  repulse <span class="op">=</span> <span class="fl">4</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjust_cnet_set_relayout_gene</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  nodes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  y <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  use_grep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  do_reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  repulse <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> Cnet object</p></dd>
+
+
 <dt>nodes</dt>
 <dd><p><code>character</code> vector of one or more Set nodes.</p></dd>
+
+
 <dt>x, y</dt>
 <dd><p><code>numeric</code> values passed to <code><a href="nudge_igraph_node.html">nudge_igraph_node()</a></code>.</p></dd>
+
+
 <dt>use_grep</dt>
 <dd><p><code>logical</code> passed to <code><a href="nudge_igraph_node.html">nudge_igraph_node()</a></code>.</p></dd>
+
+
 <dt>do_reorder</dt>
 <dd><p><code>logical</code> indicating whether nodes should
 be re-positioned within each subcluster by calling
 <code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code>.</p></dd>
+
+
 <dt>spread_labels</dt>
 <dd><p><code>logical</code> indicating whether labels
 should be re-oriented around each node by calling
 <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>.</p></dd>
+
+
 <dt>repulse</dt>
 <dd><p><code>numeric</code> value passed to <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code>
 to indicate the repulsion force. Typical values range between
 <code>3</code> for loosely-packed nodes, and <code>5</code> or higher for more
 closely-packed nodes.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to functions
 <code><a href="nudge_igraph_node.html">nudge_igraph_node()</a></code>, <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code>, <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>,
 <code><a href="reorderIgraphNodes.html">reorderIgraphNodes()</a></code>.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -133,7 +151,6 @@ were included in <code>nodes</code>.</p>
 <code><a href="nudge_igraph_node.html">nudge_igraph_node</a>()</code>,
 <code><a href="rotate_igraph_layout.html">rotate_igraph_layout</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -147,8 +164,7 @@ were included in <code>nodes</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

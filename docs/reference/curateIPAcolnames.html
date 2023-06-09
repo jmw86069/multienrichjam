@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,42 +62,56 @@
     <p>Curate Ingenuity IPA colnames</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">curateIPAcolnames</span><span class="op">(</span>
-  <span class="va">jDF</span>,
-  ipaNameGrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^Name$"</span>, <span class="st">"^ID$"</span>, <span class="st">"Canonical Pathways"</span>, <span class="st">"Upstream Regulator"</span>,
-    <span class="st">"Diseases or Functions Annotation"</span>, <span class="st">"Diseases . Functions"</span>, <span class="st">"My Lists"</span>,
-    <span class="st">"Ingenuity Toxicity Lists"</span>, <span class="st">"My Pathways"</span><span class="op">)</span>,
-  geneGrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Molecules in Network"</span>, <span class="st">"Target molecules"</span>, <span class="st">"Molecules"</span><span class="op">)</span>,
-  geneCurateFrom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">" [(](complex|includes others)[)]"</span>, <span class="st">"^[,]+|[,]+$"</span><span class="op">)</span>,
-  geneCurateTo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">""</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">curateIPAcolnames</span><span class="op">(</span></span>
+<span>  <span class="va">jDF</span>,</span>
+<span>  ipaNameGrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^Name$"</span>, <span class="st">"^ID$"</span>, <span class="st">"Canonical Pathways"</span>, <span class="st">"Upstream Regulator"</span>,</span>
+<span>    <span class="st">"Diseases or Functions Annotation"</span>, <span class="st">"Diseases . Functions"</span>, <span class="st">"My Lists"</span>,</span>
+<span>    <span class="st">"Ingenuity Toxicity Lists"</span>, <span class="st">"My Pathways"</span><span class="op">)</span>,</span>
+<span>  geneGrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Molecules in Network"</span>, <span class="st">"Target molecules"</span>, <span class="st">"Molecules"</span>, <span class="st">"Symbol"</span><span class="op">)</span>,</span>
+<span>  geneCurateFrom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">" [(](complex|includes others)[)]"</span>, <span class="st">"^[,]+|[,]+$"</span><span class="op">)</span>,</span>
+<span>  geneCurateTo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">""</span><span class="op">)</span>,</span>
+<span>  convert_ipa_slash <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ipa_slash_sep <span class="op">=</span> <span class="st">":"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>jDF</dt>
 <dd><p>data.frame from one Ingenuity IPA enrichment test.</p></dd>
+
+
 <dt>ipaNameGrep</dt>
 <dd><p>vector of regular expression patterns
 used to recognize the name of the enriched entity,
 for example the biological pathway, or network, or
 disease category, etc.</p></dd>
+
+
 <dt>geneGrep</dt>
 <dd><p>regular expression pattern used to recognize
 the column containing genes, or the molecules tested for
 enrichment which were found in the enriched entity.</p></dd>
+
+
 <dt>geneCurateFrom, geneCurateTo</dt>
 <dd><p>vector of patterns and
 replacements, respectively, used to curate values in
 the gene column. These replacement rules are used to
 ensure that genes are delimited consistently, with no
 leading or trailing delimiters.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -132,7 +146,6 @@ P-values.</p>
     <div class="dont-index"><p>Other jam import functions: 
 <code><a href="importIPAenrichment.html">importIPAenrichment</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -146,8 +159,7 @@ P-values.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

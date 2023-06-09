@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,32 +62,42 @@
     <p>Plot layout scale by percentage of coordinate range</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_layout_scale</span><span class="op">(</span>
-  <span class="va">layout</span>,
-  grid_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey80"</span>, <span class="st">"grey70"</span><span class="op">)</span>,
-  grid_lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dotted"</span>, <span class="st">"solid"</span><span class="op">)</span>,
-  big_tick <span class="op">=</span> <span class="fl">10</span>,
-  small_tick <span class="op">=</span> <span class="fl">2.5</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_layout_scale</span><span class="op">(</span></span>
+<span>  <span class="va">layout</span>,</span>
+<span>  grid_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey80"</span>, <span class="st">"grey70"</span><span class="op">)</span>,</span>
+<span>  grid_lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dotted"</span>, <span class="st">"solid"</span><span class="op">)</span>,</span>
+<span>  big_tick <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  small_tick <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>layout</dt>
 <dd><p><code>matrix</code> or <code>data.frame</code> with at least two columns,
 only the first two columns are used for the grid.</p></dd>
+
+
 <dt>grid_colors</dt>
 <dd><p><code>character</code> colors used for the small and big grid
 lines, respectively.</p></dd>
+
+
 <dt>grid_lty</dt>
 <dd><p><code>integer</code> or <code>character</code> line type used for the
 small and big grid lines, respectively.</p></dd>
+
+
 <dt>big_tick, small_tick</dt>
 <dd><p><code>numeric</code> values in percent, the step size
 between big grid lines, and small grid lines, respectively.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -109,7 +119,6 @@ respectively.</p>
 <code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
 <code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -123,8 +132,7 @@ respectively.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

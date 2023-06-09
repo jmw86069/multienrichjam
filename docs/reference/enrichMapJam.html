@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,22 +62,23 @@
     <p>Create enrichMap igraph object</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">enrichMapJam</span><span class="op">(</span>
-  <span class="va">x</span>,
-  n <span class="op">=</span> <span class="fl">50</span>,
-  vertex.label.font <span class="op">=</span> <span class="fl">1</span>,
-  vertex.label.cex <span class="op">=</span> <span class="fl">1</span>,
-  keyColname <span class="op">=</span> <span class="st">"ID"</span>,
-  nodeLabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"Description"</span>, <span class="st">"ID"</span><span class="op">)</span>,
-  descriptionColname <span class="op">=</span> <span class="st">"Description"</span>,
-  nodeLabelFunc <span class="op">=</span> <span class="cn">NULL</span>,
-  overlapThreshold <span class="op">=</span> <span class="fl">0.2</span>,
-  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">enrichMapJam</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  vertex.label.font <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  vertex.label.cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  keyColname <span class="op">=</span> <span class="st">"ID"</span>,</span>
+<span>  nodeLabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"Description"</span>, <span class="st">"ID"</span><span class="op">)</span>,</span>
+<span>  descriptionColname <span class="op">=</span> <span class="st">"Description"</span>,</span>
+<span>  nodeLabelFunc <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  overlapThreshold <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
@@ -86,32 +87,50 @@ enrichment results, specifically expecting colnames to
 contain one of <code>c("ID","Description","Name")</code>
 to represent the node name, and <code>c("Description")</code> to represent
 the description, if present.</p></dd>
+
+
 <dt>n</dt>
 <dd><p>numeric value indicating the maximum number of nodes to
 include in the final network.</p></dd>
+
+
 <dt>vertex.label.font, vertex.label.cex</dt>
 <dd><p>attributes to define the
 default node label font and size.</p></dd>
+
+
 <dt>keyColname, nodeLabel, descriptionColname</dt>
 <dd><p>character vectors
 indicating the colname to use for the node name and label.</p></dd>
+
+
 <dt>nodeLabelFunc</dt>
 <dd><p>optional function to apply to <code>V(g)$name</code> in
 order to create <code>V(g)$label</code>. One suggestion is <code><a href="fixSetLabels.html">fixSetLabels()</a></code>
 which applies word wrap, and optional max character length.</p></dd>
+
+
 <dt>overlapThreshold</dt>
 <dd><p>numeric value indicating the minimum
 Jaccard overlap, where edges with lower values are deleted from
 the <code>igraph</code> object.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code>
 when the input <code>x</code> is a <code>data.frame</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>igraph</code> object, whose nodes represent each enriched pathway,
+    
+
+<p><code>igraph</code> object, whose nodes represent each enriched pathway,
 and are sized based upon the number of genes involved in the
-enrichment, and are colored based upon the <code>log10(Pvalue)</code>using <code><a href="https://rdrr.io/pkg/colorjam/man/vals2colorLevels.html" class="external-link">colorjam::vals2colorLevels()</a></code>, a function that applies
+enrichment, and are colored based upon the <code>log10(Pvalue)</code></p>
+
+
+<p>using <code><a href="https://rdrr.io/pkg/colorjam/man/vals2colorLevels.html" class="external-link">colorjam::vals2colorLevels()</a></code>, a function that applies
 a color gradient to a numeric range.
 Each edge has attributes: <code>overlap</code> containing Jaccard overlap,
 <code>overlap_count</code> with the number of genes in common between
@@ -179,7 +198,6 @@ with this filter, and it appears to be a helpful option.</p></li>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -193,8 +211,7 @@ with this filter, and it appears to be a helpful option.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

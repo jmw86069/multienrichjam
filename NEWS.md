@@ -1,3 +1,63 @@
+# multienrichjam 0.0.76.900
+
+## changes to existing functions
+
+The theme of this update is "Customizing mark.groups labeling".
+Useful with `jam_igraph()` when supplying a `list` of node groups
+or communities via `mark.groups`, with labels defined in
+`names(mark.groups)`. The labels are automatically placed
+outside the mark polygon, and can be adjusted in size
+with `mark.cex`, and position with `mark.x.nudge`, `mark.y.nudge`.
+
+* `make_point_hull()`
+
+   * new arguments: `label.cex`, `label.x.nudge`, `label.y.nudge`
+   to customize the label font size, and label placement, when
+   `label` is provided.
+
+* `jam_igraph()` new arguments:
+
+   * `mark.cex` passed to `make_point_hull()` as `label.cex`
+   * `mark.x.nudge` passed to `make_point_hull()` as `label.x.nudge`
+   * `mark.y.nudge` passed to `make_point_hull()` as `label.y.nudge`
+
+
+## major changes to existing functions
+
+* `mem_plot_folio()`
+
+   * New default creates the gene-pathway incidence matrix
+   heatmap data first, which serves as the basis for all other plots.
+   * Impact on `mem_gene_path_heatmap()`, now inherits this
+   clustering defined using the gene-pathway incidence matrix
+   and only when called by `mem_plot_folio()`.
+   This change is the primary motivation for the update, so that
+   the enrichment heatmap clustering is informed and driven by
+   gene content, and no longer reflects only the enrichment P-values.
+
+## other changes to existing functions
+
+* `mem_enrichment_heatmap()`
+
+   * default `point_size_min=1` changed to `point_size_min=2` so the
+   smallest points are still clearly visible, including the fill color.
+   * default `p_cutoff=1e-6` changed to `p_cutoff=1e-10`
+
+* `mem_gene_path_heatmap()`
+
+   * default `p_cutoff=1e-6` changed to `p_cutoff=1e-10`
+
+## bug fixes
+
+* `multiEnrichMap()`
+
+   * Edge case where `geneHitList` could be supplied as a `list` of
+   signed values, a directional hit list as used in `venndir::venndir()`.
+   It did not get recognized, and was converted using the `numeric`
+   values rather than using the names of the values.
+   * The preferred option is to supply `geneHitIM` for signed data,
+   however it now works with a signed hit `list` as well.
+
 # multienrichjam 0.0.75.900
 
 ## bug fixes

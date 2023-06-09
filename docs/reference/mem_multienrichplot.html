@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,75 +62,98 @@
     <p>MultiEnrichMap plot</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">mem_multienrichplot</span><span class="op">(</span>
-  <span class="va">mem</span>,
-  overlap <span class="op">=</span> <span class="fl">0.1</span>,
-  overlap_count <span class="op">=</span> <span class="fl">2</span>,
-  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,
-  do_legend <span class="op">=</span> <span class="cn">TRUE</span>,
-  remove_blanks <span class="op">=</span> <span class="cn">TRUE</span>,
-  remove_singlets <span class="op">=</span> <span class="cn">TRUE</span>,
-  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,
-  y_bias <span class="op">=</span> <span class="fl">1</span>,
-  label_edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"overlap_count"</span>, <span class="st">"count"</span>, <span class="st">"overlap"</span>, <span class="st">"label"</span>, <span class="st">"none"</span><span class="op">)</span>,
-  edge_cex <span class="op">=</span> <span class="fl">1</span>,
-  node_cex <span class="op">=</span> <span class="fl">0.8</span>,
-  node_size <span class="op">=</span> <span class="fl">5</span>,
-  edge_color <span class="op">=</span> <span class="st">"#55555588"</span>,
-  frame_color <span class="op">=</span> <span class="st">"#55555500"</span>,
-  shape <span class="op">=</span> <span class="st">"pie"</span>,
-  repulse <span class="op">=</span> <span class="fl">3.7</span>,
-  sets <span class="op">=</span> <span class="cn">NULL</span>,
-  rescale <span class="op">=</span> <span class="cn">TRUE</span>,
-  edge_bundling <span class="op">=</span> <span class="st">"connections"</span>,
-  main <span class="op">=</span> <span class="st">"MultiEnrichMap\noverlap &gt;= {overlap}, overlap_count &gt;= {overlap_count}"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mem_multienrichplot</span><span class="op">(</span></span>
+<span>  <span class="va">mem</span>,</span>
+<span>  overlap <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  overlap_count <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  do_legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  remove_blanks <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  remove_singlets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  y_bias <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  label_edges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"overlap_count"</span>, <span class="st">"count"</span>, <span class="st">"overlap"</span>, <span class="st">"label"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
+<span>  edge_cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  node_cex <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  node_size <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  edge_color <span class="op">=</span> <span class="st">"#55555588"</span>,</span>
+<span>  frame_color <span class="op">=</span> <span class="st">"#55555500"</span>,</span>
+<span>  shape <span class="op">=</span> <span class="st">"pie"</span>,</span>
+<span>  repulse <span class="op">=</span> <span class="fl">3.7</span>,</span>
+<span>  sets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rescale <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  edge_bundling <span class="op">=</span> <span class="st">"connections"</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">"MultiEnrichMap\noverlap &gt;= {overlap}, overlap_count &gt;= {overlap_count}"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mem</dt>
 <dd><p><code>list</code> object output from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>, specifically
 containing elements <code>"multiEnrichMap","multiEnrichMap2"</code> which
 are expected to be <code>igraph</code> objects.</p></dd>
+
+
 <dt>overlap</dt>
 <dd><p>numeric value between 0 and 1, indicating the Jaccard
 overlap filter to use for edge nodes. The value is used to
 delete edges whose values <code>E(g)$overlap</code> are below this threshold.</p></dd>
+
+
 <dt>overlap_count</dt>
 <dd><p>numeric value indicating the minimum overlap count
 below which edges are removed. The value <code>E(g)$overlap_count</code> is
 used for this filter.</p></dd>
+
+
 <dt>do_plot</dt>
 <dd><p>logical indicating whether to plot the final result.</p></dd>
+
+
 <dt>do_legend</dt>
 <dd><p>logical indicating whether to print a color legend,
 valid when <code>do_plot=TRUE</code>. Arguments <code>...</code> are also passed to
 <code><a href="mem_legend.html">mem_legend()</a></code>, for example <code>x="bottomleft"</code> can be overriden.</p></dd>
+
+
 <dt>remove_blanks</dt>
 <dd><p>logical indicating whether to call
 <code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code> which removes blank/empty colors in
 igraph nodes.</p></dd>
+
+
 <dt>remove_singlets</dt>
 <dd><p>logical indicating whether to remove singlet
 nodes, which are nodes that have no connections to other nodes.
 By default, singlets are removed, in order to help visualize the
 node connections that remain after filtering by <code>overlap</code>.</p></dd>
+
+
 <dt>spread_labels</dt>
 <dd><p>logical indicating whether to call
 <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>, which places node labels at an angle offset
 from the node, in order to improve default label positions.</p></dd>
+
+
 <dt>y_bias</dt>
 <dd><p>numeric value passed to <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code> when
 <code>spread_labels=TRUE</code>.</p></dd>
+
+
 <dt>repulse</dt>
 <dd><p>numeric value used for network layout when
 <code><a href="layout_with_qfrf.html">layout_with_qfrf()</a></code> is used.</p></dd>
+
+
 <dt>sets</dt>
 <dd><p>optional character vector of enriched sets to include,
 all other sets will be excluded. These values are matched with
 <code>V(g)$name</code>.</p></dd>
+
+
 <dt>rescale</dt>
 <dd><p>logical indicating whether the <code>igraph</code> layout
 coordinates are scaled to range <code>c(-1, 1)</code> before plotting.
@@ -140,17 +163,24 @@ other settings during the change. The effect is mainly to keep
 layout aspect intact, in cases where the x- and y-axis ranges
 are not roughly the same size, for example a short-wide
 layout.</p></dd>
+
+
 <dt>main</dt>
 <dd><p>character string used as the title when <code>do_plot=TRUE</code>.
 This character string is passed to <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> in order to
 include certain argument values such as <code>overlap</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code>,
 <code><a href="removeIgraphSinglets.html">removeIgraphSinglets()</a></code>, and <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code> as needed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>invisibly returns the <code>igraph</code> object used for plotting,
+    
+
+<p>invisibly returns the <code>igraph</code> object used for plotting,
 a by-product of this function when <code>do_plot=TRUE</code> is that
 the igraph object is also visualized. All custom plot elements
 are updated in the <code>igraph</code> object, so in principle a
@@ -220,7 +250,6 @@ visualization has insightful structure.</p>
 <code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
 <code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -234,8 +263,7 @@ visualization has insightful structure.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

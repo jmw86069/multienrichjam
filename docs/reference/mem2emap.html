@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,31 +62,34 @@
     <p>Convert multiEnrichMap mem output to EnrichmentMap emap</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">mem2emap</span><span class="op">(</span>
-  <span class="va">mem</span>,
-  overlap <span class="op">=</span> <span class="fl">0.2</span>,
-  p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,
-  min_count <span class="op">=</span> <span class="fl">4</span>,
-  colorV <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">colorV</span>,
-  cluster_function <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_walktrap.html" class="external-link">cluster_walktrap</a></span>,
-  cluster_list <span class="op">=</span> <span class="cn">NULL</span>,
-  num_keep_terms <span class="op">=</span> <span class="fl">3</span>,
-  keep_terms_sep <span class="op">=</span> <span class="st">",\n"</span>,
-  repulse <span class="op">=</span> <span class="fl">3.3</span>,
-  remove_singlets <span class="op">=</span> <span class="cn">TRUE</span>,
-  color_by_nodes <span class="op">=</span> <span class="cn">FALSE</span>,
-  apply_direction <span class="op">=</span> <span class="cn">TRUE</span>,
-  direction_max <span class="op">=</span> <span class="fl">2</span>,
-  direction_floor <span class="op">=</span> <span class="fl">0.5</span>,
-  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mem2emap</span><span class="op">(</span></span>
+<span>  <span class="va">mem</span>,</span>
+<span>  overlap <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,</span>
+<span>  min_count <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  colorV <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">colorV</span>,</span>
+<span>  cluster_function <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_walktrap.html" class="external-link">cluster_walktrap</a></span>,</span>
+<span>  cluster_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  num_keep_terms <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  keep_terms_sep <span class="op">=</span> <span class="st">",\n"</span>,</span>
+<span>  repulse <span class="op">=</span> <span class="fl">3.3</span>,</span>
+<span>  remove_singlets <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  color_by_nodes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  apply_direction <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  direction_max <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  direction_floor <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mem</dt>
 <dd><p><code>list</code> object output from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code></p></dd>
+
+
 <dt>overlap</dt>
 <dd><p><code>numeric</code> value between 0 and 1 indicating the Jaccard
 overlap coefficient required between any two pathways in order to
@@ -96,46 +99,69 @@ in genes shared between two pathway nodes. Note these genes must be
 involved in enrichment, and therefore does not use all possible
 genes annotated to a pathway. Therefore connections are only
 created with enriched genes are shared between pathways.</p></dd>
+
+
 <dt>p_cutoff</dt>
 <dd><p><code>numeric</code> threshold used for significant enrichment
 P-value, usually defined in the <code>mem</code> object.</p></dd>
+
+
 <dt>min_count</dt>
 <dd><p><code>integer</code> threshold for minimum genes involved in
 enrichment in order for a pathway to be considered significant
 during this analysis.</p></dd>
+
+
 <dt>colorV</dt>
 <dd><p><code>character</code> vector of R colors used for each enrichment.</p></dd>
+
+
 <dt>cluster_function</dt>
 <dd><p><code>function</code> used to cluster nodes in the resulting
 <code>igraph</code> object, used to help generate a visual summary.</p></dd>
+
+
 <dt>num_keep_terms</dt>
 <dd><p><code>integer</code> number of terms to keep from each
 pathway cluster, when <code>cluster_function</code> is supplied above. Common
 terms are removed from each pathway cluster, then remaining terms
 are sorted by decreasing occurrence, and used as a straightforward
 summary of pathways in each cluster.</p></dd>
+
+
 <dt>keep_terms_sep</dt>
 <dd><p><code>character</code> string used to separated multiple
 pathway terms defined by <code>num_keep_terms</code> above.</p></dd>
+
+
 <dt>repulse</dt>
 <dd><p><code>numeric</code> value passed to <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code>.</p></dd>
+
+
 <dt>remove_singlets</dt>
 <dd><p><code>logical</code> indicating whether to remove pathway
 singlets, which have no connections to any other pathways. It can
 help simplify busy figures, however removing a singlet pathway
 is not recommended because it may imply the pathways were not
 statistically significant, and in fact they were.</p></dd>
+
+
 <dt>color_by_nodes</dt>
 <dd><p><code>logical</code> indicating whether to colorize pathway
 clusters based upon blending the node colors within each cluster.
 Note that a mix of colors often turns brown, so this feature has
 unpredictable benefit.</p></dd>
+
+
 <dt>do_plot</dt>
 <dd><p><code>logical</code> indicating whether to render the resulting
 plot.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> to customize
 the network plot.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -191,7 +217,6 @@ are used to define nodegroups for edge bundling.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -205,8 +230,7 @@ are used to define nodegroups for edge bundling.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

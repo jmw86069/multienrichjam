@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Convert data.frame to enrichResult</h1>
-    <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamenrich-base.r" class="external-link"><code>R/jamenrich-base.r</code></a></small>
+    <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamenrich-enrichdf2er.R" class="external-link"><code>R/jamenrich-enrichdf2er.R</code></a></small>
     <div class="hidden name"><code>enrichDF2enrichResult.Rd</code></div>
     </div>
 
@@ -62,71 +62,98 @@
     <p>Convert data.frame to enrichResult</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">enrichDF2enrichResult</span><span class="op">(</span>
-  enrichDF <span class="op">=</span> <span class="cn">NULL</span>,
-  pvalueCutoff <span class="op">=</span> <span class="fl">1</span>,
-  pAdjustMethod <span class="op">=</span> <span class="st">"none"</span>,
-  keyColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"itemsetID"</span>, <span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"Pathway"</span><span class="op">)</span>,
-  pathGenes <span class="op">=</span> <span class="st">"pathGenes"</span>,
-  geneColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"geneNames"</span>, <span class="st">"geneID"</span>, <span class="st">"Gene"</span>, <span class="st">"Genes"</span><span class="op">)</span>,
-  geneHits <span class="op">=</span> <span class="st">"geneHits"</span>,
-  geneRatioColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GeneRatio"</span>, <span class="st">"^Ratio"</span><span class="op">)</span>,
-  geneDelim <span class="op">=</span> <span class="st">"[,/ ]+"</span>,
-  pvalueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P.Value"</span>, <span class="st">"Pvalue"</span>, <span class="st">"FDR"</span>, <span class="st">"adj.P.Val"</span><span class="op">)</span>,
-  descriptionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Description"</span>, <span class="st">"Name"</span>, <span class="st">"Pathway"</span>, <span class="st">"ID"</span><span class="op">)</span>,
-  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">enrichDF2enrichResult</span><span class="op">(</span></span>
+<span>  enrichDF <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pvalueCutoff <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  pAdjustMethod <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  keyColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"itemsetID"</span>, <span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"Pathway"</span><span class="op">)</span>,</span>
+<span>  pathGenes <span class="op">=</span> <span class="st">"pathGenes"</span>,</span>
+<span>  geneColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"geneNames"</span>, <span class="st">"geneID"</span>, <span class="st">"Gene"</span>, <span class="st">"Genes"</span><span class="op">)</span>,</span>
+<span>  geneHits <span class="op">=</span> <span class="st">"geneHits"</span>,</span>
+<span>  geneRatioColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GeneRatio"</span>, <span class="st">"^Ratio"</span><span class="op">)</span>,</span>
+<span>  geneDelim <span class="op">=</span> <span class="st">"[,/ ]+"</span>,</span>
+<span>  geneSep <span class="op">=</span> <span class="st">","</span>,</span>
+<span>  pvalueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P.Value"</span>, <span class="st">"Pvalue"</span>, <span class="st">"FDR"</span>, <span class="st">"adj.P.Val"</span><span class="op">)</span>,</span>
+<span>  descriptionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Description"</span>, <span class="st">"Name"</span>, <span class="st">"Pathway"</span>, <span class="st">"ID"</span><span class="op">)</span>,</span>
+<span>  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>enrichDF</dt>
 <dd><p><code>data.frame</code> representing gene set enrichment
 results.</p></dd>
+
+
 <dt>pvalueCutoff</dt>
 <dd><p><code>numeric</code> value range 0 to 1, to define the
 P-value threshold for enrichment results to be considered
 in downstream processing.</p></dd>
+
+
 <dt>pAdjustMethod</dt>
 <dd><p><code>character</code> string to define the P-value
 adjustment method, or <code>"none"</code> for no additional adjustment.
 See <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">stats::p.adjust()</a></code> for valid values.</p></dd>
+
+
 <dt>keyColname</dt>
 <dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing the unique row identifier. It can be a pathway_ID
 or any uniquely identifying value.</p></dd>
+
+
 <dt>pathGenes</dt>
 <dd><p><code>character</code> or value of the <code>colname(enrichDF)</code>
 containing the number of genes in each pathway. This value will be
 derived from <code>geneRatioColname</code> if needed.</p></dd>
+
+
 <dt>geneColname</dt>
 <dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing delimiited genes in each pathway.</p></dd>
+
+
 <dt>geneHits</dt>
 <dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing the integer count of the gene hits in each pathway.
 This value will be derived from <code>geneRatioColname</code> if needed.</p></dd>
+
+
 <dt>geneRatioColname</dt>
 <dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing the character ratio of gene hits to pathway size,
 in format "50/100". This value is used when either <code>"pathGenes"</code>
 or <code>"geneHits"</code> are not supplied.</p></dd>
+
+
 <dt>geneDelim</dt>
 <dd><p><code>character</code> regular expression pattern used to separate
 genes in the <code>pathGenes</code> column into a vector of character
 values.</p></dd>
+
+
 <dt>pvalueColname</dt>
 <dd><p><code>character</code> value of the <code>colname(enrichDF)</code>
 containing enrichment P-values to use in downstream processing.</p></dd>
+
+
 <dt>msigdbGmtT</dt>
 <dd><p>optional gmtT object, a representation of
 <code>arules::transactions-class</code>. (Not currently implemented.)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -144,7 +171,6 @@ package.</p>
 <code><a href="enrichList2df.html">enrichList2df</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -158,8 +184,7 @@ package.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

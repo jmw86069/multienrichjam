@@ -20,6 +20,9 @@ jam_plot_igraph(
   mark.lwd = 2,
   mark.lty = 1,
   mark.smooth = TRUE,
+  mark.cex = 1,
+  mark.x.nudge = 0,
+  mark.y.nudge = 0,
   pie_to_jampie = TRUE,
   use_shadowText = FALSE,
   vectorized_node_shapes = TRUE,
@@ -80,7 +83,16 @@ vector is given, then different values are used for the different vertex
 groups.}
 
 \item{mark.lwd, mark.lty}{line with and line type parameters for each
-\code{mark.groups} polygon,}
+\code{mark.groups} polygon.}
+
+\item{mark.cex}{\code{numeric} adjustment for mark label font size, used
+when \code{mark.groups} is supplied and has \code{names(mark.groups)}.}
+
+\item{mark.x.nudge, mark.y.nudge}{\code{numeric} values in units of the
+maximum x-axis or y-axis range for the layout coordinates,
+used to adjust each label displayed when \code{names(mark.groups)}
+is defined. These arguments are passed to \code{make_point_hull()}
+as \code{label.x.nudge}, \code{label.y.nudge}, respectively.}
 
 \item{pie_to_jampie}{\code{logical} indicating whether to convert
 vertex shape \code{"pie"} to \code{"jampie"} in order to use vectorized

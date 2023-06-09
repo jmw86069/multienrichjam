@@ -153,6 +153,13 @@
 #' that the border should match the colors, or it can be set to `"grey45"`
 #' for a generally visible border.
 #'
+#' When `names(mark.groups)` is defined, the values are used as
+#' labels, positioned at the outer edge of each polygon. The label
+#' text size is adjusted with `label.cex`, and the position can
+#' be adjusted with `mark.x.nudge`, `mark.y.nudge`, in units of
+#' fraction of the maximum x- or y-axis range (effectively fraction
+#' of the layout size).
+#'
 #' Optional argument `nodegroups` can be supplied, which is a `list`
 #' of vectors, where each vector represents a group of nodes. The
 #' `nodegroups` can be used with `edge_bundling="nodegroups"` to
@@ -338,6 +345,9 @@ jam_igraph <- function
  mark.lwd=2,
  mark.lty=1,
  mark.smooth=TRUE,
+ mark.cex=1,
+ mark.x.nudge=0,
+ mark.y.nudge=0,
  verbose=FALSE,
  debug=NULL)
 {
@@ -557,6 +567,9 @@ jam_igraph <- function
       mark.lwd=mark.lwd,
       mark.lty=mark.lty,
       mark.smooth=mark.smooth,
+      mark.cex=mark.cex,
+      mark.x.nudge=mark.x.nudge,
+      mark.y.nudge=mark.y.nudge,
       use_shadowText=use_shadowText,
       xlim=xlim,
       ylim=ylim,

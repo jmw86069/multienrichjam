@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,39 +62,49 @@
     <p>igraph re-layout using qgraph Fruchterman-Reingold</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">relayout_with_qfr</span><span class="op">(</span>
-  <span class="va">g</span>,
-  repulse <span class="op">=</span> <span class="fl">3.5</span>,
-  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,
-  seed <span class="op">=</span> <span class="fl">123</span>,
-  init <span class="op">=</span> <span class="cn">NULL</span>,
-  constrain <span class="op">=</span> <span class="cn">NULL</span>,
-  constraints <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">relayout_with_qfr</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  repulse <span class="op">=</span> <span class="fl">3.5</span>,</span>
+<span>  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
+<span>  init <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  constrain <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  constraints <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> object</p></dd>
+
+
 <dt>repulse</dt>
 <dd><p>exponent power used to scale the radius effect around
 each vertex. The default is slightly higher than the cube of
 the number of vertices, but as the number of vertices increases,
 values from 3.5 to 4 and higher are more effective for layout.</p></dd>
+
+
 <dt>spread_labels</dt>
 <dd><p>logical indicating whether to call
 <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>, which places node labels at an angle offset
 from the node, in order to improve default label positions.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code> and
 <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code> as needed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>igraph</code> object, with layout coordinates stored in
+    
+
+<p><code>igraph</code> object, with layout coordinates stored in
 graph attribute <code>"layout"</code>, accessible for example with
 <code>graph$layout</code> or <code>graph_attr(graph, "layout")</code>.
 When <code>spread_labels=TRUE</code>,
@@ -151,7 +161,6 @@ while also returning the <code>igraph</code> object ready to be plotted as-is.</
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -165,8 +174,7 @@ while also returning the <code>igraph</code> object ready to be plotted as-is.</
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

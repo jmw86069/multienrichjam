@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,31 +62,40 @@
     <p>Color edges by nodegroups</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">color_nodes_by_nodegroups</span><span class="op">(</span>
-  <span class="va">g</span>,
-  <span class="va">nodegroups</span>,
-  nodegroup_colors <span class="op">=</span> <span class="cn">NULL</span>,
-  node_alpha <span class="op">=</span> <span class="cn">NULL</span>,
-  Crange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">100</span><span class="op">)</span>,
-  Lrange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">85</span><span class="op">)</span>,
-  color_attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"color"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">color_nodes_by_nodegroups</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  <span class="va">nodegroups</span>,</span>
+<span>  nodegroup_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  node_alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  Crange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">100</span><span class="op">)</span>,</span>
+<span>  Lrange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">85</span><span class="op">)</span>,</span>
+<span>  color_attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"color"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> object that contains vertex node attribute <code>"color"</code>
 as seen with <code>igraph::vertex_attr(g, "color")</code>.</p></dd>
+
+
 <dt>nodegroups</dt>
 <dd><p><code>list</code> or <code>communities</code> object that references
 nodes in <code>g</code> and assigns one or more to nodegroups.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code>.</p></dd>
+
+
 <dt>edge_alpha</dt>
 <dd><p><code>numeric</code> or <code>NULL</code>, where numeric value sets
 the edge alpha transparency, where <code>edge_alpha=0</code> is completely
@@ -94,10 +103,13 @@ transparent, <code>edge_alpha=0.5</code> is 50% transparent, and <code>edge_alph
 is completely not transparent, and is opaque. When <code>edge_alpha=NULL</code>
 the alpha values are supplied by <code><a href="https://rdrr.io/pkg/colorjam/man/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code>
 which blends the two values.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>igraph</code> object with edge color attribute updated to
+    
+
+<p><code>igraph</code> object with edge color attribute updated to
 represent the result of blending node colors, seen by
 <code>igraph::edge_attr(g)$color</code>.</p>
     </div>
@@ -142,7 +154,6 @@ represent the result of blending node colors, seen by
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -156,8 +167,7 @@ represent the result of blending node colors, seen by
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

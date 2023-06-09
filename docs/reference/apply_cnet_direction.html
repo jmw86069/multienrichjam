@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,41 +62,51 @@
     <p>Apply Cnet border color by directionality</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">apply_cnet_direction</span><span class="op">(</span>
-  <span class="va">cnet</span>,
-  <span class="va">hitim</span>,
-  col <span class="op">=</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/col_div_xf.html" class="external-link">col_div_xf</a></span><span class="op">(</span><span class="fl">1.2</span><span class="op">)</span>,
-  col_l_max <span class="op">=</span> <span class="fl">65</span>,
-  hide_solo_pie <span class="op">=</span> <span class="cn">TRUE</span>,
-  frame_blank <span class="op">=</span> <span class="fu"><a href="default_igraph_values.html">default_igraph_values</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">vertex</span><span class="op">$</span><span class="va">frame.color</span>,
-  frame_lwd_blank <span class="op">=</span> <span class="fl">0.2</span>,
-  border_lwd <span class="op">=</span> <span class="fl">2</span>,
-  do_reorder <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">apply_cnet_direction</span><span class="op">(</span></span>
+<span>  <span class="va">cnet</span>,</span>
+<span>  hitim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  col <span class="op">=</span> <span class="fu">circlize</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html" class="external-link">colorRamp2</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"grey80"</span>,</span>
+<span>    <span class="st">"firebrick3"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  col_l_max <span class="op">=</span> <span class="fl">80</span>,</span>
+<span>  hide_solo_pie <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  frame_blank <span class="op">=</span> <span class="fu"><a href="default_igraph_values.html">default_igraph_values</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">vertex</span><span class="op">$</span><span class="va">frame.color</span>,</span>
+<span>  frame_lwd_blank <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  border_lwd <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  do_reorder <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>cnet</dt>
 <dd><p><code>igraph</code> object with node attribute <code>"pie.color"</code>
 populated as a <code>list</code> of <code>character</code> vectors, named by
 enrichment. The enrichment names should match <code>colnames(hitim)</code>.</p></dd>
+
+
 <dt>hitim</dt>
 <dd><p><code>numeric</code> matrix with values centered at zero for
 no change, positive values <code>+1</code> for up-regulation, and
 negative values <code>-1</code> for down-regulation. The values are
 converted to color using color function <code>col</code>.</p></dd>
+
+
 <dt>col</dt>
 <dd><p><code>function</code> that takes <code>numeric</code> input and assigns
 a color. The default assigns red for positive values, blue
 for negative values, and white for zero, using
 <code>colorjam::col_div_xf(1.2)</code>.</p></dd>
+
+
 <dt>col_l_max</dt>
 <dd><p><code>numeric</code> maximum HCL Lightness permitted for
 output colors, for example because the middle color in <code>"RdBu_r"</code>
 is nearly white, it may be preferable to apply a darker grey
 color.</p></dd>
+
+
 <dt>hide_solo_pie</dt>
 <dd><p><code>logical</code> indicating whether a single-color
 border should only be applied to <code>"frame.color"</code> and not to
@@ -111,16 +121,53 @@ to <code>pie.border</code>, <code>frame.color</code> will be assigned <code>fram
 and <code>frame.lwd</code> will be assigned <code>frame_lwd_blank</code> which is useful
 for displaying a small outer frame for each node.</p></li>
 </ul></dd>
+
+
 <dt>frame_blank</dt>
 <dd><p><code>character</code> string to define the color used
-for <code>"frame.color"</code> when there are multiple colors in <code>"pie.border"</code>
-and therefore there should be no visible <code>"frame.color"</code>.</p></dd>
+for <code>"frame.color"</code> when colors are defined in <code>"pie.border"</code>.
+In this case, the frame is drawn around the inner <code>pie.border</code>
+colors, and only serves to add visual clarity. The frame border
+can be blank (<code>frame_blank="transparent"</code>) or can be a thinner line,
+controlled with <code>frame_lwd_blank=0.2</code>.
+By default, the default igraph vertex <code>frame.color</code> is used,
+defined by <code>default_igraph_values()$vertex$frame.color</code>.</p></dd>
+
+
+<dt>frame_lwd_blank</dt>
+<dd><p><code>numeric</code> line width for nodes that have "blank"
+frame, which means the <code>pie.border</code> colors are defined. In this case
+the frame border can be invisible (<code>frame_lwd_blank=0</code>) or
+a very thin line (default <code>frame_lwd_blank=0.2</code>) to surround the
+inner borders drawn with <code>pie.border</code>.</p></dd>
+
+
+<dt>border_lwd</dt>
+<dd><p><code>numeric</code> line width used whenever a node is matched
+with <code>rownames(hitim)</code>. When the colors are applied to <code>pie.color</code>,
+the border is defined with <code>pie.lwd</code>. When colors are applied to
+<code>frame.color</code>, the border is defined with <code>frame.lwd</code>.
+(Soon to become <code>frame.width</code>.)</p></dd>
+
+
 <dt>do_reorder</dt>
 <dd><p><code>logical</code> indicating whether to call
 <code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> on the resulting <code>igraph</code>, so that
-the border color can be used in the sort conditions.</p></dd>
+the border color can be used in the sort conditions.
+Note that when <code>do_reorder=TRUE</code>, other relevant arguments are passed
+through <code>...</code> to <code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> such as:</p><ul><li><p><code>colorV</code> - which controls the expected order of colors, and
+should be supplied if known upfront.</p></li>
+<li><p><code>sortAttributes</code> - usually contains appropriate default values</p></li>
+<li><p><code>nodeSortBy</code> - usually contains appropriate default values</p></li>
+<li><p><code>orderByAspect=TRUE</code> - controls whether left-right and top-bottom
+order is affected by the aspect ratio of each nodeset.</p></li>
+</ul></dd>
+
+
 <dt>...</dt>
-<dd><p>additional arguments are ignored.</p></dd>
+<dd><p>additional arguments are passed to <code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code>
+when <code>do_reorder=TRUE</code>.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -158,7 +205,6 @@ one unique border color, so that only the outer border is colorized.</p>
 <code><a href="nudge_igraph_node.html">nudge_igraph_node</a>()</code>,
 <code><a href="rotate_igraph_layout.html">rotate_igraph_layout</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -172,8 +218,7 @@ one unique border color, so that only the outer border is colorized.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

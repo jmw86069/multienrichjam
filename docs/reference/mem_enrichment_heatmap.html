@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,53 +62,56 @@
     <p>MultiEnrichment Heatmap of enrichment P-values</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">mem_enrichment_heatmap</span><span class="op">(</span>
-  <span class="va">mem</span>,
-  style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dotplot"</span>, <span class="st">"heatmap"</span><span class="op">)</span>,
-  p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,
-  min_count <span class="op">=</span> <span class="fl">1</span>,
-  p_floor <span class="op">=</span> <span class="fl">1e-06</span>,
-  point_size_factor <span class="op">=</span> <span class="fl">1</span>,
-  point_size_max <span class="op">=</span> <span class="fl">8</span>,
-  point_size_min <span class="op">=</span> <span class="fl">1</span>,
-  row_method <span class="op">=</span> <span class="st">"euclidean"</span>,
-  column_method <span class="op">=</span> <span class="st">"euclidean"</span>,
-  name <span class="op">=</span> <span class="st">"-log10P"</span>,
-  row_dend_reorder <span class="op">=</span> <span class="cn">TRUE</span>,
-  row_dend_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span>,
-  row_fontsize <span class="op">=</span> <span class="cn">NULL</span>,
-  row_cex <span class="op">=</span> <span class="fl">1</span>,
-  row_split <span class="op">=</span> <span class="cn">NULL</span>,
-  cluster_rows <span class="op">=</span> <span class="cn">TRUE</span>,
-  column_fontsize <span class="op">=</span> <span class="cn">NULL</span>,
-  column_cex <span class="op">=</span> <span class="fl">1</span>,
-  cluster_columns <span class="op">=</span> <span class="cn">FALSE</span>,
-  sets <span class="op">=</span> <span class="cn">NULL</span>,
-  color_by_column <span class="op">=</span> <span class="cn">FALSE</span>,
-  cex.axis <span class="op">=</span> <span class="fl">1</span>,
-  lens <span class="op">=</span> <span class="fl">3</span>,
-  cexCellnote <span class="op">=</span> <span class="fl">0</span>,
-  column_title <span class="op">=</span> <span class="cn">NULL</span>,
-  row_names_max_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">12</span>, <span class="st">"cm"</span><span class="op">)</span>,
-  column_names_max_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">12</span>, <span class="st">"cm"</span><span class="op">)</span>,
-  heatmap_legend_param <span class="op">=</span> <span class="cn">NULL</span>,
-  legend_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">6</span>, <span class="st">"cm"</span><span class="op">)</span>,
-  apply_direction <span class="op">=</span> <span class="cn">FALSE</span>,
-  direction_cutoff <span class="op">=</span> <span class="fl">0</span>,
-  gene_count_max <span class="op">=</span> <span class="cn">NULL</span>,
-  top_annotation <span class="op">=</span> <span class="cn">NULL</span>,
-  show <span class="op">=</span> <span class="cn">NULL</span>,
-  use_raster <span class="op">=</span> <span class="cn">FALSE</span>,
-  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mem_enrichment_heatmap</span><span class="op">(</span></span>
+<span>  <span class="va">mem</span>,</span>
+<span>  style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dotplot"</span>, <span class="st">"heatmap"</span><span class="op">)</span>,</span>
+<span>  p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,</span>
+<span>  min_count <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  p_floor <span class="op">=</span> <span class="fl">1e-10</span>,</span>
+<span>  point_size_factor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  point_size_max <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  point_size_min <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  row_method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
+<span>  column_method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"-log10P"</span>,</span>
+<span>  row_dend_reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  row_dend_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>  row_fontsize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row_cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  row_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cluster_rows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  column_fontsize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column_cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  cluster_columns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  color_by_column <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cex.axis <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  lens <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  cexCellnote <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  column_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row_names_max_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">12</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
+<span>  column_names_max_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">12</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
+<span>  heatmap_legend_param <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  legend_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">6</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
+<span>  apply_direction <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  direction_cutoff <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  gene_count_max <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  top_annotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  show <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  use_raster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mem</dt>
 <dd><p><code>list</code> object created by <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>. Specifically
 the object is expected to contain <code>enrichIM</code>.</p></dd>
+
+
 <dt>style</dt>
 <dd><p><code>character</code> string indicating the style of heatmap:
 <code>"heatmap"</code> produces a regular heatmap, shaded by <code>log10(Pvalue)</code>;
@@ -117,6 +120,8 @@ to the number of genes. See function description for details on
 how to include the point size legend beside the heatmap.
 The main benefit of using "dotplot" style is that it also indicates
 the relative number of genes involved in the enrichment.</p></dd>
+
+
 <dt>p_cutoff</dt>
 <dd><p><code>numeric</code> value of the enrichment P-value cutoff,
 by default this value is obtained from <code>mem$p_cutoff</code> to be
@@ -125,79 +130,130 @@ P-values above <code>p_cutoff</code> are not colored, and are therefore white.
 This behavior is intended to indicate pathways with P-value above
 this threshold did not meet the threshold, instead of
 pathways with similar P-values displaying with similar color.</p></dd>
+
+
 <dt>min_count</dt>
 <dd><p><code>numeric</code> number of genes required for a pathway
 to be considered dysregulated.</p></dd>
+
+
 <dt>p_floor</dt>
 <dd><p><code>numeric</code> minimum P-value used for the color gradient.
 P-values below this floor are colored with the maximum color gradient.
 This value is intended to be used in cases where one enrichment
 P-value is very low (e.g. 1e-36) to prevent all other P-values from
 being colored pale red-white and not be noticeable.</p></dd>
+
+
 <dt>point_size_factor</dt>
 <dd><p><code>numeric</code> used to adjust the legend point size,
 since the heatmap point size is dependent upon the number of rows,
 the legend may require some manual adjustment to make sure the
 legend matches the heatmap.</p></dd>
+
+
+<dt>point_size_min, point_size_max</dt>
+<dd><p><code>numeric</code> values which define
+the minimum and maximum point sizes, effectively defining the range
+permitted when <code>style="dotplot"</code>.</p></dd>
+
+
 <dt>row_method</dt>
-<dd><p>character string of the distance method
+<dd><p><code>character</code> string of the distance method
 to use for row and column clustering. The clustering is performed
 by <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code>.</p></dd>
+
+
 <dt>name</dt>
-<dd><p>character value passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>,
+<dd><p><code>character</code> value passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>,
 used as a label above the heatmap color legend.</p></dd>
+
+
 <dt>row_dend_reorder</dt>
-<dd><p>logical indicating whether to reorder the
+<dd><p><code>logical</code> indicating whether to reorder the
 row dendrogram using the method described in
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>. The end result is minor reshuffling of
 leaf nodes on the dendrogram based upon mean signal in each row,
 which can sometimes look cleaner.</p></dd>
+
+
 <dt>row_fontsize, column_fontsize</dt>
-<dd><p>arguments passed to
+<dd><p>optional <code>numeric</code> arguments passed to
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> to size row and column labels.</p></dd>
+
+
 <dt>cluster_columns</dt>
-<dd><p>logical indicating whether to cluster heatmap
+<dd><p><code>logical</code> indicating whether to cluster heatmap
 columns, by default columns are not clustered.</p></dd>
+
+
 <dt>sets</dt>
-<dd><p>character vector of sets (pathways) to include in the heatmap,
+<dd><p><code>character</code> vector of sets (pathways) to include in the heatmap,
 all other sets will be excluded.</p></dd>
+
+
 <dt>color_by_column</dt>
-<dd><p>logical indicating whether to colorize the
+<dd><p><code>logical</code> indicating whether to colorize the
 heatmap using <code>mem$colorV</code> as defined for each comparison. This
 option is currently experimental, and produces a base R heatmap
 using <code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code>.</p></dd>
+
+
 <dt>cex.axis</dt>
-<dd><p>sent to <code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code> only when
-<code>color_by_column=TRUE</code>.</p></dd>
+<dd><p><code>numeric</code> adjustment for axis labels, passed to
+<code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code> only when <code>color_by_column=TRUE</code>.</p></dd>
+
+
 <dt>lens</dt>
-<dd><p><code>numeric</code> value used in color gradients, to define whether
-the color gradient should be enhanced in the mid-ranges (positive <code>lens</code>),
-or diminished in the mid-ranges (negative <code>lens</code>).</p></dd>
+<dd><p><code>numeric</code> value used in color gradients, defining the extent
+the color gradient is enhanced in the mid-ranges (positive <code>lens</code>),
+or diminished in the mid-ranges (negative <code>lens</code>). There is no
+quantitative standard measure for color gradient changes, so this
+option is intended to help adjust and improve the visual perception
+of the current data.</p></dd>
+
+
 <dt>cexCellnote</dt>
-<dd><p>numeric character expansion value used only
+<dd><p><code>numeric</code> character expansion value used only
 when <code>color_by_column=TRUE</code>, used to adjust the P-value label size
 inside each heatmap cell.</p></dd>
+
+
 <dt>column_title</dt>
-<dd><p>optional character string with title to display
+<dd><p>optional <code>character</code> string with title to display
 above the heatmap.</p></dd>
+
+
 <dt>row_names_max_width, column_names_max_height, heatmap_legend_param</dt>
-<dd><p>arguments passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>.</p></dd>
+<dd><p>arguments passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> and provided here
+for convenience.</p></dd>
+
+
 <dt>top_annotation</dt>
 <dd><p><code>HeatmapAnnotation</code> as produced by
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapAnnotation.html" class="external-link">ComplexHeatmap::HeatmapAnnotation()</a></code> or <code>NULL</code>, used to display
-annotation at the top of the heatmap.</p></dd>
+customized annotation at the top of the heatmap. The order of
+columns must match the order of columns in the data displayed
+in the heatmap.</p></dd>
+
+
 <dt>use_raster</dt>
 <dd><p><code>logical</code> passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
 indicating whether to rasterize the heatmap output, used when
-<code>style="heatmap"</code>, since dotplot output is always drawn with
-individual circles in each heatmap cell.</p></dd>
+<code>style="heatmap"</code>. Rasterization is not relevant to dotplot output
+since dotplot is drawn using an individual circle in each heatmap cell.</p></dd>
+
+
 <dt>do_plot</dt>
 <dd><p><code>logical</code> indicating whether to display the plot with
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">ComplexHeatmap::draw()</a></code> or <code><a href="https://rdrr.io/pkg/jamba/man/imageByColors.html" class="external-link">jamba::imageByColors()</a></code> as relevant.
 The underlying data is returned invisibly.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>
 for customization.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -213,8 +269,19 @@ genes involved in enrichment. Because <code><a href="https://rdrr.io/pkg/Complex
 is used for this step, a separate point legend is returned
 as an attribute of the heatmap object.</p>
 <p>To draw the dotplot heatmap including the point legend,
-use this form:</p><div class="sourceCode R"><pre><code><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">hm</span>,
-   annotation_legend_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">hm</span>, <span class="st">"annotation_legend_list"</span><span class="op">)</span><span class="op">)</span></code></pre><p></p></div>
+use this form:</p>
+<p></p><div class="sourceCode R"><pre><code><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">hm</span>,</span>
+<span>   annotation_legend_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">hm</span>, <span class="st">"annotation_legend_list"</span><span class="op">)</span><span class="op">)</span></span></code></pre><p></p></div>
+<p>Note that this function may be more easily applied through the
+wrapper function with the format <code>mem_plot_folio(mem, do_which=1, ...)</code>.
+The wrapper function <code><a href="mem_plot_folio.html">mem_plot_folio()</a></code> performs hierarchical
+clustering of the underlying gene-pathway incidence matrix, which
+informs the clustering of enrichment results shown
+in this function <code>mem_enrichment_heatmap()</code>. Otherwise, this
+function will cluster pathways using only the enrichment
+P-values transformed with <code>-log10(p)</code>. Generally, the clustering
+using the gene-pathway incidence matrix is more effective at
+representing biologically-driven pathway clusters.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -227,7 +294,6 @@ use this form:</p><div class="sourceCode R"><pre><code><span class="fu">ComplexH
 <code><a href="mem_multienrichplot.html">mem_multienrichplot</a>()</code>,
 <code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
 <code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
-    </div>
     </div>
 
   </div>
@@ -242,8 +308,7 @@ use this form:</p><div class="sourceCode R"><pre><code><span class="fu">ComplexH
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

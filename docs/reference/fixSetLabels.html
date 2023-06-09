@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,58 +62,75 @@
     <p>Fix Set labels for legibility</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">fixSetLabels</span><span class="op">(</span>
-  <span class="va">x</span>,
-  wrap <span class="op">=</span> <span class="cn">TRUE</span>,
-  width <span class="op">=</span> <span class="fl">25</span>,
-  maxNchar <span class="op">=</span> <span class="cn">Inf</span>,
-  suffix <span class="op">=</span> <span class="st">"..."</span>,
-  nodeType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Set"</span>, <span class="st">"Gene"</span>, <span class="st">"any"</span><span class="op">)</span>,
-  adjustCase <span class="op">=</span> <span class="cn">TRUE</span>,
-  removeGrep <span class="op">=</span> <span class="st">"^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]"</span>,
-  words_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"als"</span>, <span class="st">"ii"</span>, <span class="st">"iii"</span>, <span class="st">"iv"</span>, <span class="st">"v"</span>, <span class="st">"tgf"</span>, <span class="st">"nfkb"</span>, <span class="st">"trna"</span>, <span class="st">"rrna"</span>, <span class="st">"mirna"</span>,
-    <span class="st">"mrna"</span>, <span class="st">"snrna"</span>, <span class="st">"snorna"</span>, <span class="st">"scrna"</span>, <span class="st">"lincrna"</span><span class="op">)</span>,
-  words_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ALS"</span>, <span class="st">"II"</span>, <span class="st">"III"</span>, <span class="st">"IV"</span>, <span class="st">"V"</span>, <span class="st">"TGF"</span>, <span class="st">"NFKB"</span>, <span class="st">"tRNA"</span>, <span class="st">"rRNA"</span>, <span class="st">"miRNA"</span>,
-    <span class="st">"mRNA"</span>, <span class="st">"snRNA"</span>, <span class="st">"snoRNA"</span>, <span class="st">"scRNA"</span>, <span class="st">"lincRNA"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fixSetLabels</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  wrap <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>  maxNchar <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  suffix <span class="op">=</span> <span class="st">"..."</span>,</span>
+<span>  nodeType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Set"</span>, <span class="st">"Gene"</span>, <span class="st">"any"</span><span class="op">)</span>,</span>
+<span>  adjustCase <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  removeGrep <span class="op">=</span> <span class="st">"^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]"</span>,</span>
+<span>  words_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"als"</span>, <span class="st">"ii"</span>, <span class="st">"iii"</span>, <span class="st">"iv"</span>, <span class="st">"v"</span>, <span class="st">"tgf"</span>, <span class="st">"nfkb"</span>, <span class="st">"trna"</span>, <span class="st">"rrna"</span>, <span class="st">"mirna"</span>,</span>
+<span>    <span class="st">"mrna"</span>, <span class="st">"snrna"</span>, <span class="st">"snorna"</span>, <span class="st">"scrna"</span>, <span class="st">"lincrna"</span><span class="op">)</span>,</span>
+<span>  words_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ALS"</span>, <span class="st">"II"</span>, <span class="st">"III"</span>, <span class="st">"IV"</span>, <span class="st">"V"</span>, <span class="st">"TGF"</span>, <span class="st">"NFKB"</span>, <span class="st">"tRNA"</span>, <span class="st">"rRNA"</span>, <span class="st">"miRNA"</span>,</span>
+<span>    <span class="st">"mRNA"</span>, <span class="st">"snRNA"</span>, <span class="st">"snoRNA"</span>, <span class="st">"scRNA"</span>, <span class="st">"lincRNA"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>character vector, or <code>igraph</code> object. When an <code>igraph</code>
 object is supplied, the <code>V(g)$name</code> attribute is used as the
 basis of generating a label, which is then stored as <code>V(g)$label</code>.</p></dd>
+
+
 <dt>wrap</dt>
 <dd><p>logical indicating whether to apply word wrap, based upon
 the supplied <code>width</code> argument.</p></dd>
+
+
 <dt>width</dt>
 <dd><p>integer value used when <code>wrap=TRUE</code>, it is sent to
 <code><a href="https://rdrr.io/r/base/strwrap.html" class="external-link">base::strwrap()</a></code>.</p></dd>
+
+
 <dt>maxNchar</dt>
 <dd><p>numeric value or <code>Inf</code> to limit the maximum characters
 allowed for each string. This option is preferred when <code>wrap=TRUE</code>
 is not feasible, for example heatmap labels. When <code>NULL</code> or <code>Inf</code>
 no limit is applied. See <code><a href="https://rdrr.io/r/base/nchar.html" class="external-link">base::nchar()</a></code>.</p></dd>
+
+
 <dt>suffix</dt>
 <dd><p>character value used as a suffix when <code>maxNchar</code> is used,
 the string is shortened so that the shortened string and suffix
 values are <code>maxNchar</code> characters long. It serves as an indicator
 that the string label has been shortened.</p></dd>
+
+
 <dt>nodeType</dt>
 <dd><p>character value compared to the vertex attribute
 <code>"nodeType"</code> when the input <code>x</code> is an <code>igraph</code> object. This option
 is used to restrict label changes to certain nodes. When <code>NULL</code> or
 <code>nodeType="any"</code> then all node labels are updated.</p></dd>
+
+
 <dt>adjustCase</dt>
 <dd><p>logical indicating whether to adjust the uppercase
 and lowercase lettering.</p></dd>
+
+
 <dt>removeGrep</dt>
 <dd><p>character regular expression pattern used to remove
 patterns from the resulting label. The default values remove the
 prefix used in MsigDB canonical pathway names, which is a prefix
 indicating the source of each pathway.</p></dd>
+
+
 <dt>words_from, words_to</dt>
 <dd><p>character vectors of words to match
 in case-insensitive manner, to be replaced with fixed-case
@@ -121,12 +138,17 @@ alternatives. It uses perl-based regular expression matching
 in <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">base::gsub()</a></code>, and the <code>\\b</code> expression to enforce a
 word boundary, either via delimiter, whitespace, or the end
 of the string.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>vector or igraph object, to match the input <code>x</code>.</p>
+    
+
+<p>vector or igraph object, to match the input <code>x</code>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -175,22 +197,21 @@ operates on either a character vector, or an igraph object.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KEGG_INSULIN_SIGNALING_PATHWAY"</span>,</span>
-<span class="r-in">   <span class="st">"KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY"</span>,</span>
-<span class="r-in">   <span class="st">"KEGG_NEUROTROPHIN_SIGNALING_PATHWAY"</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu">fixSetLabels</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>;</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KEGG_INSULIN_SIGNALING_PATHWAY"</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY"</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"KEGG_NEUROTROPHIN_SIGNALING_PATHWAY"</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">fixSetLabels</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Insulin Signaling\nPathway"         "T Cell Receptor\nSignaling Pathway"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Neurotrophin Signaling\nPathway"   </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nullPlot.html" class="external-link">nullPlot</a></span><span class="op">(</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/drawLabels.html" class="external-link">drawLabels</a></span><span class="op">(</span>txt<span class="op">=</span><span class="va">x</span>,</span>
-<span class="r-in">   preset<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"center"</span>, <span class="st">"bottom"</span><span class="op">)</span><span class="op">)</span>;</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nullPlot.html" class="external-link">nullPlot</a></span><span class="op">(</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/drawLabels.html" class="external-link">drawLabels</a></span><span class="op">(</span>txt<span class="op">=</span><span class="va">x</span>,</span></span>
+<span class="r-in"><span>   preset<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"center"</span>, <span class="st">"bottom"</span><span class="op">)</span><span class="op">)</span>;</span></span>
 <span class="r-plt img"><img src="fixSetLabels-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -205,8 +226,7 @@ operates on either a character vector, or an igraph object.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

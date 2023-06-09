@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,25 +62,28 @@
     <p>Adjust Cnet node set</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">adjust_cnet_nodeset</span><span class="op">(</span>
-  <span class="va">g</span>,
-  set_nodes <span class="op">=</span> <span class="cn">NULL</span>,
-  x <span class="op">=</span> <span class="fl">0</span>,
-  y <span class="op">=</span> <span class="fl">0</span>,
-  expand <span class="op">=</span> <span class="fl">0</span>,
-  percent_spacing <span class="op">=</span> <span class="cn">NULL</span>,
-  rotate_degrees <span class="op">=</span> <span class="fl">0</span>,
-  cnet_nodesets <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjust_cnet_nodeset</span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  set_nodes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  y <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  expand <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  percent_spacing <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rotate_degrees <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  cnet_nodesets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> Cnet plot, with vertex attribute <code>nodeType</code> that
 contains values <code>"Gene"</code> and <code>"Set"</code>, as produced by <code><a href="memIM2cnet.html">memIM2cnet()</a></code>.</p></dd>
+
+
 <dt>set_nodes</dt>
 <dd><p><code>character</code> vector of one or more set names, which are
 defined here as the names of the nodes with <code>nodeType="Set"</code>
@@ -89,27 +92,40 @@ For example <code>set_nodes=c("A", "B")</code> will return all Gene nodes
 that are connected only to Set nodes <code>"A"</code> and <code>"B"</code>. Alternatively,
 one can refer to a cluster by the node name of one member of the
 cluster, as a convenience option.</p></dd>
+
+
 <dt>x, y</dt>
 <dd><p><code>numeric</code> indicating the relative amount to move nodes
 in the node set, based upon the overall range of x and y values
 in the layout coordinates.</p></dd>
+
+
 <dt>expand</dt>
 <dd><p><code>numeric</code> the relative amount to expand node coordinates,
 where <code>expand=0</code> does no expansion, <code>expand=1</code> will expand coordinates
 100% of the distance to the center of the cluster, twice the original
 distance; and <code>expand=-1</code> will expand coordinates to half the
 distance to the center.</p></dd>
+
+
 <dt>rotate_degrees</dt>
 <dd><p><code>numeric</code> value indicating the rotation in
 degrees to adjust the node coordinates, relative to the center of
 the coordinates.</p></dd>
+
+
 <dt>cnet_nodesets</dt>
 <dd><p><code>list</code> optional to provide the known nodesets
 upfront, in order to avoid re-determining the nodesets.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -136,29 +152,28 @@ overlaps.</p>
 <code><a href="nudge_igraph_node.html">nudge_igraph_node</a>()</code>,
 <code><a href="rotate_igraph_layout.html">rotate_igraph_layout</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># the examples below are for internal data</span></span>
-<span class="r-in"><span class="co"># and will be rewritten to work with example data</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="fl">1</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="va">mem_dmjdm_gp_20_plots_jikl</span><span class="op">$</span><span class="va">cnet_collapsed_set</span>;</span>
-<span class="r-in"><span class="va">set_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"J"</span>, <span class="st">"L"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"J"</span>, <span class="st">"L"</span><span class="op">)</span>, expand<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"K"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.01</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.01</span>, expand<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span>, <span class="st">"K"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.08</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.05</span>, expand<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.05</span>, y<span class="op">=</span><span class="fl">0.05</span>, expand<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.02</span>, y<span class="op">=</span><span class="fl">0.03</span>, expand<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"K"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.03</span>, y<span class="op">=</span><span class="fl">0.09</span>, expand<span class="op">=</span><span class="fl">0.</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span>, <span class="st">"K"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.02</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.01</span>, expand<span class="op">=</span><span class="fl">0.</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.01</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.00</span>, expand<span class="op">=</span><span class="fl">0.1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"J"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.03</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.02</span>, expand<span class="op">=</span><span class="fl">0.</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># the examples below are for internal data</span></span></span>
+<span class="r-in"><span><span class="co"># and will be rewritten to work with example data</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fl">1</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="va">mem_dmjdm_gp_20_plots_jikl</span><span class="op">$</span><span class="va">cnet_collapsed_set</span>;</span></span>
+<span class="r-in"><span><span class="va">set_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"J"</span>, <span class="st">"L"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"J"</span>, <span class="st">"L"</span><span class="op">)</span>, expand<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"K"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.01</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.01</span>, expand<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span>, <span class="st">"K"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.08</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.05</span>, expand<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.05</span>, y<span class="op">=</span><span class="fl">0.05</span>, expand<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span>, <span class="st">"L"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.02</span>, y<span class="op">=</span><span class="fl">0.03</span>, expand<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"K"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.03</span>, y<span class="op">=</span><span class="fl">0.09</span>, expand<span class="op">=</span><span class="fl">0.</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span>, <span class="st">"K"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.02</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.01</span>, expand<span class="op">=</span><span class="fl">0.</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I"</span>, <span class="st">"J"</span><span class="op">)</span>, x<span class="op">=</span><span class="fl">0.01</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.00</span>, expand<span class="op">=</span><span class="fl">0.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu">adjust_cnet_nodeset</span><span class="op">(</span><span class="va">g2</span>, set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"J"</span><span class="op">)</span>, x<span class="op">=</span><span class="op">-</span><span class="fl">0.03</span>, y<span class="op">=</span><span class="op">-</span><span class="fl">0.02</span>, expand<span class="op">=</span><span class="fl">0.</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -173,8 +188,7 @@ overlaps.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,66 +62,73 @@
     <p>Prepare MultiEnrichMap data from enrichList</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">multiEnrichMap</span><span class="op">(</span>
-  <span class="va">enrichList</span>,
-  geneHitList <span class="op">=</span> <span class="cn">NULL</span>,
-  geneHitIM <span class="op">=</span> <span class="cn">NULL</span>,
-  colorV <span class="op">=</span> <span class="cn">NULL</span>,
-  nrow <span class="op">=</span> <span class="cn">NULL</span>,
-  ncol <span class="op">=</span> <span class="cn">NULL</span>,
-  byrow <span class="op">=</span> <span class="cn">FALSE</span>,
-  enrichLabels <span class="op">=</span> <span class="cn">NULL</span>,
-  subsetSets <span class="op">=</span> <span class="cn">NULL</span>,
-  overlapThreshold <span class="op">=</span> <span class="fl">0.1</span>,
-  cutoffRowMinP <span class="op">=</span> <span class="fl">0.05</span>,
-  enrichBaseline <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">cutoffRowMinP</span><span class="op">)</span>,
-  enrichLens <span class="op">=</span> <span class="fl">0</span>,
-  enrichNumLimit <span class="op">=</span> <span class="fl">4</span>,
-  nEM <span class="op">=</span> <span class="fl">500</span>,
-  min_count <span class="op">=</span> <span class="fl">1</span>,
-  topEnrichN <span class="op">=</span> <span class="fl">20</span>,
-  topEnrichSources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gs_cat"</span>, <span class="st">"gs_subat"</span><span class="op">)</span>,
-  topEnrichCurateFrom <span class="op">=</span> <span class="cn">NULL</span>,
-  topEnrichCurateTo <span class="op">=</span> <span class="cn">NULL</span>,
-  topEnrichSourceSubset <span class="op">=</span> <span class="cn">NULL</span>,
-  topEnrichDescriptionGrep <span class="op">=</span> <span class="cn">NULL</span>,
-  topEnrichNameGrep <span class="op">=</span> <span class="cn">NULL</span>,
-  keyColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"pathway"</span>, <span class="st">"itemsetID"</span>, <span class="st">"Description"</span><span class="op">)</span>,
-  nameColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"pathway"</span>, <span class="st">"Description"</span>, <span class="st">"itemsetID"</span>, <span class="st">"ID"</span><span class="op">)</span>,
-  geneColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"geneID"</span>, <span class="st">"geneNames"</span>, <span class="st">"Genes"</span><span class="op">)</span>,
-  countColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene_count"</span>, <span class="st">"count"</span>, <span class="st">"geneHits"</span><span class="op">)</span>,
-  pvalueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"padjust"</span>, <span class="st">"p.adjust"</span>, <span class="st">"adjp"</span>, <span class="st">"padj"</span>, <span class="st">"qvalue"</span>, <span class="st">"qval"</span>, <span class="st">"q.value"</span>,
-    <span class="st">"pvalue"</span>, <span class="st">"p.value"</span>, <span class="st">"pval"</span>, <span class="st">"FDR"</span><span class="op">)</span>,
-  descriptionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Description"</span>, <span class="st">"Name"</span>, <span class="st">"Pathway"</span>, <span class="st">"ID"</span><span class="op">)</span>,
-  descriptionCurateFrom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^Genes annotated by the GO term "</span><span class="op">)</span>,
-  descriptionCurateTo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span>,
-  directionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"activation.z.{0,1}score"</span>, <span class="st">"z.{0,1}score"</span><span class="op">)</span>,
-  direction_cutoff <span class="op">=</span> <span class="fl">0</span>,
-  pathGenes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setSize"</span>, <span class="st">"pathGenes"</span>, <span class="st">"Count"</span><span class="op">)</span>,
-  geneHits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Count"</span>, <span class="st">"geneHits"</span>, <span class="st">"gene_count"</span><span class="op">)</span>,
-  geneDelim <span class="op">=</span> <span class="st">"[,/ ]+"</span>,
-  GmtTname <span class="op">=</span> <span class="cn">NULL</span>,
-  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multiEnrichMap</span><span class="op">(</span></span>
+<span>  <span class="va">enrichList</span>,</span>
+<span>  geneHitList <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geneHitIM <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colorV <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ncol <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  byrow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  enrichLabels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  subsetSets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  overlapThreshold <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  cutoffRowMinP <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  enrichBaseline <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">cutoffRowMinP</span><span class="op">)</span>,</span>
+<span>  enrichLens <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  enrichNumLimit <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  nEM <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  min_count <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  topEnrichN <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  topEnrichSources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gs_cat"</span>, <span class="st">"gs_subat"</span><span class="op">)</span>,</span>
+<span>  topEnrichCurateFrom <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  topEnrichCurateTo <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  topEnrichSourceSubset <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  topEnrichDescriptionGrep <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  topEnrichNameGrep <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  keyColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ID"</span>, <span class="st">"Name"</span>, <span class="st">"pathway"</span>, <span class="st">"itemsetID"</span>, <span class="st">"Description"</span><span class="op">)</span>,</span>
+<span>  nameColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"pathway"</span>, <span class="st">"Description"</span>, <span class="st">"itemsetID"</span>, <span class="st">"ID"</span><span class="op">)</span>,</span>
+<span>  geneColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"geneID"</span>, <span class="st">"geneNames"</span>, <span class="st">"Genes"</span><span class="op">)</span>,</span>
+<span>  countColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene_count"</span>, <span class="st">"count"</span>, <span class="st">"geneHits"</span><span class="op">)</span>,</span>
+<span>  pvalueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"padjust"</span>, <span class="st">"p.adjust"</span>, <span class="st">"adjp"</span>, <span class="st">"padj"</span>, <span class="st">"qvalue"</span>, <span class="st">"qval"</span>, <span class="st">"q.value"</span>,</span>
+<span>    <span class="st">"pvalue"</span>, <span class="st">"p.value"</span>, <span class="st">"pval"</span>, <span class="st">"FDR"</span><span class="op">)</span>,</span>
+<span>  descriptionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Description"</span>, <span class="st">"Name"</span>, <span class="st">"Pathway"</span>, <span class="st">"ID"</span><span class="op">)</span>,</span>
+<span>  descriptionCurateFrom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"^Genes annotated by the GO term "</span><span class="op">)</span>,</span>
+<span>  descriptionCurateTo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span>,</span>
+<span>  directionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"activation.z.{0,1}score"</span>, <span class="st">"z.{0,1}score"</span><span class="op">)</span>,</span>
+<span>  direction_cutoff <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  pathGenes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setSize"</span>, <span class="st">"pathGenes"</span>, <span class="st">"Count"</span><span class="op">)</span>,</span>
+<span>  geneHits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Count"</span>, <span class="st">"geneHits"</span>, <span class="st">"gene_count"</span><span class="op">)</span>,</span>
+<span>  geneDelim <span class="op">=</span> <span class="st">"[,/ ]+"</span>,</span>
+<span>  GmtTname <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>enrichList</dt>
 <dd><p><code>list</code> of <code>enrichResult</code> objects, whose
 names are used in subsequent derived results.</p></dd>
+
+
 <dt>geneHitList</dt>
 <dd><p><code>list</code> of character vectors, or <code>NULL</code>. When
 <code>NULL</code> the gene hit list for each enrichment result is inferred
 from the enrichment results themselves. Therefore, if a gene
 does not appear in any enrichment result, it will not be
 used in this function.</p></dd>
+
+
 <dt>colorV</dt>
 <dd><p><code>character</code> vector of colors, length
 equal to <code>length(enrichList)</code>,
 used to assign specific colors to each enrichment result.</p></dd>
+
+
 <dt>nrow, ncol, byrow</dt>
 <dd><p>optional arguments used to customize
 <code>igraph</code> node shape <code>"coloredrectangle"</code>, useful when the
@@ -129,13 +136,19 @@ number of <code>enrichList</code> results is larger than around 4. It
 defines the number of columns and rows used for each node,
 to display enrichment result colors, and whether to fill
 colors by row when <code>byrow=TRUE</code>, or by column when <code>byrow=FALSE</code>.</p></dd>
+
+
 <dt>enrichLabels</dt>
 <dd><p><code>character</code> vector of enrichment labels to use,
 as an optional alternative to <code>names(enrichList)</code>.</p></dd>
+
+
 <dt>subsetSets</dt>
 <dd><p><code>character</code> vector of optional set names to
 use in the analysis, useful to analyze only a specific subset
 of known pathways.</p></dd>
+
+
 <dt>overlapThreshold</dt>
 <dd><p><code>numeric</code> value between 0 and 1, indicating
 the Jaccard overlap score above which two pathways will be linked
@@ -144,44 +157,62 @@ genes overlap more than <code>0.1</code> will be connected, which is roughly
 equivalent to about a 10% overlap. Note that the Jaccard coefficient
 is adversely affected when pathway sets differ in size by more than
 about 5-fold.</p></dd>
+
+
 <dt>cutoffRowMinP</dt>
 <dd><p><code>numeric</code> value between 0 and 1, indicating the
 enrichment P-value required by at least one enrichment result, to
 be retained in downstream analyses. This P-value can be confirmed
 in the returned list element <code>"enrichIM"</code>, which is a matrix of
 P-values by pathway and enrichment.</p></dd>
+
+
 <dt>enrichBaseline</dt>
 <dd><p><code>numeric</code> value indicating the <code>-log10(P-value)</code>
 at which colors are defined as non-blank in color gradients.
 This value is typically derived from <code>cutoffRowMinP</code> to ensure
 that colors are only applied when a pathway meets this significance
 threshold.</p></dd>
+
+
 <dt>enrichLens</dt>
 <dd><p><code>numeric</code> value indicating the "lens" to apply to
 color gradients, where numbers above 0 make the color ramp more
 compressed, so colors are more vivid at lower numeric values.</p></dd>
+
+
 <dt>enrichNumLimit</dt>
 <dd><p><code>numeric</code> value indicating the <code>-log10(P-value)</code>
 above which each color gradient is considered the maximum color,
 useful to apply a fixed threshold for each color gradient.</p></dd>
+
+
 <dt>nEM</dt>
 <dd><p><code>integer</code> number, to define the maximum number of pathway
 nodes to include in the EnrichMap <code>igraph</code> network. This argument
 is passed to <code><a href="enrichMapJam.html">enrichMapJam()</a></code>.</p></dd>
+
+
 <dt>topEnrichN</dt>
 <dd><p><code>integer</code> value with the maximum rows to retain
 from each <code>enrichList</code> table, by source. Set <code>topEnrichN=0</code> or
 <code>topEnrichN=NULL</code> to disable subsetting for the top rows.</p></dd>
+
+
 <dt>topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep</dt>
 <dd><p>arguments passed to <code><a href="topEnrichBySource.html">topEnrichListBySource()</a></code> when <code>topEnrichN</code>
 is greater than <code>0</code>. The default values are used only when
 input data matches these patterns.</p></dd>
+
+
 <dt>keyColname, nameColname, geneColname, pvalueColname, descriptionColname</dt>
 <dd><p><code>character</code> vector in each case indicating the colnames
 for <code>key</code>, <code>name</code>, <code>gene</code>, <code>pvalue</code>, and <code>description</code>,
 respectively. Each vector is passed to <code><a href="find_colname.html">find_colname()</a></code> to find
 a suitable matching colname for each <code>data.frame</code> in
 <code>enrichList</code>.</p></dd>
+
+
 <dt>descriptionCurateFrom, descriptionCurateTo</dt>
 <dd><p><code>character</code> vectors
 with patterns and replacements, passed to <code><a href="gsubs.html">gsubs()</a></code>, intended to
@@ -191,26 +222,37 @@ user-friendly labels. One example is removing the prefix
 These label can be manually curated later, but it is often
 more convenient to curate them upfront in order to keep the
 different result objects consistent.</p></dd>
+
+
 <dt>pathGenes, geneHits</dt>
 <dd><p><code>character</code> values indicating the colnames
 that contain the number of pathway genes, and the number of gene
 hits, respectively.</p></dd>
+
+
 <dt>geneDelim</dt>
 <dd><p><code>character</code> pattern used with <code><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit()</a></code> to
 split multiple gene values into a list of vectors. The default
 for <code>enrichResult</code> objects is <code>"/"</code>, but the default for other
 sources is often <code>","</code>. The default pattern <code>"[,/ ]+"</code> splits
 by either <code>"/"</code>, <code>","</code>, or whitespace <code>" "</code>.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.
 For <code>verbose</code> to cascade to internal functions, use <code>verbose=2</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to various internal
 functions.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>list</code> object containing various result formats:</p><ul><li><p>colorV: named vector of colors assigned to each enrichment,
+    
+
+<p><code>list</code> object containing various result formats:</p><ul><li><p>colorV: named vector of colors assigned to each enrichment,
 where names match the names of each enrichment in <code>enrichList</code>.</p></li>
 </ul></div>
     <div id="details">
@@ -248,12 +290,11 @@ argument <code>colorV</code>, otherwise colors are assigned using
     <div class="dont-index"><p>Other jam enrichment functions: 
 <code><a href="topEnrichBySource.html">topEnrichBySource</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## See the Vignette for a full walkthrough example</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## See the Vignette for a full walkthrough example</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -269,8 +310,7 @@ argument <code>colorV</code>, otherwise colors are assigned using
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -21,7 +21,7 @@ subtitle at the bottom of the visualization."><!-- mathjax --><script src="https
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -70,52 +70,70 @@ top of the resulting visualization, and optionally one
 subtitle at the bottom of the visualization.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">grid_with_title</span><span class="op">(</span>
-  <span class="va">object</span>,
-  title <span class="op">=</span> <span class="cn">NULL</span>,
-  title_fontsize <span class="op">=</span> <span class="fl">18</span>,
-  title_just <span class="op">=</span> <span class="st">"centre"</span>,
-  caption <span class="op">=</span> <span class="cn">NULL</span>,
-  caption_fontsize <span class="op">=</span> <span class="fl">12</span>,
-  caption_just <span class="op">=</span> <span class="st">"left"</span>,
-  caption_x <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">grid_with_title</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  title_fontsize <span class="op">=</span> <span class="fl">18</span>,</span>
+<span>  title_just <span class="op">=</span> <span class="st">"centre"</span>,</span>
+<span>  caption <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  caption_fontsize <span class="op">=</span> <span class="fl">12</span>,</span>
+<span>  caption_just <span class="op">=</span> <span class="st">"left"</span>,</span>
+<span>  caption_x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>an object with class <code>"Heatmap"</code>, <code>"gTree"</code>, or
 any object where <code>methods::hasMethod("draw", class(object))</code>
 is <code>TRUE</code>.</p></dd>
+
+
 <dt>title</dt>
 <dd><p>character string used as title. When <code>NULL</code> or
 <code>nchar(title)==0</code> then no title is displayed.</p></dd>
+
+
 <dt>title_fontsize</dt>
 <dd><p>numeric value indicating the font size,
 with units <code>"points"</code>.</p></dd>
+
+
 <dt>title_just</dt>
 <dd><p>character string indicating the justification
 (alignment) of the title.</p></dd>
+
+
 <dt>caption, caption_fontsize, caption_just</dt>
 <dd><p>arguments equivalent
 to the title_* arguments.</p></dd>
+
+
 <dt>caption_x</dt>
 <dd><p>numeric value in grid units specifying where to
 position the caption text. By default when <code>caption_just</code> is <code>"left"</code>
 the <code>caption_x</code> is defined by <code>grid::unit(0.2, "npc")</code>, which
 positions the caption at the left side (20% from the left edge)
 of the plot, with text proceeding to the right of that point.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The byproduct of this function is to draw a grid visualization
+    
+
+<p>The byproduct of this function is to draw a grid visualization
 that includes a title and subtitle, then the <code>object</code> in the center.</p>
     </div>
     <div id="details">
@@ -142,7 +160,6 @@ for arranging one or more heatmaps and associated annotations.</p>
 <code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
 <code><a href="plot_layout_scale.html">plot_layout_scale</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -156,8 +173,7 @@ for arranging one or more heatmaps and associated annotations.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

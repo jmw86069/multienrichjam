@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,26 +62,36 @@
     <p>Sync igraph nodes and communities</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">sync_igraph_communities</span><span class="op">(</span><span class="va">g</span>, <span class="va">wc</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sync_igraph_communities</span><span class="op">(</span><span class="va">g</span>, <span class="va">wc</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> object</p></dd>
+
+
 <dt>wc</dt>
 <dd><p><code>communities</code> object, or <code>list</code> in form of nodegroups,
 which is a <code>list</code> of <code>character</code> vectors that contain <code>igraph</code>
 node names.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="nodegroups2communities.html">nodegroups2communities()</a></code>
 only when input <code>wc</code> is supplied in <code>list</code> nodegroups format.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>list</code> with two elements:</p><ul><li><p><code>"g"</code> - the <code>igraph</code> object after subsetting to match node names
+    
+
+<p><code>list</code> with two elements:</p><ul><li><p><code>"g"</code> - the <code>igraph</code> object after subsetting to match node names
 shared with <code>wc</code>, as necessary.</p></li>
 <li><p><code>"wc'</code> - the <code>communities</code> object after subsetting to match
 node names shared with <code>g</code>, as necessary. When input <code>wc</code> is
@@ -136,7 +146,6 @@ two objects are in sync, the same order, and with the same nodes.</p>
 <code><a href="subset_igraph_components.html">subset_igraph_components</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -150,8 +159,7 @@ two objects are in sync, the same order, and with the same nodes.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

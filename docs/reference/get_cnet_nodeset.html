@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,14 +62,17 @@
     <p>Get Cnet node set by connected Sets</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">get_cnet_nodeset</span><span class="op">(</span><span class="va">g</span>, set_nodes <span class="op">=</span> <span class="cn">NULL</span>, sep <span class="op">=</span> <span class="st">","</span>, filter_set_only <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_cnet_nodeset</span><span class="op">(</span><span class="va">g</span>, set_nodes <span class="op">=</span> <span class="cn">NULL</span>, sep <span class="op">=</span> <span class="st">","</span>, filter_set_only <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p><code>igraph</code> object specifically containing Cnet plot data,
 with node attribute <code>"nodeType"</code> that has values <code>c("Gene", "Set")</code>.</p></dd>
+
+
 <dt>set_nodes</dt>
 <dd><p><code>character</code> vector of one or more set names, which are
 defined here as the names of the nodes with <code>nodeType="Set"</code>
@@ -78,15 +81,22 @@ For example <code>set_nodes=c("A", "B")</code> will return all Gene nodes
 that are connected only to Set nodes <code>"A"</code> and <code>"B"</code>. If
 <code>set_nodes=NULL</code> then this function returns a <code>list</code> with
 all set_nodes observed.</p></dd>
+
+
 <dt>sep</dt>
 <dd><p><code>character</code> string used as a delimited when combining
 <code>set_nodes</code> into a name.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>character</code> vector when argument <code>set_nodes</code> is supplied
+    
+
+<p><code>character</code> vector when argument <code>set_nodes</code> is supplied
 as a <code>character</code> vector; when <code>set_nodes</code> is <code>NULL</code>,
 this function returns a <code>list</code> of <code>character</code> vectors whose
 names represent the Set node names connected to each
@@ -125,7 +135,6 @@ of nodes.</p>
 <code><a href="nudge_igraph_node.html">nudge_igraph_node</a>()</code>,
 <code><a href="rotate_igraph_layout.html">rotate_igraph_layout</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -139,8 +148,7 @@ of nodes.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

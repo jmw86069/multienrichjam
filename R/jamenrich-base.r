@@ -410,11 +410,19 @@ multiEnrichMap <- function
 
    #####################################################################
    ## gene IM
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "geneIM <- list2im(geneHitList)");
+   if (is.numeric(geneHitList[[1]])) {
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "geneIM <- list2imSigned(geneHitList)");
+      }
+      geneIM <- list2imSigned(geneHitList)[,,drop=FALSE];
+   } else {
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "geneIM <- list2im(geneHitList)");
+      }
+      geneIM <- list2im(geneHitList)[,,drop=FALSE];
    }
-   geneIM <- list2im(geneHitList)[,,drop=FALSE];
 
    #####################################################################
    ## Optionally run topEnrichBySource()
@@ -1536,7 +1544,7 @@ enrichMapJam <- function
       igraph::E(g)$overlap <- wd[,3];
       igraph::E(g)$overlap_count <- wctd[, 3];
       igraph::E(g)$overlap_max_pct <- wctmaxpctd[, 3];
-      igraph::V(g)$pvalue <- pvalue[V(g)$name];
+      igraph::V(g)$pvalue <- pvalue[igraph::V(g)$name];
 
       ## Attempt to merge annotations from the enrichResult object
       iMatch <- match(igraph::V(g)$name, y[[nodeLabel]]);

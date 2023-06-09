@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,30 +62,38 @@
     <p>igraph layout function using qgraph Fruchterman-Reingold</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">layout_with_qfrf</span><span class="op">(</span>repulse <span class="op">=</span> <span class="fl">3.5</span>, seed <span class="op">=</span> <span class="fl">123</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">layout_with_qfrf</span><span class="op">(</span>repulse <span class="op">=</span> <span class="fl">3.5</span>, seed <span class="op">=</span> <span class="fl">123</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>repulse</dt>
 <dd><p>numeric value typically between 3 and 5, passed
 to <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code>, which in turn is passed to
 <code><a href="https://rdrr.io/pkg/qgraph/man/qgraph.layout.fruchtermanreingold.html" class="external-link">qgraph::qgraph.layout.fruchtermanreingold()</a></code>.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>numeric value used to set the R random seed, in order
 to make layouts consistent.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are passed to <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>function used to calculate layout coordinates of
+    
+
+<p>function used to calculate layout coordinates of
 an <code>igraph</code> object.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p>This function returns a layout function, which can be convenient
-when calling <code><a href="https://rdrr.io/pkg/igraph/man/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, in order to set
+when calling <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code>, in order to set
 layout parameters in the same call.</p>
     </div>
     <div id="see-also">
@@ -129,7 +137,6 @@ layout parameters in the same call.</p>
 <code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code>,
 <code><a href="with_qfr.html">with_qfr</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -143,8 +150,7 @@ layout parameters in the same call.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

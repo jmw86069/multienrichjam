@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,24 +62,32 @@
     <p>Convert Cnet igraph to incidence matrix</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">cnet2im</span><span class="op">(</span>g <span class="op">=</span> <span class="cn">NULL</span>, df <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cnet2im</span><span class="op">(</span>g <span class="op">=</span> <span class="cn">NULL</span>, df <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>g</dt>
 <dd><p>igraph object containing Cnet data, specifically vertex
 attribute name "nodeType" with values "Set" and "Gene", and
 where "Set" nodes are only connected to "Gene" nodes.</p></dd>
+
+
 <dt>df</dt>
 <dd><p>data.frame as optional input instead of <code>g</code>, usually
 the result of a previous call to <code><a href="cnet2df.html">cnet2df()</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>numeric matrix with colnames defined by <code>"Set"</code> node
+    
+
+<p>numeric matrix with colnames defined by <code>"Set"</code> node
 names, and rownames defined by <code>"Gene"</code> node names.</p>
     </div>
     <div id="details">
@@ -138,7 +146,6 @@ node names.</p>
 <code><a href="enrichList2df.html">enrichList2df</a>()</code>,
 <code><a href="enrichMapJam.html">enrichMapJam</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -152,8 +159,7 @@ node names.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

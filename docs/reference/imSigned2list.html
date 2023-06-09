@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,26 +62,34 @@
     <p>convert signed incidence matrix to list</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">x</span>, empty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">""</span>, <span class="fl">0</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">x</span>, empty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">""</span>, <span class="fl">0</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p><code>matrix</code> or equivalent object with <code>colnames(x)</code> indicating
 list set names, and <code>rownames(x)</code> indicating list contents.</p></dd>
+
+
 <dt>empty</dt>
 <dd><p><code>character</code> vector of incidence matrix values that
 should be considered "empty" and therefore do not indicate
 the row in <code>x</code> is present for the given column in <code>x</code>.
 All other items are considered to be present, and are assigned
 direction based upon the value in that cell of <code>x</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>list</code> of named numeric vectors, where list names
+    
+
+<p><code>list</code> of named numeric vectors, where list names
 are defined by <code>colnames(x)</code>, and vector names are derived
 from <code>rownames(x)</code>. Values in each vector indicate the
 signed direction, <code>c(-1,1)</code>.</p>
@@ -111,21 +119,20 @@ to <code>numeric</code> before output.</p>
 <code><a href="list2imSigned.html">list2imSigned</a>()</code>,
 <code><a href="list2im.html">list2im</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">im</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="cn">NA</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>,</span>
-<span class="r-in">   ncol<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">   nrow<span class="op">=</span><span class="fl">3</span>,</span>
-<span class="r-in">   dimnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">im</span><span class="op">)</span>;</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">im</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="cn">NA</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   ncol<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>   nrow<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>   dimnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">im</span><span class="op">)</span>;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    A  B  C</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> a  0  1 -1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> b  1  1  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> c -1 NA  1</span>
-<span class="r-in"><span class="co"># matrix input</span></span>
-<span class="r-in"><span class="fu"><a href="im2list.html">im2list</a></span><span class="op">(</span><span class="va">im</span><span class="op">)</span>;</span>
+<span class="r-in"><span><span class="co"># matrix input</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="im2list.html">im2list</a></span><span class="op">(</span><span class="va">im</span><span class="op">)</span>;</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
@@ -138,7 +145,7 @@ to <code>numeric</code> before output.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $C</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "a" "c"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">im</span><span class="op">)</span>;</span>
+<span class="r-in"><span><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">im</span><span class="op">)</span>;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $A</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  b  c </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1 -1 </span>
@@ -151,7 +158,7 @@ to <code>numeric</code> before output.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  a  c </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -1  1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">im</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span>;</span>
+<span class="r-in"><span><span class="fu">imSigned2list</span><span class="op">(</span><span class="va">im</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span>;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $A</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> b c </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 </span>
@@ -164,7 +171,7 @@ to <code>numeric</code> before output.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> a c </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -179,8 +186,7 @@ to <code>numeric</code> before output.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

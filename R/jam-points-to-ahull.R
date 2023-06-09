@@ -108,12 +108,16 @@ make_point_hull <- function
  smooth=TRUE,
  shape=1/2,
  label=NULL,
+ label.cex=1,
+ label.x.nudge=0,
+ label.y.nudge=0,
  label_preset="bottom",
  label_adj_preset=label_preset,
  verbose=FALSE,
  ...)
 {
    # validate hull_method
+   jamba::printDebug("label.y.nudge:", label.y.nudge);
    hull_method <- match.arg(hull_method);
    if ("default" %in% hull_method) {
       if (jamba::check_pkg_installed("alphahull")) {
@@ -418,11 +422,20 @@ make_point_hull <- function
             label_x <- mxys[use_mxys, 1];
             label_y <- mxys[use_mxys, 2];
          }
+         if (length(label.x.nudge) == 1 && !label.x.nudge == 0) {
+            label_x <- label_x + label.x.nudge;
+         }
+         if (length(label.y.nudge) == 1 && !label.y.nudge == 0) {
+            label_y <- label_y + label.y.nudge;
+         }
          jamba::drawLabels(txt=label,
+            labelCex=label.cex,
+            boxCexAdjust=c(2.2, 2.2),
             x=label_x, y=label_y,
             adjX=label_xy$adjX,
             adjY=label_xy$adjY,
-            drawSegments=FALSE,drawBox=FALSE)
+            drawSegments=FALSE,
+            drawBox=FALSE)
       }
    }
 

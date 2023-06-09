@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,20 +62,21 @@
     <p>Apply minimum node spacing for each Cnet node set</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">apply_nodeset_spacing</span><span class="op">(</span>
-  <span class="va">cnet</span>,
-  percent_spacing <span class="op">=</span> <span class="fl">3</span>,
-  apply_negative <span class="op">=</span> <span class="cn">FALSE</span>,
-  metric <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"median"</span>, <span class="st">"minimum"</span><span class="op">)</span>,
-  nodesets <span class="op">=</span> <span class="cn">NULL</span>,
-  tolerance <span class="op">=</span> <span class="fl">1.05</span>,
-  cnet_nodesets <span class="op">=</span> <span class="cn">NULL</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">apply_nodeset_spacing</span><span class="op">(</span></span>
+<span>  <span class="va">cnet</span>,</span>
+<span>  percent_spacing <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  apply_negative <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  metric <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"median"</span>, <span class="st">"minimum"</span><span class="op">)</span>,</span>
+<span>  nodesets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tolerance <span class="op">=</span> <span class="fl">1.05</span>,</span>
+<span>  cnet_nodesets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>cnet</dt>
@@ -85,17 +86,23 @@ consistent with use of <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()<
 <code><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code>.
 The node layout is expected to be stored in
 <code>igraph::graph_attr(cnet, "layout")</code>.</p></dd>
+
+
 <dt>percent_spacing</dt>
 <dd><p><code>numeric</code> indicating the target spacing in relation
 to the maximum x-axis and y-axis span for the layout coordinates.
 For example <code>percent_spacing=4</code> will require that the median spacing
 between nodes in each nodeset is at least 4 percent of the larger of
 the x-axis and y-axis ranges for the layout of input <code>cnet</code>.</p></dd>
+
+
 <dt>apply_negative</dt>
 <dd><p><code>logical</code> indicating whether to shrink node spacing
 when the spacing is larger than the target <code>percent spacing</code>. By default
 <code>apply_negative=FALSE</code> which allows nodes to exceed the spacing, and
 only adjusts node spacing when a nodeset is below this threshold.</p></dd>
+
+
 <dt>metric</dt>
 <dd><p><code>character</code> string indicating the metric used to summarize
 nodeset spacing:</p><ul><li><p><code>"median"</code> - takes the median spacing between nodes in the nodeset,
@@ -112,11 +119,15 @@ which will be scaled relative to the maximum xy axis range. This option
 would allow using <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code>, or a quantile function such as
 <code>function(x){quantile(x, 0.3)}</code>.</p></li>
 </ul></dd>
+
+
 <dt>nodesets</dt>
 <dd><p><code>character</code> with optional subset of nodesets to adjust,
 or the default <code>nodesets=NULL</code> will adjust all nodesets. Values can be
 specified either in form or nodeset names, or any one or more members
 of a nodeset.</p></dd>
+
+
 <dt>tolerance</dt>
 <dd><p><code>numeric</code> value used to apply a small tolerance to the
 distance threshold, for example the default <code>tolerance=1.05</code> requires
@@ -128,24 +139,35 @@ which can happen when the overall plot range is adjusted during rounds
 of small node coordinate adjustments like with this function,
 <code><a href="nudge_igraph_node.html">nudge_igraph_node()</a></code>, <code>apply_nodeset_spacing()</code>, or
 <code><a href="adjust_cnet_set_relayout_gene.html">adjust_cnet_set_relayout_gene()</a></code>.</p></dd>
+
+
 <dt>cnet_nodesets</dt>
 <dd><p><code>list</code> optional to provide the known nodesets
 upfront, in order to avoid re-determining the nodesets.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p><code>logical</code> indicating whether to print debug information
 without adjusting the nodeset spacing. This option is useful to see
 summary information about nodeset spacing before choosing the
 <code>percent_spacing</code> threshold.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.
 The output includes text printed with <code>debug=TRUE</code> except that nodes
 are adjusted when <code>debug=FALSE</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>igraph</code> Cnet object, whose nodes are adjusted
+    
+
+<p><code>igraph</code> Cnet object, whose nodes are adjusted
 according to the arguments given.</p>
     </div>
     <div id="details">
@@ -184,7 +206,6 @@ so that no subsequent adjustments are performed on the nodeset.</p>
 <code><a href="nudge_igraph_node.html">nudge_igraph_node</a>()</code>,
 <code><a href="rotate_igraph_layout.html">rotate_igraph_layout</a>()</code></p></div>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -198,8 +219,7 @@ so that no subsequent adjustments are performed on the nodeset.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

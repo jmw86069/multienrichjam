@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.69.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
       </span>
     </div>
 
@@ -62,28 +62,40 @@
     <p>convert list to incidence matrix</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">list2im</span><span class="op">(</span><span class="va">x</span>, keepCounts <span class="op">=</span> <span class="cn">FALSE</span>, emptyValue <span class="op">=</span> <span class="fl">0</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">list2im</span><span class="op">(</span><span class="va">x</span>, keepCounts <span class="op">=</span> <span class="cn">FALSE</span>, emptyValue <span class="op">=</span> <span class="fl">0</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>list of vectors</p></dd>
+
+
 <dt>keepCounts</dt>
 <dd><p>boolean indicating whether to return values indicating
 the number of occurrences of each item.</p></dd>
+
+
 <dt>emptyValue</dt>
 <dd><p>any single value that should be used for blank entries,
 by default zero <code>0</code>. Use <code>emptyValue=NA</code> to return <code>NA</code> for missing
 entries.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>boolean indicating whether to print verbose output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>numeric matrix whose rownames were vector items of the input list,
+    
+
+<p>numeric matrix whose rownames were vector items of the input list,
 and whole colnames were list names.</p>
     </div>
     <div id="details">
@@ -116,16 +128,15 @@ relatively fast.</p>
 <code><a href="list2concordance.html">list2concordance</a>()</code>,
 <code><a href="list2imSigned.html">list2imSigned</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">L1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>A<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>,<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"A"</span><span class="op">)</span>,</span>
-<span class="r-in">   D<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"D"</span>,<span class="st">"E"</span>,<span class="st">"F"</span>,<span class="st">"D"</span><span class="op">)</span>,</span>
-<span class="r-in">   A123<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span>,<span class="fl">3</span>,<span class="fl">5</span><span class="op">)</span>,</span>
-<span class="r-in">   T<span class="op">=</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">7</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>;</span>
-<span class="r-in"><span class="co"># Default behavior is to make items unique</span></span>
-<span class="r-in"><span class="fu">list2im</span><span class="op">(</span><span class="va">L1</span><span class="op">)</span>;</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">L1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>A<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>,<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"A"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   D<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"D"</span>,<span class="st">"E"</span>,<span class="st">"F"</span>,<span class="st">"D"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   A123<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span>,<span class="fl">3</span>,<span class="fl">5</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   T<span class="op">=</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">7</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="co"># Default behavior is to make items unique</span></span></span>
+<span class="r-in"><span><span class="fu">list2im</span><span class="op">(</span><span class="va">L1</span><span class="op">)</span>;</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>removing duplicated items in transactions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   A D A123 T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0 0    1 0</span>
@@ -145,9 +156,9 @@ relatively fast.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> G 0 0    0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H 0 0    0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> I 0 0    0 1</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Option to report the counts</span></span>
-<span class="r-in"><span class="fu">list2im</span><span class="op">(</span><span class="va">L1</span>, keepCounts<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Option to report the counts</span></span></span>
+<span class="r-in"><span><span class="fu">list2im</span><span class="op">(</span><span class="va">L1</span>, keepCounts<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>removing duplicated items in transactions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   A D A123 T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0 0    1 0</span>
@@ -167,7 +178,7 @@ relatively fast.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> G 0 0    0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H 0 0    0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> I 0 0    0 1</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -182,8 +193,7 @@ relatively fast.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
