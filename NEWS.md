@@ -1,3 +1,16 @@
+# multienrichjam 0.0.77.900
+
+## bug fixes
+
+* `mem_plot_folio()` and `mem_enrichment_heatmap()` threw errors
+
+   * using `pathway_column_split` when there was only one column
+   (one enrichment), this error is corrected.
+   * Further, passing `cluster_rows` as a `function` caused the
+   resulting `Heatmap` object not to store the `obj` with the
+   dendrogram/hclust, instead it stored the function.
+   This error was also corrected.
+
 # multienrichjam 0.0.76.900
 
 ## changes to existing functions

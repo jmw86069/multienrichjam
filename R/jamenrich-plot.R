@@ -675,7 +675,7 @@ mem_gene_path_heatmap <- function
       );
 
       hm <- tryCatch({
-         call_fn_ellipsis(ComplexHeatmap::Heatmap,
+         jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
             matrix=memIM[genes, sets, drop=FALSE],
             border=TRUE,
             name=name,
@@ -779,7 +779,7 @@ mem_gene_path_heatmap <- function
          gap=grid::unit(0, "mm")
       );
       hm <- tryCatch({
-         call_fn_ellipsis(ComplexHeatmap::Heatmap,
+         jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
             t(memIM[genes,sets,drop=FALSE]),
             border=TRUE,
             name=name,
@@ -1041,7 +1041,7 @@ mem_enrichment_heatmap <- function
       stop("No remaining data after filtering.");
    }
    if (ncol(mem$enrichIM) > 1) {
-      if (TRUE %in% cluster_rows) {
+      if (is.logical(cluster_rows) && TRUE %in% cluster_rows) {
          cluster_rows <- amap::hcluster(
             link="ward",
             jamba::noiseFloor(
@@ -1055,7 +1055,7 @@ mem_enrichment_heatmap <- function
             row_dend_width <- grid::unit(30, "mm");
          }
       }
-      if (TRUE %in% cluster_columns) {
+      if (is.logical(cluster_columns) && TRUE %in% cluster_columns) {
          cluster_columns <- amap::hcluster(
             link="ward",
             jamba::noiseFloor(
@@ -1067,7 +1067,9 @@ mem_enrichment_heatmap <- function
             method=column_method);
       }
    } else {
-      cluster_rows <- FALSE;
+      if (is.logical(cluster_rows)) {
+         cluster_rows <- FALSE;
+      }
       cluster_columns <- FALSE;
       if (length(row_dend_width) == 0) {
          row_dend_width <- grid::unit(10, "mm");
@@ -1117,7 +1119,7 @@ mem_enrichment_heatmap <- function
       pch <- 21;
    }
    if ("heatmap1" %in% style) {
-      hm <- call_fn_ellipsis(ComplexHeatmap::Heatmap,
+      hm <- jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
          matrix=use_matrix,
          name=name,
          col=col_logp,
@@ -1314,13 +1316,19 @@ mem_enrichment_heatmap <- function
             row_split <- row_split[rownames(use_matrix)];
          }
       }
+      if (is.numeric(row_split) && row_split == 1) {
+         row_split <- NULL
+      }
+      if (is.logical(cluster_rows) && FALSE %in% cluster_rows) {
+         row_split <- NULL
+      }
 
       if ("dotplot" %in% style) {
          use_raster <- FALSE
       }
 
       # dot plot or heatmap style
-      hm <- call_fn_ellipsis(ComplexHeatmap::Heatmap,
+      hm <- jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
          matrix=use_matrix,
          name=name,
          col=col_logp,
@@ -2178,6 +2186,9 @@ mem_plot_folio <- function
 
    # Extract hclust object for re-use in the enrichment heatmap
    gp_hm_hclust <- gp_hm@column_dend_param$obj;
+   if (length(gp_hm_hclust) == 0) {
+      gp_hm_hclust <- gp_hm@column_dend_param$fun(t(gp_hm@matrix));
+   }
 
 
    #############################################################
@@ -2333,7 +2344,7 @@ mem_plot_folio <- function
       }
    }
    ## Obtain heatmap pathway clusters
-   clusters_mem <- heatmap_column_order(gp_hm);
+   clusters_mem <- jamba::heatmap_column_order(gp_hm);
    ret_vals$clusters_mem <- clusters_mem;
    ## Get number of pathway clusters
    pathway_clusters_n <- length(clusters_mem);
