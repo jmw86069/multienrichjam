@@ -13,6 +13,8 @@ make_legend_bivariate(
   title = "",
   border = TRUE,
   digits = 3,
+  title_fontsize = 11,
+  legend_fontsize = 10,
   grid_height = grid::unit(5, "mm"),
   grid_width = grid_height,
   row_breaks = NULL,
@@ -22,15 +24,71 @@ make_legend_bivariate(
   ...
 )
 }
+\arguments{
+\item{col_fun}{\code{function} as defined by \code{colorRamp2D()}.}
+
+\item{pretty.n}{\code{numeric} value passed to \code{pretty()} to help define
+a suitable number of labels for the x-axis and y-axis color breaks.
+For specific breaks, use \code{column_breaks}, or \code{row_breaks}.}
+
+\item{name}{\code{character} string used to name the resulting
+\code{ComplexHeatmap::Legend} object, normally only useful when
+trying to find the \code{grid} object for custom modifications.}
+
+\item{xlab, ylab}{\code{character} strings used to define x-axis and y-axis
+labels, effectively the units being displayed. The common
+values should be \code{xlab="z-score"} or \verb{xlab="direction'},
+and \code{ylab="-log10pvalue"} or \code{y="log10 significance"}.}
+
+\item{title}{\code{character}, currently ignored, but may be used in future
+if necessary to display a title above the overall bivariate legend.}
+
+\item{border}{\code{logical} indicating whether to draw a border around
+each color square in the color legend.
+This argument can also be a \code{character} R color value, which will
+define the color of border drawn around each color square.}
+
+\item{digits}{\code{numeric} passed to \code{format()} to define the labels
+displayed at each position.}
+
+\item{title_fontsize, legend_fontsize}{\code{numeric} value passed to
+\code{grid::gpar(fontsize)} to define the font sizes for
+legend axis labels, and numerical legend labels, respectively.}
+
+\item{grid_height, grid_width}{\code{grid::unit()} objects to define the
+exact height and width of each colored square in the color legend.}
+
+\item{row_breaks, column_breaks}{\code{numeric} optional vectors which define
+absolute breaks for row and column values displayed in the color
+legend. When not supplied, these values are defined using \code{pretty}
+and argument \code{pretty.n}.}
+
+\item{row_gap, column_gap}{\code{grid::unit()} object to define optional
+visible gaps between color squares in the color legend. By default,
+there is no gap. These arguments are provided as a convenient way
+to impose a gap, since the method used does not otherwise provide
+a reasonable way to adjust the spacing.}
+
+\item{...}{additional arguments are ignored.}
+}
+\value{
+\code{ComplexHeatmap::Legends-class} object as returned by
+\code{ComplexHeatmap::packLegend()}, specifically containing a group
+of legends, otherwise known as a legend list.
+}
 \description{
 Display colors from bivariate color function
 }
+\details{
+This function produces a \code{"Legend"} object as defined by
+\code{ComplexHeatmap::Legend()}.
+}
 \examples{
 mcolor <- matrix(ncol=3,
-   c("seashell", "salmon1", "firebrick3",
-      "gray99", "lightgoldenrod1", "gold",
-      "aliceblue", "skyblue", "dodgerblue3"));
-row_breaks <- c(0, 0.5, 1);
+   c("white", "salmon1", "firebrick3",
+      "white", "lightgoldenrod1", "gold",
+      "white", "skyblue", "dodgerblue3"));
+row_breaks <- c(0, 0.5, 5);
 column_breaks <- c(-1, 0, 1);
 rownames(mcolor) <- row_breaks;
 colnames(mcolor) <- column_breaks;
@@ -42,6 +100,18 @@ col_fun <- colorRamp2D(column_breaks=column_breaks,
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
    xlab="z-score",
+   pretty.n=5);
+jamba::nullPlot(doBoxes=FALSE);
+ComplexHeatmap::draw(lgds)
+
+# same as above with slightly larger grid size
+# and slightly larger font sizes
+lgds <- make_legend_bivariate(col_fun,
+   ylab="-log10pvalue",
+   xlab="z-score",
+   title_fontsize=14,
+   legend_fontsize=12,
+   grid_height=grid::unit(7, "mm"),
    pretty.n=5);
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)

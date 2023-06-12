@@ -11,7 +11,7 @@ colorRamp2D(
   na_color = "grey15",
   return_rgb = FALSE,
   transparency = 0,
-  space = "LAB",
+  space = "sRGB",
   verbose = FALSE,
   ...
 )

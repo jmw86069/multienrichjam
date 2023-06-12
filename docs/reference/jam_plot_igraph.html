@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
       </span>
     </div>
 
@@ -79,6 +79,9 @@
 <span>  mark.lwd <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  mark.lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  mark.smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  mark.cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  mark.x.nudge <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  mark.y.nudge <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  pie_to_jampie <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  use_shadowText <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  vectorized_node_shapes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -164,7 +167,20 @@ groups.</p></dd>
 
 <dt>mark.lwd, mark.lty</dt>
 <dd><p>line with and line type parameters for each
-<code>mark.groups</code> polygon,</p></dd>
+<code>mark.groups</code> polygon.</p></dd>
+
+
+<dt>mark.cex</dt>
+<dd><p><code>numeric</code> adjustment for mark label font size, used
+when <code>mark.groups</code> is supplied and has <code>names(mark.groups)</code>.</p></dd>
+
+
+<dt>mark.x.nudge, mark.y.nudge</dt>
+<dd><p><code>numeric</code> values in units of the
+maximum x-axis or y-axis range for the layout coordinates,
+used to adjust each label displayed when <code>names(mark.groups)</code>
+is defined. These arguments are passed to <code><a href="make_point_hull.html">make_point_hull()</a></code>
+as <code>label.x.nudge</code>, <code>label.y.nudge</code>, respectively.</p></dd>
 
 
 <dt>pie_to_jampie</dt>

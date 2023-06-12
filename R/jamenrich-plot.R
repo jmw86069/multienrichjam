@@ -1099,7 +1099,9 @@ mem_enrichment_heatmap <- function
       use_matrix <- -log10(mem$enrichIM);
       # use_direction contains z-score values at or above direction_cutoff
       # otherwise it is set to zero
-      use_direction <- (abs(mem$enrichIMdirection) >= direction_cutoff) * mem$enrichIMdirection;
+      use_direction <- (
+         (abs(mem$enrichIMdirection) >= direction_cutoff) *
+         mem$enrichIMdirection);
    } else {
       use_matrix <- -log10(mem$enrichIM);
       use_direction <- NULL;
@@ -1107,11 +1109,12 @@ mem_enrichment_heatmap <- function
    }
 
    # raster_device workaround
-   if (jamba::check_pkg_installed("ragg")) {
-      raster_device <- "agg_png"
-   } else {
-      raster_device <- "png"
-   }
+   # disabled with version 0.0.78.900
+   # if (jamba::check_pkg_installed("ragg")) {
+   #    raster_device <- "agg_png"
+   # } else {
+   raster_device <- "png"
+   # }
 
    if ("heatmap" %in% style) {
       pch <- NULL;
@@ -1202,12 +1205,19 @@ mem_enrichment_heatmap <- function
       # improved cell_fun
       if (apply_direction) {
          tcount <- jamba::tcount;
-         dir_colors <- c("royalblue4", "gold", "firebrick3");
-         mcolor <- matrix(ncol=3,
+         dir_colors <- c("royalblue4", "gold3", "firebrick3");
+         dir_colors2 <- c("skyblue", "gold", "indianred1");
+         dir_colors3 <- c("white", "white", "white");
+         mcolor <- jamba::rbindList(list(dir_colors3, dir_colors2, dir_colors))
+         # jamba::imageByColors(mcolor)
+         # white_num controls the intensity of the first non-white color
+         # in the color gradient
+         white_num <- 2;
+         mcolor2 <- matrix(ncol=3,
             c("white", "white", "white",
-               colorjam::blend_colors(c(dir_colors[1], "white", "white", "white", "white")),
-               colorjam::blend_colors(c(dir_colors[2], "white", "white", "white", "white")),
-               colorjam::blend_colors(c(dir_colors[3], "white", "white", "white", "white")),
+               colorjam::blend_colors(c(dir_colors[1], rep("white", white_num))),
+               colorjam::blend_colors(c(dir_colors[2], rep("white", white_num))),
+               colorjam::blend_colors(c(dir_colors[3], rep("white", white_num))),
                dir_colors),
             byrow=TRUE);
          row_breaks <- c(-log10(p_cutoff) - 1e-10,
@@ -2386,19 +2396,22 @@ mem_plot_folio <- function
             return_type="cnet",
             ...);
       }, error=function(e){
-         jamba::printDebug("Error during collapse_mem_clusters(), returning NULL.");
+         jamba::printDebug("Error during collapse_mem_clusters(), ",
+            "returning NULL.");
          print(e);
          NULL;
       });
       if (length(cnet_collapsed) == 0) {
          return(list(mem=mem, clusters_mem=clusters_mem, ret_vals=ret_vals))
       }
-      igraph::V(cnet_collapsed)$pie.color <- lapply(igraph::V(cnet_collapsed)$pie.color, function(i){
+      igraph::V(cnet_collapsed)$pie.color <- lapply(
+         igraph::V(cnet_collapsed)$pie.color, function(i){
          j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
             mem$colorV[names(i)],
             i);
       });
-      igraph::V(cnet_collapsed)$coloredrect.color <- lapply(igraph::V(cnet_collapsed)$coloredrect.color, function(i){
+      igraph::V(cnet_collapsed)$coloredrect.color <- lapply(
+         igraph::V(cnet_collapsed)$coloredrect.color, function(i){
          j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
             mem$colorV[names(i)],
             i);
@@ -2416,7 +2429,8 @@ mem_plot_folio <- function
       }, error=function(e){
          if (verbose) {
             jamba::printDebug("mem_plot_folio(): ",
-               "subsetCnetIgraph() error during subsetCnetIgraph(..., remove_blanks=TRUE):");
+               "subsetCnetIgraph() error during ",
+               "subsetCnetIgraph(..., remove_blanks=TRUE):");
             print(e);
          }
          cnet_collapsed <- tryCatch({
@@ -2426,7 +2440,8 @@ mem_plot_folio <- function
                   verbose=verbose>1);
          }, error=function(e2){
             jamba::printDebug("mem_plot_folio(): ",
-               "subsetCnetIgraph() error during subsetCnetIgraph(), skipping this operation.");
+               "subsetCnetIgraph() error during ",
+               "subsetCnetIgraph(), skipping this operation.");
             print(e2);
             cnet_collapsed;
          })
@@ -2493,6 +2508,7 @@ mem_plot_folio <- function
                cex.sub=cex.sub);
          }
       }
+      ## Draw Cnet collapsed with top n labels, no gene labels
       plot_num <- plot_num + 1;
       if (length(do_which) == 0 || plot_num %in% do_which) {
          if (verbose) {
@@ -2501,10 +2517,25 @@ mem_plot_folio <- function
                c("Cnet collapsed ", "with set labels, without gene labels"),
                sep="");
          }
-         igraph::V(cnet_collapsed)$label <- ifelse(igraph::V(cnet_collapsed)$nodeType %in% "Gene",
+         if (length(igraph::V(cnet_collapsed)$label) == 0) {
+            if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
+               igraph::V(cnet_collapsed)$label <- ifelse(
+                  nchar(jamba::rmNA(naValue="",
+                     igraph::V(cnet_collapsed)$set_labels)) > 0,
+                  igraph::V(cnet_collapsed)$set_labels,
+                  igraph::V(cnet_collapsed)$name);
+            } else {
+               igraph::V(cnet_collapsed)$label <- igraph::V(cnet_collapsed)$name;
+            }
+         }
+         igraph::V(cnet_collapsed)$label <- ifelse(
+            igraph::V(cnet_collapsed)$nodeType %in% "Gene",
             "",
             igraph::V(cnet_collapsed)$label);
-         cnet_title <- "Cnet plot using collapsed clusters\nlabeled by set\ngene labels hidden";
+         cnet_title <- paste(sep="\n",
+            "Cnet plot using collapsed clusters",
+            "labeled by set",
+            "gene labels hidden");
          cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
             name="title",
             value=cnet_title);

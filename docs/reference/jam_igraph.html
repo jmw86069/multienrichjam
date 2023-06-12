@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
       </span>
     </div>
 
@@ -99,6 +99,9 @@
 <span>  mark.lwd <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  mark.lty <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  mark.smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  mark.cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  mark.x.nudge <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  mark.y.nudge <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  debug <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -309,7 +312,20 @@ groups.</p></dd>
 
 <dt>mark.lwd, mark.lty</dt>
 <dd><p>line with and line type parameters for each
-<code>mark.groups</code> polygon,</p></dd>
+<code>mark.groups</code> polygon.</p></dd>
+
+
+<dt>mark.cex</dt>
+<dd><p><code>numeric</code> adjustment for mark label font size, used
+when <code>mark.groups</code> is supplied and has <code>names(mark.groups)</code>.</p></dd>
+
+
+<dt>mark.x.nudge, mark.y.nudge</dt>
+<dd><p><code>numeric</code> values in units of the
+maximum x-axis or y-axis range for the layout coordinates,
+used to adjust each label displayed when <code>names(mark.groups)</code>
+is defined. These arguments are passed to <code><a href="make_point_hull.html">make_point_hull()</a></code>
+as <code>label.x.nudge</code>, <code>label.y.nudge</code>, respectively.</p></dd>
 
 
 <dt>verbose</dt>
@@ -458,6 +474,12 @@ This behavior can be controlled by supplying a <code>character</code>
 vector with specific colors for <code>mark.col</code> and <code>mark.border</code>. Note
 that the border should match the colors, or it can be set to <code>"grey45"</code>
 for a generally visible border.</p>
+<p>When <code>names(mark.groups)</code> is defined, the values are used as
+labels, positioned at the outer edge of each polygon. The label
+text size is adjusted with <code>label.cex</code>, and the position can
+be adjusted with <code>mark.x.nudge</code>, <code>mark.y.nudge</code>, in units of
+fraction of the maximum x- or y-axis range (effectively fraction
+of the layout size).</p>
 <p>Optional argument <code>nodegroups</code> can be supplied, which is a <code>list</code>
 of vectors, where each vector represents a group of nodes. The
 <code>nodegroups</code> can be used with <code>edge_bundling="nodegroups"</code> to
@@ -534,6 +556,10 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>  mark.lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, mark.shape<span class="op">=</span><span class="fl">1</span>,</span></span>
 <span class="r-in"><span>  edge_bundling<span class="op">=</span><span class="st">"default"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-1.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:33</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:33</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:33</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:33</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create example cnet data</span></span></span>
 <span class="r-in"><span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_cnet_test.html">make_cnet_test</a></span><span class="op">(</span>num_sets<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
@@ -568,6 +594,10 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
 <span class="r-in"><span>   vertex.color<span class="op">=</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/colorjam/man/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-3.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cfuncs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cluster_leading_eigen<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen</a></span>,</span></span>
 <span class="r-in"><span>   cluster_edge_betweenness<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_edge_betweenness.html" class="external-link">cluster_edge_betweenness</a></span>,</span></span>
@@ -587,9 +617,25 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-4.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:34</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-plt img"><img src="jam_igraph-5.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-plt img"><img src="jam_igraph-6.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-plt img"><img src="jam_igraph-7.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fancy example showing mark.groups and colorizing</span></span></span>
 <span class="r-in"><span><span class="co"># edges using node colors</span></span></span>
@@ -601,6 +647,10 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   edge_bundling<span class="op">=</span><span class="st">"nodegroups"</span>,</span></span>
 <span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
 <span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cluster_spinglass()\n"</span>,</span></span>
 <span class="r-in"><span>   <span class="st">"edge_bundling='nodegroups'"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-8.png" alt="" width="700" height="433"></span>
@@ -613,6 +663,10 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span></span>
 <span class="r-in"><span>   bundle_style<span class="op">=</span><span class="st">"xspline"</span>,</span></span>
 <span class="r-in"><span>   detail<span class="op">=</span><span class="fl">14</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"bundle_style='xspline'"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -622,6 +676,10 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   edge_bundling<span class="op">=</span><span class="st">"connections"</span>,</span></span>
 <span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
 <span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:35</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"edge_bundling='connections'"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="jam_igraph-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

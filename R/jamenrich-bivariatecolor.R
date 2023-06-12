@@ -47,14 +47,14 @@
 #' @export
 colorRamp2D <- function
 (column_breaks,
-   row_breaks,
-   mcolor,
-   na_color="grey15",
-   return_rgb=FALSE,
-   transparency=0,
-   space="LAB",
-   verbose=FALSE,
-   ...)
+ row_breaks,
+ mcolor,
+ na_color="grey15",
+ return_rgb=FALSE,
+ transparency=0,
+ space="sRGB",
+ verbose=FALSE,
+ ...)
 {
    #
    use_space <- space;
@@ -132,11 +132,11 @@ colorRamp2D <- function
 #' @export
 display_colorRamp2D <- function
 (col_fun,
-   pretty.n=12,
-   xlab="",
-   ylab="",
-   main="",
-   ...)
+ pretty.n=12,
+ xlab="",
+ ylab="",
+ main="",
+ ...)
 {
    row_breaks <- attr(col_fun, "row_breaks");
    column_breaks <- attr(col_fun, "column_breaks");
@@ -455,14 +455,58 @@ cell_fun_bivariate <- function
 
 #' Display colors from bivariate color function
 #'
+#' Display colors from bivariate color function
+#'
+#' This function produces a `"Legend"` object as defined by
+#' `ComplexHeatmap::Legend()`.
+#'
 #' @family jam utility functions
+#'
+#' @param col_fun `function` as defined by `colorRamp2D()`.
+#' @param pretty.n `numeric` value passed to `pretty()` to help define
+#'    a suitable number of labels for the x-axis and y-axis color breaks.
+#'    For specific breaks, use `column_breaks`, or `row_breaks`.
+#' @param name `character` string used to name the resulting
+#'    `ComplexHeatmap::Legend` object, normally only useful when
+#'    trying to find the `grid` object for custom modifications.
+#' @param xlab,ylab `character` strings used to define x-axis and y-axis
+#'    labels, effectively the units being displayed. The common
+#'    values should be `xlab="z-score"` or `xlab="direction'`,
+#'    and `ylab="-log10pvalue"` or `y="log10 significance"`.
+#' @param title `character`, currently ignored, but may be used in future
+#'    if necessary to display a title above the overall bivariate legend.
+#' @param border `logical` indicating whether to draw a border around
+#'    each color square in the color legend.
+#'    This argument can also be a `character` R color value, which will
+#'    define the color of border drawn around each color square.
+#' @param digits `numeric` passed to `format()` to define the labels
+#'    displayed at each position.
+#' @param title_fontsize,legend_fontsize `numeric` value passed to
+#'    `grid::gpar(fontsize)` to define the font sizes for
+#'    legend axis labels, and numerical legend labels, respectively.
+#' @param grid_height,grid_width `grid::unit()` objects to define the
+#'    exact height and width of each colored square in the color legend.
+#' @param row_breaks,column_breaks `numeric` optional vectors which define
+#'    absolute breaks for row and column values displayed in the color
+#'    legend. When not supplied, these values are defined using `pretty`
+#'    and argument `pretty.n`.
+#' @param row_gap,column_gap `grid::unit()` object to define optional
+#'    visible gaps between color squares in the color legend. By default,
+#'    there is no gap. These arguments are provided as a convenient way
+#'    to impose a gap, since the method used does not otherwise provide
+#'    a reasonable way to adjust the spacing.
+#' @param ... additional arguments are ignored.
+#'
+#' @return `ComplexHeatmap::Legends-class` object as returned by
+#'    `ComplexHeatmap::packLegend()`, specifically containing a group
+#'    of legends, otherwise known as a legend list.
 #'
 #' @examples
 #' mcolor <- matrix(ncol=3,
-#'    c("seashell", "salmon1", "firebrick3",
-#'       "gray99", "lightgoldenrod1", "gold",
-#'       "aliceblue", "skyblue", "dodgerblue3"));
-#' row_breaks <- c(0, 0.5, 1);
+#'    c("white", "salmon1", "firebrick3",
+#'       "white", "lightgoldenrod1", "gold",
+#'       "white", "skyblue", "dodgerblue3"));
+#' row_breaks <- c(0, 0.5, 5);
 #' column_breaks <- c(-1, 0, 1);
 #' rownames(mcolor) <- row_breaks;
 #' colnames(mcolor) <- column_breaks;
@@ -474,6 +518,18 @@ cell_fun_bivariate <- function
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
 #'    xlab="z-score",
+#'    pretty.n=5);
+#' jamba::nullPlot(doBoxes=FALSE);
+#' ComplexHeatmap::draw(lgds)
+#'
+#' # same as above with slightly larger grid size
+#' # and slightly larger font sizes
+#' lgds <- make_legend_bivariate(col_fun,
+#'    ylab="-log10pvalue",
+#'    xlab="z-score",
+#'    title_fontsize=14,
+#'    legend_fontsize=12,
+#'    grid_height=grid::unit(7, "mm"),
 #'    pretty.n=5);
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
@@ -499,20 +555,22 @@ cell_fun_bivariate <- function
 #' @export
 make_legend_bivariate <- function
 (col_fun,
-   pretty.n=5,
-   name="bivariate",
-   xlab="",
-   ylab="",
-   title="",
-   border=TRUE,
-   digits=3,
-   grid_height=grid::unit(5, "mm"),
-   grid_width=grid_height,
-   row_breaks=NULL,
-   column_breaks=NULL,
-   row_gap=grid::unit(0, "mm"),
-   column_gap=grid::unit(0, "mm"),
-   ...)
+ pretty.n=5,
+ name="bivariate",
+ xlab="",
+ ylab="",
+ title="",
+ border=TRUE,
+ digits=3,
+ title_fontsize=11,
+ legend_fontsize=10,
+ grid_height=grid::unit(5, "mm"),
+ grid_width=grid_height,
+ row_breaks=NULL,
+ column_breaks=NULL,
+ row_gap=grid::unit(0, "mm"),
+ column_gap=grid::unit(0, "mm"),
+ ...)
 {
    if (length(pretty.n) > 0) {
       pretty.n <- rep(pretty.n, length.out=2);
@@ -534,34 +592,85 @@ make_legend_bivariate <- function
    }
    row_breaks <- rev(row_breaks);
 
-   legend_columns <- lapply(seq_along(column_breaks), function(i){
-      column_break <- column_breaks[i];
+   legend_seq <- c(0, seq_along(column_breaks), length(column_breaks) + 1);
+   legend_columns <- lapply(legend_seq, function(i){
       labels <- rep("", length(row_breaks));
       maintitle <- "";
       title_position <- "topcenter";
-      if (i == 1) {
-         maintitle <- ylab;
-         title_position <- "lefttop-rot";
-      }
-      if (i == length(column_breaks)) {
+
+      # First, last column are dedicated to blank legend for test labels only
+      title_gp <- grid::gpar(fontsize=legend_fontsize,
+         fontface="bold");
+      labels_gp <- grid::gpar(fontsize=legend_fontsize)
+
+      if (i %in% c(0)) {
+         title_gp <- grid::gpar(fontsize=title_fontsize,
+            fontface="bold");
+         maintitle <- paste0(ylab,
+            paste0(rep(" ", 10), collapse=""))
+         title_position <- "leftcenter-rot";
+         column_break <- column_breaks[1];
+         igrid_width <- grid::unit(0.1, "mm");
+         use_border <- "transparent";
+         row_colors <- rep("transparent", length(row_breaks));
+      } else if (i %in% c(length(column_breaks) + 1)) {
+         maintitle <- ".\n.";
+         title_gp <- grid::gpar(fontsize=title_fontsize,
+            fontface="bold",
+            col="transparent");
          labels <- format(row_breaks,
             digits=digits,
             trim=TRUE);
+         column_break <- column_breaks[1];
+         igrid_width <- grid::unit(0.1, "mm");
+         use_border <- "transparent";
+         row_colors <- rep("transparent", length(row_breaks));
+      } else {
+         column_break <- column_breaks[i];
+         igrid_width <- grid_width;
+         use_border <- border;
+         title_gp <- grid::gpar(fontsize=legend_fontsize)
+         #
+         if (i == ceiling(length(column_breaks) / 2)) {
+            maintitle <- ComplexHeatmap::gt_render(
+               margin=grid::unit(c(0, 0, 0, 0), "pt"),
+               padding=grid::unit(c(0, 0, 0, 0), "pt"),
+               r=grid::unit(0, "pt"),
+               paste0("<b><span style='font-size:", title_fontsize, "pt'>",
+                  xlab, "</span></b><br>",
+                  "<span style='font-size:", legend_fontsize, "pt'>",
+                  column_break, "</span>"))
+            title_position <- "topcenter";
+         } else {
+            maintitle <- ComplexHeatmap::gt_render(
+               margin=grid::unit(c(0, 0, 0, 0), "pt"),
+               padding=grid::unit(c(0, 0, 0, 0), "pt"),
+               r=grid::unit(0, "pt"),
+               paste0("<b><span style='font-size:", title_fontsize, "pt'>",
+                  " </span></b><br>",
+                  "<span style='font-size:", legend_fontsize, "pt'>",
+                  column_break, "</span>"))
+            title_position <- "topcenter";
+         }
+         row_colors <- sapply(row_breaks, function(row_break) {
+            col_fun(x=column_break,
+               y=row_break)
+         })
       }
-      row_colors <- sapply(row_breaks, function(row_break) {
-         col_fun(x=column_break,
-            y=row_break)
-      })
+
+      # create Legend object
       lgd <- ComplexHeatmap::Legend(
          name=name,
          at=row_breaks,
          labels=labels,
+         labels_gp=labels_gp,
          title=maintitle,
          title_position=title_position,
          grid_height=grid_height,
-         grid_width=grid_width,
+         grid_width=igrid_width,
          legend_gp=grid::gpar(fill=row_colors),
-         border=border,
+         title_gp=title_gp,
+         border=use_border,
          row_gap=row_gap,
          ...)
       lgd;

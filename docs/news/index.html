@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
       </span>
     </div>
 
@@ -58,7 +58,66 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.78.900" id="multienrichjam-0078900">multienrichjam 0.0.78.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0078900"></a></h2>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-78-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-78-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code></p>
+<ul><li>The bivariate color scale was too pale for lower significance P-values, so the colors were encoded to have higher color saturation at the low end. The intermediate colors are improved, see <code><a href="../reference/colorRamp2D.html">colorRamp2D()</a></code> changes below.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/colorRamp2D.html">colorRamp2D()</a></code></p>
+<ul><li>The blue-yellow color blending by default in <code><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html" class="external-link">circlize::colorRamp2()</a></code> was still producing grey, despite using the “LAB” (or “LUV”, “XYZ”) color models. This is usually a symptom of using RGB color space, blending “blue” with “red/green” (yellow) produces “red/green/blue” (grey), and not usually seen when using “LUV” which is a 360-degree hue radial color wheel. It is probably still converted to RGB before blending, then back to LUV.</li>
+<li>The default argument was changed to <code>use_model="sRGB"</code> which produces a somewhat green color when blending blue and gold. The red-gold blending is improved as well, producing a more saturated orange color. End result: The intermediate directional colors are more recognizable as partly up (orange) or partly down (green).</li>
+<li>TODO: This color legend needs x-axis labels, showing z-score values.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/make_legend_bivariate.html">make_legend_bivariate()</a></code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span> finally displays the x<span class="sc">-</span>axis label and numerical units,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>by default <span class="st">`</span><span class="at">"z-score"</span><span class="st">`</span>.</span></code></pre></div>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-78-900">bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-78-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/reorderIgraphNodes.html">reorder_igraph_nodes()</a></code>,<code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code></p>
+<ul><li>error occurred when attributes in <code>list</code> form were entirely <code>NA</code>, one section did not use <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code> properly. The bug was fixed.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.77.900" id="multienrichjam-0077900">multienrichjam 0.0.77.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0077900"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-77-900">bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-77-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> and <code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> threw errors</p>
+<ul><li>using <code>pathway_column_split</code> when there was only one column (one enrichment), this error is corrected.</li>
+<li>Further, passing <code>cluster_rows</code> as a <code>function</code> caused the resulting <code>Heatmap</code> object not to store the <code>obj</code> with the dendrogram/hclust, instead it stored the function. This error was also corrected.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.76.900" id="multienrichjam-0076900">multienrichjam 0.0.76.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0076900"></a></h2>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-76-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-76-900"></a></h3>
+<p>The theme of this update is “Customizing mark.groups labeling”. Useful with <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> when supplying a <code>list</code> of node groups or communities via <code>mark.groups</code>, with labels defined in <code>names(mark.groups)</code>. The labels are automatically placed outside the mark polygon, and can be adjusted in size with <code>mark.cex</code>, and position with <code>mark.x.nudge</code>, <code>mark.y.nudge</code>.</p>
+<ul><li>
+<p><code><a href="../reference/make_point_hull.html">make_point_hull()</a></code></p>
+<ul><li>new arguments: <code>label.cex</code>, <code>label.x.nudge</code>, <code>label.y.nudge</code> to customize the label font size, and label placement, when <code>label</code> is provided.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> new arguments:</p>
+<ul><li>
+<code>mark.cex</code> passed to <code><a href="../reference/make_point_hull.html">make_point_hull()</a></code> as <code>label.cex</code>
+</li>
+<li>
+<code>mark.x.nudge</code> passed to <code><a href="../reference/make_point_hull.html">make_point_hull()</a></code> as <code>label.x.nudge</code>
+</li>
+<li>
+<code>mark.y.nudge</code> passed to <code><a href="../reference/make_point_hull.html">make_point_hull()</a></code> as <code>label.y.nudge</code>
+</li>
+</ul></li>
+</ul></div>
 <div class="section level3">
 <h3 id="major-changes-to-existing-functions-0-0-76-900">major changes to existing functions<a class="anchor" aria-label="anchor" href="#major-changes-to-existing-functions-0-0-76-900"></a></h3>
 <ul><li>
@@ -68,7 +127,7 @@
 </ul></li>
 </ul></div>
 <div class="section level3">
-<h3 id="changes-to-existing-functions-0-0-76-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-76-900"></a></h3>
+<h3 id="other-changes-to-existing-functions-0-0-76-900">other changes to existing functions<a class="anchor" aria-label="anchor" href="#other-changes-to-existing-functions-0-0-76-900"></a></h3>
 <ul><li>
 <p><code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code></p>
 <ul><li>default <code>point_size_min=1</code> changed to <code>point_size_min=2</code> so the smallest points are still clearly visible, including the fill color.</li>

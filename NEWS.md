@@ -1,3 +1,42 @@
+# multienrichjam 0.0.78.900
+
+## changes to existing functions
+
+* `mem_enrichment_heatmap()`
+
+   * The bivariate color scale was too pale for lower significance P-values,
+   so the colors were encoded to have higher color saturation at the low end.
+   The intermediate colors are improved, see `colorRamp2D()` changes below.
+
+* `colorRamp2D()`
+
+   * The blue-yellow color blending by default in `circlize::colorRamp2()`
+   was still producing grey, despite using the "LAB" (or "LUV", "XYZ")
+   color models. This is usually a symptom of using RGB color space,
+   blending "blue" with "red/green" (yellow) produces "red/green/blue" (grey),
+   and not usually seen when using "LUV" which is a 360-degree hue radial
+   color wheel. It is probably still converted to RGB before blending,
+   then back to LUV.
+   * The default argument was changed to `use_model="sRGB"` which
+   produces a somewhat green color when blending blue and gold.
+   The red-gold blending is improved as well, producing a more saturated
+   orange color. End result: The intermediate directional colors are
+   more recognizable as partly up (orange) or partly down (green).
+   * TODO: This color legend needs x-axis labels, showing z-score values.
+
+* `make_legend_bivariate()`
+
+      * finally displays the x-axis label and numerical units,
+      by default `"z-score"`.
+
+## bug fixes
+
+* `reorder_igraph_nodes()`,`reorderIgraphNodes()`
+
+   * error occurred when attributes in `list` form were entirely `NA`,
+   one section did not use `unlist()` properly. The bug was fixed.
+
+
 # multienrichjam 0.0.77.900
 
 ## bug fixes

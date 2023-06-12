@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.76.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
       </span>
     </div>
 
@@ -72,6 +72,8 @@
 <span>  title <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  border <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  title_fontsize <span class="op">=</span> <span class="fl">11</span>,</span>
+<span>  legend_fontsize <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  grid_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">5</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>  grid_width <span class="op">=</span> <span class="va">grid_height</span>,</span>
 <span>  row_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -82,6 +84,91 @@
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>col_fun</dt>
+<dd><p><code>function</code> as defined by <code><a href="colorRamp2D.html">colorRamp2D()</a></code>.</p></dd>
+
+
+<dt>pretty.n</dt>
+<dd><p><code>numeric</code> value passed to <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty()</a></code> to help define
+a suitable number of labels for the x-axis and y-axis color breaks.
+For specific breaks, use <code>column_breaks</code>, or <code>row_breaks</code>.</p></dd>
+
+
+<dt>name</dt>
+<dd><p><code>character</code> string used to name the resulting
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legend.html" class="external-link">ComplexHeatmap::Legend</a></code> object, normally only useful when
+trying to find the <code>grid</code> object for custom modifications.</p></dd>
+
+
+<dt>xlab, ylab</dt>
+<dd><p><code>character</code> strings used to define x-axis and y-axis
+labels, effectively the units being displayed. The common
+values should be <code>xlab="z-score"</code> or <code>xlab="direction'</code>,
+and <code>ylab="-log10pvalue"</code> or <code>y="log10 significance"</code>.</p></dd>
+
+
+<dt>title</dt>
+<dd><p><code>character</code>, currently ignored, but may be used in future
+if necessary to display a title above the overall bivariate legend.</p></dd>
+
+
+<dt>border</dt>
+<dd><p><code>logical</code> indicating whether to draw a border around
+each color square in the color legend.
+This argument can also be a <code>character</code> R color value, which will
+define the color of border drawn around each color square.</p></dd>
+
+
+<dt>digits</dt>
+<dd><p><code>numeric</code> passed to <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> to define the labels
+displayed at each position.</p></dd>
+
+
+<dt>title_fontsize, legend_fontsize</dt>
+<dd><p><code>numeric</code> value passed to
+<code>grid::gpar(fontsize)</code> to define the font sizes for
+legend axis labels, and numerical legend labels, respectively.</p></dd>
+
+
+<dt>grid_height, grid_width</dt>
+<dd><p><code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code> objects to define the
+exact height and width of each colored square in the color legend.</p></dd>
+
+
+<dt>row_breaks, column_breaks</dt>
+<dd><p><code>numeric</code> optional vectors which define
+absolute breaks for row and column values displayed in the color
+legend. When not supplied, these values are defined using <code>pretty</code>
+and argument <code>pretty.n</code>.</p></dd>
+
+
+<dt>row_gap, column_gap</dt>
+<dd><p><code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit()</a></code> object to define optional
+visible gaps between color squares in the color legend. By default,
+there is no gap. These arguments are provided as a convenient way
+to impose a gap, since the method used does not otherwise provide
+a reasonable way to adjust the spacing.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>additional arguments are ignored.</p></dd>
+
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    
+
+<p><code>ComplexHeatmap::Legends-class</code> object as returned by
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/packLegend.html" class="external-link">ComplexHeatmap::packLegend()</a></code>, specifically containing a group
+of legends, otherwise known as a legend list.</p>
+    </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>This function produces a <code>"Legend"</code> object as defined by
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legend.html" class="external-link">ComplexHeatmap::Legend()</a></code>.</p>
+    </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam utility functions: 
@@ -115,10 +202,10 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mcolor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span>,</span></span>
-<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seashell"</span>, <span class="st">"salmon1"</span>, <span class="st">"firebrick3"</span>,</span></span>
-<span class="r-in"><span>      <span class="st">"gray99"</span>, <span class="st">"lightgoldenrod1"</span>, <span class="st">"gold"</span>,</span></span>
-<span class="r-in"><span>      <span class="st">"aliceblue"</span>, <span class="st">"skyblue"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span><span class="op">)</span>;</span></span>
-<span class="r-in"><span><span class="va">row_breaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"salmon1"</span>, <span class="st">"firebrick3"</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"white"</span>, <span class="st">"lightgoldenrod1"</span>, <span class="st">"gold"</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"white"</span>, <span class="st">"skyblue"</span>, <span class="st">"dodgerblue3"</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">row_breaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">5</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="va">column_breaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mcolor</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">row_breaks</span>;</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mcolor</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">column_breaks</span>;</span></span>
@@ -136,13 +223,26 @@
 <span class="r-in"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">lgds</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="make_legend_bivariate-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># same as above with slightly larger grid size</span></span></span>
+<span class="r-in"><span><span class="co"># and slightly larger font sizes</span></span></span>
+<span class="r-in"><span><span class="va">lgds</span> <span class="op">&lt;-</span> <span class="fu">make_legend_bivariate</span><span class="op">(</span><span class="va">col_fun</span>,</span></span>
+<span class="r-in"><span>   ylab<span class="op">=</span><span class="st">"-log10pvalue"</span>,</span></span>
+<span class="r-in"><span>   xlab<span class="op">=</span><span class="st">"z-score"</span>,</span></span>
+<span class="r-in"><span>   title_fontsize<span class="op">=</span><span class="fl">14</span>,</span></span>
+<span class="r-in"><span>   legend_fontsize<span class="op">=</span><span class="fl">12</span>,</span></span>
+<span class="r-in"><span>   grid_height<span class="op">=</span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">7</span>, <span class="st">"mm"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   pretty.n<span class="op">=</span><span class="fl">5</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nullPlot.html" class="external-link">nullPlot</a></span><span class="op">(</span>doBoxes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">lgds</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_legend_bivariate-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">lgds</span> <span class="op">&lt;-</span> <span class="fu">make_legend_bivariate</span><span class="op">(</span><span class="va">col_fun</span>,</span></span>
 <span class="r-in"><span>   ylab<span class="op">=</span><span class="st">"-log10pvalue"</span>,</span></span>
 <span class="r-in"><span>   xlab<span class="op">=</span><span class="st">"z-score"</span>,</span></span>
 <span class="r-in"><span>   pretty.n<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nullPlot.html" class="external-link">nullPlot</a></span><span class="op">(</span>doBoxes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">lgds</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_legend_bivariate-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="make_legend_bivariate-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">lgds</span> <span class="op">&lt;-</span> <span class="fu">make_legend_bivariate</span><span class="op">(</span><span class="va">col_fun</span>,</span></span>
 <span class="r-in"><span>   ylab<span class="op">=</span><span class="st">"-log10pvalue"</span>,</span></span>
@@ -154,7 +254,7 @@
 <span class="r-in"><span>   pretty.n<span class="op">=</span><span class="fl">5</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jamba/man/nullPlot.html" class="external-link">nullPlot</a></span><span class="op">(</span>doBoxes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">lgds</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_legend_bivariate-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="make_legend_bivariate-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

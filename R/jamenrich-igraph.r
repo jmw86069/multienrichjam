@@ -1578,7 +1578,7 @@ removeIgraphBlanks <- function
                         ", vcount(g):", vcount(g),
                         ", length(unique(pieSplitV)):", length(unique(pieSplitV)),
                         ", length(unique(pieSplitV[!pieBlanksV])):", length(unique(pieSplitV[!pieBlanksV])),
-                        ", sum(!pieBlanksV):", sum(!pieBlanksV)); ## debug
+                        ", sum(!pieBlanksV):", sum(!pieBlanksV)); # debug
                   }
                   if (length(unique(pieSplitV[!pieBlanksV])) < igraph::vcount(g)) {
                      missing_x <- setdiff(seq_len(igraph::vcount(g)), unique(pieSplitV[!pieBlanksV]));
@@ -1991,6 +1991,10 @@ reorderIgraphNodes <- function
 
    neighborA_df <- do.call(cbind, lapply(sortAttributes,
       function(sortAttribute){
+         if (verbose) {
+            jamba::printDebug("reorderIgraphNodes(): ",
+               "sortAttribute: ", sortAttribute);
+         }
          sortOrder <- sortOrders[sortAttribute];
          if (sortAttribute %in% length_attrs) {
             # length attributes convert values to count before sorting
@@ -2015,9 +2019,10 @@ reorderIgraphNodes <- function
             if (!is.list(j_colors)) {
                j_colors <- as.list(j_colors)
             }
-            j_colors_u <- jamba::rgb2col(col2rgb(unique(unlist(unname(j_colors)))))
+            j_colors_u <- jamba::rgb2col(col2rgb(
+               unique(unlist(unname(j_colors)))))
             # if only one value is present, return dummy column
-            if (length(unique(j_colors)) == 1) {
+            if (length(j_colors_u) == 1) {
                if (verbose) {
                   jamba::printDebug("reorderIgraphNodes(): ",
                      "Only one value for sortAttribute:",
