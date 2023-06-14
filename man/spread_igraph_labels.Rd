@@ -11,7 +11,7 @@ spread_igraph_labels(
   update_g_coords = TRUE,
   do_reorder = TRUE,
   sortAttributes = NULL,
-  nodeSortBy = c("x", "y"),
+  nodeSortBy = c("x", "-y"),
   repulse = 3.5,
   force_relayout = FALSE,
   label_min_dist = 0.5,

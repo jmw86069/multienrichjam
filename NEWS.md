@@ -1,3 +1,13 @@
+# multienrichjam 0.0.79.900
+
+## changes to existing functions
+
+* `spread_igraph_labels()`
+
+   * argument `nodeSortBy=c("x", "y")` changed to `nodeSortBy=c("x", "-y")`,
+   consistent with top-to-bottom sorting on the y-axis.
+   This change indirectly affects `mem_plot_folio()` default output.
+
 # multienrichjam 0.0.78.900
 
 ## changes to existing functions

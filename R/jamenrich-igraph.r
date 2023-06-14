@@ -2266,6 +2266,7 @@ reorderIgraphNodes <- function
       nodeSortBy <- c(nodeSortBy, "-y");
    }
    use_nodeSortBy <- nodeSortBy;
+   jamba::printDebug("use_nodeSortBy: ", paste0('"', use_nodeSortBy, '"'));# debug
    newDF <- jamba::rbindList(lapply(names(neighborGct), function(Gname){
       iDF <- subset(neighborDF, edgeGroup %in% Gname);
       if (!Gname %in% nodesets) {
@@ -2285,9 +2286,19 @@ reorderIgraphNodes <- function
             if (xyaspect >= aspectThreshold) {
                nodeSortBy <- jamba::provigrep(c("x", "y", "."),
                   use_nodeSortBy)
+               if (TRUE || verbose) {
+                  jamba::printDebug("reorder_igraph_nodes(): ",
+                     "short-wide aspect ratio, using nodeSortBy: ",
+                     paste0('"', nodeSortBy, '"'));
+               }
             } else {
                nodeSortBy <- jamba::provigrep(c("y", "x", "."),
                   use_nodeSortBy)
+               if (TRUE || verbose) {
+                  jamba::printDebug("reorder_igraph_nodes(): ",
+                     "tall-skinny aspect ratio, using nodeSortBy: ",
+                     paste0('"', nodeSortBy, '"'));
+               }
             }
          }
          if (verbose) {
@@ -2465,7 +2476,7 @@ spread_igraph_labels <- function
  update_g_coords=TRUE,
  do_reorder=TRUE,
  sortAttributes=NULL,
- nodeSortBy=c("x","y"),
+ nodeSortBy=c("x", "-y"),
  repulse=3.5,
  force_relayout=FALSE,
  label_min_dist=0.5,

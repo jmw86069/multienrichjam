@@ -1,5 +1,25 @@
 # TODO
 
+## 14jun2023
+
+* DONE: `reorder_igraph_nodes()`
+
+   * When `orderByAspect=TRUE`, and it detects tall-skinny aspect ratio,
+   it appears to be applying the y-axis sorting bottom-to-top instead of
+   top-to-bottom.
+   * The culprit was `spread_igraph_labels()` default argument,
+   changed from `nodeSortBy=c("x", "y")` to `nodeSortBy=c("x", "-y")`.
+   
+* `mem_gene_path_heatmap()`
+
+   * Slightly increase the spacing between heatmap body and row/column
+   annotations. Currently the gap between heatmap row/column split
+   is identical to the gap between heatmap and row/column annotations,
+   which makes it harder to distinguish one from the other.
+   * The same can be accomplished using `ComplexHeatmap::ht_opts()`
+   but the option is hard to remember, and would ideally need to be
+   set back to the previous value after drawing the plot.
+
 ## 05jun2023
 
 * `mem_plot_folio()`
