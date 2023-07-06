@@ -117,7 +117,11 @@ make_point_hull <- function
  ...)
 {
    # validate hull_method
-   jamba::printDebug("label.y.nudge:", label.y.nudge);
+   if (TRUE %in% verbose) {
+      jamba::printDebug("make_point_hull(): ",
+         "label.y.nudge:",
+         label.y.nudge);
+   }
    hull_method <- match.arg(hull_method);
    if ("default" %in% hull_method) {
       if (jamba::check_pkg_installed("alphahull")) {
@@ -127,7 +131,8 @@ make_point_hull <- function
       }
       if (verbose) {
          jamba::printDebug("make_point_hull(): ",
-            "hull_method: ", hull_method)
+            "hull_method: ",
+            hull_method)
       }
    }
 

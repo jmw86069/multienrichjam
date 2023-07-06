@@ -1,3 +1,14 @@
+# multienrichjam 0.0.80.900
+
+(In progress.)
+
+## changes to existing functions
+
+* `make_point_hull()`
+
+   * Silenced some default verbose output.
+
+
 # multienrichjam 0.0.79.900
 
 ## changes to existing functions
