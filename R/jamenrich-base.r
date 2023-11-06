@@ -29,7 +29,8 @@
 #' Prepare MultiEnrichMap data from enrichList
 #'
 #' This function performs most of the work of comparing multiple
-#' enrichment results. It takes a list of `enrichResult` objects,
+#' enrichment results.
+#' This function takes a list of `enrichResult` objects,
 #' generates an overall pathway-gene incidence matrix, assembles
 #' a pathway-to-Pvalue matrix, creates EnrichMap `igraph` network
 #' objects, and CnetPlot `igraph` network objects. It also applies
@@ -1365,7 +1366,9 @@ enrichList2df <- function
 
 #' Create enrichMap igraph object
 #'
-#' Create enrichMap igraph object
+#' Create enrichMap igraph object from enrichResult.
+#'
+#' This function could also be called `enrichResult2emap()`.
 #'
 #' This function is a minor extension to the original function
 #' DOSE::enrichMap() which is now rewritten in the source package

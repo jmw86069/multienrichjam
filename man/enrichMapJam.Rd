@@ -58,9 +58,11 @@ the two nodes, and \code{overlap_max_pct} with the maximum percent
 overlap between two nodes (overlap count)/(smaller node size).
 }
 \description{
-Create enrichMap igraph object
+Create enrichMap igraph object from enrichResult.
 }
 \details{
+This function could also be called \code{enrichResult2emap()}.
+
 This function is a minor extension to the original function
 DOSE::enrichMap() which is now rewritten in the source package
 to \code{enrichplot::emapplot()}. The major differences:

@@ -1,6 +1,15 @@
-# multienrichjam 0.0.80.900
+# multienrichjam 0.0.81.900
 
-(In progress.)
+* `jam_igraph()` and `jam_igraph_arrows()`
+
+   * fixed bug when plotting directed edges with arrows, the arrow head
+   width (`h.lwd`) was not properly expanded to the number of arrows,
+   causing arrow heads to appear "twisted".
+   * changed default obscure option `sh.adj=1` which draws straight edges
+   to the base of the arrow head, not to the arrow tip. It allows the
+   arrow tip to be a point without needing to equal the edge line width.
+
+# multienrichjam 0.0.80.900
 
 ## changes to existing functions
 

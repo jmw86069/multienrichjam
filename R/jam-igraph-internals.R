@@ -301,9 +301,9 @@ default_igraph_values <- function
 #'    * `sh.adj=1` will extend the edge line only to the base of the arrow head
 #'    * `sh.adj=1.1` will leave a gap approximately 10% the arrow head length,
 #'     between the edge line and the start of the arrow head.
-#' @param sh.lwd `numeric` line width of main edge line
-#' @param sh.col `character` color of main edge line
-#' @param sh.lty `numeric` line type of main edge line
+#' @param sh.lwd `numeric` line width of main segment edge line
+#' @param sh.col `character` color of main segment edge line
+#' @param sh.lty `numeric` line type of main segment edge line
 #' @param h.col,h.col.bo `character` arrow head color and arrow head border
 #'    color, respectively.
 #' @param h.lwd `numeric` arrow head line width
@@ -356,26 +356,68 @@ jam_igraph_arrows <- function
  curved=FALSE,
  verbose=FALSE)
 {
-   cin <- head(size * par("cin")[2], 1);
-   width <- head(width * (1.2/4/cin), 1);
+   # parcin2 is character height in inches
+   parcin2 <- par("cin")[2];
+   # cin is multipled by size
+   cin <- head(size * parcin2, 1);
+   # width is cin also multiplied by width with default 1.2/4 ratio to size
+   width <- head(width * (1.2 / (4 * cin)), 1);
 
    if (verbose) {
       jamba::printDebug("jam_igraph_arrows()");
    }
 
-   if (is.R()) {
-      uin <- 1/xyinch()
-   } else {
-      uin <- par("uin")
-   }
-   x <- sqrt(seq(0, cin^2, length=floor(35 * cin) + 2))
+   # only works with R and not S (who uses S?)
+   uin <- 1 / graphics::xyinch()
 
-   delta <- sqrt(h.lwd) * par("cin")[2] * 0.005
-   x.arr <- c(-rev(x), -x)
-   wx2 <- width * x^2
-   y.arr <- c(-rev(wx2 + delta), wx2 + delta)
+   # arrow head width in steps, based upon arrow head size for more steps
+   # with larger arrow head size, using at least 2 steps
+   size_n <- floor(35 * cin) + 2;
+   if (verbose > 1) {
+      jamba::printDebug("jam_igraph_arrows(),",
+         "number of steps drawing the arrow:", size_n);
+   }
+   # x <- sqrt(seq(0, cin ^ 2, length=size_n));
+   x <- (seq(0, cin ^ 2, length=size_n))^(1 / 2);
+
+   # ensure h.lwd is not longer than the number of edges
+   h.lwd <- rep(h.lwd, length.out=size_n);
+   # h.lwd <- rep(rep(h.lwd, length.out=length(x1)), each=size_n * 2)
+
+   # delta might be some adjustment for line width?
+   delta <- sqrt(h.lwd) * parcin2 * 0.005
+
+   # expand x.arr to size_n steps, for each side of the arrow
+   # length: (size_n * 2)
+   #
+   # TODO: make the midpoint a single point and not two adjacent points
+   # x.arr <- c(-rev(x), -x)
+   x.arr <- c(head(-rev(x), -1), -x);
+
+   wx2 <- width * x ^ 2
+   # expand y.arr to size_n steps, for each side of the arrow
+   # length: (size_n * 2)
+   # TODO: make the midpoint a single point and not two adjacent points
+   # y.arr <- c(-rev(wx2 + delta), wx2 + delta)
+   y.arr <- c(head(-rev(wx2 + delta), -1), wx2 + delta)
+
+   # expand deg.arr to size_n steps for each side of the arrow, then add NA
+   # length: (size_n * 2) + 1
    deg.arr <- c(atan2(y.arr, x.arr), NA)
-   r.arr <- c(sqrt(x.arr^2 + y.arr^2), NA)
+   r.arr <- c(sqrt(x.arr ^ 2 + y.arr ^ 2), NA)
+
+   if (verbose > 1) {
+      jamba::printDebug("arrow df:");
+      arrow_list <- list(x=x,
+         h.lwd=h.lwd,
+         delta=delta,
+         x.arr=x.arr,
+         wx2=wx2,
+         y.arr=y.arr,
+         deg.arr=deg.arr);
+      print(arrow_list);
+      print(jamba::sdim(arrow_list));# debug
+   }
    bx1 <- x1
    bx2 <- x2
    by1 <- y1
@@ -504,6 +546,13 @@ jam_igraph_arrows <- function
             lty=h.lty)
       } else {
          # head arrow with color fill
+         if (verbose > 1) {
+            jamba::printDebug("jam_igraph_arrows(): ",
+               "x,y polygon coordinates:");
+            print(data.frame(
+               x=p.x2 + r.arr * cos(ttheta)/uin[1],
+               y=p.y2 + r.arr * sin(ttheta)/uin[2]));
+         }
          polygon(p.x2 + r.arr * cos(ttheta)/uin[1],
             p.y2 + r.arr * sin(ttheta)/uin[2],
             col=h.col,
@@ -538,6 +587,13 @@ jam_igraph_arrows <- function
             col=h.col.bo,
             lty=h.lty)
       } else {
+         if (verbose > 1) {
+            jamba::printDebug("jam_igraph_arrows(): ",
+               "x,y polygon coordinates:");
+            print(data.frame(
+               x=p.x2 + r.arr * cos(ttheta)/uin[1],
+               y=p.y2 + r.arr * sin(ttheta)/uin[2]));
+         }
          polygon(
             p.x2 + r.arr * cos(ttheta)/uin[1],
             p.y2 + r.arr * sin(ttheta)/uin[2],

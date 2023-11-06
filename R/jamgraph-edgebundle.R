@@ -1085,15 +1085,18 @@ edge_bundle_nodegroups <- function
                awidth <- edge_spline_df$arrow.width[i][valid]
                # render end point arrows where necessary
                lc <- jam_igraph_arrows(
-                  xx[row3],
-                  yy[row3],
-                  xx[row4],
-                  yy[row4],
+                  x1=xx[row3],
+                  y1=yy[row3],
+                  x2=xx[row4],
+                  y2=yy[row4],
                   code=2,
                   sh.col=ec[row4],
+                  # sh.col="navy",# debug
                   sh.lwd=ew[row4],
                   sh.lty=elty[row4],
+                  sh.adj=1,
                   h.col=ec[row4],
+                  # h.col="#FF000055",# debug
                   h.lwd=ew[row4],
                   h.lty=elty[row4],
                   open=FALSE,

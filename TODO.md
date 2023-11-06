@@ -1,5 +1,173 @@
 # TODO
 
+## 06nov2023
+
+* DONE. Debug issue when rendering edge arrow heads, they look wonky.
+* Remove dependency on `sf` in `adjust_polygon_border()`
+
+   * use `polyclip` package as it is much more lightweight, without requiring
+   RGEOS, LWGEOM, other world globe map-coordinate based libraries
+   which are not easily compiled on all computer systems using R.
+
+* Consider porting `deconcat_df2()` to `jamba` for wider re-use by jam
+packages that would not otherwise need dependency on `multienrichjam`.
+* Consider vectorizing edge arrow size
+
+   * Currently all edge arrows must be the same size (the same limitation
+   is present with `igraph::plot()`).
+   * This is a niche feature, arrows are rarely used in `multienrichjam`,
+   and use of differently-sized arrows does not have a driving use case.
+   (This feature is unlikely to move forward until needed.)
+
+* Consider `ggraph` compatibility in future.
+
+   * Many R packages use `ggraph` for `igraph` plotting, so it might make
+   sense for consistency to offer this feature. The output `ggplot` objects
+   can be combined into larger figures using `patchwork` or `cowplot`
+   easier than using base R `plot()` functions.
+   * My preference not to use `ggraph` is mainly because the
+   returned `ggplot` object is not a useful network graph, it is only the
+   instructions for visualization. As such, the layout, node customization,
+   is not persistent outside the `ggplot` object. The package
+   `clusterProfiler` migrated to `ggraph` and now all the returned objects
+   are not useful because they cannot (easily) be customized and analyzed.
+   * However `ggraph` does not offer `pie` nor `coloredrectangle` node shapes.
+   * Note that `pie` nodes can be emulated with `geom_pie()` but
+   (1) is painfully slow to render because it is not vectorized,
+   (2) does not use inner borders, which allow adjacent wedge borders to
+   be shown beside each other without overlapping.
+   * Task is to add new `geom` for `jampie` node shape that accepts
+   pie wedge border colors drawn as inner border, with optional outer border
+   color that also does not overlap the optional inner border.
+   * Another task is to implement edge bundling using `ggraph` compatible
+   methods. It involves calculating edge bundles, then rendering the
+   curved edges, optionally with arrow heads.
+   * Ultimately a utility function `jam_ggraph()` may be the `ggraph`
+   equivalent of `jam_igraph()` for plotting `igraph` objects.
+
+## 12oct2023
+
+* Integrate directionality with more steps in the workflow:
+
+   * `mem_gene_path_heatmap()`
+   
+      * Consider option to display direction of change in row (gene)
+      annotations for each enrichment.
+      Could display with or without enrichment-colored results?
+
+* Create `bookdown` documentation
+
+   * Should it use a separate Github repository? (Probably yes.)
+   It looks like `"jokergoo/circlize_book"` is the repo for the bookdown site.
+
+* Refactor `multiEnrichMap()` - maybe new function `multienrichjam()`?
+
+   * create `mem` S4 object with slots, print, summary functions
+   
+      * suggested methods:
+      
+         * `plot()` could default to `mem_gene_path_heatmap()` to show all data
+         * `print()` could print summary of content:
+         enrichments, pathways, genes
+         * consider `as.data.frame()` - convert to wide `data.frame` summary?
+         * `memIM()`, `geneIM()`, `enrichIM()` convenient access to slot data
+         * convenient way to get `list` format for IMs?
+         
+      * slots:
+      
+         * `memIM`: gene/pathway matrix
+         * `geneIM`: gene/enrichment matrix
+         * `enrichIM`: pathway/enrichment
+         * `geneIMdirection`: optional direction per gene/enrichment
+         * `geneIMcolors`: colors assigned per gene/enrichment
+         * `enrichIMdirection`: optional direction (z-score) per pathway/enrichment
+         * `enrichIMcolors`: colors assigned per pathway/enrichment
+         * `enrichIMgeneCount`: integer number of genes per pathway/enrichment
+   
+   * remove steps that create embedded Cnet and Emap `igraph` objects:
+   
+      * `multiCnetPlot`, `multiCnetPlot1`, `multiCnetPlot1b`, `multiCnetPlot2`
+      * `multiEnrichMap`, `multiEnrichMap2`
+      * `multiEnrichDF` - consider saving `data.frame` with clear name
+      * `multiEnrichResult` - What content is stored here?
+
+
+## 12jul2023
+
+* New object classes:
+
+   * `"mem"`: store output from `multiEnrichMap()`
+   
+      * (Essentially a formal replacement for `list` format used currently.)
+      * memIM
+      * enrichIM, enrichIMcolors, enrichIMdirection
+      * geneIM, geneIMcolors, geneIMdirection
+      * geneHitList
+      * colorV
+      * params:
+      
+         * p_cutoff (from argument `cutoffRowMinP`)
+         * min_count
+         * topEnrichN
+         * pvalueColname
+         * directionColname
+   
+   * `"mem_plots"`: store `mem_plot_folio()` data for re-use.
+
+* New wrapper function `multienrich()` to replace `multiEnrichMap()`?
+
+   * streamlined refactor and replacement for `multiEnrichMap()`
+   * avoids defining Cnet and Emap data, pushing into `mem_plot_folio()`
+   * reduces arguments by removing all visualization arguments
+   * consider storing `memIM` data as `SummarizedExperiment` for convenient
+   use with `ComplexHeatmap::Heatmap()` via `jamses::heatmap_se()`.
+   * returns `mem` object.
+
+* Update `mem_plot_folio()`
+
+   * input `mem` object
+   * add `mem2emap()` plot output.
+   * consider using `jamses::heatmap_se()` for heatmap functions
+   
+      * it adds `jamses` as dependency, along with its dependencies
+      * it puts pressure to refactor the jamses contrast stats code
+      * should `jamses::heatmap_se()` be moved to new package focused
+      only on SummarizedExperiment heatmaps?
+      * See Bioconductor package `sechm` which is much less capable, but
+      has the same inspiration.
+      It provides **row scaling** (ack) as a recommended (!) option.
+      (Problematic, sorry to say. For gene expression
+      data, the magnitude of change is important, and matters.
+      To rescale the numeric range for **consistency** is counter to the
+      biology, and to the technology. The technology has measurement
+      limitations, for which seeing the **actual** numeric differences is
+      important for assessing whether changes are reliable from that platform.
+      These differences also transfer into follow-up confirmation assays,
+      where changes below a threshold are not feasible to confirm.
+      In general, gene (transcript or protein) expression fold changes are
+      relatively consistently measured for each gene, so to **enhance**
+      the apparent fold change of one gene to fit the fold change of another
+      gene is not necessary, certainly not by default.)
+
+* Consider new R package for SummarizedExperiment heatmaps
+
+   * move `jamses::heatmap_se()` into this package
+   * move `platjam::design2colors()` into this package
+   * minimize R package dependencies
+
+* R packages to review
+
+   * Bioconductor package `"ConsensusClusterPlus"` which can be
+   used to determine appropriate `k` values for k-means clustering,
+   with metrics to assess consistency of cluster assignment.
+   * `"GeneTonic"` function `ggs_graph()` produces a Cnet plot
+   which they export to `visIgraph()` for interactivity;
+   `enrichment_map()` creates EnrichMap.
+   * `"monaLisa"` - motif enrichment, extends HOMER theme; nice heatmap
+   Motif labels
+   * `"profileplyr"` - coverage heatmap using tidyverse plyr syntax
+
+
 ## 14jun2023
 
 * DONE: `reorder_igraph_nodes()`

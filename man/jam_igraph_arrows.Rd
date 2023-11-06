@@ -55,11 +55,11 @@ to the end of the line
 between the edge line and the start of the arrow head.
 }}
 
-\item{sh.lwd}{\code{numeric} line width of main edge line}
+\item{sh.lwd}{\code{numeric} line width of main segment edge line}
 
-\item{sh.col}{\code{character} color of main edge line}
+\item{sh.col}{\code{character} color of main segment edge line}
 
-\item{sh.lty}{\code{numeric} line type of main edge line}
+\item{sh.lty}{\code{numeric} line type of main segment edge line}
 
 \item{h.col, h.col.bo}{\code{character} arrow head color and arrow head border
 color, respectively.}

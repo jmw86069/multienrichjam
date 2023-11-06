@@ -159,7 +159,8 @@ Prepare MultiEnrichMap data from enrichList
 }
 \details{
 This function performs most of the work of comparing multiple
-enrichment results. It takes a list of \code{enrichResult} objects,
+enrichment results.
+This function takes a list of \code{enrichResult} objects,
 generates an overall pathway-gene incidence matrix, assembles
 a pathway-to-Pvalue matrix, creates EnrichMap \code{igraph} network
 objects, and CnetPlot \code{igraph} network objects. It also applies
