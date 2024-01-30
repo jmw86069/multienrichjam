@@ -52,11 +52,20 @@ multiEnrichMap(
 \item{enrichList}{\code{list} of \code{enrichResult} objects, whose
 names are used in subsequent derived results.}
 
-\item{geneHitList}{\code{list} of character vectors, or \code{NULL}. When
-\code{NULL} the gene hit list for each enrichment result is inferred
-from the enrichment results themselves. Therefore, if a gene
-does not appear in any enrichment result, it will not be
-used in this function.}
+\item{geneHitList}{\code{list} of character vectors, or
+\code{list} of \code{numeric} vectors whose names represent genes, or
+or \code{NULL}. When \code{NULL} the gene hit list for each enrichment
+result is inferred from the enrichment results themselves,
+however this option may incompletely represent which genes
+were statistical hits.
+Note that \code{geneHitList} and \code{geneHitIM} serve the same purpose
+and either can be supplied.}
+
+\item{geneHitIM}{\code{numeric} matrix with gene rows, enrichment columns,
+and \code{numeric} values indicating the presence and/or direction
+of change for each gene.
+Note that \code{geneHitList} and \code{geneHitIM} serve the same purpose
+and either can be supplied.}
 
 \item{colorV}{\code{character} vector of colors, length
 equal to \code{length(enrichList)},

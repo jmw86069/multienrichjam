@@ -53,14 +53,41 @@
 #' @param row_method,column_method character string of the distance method
 #'    to use for row and column clustering. The clustering is performed
 #'    by `amap::hcluster()`.
-#' @param enrich_im_weight `numeric` value between 0 and 1 indicating
-#'    the relative weight of enrichment `-log10 P-value` and gene
-#'    incidence matrix when combined prior to clustering the columns
-#'    in the resulting heatmap. When `enrich_im_weight=0` then
-#'    the data is scaled using zero weight for enrichment and therefore
-#'    only uses the gene incidence matrix; when `enrich_im_weight=1`
-#'    the gene incidence matrix is scaled using zero weight and
-#'    therefore clustering only uses the `-log10 P-value` values.
+#' @param enrich_im_weight `numeric` value between 0 and 1 (default 0.3),
+#'    the relative weight of enrichment `-log10 P-value` and overall
+#'    gene-pathway incidence matrix when clustering pathways.
+#'    * When `enrich_im_weight=0` then only the gene-pathway incidence
+#'    matrix is used for pathway clustering.
+#'    * When `enrich_im_weight=1` then only the pathway significance
+#'    (`-log10 P-value`) is used for pathway clustering.
+#'    * The default `enrich_im_weight=0.3` balances the combination
+#'    of the enrichment P-value matrix, with the gene-pathway incidence
+#'    matrix.
+#' @param gene_im_weight `numeric` value between 0 and 1 (default 0.5),
+#'    the relative weight of the `mem$geneIM` gene incidence matrix,
+#'    and overall gene-pathway incidence matrix when clustering genes.
+#'    * When `gene_im_weight=0` then only the gene-pathway incidence
+#'    matrix is used for gene clustering.
+#'    * When `gene_im_weight=1` then only the gene incidence matrix
+#'    (`mem$geneIM`) is used for gene clustering.
+#'    * The default `_im_weight=0.5` balances the gene incidence matrix
+#'    with the gene-pathway incidence matrix, giving each matrix equal weight
+#'    (since values are typically all `(0, 1)`.
+#' @param gene_annotations `character` string indicating which annotation(s)
+#'    to display alongside the gene axis of the heatmap.
+#'    By default it uses `"im", "direction"`, and `"direction"` is removed
+#'    when `mem$geneIMdirection` is not available.
+#'    * `"im"` displays the gene incidence matrix `mem$geneIM` using
+#'    categorical colors defined by `mem$colorV`.
+#'    * `"direction"` displays the gene directionality `mem$geneIMdirection`
+#'    using colors defined by `colorjam::col_div_xf(1.2)`.
+#'    * When no values are given, the gene annotation is not displayed.
+#'    * When two values are given, the annotations are displayed in the
+#'    order they are provided.
+#' @param annotation_suffix `character` vector named by values permitted
+#'    by `gene_annotations`, with optional suffix to add to the annotation
+#'    labels. For example it may be helpful to add "hit" or "dir" to
+#'    distinguish the enrichment labels.
 #' @param name character value passed to `ComplexHeatmap::Heatmap()`,
 #'    used as a label above the heatmap color legend.
 #' @param p_cutoff numeric value of the enrichment P-value cutoff,
@@ -170,6 +197,11 @@ mem_gene_path_heatmap <- function
  column_method="binary",
  enrich_im_weight=0.3,
  gene_im_weight=0.5,
+ gene_annotations=c("im",
+    "direction"),
+ annotation_suffix=c(im="hit",
+    direction="dir"),
+ simple_anno_size=grid::unit(6, "mm"),
  cluster_columns=NULL,
  cluster_rows=NULL,
  cluster_row_slices=TRUE,
@@ -214,6 +246,21 @@ mem_gene_path_heatmap <- function
 
    if (length(name) == 0) {
       name <- "enrichments\nper gene";
+   }
+
+   # gene_annotations: im, direction
+   gene_annotations <- intersect(gene_annotations,
+      c("im", "direction"));
+   if ("direction" %in% gene_annotations && !"geneIMdirection" %in% names(mem)) {
+      gene_annotations <- setdiff(gene_annotations, "direction");
+      if (verbose) {
+         jamba::printDebug("mem_gene_path_heatmap(): ",
+            c("gene_annotations='direction'",
+               " was removed because ",
+               "mem$geneIMdirection",
+               " is not available."),
+            sep="")
+      }
    }
 
    ## TODO:
@@ -484,16 +531,25 @@ mem_gene_path_heatmap <- function
       min_weight <- max(c(1, min(c(gene_weight, im_weight))));
       gene_weight <- gene_weight / min_weight;
       im_weight <- im_weight / min_weight;
+      use_gene_im <- mem$geneIM;
+      if ("geneIMdirection" %in% names(mem)) {
+         # TODO: verify what to do when geneIM has 1 and geneIMdirection is NA,
+         # which implies direction is "not known". For now we use 1 to maintain
+         # the geneIM value.
+         use_gene_im <- use_gene_im * jamba::rmNA(mem$geneIMdirection, naValue=1);
+      }
       if (im_weight == 0) {
-         row_matrix <- (mem$geneIM[genes,,drop=FALSE]) * gene_weight;
+         row_matrix <- (use_gene_im[genes, , drop=FALSE]) * gene_weight;
       } else if (gene_weight == 0) {
          row_matrix <- ((mem$memIM[genes,sets,drop=FALSE]) * im_weight); # not incidence
          # row_matrix <- ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight; # incidence
       } else {
          row_matrix <- cbind(
-            (mem$geneIM[genes,,drop=FALSE]) * gene_weight,
-            ((mem$memIM[genes,sets,drop=FALSE])) * im_weight) # do not convert to incidence
-            # ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight) # convert to incidence
+            (use_gene_im[genes, , drop=FALSE]) * gene_weight,
+            ((mem$memIM[genes, sets, drop=FALSE])) * im_weight)
+         # note: do not convert memIM to incidence
+         # below: convert to incidence matrix format
+         # ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight)
       }
       if (is.numeric(row_split)) {
          set.seed(seed);
@@ -663,16 +719,139 @@ mem_gene_path_heatmap <- function
          df=-log10(mem$enrichIM[sets,,drop=FALSE]),
          gap=grid::unit(0, "mm")
       );
-      left_annotation <- ComplexHeatmap::rowAnnotation(
-         col=col_iml1,
-         border=TRUE,
-         show_legend=show_gene_legend,
-         annotation_legend_param=gene_annotation_legend_param,
-         annotation_name_rot=column_names_rot,
-         #gp=grid::gpar(col="#00000011"), # per-cell border
-         df=mem$geneIM[genes,,drop=FALSE],
-         gap=grid::unit(0, "mm")
-      );
+      # scalable approach to annotations
+      gene_anno_list <- list();
+      gene_color_list <- list();
+      gene_param_list <- list();
+      gene_anno_gap <- numeric(0);
+      for (gene_ann in gene_annotations) {
+         if ("direction" %in% gene_ann) {
+            if (length(gene_anno_list) > 0) {
+               gene_anno_gap <- c(2, gene_anno_gap)
+            }
+            dir_matrix <- mem$geneIMdirection[genes, , drop=FALSE];
+            if ("direction" %in% names(annotation_suffix) &&
+                  any(nchar(annotation_suffix[["direction"]])) > 0) {
+               colnames(dir_matrix) <- paste(colnames(dir_matrix),
+                  rep(annotation_suffix[["direction"]],
+                     length.out=ncol(dir_matrix)));
+            }
+            gene_anno_list <- c(
+               list(direction=dir_matrix),
+               gene_anno_list)
+            gene_color_list <- c(list(
+               direction=colorjam::col_div_xf(1.2)),
+               gene_color_list);
+            gene_param_list <- c(
+               list(direction=list(color_bar="discrete",
+                  at=c(-1, 0, 1),
+                  labels=c("down", "no change", "up"),
+                  border="black")),
+               gene_param_list)
+         }
+         if ("im" %in% gene_ann) {
+            if (length(gene_anno_list) > 0) {
+               gene_anno_gap <- c(2, gene_anno_gap);
+            }
+            gene_anno_gap <- c(
+               rep(0, ncol(mem$geneIM) - 1),
+               gene_anno_gap)
+            im_matrix <- mem$geneIM[genes, , drop=FALSE];
+            if ("im" %in% names(annotation_suffix) &&
+                  any(nchar(annotation_suffix[["im"]])) > 0) {
+               colnames(im_matrix) <- paste(colnames(im_matrix),
+                  rep(annotation_suffix[["im"]],
+                     length.out=ncol(im_matrix)));
+               names(col_iml1) <- paste(names(col_iml1),
+                  rep(annotation_suffix[["im"]],
+                     length.out=length(col_iml1)));
+               names(gene_annotation_legend_param) <- paste(
+                  names(gene_annotation_legend_param),
+                  rep(annotation_suffix[["im"]],
+                     length.out=length(gene_annotation_legend_param)));
+            }
+            gene_anno_list <- c(
+               as.list(data.frame(check.names=FALSE, im_matrix)),
+               gene_anno_list)
+            gene_color_list <- c(
+               col_iml1,
+               gene_color_list);
+            gene_param_list <- c(
+               gene_annotation_legend_param,
+               gene_param_list)
+         }
+      }
+      # put it together
+      if (length(gene_anno_list) == 0) {
+         left_annotation <- NULL;
+      } else {
+         if (length(gene_anno_gap) == 0) {
+            gene_anno_gap <- 0;
+         }
+         gene_alist <- alist(
+            simple_anno_size=simple_anno_size,
+            # gap=ComplexHeatmap::ht_opt("ROW_ANNO_PADDING"),
+            col=gene_color_list,
+            gap=grid::unit(gene_anno_gap, "mm"),
+            annotation_legend_param=gene_param_list,
+            show_legend=show_gene_legend,
+            # show_annotation_name=show_gene_annotation_name,
+            annotation_name_rot=column_names_rot,
+            annotation_name_gp=grid::gpar(fontsize=column_fontsize),
+            border=TRUE
+         );
+         gene_arglist <- c(
+            gene_alist,
+            gene_anno_list);
+         left_annotation <- do.call(ComplexHeatmap::rowAnnotation,
+            gene_arglist);
+      }
+      # quick and dirty approach to annotations
+      if (FALSE) {
+      if (all(c("im", "direction") %in% gene_annotations)) {
+         left_annotation <- ComplexHeatmap::rowAnnotation(
+            col=list(col_iml1,
+               direction=col_div_xf(1.2)),
+            df=mem$geneIM[genes, , drop=FALSE],
+            direction=mem$geneIMdirection[genes, , drop=FALSE],
+            border=TRUE,
+            show_legend=show_gene_legend,
+            annotation_legend_param=c(gene_annotation_legend_param,
+               list(direction=list(color_bar="discrete",
+                  at=c(-1, 0, 1),
+                  labels=c("down", "no change", "up"),
+                  border="black"))),
+            annotation_name_rot=column_names_rot,
+            gap=grid::unit(c(2, rep(0, ncol(mem$geneIM) - 1)), "mm")
+         )
+      } else if ("im" %in% gene_annotations) {
+         left_annotation <- ComplexHeatmap::rowAnnotation(
+            col=col_iml1,
+            border=TRUE,
+            show_legend=show_gene_legend,
+            annotation_legend_param=gene_annotation_legend_param,
+            annotation_name_rot=column_names_rot,
+            #gp=grid::gpar(col="#00000011"), # per-cell border
+            df=mem$geneIM[genes, , drop=FALSE],
+            gap=grid::unit(0, "mm")
+         );
+      } else if ("direction" %in% gene_annotations) {
+         left_annotation <- ComplexHeatmap::rowAnnotation(
+            col=list(direction=col_div_xf(1.2)),
+            border=TRUE,
+            show_legend=show_gene_legend,
+            annotation_legend_param=list(
+               direction=list(color_bar="discrete",
+                  at=c(-1, 0, 1),
+                  labels=c("down", "no change", "up"),
+                  border="black")),
+            annotation_name_rot=column_names_rot,
+            #gp=grid::gpar(col="#00000011"), # per-cell border
+            direction=mem$geneIMdirection[genes, , drop=FALSE],
+            gap=grid::unit(0, "mm")
+         );
+      }
+      }
 
       hm <- tryCatch({
          jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
@@ -989,10 +1168,11 @@ mem_enrichment_heatmap <- function
  lens=3,
  cexCellnote=0.0,
  column_title=NULL,
- row_names_max_width=grid::unit(12, "cm"),
- column_names_max_height=grid::unit(12, "cm"),
+ row_names_max_width=grid::unit(30, "cm"),
+ column_names_max_height=grid::unit(30, "cm"),
  heatmap_legend_param=NULL,
  legend_height=grid::unit(6, "cm"),
+ legend_cex=1,
  apply_direction=FALSE,
  direction_cutoff=0,
  gene_count_max=NULL,
@@ -1091,6 +1271,8 @@ mem_enrichment_heatmap <- function
    if (length(heatmap_legend_param) == 0) {
       heatmap_legend_param <- list(
          border="black",
+         labels_gp=gpar(fontsize=10 * legend_cex),
+         title_gp=gpar(fontsize=10 * legend_cex),
          legend_height=legend_height);
    }
 
@@ -1191,6 +1373,8 @@ mem_enrichment_heatmap <- function
             type="points",
             pch=pch,
             ncol=pt_legend_ncol,
+            labels_gp=gpar(fontsize=10 * legend_cex),
+            title_gp=gpar(fontsize=10 * legend_cex),
             size=grid::unit(ct_tick_sizes, "mm"),
             grid_height=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
             grid_width=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
@@ -1364,7 +1548,8 @@ mem_enrichment_heatmap <- function
       attr(hm,
          "annotation_legend_list") <- anno_legends;
       if (do_plot) {
-         draw(hm,
+         ComplexHeatmap::draw(hm,
+            merge_legends=TRUE,
             annotation_legend_list=anno_legends);
          # message to use draw command
          # draw(hm, annotation_legend_list=anno_legends);
@@ -2172,7 +2357,7 @@ mem_plot_folio <- function
    # All subsequent plots depend upon mem_gene_path_heatmap()
    if (verbose) {
       jamba::printDebug("mem_plot_folio(): ",
-         "Gene-pathway heatmap");
+         "Gene-pathway heatmap (pre-emptive)");
    }
    gp_hm <- mem_gene_path_heatmap(mem,
       p_cutoff=p_cutoff,

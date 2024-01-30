@@ -1,3 +1,31 @@
+# multienrichjam 0.0.82.900
+
+* `multiEnrichMap()`
+
+   * now `geneHitIM` and `geneHitList` are equivalent as input, either
+   or both can be provided. The incidence matrix with values c(0, 1)
+   are stored as `geneIM`, and if there are any other numeric values
+   those values are stored in `geneIMdirection`.
+   It does not (yet) verify that all genes involved in enrichment are
+   also present in the `geneIM` and `geneIMdirection` matrices.
+
+* `mem_gene_path_heatmap()`
+
+   * New argument `gene_annotations` allows display of the `mem$geneIM`
+   (gene hits per enrichment) and `mem$geneIMdirection` (gene direction
+   of change) as annotations alongside the gene axis of the heatmap.
+   By default, when `mem$geneIMdirection` is available, both are shown,
+   otherwise only `geneIM` is shown. It can now be hidden.
+   * New argument `simple_anno_size` to control the size of heatmap annotations.
+   * New argument `annotation_suffix` to add optional suffix to the
+   gene annotation labels, helpful to indicate the unit. For example
+   `im` data has default suffix `"hit"`, while `direction` uses `"dir"`.
+   * When `mem$geneIMdirection` is present, it is now used by default
+   during clustering. Values are multiplied by `mem$geneIM` and any `NA`
+   values in `mem$geneIMdirection` are replaced with `1` in order to
+   maintain the `mem$geneIM` value. They are considered `unknown direction`
+   in that sense.
+
 # multienrichjam 0.0.81.900
 
 * `jam_igraph()` and `jam_igraph_arrows()`

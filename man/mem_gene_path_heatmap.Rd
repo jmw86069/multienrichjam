@@ -19,6 +19,9 @@ mem_gene_path_heatmap(
   column_method = "binary",
   enrich_im_weight = 0.3,
   gene_im_weight = 0.5,
+  gene_annotations = c("im", "direction"),
+  annotation_suffix = c(im = "hit", direction = "dir"),
+  simple_anno_size = grid::unit(6, "mm"),
   cluster_columns = NULL,
   cluster_rows = NULL,
   cluster_row_slices = TRUE,
@@ -78,14 +81,50 @@ and \code{row_cex}.}
 to use for row and column clustering. The clustering is performed
 by \code{amap::hcluster()}.}
 
-\item{enrich_im_weight}{\code{numeric} value between 0 and 1 indicating
-the relative weight of enrichment \verb{-log10 P-value} and gene
-incidence matrix when combined prior to clustering the columns
-in the resulting heatmap. When \code{enrich_im_weight=0} then
-the data is scaled using zero weight for enrichment and therefore
-only uses the gene incidence matrix; when \code{enrich_im_weight=1}
-the gene incidence matrix is scaled using zero weight and
-therefore clustering only uses the \verb{-log10 P-value} values.}
+\item{enrich_im_weight}{\code{numeric} value between 0 and 1 (default 0.3),
+the relative weight of enrichment \verb{-log10 P-value} and overall
+gene-pathway incidence matrix when clustering pathways.
+\itemize{
+\item When \code{enrich_im_weight=0} then only the gene-pathway incidence
+matrix is used for pathway clustering.
+\item When \code{enrich_im_weight=1} then only the pathway significance
+(\verb{-log10 P-value}) is used for pathway clustering.
+\item The default \code{enrich_im_weight=0.3} balances the combination
+of the enrichment P-value matrix, with the gene-pathway incidence
+matrix.
+}}
+
+\item{gene_im_weight}{\code{numeric} value between 0 and 1 (default 0.5),
+the relative weight of the \code{mem$geneIM} gene incidence matrix,
+and overall gene-pathway incidence matrix when clustering genes.
+\itemize{
+\item When \code{gene_im_weight=0} then only the gene-pathway incidence
+matrix is used for gene clustering.
+\item When \code{gene_im_weight=1} then only the gene incidence matrix
+(\code{mem$geneIM}) is used for gene clustering.
+\item The default \verb{_im_weight=0.5} balances the gene incidence matrix
+with the gene-pathway incidence matrix, giving each matrix equal weight
+(since values are typically all \verb{(0, 1)}.
+}}
+
+\item{gene_annotations}{\code{character} string indicating which annotation(s)
+to display alongside the gene axis of the heatmap.
+By default it uses \verb{"im", "direction"}, and \code{"direction"} is removed
+when \code{mem$geneIMdirection} is not available.
+\itemize{
+\item \code{"im"} displays the gene incidence matrix \code{mem$geneIM} using
+categorical colors defined by \code{mem$colorV}.
+\item \code{"direction"} displays the gene directionality \code{mem$geneIMdirection}
+using colors defined by \code{colorjam::col_div_xf(1.2)}.
+\item When no values are given, the gene annotation is not displayed.
+\item When two values are given, the annotations are displayed in the
+order they are provided.
+}}
+
+\item{annotation_suffix}{\code{character} vector named by values permitted
+by \code{gene_annotations}, with optional suffix to add to the annotation
+labels. For example it may be helpful to add "hit" or "dir" to
+distinguish the enrichment labels.}
 
 \item{name}{character value passed to \code{ComplexHeatmap::Heatmap()},
 used as a label above the heatmap color legend.}

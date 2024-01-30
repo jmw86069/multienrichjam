@@ -1,5 +1,40 @@
 # TODO
 
+## 30jan2024
+
+* `multiEnrichMap()`
+
+   * DONE. `geneHitIM` and `geneHitList` are not behaving as intended, nor
+   consistently. They should be interchangeable and equivalent.
+   When `geneHitIM` is supplied, it populates `geneIMdirection` but
+   not `geneIM`.
+   When `geneHitList` is supplied, it populates `geneIM` but not
+   `geneIMdirection`.
+   When either are supplied, they should populate the relevant row
+   in `geneIM` and `geneIMdirection`.
+
+## 19jan2024
+
+* Currently it is cumbersome to edit pathway labels.
+It could be done for the `mem` object itself, however the adjustment
+might need to be different for different plot outputs: heatmap may not
+work well using word-wrap, while Cnet plots might work best with word-wrap.
+Publication figures might need an abbreviated label to save plot space.
+
+* `mem_plot_folio()` 
+
+   * Consider argument to enable custom adjustment of pathway labels.
+
+* `mem_gene_path_heatmap()`
+
+   * DONE. Consider argument `gene_annotations` to enable `"geneIM"`,
+   `"geneIMdirection"`.
+   * DONE. When `mem$geneIMdirection` is present, include directionality
+   in the gene clustering step.
+   * Consider option to display pathway z-score (`mem$pathwayIMdirection`)
+   similar to display of `mem$geneIMdirection`.
+   New argument `pathway_annotations`.
+
 ## 06nov2023
 
 * DONE. Debug issue when rendering edge arrow heads, they look wonky.
