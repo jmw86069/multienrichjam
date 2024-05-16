@@ -880,6 +880,11 @@ multiEnrichMap <- function
 
    #####################################################################
    ## Incidence matrix of genes and pathways
+   if (verbose) {
+      jamba::printDebug("multiEnrichMap(): ",
+         "preparing memIM");
+   }
+   # memIM <- venndir::list2im_opt(do_sparse=FALSE,
    memIM <- list2im(
       keepCounts=TRUE,
       strsplit(
@@ -901,10 +906,12 @@ multiEnrichMap <- function
       msigdbGmtT=msigdbGmtT,
       doPlot=FALSE,
       n=nEM,
-      keyColname="ID",
+      # keyColname="ID",
+      keyColname=keyColname,
       nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
       vertex.label.cex=0.5,
-      verbose=(verbose - 1) > 0);
+      verbose=verbose)
+      # verbose=(verbose - 1) > 0);
    ## jamba::normScale(..., low=0) scales range 0 to maximum, into 0 to 1
    ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
    igraph::V(enrichEM)$size_orig <- igraph::V(enrichEM)$size;
@@ -1573,6 +1580,7 @@ enrichMapJam <- function
       ## Jaccard coefficient is given as output from
       ## 1-dist(method="binary")
       wIM <- list2im(geneSets);
+      # wIM <- venndir::list2im_opt(geneSets, do_sparse=FALSE);
       w <- 1-as.matrix(dist(t(wIM), method="binary"));
       ## overlap counts, use sign() to count each gene only once
       wct <- t(sign(wIM)) %*% sign(wIM);

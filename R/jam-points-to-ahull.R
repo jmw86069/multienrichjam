@@ -144,12 +144,13 @@ make_point_hull <- function
          jamba::printDebug("make_point_hull(): ",
             "Expanding input points to ", nrow(x)*3, " rows.");
       }
+      xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
       x <- jamba::rbindList(list(
          x,
-         x + rnorm(prod(dim(x))),
-         x + rnorm(prod(dim(x)))
+         x + rnorm(prod(dim(x))) * xy_max / 100,
+         x + rnorm(prod(dim(x))) * xy_max / 100
       ));
-      x <- head(x, 3);
+      # x <- head(x, 4);
    }
 
    set.seed(seed);
@@ -164,7 +165,7 @@ make_point_hull <- function
    }
 
    # custom internal function
-   get_hull_data <- function
+   get_hull_data_OLD <- function
    (x,
     verbose=FALSE,
     hull_method="alphahull")
@@ -341,6 +342,9 @@ make_point_hull <- function
       mxys <- tryCatch({
          get_hull_data(x,
             verbose=(verbose > 1),
+            buffer=buffer,
+            alpha=alpha,
+            expand=expand,
             hull_method=hull_method)
       }, error=function(e){
          if (verbose) {
@@ -368,6 +372,9 @@ make_point_hull <- function
          rbind(mxys1, head(mxys1, 1));
       }, error=function(e){
          print(e)
+         print("mxys:");print(mxys);
+         print("shape:");print(shape);
+         print("x:");print(x);
          mxys;
       });
    }
@@ -447,3 +454,184 @@ make_point_hull <- function
    return(invisible(mxys))
 }
 
+#' Get data for alpha hull (internal)
+#'
+#' @param x `numeric` matrix with x,y coordinates
+#' @param verbose `logical` indicating whether to print verbose output
+#' @param hull_method `character` string with the preferred hull method.
+#' @param alpha `numeric` passed to `alphahull:ashape()`
+#' @param expand `numeric` used to define `alpha` based upon coordinate range.
+#' @param ... additional arguments are ignored.
+#'
+get_hull_data <- function
+(x,
+ verbose=FALSE,
+ hull_method="alphahull",
+ buffer=NULL,
+ alpha=NULL,
+ expand=0.1,
+ ...)
+{
+   hiA <- list(alpha=NULL);
+   if ("alphahull" %in% hull_method) {
+      hiA <- alphahull::ashape(x, alpha=alpha)
+      if (verbose) {
+         jamba::printDebug("get_hull_data(): ",
+            "sdim(hiA):");
+         print(jamba::sdim(hiA));
+      }
+      hiAedges <- data.frame(hiA$edges);
+      if (verbose) {
+         jamba::printDebug("get_hull_data(): ",
+            "alpha: ", hiA$alpha);
+      }
+
+      #hiAedges$length <- sqrt((hiAedges$x1 - hiAedges$x2)^2 + (hiAedges$y1 - hiAedges$y2)^2);
+      hiAedges$coord <- paste0(round(hiAedges$x1*10),
+         "_",
+         round(hiAedges$y1*10));
+      hiAedges$coord2 <- paste0(round(hiAedges$x2*10),
+         "_",
+         round(hiAedges$y2*10));
+      hiAedges2 <- jamba::rbindList(lapply(seq_len(nrow(hiAedges)), function(irow){
+         ix <- jamba::mixedSortDF(data.frame(x=c(hiAedges$x1[irow], hiAedges$x2[irow]),
+            y=c(hiAedges$y1[irow], hiAedges$y2[irow])))
+         data.frame(x1=ix$x[1], x2=ix$x[2],
+            y1=ix$y[1], y2=ix$y[2])
+      }))
+      coordu <- unique(c(hiAedges$coord, hiAedges$coord2));
+      #match(hiAedges$coord, hiAedges$coord2)
+      #subset(hiAedges, coord %in%names(tcount(hiAedges$coord, 2)))
+      hiAedges2 <- jamba::mixedSortDF(hiAedges, byCols=c("x1", "y1", "x2", "y2"));
+      if (1 == 2) {
+         plot(hiAedges2[,c("x1", "y1")], pch=c(0:9, LETTERS))
+         plot(
+            x=hiAedges2$x1+c(-3, 3),
+            y=hiAedges2$y1+c(-3, 3), pch="1")
+         points(
+            x=hiAedges2$x2+c(-3, 3),
+            y=hiAedges2$y2+c(3, -3), pch="2", col="red")
+         segments(
+            x0=hiAedges2$x1+c(-3, 3),
+            y0=hiAedges2$y1+c(-3, 3),
+            x1=hiAedges2$x2+c(-3, 3),
+            y1=hiAedges2$y2+c(3, -3),
+            lwd=c(2, 4),
+            col=colorjam::rainbowJam(8))
+      }
+
+      # make a properly connected polygon
+      icurr <- 1;
+      ixy <- hiAedges[icurr, c("x1", "y1")]
+      i2start <- hiAedges$coord[icurr]
+      i2end <- hiAedges$coord2[icurr]
+      for (i1 in seq_len(nrow(hiAedges))) {
+         i3 <- head(
+            which((hiAedges$coord %in% i2end | hiAedges$coord2 %in% i2end) &
+                  seq_along(hiAedges$coord) != icurr),
+            1);
+         #printDebug("icurr:", icurr, ", i3:", i3);
+         if (length(i3) == 0) {
+            next;
+         }
+         if (hiAedges$coord[i3] == i2end) {
+            ixy <- rbind(ixy, hiAedges[i3, c("x1", "y1")])
+            i2start <- hiAedges$coord[i3]
+            i2end <- hiAedges$coord2[i3]
+         } else {
+            ixy <- rbind(ixy,
+               jamba::renameColumn(hiAedges[i3, c("x2", "y2")],
+                  from=c("x2", "y2"), to=c("x1", "y1")))
+            i2start <- hiAedges$coord2[i3]
+            i2end <- hiAedges$coord[i3]
+         }
+         icurr <- i3;
+      }
+   } else if ("igraph" %in% hull_method) {
+      ixy1 <- igraph:::convex_hull(x)
+      ixy <- rbind(ixy1$rescoords,
+         ixy1$rescoords[1, , drop=FALSE]);
+   } else if ("sf" %in% hull_method) {
+      ixy <- as(sf::st_convex_hull(sf::st_multipoint(x)), "matrix");
+   } else {
+      # chull
+      xy_index <- grDevices::chull(x)
+      ixy <- x[c(xy_index, head(xy_index, 1)), , drop=FALSE];
+   }
+   # # convert to sf polygon
+   if (verbose) {
+      jamba::printDebug("get_hull_data(): ",
+         "head(ixy):");
+      print(head(ixy));
+      jamba::printDebug("get_hull_data(): ",
+         "class(ixy):",
+         class(ixy));
+   }
+   hull_sf <- sf::st_polygon(
+      list(as.matrix(ixy)))
+   if (verbose) {
+      jamba::printDebug("get_hull_data(): ",
+         "class(hull_sf):",
+         class(hull_sf));
+   }
+
+   # expand polygon using sp buffer
+   xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
+   if (length(buffer) == 0) {
+      buffer <- xy_max * expand;
+   }
+   # hull_sp_exp <- venndir::get_sp_buffer(hull_sp,
+   #    sp_buffer=buffer,
+   #    relative_size=FALSE)
+   # sf buffer
+   hull_sf_exp <- sf::st_buffer(x=hull_sf,
+      dist=buffer)
+   if (verbose) {
+      jamba::printDebug("get_hull_data(): ",
+         "class(hull_sf_exp):",
+         class(hull_sf_exp));
+   }
+   # extract matrix data
+   mxys <- as(hull_sf_exp, "matrix");
+   if (verbose) {
+      jamba::printDebug("get_hull_data(): ",
+         "class(mxys):",
+         class(mxys));
+   }
+
+   # check if all points are inside the polygon(s)
+   sfpt <- sf::st_multipoint(x);
+   if (verbose) {
+      jamba::printDebug("get_hull_data(): ",
+         "class(sfpt):",
+         class(sfpt));
+   }
+   pts_inpoly <- sf::st_contains(
+      x=sf::st_polygon(list(mxys)),
+      y=sfpt,
+      sparse=FALSE);
+   if (verbose) {
+      jamba::printDebug("get_hull_data(): ",
+         "class(pts_inpoly):",
+         class(pts_inpoly));
+   }
+
+   # if points are not all inside the polygon re-run with higher alpha
+   if (verbose) {
+      jamba::printDebug("pts_inpoly:",
+         pts_inpoly, fgText=c("darkorange2", "dodgerblue"));
+   }
+   # if (!all(apply(pts_inpoly, 1, max, na.rm=TRUE) > 0)) {
+   if (!all(pts_inpoly)) {
+      hull_failed <- TRUE;
+      if (verbose) {
+         jamba::printDebug("Points were not inside the polygon");
+      }
+      mxys <- NULL;
+   }
+   if (length(mxys) > 0) {
+      attr(mxys, "alpha") <- hiA$alpha;
+      # attr(mxys, "sf") <- hull_sf_exp;
+   }
+   return(mxys);
+}

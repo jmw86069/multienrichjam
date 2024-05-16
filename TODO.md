@@ -1,8 +1,146 @@
 # TODO
 
-## 30jan2024
+## 10may2024
+
+* `igraph` adjustment scripting language?
+
+   * Combines:
+   
+      * `nudge_igraph_nodes()`: Fuscobac::x:0.01:y:-0.02
+      * `adjust_cnet_nodeset()`: nodeset:A::degrees:45:x0.1:y-0.05:percent_spacing:7
+      * `apply_nodeset_spacing()`: nodeset:B::percent_spacing:7
+
+* `adjust_cnet_nodeset()`, `apply_nodeset_spacing()`
+
+   * Debug issue where `label.dist` and `label.degrees` are defined for
+   subset of nodes, leaving other node attributes `NA` - which causes an
+   error in `jam_igraph()`. Occurs when only one nodeset is adjusted.
+   * Debug issue where `percent_spacing` fails in `adjust_cnet_nodeset()`
+   when supplying custom nodegroups from community detection, and are
+   not proper Cnet nodesets.
+
+
+## 03may2024
+
+* `mem_gene_path_heatmap()` - lower priority but could be useful
+
+   * Consider interactive view (plotly? InteractiveComplexHeatmap?)
+   to enable hover text with the enrichment P-value, gene count, z-score.
+   Could be particularly useful with directional output.
+   * Consider optionally labeling the significant dots?
+   
+      * P-value
+      * z-score
+      * number of genes.
+
+* `mem_legend()` - lower priority, eventually necessary
+
+   * Consider using `ComplexHeatmap::Legend()` for consistency with other
+   legends, and to allow combining multiple legends together.
+
+* S4 object `mem` (or `MEM`?) - higher priority - sooner the better
+
+   * streamlined data content:
+   
+      * geneIM (im, direction, colors): `matrix` objects
+      * enrichIM, (pvalues, direction, geneCount, colors): `matrix` objects
+      * memIM: `matrix` object
+      * enrichList: `list` of `enrichResult` objects
+      * colorV: `character` vector of colors per enrichment
+      * colnames: `character` column assignment (consider omitting to enforce
+      standardized colnames)
+      
+      * omit: `multiEnrichMap` - in favor of `mem_plot_folio()`, `memIM2cnet()`
+      * omit: `multiCnetPlot` - in favor of `mem_multienrichplot()`
+      
+      * optional: store output from `mem_plot_folio()` to keep a series
+      of plots coordinated, using the same options: `pathway_column_split`,
+      `gene_row_split`, `enrich_im_weight`, `gene_im_weight`,
+      `column_method`, `row_method` (rename `column_method` to `pathway_method`?)
+      * optional `enrichment_hm`: `Heatmap` output from
+      `mem_enrichment_heatmap()`?
+   
+   * methods:
+   
+      * `mem_plot_folio()`, supporting functions: `mem_gene_path_heatmap()`,
+      `mem_enrichment_heatmap()`, `mem2cnet()`
+      * `enrichList()` - accessor for `mem@enrichList`
+      * `mem2dfs()` - create series of `data.frame` summarizing content,
+      intended for export to Excel xlsx.
+      * `mem2xlsx()` - direct export to Excel xlsx, calling `mem2dfs()`.
+
+   * behaviors
+
+      * `multiEnrichMap()` creates `MEM` object instead of `list` by default
+      * `mem_gene_path_heatmap()`, `mem_enrichment_heatmap()` could also
+      store/retrieve parameters from the `mem` input object.
+      * `mem_plot_folio()` optionally stores plots into `mem`
+      to maintian consistent plot attributes
+
+
+* `mem_plot_folio()`
+
+   * argument `do_which` - consider accepting `character` string terms,
+   e.g. `"enrichment_hm"`, `"gp_hm"`, `"cnet_collapse_set"`
+   * Consider new argument `clusters_mem` for these uses:
+   
+      * allow user-defined pathway clusters
+      * allow user-defined pathway subsets (missing pathways are dropped)
+
+* `collapse_mem_clusters()`
+
+   * When provided `mpf$clusters_mem` as `list` it may result in singlet
+   genes not connected to any pathways - these should (by default) be removed.
+
+* `jam_igraph()` - debug
+
+   * Apparently sometimes with singlet gene nodes it produces an error:
+   `"Error in FUN(X[[i]], ...) : !anyNA(x) is not TRUE"`
+   traceback pointed to this line:
+   `sf::st_polygon(list(polym)) at jamenrich-igraphshapes.R#1635`
+
+
+## 12mar2024
+
+* `mem_gene_path_heatmap()`
+
+   * Consider option to place the caption elsewhere.
+   
+      * Problem: The caption sometimes covers part of the color legend
+      in the bottom-right corner.
+      * Another workaround might be to customize the legend layout,
+      so it is not blocked by the caption.
+
+* `mem_plot_folio()`, `mem_gene_path_heatmap()`
+
+   * Consider a workflow to merge pathway clusters, to allow flexibility
+   in how pathway clusters are defined.
+   
+      * Problem: Pathway clusters are sometimes defined inconsistently,
+      where clusters `"A"` and `"B"` might be nearly identical.
+      * Problem: It might be visually apparent how to sub-divide pathways,
+      the user may need a mechanism to define pathways to specific clusters.
+
+## 04mar2024
+
+* `mem_gene_path_heatmap()`
+
+   * consider adding column `top_annotation` with pathway directionality,
+   equivalent to the `left_annotation` used for gene directionality.
+   * Add row and column annotation padding by default, to help distinguish
+   the central heatmap from the left and top annotations.
 
 * `multiEnrichMap()`
+
+   * when supplied with `geneHitIM` or `geneHitList`, calculate the
+   `z-score` using the IPA formula:
+   `z <- (N_genes_up - N_genes_down) / sqrt(N_genes_up + N_genes_down)`
+   as described [https://doi.org/10.1093/bioinformatics/btt703],
+   and in their FAQ: [IPA FAQ - Statistical Calculations](https://qiagen.my.salesforce-sites.com/KnowledgeBase/KnowledgeNavigatorPage?id=kA41i000000L5nQCAS&categoryName=BioX)
+
+## 30jan2024
+
+* DONE. `multiEnrichMap()`
 
    * DONE. `geneHitIM` and `geneHitList` are not behaving as intended, nor
    consistently. They should be interchangeable and equivalent.
@@ -31,8 +169,8 @@ Publication figures might need an abbreviated label to save plot space.
    `"geneIMdirection"`.
    * DONE. When `mem$geneIMdirection` is present, include directionality
    in the gene clustering step.
-   * Consider option to display pathway z-score (`mem$pathwayIMdirection`)
-   similar to display of `mem$geneIMdirection`.
+   * REWRITTEN ABOVE. Consider option to display pathway z-score
+   (`mem$pathwayIMdirection`) similar to display of `mem$geneIMdirection`.
    New argument `pathway_annotations`.
 
 ## 06nov2023

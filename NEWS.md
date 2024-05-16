@@ -1,3 +1,39 @@
+# multienrichjam 0.0.83.900
+
+## Bug fixes
+
+* `make_point_hull()`
+
+   * One of the more obscure bugs, caused by creating a point hull with
+   only two points, where the two points apparently resided at exactly the
+   wrong angle. Only apparently occurred when the two points were within 3
+   degrees of some "evil angle" - resolved when points were rotated
+   more than 3 degrees from this "evil angle".
+   Typically, a point hull is not possible with two points, since it does
+   not create a polygon, so the workaround was to add a third point (recycling
+   the first point) adding amount of noise to create a polygon. Except for
+   some reason even `rnorm()` was not adding *enough* or the right kind
+   of noise. No random value should ever exactly, reproducible, reside
+   on the line. There must be some rounding that takes place in an
+   internal function. Nonetheless, the "fix" for this purpose was
+   to add more than one dummy point.
+
+* `list2im()`
+
+   * Another bizarre "bug" was caused by some unconfirmed R function
+   that appears to change `options("warn")` to `options("warn"=2)`
+   - and then does not change it back! Probably related to RMarkdown
+   knitting, since it seems to occur when the knitting is interrupted.
+   To be fair, warnings should be resolved in Jam packages, that's true.
+   But they should not impose an error.
+   * Filed under: "Things that worked just two minutes ago, but now
+   cause an error for no reason."
+   * Added workaround for random but painful issue when `options("warn"=2)`
+   which forces warnings to errors. No idea what made that setting, but
+   it caused `list2im()` to fail due to implicit conversion of `empty`
+   to whatever datatype was defined in the input matrix. In future this
+   function may change, but for now this change keeps it working.
+
 # multienrichjam 0.0.82.900
 
 * `multiEnrichMap()`

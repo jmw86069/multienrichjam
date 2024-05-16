@@ -412,6 +412,14 @@ im2list <- function
    # the reciprocal of list2im()
    x_rows <- rownames(x);
    x_cols <- colnames(x);
+
+   # vicious bug when options("warn"=2) forcing warnings into errors
+   # For now, force to max warn=1.
+   # Who would do such a thing.
+   if (getOption("warn", -1) > 1) {
+      options("warn", 1)
+   }
+
    l <- lapply(jamba::nameVector(x_cols), function(i){
       i_empty <- as(empty, class(x[,i]));
       has_value <- (!x[,i] %in% i_empty);
