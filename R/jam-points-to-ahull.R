@@ -97,7 +97,7 @@ make_point_hull <- function
  border="#FF0000FF",
  lwd=2,
  lty=1,
- max_iterations=10,
+ max_iterations=100,
  do_plot=FALSE,
  add=FALSE,
  hull_method=c("default",
@@ -139,18 +139,23 @@ make_point_hull <- function
    # ensure at least 3 points
    set.seed(seed);
    x <- unique(x);
+   npoints <- nrow(x);
    if (nrow(unique(x)) < 3) {
-      if (verbose) {
-         jamba::printDebug("make_point_hull(): ",
-            "Expanding input points to ", nrow(x)*3, " rows.");
-      }
       xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
       x <- jamba::rbindList(list(
          x,
          x + rnorm(prod(dim(x))) * xy_max / 100,
          x + rnorm(prod(dim(x))) * xy_max / 100
       ));
+      ## Ensure polygon is "closed"?
+      # x <- rbind(x, x[1, , drop=FALSE])
+      ## Take only the first N rows?
       # x <- head(x, 4);
+      if (verbose) {
+         jamba::printDebug("make_point_hull(): ",
+            "Expanding input points to ", nrow(x), " rows.");
+         print(x);
+      }
    }
 
    set.seed(seed);
@@ -338,6 +343,10 @@ make_point_hull <- function
 
    #### iterate attempts with increasing alpha
    hull_failed <- FALSE;
+   if (verbose) {
+      jamba::printDebug("make_point_hull(): ",
+         "Iterating alpha values up to ", max_iterations, " times.");
+   }
    for (iteration in seq_len(max_iterations)) {
       mxys <- tryCatch({
          get_hull_data(x,
@@ -345,6 +354,7 @@ make_point_hull <- function
             buffer=buffer,
             alpha=alpha,
             expand=expand,
+            npoints=npoints,
             hull_method=hull_method)
       }, error=function(e){
          if (verbose) {
@@ -355,7 +365,10 @@ make_point_hull <- function
       if (length(mxys) > 0 && nrow(mxys) >= 3) {
          break;
       }
-      alpha <- alpha * 1.5;
+      alpha <- alpha * 1.2;
+   }
+   if (length(mxys) == 0 || nrow(mxys) < 3) {
+      return(NULL)
    }
    if (length(mxys) > 0) {
       attr(mxys, "iteration") <- iteration;
@@ -474,7 +487,16 @@ get_hull_data <- function
 {
    hiA <- list(alpha=NULL);
    if ("alphahull" %in% hull_method) {
-      hiA <- alphahull::ashape(x, alpha=alpha)
+      if (verbose) {
+         jamba::printDebug("get_hull_data(): ",
+            "hull_method: ", hull_method);
+      }
+      hiA <- alphahull::ashape(x,
+         alpha=alpha)
+      if (nrow(hiA$edges) <= 2) {
+         # 2 or 0 edges means the hull is not a true polygon hull
+         return(NULL)
+      }
       if (verbose) {
          jamba::printDebug("get_hull_data(): ",
             "sdim(hiA):");
@@ -493,59 +515,139 @@ get_hull_data <- function
       hiAedges$coord2 <- paste0(round(hiAedges$x2*10),
          "_",
          round(hiAedges$y2*10));
-      hiAedges2 <- jamba::rbindList(lapply(seq_len(nrow(hiAedges)), function(irow){
-         ix <- jamba::mixedSortDF(data.frame(x=c(hiAedges$x1[irow], hiAedges$x2[irow]),
-            y=c(hiAedges$y1[irow], hiAedges$y2[irow])))
-         data.frame(x1=ix$x[1], x2=ix$x[2],
-            y1=ix$y[1], y2=ix$y[2])
-      }))
-      coordu <- unique(c(hiAedges$coord, hiAedges$coord2));
-      #match(hiAedges$coord, hiAedges$coord2)
-      #subset(hiAedges, coord %in%names(tcount(hiAedges$coord, 2)))
-      hiAedges2 <- jamba::mixedSortDF(hiAedges, byCols=c("x1", "y1", "x2", "y2"));
-      if (1 == 2) {
-         plot(hiAedges2[,c("x1", "y1")], pch=c(0:9, LETTERS))
-         plot(
-            x=hiAedges2$x1+c(-3, 3),
-            y=hiAedges2$y1+c(-3, 3), pch="1")
-         points(
-            x=hiAedges2$x2+c(-3, 3),
-            y=hiAedges2$y2+c(3, -3), pch="2", col="red")
-         segments(
-            x0=hiAedges2$x1+c(-3, 3),
-            y0=hiAedges2$y1+c(-3, 3),
-            x1=hiAedges2$x2+c(-3, 3),
-            y1=hiAedges2$y2+c(3, -3),
-            lwd=c(2, 4),
-            col=colorjam::rainbowJam(8))
+      # assemble edges into polygon coordinates
+      # - Note: There could be a better method, in hindsight not sure
+      #   how this approach even works, haha.
+      # - Edges are supplied as ind1, ind2, in apparently random order.
+      #   Each unique index value can be assigned its corresponding coordinate
+      #   Then the ind1,ind2 can be traversed in order.
+      #   Example data:
+      #   ind1 ind2
+      #   1    2
+      #   3    1
+      #   3    2
+      #   Define 1-to-2, then 2-to-3, then 3-to-1.
+      #   Note each point must appear exactly twice.
+      #
+      #   This situation defines a "star" shape, one central point with spokes.
+      #   (Should probably fail a validation check.)
+      #   ind1 ind2
+      #   4    2
+      #   4    1
+      #   3    4
+      ind1 <- hiAedges$ind1;
+      ind2 <- hiAedges$ind2;
+      if (!all(table(c(ind1, ind2)) == 2)) {
+         # points are not duplicated meaning hull is incorrect
+         return(NULL)
       }
-
-      # make a properly connected polygon
-      icurr <- 1;
-      ixy <- hiAedges[icurr, c("x1", "y1")]
-      i2start <- hiAedges$coord[icurr]
-      i2end <- hiAedges$coord2[icurr]
-      for (i1 in seq_len(nrow(hiAedges))) {
-         i3 <- head(
-            which((hiAedges$coord %in% i2end | hiAedges$coord2 %in% i2end) &
-                  seq_along(hiAedges$coord) != icurr),
-            1);
-         #printDebug("icurr:", icurr, ", i3:", i3);
-         if (length(i3) == 0) {
-            next;
-         }
-         if (hiAedges$coord[i3] == i2end) {
-            ixy <- rbind(ixy, hiAedges[i3, c("x1", "y1")])
-            i2start <- hiAedges$coord[i3]
-            i2end <- hiAedges$coord2[i3]
+      # Insert validation that hull is one full piece?
+      #
+      if (verbose) {
+         jamba::printDebug("get_hull_data(): ",
+            "hiAedges:");print(hiAedges);# debug
+      }
+      pointlist <- list();
+      for (irow in seq_len(nrow(hiAedges))) {
+         ind1i <- hiAedges$ind1[[irow]];
+         ind2i <- hiAedges$ind2[[irow]];
+         pointlist[[as.character(ind1i)]] <- c(hiAedges$x1[irow], hiAedges$y1[irow])
+         pointlist[[as.character(ind2i)]] <- c(hiAedges$x2[irow], hiAedges$y2[irow])
+      }
+      # iterate each edge, convert to list of coordinates
+      coordlist <- list()
+      used_rows <- NULL;
+      for (irow in seq_len(nrow(hiAedges))) {
+         if (irow == 1) {
+            ind1i <- hiAedges$ind1[[irow]];
+            ind2i <- hiAedges$ind2[[irow]];
+            # jamba::printDebug("row: ", 1, ", ind1i:", ind1i, ", ind2i:", ind2i);
+            coordlist <- c(pointlist[as.character(ind1i)], pointlist[as.character(ind2i)])
+            nextrow <- ind2i;
+            used_rows <- c(used_rows, 1);
          } else {
-            ixy <- rbind(ixy,
-               jamba::renameColumn(hiAedges[i3, c("x2", "y2")],
-                  from=c("x2", "y2"), to=c("x1", "y1")))
-            i2start <- hiAedges$coord2[i3]
-            i2end <- hiAedges$coord[i3]
+            match1 <- setdiff(which(hiAedges$ind1 %in% nextrow), used_rows)
+            match2 <- setdiff(which(hiAedges$ind2 %in% nextrow), used_rows)
+            if (length(match1) == 1) {
+               used_rows <- c(used_rows, match1);
+               ind1i <- hiAedges$ind1[[match1]];
+               ind2i <- hiAedges$ind2[[match1]];
+               # jamba::printDebug("match1: ", match1, ", ind1i:", ind1i, ", ind2i:", ind2i);
+               coordlist <- c(coordlist, pointlist[as.character(ind2i)])
+               nextrow <- ind2i
+            } else if (length(match2) == 1) {
+               used_rows <- c(used_rows, match2);
+               ind1i <- hiAedges$ind2[[match2]];
+               ind2i <- hiAedges$ind1[[match2]];
+               # jamba::printDebug("match2: ", match2, ", ind1i:", ind1i, ", ind2i:", ind2i);
+               coordlist <- c(coordlist, pointlist[as.character(ind2i)])
+               nextrow <- ind2i
+            } else {
+               if (verbose) {
+                  jamba::printDebug("get_hull_data(): ",
+                     "Hull had disconnected polygons.");
+               }
+               break;
+            }
          }
-         icurr <- i3;
+      }
+      ixy <- do.call(rbind, coordlist)
+      if (FALSE) {
+         hiAedges2 <- jamba::rbindList(lapply(seq_len(nrow(hiAedges)), function(irow){
+            ix <- jamba::mixedSortDF(data.frame(
+               x=c(hiAedges$x1[irow], hiAedges$x2[irow]),
+               y=c(hiAedges$y1[irow], hiAedges$y2[irow])))
+            data.frame(x1=ix$x[1], x2=ix$x[2],
+               y1=ix$y[1], y2=ix$y[2])
+         }))
+         coordu <- unique(c(hiAedges$coord, hiAedges$coord2));
+         #match(hiAedges$coord, hiAedges$coord2)
+         #subset(hiAedges, coord %in%names(tcount(hiAedges$coord, 2)))
+         hiAedges2 <- jamba::mixedSortDF(hiAedges, byCols=c("x1", "y1", "x2", "y2"));
+         if (1 == 2) {
+            plot(hiAedges2[,c("x1", "y1")], pch=c(0:9, LETTERS))
+            plot(
+               x=hiAedges2$x1+c(-3, 3),
+               y=hiAedges2$y1+c(-3, 3), pch="1")
+            points(
+               x=hiAedges2$x2+c(-3, 3),
+               y=hiAedges2$y2+c(3, -3), pch="2", col="red")
+            segments(
+               x0=hiAedges2$x1+c(-3, 3),
+               y0=hiAedges2$y1+c(-3, 3),
+               x1=hiAedges2$x2+c(-3, 3),
+               y1=hiAedges2$y2+c(3, -3),
+               lwd=c(2, 4),
+               col=colorjam::rainbowJam(8))
+         }
+
+         # make a properly connected polygon
+         icurr <- 1;
+         ixy <- hiAedges[icurr, c("x1", "y1")]
+         i2start <- hiAedges$coord[icurr]
+         i2end <- hiAedges$coord2[icurr]
+         for (i1 in seq_len(nrow(hiAedges))) {
+            i3 <- head(
+               which((hiAedges$coord %in% i2end | hiAedges$coord2 %in% i2end) &
+                     seq_along(hiAedges$coord) != icurr),
+               1);
+            #printDebug("icurr:", icurr, ", i3:", i3);
+            if (length(i3) == 0) {
+               next;
+            }
+            if (hiAedges$coord[i3] == i2end) {
+               ixy <- rbind(ixy, hiAedges[i3, c("x1", "y1")])
+               i2start <- hiAedges$coord[i3]
+               i2end <- hiAedges$coord2[i3]
+            } else {
+               ixy <- rbind(ixy,
+                  jamba::renameColumn(hiAedges[i3, c("x2", "y2")],
+                     from=c("x2", "y2"), to=c("x1", "y1")))
+               i2start <- hiAedges$coord2[i3]
+               i2end <- hiAedges$coord[i3]
+            }
+            icurr <- i3;
+         }
       }
    } else if ("igraph" %in% hull_method) {
       ixy1 <- igraph:::convex_hull(x)
@@ -561,8 +663,8 @@ get_hull_data <- function
    # # convert to sf polygon
    if (verbose) {
       jamba::printDebug("get_hull_data(): ",
-         "head(ixy):");
-      print(head(ixy));
+         "head(ixy, 20):");
+      print(head(ixy, 20));
       jamba::printDebug("get_hull_data(): ",
          "class(ixy):",
          class(ixy));

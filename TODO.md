@@ -1,5 +1,13 @@
 # TODO
 
+## 16may2024
+
+* edge bundling
+
+   * Between two communities currently calculates the "central path" between
+   the group centroids. Consider calculating the "central path" between
+   the points with edges between the two communities.
+
 ## 10may2024
 
 * `igraph` adjustment scripting language?

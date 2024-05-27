@@ -1,3 +1,27 @@
+# multienrichjam 0.0.84.900
+
+## Bug fixes
+
+* `make_point_hull()`
+
+   * Finally "fixed" the full bug, sometimes causing point hull to fail.
+   Sometimes `alphahull::ahull()` would return weird results with small
+   `alpha` values: individual points, segments, or multiple disconnected
+   polygons.
+   * Now `make_point_hull()` calls `get_hull_data()` which performs additional
+   validation checks: Confirms there is actually a polygon; confirms each
+   point in the `edges` are used exactly twice; confirms that all edge points
+   are used in a continuous polygon, not two separate polygons.
+   * The default value for `max_iterations=100` is vastly increased, since
+   many of these weird cases were caused by having coordinate ranges
+   orders of magnitude higher than `alpha=0.1` and so 10 iterations would
+   not be enough to avoid these weird situations.
+   * Also when `make_point_hull()` does not find a suitable solution after
+   `max_iterations` tries, it returns `NULL` instead of proceeding to
+   process the inadequate/empty polygon coordinate data. Hopefully this
+   will allow weird cases to be skipped rather than throwing an obscure
+   error.
+
 # multienrichjam 0.0.83.900
 
 ## Bug fixes

@@ -14,7 +14,7 @@ make_point_hull(
   border = "#FF0000FF",
   lwd = 2,
   lty = 1,
-  max_iterations = 10,
+  max_iterations = 100,
   do_plot = FALSE,
   add = FALSE,
   hull_method = c("default", "alphahull", "igraph", "sf", "chull"),
