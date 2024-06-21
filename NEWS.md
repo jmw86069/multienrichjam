@@ -1,3 +1,26 @@
+# multienrichjam 0.0.85.900
+
+## Changes to existing functions
+
+* `importIPAenrichment()`
+
+   * New argument `revert_ipa_xref=TRUE` changes the default behavior
+   (for the better) such that the resulting gene symbols associated
+   with IPA pathway enrichment will match the input gene symbols,
+   instead of using the customized IPA symbols.
+   
+      * The situation does not have an ideal solution. Ultimately, IPA
+      provides results which do not completely represent the input data.
+      When two genes are combined to one entity by IPA, they only retain
+      one gene symbol in `"Analysis Ready Molecules"`, and so there
+      is no recorded association of all entities which were combined.
+      Sometimes the combined symbol is `"HSPA1A/HSPA1B"` which can be
+      separated... but they do not indicate which symbol(s) the user
+      provided, they only record one. Some entities are called
+      `"NBPF10 (includes others)"` and which appears to include
+      `'NBPF10"` and `"NBPF19"`, possibly others.
+
+
 # multienrichjam 0.0.84.900
 
 ## Bug fixes

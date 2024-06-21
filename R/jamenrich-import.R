@@ -108,6 +108,9 @@
 #' @param ipa_slash_sep `character` string used as a delimited when
 #'    `convert_ipa_slash=TRUE`, used to replace genes that contain
 #'    forward slash `"/"` to use another character.
+#' @param revert_ipa_xref `logical` indicating whether to revert the
+#'    IPA gene symbols reported, which requires that the IPA data
+#'    contains a section `"Analysis Ready Molecules"`.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -143,6 +146,7 @@ importIPAenrichment <- function
  remove_blank_colnames=TRUE,
  convert_ipa_slash=TRUE,
  ipa_slash_sep=":",
+ revert_ipa_xref=TRUE,
  verbose=FALSE,
  ...)
 {
@@ -402,7 +406,56 @@ importIPAenrichment <- function
          jDF;
       });
    }
-   ## Return list of data.frames
+
+   ## Optionally revert IPA gene symbols where possible
+   if (TRUE %in% revert_ipa_xref) {
+      arm <- head(jamba::vigrep("Analysis.*Ready.*Molecules", names(ipaDFL)), 1)
+      if (length(arm) == 0) {
+         jamba::printDebug("IPA xref data was not found, expecting section: '",
+            "Analysis Ready Molecules",
+            "', handling as: ", "revert_ipa_xref=FALSE",
+            fgText=c("darkorange", "firebrick"))
+      } else {
+         ## Now curate gene symbols
+         # - ID: contains the input gene
+         # - Symbol: contains the gene as updated by this function:
+         #    - replaced "/" with ":"
+         #    - removed things like "(and others)", and "(complex)"
+         # - Name: contains the original IPA label
+         ipaxref <- ipaDFL[[arm]]
+         to_updates <- setdiff(names(ipaDFL), arm);
+         ipaDFL2 <- lapply(jamba::nameVector(to_updates), function(to_update){
+            ipadf <- ipaDFL[[to_update]]
+            ipadf_gl <- strsplit(ipadf$geneNames, ",")
+            ipadf_gldf <- data.frame(
+               Num=rep(seq_len(nrow(ipadf)), lengths(ipadf_gl)),
+               IPA_Symbol=unlist(ipadf_gl))
+            # Note this step may not be complete, it only converts 1-to-1.
+            # Some entries are "MAPK (and others)", and it appears that
+            # IPA simply chooses one to represent the row.
+            # For example, HSPA1A and HSPA1B are provided at input,
+            # they are combined into one row "HSPA1A/HSPA1B" which uses
+            # "HSPA1B" as the exemplar since it is more significant.
+            ipadf_gldf$User_Symbol <- ipaxref$ID[match(ipadf_gldf$IPA_Symbol,
+               ipaxref$Symbol)];
+            US_na <- is.na(ipadf_gldf$User_Symbol);
+            if (any(US_na)) {
+               # some entries may not match, then use the IPA symbol
+               ipadf_gldf$User_Symbol[US_na] <- ipadf_gldf$IPA_Symbol[US_na]
+            }
+            # paste sorted, unique genes for each pathway
+            new_geneNames <- jamba::cPasteSU(
+               split(ipadf_gldf$User_Symbol, ipadf_gldf$Num))
+            ipadf$geneNames <- new_geneNames;
+            ipadf
+         })
+         ipaDFL[to_updates] <- ipaDFL2[to_updates];
+         if (verbose) {
+            jamba::printDebug("importIPAenrichment(): ",
+               "Updated gene symbols to user input values.");
+         }
+      }
+   }
    ipaDFL;
 }
 

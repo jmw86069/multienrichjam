@@ -1,5 +1,72 @@
 # TODO
 
+## 21jun2024
+
+* `importIPAenrichment()`
+
+   * DONE. Consider handling gene identifiers so that the default behavior
+   refers to each enriched gene by the original input gene symbol,
+   and not the IPA-generated gene symbol.
+   Some considerations:
+   
+      * The main driver is to associate pathway genes to the input data,
+      using the same identifier as the input data. Sometimes IPA
+      assigns its own name which will not match the input data.
+      * We may consider that data integration (comparison across enrichments)
+      may perform better by comparing via IPA Symbol. Consider the example
+      `"HSPA1A/HSPA1B"`, one experiment may find `"HSPA1A"` significant,
+      another may find `"HSPA1B"` significant. According to IPA, these
+      results are equivalent, in which case the IPA symbol `"HSPA1A/HSPA1B"`
+      would allow them to use the same identifier.
+      * Sometimes the "user input" is a platform ID, such
+      as Affymetrix probe. In this case may not be preferable to
+      use the "user input". In this case it may be convenient for data
+      integration, but less convenient when trying to recognize
+      gene symbols as labels.
+      * This step requires `"Analysis Ready Molecules"` is available,
+      and follows expected convention used by Ingenuity.
+      * When multiple genes are combined to "one entity"
+      by IPA, and only one input symbol is retained in the
+      `"Analysis Ready Molecules"`.
+      The driving use case: `"HSPA1A"` and `"HSPA1B"` are combined to
+      one gene entry `"HSPA1A/HSPA1B"` by IPA. They are considered one
+      gene for the purpose of enrichment. If one or both genes were significant,
+      they would appear as `"HSPA1A/HSPA1B"` by IPA.
+      The `"Analysis Ready Molecules"` will list one symbol `"HSPA1B"`
+      as exemplar, and no entry will appear for `"HSPA1A"`.
+      In this case there are two options:
+      
+         1. Use only the IPA assigned input symbol as provided: `"HSPA1B"`.
+         IMPLEMENTED with `revert_ipa_xref=TRUE` (new default).
+         2. Split the IPA multi-symbol label into component parts `"HSPA1A"`
+         and `"HSPA1B"`. In this case, we need the user to supply the
+         actual gene hits, so we retain only the gene hit the user provided.
+         NOT IMPLEMENTED.
+         3. Leave the entry as `"HSPA1A/HSPA1B"`, however this symbol will
+         not match any input gene hit list, or other expression data matrix.
+         IMPLEMENTED with `revert_ipa_xref=FALSE`.
+
+   * Consider retaining the header section with analysis details,
+   at least for text input.
+
+* `multiEnrichMap()`
+
+   * Sometimes the gene rows in `geneIM` do not match gene rows in `memIM`,
+   causing an error downstream. The problem appears to happen when the
+   gene hit list does not match all entries in `memIM`, causing `geneIM`
+   to have fewer rows.
+   * One solution is to reduce `memIM` - not ideal because we do not
+   want to lose data.
+   * Another option is to expand `geneIM` - which requires inferring the
+   incidence matrix. For directional data, it would impose `1` regardless
+   of the intended directionality, since no other source is available.
+
+
+* S4 object `mem` (or `MEM`?) - higher priority - sooner the better
+
+   * IT IS COMING
+
+
 ## 16may2024
 
 * edge bundling

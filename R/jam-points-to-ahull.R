@@ -363,6 +363,7 @@ make_point_hull <- function
          return(NULL);
       });
       if (length(mxys) > 0 && nrow(mxys) >= 3) {
+         attr(mxys, "alphahull_alpha") <- alpha;
          break;
       }
       alpha <- alpha * 1.2;
@@ -391,6 +392,8 @@ make_point_hull <- function
          mxys;
       });
    }
+   # Replace alpha attribute
+   attr(mxys, "alphahull_alpha") <- alpha;
 
    if (do_plot && length(mxys) > 0) {
       hull_sf_exp <- sf::st_polygon(list(mxys));

@@ -22,6 +22,7 @@ importIPAenrichment(
   remove_blank_colnames = TRUE,
   convert_ipa_slash = TRUE,
   ipa_slash_sep = ":",
+  revert_ipa_xref = TRUE,
   verbose = FALSE,
   ...
 )
@@ -104,6 +105,10 @@ forward slash \code{"/"} to the value of argument \code{ipa_slash_sep}.}
 \item{ipa_slash_sep}{\code{character} string used as a delimited when
 \code{convert_ipa_slash=TRUE}, used to replace genes that contain
 forward slash \code{"/"} to use another character.}
+
+\item{revert_ipa_xref}{\code{logical} indicating whether to revert the
+IPA gene symbols reported, which requires that the IPA data
+contains a section \code{"Analysis Ready Molecules"}.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 
