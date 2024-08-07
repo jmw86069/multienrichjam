@@ -1,5 +1,9 @@
 # TODO
 
+## 07aug2024
+
+* Remove all `require()` checks, since they should already be in Dependencies.
+
 ## 19jul2024
 
 * Remove `gsubs()` which causes a warning upon loading `multienrichjam`.

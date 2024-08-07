@@ -648,9 +648,11 @@ multiEnrichMap <- function
    colnames(enrichIM) <- names(enrichList);
 
    if (all(is.na(enrichIM))) {
-      jamba::printDebug("all enrichIM is NA.");
-      jamba::printDebug("pvalueColname:", pvalueColname);
-      jamba::printDebug("nameColname:", nameColname);
+      if (verbose) {
+         jamba::printDebug("all enrichIM is NA.");
+         jamba::printDebug("pvalueColname:", pvalueColname);
+         jamba::printDebug("nameColname:", nameColname);
+      }
       stop("enrichIM is entirely NA.");
    }
 

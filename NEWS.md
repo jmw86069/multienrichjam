@@ -26,6 +26,13 @@
 
 ## changes to existing functions
 
+* `multiEnrichMap()`
+
+   * Minor change to silence the text output when `enrichIM` is entirely NA,
+   which can occur when the input data does not contain any significantly
+   enriched pathway results. This outcome causes `stop()` but should not
+   otherwise print output unless `verbose=TRUE`.
+
 * `importIPAenrichment()` and `topEnrichBySource()`
 
    * Both now use `jamba::gsubs()` instead of the "temporary" internal
