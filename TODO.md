@@ -1,5 +1,31 @@
 # TODO
 
+## 19jul2024
+
+* Remove `gsubs()` which causes a warning upon loading `multienrichjam`.
+It conflicts with `jamba::gsubs()`. They have slightly different logic.
+* `mem_plot_folio()`
+
+   * Enrichment heatmap should define `row_title` to match
+   `pathway_column_title`, `LETTERS` by default.
+   It currently shows numbers.
+
+## 11jul2024
+
+* `mem_plot_folio()` - option to support RMarkdown output
+
+   * Provide optional wrapper for RMarkdown output, specifically to
+   print headings/tabs for each plot produced.
+   * Slight downside is there isn't an easy way to configure a unique
+   figure size for each plot, so plot sizes are at the mercy of the
+   Rmd chunk options `fig.height`, `fig.width`.
+   * One implementation option is to allow `hook_preplot` and `hook_postplot`
+   to allow the user to run a custom function before and after each plot
+   is drawn.
+   That feels too complicated, when the main driver is just to print
+   an RMarkdown header.
+   * Investigate whether each Markdown tab can define a new figure size.
+
 ## 21jun2024
 
 * `importIPAenrichment()`

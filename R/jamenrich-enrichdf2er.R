@@ -42,7 +42,6 @@
 #'
 #' @family jam conversion functions
 #'
-#' @importFrom jamba nameVector
 #'
 #' @export
 enrichDF2enrichResult <- function

@@ -2880,6 +2880,12 @@ mem_plot_folio <- function
 
 #' Draw Heatmap with title and subtitle using grid viewports
 #'
+#' Draw Heatmap with title and subtitle using grid viewports
+#'
+#' This function is likely to work only with `grid` or `ComplexHeatmap`
+#' input. Other objects that have `draw()` defined may not work
+#' properly.
+#'
 #' This function is intended to help make it easier to wrap a
 #' heatmap from `ComplexHeatmap::Heatmap()` inside the relevant
 #' grid viewports in order to display one large title at the
@@ -2923,7 +2929,6 @@ mem_plot_folio <- function
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
-#' @importFrom ComplexHeatmap draw
 #'
 #' @export
 grid_with_title <- function
@@ -3009,7 +3014,7 @@ grid_with_title <- function
             "creating grid object grTree.");
       }
       grobject <- grid::grid.grabExpr(
-         draw(object));
+         ComplexHeatmap::draw(object));
       if (verbose) {
          jamba::printDebug("grid_with_title(): ",
             "calling grid::grid.draw()");

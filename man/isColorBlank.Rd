@@ -60,7 +60,7 @@ Other jam utility functions:
 \code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
 \code{\link{get_igraph_layout}()},
-\code{\link{gsubs}()},
+\code{\link{gsubs_remove}()},
 \code{\link{handle_igraph_param_list}()},
 \code{\link{make_legend_bivariate}()},
 \code{\link{make_point_hull}()},

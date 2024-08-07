@@ -573,7 +573,7 @@ curateIPAcolnames <- function
          }
       }
       ## Curate gene column values
-      jDF[[geneNamesColumn]] <- gsubs(geneCurateFrom,
+      jDF[[geneNamesColumn]] <- jamba::gsubs(geneCurateFrom,
          geneCurateTo,
          jDF[[geneNamesColumn]]);
 
@@ -683,7 +683,7 @@ curateIPAcolnames <- function
 #'    or `base::sub()`.
 #'
 #' @export
-gsubs <- function
+gsubs_remove <- function
 (pattern,
  replacement,
  x,

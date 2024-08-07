@@ -49,13 +49,19 @@ The byproduct of this function is to draw a grid visualization
 that includes a title and subtitle, then the \code{object} in the center.
 }
 \description{
+Draw Heatmap with title and subtitle using grid viewports
+}
+\details{
+This function is likely to work only with \code{grid} or \code{ComplexHeatmap}
+input. Other objects that have \code{draw()} defined may not work
+properly.
+
 This function is intended to help make it easier to wrap a
 heatmap from \code{ComplexHeatmap::Heatmap()} inside the relevant
 grid viewports in order to display one large title at the
 top of the resulting visualization, and optionally one
 subtitle at the bottom of the visualization.
-}
-\details{
+
 The input can be one heatmap (\code{Heatmap} object),
 or object of class \code{"gTree"}, or any object with a method
 \code{draw()} associated with it, detected by

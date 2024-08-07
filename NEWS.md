@@ -1,3 +1,48 @@
+# multienrichjam 0.0.86.900
+
+## Bug fixes
+
+* `topEnrichBySource()`, `topEnrichListBySource()`, `multiEnrichMap()`
+
+   * Weird rare scenario that appears limited to custom enrichment data
+   where input data contains multiple P-value columns, none of which
+   match the defaults for argument `sortColnames` in `topEnrichBySource()`.
+   * First bug: The `sortColnames` argument was not evaluated with
+   `find_colname()`, which is intended to match the patterns to actual
+   data. This decision was probably to avoid handling the optional
+   prefix `"-"` to reverse sort by colname.
+   * Second bug: The `sortColnames` should really only use
+   `pvalueColname` then reverse order for `countColname`.
+   * End result: When `sortColname` matched no existing columns,
+   the data was still sorted using `jamba::mixedSortDF()`.
+   It found no matching colnames so by default it sorted
+   starting with the first column. This is incorrect, and caused the bug.
+   * New argument default: `sortColname=NULL` will use `pvalueColname`
+   then reverse order of `countColname`.
+   Alternatively `sortColname=FALSE` causes no sort to be performed,
+   using data in the order it was provided.
+   Finally, if `sortColname` is defined, and its values do not match
+   existing colnames, no sort is performed.
+
+## changes to existing functions
+
+* `importIPAenrichment()` and `topEnrichBySource()`
+
+   * Both now use `jamba::gsubs()` instead of the "temporary" internal
+   function by the same name.
+
+* `gsubs()` is removed, renamed `gsubs_remove()` in favor of `jamba::gsubs()`.
+
+## other changes
+
+Two functions are no longer imported, instead they are both called using
+the package prefix. It only affects `grid_with_title()` which is no longer
+used by default.
+
+   * `ComplexHeatmap::draw()`
+   * `jamba::nameVector()`
+   
+
 # multienrichjam 0.0.85.900
 
 ## Changes to existing functions

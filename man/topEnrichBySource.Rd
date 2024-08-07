@@ -11,8 +11,7 @@ topEnrichBySource(
   min_count = 1,
   p_cutoff = 1,
   sourceColnames = c("gs_cat", "gs_subcat"),
-  sortColname = c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count",
-    "-geneHits"),
+  sortColname = NULL,
   countColname = c("gene_count", "count", "geneHits"),
   pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
   directionColname = c("activation.z.{0,1}score", "z.{0,1}score"),
@@ -37,8 +36,8 @@ topEnrichListBySource(
   min_count = 1,
   p_cutoff = 1,
   sourceColnames = c("gs_cat", "gs_subcat"),
-  sortColname = c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count",
-    "-geneHits"),
+  sortColname = c(pvalueColname, "P-value", "pvalue", "qvalue", "padjust", "-GeneRatio",
+    "-Count", "-geneHits"),
   countColname = c("gene_count", "count", "geneHits"),
   pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
   directionColname = c("activation.z.{0,1}score", "z.{0,1}score"),
@@ -80,12 +79,21 @@ columns will be combined using delimiter argument
 contains no \code{colnames(enrichDF)}, then data
 is considered \code{"All"}.}
 
-\item{sortColname}{character vector indicating the colnames
-to use to sort data, prior to selecting the top \code{n}
-results by source. This argument is passed to
-\code{jamba::mixedSortDF(x, byCols=sortColname)}. Columns
-can be sorted in reverse order by using the prefix \code{"-"},
-as described in \code{jamba::mixedSortDF()}.}
+\item{sortColname}{\code{character} vector, default \code{NULL},
+indicating the colnames to sort/prioritize the enrichment
+data rows. Please use \code{NULL}.
+\itemize{
+\item Default \code{NULL} will use \code{pvalueColname} and the
+reverse of \code{countColname}, to prioritize lowest P-value,
+then highest gene count.
+\item When \code{FALSE} it will not perform any sorting, and will
+use the input data as-is.
+\item When \code{character} vector is provided, its values must
+exactly match the intended colnames, with optional
+prefix \code{"-"} to indicate reverse sort for a particular
+colname. These values are passed to \code{jamba::mixedSortDF()}
+argument \code{byCols}.
+}}
 
 \item{countColname}{\code{character} vector of possible colnames
 in \code{enrichDF} that should contain the \code{integer} number

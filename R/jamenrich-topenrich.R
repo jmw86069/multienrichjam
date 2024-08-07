@@ -62,12 +62,19 @@
 #'    `sourceSep`. When `sourceColnames` is NULL or
 #'    contains no `colnames(enrichDF)`, then data
 #'    is considered `"All"`.
-#' @param sortColname character vector indicating the colnames
-#'    to use to sort data, prior to selecting the top `n`
-#'    results by source. This argument is passed to
-#'    `jamba::mixedSortDF(x, byCols=sortColname)`. Columns
-#'    can be sorted in reverse order by using the prefix `"-"`,
-#'    as described in `jamba::mixedSortDF()`.
+#' @param sortColname `character` vector, default `NULL`,
+#'    indicating the colnames to sort/prioritize the enrichment
+#'    data rows. Please use `NULL`.
+#'    * Default `NULL` will use `pvalueColname` and the
+#'    reverse of `countColname`, to prioritize lowest P-value,
+#'    then highest gene count.
+#'    * When `FALSE` it will not perform any sorting, and will
+#'    use the input data as-is.
+#'    * When `character` vector is provided, its values must
+#'    exactly match the intended colnames, with optional
+#'    prefix `"-"` to indicate reverse sort for a particular
+#'    colname. These values are passed to `jamba::mixedSortDF()`
+#'    argument `byCols`.
 #' @param countColname `character` vector of possible colnames
 #'    in `enrichDF` that should contain the `integer` number
 #'    of genes involved in enrichment. This vector is
@@ -113,7 +120,16 @@ topEnrichBySource <- function
    min_count=1,
    p_cutoff=1,
    sourceColnames=c("gs_cat", "gs_subcat"),
-   sortColname=c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count", "-geneHits"),
+   sortColname=NULL,
+   #c(pvalueColname,
+      # "P-value",
+      # "pvalue",
+      # "qvalue",
+      # "padjust",
+      # "-gene_count",
+      # "-GeneRatio",
+      # "-Count",
+      # "-geneHits"),
    countColname=c("gene_count", "count", "geneHits"),
    pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
    directionColname=c("activation.z.{0,1}score",
@@ -193,6 +209,24 @@ topEnrichBySource <- function
    nameColname <- find_colname(nameColname, enrichDF);
    countColname <- find_colname(countColname, enrichDF);
    pvalueColname <- find_colname(pvalueColname, enrichDF);
+   if (length(sortColname) > 0) {
+      if (FALSE %in% sortColname) {
+         sortColname <- NULL;
+      } else {
+         keep_sortColname <- (gsub("^-", "", sortColname) %in%
+               colnames(enrichDF))
+         sortColname <- sortColname[keep_sortColname]
+      }
+   } else {
+      if (length(pvalueColname) > 0) {
+         if (length(countColname) > 0) {
+            sortColname <- c(pvalueColname,
+               paste0("-", countColname))
+         } else {
+            sortColname <- c(pvalueColname)
+         }
+      }
+   }
    directionColname <- find_colname(directionColname,
       enrichDF,
       require_non_na=FALSE);
@@ -300,7 +334,7 @@ topEnrichBySource <- function
          enrichDF[,sourceColnames,drop=FALSE]);
    }
    if (length(curateFrom) > 0) {
-      iDFsplit <- gsubs(curateFrom,
+      iDFsplit <- jamba::gsubs(curateFrom,
          curateTo,
          iDFsplit,
          ...);
@@ -458,7 +492,14 @@ topEnrichListBySource <- function
    min_count=1,
    p_cutoff=1,
    sourceColnames=c("gs_cat", "gs_subcat"),
-   sortColname=c("P-value", "pvalue", "qvalue", "padjust", "-GeneRatio", "-Count", "-geneHits"),
+   sortColname=c(pvalueColname,
+      "P-value",
+      "pvalue",
+      "qvalue",
+      "padjust",
+      "-GeneRatio",
+      "-Count",
+      "-geneHits"),
    countColname=c("gene_count", "count", "geneHits"),
    pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
    directionColname=c("activation.z.{0,1}score",
