@@ -1,3 +1,38 @@
+# multienrichjam 0.0.87.900
+
+The next update will likely use `Mem` S4 object instead of `list`,
+although the plan is to allow convenient conversion to `list` for
+legacy compatibility. The S4 functions and methods should be more
+convenient in long term, and will be Bioconductor-compliant.
+
+## new functions
+
+* `add_pathway_direction()`
+
+   * Adds column to `enrichResult` indicating the directionality,
+   using the IPA Activation z-score calculation (refs in help doc).
+   It requires `gene_hits` as a numeric vector named by gene symbol.
+
+## changes to existing functions
+
+* `topEnrichBySource()`, affecting `topEnrichListBySource()`, `multiEnrichMap()`
+
+   * now applies logic for `descriptionGrep`, `nameGrep`, and `subsetSets`
+   using OR logic, so any combination of matching results will be
+   retained.
+   * Help docs have been updated.
+
+
+## other changes
+
+* `.onLoad()`
+
+   * Minor change, it now checks whether the new `igraph` shapes already
+   exist before adding, mostly useful when reloading this package
+   in a live R session, which should be rare.
+
+
+
 # multienrichjam 0.0.86.900
 
 ## Bug fixes

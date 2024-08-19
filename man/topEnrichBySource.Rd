@@ -3,7 +3,7 @@
 \name{topEnrichBySource}
 \alias{topEnrichBySource}
 \alias{topEnrichListBySource}
-\title{Subset enrichList for top enrichment results by source}
+\title{Subset enrichResult for top enrichment results by source}
 \usage{
 topEnrichBySource(
   enrichDF,
@@ -15,7 +15,7 @@ topEnrichBySource(
   countColname = c("gene_count", "count", "geneHits"),
   pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
   directionColname = c("activation.z.{0,1}score", "z.{0,1}score"),
-  direction_cutoff = 1,
+  direction_cutoff = 0,
   newColname = "EnrichGroup",
   curateFrom = NULL,
   curateTo = NULL,
@@ -57,7 +57,7 @@ topEnrichListBySource(
 )
 }
 \arguments{
-\item{enrichDF}{\code{data.frame} containing enrichment results.}
+\item{enrichDF}{\code{enrichResult} or \code{data.frame} with enrichment results.}
 
 \item{n}{\code{integer} maximum number of pathways to retain,
 after applying \code{min_count} and \code{p_cutoff} thresholds
@@ -72,7 +72,7 @@ P-value threshold, pathways with enrichment P-value at
 or below this threshold are retained, based upon values
 in \code{pvalueColname}.}
 
-\item{sourceColnames}{character vector of colnames in
+\item{sourceColnames}{\code{character} vector of colnames in
 \code{enrichDF} to consider as the \code{"Source"}. Multiple
 columns will be combined using delimiter argument
 \code{sourceSep}. When \code{sourceColnames} is NULL or
@@ -105,25 +105,38 @@ matching colname in \code{enrichDF}.}
 in \code{enrichDF} that should contain the enrichment P-value
 used for filtering by \code{p_cutoff}.}
 
-\item{newColname}{new column name to use when \code{sourceColname}
-matches multiple colnames in \code{enrichDF}. Values for each
-row are combined using \code{jamba::pasteByRow()}.}
+\item{directionColname}{\code{character} vector of possible colnames
+in \code{enrichDF} which may contain directional z-score, or
+other metric used to indicate directionality. It is assumed
+to be symmetric around zero, where zero indicates no
+directional bias.}
 
-\item{curateFrom, curateTo}{character vectors with
+\item{direction_cutoff}{\code{numeric} threshold (default \code{0}) to subset
+enriched sets, filtering by magnitude of the absolute value
+of the \code{directionColname}.}
+
+\item{newColname}{\code{character} string with new column name
+when \code{sourceColname} matches multiple colnames in \code{enrichDF}.
+Values for each row are combined using \code{jamba::pasteByRow()}.}
+
+\item{curateFrom, curateTo}{\code{character} vectors with
 pattern,replacement values, passed to \code{gsubs()}
 to allow some editing of values. The default values
 convert MSigDB canonical pathways from the prefix \code{"CP:"}
 to use \code{"CP"} which has the effect of combining all
 canonical pathways before selecting the top \code{n} results.}
 
-\item{sourceSubset}{character vector with a subset of
+\item{sourceSubset}{\code{character} vector with a subset of
 sources to retain. If there are multiple colnames in
 \code{sourceColnames}, then column values are combined
 using \code{jamba::pasteByRow()} and delimiter \code{sourceSep},
 prior to filtering.}
 
-\item{sourceSep}{character string used as a delimiter
+\item{sourceSep}{\code{character} string used as a delimiter
 when \code{sourceColnames} contains multiple colnames.}
+
+\item{subsetSets}{\code{character} optional set names to include
+by exact match.}
 
 \item{descriptionColname, nameColname}{character vectors
 indicating the colnames to consider description and name,
@@ -131,14 +144,16 @@ as returned from \code{find_colname()}. These arguments are
 used only when \code{descriptionGrep} or \code{nameGrep} are
 supplied.}
 
-\item{descriptionGrep, nameGrep}{character vector of patterns, used
-to filter pathways to those matching one or more patterns.
-This argument is used to help extract a specific subset
-of pathways of interest using keywords.
-The \code{descriptionGrep} argument searches only \code{descriptionColname};
-the \code{nameGrep} argument searches only \code{nameColname}.}
+\item{descriptionGrep, nameGrep}{\code{character} vector of
+regular expression patterns, intended to subset pathways
+to include only those matching these patterns.
+The \code{descriptionGrep} argument searches only \code{descriptionColname}.
+The \code{nameGrep} argument searches only \code{nameColname}.
+Note that the sets are combined with OR logic, such that
+any pathways matched by \code{descriptionGrep} OR \code{nameGrep}
+or \code{subsetSets} will be included in the output.}
 
-\item{verbose}{logical indicating whether to print verbose output.}
+\item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
 
@@ -150,9 +165,9 @@ to \code{topEnrichBySource()}.}
 applying optional \code{min_count} and \code{p_cutoff} filters.
 }
 \description{
-Subset enrichList for top enrichment results by source
+Subset enrichResult for top enrichment results by source
 
-Subset enrichList for top enrichment results by source
+Subset list of enrichResult for top enrichment results by source
 }
 \details{
 This function takes one \code{enrichResult} object, or
@@ -190,7 +205,7 @@ which are each independently filtered and sorted to the
 top \code{topEnrichN} entries.
 
 Finally, this function is useful to subset enrichment results
-by name, using \code{descriptionGrep} or \code{nameGrep}.
+by name, using \code{descriptionGrep}, \code{nameGrep}, or \code{subsetSets}.
 
 \code{topEnrichListBySource()} extends \code{topEnrichBySource()} by applying
 filters to each \code{enrichList} entry, then keeping pathways
@@ -203,9 +218,11 @@ comparative analysis.
 }
 \seealso{
 Other jam enrichment functions: 
+\code{\link{add_pathway_direction}()},
 \code{\link{multiEnrichMap}()}
 
 Other jam enrichment functions: 
+\code{\link{add_pathway_direction}()},
 \code{\link{multiEnrichMap}()}
 }
 \concept{jam enrichment functions}

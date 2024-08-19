@@ -206,6 +206,7 @@ argument \code{colorV}, otherwise colors are assigned using
 }
 \seealso{
 Other jam enrichment functions: 
+\code{\link{add_pathway_direction}()},
 \code{\link{topEnrichBySource}()}
 }
 \concept{jam enrichment functions}

@@ -1,7 +1,7 @@
 
-#' Subset enrichList for top enrichment results by source
+#' Subset enrichResult for top enrichment results by source
 #'
-#' Subset enrichList for top enrichment results by source
+#' Subset enrichResult for top enrichment results by source
 #'
 #' This function takes one `enrichResult` object, or
 #' a `data.frame` of enrichment results, and determines the
@@ -38,14 +38,14 @@
 #' top `topEnrichN` entries.
 #'
 #' Finally, this function is useful to subset enrichment results
-#' by name, using `descriptionGrep` or `nameGrep`.
+#' by name, using `descriptionGrep`, `nameGrep`, or `subsetSets`.
 #'
 #' @return `data.frame` subset up to `topEnrichN` rows, after
 #'    applying optional `min_count` and `p_cutoff` filters.
 #'
 #' @family jam enrichment functions
 #'
-#' @param enrichDF `data.frame` containing enrichment results.
+#' @param enrichDF `enrichResult` or `data.frame` with enrichment results.
 #' @param n `integer` maximum number of pathways to retain,
 #'    after applying `min_count` and `p_cutoff` thresholds
 #'    if relevant.
@@ -56,7 +56,7 @@
 #'    P-value threshold, pathways with enrichment P-value at
 #'    or below this threshold are retained, based upon values
 #'    in `pvalueColname`.
-#' @param sourceColnames character vector of colnames in
+#' @param sourceColnames `character` vector of colnames in
 #'    `enrichDF` to consider as the `"Source"`. Multiple
 #'    columns will be combined using delimiter argument
 #'    `sourceSep`. When `sourceColnames` is NULL or
@@ -83,70 +83,91 @@
 #' @param pvalueColname `character` vector of possible colnames
 #'    in `enrichDF` that should contain the enrichment P-value
 #'    used for filtering by `p_cutoff`.
-#' @param newColname new column name to use when `sourceColname`
-#'    matches multiple colnames in `enrichDF`. Values for each
-#'    row are combined using `jamba::pasteByRow()`.
-#' @param curateFrom,curateTo character vectors with
+#' @param directionColname `character` vector of possible colnames
+#'    in `enrichDF` which may contain directional z-score, or
+#'    other metric used to indicate directionality. It is assumed
+#'    to be symmetric around zero, where zero indicates no
+#'    directional bias.
+#' @param direction_cutoff `numeric` threshold (default `0`) to subset
+#'    enriched sets, filtering by magnitude of the absolute value
+#'    of the `directionColname`.
+#' @param newColname `character` string with new column name
+#'    when `sourceColname` matches multiple colnames in `enrichDF`.
+#'    Values for each row are combined using `jamba::pasteByRow()`.
+#' @param curateFrom,curateTo `character` vectors with
 #'    pattern,replacement values, passed to `gsubs()`
 #'    to allow some editing of values. The default values
 #'    convert MSigDB canonical pathways from the prefix `"CP:"`
 #'    to use `"CP"` which has the effect of combining all
 #'    canonical pathways before selecting the top `n` results.
-#' @param sourceSubset character vector with a subset of
+#' @param sourceSubset `character` vector with a subset of
 #'    sources to retain. If there are multiple colnames in
 #'    `sourceColnames`, then column values are combined
 #'    using `jamba::pasteByRow()` and delimiter `sourceSep`,
 #'    prior to filtering.
-#' @param sourceSep character string used as a delimiter
+#' @param sourceSep `character` string used as a delimiter
 #'    when `sourceColnames` contains multiple colnames.
+#' @param subsetSets `character` optional set names to include
+#'    by exact match.
 #' @param descriptionColname,nameColname character vectors
 #'    indicating the colnames to consider description and name,
 #'    as returned from `find_colname()`. These arguments are
 #'    used only when `descriptionGrep` or `nameGrep` are
 #'    supplied.
-#' @param descriptionGrep,nameGrep character vector of patterns, used
-#'    to filter pathways to those matching one or more patterns.
-#'    This argument is used to help extract a specific subset
-#'    of pathways of interest using keywords.
-#'    The `descriptionGrep` argument searches only `descriptionColname`;
-#'    the `nameGrep` argument searches only `nameColname`.
-#' @param verbose logical indicating whether to print verbose output.
+#' @param descriptionGrep,nameGrep `character` vector of
+#'    regular expression patterns, intended to subset pathways
+#'    to include only those matching these patterns.
+#'    The `descriptionGrep` argument searches only `descriptionColname`.
+#'    The `nameGrep` argument searches only `nameColname`.
+#'    Note that the sets are combined with OR logic, such that
+#'    any pathways matched by `descriptionGrep` OR `nameGrep`
+#'    or `subsetSets` will be included in the output.
+#' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
 #' @export
 topEnrichBySource <- function
 (enrichDF,
-   n=15,
-   min_count=1,
-   p_cutoff=1,
-   sourceColnames=c("gs_cat", "gs_subcat"),
-   sortColname=NULL,
-   #c(pvalueColname,
-      # "P-value",
-      # "pvalue",
-      # "qvalue",
-      # "padjust",
-      # "-gene_count",
-      # "-GeneRatio",
-      # "-Count",
-      # "-geneHits"),
-   countColname=c("gene_count", "count", "geneHits"),
-   pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
-   directionColname=c("activation.z.{0,1}score",
-      "z.{0,1}score"),
-   direction_cutoff=1,
-   newColname="EnrichGroup",
-   curateFrom=NULL,
-   curateTo=NULL,
-   sourceSubset=NULL,
-   sourceSep="_",
-   subsetSets=NULL,
-   descriptionColname=c("Description", "Name", "Pathway"),
-   nameColname=c("ID", "Name"),
-   descriptionGrep=NULL,
-   nameGrep=NULL,
-   verbose=FALSE,
-   ...)
+ n=15,
+ min_count=1,
+ p_cutoff=1,
+ sourceColnames=c("gs_cat", "gs_subcat"),
+ sortColname=NULL,
+ #c(pvalueColname,
+    # "P-value",
+    # "pvalue",
+    # "qvalue",
+    # "padjust",
+    # "-gene_count",
+    # "-GeneRatio",
+    # "-Count",
+    # "-geneHits"),
+ countColname=c("gene_count",
+    "count",
+    "geneHits"),
+ pvalueColname=c("P.Value",
+    "pvalue",
+    "FDR",
+    "adj.P.Val",
+    "qvalue"),
+ directionColname=c("activation.z.{0,1}score",
+    "z.{0,1}score"),
+ direction_cutoff=0,
+ newColname="EnrichGroup",
+ curateFrom=NULL,
+ curateTo=NULL,
+ sourceSubset=NULL,
+ sourceSep="_",
+ subsetSets=NULL,
+ descriptionColname=c("Description",
+    "Name",
+    "Pathway"),
+ nameColname=c("ID",
+    "Name"),
+ descriptionGrep=NULL,
+ nameGrep=NULL,
+ verbose=FALSE,
+ ...)
 {
    ## Purpose is to take a data.frame of pathway enrichment, split the results
    ## by values in sourceColnames, and return the top n rows from each
@@ -387,8 +408,11 @@ topEnrichBySource <- function
 
    iDFtopL <- lapply(jamba::nameVectorN(iDFsplitL), function(iSubset){
       iDFsub <- iDFsplitL[[iSubset]];
+      if (nrow(iDFsub) == 0) {
+         return(iDFsub)
+      }
       ## descriptionGrep
-      if (length(descriptionColname) > 0 && length(descriptionGrep) > 0 && nrow(iDFsub) > 0) {
+      if (length(descriptionColname) > 0 && length(descriptionGrep) > 0) {
          descr_keep_vals <- jamba::provigrep(descriptionGrep,
             iDFsub[[descriptionColname]]);
          if (length(descr_keep_vals) > 0) {
@@ -397,11 +421,11 @@ topEnrichBySource <- function
             descr_keep <- rep(FALSE, nrow(iDFsub))
          }
       } else {
-         descr_keep <- rep(TRUE, nrow(iDFsub))
+         descr_keep <- rep(NA, nrow(iDFsub))
          descr_keep_vals <- NULL;
       }
       ## nameGrep
-      if (length(nameColname) > 0 && length(nameGrep) > 0 && nrow(iDFsub) > 0) {
+      if (length(nameColname) > 0 && length(nameGrep) > 0) {
          name_keep_vals <- jamba::provigrep(nameGrep,
             iDFsub[[nameColname]]);
          if (length(descr_keep_vals) > 0) {
@@ -410,15 +434,18 @@ topEnrichBySource <- function
             name_keep <- rep(FALSE, nrow(iDFsub))
          }
       } else {
-         name_keep <- rep(TRUE, nrow(iDFsub))
+         name_keep <- rep(NA, nrow(iDFsub))
       }
       ## subsetSets
       if (length(nameColname) > 0 && length(subsetSets) > 0) {
          subset_keep <- (tolower(iDFsub[[nameColname]]) %in% tolower(subsetSets));
       } else {
-         subset_keep <- rep(TRUE, nrow(iDFsub))
+         subset_keep <- rep(NA, nrow(iDFsub))
       }
-      rows_keep <- (descr_keep & name_keep & subset_keep);
+      # 0.0.87.900 - new logic uses OR instead of AND
+      m_keep <- cbind(descr_keep, name_keep, subset_keep);
+      rows_keep <- (!apply(m_keep, 1, max, na.rm=TRUE) %in% 0);
+      # rows_keep <- (descr_keep & name_keep & subset_keep);
       if (any(!rows_keep)) {
          iDFsub <- subset(iDFsub, rows_keep);
       }
@@ -465,9 +492,9 @@ topEnrichBySource <- function
 }
 
 
-#' Subset enrichList for top enrichment results by source
+#' Subset list of enrichResult for top enrichment results by source
 #'
-#' Subset enrichList for top enrichment results by source
+#' Subset list of enrichResult for top enrichment results by source
 #'
 #' `topEnrichListBySource()` extends `topEnrichBySource()` by applying
 #' filters to each `enrichList` entry, then keeping pathways

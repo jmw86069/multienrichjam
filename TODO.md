@@ -1,5 +1,70 @@
 # TODO
 
+## 16aug2024
+
+* DONE. Add `add_pathway_direction()`
+
+   * DONE. Helper function to add directional z-score column to `enrichResult`
+   data, using the formula from QIAGEN IPA:
+   `z <- (N_genes_up - N_genes_down) / sqrt(N_genes_up + N_genes_down)`
+
+* Call `add_pathway_direction()` from `multiEnrichMap()` when appropriate.
+
+   * `geneHitList` or `geneHitIM` are provided, and
+   * contain positive and negative values, and
+   * `"z-score"` is not already defined in each `enrichResult` object.
+   (Bonus points for checking the direction colname attribute.)
+   
+* Review `clusterProfiler::compareClusterResult-class` object
+definition. For example `clusterProfiler::merge_result(list(enrichResults))`.
+
+   * Consider some form of integration, if possible, for example conversion
+   to/from to call similar functions in `clusterProfiler`.
+
+* S4 object `Mem` to replace `list` returned by `multiEnrichMap()`
+
+   * IT IS COMING
+   * Consider `multienrichjam()` to replace `multiEnrichmap()`?
+   * **slots**:
+   
+      * geneIM (im, direction, colors): `matrix` objects
+      * enrichIM, (pvalues, direction, geneCount, colors): `matrix` objects
+      * memIM: `matrix` object
+      * enrichList: `list` of `enrichResult` objects
+      * colorV: `character` vector of colors per enrichment
+      * colnames: `character` column assignment (consider omitting to enforce
+      standardized colnames)
+
+   * **methods**:
+   
+      * `mem_plot_folio()`, supporting functions: `mem_gene_path_heatmap()`,
+      `mem_enrichment_heatmap()`, `mem2cnet()`
+      * `enrichList()` - accessor for `mem@enrichList`
+      * `mem2dfs()` - create series of `data.frame` summarizing content,
+      intended for export to Excel xlsx.
+      * `mem2xlsx()` - direct export to Excel xlsx, calling `mem2dfs()`.
+
+   * **behaviors**
+
+      * `multiEnrichMap()` returns `Mem` object instead of `list`
+      * `mem_plot_folio()` may store parameters in the `Mem` object
+      * `mem_gene_path_heatmap()`, `mem_enrichment_heatmap()` could also
+      store/retrieve parameters from the `mem` input object.
+      * `mem_plot_folio()` optionally stores plots into `mem`
+      to maintian consistent plot attributes
+
+* Consider `Cnet` object that inherits `igraph`?
+
+   * It behaves as an `igraph` object except its class is helpful for
+   generic functions: `plot.Cnet()`, `layout.Cnet()`, `relayout.Cnet()`
+   * Unclear if S3 object type is preferred since it could inherit
+   `igraph` (S3 object) characteristics.
+
+* Consider `subgraph.Cnet()` or `subgraph.igraph()` functions
+
+   * Main purpose is to subset the layout as well as nodes.
+
+
 ## 07aug2024
 
 * Remove all `require()` checks, since they should already be in Dependencies.
@@ -91,10 +156,6 @@ It conflicts with `jamba::gsubs()`. They have slightly different logic.
    incidence matrix. For directional data, it would impose `1` regardless
    of the intended directionality, since no other source is available.
 
-
-* S4 object `mem` (or `MEM`?) - higher priority - sooner the better
-
-   * IT IS COMING
 
 
 ## 16may2024
