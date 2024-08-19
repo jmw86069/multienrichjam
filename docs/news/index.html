@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -58,6 +58,150 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.87.900" id="multienrichjam-0087900">multienrichjam 0.0.87.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0087900"></a></h2>
+<p>The next update will likely use <code>Mem</code> S4 object instead of <code>list</code>, although the plan is to allow convenient conversion to <code>list</code> for legacy compatibility. The S4 functions and methods should be more convenient in long term, and will be Bioconductor-compliant.</p>
+<div class="section level3">
+<h3 id="new-functions-0-0-87-900">new functions<a class="anchor" aria-label="anchor" href="#new-functions-0-0-87-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/add_pathway_direction.html">add_pathway_direction()</a></code></p>
+<ul><li>Adds column to <code>enrichResult</code> indicating the directionality, using the IPA Activation z-score calculation (refs in help doc). It requires <code>gene_hits</code> as a numeric vector named by gene symbol.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-87-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-87-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/topEnrichBySource.html">topEnrichBySource()</a></code>, affecting <code><a href="../reference/topEnrichBySource.html">topEnrichListBySource()</a></code>, <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>now applies logic for <code>descriptionGrep</code>, <code>nameGrep</code>, and <code>subsetSets</code> using OR logic, so any combination of matching results will be retained.</li>
+<li>Help docs have been updated.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-0-0-87-900">other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-0-87-900"></a></h3>
+<ul><li>
+<p><code>.onLoad()</code></p>
+<ul><li>Minor change, it now checks whether the new <code>igraph</code> shapes already exist before adding, mostly useful when reloading this package in a live R session, which should be rare.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.86.900" id="multienrichjam-0086900">multienrichjam 0.0.86.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0086900"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-86-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-86-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/topEnrichBySource.html">topEnrichBySource()</a></code>, <code><a href="../reference/topEnrichBySource.html">topEnrichListBySource()</a></code>, <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>Weird rare scenario that appears limited to custom enrichment data where input data contains multiple P-value columns, none of which match the defaults for argument <code>sortColnames</code> in <code><a href="../reference/topEnrichBySource.html">topEnrichBySource()</a></code>.</li>
+<li>First bug: The <code>sortColnames</code> argument was not evaluated with <code><a href="../reference/find_colname.html">find_colname()</a></code>, which is intended to match the patterns to actual data. This decision was probably to avoid handling the optional prefix <code>"-"</code> to reverse sort by colname.</li>
+<li>Second bug: The <code>sortColnames</code> should really only use <code>pvalueColname</code> then reverse order for <code>countColname</code>.</li>
+<li>End result: When <code>sortColname</code> matched no existing columns, the data was still sorted using <code><a href="https://rdrr.io/pkg/jamba/man/mixedSortDF.html" class="external-link">jamba::mixedSortDF()</a></code>. It found no matching colnames so by default it sorted starting with the first column. This is incorrect, and caused the bug.</li>
+<li>New argument default: <code>sortColname=NULL</code> will use <code>pvalueColname</code> then reverse order of <code>countColname</code>. Alternatively <code>sortColname=FALSE</code> causes no sort to be performed, using data in the order it was provided. Finally, if <code>sortColname</code> is defined, and its values do not match existing colnames, no sort is performed.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-86-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-86-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>Minor change to silence the text output when <code>enrichIM</code> is entirely NA, which can occur when the input data does not contain any significantly enriched pathway results. This outcome causes <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> but should not otherwise print output unless <code>verbose=TRUE</code>.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code> and <code><a href="../reference/topEnrichBySource.html">topEnrichBySource()</a></code></p>
+<ul><li>Both now use <code><a href="https://rdrr.io/pkg/jamba/man/gsubs.html" class="external-link">jamba::gsubs()</a></code> instead of the “temporary” internal function by the same name.</li>
+</ul></li>
+<li><p><code><a href="https://rdrr.io/pkg/jamba/man/gsubs.html" class="external-link">gsubs()</a></code> is removed, renamed <code><a href="../reference/gsubs_remove.html">gsubs_remove()</a></code> in favor of <code><a href="https://rdrr.io/pkg/jamba/man/gsubs.html" class="external-link">jamba::gsubs()</a></code>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-0-0-86-900">other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-0-86-900"></a></h3>
+<p>Two functions are no longer imported, instead they are both called using the package prefix. It only affects <code><a href="../reference/grid_with_title.html">grid_with_title()</a></code> which is no longer used by default.</p>
+<ul><li><code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">ComplexHeatmap::draw()</a></code></li>
+<li><code><a href="https://rdrr.io/pkg/jamba/man/nameVector.html" class="external-link">jamba::nameVector()</a></code></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.85.900" id="multienrichjam-0085900">multienrichjam 0.0.85.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0085900"></a></h2>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-85-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-85-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code></p>
+<ul><li>
+<p>New argument <code>revert_ipa_xref=TRUE</code> changes the default behavior (for the better) such that the resulting gene symbols associated with IPA pathway enrichment will match the input gene symbols, instead of using the customized IPA symbols.</p>
+<ul><li>The situation does not have an ideal solution. Ultimately, IPA provides results which do not completely represent the input data. When two genes are combined to one entity by IPA, they only retain one gene symbol in <code>"Analysis Ready Molecules"</code>, and so there is no recorded association of all entities which were combined. Sometimes the combined symbol is <code>"HSPA1A/HSPA1B"</code> which can be separated… but they do not indicate which symbol(s) the user provided, they only record one. Some entities are called <code>"NBPF10 (includes others)"</code> and which appears to include <code>'NBPF10"</code> and <code>"NBPF19"</code>, possibly others.</li>
+</ul></li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.84.900" id="multienrichjam-0084900">multienrichjam 0.0.84.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0084900"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-84-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-84-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/make_point_hull.html">make_point_hull()</a></code></p>
+<ul><li>Finally “fixed” the full bug, sometimes causing point hull to fail. Sometimes <code><a href="https://rdrr.io/pkg/alphahull/man/ahull.html" class="external-link">alphahull::ahull()</a></code> would return weird results with small <code>alpha</code> values: individual points, segments, or multiple disconnected polygons.</li>
+<li>Now <code><a href="../reference/make_point_hull.html">make_point_hull()</a></code> calls <code><a href="../reference/get_hull_data.html">get_hull_data()</a></code> which performs additional validation checks: Confirms there is actually a polygon; confirms each point in the <code>edges</code> are used exactly twice; confirms that all edge points are used in a continuous polygon, not two separate polygons.</li>
+<li>The default value for <code>max_iterations=100</code> is vastly increased, since many of these weird cases were caused by having coordinate ranges orders of magnitude higher than <code>alpha=0.1</code> and so 10 iterations would not be enough to avoid these weird situations.</li>
+<li>Also when <code><a href="../reference/make_point_hull.html">make_point_hull()</a></code> does not find a suitable solution after <code>max_iterations</code> tries, it returns <code>NULL</code> instead of proceeding to process the inadequate/empty polygon coordinate data. Hopefully this will allow weird cases to be skipped rather than throwing an obscure error.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.83.900" id="multienrichjam-0083900">multienrichjam 0.0.83.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0083900"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-83-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-83-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/make_point_hull.html">make_point_hull()</a></code></p>
+<ul><li>One of the more obscure bugs, caused by creating a point hull with only two points, where the two points apparently resided at exactly the wrong angle. Only apparently occurred when the two points were within 3 degrees of some “evil angle” - resolved when points were rotated more than 3 degrees from this “evil angle”. Typically, a point hull is not possible with two points, since it does not create a polygon, so the workaround was to add a third point (recycling the first point) adding amount of noise to create a polygon. Except for some reason even <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm()</a></code> was not adding <em>enough</em> or the right kind of noise. No random value should ever exactly, reproducible, reside on the line. There must be some rounding that takes place in an internal function. Nonetheless, the “fix” for this purpose was to add more than one dummy point.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/list2im.html">list2im()</a></code></p>
+<ul><li>Another bizarre “bug” was caused by some unconfirmed R function that appears to change <code>options("warn")</code> to <code>options("warn"=2)</code>
+</li>
+<li>and then does not change it back! Probably related to RMarkdown knitting, since it seems to occur when the knitting is interrupted. To be fair, warnings should be resolved in Jam packages, that’s true. But they should not impose an error.</li>
+<li>Filed under: “Things that worked just two minutes ago, but now cause an error for no reason.”</li>
+<li>Added workaround for random but painful issue when <code>options("warn"=2)</code> which forces warnings to errors. No idea what made that setting, but it caused <code><a href="../reference/list2im.html">list2im()</a></code> to fail due to implicit conversion of <code>empty</code> to whatever datatype was defined in the input matrix. In future this function may change, but for now this change keeps it working.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.82.900" id="multienrichjam-0082900">multienrichjam 0.0.82.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0082900"></a></h2>
+<ul><li>
+<p><code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>now <code>geneHitIM</code> and <code>geneHitList</code> are equivalent as input, either or both can be provided. The incidence matrix with values c(0, 1) are stored as <code>geneIM</code>, and if there are any other numeric values those values are stored in <code>geneIMdirection</code>. It does not (yet) verify that all genes involved in enrichment are also present in the <code>geneIM</code> and <code>geneIMdirection</code> matrices.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>New argument <code>gene_annotations</code> allows display of the <code>mem$geneIM</code> (gene hits per enrichment) and <code>mem$geneIMdirection</code> (gene direction of change) as annotations alongside the gene axis of the heatmap. By default, when <code>mem$geneIMdirection</code> is available, both are shown, otherwise only <code>geneIM</code> is shown. It can now be hidden.</li>
+<li>New argument <code>simple_anno_size</code> to control the size of heatmap annotations.</li>
+<li>New argument <code>annotation_suffix</code> to add optional suffix to the gene annotation labels, helpful to indicate the unit. For example <code>im</code> data has default suffix <code>"hit"</code>, while <code>direction</code> uses <code>"dir"</code>.</li>
+<li>When <code>mem$geneIMdirection</code> is present, it is now used by default during clustering. Values are multiplied by <code>mem$geneIM</code> and any <code>NA</code> values in <code>mem$geneIMdirection</code> are replaced with <code>1</code> in order to maintain the <code>mem$geneIM</code> value. They are considered <code>unknown direction</code> in that sense.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.81.900" id="multienrichjam-0081900">multienrichjam 0.0.81.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0081900"></a></h2>
+<ul><li>
+<p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> and <code><a href="../reference/jam_igraph_arrows.html">jam_igraph_arrows()</a></code></p>
+<ul><li>fixed bug when plotting directed edges with arrows, the arrow head width (<code>h.lwd</code>) was not properly expanded to the number of arrows, causing arrow heads to appear “twisted”.</li>
+<li>changed default obscure option <code>sh.adj=1</code> which draws straight edges to the base of the arrow head, not to the arrow tip. It allows the arrow tip to be a point without needing to equal the edge line width.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.80.900" id="multienrichjam-0080900">multienrichjam 0.0.80.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0080900"></a></h2>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-80-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-80-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/make_point_hull.html">make_point_hull()</a></code></p>
+<ul><li>Silenced some default verbose output.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.79.900" id="multienrichjam-0079900">multienrichjam 0.0.79.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0079900"></a></h2>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-79-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-79-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/spread_igraph_labels.html">spread_igraph_labels()</a></code></p>
+<ul><li>argument <code>nodeSortBy=c("x", "y")</code> changed to <code>nodeSortBy=c("x", "-y")</code>, consistent with top-to-bottom sorting on the y-axis. This change indirectly affects <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> default output.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.78.900" id="multienrichjam-0078900">multienrichjam 0.0.78.900<a class="anchor" aria-label="anchor" href="#multienrichjam-0078900"></a></h2>
 <div class="section level3">
 <h3 id="changes-to-existing-functions-0-0-78-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-78-900"></a></h3>
@@ -73,8 +217,8 @@
 </ul></li>
 <li>
 <p><code><a href="../reference/make_legend_bivariate.html">make_legend_bivariate()</a></code></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span> finally displays the x<span class="sc">-</span>axis label and numerical units,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>by default <span class="st">`</span><span class="at">"z-score"</span><span class="st">`</span>.</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">*</span> finally displays the x<span class="sc">-</span>axis label and numerical units,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>by default <span class="st">`</span><span class="at">"z-score"</span><span class="st">`</span>.</span></code></pre></div>
 </li>
 </ul></div>
 <div class="section level3">
@@ -1580,7 +1724,7 @@
 <li>
 <code><a href="../reference/curateIPAcolnames.html">curateIPAcolnames()</a></code> will curate the colnames of IPA data, and ensures the values in the gene column are consistently delimited.</li>
 <li>
-<code><a href="../reference/gsubs.html">gsubs()</a></code> is similar to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">base::gsub()</a></code> except that it applies a vector of pattern-replacement operations in order. This function may be moved to the <code>"jamba"</code> package.</li>
+<code><a href="https://rdrr.io/pkg/jamba/man/gsubs.html" class="external-link">gsubs()</a></code> is similar to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">base::gsub()</a></code> except that it applies a vector of pattern-replacement operations in order. This function may be moved to the <code>"jamba"</code> package.</li>
 <li>
 <code><a href="../reference/find_colname.html">find_colname()</a></code> is a helper function to find a colname given a vector of expected values, which is matched directly, then case-insensitively, then as a vector of patterns to match the start, end, then any part of the colnames. By default the first matching value from the first successful method is returned. Good for matching c(“P-Value”, “pvalue”, “Pval”)</li>
 <li>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -116,11 +116,22 @@ names are used in subsequent derived results.</p></dd>
 
 
 <dt>geneHitList</dt>
-<dd><p><code>list</code> of character vectors, or <code>NULL</code>. When
-<code>NULL</code> the gene hit list for each enrichment result is inferred
-from the enrichment results themselves. Therefore, if a gene
-does not appear in any enrichment result, it will not be
-used in this function.</p></dd>
+<dd><p><code>list</code> of character vectors, or
+<code>list</code> of <code>numeric</code> vectors whose names represent genes, or
+or <code>NULL</code>. When <code>NULL</code> the gene hit list for each enrichment
+result is inferred from the enrichment results themselves,
+however this option may incompletely represent which genes
+were statistical hits.
+Note that <code>geneHitList</code> and <code>geneHitIM</code> serve the same purpose
+and either can be supplied.</p></dd>
+
+
+<dt>geneHitIM</dt>
+<dd><p><code>numeric</code> matrix with gene rows, enrichment columns,
+and <code>numeric</code> values indicating the presence and/or direction
+of change for each gene.
+Note that <code>geneHitList</code> and <code>geneHitIM</code> serve the same purpose
+and either can be supplied.</p></dd>
 
 
 <dt>colorV</dt>
@@ -215,7 +226,7 @@ a suitable matching colname for each <code>data.frame</code> in
 
 <dt>descriptionCurateFrom, descriptionCurateTo</dt>
 <dd><p><code>character</code> vectors
-with patterns and replacements, passed to <code><a href="gsubs.html">gsubs()</a></code>, intended to
+with patterns and replacements, passed to <code>gsubs()</code>, intended to
 help curate common descriptions to shorter, perhaps more
 user-friendly labels. One example is removing the prefix
 <code>"Genes annotated by the GO term "</code> from Gene Ontology pathways.
@@ -258,7 +269,8 @@ where names match the names of each enrichment in <code>enrichList</code>.</p></
     <div id="details">
     <h2>Details</h2>
     <p>This function performs most of the work of comparing multiple
-enrichment results. It takes a list of <code>enrichResult</code> objects,
+enrichment results.
+This function takes a list of <code>enrichResult</code> objects,
 generates an overall pathway-gene incidence matrix, assembles
 a pathway-to-Pvalue matrix, creates EnrichMap <code>igraph</code> network
 objects, and CnetPlot <code>igraph</code> network objects. It also applies
@@ -288,6 +300,7 @@ argument <code>colorV</code>, otherwise colors are assigned using
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p>Other jam enrichment functions: 
+<code><a href="add_pathway_direction.html">add_pathway_direction</a>()</code>,
 <code><a href="topEnrichBySource.html">topEnrichBySource</a>()</code></p></div>
     </div>
 

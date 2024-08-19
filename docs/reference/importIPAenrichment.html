@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -81,6 +81,7 @@
 <span>  remove_blank_colnames <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  convert_ipa_slash <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  ipa_slash_sep <span class="op">=</span> <span class="st">":"</span>,</span>
+<span>  revert_ipa_xref <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -124,7 +125,7 @@ leading or trailing delimiters.</p></dd>
 <dd><p>integer value indicating the method used to
 import data from a text file, where: <code>method=1</code> uses
 <code>data.table::read.table()</code> and the <code>textConnection</code> argument;
-<code>method=2</code> uses <code>readr::read_tsv()</code>. The motivation to use
+<code>method=2</code> uses <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv()</a></code>. The motivation to use
 <code>data.table::read.table()</code> is it performed better in the
 presence of UTF-8 characters such as the alpha symbol.</p></dd>
 
@@ -190,6 +191,12 @@ forward slash <code>"/"</code> to the value of argument <code>ipa_slash_sep</cod
 <dd><p><code>character</code> string used as a delimited when
 <code>convert_ipa_slash=TRUE</code>, used to replace genes that contain
 forward slash <code>"/"</code> to use another character.</p></dd>
+
+
+<dt>revert_ipa_xref</dt>
+<dd><p><code>logical</code> indicating whether to revert the
+IPA gene symbols reported, which requires that the IPA data
+contains a section <code>"Analysis Ready Molecules"</code>.</p></dd>
 
 
 <dt>verbose</dt>

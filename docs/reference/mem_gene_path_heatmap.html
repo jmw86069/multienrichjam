@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -78,6 +78,9 @@
 <span>  column_method <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  enrich_im_weight <span class="op">=</span> <span class="fl">0.3</span>,</span>
 <span>  gene_im_weight <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  gene_annotations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"im"</span>, <span class="st">"direction"</span><span class="op">)</span>,</span>
+<span>  annotation_suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>im <span class="op">=</span> <span class="st">"hit"</span>, direction <span class="op">=</span> <span class="st">"dir"</span><span class="op">)</span>,</span>
+<span>  simple_anno_size <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">6</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>  cluster_columns <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cluster_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cluster_row_slices <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -156,14 +159,50 @@ by <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-li
 
 
 <dt>enrich_im_weight</dt>
-<dd><p><code>numeric</code> value between 0 and 1 indicating
-the relative weight of enrichment <code>-log10 P-value</code> and gene
-incidence matrix when combined prior to clustering the columns
-in the resulting heatmap. When <code>enrich_im_weight=0</code> then
-the data is scaled using zero weight for enrichment and therefore
-only uses the gene incidence matrix; when <code>enrich_im_weight=1</code>
-the gene incidence matrix is scaled using zero weight and
-therefore clustering only uses the <code>-log10 P-value</code> values.</p></dd>
+<dd><p><code>numeric</code> value between 0 and 1 (default 0.3),
+the relative weight of enrichment <code>-log10 P-value</code> and overall
+gene-pathway incidence matrix when clustering pathways.</p><ul><li><p>When <code>enrich_im_weight=0</code> then only the gene-pathway incidence
+matrix is used for pathway clustering.</p></li>
+<li><p>When <code>enrich_im_weight=1</code> then only the pathway significance
+(<code>-log10 P-value</code>) is used for pathway clustering.</p></li>
+<li><p>The default <code>enrich_im_weight=0.3</code> balances the combination
+of the enrichment P-value matrix, with the gene-pathway incidence
+matrix.</p></li>
+</ul></dd>
+
+
+<dt>gene_im_weight</dt>
+<dd><p><code>numeric</code> value between 0 and 1 (default 0.5),
+the relative weight of the <code>mem$geneIM</code> gene incidence matrix,
+and overall gene-pathway incidence matrix when clustering genes.</p><ul><li><p>When <code>gene_im_weight=0</code> then only the gene-pathway incidence
+matrix is used for gene clustering.</p></li>
+<li><p>When <code>gene_im_weight=1</code> then only the gene incidence matrix
+(<code>mem$geneIM</code>) is used for gene clustering.</p></li>
+<li><p>The default <code>_im_weight=0.5</code> balances the gene incidence matrix
+with the gene-pathway incidence matrix, giving each matrix equal weight
+(since values are typically all <code>(0, 1)</code>.</p></li>
+</ul></dd>
+
+
+<dt>gene_annotations</dt>
+<dd><p><code>character</code> string indicating which annotation(s)
+to display alongside the gene axis of the heatmap.
+By default it uses <code>"im", "direction"</code>, and <code>"direction"</code> is removed
+when <code>mem$geneIMdirection</code> is not available.</p><ul><li><p><code>"im"</code> displays the gene incidence matrix <code>mem$geneIM</code> using
+categorical colors defined by <code>mem$colorV</code>.</p></li>
+<li><p><code>"direction"</code> displays the gene directionality <code>mem$geneIMdirection</code>
+using colors defined by <code>colorjam::col_div_xf(1.2)</code>.</p></li>
+<li><p>When no values are given, the gene annotation is not displayed.</p></li>
+<li><p>When two values are given, the annotations are displayed in the
+order they are provided.</p></li>
+</ul></dd>
+
+
+<dt>annotation_suffix</dt>
+<dd><p><code>character</code> vector named by values permitted
+by <code>gene_annotations</code>, with optional suffix to add to the annotation
+labels. For example it may be helpful to add "hit" or "dir" to
+distinguish the enrichment labels.</p></dd>
 
 
 <dt>name</dt>

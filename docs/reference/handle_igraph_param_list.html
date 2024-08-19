@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -129,11 +129,11 @@ nodes or edges. Most commonly, the argument <code>factor_l</code> is
 multiplied by numeric attributes to scale attribute values,
 for example label font size, or node size.</p>
 <p>For example:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">handle_igraph_param_list</span>(x,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">attr=</span><span class="st">"size"</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">factor_l=</span><span class="fu">list</span>(<span class="at">nodeType=</span><span class="fu">c</span>(<span class="at">Gene=</span><span class="dv">1</span>, <span class="at">Set=</span><span class="dv">2</span>)),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">i_values=</span><span class="fu">rep</span>(<span class="dv">1</span>, igraph<span class="sc">::</span><span class="fu">vcount</span>(x)),</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">attr_type=</span><span class="st">"node"</span>)</span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">handle_igraph_param_list</span>(x,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>   <span class="at">attr=</span><span class="st">"size"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>   <span class="at">factor_l=</span><span class="fu">list</span>(<span class="at">nodeType=</span><span class="fu">c</span>(<span class="at">Gene=</span><span class="dv">1</span>, <span class="at">Set=</span><span class="dv">2</span>)),</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>   <span class="at">i_values=</span><span class="fu">rep</span>(<span class="dv">1</span>, igraph<span class="sc">::</span><span class="fu">vcount</span>(x)),</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>   <span class="at">attr_type=</span><span class="st">"node"</span>)</span></code></pre><p></p></div>
 <p>This function call will match node attribute <code>nodeType</code>,
 the size of nodes with attribute value
 <code>nodeType="Set"</code> are multiplied <code>size * 2</code>,
@@ -154,8 +154,9 @@ the size of nodes with attribute value
 <code><a href="filter_mem_genes.html">filter_mem_genes</a>()</code>,
 <code><a href="filter_mem_sets.html">filter_mem_sets</a>()</code>,
 <code><a href="find_colname.html">find_colname</a>()</code>,
+<code><a href="get_hull_data.html">get_hull_data</a>()</code>,
 <code><a href="get_igraph_layout.html">get_igraph_layout</a>()</code>,
-<code><a href="gsubs.html">gsubs</a>()</code>,
+<code><a href="gsubs_remove.html">gsubs_remove</a>()</code>,
 <code><a href="isColorBlank.html">isColorBlank</a>()</code>,
 <code><a href="make_legend_bivariate.html">make_legend_bivariate</a>()</code>,
 <code><a href="make_point_hull.html">make_point_hull</a>()</code>,

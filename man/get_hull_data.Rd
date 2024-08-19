@@ -30,3 +30,38 @@ get_hull_data(
 \description{
 Get data for alpha hull (internal)
 }
+\details{
+This function is intended for internal use by \code{make_point_hull()}
+and is exported for convenient re-use by other functions as
+relevant.
+}
+\seealso{
+Other jam utility functions: 
+\code{\link{avg_angles}()},
+\code{\link{avg_colors_by_list}()},
+\code{\link{call_fn_ellipsis_deprecated}()},
+\code{\link{cell_fun_bivariate}()},
+\code{\link{collapse_mem_clusters}()},
+\code{\link{colorRamp2D}()},
+\code{\link{deconcat_df2}()},
+\code{\link{display_colorRamp2D}()},
+\code{\link{enrichList2geneHitList}()},
+\code{\link{filter_mem_genes}()},
+\code{\link{filter_mem_sets}()},
+\code{\link{find_colname}()},
+\code{\link{get_igraph_layout}()},
+\code{\link{gsubs_remove}()},
+\code{\link{handle_igraph_param_list}()},
+\code{\link{isColorBlank}()},
+\code{\link{make_legend_bivariate}()},
+\code{\link{make_point_hull}()},
+\code{\link{mem_find_overlap}()},
+\code{\link{order_colors}()},
+\code{\link{rank_mem_clusters}()},
+\code{\link{rotate_coordinates}()},
+\code{\link{subgraph_jam}()},
+\code{\link{subset_mem}()},
+\code{\link{summarize_node_spacing}()},
+\code{\link{xyAngle}()}
+}
+\concept{jam utility functions}

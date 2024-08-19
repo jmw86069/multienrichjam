@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
 <span>  border <span class="op">=</span> <span class="st">"#FF0000FF"</span>,</span>
 <span>  lwd <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  lty <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  max_iterations <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  max_iterations <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  do_plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  add <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  hull_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"default"</span>, <span class="st">"alphahull"</span>, <span class="st">"igraph"</span>, <span class="st">"sf"</span>, <span class="st">"chull"</span><span class="op">)</span>,</span>
@@ -207,8 +207,9 @@ random set of outer edges into a coherent polygon.</p>
 <code><a href="filter_mem_genes.html">filter_mem_genes</a>()</code>,
 <code><a href="filter_mem_sets.html">filter_mem_sets</a>()</code>,
 <code><a href="find_colname.html">find_colname</a>()</code>,
+<code><a href="get_hull_data.html">get_hull_data</a>()</code>,
 <code><a href="get_igraph_layout.html">get_igraph_layout</a>()</code>,
-<code><a href="gsubs.html">gsubs</a>()</code>,
+<code><a href="gsubs_remove.html">gsubs_remove</a>()</code>,
 <code><a href="handle_igraph_param_list.html">handle_igraph_param_list</a>()</code>,
 <code><a href="isColorBlank.html">isColorBlank</a>()</code>,
 <code><a href="make_legend_bivariate.html">make_legend_bivariate</a>()</code>,
@@ -239,31 +240,33 @@ random set of outer edges into a coherent polygon.</p>
 <span class="r-in"><span>      add<span class="op">=</span><span class="cn">TRUE</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="make_point_hull-1.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:46</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x4</span>, col<span class="op">=</span><span class="st">"red"</span>, pch<span class="op">=</span><span class="fl">20</span>, cex<span class="op">=</span><span class="fl">3</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"hull_method='chull'"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">phxy2</span> <span class="op">&lt;-</span> <span class="fu">make_point_hull</span><span class="op">(</span>x<span class="op">=</span><span class="va">xy</span>, expand<span class="op">=</span><span class="fl">0.05</span>, do_plot<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>   add<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">TRUE</span>, xpd<span class="op">=</span><span class="cn">TRUE</span>, hull_method<span class="op">=</span><span class="st">"chull"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="make_point_hull-2.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:46</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:46</span>) 12Jun2023:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">calculated alpha: </span><span style="color: #FF8700;">10</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">label.y.nudge:</span><span style="color: #FF8700;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">calculated alpha: </span><span style="color: #FF8700;">10</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">Iterating alpha values up to </span><span style="color: #FF8700;">100</span><span style="color: #00AFFF;"> times.</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x4</span>, col<span class="op">=</span><span class="st">"red"</span>, pch<span class="op">=</span><span class="fl">20</span>, cex<span class="op">=</span><span class="fl">3</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"hull_method='igraph'"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">phxy2</span> <span class="op">&lt;-</span> <span class="fu">make_point_hull</span><span class="op">(</span>x<span class="op">=</span><span class="va">xy</span>, expand<span class="op">=</span><span class="fl">0.05</span>, do_plot<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>   add<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">TRUE</span>, xpd<span class="op">=</span><span class="cn">TRUE</span>, hull_method<span class="op">=</span><span class="st">"igraph"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="make_point_hull-3.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:46</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:46</span>) 12Jun2023:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">calculated alpha: </span><span style="color: #FF8700;">10</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">label.y.nudge:</span><span style="color: #FF8700;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">calculated alpha: </span><span style="color: #FF8700;">10</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">Iterating alpha values up to </span><span style="color: #FF8700;">100</span><span style="color: #00AFFF;"> times.</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x4</span>, col<span class="op">=</span><span class="st">"red"</span>, pch<span class="op">=</span><span class="fl">20</span>, cex<span class="op">=</span><span class="fl">3</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"hull_method='sf'"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">phxy2</span> <span class="op">&lt;-</span> <span class="fu">make_point_hull</span><span class="op">(</span>x<span class="op">=</span><span class="va">xy</span>, expand<span class="op">=</span><span class="fl">0.05</span>, do_plot<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>   add<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">TRUE</span>, xpd<span class="op">=</span><span class="cn">TRUE</span>, hull_method<span class="op">=</span><span class="st">"sf"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="make_point_hull-4.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:46</span>) 12Jun2023:   <span style="color: #FF8700;">label.y.nudge:</span><span style="color: #00AFFF;">0</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:39:46</span>) 12Jun2023:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">calculated alpha: </span><span style="color: #FF8700;">10</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">label.y.nudge:</span><span style="color: #FF8700;">0</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">calculated alpha: </span><span style="color: #FF8700;">10</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:47:45</span>) 19Aug2024:   <span style="color: #FF8700;">make_point_hull(): </span><span style="color: #00AFFF;">Iterating alpha values up to </span><span style="color: #FF8700;">100</span><span style="color: #00AFFF;"> times.</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -472,6 +472,12 @@ make_point_hull <- function
 
 #' Get data for alpha hull (internal)
 #'
+#' Get data for alpha hull (internal)
+#'
+#' This function is intended for internal use by `make_point_hull()`
+#' and is exported for convenient re-use by other functions as
+#' relevant.
+#'
 #' @param x `numeric` matrix with x,y coordinates
 #' @param verbose `logical` indicating whether to print verbose output
 #' @param hull_method `character` string with the preferred hull method.
@@ -479,6 +485,9 @@ make_point_hull <- function
 #' @param expand `numeric` used to define `alpha` based upon coordinate range.
 #' @param ... additional arguments are ignored.
 #'
+#' @family jam utility functions
+#'
+#' @export
 get_hull_data <- function
 (x,
  verbose=FALSE,

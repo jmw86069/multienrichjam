@@ -31,6 +31,9 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/add_pathway_direction.html</loc>
+  </url>
+  <url>
     <loc>/reference/adjust_cnet_nodeset.html</loc>
   </url>
   <url>
@@ -157,6 +160,9 @@
     <loc>/reference/get_cnet_nodeset.html</loc>
   </url>
   <url>
+    <loc>/reference/get_hull_data.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_igraph_arrow_mode.html</loc>
   </url>
   <url>
@@ -167,6 +173,9 @@
   </url>
   <url>
     <loc>/reference/gsubs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gsubs_remove.html</loc>
   </url>
   <url>
     <loc>/reference/handle_igraph_param_list.html</loc>

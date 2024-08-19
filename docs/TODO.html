@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -58,6 +58,440 @@
 
 <div id="todo" class="section level1">
 
+<div class="section level2">
+<h2 id="id_16aug2024">16aug2024<a class="anchor" aria-label="anchor" href="#id_16aug2024"></a></h2>
+<ul><li>
+<p>DONE. Add <code><a href="reference/add_pathway_direction.html">add_pathway_direction()</a></code></p>
+<ul><li>DONE. Helper function to add directional z-score column to <code>enrichResult</code> data, using the formula from QIAGEN IPA: <code>z &lt;- (N_genes_up - N_genes_down) / sqrt(N_genes_up + N_genes_down)</code>
+</li>
+</ul></li>
+<li>
+<p>Call <code><a href="reference/add_pathway_direction.html">add_pathway_direction()</a></code> from <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> when appropriate.</p>
+<ul><li>
+<code>geneHitList</code> or <code>geneHitIM</code> are provided, and</li>
+<li>contain positive and negative values, and</li>
+<li>
+<code>"z-score"</code> is not already defined in each <code>enrichResult</code> object. (Bonus points for checking the direction colname attribute.)</li>
+</ul></li>
+<li>
+<p>Review <code>clusterProfiler::compareClusterResult-class</code> object definition. For example <code>clusterProfiler::merge_result(list(enrichResults))</code>.</p>
+<ul><li>Consider some form of integration, if possible, for example conversion to/from to call similar functions in <code>clusterProfiler</code>.</li>
+</ul></li>
+<li>
+<p>S4 object <code>Mem</code> to replace <code>list</code> returned by <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li><p>IT IS COMING</p></li>
+<li><p>Consider <code>multienrichjam()</code> to replace <code>multiEnrichmap()</code>?</p></li>
+<li>
+<p><strong>slots</strong>:</p>
+<ul><li>geneIM (im, direction, colors): <code>matrix</code> objects</li>
+<li>enrichIM, (pvalues, direction, geneCount, colors): <code>matrix</code> objects</li>
+<li>memIM: <code>matrix</code> object</li>
+<li>enrichList: <code>list</code> of <code>enrichResult</code> objects</li>
+<li>colorV: <code>character</code> vector of colors per enrichment</li>
+<li>colnames: <code>character</code> column assignment (consider omitting to enforce standardized colnames)</li>
+</ul></li>
+<li>
+<p><strong>methods</strong>:</p>
+<ul><li>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code>
+</li>
+<li>
+<code>enrichList()</code> - accessor for <code>mem@enrichList</code>
+</li>
+<li>
+<code>mem2dfs()</code> - create series of <code>data.frame</code> summarizing content, intended for export to Excel xlsx.</li>
+<li>
+<code>mem2xlsx()</code> - direct export to Excel xlsx, calling <code>mem2dfs()</code>.</li>
+</ul></li>
+<li>
+<p><strong>behaviors</strong></p>
+<ul><li>
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> returns <code>Mem</code> object instead of <code>list</code>
+</li>
+<li>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> may store parameters in the <code>Mem</code> object</li>
+<li>
+<code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> could also store/retrieve parameters from the <code>mem</code> input object.</li>
+<li>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> optionally stores plots into <code>mem</code> to maintian consistent plot attributes</li>
+</ul></li>
+</ul></li>
+<li>
+<p>Consider <code>Cnet</code> object that inherits <code>igraph</code>?</p>
+<ul><li>It behaves as an <code>igraph</code> object except its class is helpful for generic functions: <code>plot.Cnet()</code>, <code>layout.Cnet()</code>, <code>relayout.Cnet()</code>
+</li>
+<li>Unclear if S3 object type is preferred since it could inherit <code>igraph</code> (S3 object) characteristics.</li>
+</ul></li>
+<li>
+<p>Consider <code>subgraph.Cnet()</code> or <code>subgraph.igraph()</code> functions</p>
+<ul><li>Main purpose is to subset the layout as well as nodes.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_07aug2024">07aug2024<a class="anchor" aria-label="anchor" href="#id_07aug2024"></a></h2>
+<ul><li>Remove all <code><a href="https://rdrr.io/r/base/library.html" class="external-link">require()</a></code> checks, since they should already be in Dependencies.</li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_19jul2024">19jul2024<a class="anchor" aria-label="anchor" href="#id_19jul2024"></a></h2>
+<ul><li><p>Remove <code>gsubs()</code> which causes a warning upon loading <code>multienrichjam</code>. It conflicts with <code><a href="https://rdrr.io/pkg/jamba/man/gsubs.html" class="external-link">jamba::gsubs()</a></code>. They have slightly different logic.</p></li>
+<li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li>Enrichment heatmap should define <code>row_title</code> to match <code>pathway_column_title</code>, <code>LETTERS</code> by default. It currently shows numbers.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_11jul2024">11jul2024<a class="anchor" aria-label="anchor" href="#id_11jul2024"></a></h2>
+<ul><li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> - option to support RMarkdown output</p>
+<ul><li>Provide optional wrapper for RMarkdown output, specifically to print headings/tabs for each plot produced.</li>
+<li>Slight downside is there isn’t an easy way to configure a unique figure size for each plot, so plot sizes are at the mercy of the Rmd chunk options <code>fig.height</code>, <code>fig.width</code>.</li>
+<li>One implementation option is to allow <code>hook_preplot</code> and <code>hook_postplot</code> to allow the user to run a custom function before and after each plot is drawn. That feels too complicated, when the main driver is just to print an RMarkdown header.</li>
+<li>Investigate whether each Markdown tab can define a new figure size.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_21jun2024">21jun2024<a class="anchor" aria-label="anchor" href="#id_21jun2024"></a></h2>
+<ul><li>
+<p><code><a href="reference/importIPAenrichment.html">importIPAenrichment()</a></code></p>
+<ul><li>
+<p>DONE. Consider handling gene identifiers so that the default behavior refers to each enriched gene by the original input gene symbol, and not the IPA-generated gene symbol. Some considerations:</p>
+<ul><li><p>The main driver is to associate pathway genes to the input data, using the same identifier as the input data. Sometimes IPA assigns its own name which will not match the input data.</p></li>
+<li><p>We may consider that data integration (comparison across enrichments) may perform better by comparing via IPA Symbol. Consider the example <code>"HSPA1A/HSPA1B"</code>, one experiment may find <code>"HSPA1A"</code> significant, another may find <code>"HSPA1B"</code> significant. According to IPA, these results are equivalent, in which case the IPA symbol <code>"HSPA1A/HSPA1B"</code> would allow them to use the same identifier.</p></li>
+<li><p>Sometimes the “user input” is a platform ID, such as Affymetrix probe. In this case may not be preferable to use the “user input”. In this case it may be convenient for data integration, but less convenient when trying to recognize gene symbols as labels.</p></li>
+<li><p>This step requires <code>"Analysis Ready Molecules"</code> is available, and follows expected convention used by Ingenuity.</p></li>
+<li>
+<p>When multiple genes are combined to “one entity” by IPA, and only one input symbol is retained in the <code>"Analysis Ready Molecules"</code>. The driving use case: <code>"HSPA1A"</code> and <code>"HSPA1B"</code> are combined to one gene entry <code>"HSPA1A/HSPA1B"</code> by IPA. They are considered one gene for the purpose of enrichment. If one or both genes were significant, they would appear as <code>"HSPA1A/HSPA1B"</code> by IPA. The <code>"Analysis Ready Molecules"</code> will list one symbol <code>"HSPA1B"</code> as exemplar, and no entry will appear for <code>"HSPA1A"</code>. In this case there are two options:</p>
+<ol style="list-style-type: decimal"><li>Use only the IPA assigned input symbol as provided: <code>"HSPA1B"</code>. IMPLEMENTED with <code>revert_ipa_xref=TRUE</code> (new default).</li>
+<li>Split the IPA multi-symbol label into component parts <code>"HSPA1A"</code> and <code>"HSPA1B"</code>. In this case, we need the user to supply the actual gene hits, so we retain only the gene hit the user provided. NOT IMPLEMENTED.</li>
+<li>Leave the entry as <code>"HSPA1A/HSPA1B"</code>, however this symbol will not match any input gene hit list, or other expression data matrix. IMPLEMENTED with <code>revert_ipa_xref=FALSE</code>.</li>
+</ol></li>
+</ul></li>
+<li><p>Consider retaining the header section with analysis details, at least for text input.</p></li>
+</ul></li>
+<li>
+<p><code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>Sometimes the gene rows in <code>geneIM</code> do not match gene rows in <code>memIM</code>, causing an error downstream. The problem appears to happen when the gene hit list does not match all entries in <code>memIM</code>, causing <code>geneIM</code> to have fewer rows.</li>
+<li>One solution is to reduce <code>memIM</code> - not ideal because we do not want to lose data.</li>
+<li>Another option is to expand <code>geneIM</code> - which requires inferring the incidence matrix. For directional data, it would impose <code>1</code> regardless of the intended directionality, since no other source is available.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_16may2024">16may2024<a class="anchor" aria-label="anchor" href="#id_16may2024"></a></h2>
+<ul><li>
+<p>edge bundling</p>
+<ul><li>Between two communities currently calculates the “central path” between the group centroids. Consider calculating the “central path” between the points with edges between the two communities.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_10may2024">10may2024<a class="anchor" aria-label="anchor" href="#id_10may2024"></a></h2>
+<ul><li>
+<p><code>igraph</code> adjustment scripting language?</p>
+<ul><li>
+<p>Combines:</p>
+<ul><li>
+<code>nudge_igraph_nodes()</code>: Fuscobac:<span class="emoji" data-emoji="x">❌</span>0.01:y:-0.02</li>
+<li>
+<code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code>: nodeset:A::degrees:45:x0.1:y-0.05:percent_spacing:7</li>
+<li>
+<code><a href="reference/apply_nodeset_spacing.html">apply_nodeset_spacing()</a></code>: nodeset:B::percent_spacing:7</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code>, <code><a href="reference/apply_nodeset_spacing.html">apply_nodeset_spacing()</a></code></p>
+<ul><li>Debug issue where <code>label.dist</code> and <code>label.degrees</code> are defined for subset of nodes, leaving other node attributes <code>NA</code> - which causes an error in <code><a href="reference/jam_igraph.html">jam_igraph()</a></code>. Occurs when only one nodeset is adjusted.</li>
+<li>Debug issue where <code>percent_spacing</code> fails in <code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code> when supplying custom nodegroups from community detection, and are not proper Cnet nodesets.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_03may2024">03may2024<a class="anchor" aria-label="anchor" href="#id_03may2024"></a></h2>
+<ul><li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> - lower priority but could be useful</p>
+<ul><li><p>Consider interactive view (plotly? InteractiveComplexHeatmap?) to enable hover text with the enrichment P-value, gene count, z-score. Could be particularly useful with directional output.</p></li>
+<li>
+<p>Consider optionally labeling the significant dots?</p>
+<ul><li>P-value</li>
+<li>z-score</li>
+<li>number of genes.</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_legend.html">mem_legend()</a></code> - lower priority, eventually necessary</p>
+<ul><li>Consider using <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legend.html" class="external-link">ComplexHeatmap::Legend()</a></code> for consistency with other legends, and to allow combining multiple legends together.</li>
+</ul></li>
+<li>
+<p>S4 object <code>mem</code> (or <code>MEM</code>?) - higher priority - sooner the better</p>
+<ul><li>
+<p>streamlined data content:</p>
+<ul><li><p>geneIM (im, direction, colors): <code>matrix</code> objects</p></li>
+<li><p>enrichIM, (pvalues, direction, geneCount, colors): <code>matrix</code> objects</p></li>
+<li><p>memIM: <code>matrix</code> object</p></li>
+<li><p>enrichList: <code>list</code> of <code>enrichResult</code> objects</p></li>
+<li><p>colorV: <code>character</code> vector of colors per enrichment</p></li>
+<li><p>colnames: <code>character</code> column assignment (consider omitting to enforce standardized colnames)</p></li>
+<li><p>omit: <code>multiEnrichMap</code> - in favor of <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, <code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code></p></li>
+<li><p>omit: <code>multiCnetPlot</code> - in favor of <code><a href="reference/mem_multienrichplot.html">mem_multienrichplot()</a></code></p></li>
+<li><p>optional: store output from <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> to keep a series of plots coordinated, using the same options: <code>pathway_column_split</code>, <code>gene_row_split</code>, <code>enrich_im_weight</code>, <code>gene_im_weight</code>, <code>column_method</code>, <code>row_method</code> (rename <code>column_method</code> to <code>pathway_method</code>?)</p></li>
+<li><p>optional <code>enrichment_hm</code>: <code>Heatmap</code> output from <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>?</p></li>
+</ul></li>
+<li>
+<p>methods:</p>
+<ul><li>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code>
+</li>
+<li>
+<code>enrichList()</code> - accessor for <code>mem@enrichList</code>
+</li>
+<li>
+<code>mem2dfs()</code> - create series of <code>data.frame</code> summarizing content, intended for export to Excel xlsx.</li>
+<li>
+<code>mem2xlsx()</code> - direct export to Excel xlsx, calling <code>mem2dfs()</code>.</li>
+</ul></li>
+<li>
+<p>behaviors</p>
+<ul><li>
+<code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> creates <code>MEM</code> object instead of <code>list</code> by default</li>
+<li>
+<code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> could also store/retrieve parameters from the <code>mem</code> input object.</li>
+<li>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> optionally stores plots into <code>mem</code> to maintian consistent plot attributes</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li><p>argument <code>do_which</code> - consider accepting <code>character</code> string terms, e.g. <code>"enrichment_hm"</code>, <code>"gp_hm"</code>, <code>"cnet_collapse_set"</code></p></li>
+<li>
+<p>Consider new argument <code>clusters_mem</code> for these uses:</p>
+<ul><li>allow user-defined pathway clusters</li>
+<li>allow user-defined pathway subsets (missing pathways are dropped)</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code></p>
+<ul><li>When provided <code>mpf$clusters_mem</code> as <code>list</code> it may result in singlet genes not connected to any pathways - these should (by default) be removed.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code> - debug</p>
+<ul><li>Apparently sometimes with singlet gene nodes it produces an error: <code>"Error in FUN(X[[i]], ...) : !anyNA(x) is not TRUE"</code> traceback pointed to this line: <code>sf::st_polygon(list(polym)) at jamenrich-igraphshapes.R#1635</code>
+</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_12mar2024">12mar2024<a class="anchor" aria-label="anchor" href="#id_12mar2024"></a></h2>
+<ul><li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>
+<p>Consider option to place the caption elsewhere.</p>
+<ul><li>Problem: The caption sometimes covers part of the color legend in the bottom-right corner.</li>
+<li>Another workaround might be to customize the legend layout, so it is not blocked by the caption.</li>
+</ul></li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>
+<p>Consider a workflow to merge pathway clusters, to allow flexibility in how pathway clusters are defined.</p>
+<ul><li>Problem: Pathway clusters are sometimes defined inconsistently, where clusters <code>"A"</code> and <code>"B"</code> might be nearly identical.</li>
+<li>Problem: It might be visually apparent how to sub-divide pathways, the user may need a mechanism to define pathways to specific clusters.</li>
+</ul></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_04mar2024">04mar2024<a class="anchor" aria-label="anchor" href="#id_04mar2024"></a></h2>
+<ul><li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>consider adding column <code>top_annotation</code> with pathway directionality, equivalent to the <code>left_annotation</code> used for gene directionality.</li>
+<li>Add row and column annotation padding by default, to help distinguish the central heatmap from the left and top annotations.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>when supplied with <code>geneHitIM</code> or <code>geneHitList</code>, calculate the <code>z-score</code> using the IPA formula: <code>z &lt;- (N_genes_up - N_genes_down) / sqrt(N_genes_up + N_genes_down)</code> as described [<a href="https://doi.org/10.1093/bioinformatics/btt703" class="external-link uri">https://doi.org/10.1093/bioinformatics/btt703</a>], and in their FAQ: <a href="https://qiagen.my.salesforce-sites.com/KnowledgeBase/KnowledgeNavigatorPage?id=kA41i000000L5nQCAS&amp;categoryName=BioX" class="external-link">IPA FAQ - Statistical Calculations</a>
+</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_30jan2024">30jan2024<a class="anchor" aria-label="anchor" href="#id_30jan2024"></a></h2>
+<ul><li>
+<p>DONE. <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>DONE. <code>geneHitIM</code> and <code>geneHitList</code> are not behaving as intended, nor consistently. They should be interchangeable and equivalent. When <code>geneHitIM</code> is supplied, it populates <code>geneIMdirection</code> but not <code>geneIM</code>. When <code>geneHitList</code> is supplied, it populates <code>geneIM</code> but not <code>geneIMdirection</code>. When either are supplied, they should populate the relevant row in <code>geneIM</code> and <code>geneIMdirection</code>.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_19jan2024">19jan2024<a class="anchor" aria-label="anchor" href="#id_19jan2024"></a></h2>
+<ul><li><p>Currently it is cumbersome to edit pathway labels. It could be done for the <code>mem</code> object itself, however the adjustment might need to be different for different plot outputs: heatmap may not work well using word-wrap, while Cnet plots might work best with word-wrap. Publication figures might need an abbreviated label to save plot space.</p></li>
+<li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li>Consider argument to enable custom adjustment of pathway labels.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>DONE. Consider argument <code>gene_annotations</code> to enable <code>"geneIM"</code>, <code>"geneIMdirection"</code>.</li>
+<li>DONE. When <code>mem$geneIMdirection</code> is present, include directionality in the gene clustering step.</li>
+<li>REWRITTEN ABOVE. Consider option to display pathway z-score (<code>mem$pathwayIMdirection</code>) similar to display of <code>mem$geneIMdirection</code>. New argument <code>pathway_annotations</code>.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_06nov2023">06nov2023<a class="anchor" aria-label="anchor" href="#id_06nov2023"></a></h2>
+<ul><li><p>DONE. Debug issue when rendering edge arrow heads, they look wonky.</p></li>
+<li>
+<p>Remove dependency on <code>sf</code> in <code><a href="reference/adjust_polygon_border.html">adjust_polygon_border()</a></code></p>
+<ul><li>use <code>polyclip</code> package as it is much more lightweight, without requiring RGEOS, LWGEOM, other world globe map-coordinate based libraries which are not easily compiled on all computer systems using R.</li>
+</ul></li>
+<li><p>Consider porting <code><a href="reference/deconcat_df2.html">deconcat_df2()</a></code> to <code>jamba</code> for wider re-use by jam packages that would not otherwise need dependency on <code>multienrichjam</code>.</p></li>
+<li>
+<p>Consider vectorizing edge arrow size</p>
+<ul><li>Currently all edge arrows must be the same size (the same limitation is present with <code>igraph::plot()</code>).</li>
+<li>This is a niche feature, arrows are rarely used in <code>multienrichjam</code>, and use of differently-sized arrows does not have a driving use case. (This feature is unlikely to move forward until needed.)</li>
+</ul></li>
+<li>
+<p>Consider <code>ggraph</code> compatibility in future.</p>
+<ul><li>Many R packages use <code>ggraph</code> for <code>igraph</code> plotting, so it might make sense for consistency to offer this feature. The output <code>ggplot</code> objects can be combined into larger figures using <code>patchwork</code> or <code>cowplot</code> easier than using base R <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> functions.</li>
+<li>My preference not to use <code>ggraph</code> is mainly because the returned <code>ggplot</code> object is not a useful network graph, it is only the instructions for visualization. As such, the layout, node customization, is not persistent outside the <code>ggplot</code> object. The package <code>clusterProfiler</code> migrated to <code>ggraph</code> and now all the returned objects are not useful because they cannot (easily) be customized and analyzed.</li>
+<li>However <code>ggraph</code> does not offer <code>pie</code> nor <code>coloredrectangle</code> node shapes.</li>
+<li>Note that <code>pie</code> nodes can be emulated with <code>geom_pie()</code> but</li>
+</ul><ol style="list-style-type: decimal"><li>is painfully slow to render because it is not vectorized,</li>
+<li>does not use inner borders, which allow adjacent wedge borders to be shown beside each other without overlapping.</li>
+</ol><ul><li>Task is to add new <code>geom</code> for <code>jampie</code> node shape that accepts pie wedge border colors drawn as inner border, with optional outer border color that also does not overlap the optional inner border.</li>
+<li>Another task is to implement edge bundling using <code>ggraph</code> compatible methods. It involves calculating edge bundles, then rendering the curved edges, optionally with arrow heads.</li>
+<li>Ultimately a utility function <code>jam_ggraph()</code> may be the <code>ggraph</code> equivalent of <code><a href="reference/jam_igraph.html">jam_igraph()</a></code> for plotting <code>igraph</code> objects.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_12oct2023">12oct2023<a class="anchor" aria-label="anchor" href="#id_12oct2023"></a></h2>
+<ul><li>
+<p>Integrate directionality with more steps in the workflow:</p>
+<ul><li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>Consider option to display direction of change in row (gene) annotations for each enrichment. Could display with or without enrichment-colored results?</li>
+</ul></li>
+</ul></li>
+<li>
+<p>Create <code>bookdown</code> documentation</p>
+<ul><li>Should it use a separate Github repository? (Probably yes.) It looks like <code>"jokergoo/circlize_book"</code> is the repo for the bookdown site.</li>
+</ul></li>
+<li>
+<p>Refactor <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> - maybe new function <code>multienrichjam()</code>?</p>
+<ul><li>
+<p>create <code>mem</code> S4 object with slots, print, summary functions</p>
+<ul><li>
+<p>suggested methods:</p>
+<ul><li>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> could default to <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> to show all data</li>
+<li>
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> could print summary of content: enrichments, pathways, genes</li>
+<li>consider <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> - convert to wide <code>data.frame</code> summary?</li>
+<li>
+<code>memIM()</code>, <code>geneIM()</code>, <code>enrichIM()</code> convenient access to slot data</li>
+<li>convenient way to get <code>list</code> format for IMs?</li>
+</ul></li>
+<li>
+<p>slots:</p>
+<ul><li>
+<code>memIM</code>: gene/pathway matrix</li>
+<li>
+<code>geneIM</code>: gene/enrichment matrix</li>
+<li>
+<code>enrichIM</code>: pathway/enrichment</li>
+<li>
+<code>geneIMdirection</code>: optional direction per gene/enrichment</li>
+<li>
+<code>geneIMcolors</code>: colors assigned per gene/enrichment</li>
+<li>
+<code>enrichIMdirection</code>: optional direction (z-score) per pathway/enrichment</li>
+<li>
+<code>enrichIMcolors</code>: colors assigned per pathway/enrichment</li>
+<li>
+<code>enrichIMgeneCount</code>: integer number of genes per pathway/enrichment</li>
+</ul></li>
+</ul></li>
+<li>
+<p>remove steps that create embedded Cnet and Emap <code>igraph</code> objects:</p>
+<ul><li>
+<code>multiCnetPlot</code>, <code>multiCnetPlot1</code>, <code>multiCnetPlot1b</code>, <code>multiCnetPlot2</code>
+</li>
+<li>
+<code>multiEnrichMap</code>, <code>multiEnrichMap2</code>
+</li>
+<li>
+<code>multiEnrichDF</code> - consider saving <code>data.frame</code> with clear name</li>
+<li>
+<code>multiEnrichResult</code> - What content is stored here?</li>
+</ul></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_12jul2023">12jul2023<a class="anchor" aria-label="anchor" href="#id_12jul2023"></a></h2>
+<ul><li>
+<p>New object classes:</p>
+<ul><li>
+<p><code>"mem"</code>: store output from <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li><p>(Essentially a formal replacement for <code>list</code> format used currently.)</p></li>
+<li><p>memIM</p></li>
+<li><p>enrichIM, enrichIMcolors, enrichIMdirection</p></li>
+<li><p>geneIM, geneIMcolors, geneIMdirection</p></li>
+<li><p>geneHitList</p></li>
+<li><p>colorV</p></li>
+<li>
+<p>params:</p>
+<ul><li>p_cutoff (from argument <code>cutoffRowMinP</code>)</li>
+<li>min_count</li>
+<li>topEnrichN</li>
+<li>pvalueColname</li>
+<li>directionColname</li>
+</ul></li>
+</ul></li>
+<li><p><code>"mem_plots"</code>: store <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> data for re-use.</p></li>
+</ul></li>
+<li>
+<p>New wrapper function <code>multienrich()</code> to replace <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>?</p>
+<ul><li>streamlined refactor and replacement for <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>
+</li>
+<li>avoids defining Cnet and Emap data, pushing into <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>
+</li>
+<li>reduces arguments by removing all visualization arguments</li>
+<li>consider storing <code>memIM</code> data as <code>SummarizedExperiment</code> for convenient use with <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> via <code><a href="https://rdrr.io/pkg/jamses/man/heatmap_se.html" class="external-link">jamses::heatmap_se()</a></code>.</li>
+<li>returns <code>mem</code> object.</li>
+</ul></li>
+<li>
+<p>Update <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li><p>input <code>mem</code> object</p></li>
+<li><p>add <code><a href="reference/mem2emap.html">mem2emap()</a></code> plot output.</p></li>
+<li>
+<p>consider using <code><a href="https://rdrr.io/pkg/jamses/man/heatmap_se.html" class="external-link">jamses::heatmap_se()</a></code> for heatmap functions</p>
+<ul><li>it adds <code>jamses</code> as dependency, along with its dependencies</li>
+<li>it puts pressure to refactor the jamses contrast stats code</li>
+<li>should <code><a href="https://rdrr.io/pkg/jamses/man/heatmap_se.html" class="external-link">jamses::heatmap_se()</a></code> be moved to new package focused only on SummarizedExperiment heatmaps?</li>
+<li>See Bioconductor package <code>sechm</code> which is much less capable, but has the same inspiration. It provides <strong>row scaling</strong> (ack) as a recommended (!) option. (Problematic, sorry to say. For gene expression data, the magnitude of change is important, and matters. To rescale the numeric range for <strong>consistency</strong> is counter to the biology, and to the technology. The technology has measurement limitations, for which seeing the <strong>actual</strong> numeric differences is important for assessing whether changes are reliable from that platform. These differences also transfer into follow-up confirmation assays, where changes below a threshold are not feasible to confirm. In general, gene (transcript or protein) expression fold changes are relatively consistently measured for each gene, so to <strong>enhance</strong> the apparent fold change of one gene to fit the fold change of another gene is not necessary, certainly not by default.)</li>
+</ul></li>
+</ul></li>
+<li>
+<p>Consider new R package for SummarizedExperiment heatmaps</p>
+<ul><li>move <code><a href="https://rdrr.io/pkg/jamses/man/heatmap_se.html" class="external-link">jamses::heatmap_se()</a></code> into this package</li>
+<li>move <code><a href="https://rdrr.io/pkg/platjam/man/design2colors.html" class="external-link">platjam::design2colors()</a></code> into this package</li>
+<li>minimize R package dependencies</li>
+</ul></li>
+<li>
+<p>R packages to review</p>
+<ul><li>Bioconductor package <code>"ConsensusClusterPlus"</code> which can be used to determine appropriate <code>k</code> values for k-means clustering, with metrics to assess consistency of cluster assignment.</li>
+<li>
+<code>"GeneTonic"</code> function <code>ggs_graph()</code> produces a Cnet plot which they export to <code>visIgraph()</code> for interactivity; <code>enrichment_map()</code> creates EnrichMap.</li>
+<li>
+<code>"monaLisa"</code> - motif enrichment, extends HOMER theme; nice heatmap Motif labels</li>
+<li>
+<code>"profileplyr"</code> - coverage heatmap using tidyverse plyr syntax</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_14jun2023">14jun2023<a class="anchor" aria-label="anchor" href="#id_14jun2023"></a></h2>
+<ul><li>
+<p>DONE: <code><a href="reference/reorderIgraphNodes.html">reorder_igraph_nodes()</a></code></p>
+<ul><li>When <code>orderByAspect=TRUE</code>, and it detects tall-skinny aspect ratio, it appears to be applying the y-axis sorting bottom-to-top instead of top-to-bottom.</li>
+<li>The culprit was <code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> default argument, changed from <code>nodeSortBy=c("x", "y")</code> to <code>nodeSortBy=c("x", "-y")</code>.</li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>Slightly increase the spacing between heatmap body and row/column annotations. Currently the gap between heatmap row/column split is identical to the gap between heatmap and row/column annotations, which makes it harder to distinguish one from the other.</li>
+<li>The same can be accomplished using <code>ComplexHeatmap::ht_opts()</code> but the option is hard to remember, and would ideally need to be set back to the previous value after drawing the plot.</li>
+</ul></li>
+</ul></div>
 <div class="section level2">
 <h2 id="id_05jun2023">05jun2023<a class="anchor" aria-label="anchor" href="#id_05jun2023"></a></h2>
 <ul><li>

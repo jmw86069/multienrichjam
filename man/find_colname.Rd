@@ -80,6 +80,7 @@ Other jam utility functions:
 \code{\link{enrichList2geneHitList}()},
 \code{\link{filter_mem_genes}()},
 \code{\link{filter_mem_sets}()},
+\code{\link{get_hull_data}()},
 \code{\link{get_igraph_layout}()},
 \code{\link{gsubs_remove}()},
 \code{\link{handle_igraph_param_list}()},

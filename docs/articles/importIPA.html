@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">multienrichjam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.78.900</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.87.900</span>
       </span>
     </div>
 
@@ -127,7 +127,8 @@ exported in text format from IPA.</p>
 <code class="sourceCode R"><span><span class="va">newborn_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span>
 <span>   <span class="st">"Newborns-IPA.txt"</span>,</span>
 <span>   package<span class="op">=</span><span class="st">"multienrichjam"</span><span class="op">)</span>;</span>
-<span><span class="va">newborn_dfl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/importIPAenrichment.html">importIPAenrichment</a></span><span class="op">(</span><span class="va">newborn_txt</span><span class="op">)</span>;</span></code></pre></div>
+<span><span class="va">newborn_dfl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/importIPAenrichment.html">importIPAenrichment</a></span><span class="op">(</span><span class="va">newborn_txt</span><span class="op">)</span>;</span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:47:56</span>) 19Aug2024:   <span style="color: #FFAF00;">IPA xref data was not found, expecting section: '</span><span style="color: #D70000;">Analysis Ready Molecules</span><span style="color: #FFAF00;">', handling as: </span><span style="color: #D70000;">revert_ipa_xref=FALSE</span></span></span></code></pre></div>
 <p>The result is a list of <code>data.frame</code> objects, where each
 <code>data.frame</code> represents one enrichment test. A convenient way
 to see the dimensions of each <code>data.frame</code> is with the
@@ -154,7 +155,9 @@ function:</p>
 <span><span class="va">ipa_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Newborns<span class="op">=</span><span class="va">newborn_txt</span>,</span>
 <span>   OlderChildren<span class="op">=</span><span class="va">olderchildren_txt</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ipa_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ipa_files</span>, <span class="va">importIPAenrichment</span><span class="op">)</span>;</span></code></pre></div>
+<span><span class="va">ipa_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ipa_files</span>, <span class="va">importIPAenrichment</span><span class="op">)</span>;</span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:47:56</span>) 19Aug2024:   <span style="color: #FFAF00;">IPA xref data was not found, expecting section: '</span><span style="color: #D70000;">Analysis Ready Molecules</span><span style="color: #FFAF00;">', handling as: </span><span style="color: #D70000;">revert_ipa_xref=FALSE</span> </span></span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:47:56</span>) 19Aug2024:   <span style="color: #FFAF00;">IPA xref data was not found, expecting section: '</span><span style="color: #D70000;">Analysis Ready Molecules</span><span style="color: #FFAF00;">', handling as: </span><span style="color: #D70000;">revert_ipa_xref=FALSE</span></span></span></code></pre></div>
 <p>Now we can check the dimensions within each list using
 <code><a href="https://rdrr.io/pkg/jamba/man/sdim.html" class="external-link">jamba::ssdim()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -273,215 +276,215 @@ setSize
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid
 Arthritis
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid
 Arthritis
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.405
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NaN
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.00321
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 TNFSF13B
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3935501
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid
 Arthritis
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3935501
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 1
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 312
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Neuroinflammation Signaling Pathway
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Neuroinflammation Signaling Pathway
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.406
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NaN
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.00322
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 CASP8
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3926449
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Neuroinflammation Signaling Pathway
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3926449
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 1
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 311
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Sirtuin Signaling Pathway
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Sirtuin Signaling Pathway
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.428
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NaN
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.00344
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 HIST1H1D
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3732502
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Sirtuin Signaling Pathway
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3732502
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 1
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 291
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 G-Protein Coupled Receptor Signaling
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 G-Protein Coupled Receptor Signaling
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.447
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NaN
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.00362
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 PRKAR2B
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3572728
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 G-Protein Coupled Receptor Signaling
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3572728
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 1
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 276
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Protein Ubiquitination Pathway
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Protein Ubiquitination Pathway
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.461
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NaN
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.00377
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 TAP2
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3459394
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Protein Ubiquitination Pathway
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3459394
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 1
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 265
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Signaling by Rho Family GTPases
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Signaling by Rho Family GTPases
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.478
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NaN
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.00397
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 RDX
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3326596
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 Signaling by Rho Family GTPases
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 0.3326596
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 1
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 252
 </td>
 </tr>
@@ -529,353 +532,370 @@ class_v2
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 enrichLabels
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 character
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 colorV
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 character
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 geneHitList
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 list
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
+geneHitIM
+</td>
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
+68
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
+2
+</td>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
+matrix
+</td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+array
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 geneIM
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 34
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 matrix
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 array
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 geneIMcolors
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 34
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 matrix
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 array
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 enrichIMgeneCount
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 matrix
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 array
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 enrichIMdirection
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 matrix
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 array
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 enrichList
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 list
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 enrichIM
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 matrix
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 array
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 enrichIMcolors
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 2
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 matrix
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 array
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiEnrichDF
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 12
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 data.frame
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiEnrichResult
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 14
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 enrichResult
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 memIM
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 34
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 matrix
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 array
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiEnrichMap
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 220
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 igraph
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiEnrichMap2
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 30
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 220
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 igraph
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiCnetPlot
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 64
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 110
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 igraph
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiCnetPlot1
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 64
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 110
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 igraph
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiCnetPlot1b
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 64
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 110
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 igraph
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 multiCnetPlot2
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 64
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 110
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 igraph
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 colnames
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 5
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 list
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 p_cutoff
 </td>
-<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 1
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 </td>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 numeric
 </td>
-<td style="text-align:left;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
 NA
 </td>
 </tr>
@@ -933,20 +953,20 @@ genes to label.</li>
 <span>   do_which<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>,</span>
 <span>   verbose<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>   main<span class="op">=</span><span class="st">"Canonical Pathways"</span><span class="op">)</span>;</span>
-<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:00</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Gene-pathway heatmap</span> </span></span>
-<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:00</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">1</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Enrichment P-value Heatmap</span></span></span></code></pre></div>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:00</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Gene-pathway heatmap (pre-emptive)</span> </span></span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:00</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">1</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Enrichment P-value Heatmap</span></span></span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem_folio-1.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:00</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Gene-pathway heatmap</span> </span></span>
-<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:00</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">2</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Gene-Pathway Heatmap</span></span></span></code></pre>
+<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:00</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Gene-pathway heatmap</span> </span></span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:00</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">2</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Gene-Pathway Heatmap</span></span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-2.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:01</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Defined </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;"> pathway clusters.</span> </span></span>
-<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:01</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Preparing Cnet collapsed</span> </span></span>
-<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:02</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">subsetCnetIgraph()</span> </span></span>
-<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:02</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">3</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and cluster labels</span></span></span></code></pre>
+<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:02</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Defined </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;"> pathway clusters.</span> </span></span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:02</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">Preparing Cnet collapsed</span> </span></span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:02</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">subsetCnetIgraph()</span> </span></span>
+<span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:02</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">3</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and cluster labels</span></span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-3.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:02</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and set labels</span></span></span></code></pre>
+<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:02</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">4</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with gene and set labels</span></span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-4.png" width="960" style="display: block; margin: auto;"></p>
-<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">12:40:02</span>) 12Jun2023:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">5</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with set labels, without gene labels</span></span></span></code></pre>
+<pre><code><span><span class="co">#&gt; ##  (<span style="color: #00D7D7; font-weight: bold;">11:48:03</span>) 19Aug2024:   <span style="color: #FF8700;">mem_plot_folio(): </span><span style="color: #00AFFF;">plot_num </span><span style="color: #87D7FF;">5</span><span style="color: #00AFFF;">: </span><span style="color: #FF8700;">Cnet collapsed </span><span style="color: #FFAF5F;">with set labels, without gene labels</span></span></span></code></pre>
 <p><img src="importIPA_files/figure-html/mem_folio-5.png" width="960" style="display: block; margin: auto;"></p>
 <p>The object returned <code>mem_canonical_plots</code> will contain a
 list of the graphical objects for each plot requested. For example, each
