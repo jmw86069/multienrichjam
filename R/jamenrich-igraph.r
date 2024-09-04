@@ -90,7 +90,9 @@ layout_with_qfr <- function
    ## It also handles the changes made to igraph which produce a character
    ## edgelist instead of numeric edgelist
    e <- igraph::get.edgelist(g, names=FALSE);
-   set.seed(seed);
+   if (length(seed) > 0) {
+      set.seed(head(seed, 1));
+   }
 
    ## Handle weights from E(g)$weight if supplied
    if (length(weights) == 0 && "weight" %in% igraph::list.edge.attributes(g)) {
@@ -713,7 +715,9 @@ igraph2pieGraph <- function
             repulse,
             ")");
       }
-      set.seed(seed);
+      if (length(seed) > 0) {
+         set.seed(head(seed, 1));
+      }
       g <- relayout_with_qfr(g,
          repulse=repulse,
          ...);

@@ -56,6 +56,10 @@ This function is likely to work only with \code{grid} or \code{ComplexHeatmap}
 input. Other objects that have \code{draw()} defined may not work
 properly.
 
+Note: This function may be superceded by the ability to include
+an overall title when using \code{ComplexHeatmap::draw()}, which was not
+originally possible.
+
 This function is intended to help make it easier to wrap a
 heatmap from \code{ComplexHeatmap::Heatmap()} inside the relevant
 grid viewports in order to display one large title at the

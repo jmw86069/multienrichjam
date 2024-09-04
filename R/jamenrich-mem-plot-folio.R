@@ -334,6 +334,18 @@
 #'    will auto-detect whether there is directionality present in the
 #'    data, and will set `apply_direction=TRUE` only when there are non-NA
 #'    values that differ from zero.
+#' @param rotate_heatmap `logical` passed to `mem_gene_pathway_heatmap()`
+#'    and only this function, default `FALSE`. It indicates whether to
+#'    rotate the heatmap to have gene columns and pathway rows.
+#'    If you find most people tilt their head to read the pathways,
+#'    it might be preferable.
+#' @param row_anno_padding,column_anno_padding `grid::unit` or `numeric`
+#'    which will be converted to "mm" units. These values control the
+#'    space between the heatmap body and row/column annotations,
+#'    respectively, only relevant for `mem_gene_pathway_heatmap()`.
+#'    The value is only applied during `draw()` and cannot be
+#'    defined in the `Heatmap` object itself, which is why it is
+#'    included here and not `mem_gene_pathway_heatmap()`.
 #' @param do_plot `logical` indicating whether to render each plot.
 #'    When `do_plot=FALSE` the plot objects will be created and returned,
 #'    but the plot itself will not be rendered. This option may be
@@ -384,8 +396,11 @@ mem_plot_folio <- function
     "gene_count_rank"),
  edge_bundling="connections",
  apply_direction=NULL,
+ rotate_heatmap=FALSE,
+ row_anno_padding=grid::unit(3, "mm"),
+ column_anno_padding=grid::unit(3, "mm"),
  do_plot=TRUE,
- verbose=TRUE,
+ verbose=FALSE,
  ...)
 {
    if (length(p_cutoff) == 0) {
@@ -427,12 +442,22 @@ mem_plot_folio <- function
       enrich_im_weight=enrich_im_weight,
       gene_im_weight=gene_im_weight,
       colorize_by_gene=colorize_by_gene,
+      rotate_heatmap=rotate_heatmap,
       ...);
 
    # Extract hclust object for re-use in the enrichment heatmap
-   gp_hm_hclust <- gp_hm@column_dend_param$obj;
-   if (length(gp_hm_hclust) == 0) {
-      gp_hm_hclust <- gp_hm@column_dend_param$fun(t(gp_hm@matrix));
+   use_sets <- colnames(gp_hm@matrix);
+   if (rotate_heatmap) {
+      gp_hm_hclust <- gp_hm@row_dend_param$obj;
+      if (length(gp_hm_hclust) == 0) {
+         gp_hm_hclust <- gp_hm@row_dend_param$fun(t(gp_hm@matrix));
+      }
+      use_sets <- rownames(gp_hm@matrix);
+   } else {
+      gp_hm_hclust <- gp_hm@column_dend_param$obj;
+      if (length(gp_hm_hclust) == 0) {
+         gp_hm_hclust <- gp_hm@column_dend_param$fun(t(gp_hm@matrix));
+      }
    }
 
 
@@ -459,7 +484,7 @@ mem_plot_folio <- function
       mem_hm <- jamba::call_fn_ellipsis(
          mem_enrichment_heatmap,
          mem=mem,
-         sets=colnames(gp_hm@matrix),
+         sets=use_sets,
          p_cutoff=p_cutoff,
          p_floor=p_floor,
          color_by_column=color_by_column,
@@ -474,17 +499,21 @@ mem_plot_folio <- function
          do_plot=do_plot,
          cluster_rows=gp_hm_hclust,
          ...);
-      # mem_hm <- mem_enrichment_heatmap(mem,
-      #    p_cutoff=p_cutoff,
-      #    p_floor=p_floor,
-      #    color_by_column=color_by_column,
-      #    row_cex=row_cex,
-      #    row_method=row_method,
-      #    column_cex=column_cex,
-      #    column_method=column_method,
-      #    style=style,
-      #    ...);
       if (do_plot) {
+         if (length(row_anno_padding) > 0) {
+            if (!grid::is.unit(row_anno_padding)) {
+               row_anno_padding <- grid::unit(row_anno_padding, "mm");
+            }
+            rowpad <- ComplexHeatmap::ht_opt("ROW_ANNO_PADDING")
+            ComplexHeatmap::ht_opt(ROW_ANNO_PADDING=row_anno_padding)
+         }
+         if (length(column_anno_padding) > 0) {
+            if (!grid::is.unit(column_anno_padding)) {
+               column_anno_padding <- grid::unit(column_anno_padding, "mm");
+            }
+            columnpad <- ComplexHeatmap::ht_opt("COLUMN_ANNO_PADDING")
+            ComplexHeatmap::ht_opt(COLUMN_ANNO_PADDING=column_anno_padding)
+         }
          if (!color_by_column) {
             if ("annotation_legend_list" %in% names(attributes(mem_hm))) {
                annotation_legend_list <- attributes(mem_hm)$annotation_legend_list;
@@ -500,6 +529,12 @@ mem_plot_folio <- function
                }
             }
          }
+         if (length(row_anno_padding) > 0) {
+            ComplexHeatmap::ht_opt(ROW_ANNO_PADDING=rowpad)
+         }
+         if (length(column_anno_padding) > 0) {
+            ComplexHeatmap::ht_opt(COLUMN_ANNO_PADDING=columnpad)
+         }
       }
       ret_vals$enrichment_hm <- mem_hm;
    }
@@ -514,29 +549,6 @@ mem_plot_folio <- function
    if (verbose) {
       jamba::printDebug("mem_plot_folio(): ",
          "Gene-pathway heatmap");
-   }
-   if (FALSE) {
-      # This section is performed as the first step and is
-      # no longer required at this point.
-      gp_hm <- mem_gene_path_heatmap(mem,
-         p_cutoff=p_cutoff,
-         p_floor=p_floor,
-         row_method=row_method,
-         column_split=pathway_column_split,
-         column_title=pathway_column_title,
-         row_split=gene_row_split,
-         row_title=gene_row_title,
-         column_method=column_method,
-         row_cex=row_cex,
-         column_cex=column_cex,
-         use_raster=use_raster,
-         min_gene_ct=min_gene_ct,
-         min_set_ct=min_set_ct,
-         min_set_ct_each=min_set_ct_each,
-         enrich_im_weight=enrich_im_weight,
-         gene_im_weight=gene_im_weight,
-         colorize_by_gene=colorize_by_gene,
-         ...);
    }
 
    ## draw the heatmap
@@ -594,7 +606,11 @@ mem_plot_folio <- function
       }
    }
    ## Obtain heatmap pathway clusters
-   clusters_mem <- jamba::heatmap_column_order(gp_hm);
+   if (rotate_heatmap) {
+      clusters_mem <- jamba::heatmap_row_order(gp_hm);
+   } else {
+      clusters_mem <- jamba::heatmap_column_order(gp_hm);
+   }
    ret_vals$clusters_mem <- clusters_mem;
    ## Get number of pathway clusters
    pathway_clusters_n <- length(clusters_mem);

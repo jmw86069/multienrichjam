@@ -152,6 +152,32 @@
 #' @param colramp `character` name of color, color gradient, or a
 #'    vector of colors, anything compatible with input to
 #'    `jamba::getColorRamp()`.
+#' @param column_names_max_height `grid::unit` passed to
+#'    `ComplexHeatmap::Heatmap()`.
+#' @param column_names_rot `numeric` passed to
+#'    `ComplexHeatmap::Heatmap()`.
+#' @param show_gene_legend,show_pathway_legend `logical` whether to show
+#'    the gene IM and pathway IM legends, respectively.
+#'    * The gene IM legend is `FALSE` by default, since it only describes the
+#'    color used for each column, and is somewhat redundant with the pathway
+#'    IM legend.
+#'    * The pathway IM legend displays the color scale including the range
+#'    of enrichment P-values colorized.
+#' @param show_heatmap_legend `numeric` or `logical`, (default 8)
+#'    with the maximum number of labels to use for the heatmap color legend.
+#'    The heatmap color legend includes all the
+#'    the possible blended colors based upon the gene IM data.
+#'    * When `logical`, `TRUE` is converted to `8` by default.
+#'    * When there are more legend items than than `show_heatmap_legend`
+#'    the color legend will only display singlet colors.
+#' @param use_raster `logical` passed to `ComplexHeatmap::Heatmap()`,
+#'    (default TRUE), indicating whether to rasterize the heatmap body.
+#'    If the heatmap appears too blurry, use `FALSE` which will render each
+#'    heatmap cell individually. For very large heatmaps this can create
+#'    a very large PDF file size, and may introduce visual artifacts
+#'    if the output dimensions are smaller than 1 cell per pixel.
+#' @param seed `numeric` value passed to `set.seed()` to define a
+#'    reproducible random seed.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization. However, if `...` causes an error, the same
@@ -231,6 +257,9 @@ mem_gene_path_heatmap <- function
  ...)
 {
    #
+   if (length(seed) > 0) {
+      set.seed(head(seed, 1));
+   }
    if (length(colnames(mem$memIM)) == 0) {
       colnames(mem$memIM) <- rownames(mem$enrichIM);
    }
@@ -503,7 +532,9 @@ mem_gene_path_heatmap <- function
          # t((mem$memIM[genes, sets, drop=FALSE] != 0) * 1) * im_weight # incidence
       );
       if (is.numeric(column_split)) {
-         set.seed(seed);
+         if (length(seed) > 0) {
+            set.seed(head(seed, 1));
+         }
          cluster_columns <- amap::hcluster(
             link="ward",
             column_matrix,
@@ -511,7 +542,9 @@ mem_gene_path_heatmap <- function
       } else {
          cluster_column_slices=FALSE;
          cluster_columns <- function(x, ...){
-            set.seed(seed);
+            if (length(seed) > 0) {
+               set.seed(head(seed, 1));
+            }
             userows <- rownames(x);
             use_x <- jamba::rmNA(naValue=0,
                column_matrix[match(userows, rownames(column_matrix)), , drop=FALSE]);
@@ -553,7 +586,9 @@ mem_gene_path_heatmap <- function
          # ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight)
       }
       if (is.numeric(row_split)) {
-         set.seed(seed);
+         if (length(seed) > 0) {
+            set.seed(head(seed, 1));
+         }
          cluster_rows <- amap::hcluster(
             link="ward",
             row_matrix,
@@ -561,7 +596,9 @@ mem_gene_path_heatmap <- function
       } else {
          cluster_row_slices=FALSE;
          cluster_rows <- function(x, ...){
-            set.seed(seed);
+            if (length(seed) > 0) {
+               set.seed(head(seed, 1));
+            }
             userows <- rownames(x);
             usematrix <- jamba::rmNA(naValue=0,
                row_matrix[x, , drop=FALSE]);
@@ -655,7 +692,9 @@ mem_gene_path_heatmap <- function
    }
 
    ## Create the heatmap
-   set.seed(seed);
+   if (length(seed) > 0) {
+      set.seed(head(seed, 1));
+   }
 
    # pathway annotation legend param
    path_annotation_legend_param <- lapply(jamba::nameVectorN(col_iml4), function(i){
@@ -679,35 +718,39 @@ mem_gene_path_heatmap <- function
    );
 
    # generate usable caption describing the relevant parameters used
+   gene_type <- "gene";
+   set_type <- "set";
    caption <- c(
-      paste0(jamba::formatInt(length(genes)), " gene rows"),
-      paste0(jamba::formatInt(length(sets)), " set columns"));
+      paste0(jamba::formatInt(length(genes)),
+         " ", gene_type, ifelse(length(genes) != 1, "s")),
+      paste0(jamba::formatInt(length(sets)),
+         " ", gene_type, ifelse(length(genes) != 1, "s")));
    if (TRUE %in% rotate_heatmap) {
-      caption <- c(
-         paste0(jamba::formatInt(length(sets)), " set rows"),
-         paste0(jamba::formatInt(length(genes)), " gene columns"));
+      caption <- paste(caption, c("(columns)", "(rows)"));
+   } else {
+      caption <- paste(caption, c("(rows)", "(columns)"));
    }
    ## Generate caption as Legend
    caption_list <- list(
       Summary=caption,
       Clustering=c(
-         paste0("column = '", column_method, "'"),
-         paste0("row = '", row_method, "'")),
+         paste0(set_type, "s = '", column_method, "'"),
+         paste0(gene_type, "s = '", row_method, "'")),
       Filtering=jamba::rmNA(c(
          paste0("enrichment P <= ", p_cutoff),
          ifelse(min_gene_ct > 1,
-            paste0("genes per set >= ", min_gene_ct),
+            paste0(gene_type, "s per ", set_type, " >= ", min_gene_ct),
             NA),
          ifelse(min_set_ct > 1,
-            paste0("sets per gene >= ", min_set_ct),
+            paste0(set_type, "s per ", gene_type, " >= ", min_set_ct),
             NA))),
       `IM weights`=c(
-         paste0("enrich_im_weight = ", format(enrich_im_weight, digits=3)),
-         paste0("gene_im_weight = ", format(gene_im_weight, digits=3))))
+         paste0(set_type, " IM weight: ", format(enrich_im_weight, digits=3)),
+         paste0(gene_type, "IM weight: ", format(gene_im_weight, digits=3))))
    # make convenient text summary
-   caption <- cat(paste0(collapse="\n",
+   caption <- paste0(collapse="\n",
       paste0(names(caption_list), ":\n"),
-      jamba::cPaste(caption_list, sep="\n")))
+      jamba::cPaste(caption_list, sep="\n"));
    # Convert to list of Legend objects
    caption_legends <- lapply(names(caption_list), function(lname){
       caption_grob <- grid::textGrob(
@@ -1280,8 +1323,8 @@ mem_enrichment_heatmap <- function
    if (length(heatmap_legend_param) == 0) {
       heatmap_legend_param <- list(
          border="black",
-         labels_gp=gpar(fontsize=10 * legend_cex),
-         title_gp=gpar(fontsize=10 * legend_cex),
+         labels_gp=grid::gpar(fontsize=10 * legend_cex),
+         title_gp=grid::gpar(fontsize=10 * legend_cex),
          legend_height=legend_height);
    }
 
@@ -1382,8 +1425,8 @@ mem_enrichment_heatmap <- function
             type="points",
             pch=pch,
             ncol=pt_legend_ncol,
-            labels_gp=gpar(fontsize=10 * legend_cex),
-            title_gp=gpar(fontsize=10 * legend_cex),
+            labels_gp=grid::gpar(fontsize=10 * legend_cex),
+            title_gp=grid::gpar(fontsize=10 * legend_cex),
             size=grid::unit(ct_tick_sizes, "mm"),
             grid_height=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),
             grid_width=grid::unit(max(ct_tick_sizes) * 0.95, "mm"),

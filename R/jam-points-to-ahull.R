@@ -153,7 +153,9 @@ make_point_hull <- function
    }
 
    # ensure at least 3 points
-   set.seed(seed);
+   if (length(seed) > 0) {
+      set.seed(head(seed, 1));
+   }
    x <- unique(x);
 
    npoints <- nrow(x);
@@ -175,7 +177,9 @@ make_point_hull <- function
       }
    }
 
-   set.seed(seed);
+   if (length(seed) > 0) {
+      set.seed(head(seed, 1));
+   }
    # default size
    xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
    if (length(alpha) == 0 || any(is.na(alpha))) {

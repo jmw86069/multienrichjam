@@ -202,8 +202,41 @@ refer to the output heatmap options.
 vector of colors, anything compatible with input to
 \code{jamba::getColorRamp()}.}
 
-\item{seed}{\code{numeric} value passed to \code{set.seed()} to allow
-reproducible results, typically with clustering operations.}
+\item{column_names_max_height}{\code{grid::unit} passed to
+\code{ComplexHeatmap::Heatmap()}.}
+
+\item{column_names_rot}{\code{numeric} passed to
+\code{ComplexHeatmap::Heatmap()}.}
+
+\item{show_gene_legend, show_pathway_legend}{\code{logical} whether to show
+the gene IM and pathway IM legends, respectively.
+\itemize{
+\item The gene IM legend is \code{FALSE} by default, since it only describes the
+color used for each column, and is somewhat redundant with the pathway
+IM legend.
+\item The pathway IM legend displays the color scale including the range
+of enrichment P-values colorized.
+}}
+
+\item{show_heatmap_legend}{\code{numeric} or \code{logical}, (default 8)
+with the maximum number of labels to use for the heatmap color legend.
+The heatmap color legend includes all the
+the possible blended colors based upon the gene IM data.
+\itemize{
+\item When \code{logical}, \code{TRUE} is converted to \code{8} by default.
+\item When there are more legend items than than \code{show_heatmap_legend}
+the color legend will only display singlet colors.
+}}
+
+\item{use_raster}{\code{logical} passed to \code{ComplexHeatmap::Heatmap()},
+(default TRUE), indicating whether to rasterize the heatmap body.
+If the heatmap appears too blurry, use \code{FALSE} which will render each
+heatmap cell individually. For very large heatmaps this can create
+a very large PDF file size, and may introduce visual artifacts
+if the output dimensions are smaller than 1 cell per pixel.}
+
+\item{seed}{\code{numeric} value passed to \code{set.seed()} to define a
+reproducible random seed.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 

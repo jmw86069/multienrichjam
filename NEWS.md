@@ -5,6 +5,10 @@
 * `mem_plot_folio()`
 
    * Moved workhorse function to its own .R file.
+   * Changed default: `verbose=FALSE`.
+   * New argument `rotate_heatmap` to handle this workflow properly.
+   * New arguments `row_anno_padding`, `column_anno_padding` to control
+   the padding between heatmap and row and column annotations, respectively.
 
 * `mem_gene_path_heatmap()`
 
@@ -13,12 +17,18 @@
    rather than being tucked into the corner where it sometimes
    overlapped other heatmap labels.
    * Caption now displays the rows/columns counts first.
-   * Default caption font size 8 instead of 6.
+   Remaining values are more user-friendly.
+   * Default caption font size 10 instead of 6, consistent with
+   color legend text.
+   * Argument `seed` is utilized.
 
 * `make_point_hull()`
 
    * New argument default `label_preset=NULL`.
    * Argument `label_preset` is properly recognized.
+
+* Overall: Functions with argument `seed` now properly ignore the seed
+when it is `NULL`, thereby allowing random behavior when preferred.
 
 # multienrichjam 0.0.87.900
 
