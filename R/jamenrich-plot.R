@@ -1200,7 +1200,7 @@ mem_enrichment_heatmap <- function
 (mem,
  style=c("dotplot_inverted",
     "dotplot",
-    "heatmap",
+    "heatmap"),
  p_cutoff=mem$p_cutoff,
  min_count=1,
  p_floor=1e-10,
