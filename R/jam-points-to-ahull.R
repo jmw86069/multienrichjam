@@ -52,6 +52,13 @@
 #'    R package dependencies.
 #' @param smooth `logical` indicating whether to smooth the final polygon
 #'    using `graphics::xspline()`.
+#' @param label_preset `character` (default `NULL`) indicating the side
+#'    to place a label, when `label` is provided.
+#'    Recognized values: `"bottom", "top", "left", "right"`.
+#'    When `NULL` it detects the offset from the plot center.
+#' @param label_adj_preset `character` (default label_preset) indicating
+#'    the label adjustment relative to the position of the label. In
+#'    most cases it should equal `label_preset`.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -68,6 +75,7 @@
 #'       main="hull_method='alphahull'")
 #'    phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
 #'       hull_method="alphahull",
+#'       label="alphahull",
 #'       add=TRUE, xpd=TRUE)
 #' }
 #'
@@ -111,12 +119,20 @@ make_point_hull <- function
  label.cex=1,
  label.x.nudge=0,
  label.y.nudge=0,
- label_preset="bottom",
+ label_preset=NULL,
  label_adj_preset=label_preset,
  verbose=FALSE,
  ...)
 {
    # validate hull_method
+   if (length(label_preset) > 0) {
+      label_preset <- head(intersect(label_preset,
+         c("bottom", "top", "left", "right")), 1)
+   }
+   if (length(label_adj_preset) > 0) {
+      label_adj_preset <- head(intersect(label_adj_preset,
+         c("bottom", "top", "left", "right")), 1)
+   }
    if (TRUE %in% verbose) {
       jamba::printDebug("make_point_hull(): ",
          "label.y.nudge:",
@@ -139,8 +155,9 @@ make_point_hull <- function
    # ensure at least 3 points
    set.seed(seed);
    x <- unique(x);
+
    npoints <- nrow(x);
-   if (nrow(unique(x)) < 3) {
+   if (npoints < 3) {
       xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
       x <- jamba::rbindList(list(
          x,
@@ -278,7 +295,7 @@ make_point_hull <- function
             class(hull_sf));
       }
 
-      # expand polygon using sp buffer
+      # expand polygon using sf::st_buffer
       xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
       if (length(buffer) == 0) {
          buffer <- xy_max * expand;
@@ -410,6 +427,7 @@ make_point_hull <- function
          }
          # determine the hull placement from plot center
          parusr <- par("usr");
+         ## Todo: consider using point farthest from plot center
          hull_center <- c(x=mean(range(mxys[,1], na.rm=TRUE)),
             y=mean(range(mxys[,2], na.rm=TRUE)));
          plot_center <- c(x=mean(parusr[1:2], na.rm=TRUE),
@@ -418,20 +436,29 @@ make_point_hull <- function
             jamba::rad2deg(atan2(
                y=(hull_center[2] - plot_center[2]),
                x=(hull_center[1] - plot_center[1]))) + 270) %% 360);
-         if (hull_degree >= 315 || hull_degree <= 45) {
-            label_preset <- "top";
+         if (length(label_preset) == 0) {
+            if (hull_degree >= 315 || hull_degree <= 45) {
+               label_preset <- "top";
+            } else if (hull_degree >= 135 && hull_degree <= 225) {
+               label_preset <- "bottom";
+            } else if (hull_degree <= 135) {
+               label_preset <- "right"
+            } else {
+               label_preset <- "left"
+            }
+         }
+         if ("top" %in% label_preset) {
             use_mxys <- which.max(mxys[,2]);
-         } else if (hull_degree >= 135 && hull_degree <= 225) {
-            label_preset <- "bottom";
+         } else if ("bottom" %in% label_preset) {
             use_mxys <- which.min(mxys[,2]);
-         } else if (hull_degree <= 135) {
-            label_preset <- "right"
+         } else if ("right" %in% label_preset5) {
             use_mxys <- which.max(mxys[,1]);
          } else {
-            label_preset <- "left"
             use_mxys <- which.min(mxys[,1]);
          }
-         label_adj_preset <- label_preset;
+         if (length(label_adj_preset) == 0) {
+            label_adj_preset <- label_preset;
+         }
          # calculate preset position
          label_xy <- jamba::coordPresets(
             preset=label_preset,

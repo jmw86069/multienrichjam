@@ -159,16 +159,17 @@
 #'    which is intended to allow overloading `...` for different
 #'    functions.
 #'
-#' @return `Heatmap` object defined in `ComplexHeatmap::Heatmap()`, with
-#'    two additional attributes:
-#'    * `"caption"` - a `character` string with important clustering settings.
+#' @returns `Heatmap` object defined in `ComplexHeatmap::Heatmap()`, with
+#'    additional attributes:
+#'    * `"caption"` - a `character` string with caption that described
+#'    the data dimensions and clustering parameters.
+#'    * `"caption_legendlist"` - a `ComplexHeatmap::Legends` object suitable
+#'    to be included with Heatmap legends using
+#'    `draw(hm, annotation_legend_list=caption_legendlist)`, or
+#'    drawn with `grid::grid.draw(caption_legendlist)`.
 #'    * `"draw_caption"` - a `function` that will draw the caption in the
-#'    bottom-left corner of the heatmap, calling
-#'    `ComplexHeatmap::grid.textbox()`. This function should be called
-#'    with no parameters, for example:
-#'       ```R
-#'       attr(hm, "draw_caption")()
-#'       ```
+#'    bottom-left corner of the heatmap by default, to be called
+#'    with `attr(hm, "draw_caption")()` or `draw_caption()`.
 #'
 #'    In addition, the returned object can be interrogated with two helper
 #'    functions that help define the row and column clusters, and the
@@ -678,27 +679,101 @@ mem_gene_path_heatmap <- function
    );
 
    # generate usable caption describing the relevant parameters used
-   caption <- paste0("Hierarchical clustering:\n",
-      "   column metric = '", column_method, "'\n",
-      "   row metric = '", row_method, "'\n",
-      "Filtering:\n   enrichment P-value <= ", p_cutoff,
-      "\n   genes per set >= ", min_gene_ct,
-      "\n   sets per gene >= ", min_set_ct,
-      "\n",
-      "IM weights:\n",
-      "   enrich_im_weight = ", format(enrich_im_weight, digits=3), "\n",
-      "   gene_im_weight = ", format(gene_im_weight, digits=3),
-      "\n")
+   caption <- c(
+      paste0(jamba::formatInt(length(genes)), " gene rows"),
+      paste0(jamba::formatInt(length(sets)), " set columns"));
    if (TRUE %in% rotate_heatmap) {
-      caption <- paste0(caption,
-         jamba::formatInt(length(sets)), " set rows",
-         " x ",
-         jamba::formatInt(length(genes)), " gene columns")
-   } else {
-      caption <- paste0(caption,
-         jamba::formatInt(length(genes)), " gene rows",
-         " x ",
-         jamba::formatInt(length(sets)), " set columns");
+      caption <- c(
+         paste0(jamba::formatInt(length(sets)), " set rows"),
+         paste0(jamba::formatInt(length(genes)), " gene columns"));
+   }
+   ## Generate caption as Legend
+   caption_list <- list(
+      Summary=caption,
+      Clustering=c(
+         paste0("column = '", column_method, "'"),
+         paste0("row = '", row_method, "'")),
+      Filtering=jamba::rmNA(c(
+         paste0("enrichment P <= ", p_cutoff),
+         ifelse(min_gene_ct > 1,
+            paste0("genes per set >= ", min_gene_ct),
+            NA),
+         ifelse(min_set_ct > 1,
+            paste0("sets per gene >= ", min_set_ct),
+            NA))),
+      `IM weights`=c(
+         paste0("enrich_im_weight = ", format(enrich_im_weight, digits=3)),
+         paste0("gene_im_weight = ", format(gene_im_weight, digits=3))))
+   # make convenient text summary
+   caption <- cat(paste0(collapse="\n",
+      paste0(names(caption_list), ":\n"),
+      jamba::cPaste(caption_list, sep="\n")))
+   # Convert to list of Legend objects
+   caption_legends <- lapply(names(caption_list), function(lname){
+      caption_grob <- grid::textGrob(
+         label=jamba::cPaste(sep="\n",
+            caption_list[[lname]]),
+         gp=grid::gpar(fontsize=10,
+            lineheight=1),
+         hjust=0, vjust=0)
+      text_legend2 <- ComplexHeatmap::Legend(
+         title=paste0(lname),
+         grob=caption_grob,
+         title_position="topleft",
+         type="grid")
+   })
+   caption_legendlist <- ComplexHeatmap::packLegend(
+      list=caption_legends,
+      direction="vertical")
+   # jamba::nullPlot(plotAreaTitle="");ComplexHeatmap::draw(caption_legendlist);
+   ## Unclear if we will use draw_caption() in future,
+   ## since we prefer caption_legendlist as ComplexHeatmap legend
+   draw_caption <- function
+   (use_caption=caption_legendlist,
+    x=grid::unit(1, "npc"),
+    y=grid::unit(0, "npc"),
+    just=NULL,
+    ...)
+   {
+      if (length(x) == 0) {
+         x <- 0.5;
+      }
+      if (length(y) == 0) {
+         y <- 0.5;
+      }
+      if (!grid::is.unit(x)) {
+         x <- grid::unit(x, "npc");
+      }
+      if (!grid::is.unit(y)) {
+         y <- grid::unit(y, "npc");
+      }
+      xv <- (as.numeric(x));
+      yv <- (as.numeric(y));
+      caption_legendlist <- use_caption;
+      caption_legendlist@grob$vp$justification <- c(xv, yv)
+      caption_legendlist@grob$vp$valid.just <- c(xv, yv)
+      if (length(just) == 0) {
+         just <- c("right", "bottom");
+         if (xv == 0) {
+            just[1] <- "left";
+         } else if (xv > 0 && xv < 1) {
+            just[1] <- "center";
+         }
+         if (yv == 1) {
+            just[2] <- "top";
+         } else if (yv < 1 && yv > 0) {
+            just[2] <- "center";
+         }
+      }
+      just <- rep(just, length.out=2);
+      brc <- grid::viewport(x=x,
+         y=y,
+         width=0.03, height=0.03,
+         default.units="npc",
+         just=just)
+      grid::pushViewport(brc);
+      grid::grid.draw(caption_legendlist@grob);
+      grid::popViewport();
    }
 
    # raster_device workaround
@@ -806,52 +881,6 @@ mem_gene_path_heatmap <- function
          left_annotation <- do.call(ComplexHeatmap::rowAnnotation,
             gene_arglist);
       }
-      # quick and dirty approach to annotations
-      if (FALSE) {
-      if (all(c("im", "direction") %in% gene_annotations)) {
-         left_annotation <- ComplexHeatmap::rowAnnotation(
-            col=list(col_iml1,
-               direction=col_div_xf(1.2)),
-            df=mem$geneIM[genes, , drop=FALSE],
-            direction=mem$geneIMdirection[genes, , drop=FALSE],
-            border=TRUE,
-            show_legend=show_gene_legend,
-            annotation_legend_param=c(gene_annotation_legend_param,
-               list(direction=list(color_bar="discrete",
-                  at=c(-1, 0, 1),
-                  labels=c("down", "no change", "up"),
-                  border="black"))),
-            annotation_name_rot=column_names_rot,
-            gap=grid::unit(c(2, rep(0, ncol(mem$geneIM) - 1)), "mm")
-         )
-      } else if ("im" %in% gene_annotations) {
-         left_annotation <- ComplexHeatmap::rowAnnotation(
-            col=col_iml1,
-            border=TRUE,
-            show_legend=show_gene_legend,
-            annotation_legend_param=gene_annotation_legend_param,
-            annotation_name_rot=column_names_rot,
-            #gp=grid::gpar(col="#00000011"), # per-cell border
-            df=mem$geneIM[genes, , drop=FALSE],
-            gap=grid::unit(0, "mm")
-         );
-      } else if ("direction" %in% gene_annotations) {
-         left_annotation <- ComplexHeatmap::rowAnnotation(
-            col=list(direction=col_div_xf(1.2)),
-            border=TRUE,
-            show_legend=show_gene_legend,
-            annotation_legend_param=list(
-               direction=list(color_bar="discrete",
-                  at=c(-1, 0, 1),
-                  labels=c("down", "no change", "up"),
-                  border="black")),
-            annotation_name_rot=column_names_rot,
-            #gp=grid::gpar(col="#00000011"), # per-cell border
-            direction=mem$geneIMdirection[genes, , drop=FALSE],
-            gap=grid::unit(0, "mm")
-         );
-      }
-      }
 
       hm <- tryCatch({
          jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
@@ -914,29 +943,7 @@ mem_gene_path_heatmap <- function
       })
       # add caption in attributes
       attr(hm, "caption") <- caption;
-      draw_caption <- function
-      (text=caption,
-         x=grid::unit(1, "npc"),
-         y=grid::unit(0, "npc"),
-         fontsize=6,
-         font="Arial",
-         just=c("right", "bottom"),
-         ...)
-      {
-         ComplexHeatmap::grid.textbox(
-            text=text,
-            x=x,
-            y=y,
-            just=just,
-            gp=grid::gpar(
-               col="midnightblue",
-               fontsize=fontsize,
-               font=font),
-            background_gp=grid::gpar(
-               col="transparent",
-               fill="#FFFFFF"),
-            ...)
-      }
+      attr(hm, "caption_legendlist") <- caption_legendlist;
       attr(hm, "draw_caption") <- draw_caption;
    } else {
       ########################################################################
@@ -1015,6 +1022,8 @@ mem_gene_path_heatmap <- function
       })
       # add caption in attributes
       attr(hm, "caption") <- caption;
+      attr(hm, "caption_legendlist") <- caption_legendlist;
+      attr(hm, "draw_caption") <- draw_caption;
    }
 
    return(hm);
@@ -2494,24 +2503,19 @@ mem_plot_folio <- function
 
    # generate caption and include in returned results
    draw_caption <- NULL;
+   caption_legendlist <- NULL;
    caption <- NULL;
+   if ("caption_legendlist" %in% names(attributes(gp_hm))) {
+      caption_legendlist <- attr(gp_hm, "caption_legendlist");
+   }
+   if ("caption" %in% names(attributes(gp_hm))) {
+      caption <- attr(gp_hm, "caption");
+   }
    if ("draw_caption" %in% names(attributes(gp_hm))) {
       draw_caption <- attr(gp_hm, "draw_caption");
-      caption <- attr(gp_hm, "caption");
-   } else {
-      caption <- paste0("Hierarchical clustering: column metric '",
-         column_method,
-         "'; row metric '",
-         row_method,
-         "'\n",
-         "Data filtering: enrichment P-value <= ", p_cutoff,
-         "; genes per set >= ", min_gene_ct,
-         "; sets per gene >= ", min_set_ct,
-         "\n",
-         jamba::formatInt(nrow(gp_hm)), " rows x ",
-         jamba::formatInt(ncol(gp_hm)), " columns");
    }
    ret_vals$gp_hm <- gp_hm;
+   ret_vals$gp_hm_caption_legendlist <- caption_legendlist;
    ret_vals$gp_hm_caption <- caption;
 
    if (length(do_which) == 0 || plot_num %in% do_which) {
@@ -2525,16 +2529,26 @@ mem_plot_folio <- function
       #row_anno_padding <- ComplexHeatmap::ht_opt$ROW_ANNO_PADDING;
       #column_anno_padding <- ComplexHeatmap::ht_opt$COLUMN_ANNO_PADDING;
       if (do_plot) {
-         if (length(draw_caption) > 0) {
+         if (length(caption_legendlist) > 0) {
+            ComplexHeatmap::draw(gp_hm,
+               annotation_legend_list=caption_legendlist,
+               merge_legends=TRUE,
+               column_title=main,
+               column_title_gp=grid::gpar(fontsize=18));
+         } else if (length(draw_caption) > 0) {
             ComplexHeatmap::draw(gp_hm,
                merge_legends=TRUE,
                column_title=main,
                column_title_gp=grid::gpar(fontsize=18));
             draw_caption();
          } else {
-            grid_with_title(gp_hm,
-               title=main,
-               caption=caption);
+            ComplexHeatmap::draw(gp_hm,
+               merge_legends=TRUE,
+               column_title=main,
+               column_title_gp=grid::gpar(fontsize=18));
+            # grid_with_title(gp_hm,
+            #    title=main,
+            #    caption=caption);
          }
       }
    }

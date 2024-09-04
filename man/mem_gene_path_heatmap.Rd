@@ -215,16 +215,17 @@ functions.}
 }
 \value{
 \code{Heatmap} object defined in \code{ComplexHeatmap::Heatmap()}, with
-two additional attributes:
+additional attributes:
 \itemize{
-\item \code{"caption"} - a \code{character} string with important clustering settings.
+\item \code{"caption"} - a \code{character} string with caption that described
+the data dimensions and clustering parameters.
+\item \code{"caption_legendlist"} - a \code{ComplexHeatmap::Legends} object suitable
+to be included with Heatmap legends using
+\code{draw(hm, annotation_legend_list=caption_legendlist)}, or
+drawn with \code{grid::grid.draw(caption_legendlist)}.
 \item \code{"draw_caption"} - a \code{function} that will draw the caption in the
-bottom-left corner of the heatmap, calling
-\code{ComplexHeatmap::grid.textbox()}. This function should be called
-with no parameters, for example:
-
-\if{html}{\out{<div class="sourceCode R">}}\preformatted{attr(hm, "draw_caption")()
-}\if{html}{\out{</div>}}
+bottom-left corner of the heatmap by default, to be called
+with \code{attr(hm, "draw_caption")()} or \code{draw_caption()}.
 }
 
 In addition, the returned object can be interrogated with two helper

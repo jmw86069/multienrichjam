@@ -1,3 +1,21 @@
+# multienrichjam 0.0.88.900
+
+## changes to existing functions
+
+* `mem_gene_path_heatmap()`
+
+   * The caption is displayed as a ComplexHeatmap Legend, therefore
+   using consistent font and alignment with the color legends,
+   rather than being tucked into the corner where it sometimes
+   overlapped other heatmap labels.
+   * Caption now displays the rows/columns counts first.
+   * Default caption font size 8 instead of 6.
+
+* `make_point_hull()`
+
+   * New argument default `label_preset=NULL`.
+   * Argument `label_preset` is properly recognized.
+
 # multienrichjam 0.0.87.900
 
 The next update will likely use `Mem` S4 object instead of `list`,

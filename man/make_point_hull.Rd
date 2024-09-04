@@ -24,7 +24,7 @@ make_point_hull(
   label.cex = 1,
   label.x.nudge = 0,
   label.y.nudge = 0,
-  label_preset = "bottom",
+  label_preset = NULL,
   label_adj_preset = label_preset,
   verbose = FALSE,
   ...
@@ -81,6 +81,15 @@ R package dependencies.
 \item{smooth}{\code{logical} indicating whether to smooth the final polygon
 using \code{graphics::xspline()}.}
 
+\item{label_preset}{\code{character} (default \code{NULL}) indicating the side
+to place a label, when \code{label} is provided.
+Recognized values: \verb{"bottom", "top", "left", "right"}.
+When \code{NULL} it detects the offset from the plot center.}
+
+\item{label_adj_preset}{\code{character} (default label_preset) indicating
+the label adjustment relative to the position of the label. In
+most cases it should equal \code{label_preset}.}
+
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
@@ -115,6 +124,7 @@ if (jamba::check_pkg_installed("alphahull")) {
       main="hull_method='alphahull'")
    phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
       hull_method="alphahull",
+      label="alphahull",
       add=TRUE, xpd=TRUE)
 }
 

@@ -1,6 +1,58 @@
 # TODO
 
+## 04sep2024
+
+* Consider returning updated `igraph` from `jam_igraph()`
+
+   * Currently returns `invisible(NULL)`.
+   * For example, after applying all the updates to `igraph` values
+   such as node size, label size, label distance, etc.
+   * The end goal is to be able to call `jam_igraph(output)` with no
+   additional arguments and have it (mostly) render the identical figure.
+
+## 30aug2024
+
+* Add unit tests.
+
+   * Cover all basic functionality.
+   * Examples and vignettes should already cover the core workflow.
+
+* Consider adjustments to `make_point_hull()`
+
+   * font size
+   * distance from hull
+
+* Big picture: Consider using `venndir::JamPolygon` instead of `sf` polygons.
+
+   * Would calculate offsets, rescale, transform, using `JamPolygon` functions.
+   * Biggest benefit is to reduce dependencies, `sf` is heavy.
+
+
 ## 16aug2024
+
+* `mem_gene_path_heatmap()`
+
+   * Changed default caption to use `ComplexHeatmap::Legend()` format
+   so it can be included along with color legends.
+   * Increased caption font, it was not legible.
+   * Moved the `gene rows, set columns` labels to the top, split in two rows.
+   * Return added attribute `"caption_legendlist"`.
+
+* `apply_cnet_direction()`
+
+   * Change default logic to use `pie.border` always instead of
+   switching to `frame.color` when all borders are identical.
+   I think this logic should belong in the plotting function
+   to decide how to render nodes, `jam_igraph()`
+   Also more convenient when reviewing the data, user should only
+   have to look at `pie.border` and not combination of `pie.border`
+   and `frame.color`.
+
+
+* `mem_enrichment_heatmap()`
+
+   * Consider adding `top_annotation` using the `colorV` colors per
+   enrichment, for consistency with `mem_gene_path_heatmap()` and Cnet plots.
 
 * DONE. Add `add_pathway_direction()`
 
