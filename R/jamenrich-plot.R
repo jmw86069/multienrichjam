@@ -1076,35 +1076,39 @@ mem_gene_path_heatmap <- function
 #'
 #' MultiEnrichment Heatmap of enrichment P-values
 #'
+#' Note: It is recommended to call `mem_plot_folio()` with `do_which=1`
+#' in order to utilize the gene-pathway content during clustering,
+#' which is more effective at clustering similar pathways by gene
+#' content. Otherwise pathways are clustered using only the
+#' `-log10(p)` enrichment P-value.
+#'
 #' This function is a lightweight wrapper to `ComplexHeatmap::Heatmap()`
 #' intended to visualize the enrichment P-values from multiple
 #' enrichment results. The P-value threshold is used to colorize
 #' every cell whose P-value meets the threshold, while all other
 #' cells are therefore white.
 #'
+#' ## Drawing Dotplot with Point Legend
 #' The `style` argument controls whether a heatmap or dotplot is
-#' created. When `style="dotplot"` the cells are colored as usual
-#' but are drawn as circles sized proportional to the number of
-#' genes involved in enrichment. Because `ComplexHeatmap::Heatmap()`
-#' is used for this step, a separate point legend is returned
+#' created.
+#' * `style="dotplot"`: each heatmap cell is not filled, and the color
+#' is drawn as a circle with size proportional to the number of
+#' genes involved in enrichment. A separate point legend is returned
+#' as an attribute of the heatmap object.
+#' * `style="dotplot_inverted"`: each heatmap cell is filled, and
+#' a circle is drawn with size proportional to the number of
+#' genes involved in enrichment. A separate point legend is returned
 #' as an attribute of the heatmap object.
 #'
 #' To draw the dotplot heatmap including the point legend,
-#' use this form:
+#' use this command:
 #'
 #' ```R
 #' ComplexHeatmap::draw(hm,
 #'    annotation_legend_list=attr(hm, "annotation_legend_list"))
 #' ```
 #'
-#' Note that this function may be more easily applied through the
-#' wrapper function with the format `mem_plot_folio(mem, do_which=1, ...)`.
-#' The wrapper function `mem_plot_folio()` performs hierarchical
-#' clustering of the underlying gene-pathway incidence matrix, which
-#' informs the clustering of enrichment results shown
-#' in this function `mem_enrichment_heatmap()`. Otherwise, this
-#' function will cluster pathways using only the enrichment
-#' P-values transformed with `-log10(p)`. Generally, the clustering
+#' Generally, the clustering
 #' using the gene-pathway incidence matrix is more effective at
 #' representing biologically-driven pathway clusters.
 #'
@@ -1194,8 +1198,9 @@ mem_gene_path_heatmap <- function
 #' @export
 mem_enrichment_heatmap <- function
 (mem,
- style=c("dotplot",
-    "heatmap"),
+ style=c("dotplot_inverted",
+    "dotplot",
+    "heatmap",
  p_cutoff=mem$p_cutoff,
  min_count=1,
  p_floor=1e-10,
@@ -1210,6 +1215,7 @@ mem_enrichment_heatmap <- function
  row_fontsize=NULL,
  row_cex=1,
  row_split=NULL,
+ row_gap=grid::unit(2, "mm"),
  cluster_rows=TRUE,
  column_fontsize=NULL,
  column_cex=1,
@@ -1418,7 +1424,7 @@ mem_enrichment_heatmap <- function
       if (length(ct_ticks) >= 8) {
          pt_legend_ncol <- 2;
       }
-      if ("dotplot" %in% style) {
+      if (any(grepl("dotplot", style))) {
          pt_legend <- ComplexHeatmap::Legend(
             labels=ct_ticks,
             title="Gene Count",
@@ -1472,16 +1478,26 @@ mem_enrichment_heatmap <- function
             c("-log10Pvalue",
                "z-score",
                "geneCount"));
+         legend_bivariate <- make_legend_bivariate(col_bivariate,
+            ylab="-log10pvalue",
+            xlab="z-score");
+         use_col_fn <- col_bivariate;
+         # if ("dotplot_inverted" %in% style) {
+         #    use_col_fn <- function(x, y){
+         #       rep("#FFFFFF", length.out=length(x))
+         #    };
+         # }
          cell_fun_custom <- cell_fun_bivariate(
             list(
                use_direction,
                use_matrix,
                mem$enrichIMgeneCount),
+            invert=grepl("invert", style),
             pch=pch,
             size_fun=ct_approxfun,
             size_by=size_by,
             outline_style="darker",
-            col_hm=col_bivariate,
+            col_hm=use_col_fn,
             show=show,
             cex=cexCellnote,
             prefix=c("z-score: ",
@@ -1489,24 +1505,28 @@ mem_enrichment_heatmap <- function
                "genes: ")[show],
             ...
          );
-         legend_bivariate <- make_legend_bivariate(col_bivariate,
-            ylab="-log10pvalue",
-            xlab="z-score");
          anno_legends <- c(anno_legends,
             list(legend_bivariate));
          show_heatmap_legend <- FALSE;
       } else {
+         use_col_fn <- col_logp;
+         # if ("dotplot_inverted" %in% style) {
+         #    use_col_fn <- function(x){
+         #       rep("#FFFFFF", length.out=length(x))
+         #    };
+         # }
          show_heatmap_legend <- TRUE;
          cell_fun_custom <- cell_fun_bivariate(
             list(
                use_matrix,
                use_direction,
                mem$enrichIMgeneCount),
+            invert=grepl("invert", style),
             pch=pch,
             size_fun=ct_approxfun,
             size_by=3,
             outline_style="darker",
-            col_hm=col_logp,
+            col_hm=use_col_fn,
             show=show,
             cex=cexCellnote,
             type="univariate",
@@ -1515,45 +1535,6 @@ mem_enrichment_heatmap <- function
                "genes: ")[show],
             ...
          );
-
-         cell_fun_custom_old <- function(j, i, x, y, width, height, fill) {
-            cell_value <- jamba::rmNA(naValue=0,
-               use_matrix[i, j]);
-            cell_color <- col_logp(cell_value);
-            # draw grid through center of each cell
-            grid::grid.lines(x=x + width * c(-1/2, 1/2, NA, 0, 0),
-               y=y + height * c(0, 0, NA, -1/2, 1/2),
-               gp=grid::gpar(col="grey80"));
-            if (abs(cell_value) >= -log10(p_cutoff)) {
-               cell_size <- ct_approxfun(mem$enrichIMgeneCount[i, j]);
-               grid::grid.points(x=x,
-                  y=y,
-                  pch=21,
-                  default.units="mm",
-                  size=grid::unit(cell_size, "mm"),
-                  gp=grid::gpar(
-                     col=jamba::makeColorDarker(cell_color),
-                     fill=cell_color))
-               if (cexCellnote > 0.01) {
-                  grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
-                     x=x,
-                     y=y,
-                     gp=grid::gpar(
-                        fontsize=20 * cexCellnote * 1.05,
-                        fontface=2,
-                        col=jamba::setTextContrastColor(jamba::setTextContrastColor(cell_color, useGrey=15)))
-                  )
-                  grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
-                     x=x,
-                     y=y,
-                     gp=grid::gpar(
-                        fontsize=20 * cexCellnote,
-                        fontface=1,
-                        col=jamba::setTextContrastColor(cell_color, useGrey=15))
-                  )
-               }
-            }
-         }
       }
       # validate row_split
       if (length(row_split) > 0 && length(row_split) >= nrow(use_matrix)) {
@@ -1584,6 +1565,7 @@ mem_enrichment_heatmap <- function
          row_names_gp=grid::gpar(fontsize=row_fontsize),
          row_names_max_width=row_names_max_width,
          row_split=row_split,
+         row_gap=grid::unit(2, "mm"),
          column_names_gp=grid::gpar(fontsize=column_fontsize),
          column_names_max_height=column_names_max_height,
          cluster_columns=cluster_columns,

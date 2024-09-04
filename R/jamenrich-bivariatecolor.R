@@ -210,6 +210,9 @@ display_colorRamp2D <- function
 #' @param type `character` string indicating whether the color function
 #'    uses bivariate or univariate logic. This argument is intended to
 #'    allow this function to be used in both scenarios for consistency.
+#' @param invert `logical` indicating whether to invert the color fill,
+#'    such that each cell is filled with color, and the circle is drawn
+#'    empty on top.
 #' @param ... additional arguments are passed to `col_hm()` to allow
 #'    custom options relevant to that function.
 #'
@@ -313,11 +316,15 @@ cell_fun_bivariate <- function
  grid_color="grey80",
  type=c("bivariate",
     "univariate"),
+ invert=FALSE,
  verbose=FALSE,
  ...)
 {
    outline_style <- match.arg(outline_style);
    type <- match.arg(type);
+   if (TRUE %in% invert) {
+      grid_color <- NULL;
+   }
    if (!is.list(m) || (is.list(m) && length(m) < 2)) {
       stop("Input must be a list with two or more matrix objects.")
    }
@@ -416,14 +423,41 @@ cell_fun_bivariate <- function
                y=y + height * c(0, 0, NA, -1/2, 1/2),
                gp=grid::gpar(col=grid_color));
          }
-         grid::grid.points(x=x,
-            y=y,
-            pch=pch,
-            default.units="mm",
-            size=grid::unit(cell_size, "mm"),
-            gp=grid::gpar(
-               col=outline_col,
-               fill=cell_color));
+         if (TRUE %in% invert) {
+            # fill the cell
+            if (FALSE %in% outline) {
+               rect_col <- NA;
+            } else {
+               rect_col <- outline_col;
+            }
+            grid::grid.rect(x=x,
+               y=y,
+               width=width,
+               height=height,
+               gp=grid::gpar(
+                  col=rect_col,
+                  fill=cell_color));
+            text_col <- jamba::setTextContrastColor(cell_color);
+            # draw the point
+            grid::grid.points(x=x,
+               y=y,
+               pch=pch,
+               default.units="mm",
+               size=grid::unit(cell_size, "mm"),
+               gp=grid::gpar(
+                  # col=outline_col,
+                  col="black",
+                  fill="#FFFFFF"));
+         } else {
+            grid::grid.points(x=x,
+               y=y,
+               pch=pch,
+               default.units="mm",
+               size=grid::unit(cell_size, "mm"),
+               gp=grid::gpar(
+                  col=outline_col,
+                  fill=cell_color));
+         }
          text_col <- "black";
       } else {
          grid::grid.rect(x=x,

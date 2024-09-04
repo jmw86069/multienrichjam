@@ -22,6 +22,7 @@ cell_fun_bivariate(
   size_by = 1,
   grid_color = "grey80",
   type = c("bivariate", "univariate"),
+  invert = FALSE,
   verbose = FALSE,
   ...
 )
@@ -65,6 +66,10 @@ the colors are used directly, and \code{col_hm} is not used.}
 \item{type}{\code{character} string indicating whether the color function
 uses bivariate or univariate logic. This argument is intended to
 allow this function to be used in both scenarios for consistency.}
+
+\item{invert}{\code{logical} indicating whether to invert the color fill,
+such that each cell is filled with color, and the circle is drawn
+empty on top.}
 
 \item{...}{additional arguments are passed to \code{col_hm()} to allow
 custom options relevant to that function.}

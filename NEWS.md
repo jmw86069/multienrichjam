@@ -1,3 +1,19 @@
+# multienrichjam 0.0.88.950
+
+## changes to existing functions
+
+* `mem_enrichment_heatmap()`
+
+   * New option `style="dotplot_inverted"` due to a cool recent paper
+   using this style. I like it so much, it is the new default.
+   Much easier to see the color and the size of the circle, especially
+   for cells with very small circles.
+
+* `cell_fun_bivariate()`
+
+   * New argument `invert=FALSE` to control whether to draw colored circles,
+   or colored cells with white circles on top (`invert=TRUE`).
+
 # multienrichjam 0.0.88.900
 
 ## changes to existing functions

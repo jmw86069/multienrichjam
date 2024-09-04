@@ -6,7 +6,7 @@
 \usage{
 mem_enrichment_heatmap(
   mem,
-  style = c("dotplot", "heatmap"),
+  style = c("dotplot", "heatmap", "dotplot_inverted"),
   p_cutoff = mem$p_cutoff,
   min_count = 1,
   p_floor = 1e-10,
@@ -21,6 +21,7 @@ mem_enrichment_heatmap(
   row_fontsize = NULL,
   row_cex = 1,
   row_split = NULL,
+  row_gap = grid::unit(2, "mm"),
   cluster_rows = TRUE,
   column_fontsize = NULL,
   column_cex = 1,
@@ -153,36 +154,43 @@ for customization.}
 MultiEnrichment Heatmap of enrichment P-values
 }
 \details{
+Note: It is recommended to call \code{mem_plot_folio()} with \code{do_which=1}
+in order to utilize the gene-pathway content during clustering,
+which is more effective at clustering similar pathways by gene
+content. Otherwise pathways are clustered using only the
+\code{-log10(p)} enrichment P-value.
+
 This function is a lightweight wrapper to \code{ComplexHeatmap::Heatmap()}
 intended to visualize the enrichment P-values from multiple
 enrichment results. The P-value threshold is used to colorize
 every cell whose P-value meets the threshold, while all other
 cells are therefore white.
+\subsection{Drawing Dotplot with Point Legend}{
 
 The \code{style} argument controls whether a heatmap or dotplot is
-created. When \code{style="dotplot"} the cells are colored as usual
-but are drawn as circles sized proportional to the number of
-genes involved in enrichment. Because \code{ComplexHeatmap::Heatmap()}
-is used for this step, a separate point legend is returned
+created.
+\itemize{
+\item \code{style="dotplot"}: each heatmap cell is not filled, and the color
+is drawn as a circle with size proportional to the number of
+genes involved in enrichment. A separate point legend is returned
 as an attribute of the heatmap object.
+\item \code{style="dotplot_inverted"}: each heatmap cell is filled, and
+a circle is drawn with size proportional to the number of
+genes involved in enrichment. A separate point legend is returned
+as an attribute of the heatmap object.
+}
 
 To draw the dotplot heatmap including the point legend,
-use this form:
+use this command:
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{ComplexHeatmap::draw(hm,
    annotation_legend_list=attr(hm, "annotation_legend_list"))
 }\if{html}{\out{</div>}}
 
-Note that this function may be more easily applied through the
-wrapper function with the format \code{mem_plot_folio(mem, do_which=1, ...)}.
-The wrapper function \code{mem_plot_folio()} performs hierarchical
-clustering of the underlying gene-pathway incidence matrix, which
-informs the clustering of enrichment results shown
-in this function \code{mem_enrichment_heatmap()}. Otherwise, this
-function will cluster pathways using only the enrichment
-P-values transformed with \code{-log10(p)}. Generally, the clustering
+Generally, the clustering
 using the gene-pathway incidence matrix is more effective at
 representing biologically-driven pathway clusters.
+}
 }
 \seealso{
 Other jam plot functions: 
