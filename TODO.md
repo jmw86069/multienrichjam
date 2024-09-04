@@ -2,6 +2,8 @@
 
 ## 04sep2024
 
+* Fix the `row_title` for the enrichment heatmap when called by
+`mem_plot_folio()`, currently it uses numbers instead of `LETTERS`.
 * Consider returning updated `igraph` from `jam_igraph()`
 
    * Currently returns `invisible(NULL)`.

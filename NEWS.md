@@ -2,6 +2,10 @@
 
 ## changes to existing functions
 
+* `mem_plot_folio()`
+
+   * Moved workhorse function to its own .R file.
+
 * `mem_gene_path_heatmap()`
 
    * The caption is displayed as a ComplexHeatmap Legend, therefore
