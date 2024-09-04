@@ -8,6 +8,8 @@
    using this style. I like it so much, it is the new default.
    Much easier to see the color and the size of the circle, especially
    for cells with very small circles.
+   From Jang et al, the Waggoner lab, Nature Genetics 2024:
+   https://doi.org/10.1038/s41588-024-01880-x
 
 * `cell_fun_bivariate()`
 
