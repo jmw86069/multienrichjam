@@ -407,7 +407,8 @@ jam_igraph_arrows <- function
    r.arr <- c(sqrt(x.arr ^ 2 + y.arr ^ 2), NA)
 
    if (verbose > 1) {
-      jamba::printDebug("arrow df:");
+      jamba::printDebug("jam_igraph_arrows(): ",
+         "arrow df:");
       arrow_list <- list(x=x,
          h.lwd=h.lwd,
          delta=delta,

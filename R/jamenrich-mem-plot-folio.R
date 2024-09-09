@@ -73,25 +73,46 @@
 #'
 #' The folio of plots includes:
 #'
-#' 1. **Enrichment Heatmap**, using enrichment P-values via
-#' `mem_enrichment_heatmap()`. Plot #1.
-#' 2. **Gene-Pathway Incidence Matrix Heatmap** using `mem_gene_path_heatmap()`.
-#' This step visualizes the pathway clustering to be used by all
-#' other plots in the folio. Plot #2.
-#' 3. **Cnet Cluster Plot** representing Gene-Pathway clusters as a network,
-#' created using `collapse_mem_clusters()`, then plotted with `jam_igraph()`.
-#' Plots #3, #4, and #5.
-#' 4. **Cnet Exemplar Plots** using exemplar pathways from each
-#' gene-pathway cluster, with increase number of exemplars included
-#' from each cluster (n per cluster). Cnet `igraph` objects are created
-#' using `subsetCnetIgraph()`, then plotted with `jam_graph()`.
-#' Plots #6, #7, and #8.
-#' 5. **Cnet Individual Cluster Plots** with one plot for each gene-pathway
-#' cluster defined above, including all pathways within the cluster.
-#' These plots are mostly useful when a particular cluster may
-#' have multiple sub-clusters included together. The plots can be useful
-#' to understand the relationship between pathways in each cluster.
-#' Plots #9, #10, and so on, length equal to `pathway_column_split`.
+#' 1. **Enrichment Heatmap** (Plot #1), enrichment P-values created using
+#' `mem_enrichment_heatmap()`. Note that by default, the Gene-Pathway
+#' incidence matrix is also created (invisibly) in order to define
+#' consistent pathway clusters.
+#' Output list name: `"enrichment_hm"`
+#' 2. **Gene-Pathway Incidence Matrix Heatmap** (Plot #2) is created
+#' using `mem_gene_path_heatmap()`.
+#' This step defines and visualizes the pathway clustering used by all
+#' plots in the folio.
+#' Output list name: `"gp_hm"`
+#' 3. **Cnet Cluster Plot** (Plots #3,#4,#5) creates a collapsed
+#' Concept network (Cnet) of Genes with Pathway clusters,
+#' using `collapse_mem_clusters()`, then plotted with `jam_igraph()`.
+#'
+#'    * Plot #3 labels the pathway clusters with the first N pathways.
+#'    Output list name: `"cnet_collapsed"`
+#'    * Plot #4 labels the pathway clusters with LETTERS.
+#'    **This file is typically used for other plots.**
+#'    Output list name: `"cnet_collapsed_set"`
+#'    * Plot #5 hides all gene labels.
+#'    Output list name: `"cnet_collapsed_set2"`
+#'
+#' 4. **Cnet Exemplar Plots** (Plots #6,#7,#8) creates smaller pathway
+#' Cnet plots, as opposed to pathway-cluster Cnets in #3,#4,#5 above,
+#' using exemplar pathways from each gene-pathway cluster.
+#' Output list name: `"cnet_exemplars"` with a `list` of `igraph` objects:
+#'
+#'    * Plots #6 includes one exemplar pathway per pathway cluster.
+#'    * Plots #7 includes two exemplar pathways per pathway cluster.
+#'    * Plots #8 includes three exemplar pathways per pathway cluster.
+#'
+#' 5. **Cnet Individual Cluster Plots** (Plots #9,#10,#11,etc.) create one
+#' pathway Cnet plot per individual pathway cluster, showing only
+#' the pathways in that cluster. The number of plots are defined by
+#' the number of pathway cluters, usually `pathway_column_split`.
+#' These plots may be useful to explore pathways in detail within each
+#' pathway cluster, for example when there are many pathways which are
+#' not well-defined for a particular pathway cluster in the Gene-Pathway
+#' heatmap.
+#' Output list name `"cnet_clusters"`
 #'
 #' The specific plots to be created are controlled with `do_which`:
 #'
@@ -353,9 +374,18 @@
 #'    review each figure one by one in an interactive session.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
-#'    Notably, `sets` is passed to `mem_gene_path_heatmap()` which
+#'    Some useful examples:
+#'    * `sets` is passed to `mem_gene_path_heatmap()` which
 #'    allows one to define a specific subset of sets to use in the
 #'    gene-pathway heatmap.
+#'    * `cell_size` is passed to `mem_enrichment_heatmap()` with the
+#'    option to define square cell size in the heatmap dotplot. However,
+#'    the resulting heatmap will be at least `ncol * cell_height` width,
+#'    and `nrow * cell_size[2]` height, in addition to the heights of
+#'    the title and column labels, and widths of the color key and
+#'    dendrogram.
+#'
+#' @importFrom dplyr %>%
 #'
 #' @export
 mem_plot_folio <- function
@@ -447,17 +477,20 @@ mem_plot_folio <- function
 
    # Extract hclust object for re-use in the enrichment heatmap
    use_sets <- colnames(gp_hm@matrix);
+   gphm_pw_order <- NULL;
    if (rotate_heatmap) {
       gp_hm_hclust <- gp_hm@row_dend_param$obj;
       if (length(gp_hm_hclust) == 0) {
          gp_hm_hclust <- gp_hm@row_dend_param$fun(t(gp_hm@matrix));
       }
       use_sets <- rownames(gp_hm@matrix);
+      gphm_pw_order <- jamba::heatmap_row_order(gp_hm);
    } else {
       gp_hm_hclust <- gp_hm@column_dend_param$obj;
       if (length(gp_hm_hclust) == 0) {
          gp_hm_hclust <- gp_hm@column_dend_param$fun(t(gp_hm@matrix));
       }
+      gphm_pw_order <- jamba::heatmap_column_order(gp_hm);
    }
 
 
@@ -481,6 +514,8 @@ mem_plot_folio <- function
       }
       # version 0.0.76.900 use fixed sets, in same order as previous gp_hm,
       # then re-use the hclust object and same pathway_column_split
+      ## 0.0.89.900 - apply hclust and turn off additional row ordering
+      ## so the row order will exactly match the gp_hm pathway order.
       mem_hm <- jamba::call_fn_ellipsis(
          mem_enrichment_heatmap,
          mem=mem,
@@ -491,13 +526,16 @@ mem_plot_folio <- function
          row_cex=row_cex,
          row_method=row_method,
          row_split=pathway_column_split,
+         row_title=names(gphm_pw_order),
+         row_title_rot=0,
+         cluster_rows=gp_hm_hclust,
+         row_dend_reorder=FALSE,
          column_cex=column_cex,
          column_method=column_method,
          style=style,
          apply_direction=apply_direction,
          use_raster=use_raster,
          do_plot=do_plot,
-         cluster_rows=gp_hm_hclust,
          ...);
       if (do_plot) {
          if (length(row_anno_padding) > 0) {

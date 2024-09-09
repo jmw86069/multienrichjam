@@ -586,7 +586,7 @@ get_hull_data <- function
       }
       # Insert validation that hull is one full piece?
       #
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("get_hull_data(): ",
             "hiAedges:");print(hiAedges);# debug
       }

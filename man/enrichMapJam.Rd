@@ -20,28 +20,31 @@ enrichMapJam(
 )
 }
 \arguments{
-\item{x}{either \code{enrichResult} or \code{data.frame} containing
+\item{x}{\code{enrichResult} or \code{data.frame} containing
 enrichment results, specifically expecting colnames to
 contain one of \code{c("ID","Description","Name")}
 to represent the node name, and \code{c("Description")} to represent
 the description, if present.}
 
-\item{n}{numeric value indicating the maximum number of nodes to
+\item{n}{\code{numeric} value indicating the maximum number of nodes to
 include in the final network.}
 
-\item{vertex.label.font, vertex.label.cex}{attributes to define the
-default node label font and size.}
+\item{vertex.label.font, vertex.label.cex}{\code{numeric} values
+to define the default node label font and size.}
 
-\item{keyColname, nodeLabel, descriptionColname}{character vectors
+\item{keyColname, nodeLabel, descriptionColname}{\code{character} vectors
 indicating the colname to use for the node name and label.}
 
-\item{nodeLabelFunc}{optional function to apply to \code{V(g)$name} in
-order to create \code{V(g)$label}. One suggestion is \code{fixSetLabels()}
+\item{nodeLabelFunc}{\code{function}, default NULL, with option to apply
+to \code{V(g)$name} in order to create \code{V(g)$label}.
+One suggestion is to use \code{fixSetLabels()}
 which applies word wrap, and optional max character length.}
 
-\item{overlapThreshold}{numeric value indicating the minimum
+\item{overlapThreshold}{\code{numeric} value indicating the minimum
 Jaccard overlap, where edges with lower values are deleted from
 the \code{igraph} object.}
+
+\item{msigdbGmtT}{not currently implemented.}
 
 \item{...}{additional arguments are passed to \code{enrichDF2enrichResult()}
 when the input \code{x} is a \code{data.frame}.}

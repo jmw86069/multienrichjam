@@ -1069,8 +1069,15 @@ multiEnrichMap <- function
 enrichList2IM <- function
 (enrichList,
  addAnnotations=TRUE,
- keyColname=c("ID", "Name", "pathway", "itemsetID"),
- valueColname=c("qvalue", "q.value", "pvalue", "p.value"),
+ keyColname=c("ID",
+    "Name",
+    "pathway",
+    "itemsetID"),
+ valueColname=c("qvalue",
+    "q.value",
+    "padj",
+    "pvalue",
+    "p.value"),
  emptyValue=NA,
  verbose=FALSE,
  GmtT=NULL,
@@ -1176,10 +1183,17 @@ enrichList2IM <- function
 #' @export
 enrichList2df <- function
 (enrichList,
- keyColname=c("itemsetID","ID","Name"),
- geneColname=c("geneNames", "Genes"),
- geneCountColname=c("geneCount", "geneHits", "Count"),
- pvalueColname=c("P-value", "pvalue", "Pval"),
+ keyColname=c("itemsetID",
+    "ID",
+    "Name"),
+ geneColname=c("geneNames",
+    "Genes"),
+ geneCountColname=c("geneCount",
+    "geneHits",
+    "Count"),
+ pvalueColname=c("P-value",
+    "pvalue",
+    "Pval"),
  pvalueFloor=1e-200,
  msigdbGmtT=NULL,
  geneDelim="[,/ ]",
@@ -1462,23 +1476,25 @@ enrichList2df <- function
 #'    the two nodes, and `overlap_max_pct` with the maximum percent
 #'    overlap between two nodes (overlap count)/(smaller node size).
 #'
-#' @param x either `enrichResult` or `data.frame` containing
+#' @param x `enrichResult` or `data.frame` containing
 #'    enrichment results, specifically expecting colnames to
 #'    contain one of `c("ID","Description","Name")`
 #'    to represent the node name, and `c("Description")` to represent
 #'    the description, if present.
-#' @param n numeric value indicating the maximum number of nodes to
+#' @param n `numeric` value indicating the maximum number of nodes to
 #'    include in the final network.
-#' @param vertex.label.font,vertex.label.cex attributes to define the
-#'    default node label font and size.
-#' @param keyColname,nodeLabel,descriptionColname character vectors
+#' @param vertex.label.font,vertex.label.cex `numeric` values
+#'    to define the default node label font and size.
+#' @param keyColname,nodeLabel,descriptionColname `character` vectors
 #'    indicating the colname to use for the node name and label.
-#' @param nodeLabelFunc optional function to apply to `V(g)$name` in
-#'    order to create `V(g)$label`. One suggestion is `fixSetLabels()`
+#' @param nodeLabelFunc `function`, default NULL, with option to apply
+#'    to `V(g)$name` in order to create `V(g)$label`.
+#'    One suggestion is to use `fixSetLabels()`
 #'    which applies word wrap, and optional max character length.
-#' @param overlapThreshold numeric value indicating the minimum
+#' @param overlapThreshold `numeric` value indicating the minimum
 #'    Jaccard overlap, where edges with lower values are deleted from
 #'    the `igraph` object.
+#' @param msigdbGmtT not currently implemented.
 #' @param ... additional arguments are passed to `enrichDF2enrichResult()`
 #'    when the input `x` is a `data.frame`.
 #'

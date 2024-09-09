@@ -6,7 +6,8 @@
 \usage{
 mem_enrichment_heatmap(
   mem,
-  style = c("dotplot", "heatmap", "dotplot_inverted"),
+  style = c("dotplot_inverted", "dotplot", "heatmap"),
+  apply_direction = FALSE,
   p_cutoff = mem$p_cutoff,
   min_count = 1,
   p_floor = 1e-10,
@@ -35,9 +36,9 @@ mem_enrichment_heatmap(
   row_names_max_width = grid::unit(30, "cm"),
   column_names_max_height = grid::unit(30, "cm"),
   heatmap_legend_param = NULL,
+  hm_cell_size = NULL,
   legend_height = grid::unit(6, "cm"),
   legend_cex = 1,
-  apply_direction = FALSE,
   direction_cutoff = 0,
   gene_count_max = NULL,
   top_annotation = NULL,
@@ -58,6 +59,13 @@ to the number of genes. See function description for details on
 how to include the point size legend beside the heatmap.
 The main benefit of using "dotplot" style is that it also indicates
 the relative number of genes involved in the enrichment.}
+
+\item{apply_direction}{\code{logical}, default FALSE, whether to define
+a bivariate color scheme which uses \code{mem$enrichIMdirection}
+when defined. The color scheme is intended to indicate both the
+directional strength (usually with some type of z-score) and
+the statistical enrichment (usually with the enrichment P-value
+or adjusted P-value).}
 
 \item{p_cutoff}{\code{numeric} value of the enrichment P-value cutoff,
 by default this value is obtained from \code{mem$p_cutoff} to be
@@ -131,6 +139,21 @@ above the heatmap.}
 
 \item{row_names_max_width, column_names_max_height, heatmap_legend_param}{arguments passed to \code{ComplexHeatmap::Heatmap()} and provided here
 for convenience.}
+
+\item{hm_cell_size}{\code{grid::unit} or \code{numeric}, default \code{NULL}, to define
+an optional fixed heatmap cell size, useful to define absolute
+square heatmap cells. When \code{numeric} it is interpreted as
+"mm" units. Note that the heatmap total height is determined by
+the number of cells, and the total row gaps defined by the
+number of row gaps with \code{row_split} multiplied by \code{row_gap}.}
+
+\item{legend_height}{\code{grid::unit}, default 6 cm (60 mm), to define
+the absolute height of the color gradient in the color key.
+This value is only used when \code{heatmap_legend_param} is not defined.}
+
+\item{legend_cex}{\code{numeric} default 1, used to scale the legend
+fontsize relative to the default fontsize \code{10}.
+This value is only used when \code{heatmap_legend_param} is not defined.}
 
 \item{top_annotation}{\code{HeatmapAnnotation} as produced by
 \code{ComplexHeatmap::HeatmapAnnotation()} or \code{NULL}, used to display

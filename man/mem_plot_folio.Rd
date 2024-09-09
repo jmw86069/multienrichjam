@@ -164,9 +164,18 @@ review each figure one by one in an interactive session.}
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are passed to downstream functions.
-Notably, \code{sets} is passed to \code{mem_gene_path_heatmap()} which
+Some useful examples:
+\itemize{
+\item \code{sets} is passed to \code{mem_gene_path_heatmap()} which
 allows one to define a specific subset of sets to use in the
-gene-pathway heatmap.}
+gene-pathway heatmap.
+\item \code{cell_size} is passed to \code{mem_enrichment_heatmap()} with the
+option to define square cell size in the heatmap dotplot. However,
+the resulting heatmap will be at least \code{ncol * cell_height} width,
+and \code{nrow * cell_size[2]} height, in addition to the heights of
+the title and column labels, and widths of the color key and
+dendrogram.
+}}
 }
 \value{
 \code{list} is returned via \code{invisible()}, which contains each
@@ -299,25 +308,46 @@ with \code{multiEnrichMap()} was relatively small.
 
 The folio of plots includes:
 \enumerate{
-\item \strong{Enrichment Heatmap}, using enrichment P-values via
-\code{mem_enrichment_heatmap()}. Plot #1.
-\item \strong{Gene-Pathway Incidence Matrix Heatmap} using \code{mem_gene_path_heatmap()}.
-This step visualizes the pathway clustering to be used by all
-other plots in the folio. Plot #2.
-\item \strong{Cnet Cluster Plot} representing Gene-Pathway clusters as a network,
-created using \code{collapse_mem_clusters()}, then plotted with \code{jam_igraph()}.
-Plots #3, #4, and #5.
-\item \strong{Cnet Exemplar Plots} using exemplar pathways from each
-gene-pathway cluster, with increase number of exemplars included
-from each cluster (n per cluster). Cnet \code{igraph} objects are created
-using \code{subsetCnetIgraph()}, then plotted with \code{jam_graph()}.
-Plots #6, #7, and #8.
-\item \strong{Cnet Individual Cluster Plots} with one plot for each gene-pathway
-cluster defined above, including all pathways within the cluster.
-These plots are mostly useful when a particular cluster may
-have multiple sub-clusters included together. The plots can be useful
-to understand the relationship between pathways in each cluster.
-Plots #9, #10, and so on, length equal to \code{pathway_column_split}.
+\item \strong{Enrichment Heatmap} (Plot #1), enrichment P-values created using
+\code{mem_enrichment_heatmap()}. Note that by default, the Gene-Pathway
+incidence matrix is also created (invisibly) in order to define
+consistent pathway clusters.
+Output list name: \code{"enrichment_hm"}
+\item \strong{Gene-Pathway Incidence Matrix Heatmap} (Plot #2) is created
+using \code{mem_gene_path_heatmap()}.
+This step defines and visualizes the pathway clustering used by all
+plots in the folio.
+Output list name: \code{"gp_hm"}
+\item \strong{Cnet Cluster Plot} (Plots #3,#4,#5) creates a collapsed
+Concept network (Cnet) of Genes with Pathway clusters,
+using \code{collapse_mem_clusters()}, then plotted with \code{jam_igraph()}.
+\itemize{
+\item Plot #3 labels the pathway clusters with the first N pathways.
+Output list name: \code{"cnet_collapsed"}
+\item Plot #4 labels the pathway clusters with LETTERS.
+\strong{This file is typically used for other plots.}
+Output list name: \code{"cnet_collapsed_set"}
+\item Plot #5 hides all gene labels.
+Output list name: \code{"cnet_collapsed_set2"}
+}
+\item \strong{Cnet Exemplar Plots} (Plots #6,#7,#8) creates smaller pathway
+Cnet plots, as opposed to pathway-cluster Cnets in #3,#4,#5 above,
+using exemplar pathways from each gene-pathway cluster.
+Output list name: \code{"cnet_exemplars"} with a \code{list} of \code{igraph} objects:
+\itemize{
+\item Plots #6 includes one exemplar pathway per pathway cluster.
+\item Plots #7 includes two exemplar pathways per pathway cluster.
+\item Plots #8 includes three exemplar pathways per pathway cluster.
+}
+\item \strong{Cnet Individual Cluster Plots} (Plots #9,#10,#11,etc.) create one
+pathway Cnet plot per individual pathway cluster, showing only
+the pathways in that cluster. The number of plots are defined by
+the number of pathway cluters, usually \code{pathway_column_split}.
+These plots may be useful to explore pathways in detail within each
+pathway cluster, for example when there are many pathways which are
+not well-defined for a particular pathway cluster in the Gene-Pathway
+heatmap.
+Output list name \code{"cnet_clusters"}
 }
 
 The specific plots to be created are controlled with \code{do_which}:

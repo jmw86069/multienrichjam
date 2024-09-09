@@ -1,9 +1,25 @@
 # TODO
 
+## 09sep2024
+
+* Consider using `mem_enrichment_heatmap()` as the top_annotation
+for `mem_gene_path_heatmap()`, including for example the dotplot format.
+
+   * Easiest prototype might be to use `+` to display the
+   gene-path heatmap rotated with `rotate_heatmap=TRUE` beside the
+   enrichment heatmap,then merge the color legends:
+   ```R
+   ComplexHeatmap::draw(mpf$enrichment_hm + mpf$gp_hm,
+      annotation_legend_list=attr(mpf$enrichment_hm, "annotation_legend_list"),
+      merge_legends=TRUE)
+   ```
+
 ## 04sep2024
 
 * Fix the `row_title` for the enrichment heatmap when called by
 `mem_plot_folio()`, currently it uses numbers instead of `LETTERS`.
+* Consider option for fixed-attribute cells for `mem_enrichment_heatmap()`
+when used with dot plot, so each cell is square with the circle centered.
 * Consider returning updated `igraph` from `jam_igraph()`
 
    * Currently returns `invisible(NULL)`.

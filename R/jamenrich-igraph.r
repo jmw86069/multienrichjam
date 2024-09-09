@@ -1578,7 +1578,8 @@ removeIgraphBlanks <- function
                   pieL <- split(unlist(pieAttrL)[!pieBlanksV],
                      pieSplitV[!pieBlanksV]);
                   if (verbose > 1) {
-                     jamba::printDebug("length(pieL):", length(pieL),
+                     jamba::printDebug("removeIgraphBlanks(): ",
+                        "length(pieL):", length(pieL),
                         ", vcount(g):", vcount(g),
                         ", length(unique(pieSplitV)):", length(unique(pieSplitV)),
                         ", length(unique(pieSplitV[!pieBlanksV])):", length(unique(pieSplitV[!pieBlanksV])),

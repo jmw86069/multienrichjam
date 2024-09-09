@@ -1123,6 +1123,12 @@ mem_gene_path_heatmap <- function
 #'    how to include the point size legend beside the heatmap.
 #'    The main benefit of using "dotplot" style is that it also indicates
 #'    the relative number of genes involved in the enrichment.
+#' @param apply_direction `logical`, default FALSE, whether to define
+#'    a bivariate color scheme which uses `mem$enrichIMdirection`
+#'    when defined. The color scheme is intended to indicate both the
+#'    directional strength (usually with some type of z-score) and
+#'    the statistical enrichment (usually with the enrichment P-value
+#'    or adjusted P-value).
 #' @param p_cutoff `numeric` value of the enrichment P-value cutoff,
 #'    by default this value is obtained from `mem$p_cutoff` to be
 #'    consistent with the original `multiEnrichMap()` analysis.
@@ -1180,6 +1186,18 @@ mem_gene_path_heatmap <- function
 #' @param row_names_max_width,column_names_max_height,heatmap_legend_param
 #'    arguments passed to `ComplexHeatmap::Heatmap()` and provided here
 #'    for convenience.
+#' @param hm_cell_size `grid::unit` or `numeric`, default `NULL`, to define
+#'    an optional fixed heatmap cell size, useful to define absolute
+#'    square heatmap cells. When `numeric` it is interpreted as
+#'    "mm" units. Note that the heatmap total height is determined by
+#'    the number of cells, and the total row gaps defined by the
+#'    number of row gaps with `row_split` multiplied by `row_gap`.
+#' @param legend_height `grid::unit`, default 6 cm (60 mm), to define
+#'    the absolute height of the color gradient in the color key.
+#'    This value is only used when `heatmap_legend_param` is not defined.
+#' @param legend_cex `numeric` default 1, used to scale the legend
+#'    fontsize relative to the default fontsize `10`.
+#'    This value is only used when `heatmap_legend_param` is not defined.
 #' @param top_annotation `HeatmapAnnotation` as produced by
 #'    `ComplexHeatmap::HeatmapAnnotation()` or `NULL`, used to display
 #'    customized annotation at the top of the heatmap. The order of
@@ -1201,6 +1219,7 @@ mem_enrichment_heatmap <- function
  style=c("dotplot_inverted",
     "dotplot",
     "heatmap"),
+ apply_direction=FALSE,
  p_cutoff=mem$p_cutoff,
  min_count=1,
  p_floor=1e-10,
@@ -1229,9 +1248,9 @@ mem_enrichment_heatmap <- function
  row_names_max_width=grid::unit(30, "cm"),
  column_names_max_height=grid::unit(30, "cm"),
  heatmap_legend_param=NULL,
+ hm_cell_size=NULL,
  legend_height=grid::unit(6, "cm"),
  legend_cex=1,
- apply_direction=FALSE,
  direction_cutoff=0,
  gene_count_max=NULL,
  top_annotation=NULL,
@@ -1355,6 +1374,24 @@ mem_enrichment_heatmap <- function
    # } else {
    raster_device <- "png"
    # }
+
+   ## Experimental: set heatmap size with fixed cell dimensions
+   hm_width <- NULL;
+   hm_height <- NULL;
+   if (length(hm_cell_size) > 0) {
+      if (length(hm_cell_size) == 1) {
+         hm_cell_size <- rep(hm_cell_size, 2);
+      } else {
+         hm_cell_size <- head(hm_cell_size, 2);
+      }
+      if (!grid::is.unit(hm_cell_size)) {
+         hm_width <- grid::unit(hm_cell_size[1] * ncol(use_matrix), "mm");
+         hm_height <- grid::unit(hm_cell_size[2] * nrow(use_matrix), "mm");
+      } else {
+         hm_width <- ncol(use_matrix) * hm_cell_size[1];
+         hm_height <- nrow(use_matrix) * grid::unit(hm_cell_size[2], "mm");
+      }
+   }
 
    if ("heatmap" %in% style) {
       pch <- NULL;
@@ -1553,19 +1590,40 @@ mem_enrichment_heatmap <- function
       if ("dotplot" %in% style) {
          use_raster <- FALSE
       }
+      ## Add row_split to hm_height
+      if (length(row_split) > 0 &&
+            length(row_gap) > 0 &&
+            any(as.numeric(row_gap) > 0) &&
+            length(hm_height) == 1) {
+         # if (verbose) {
+         #    jamba::printDebug("mem_enrichment_heatmap(): ",
+         #       "Adjusted hm_height by row_split and row_gap.");# debug
+         # }
+         if (is.numeric(row_split) &&
+               length(row_split) == 1 &&
+               row_split > 1) {
+            hm_height <- hm_height + (row_split - 1) * row_gap;
+            # if (verbose) {
+            #    print(hm_height);# debug
+            #    print(hm_height);# debug
+            # }
+         }
+      }
 
       # dot plot or heatmap style
       hm <- jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
          matrix=use_matrix,
          name=name,
          col=col_logp,
+         width=hm_width,
+         height=hm_height,
          cluster_rows=cluster_rows,
          row_dend_reorder=row_dend_reorder,
          border=TRUE,
          row_names_gp=grid::gpar(fontsize=row_fontsize),
          row_names_max_width=row_names_max_width,
          row_split=row_split,
-         row_gap=grid::unit(2, "mm"),
+         row_gap=row_gap,
          column_names_gp=grid::gpar(fontsize=column_fontsize),
          column_names_max_height=column_names_max_height,
          cluster_columns=cluster_columns,

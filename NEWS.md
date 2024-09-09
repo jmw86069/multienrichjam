@@ -1,3 +1,29 @@
+# multienrichjam 0.0.89.900
+
+## changes to existing functions
+
+Added `%>%` to imported functions, and not all of `dplyr`.
+
+* `mem_enrichment_heatmap()`
+
+   * New argument `cell_size` default `NULL`, with option to specify the
+   exact cell size used in the heatmap. The driving use case is to define
+   perfectly square heatmap cells for `"dotplot_inverted"` or `"dotplot"`
+   so the circles are perfectly centered inside square cells. It forces
+   the output figure to be tall and wide enough to accomodate the resulting
+   figure, so it needs some user math. Implemented from a user suggestion,
+   and it works and looks great. It just requires some upfront work to
+   create a figure with large enough canvas.
+
+* `mem_plot_folio()`
+
+   * Added proper pathway cluster labels to `mem_enrichment_heatmap()` output.
+   * Finally fixed the pathway order of `mem_enrichment_heatmap()` to be
+   identical to `mem_gene_path_heatmap()` without minor re-ordering caused
+   by default `ComplexHeatmap` behavior. Now the two formats have identical
+   order for direct comparison.
+   * Cleaned up the help documentation a little bit.
+
 # multienrichjam 0.0.88.950
 
 ## changes to existing functions
