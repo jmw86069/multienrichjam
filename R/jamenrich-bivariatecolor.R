@@ -192,6 +192,14 @@ display_colorRamp2D <- function
 #'    is provided, this argument is ignored.
 #' @param outline `logical` indicating whether to draw an outline around
 #'    each heatmap cell
+#' @param outline_style `character` string indicating the type of outline
+#'    to draw, which also requires `outline=TRUE`. Options:
+#'    * none: uses no outline even when `outline=TRUE`
+#'    * darker: always uses a darker color (or black)
+#'    * contrast: uses a contrasting color `setTextContrastColor()`
+#'    * lighter: always uses a lighter color (or white)
+#'    * black: always uses `"black"`
+#'    * same: use the same color as the fill color
 #' @param abbrev `logical` indicating whether numeric values should
 #'    be abbreviated using `jamba::asSize(..., kiloSize=1000)` which
 #'    effectively reduces large numbers to `k` for thousands, `M` for
@@ -207,6 +215,12 @@ display_colorRamp2D <- function
 #' @param mcolor `character` matrix of R colors, with same `nrow()`
 #'    and `ncol()` or each matrix in `m`. When `mcolor` is supplied,
 #'    the colors are used directly, and `col_hm` is not used.
+#' @param pch `numeric` point type, used only when `size_fun`
+#'    is also defined. Together these arguments allow customized points.
+#' @param size_fun `function` used to define point size, only when `pch`
+#'    is also defined. Together these arguments allow customized points.
+#' @param grid_color `character` valid R color used with `style="dotplot"`
+#'    to draw lines through the center of each cell.
 #' @param type `character` string indicating whether the color function
 #'    uses bivariate or univariate logic. This argument is intended to
 #'    allow this function to be used in both scenarios for consistency.
@@ -253,10 +267,10 @@ display_colorRamp2D <- function
 #'    xlab="z-score");
 #' ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
 #'
-#' lgds <- make_legend_bivariate(col_bivariate,
-#'    row_breaks=seq(from=0, to=1, by=0.25),
+#' lgds2 <- make_legend_bivariate(col_bivariate,
+#'    row_breaks=seq(from=0, to=2, by=0.25),
 #'    ylab="-log10pvalue");
-#' ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
+#' ComplexHeatmap::draw(hm, annotation_legend_list=lgds2)
 #'
 #' # heatmap using point circles
 #' ctmax <- 6;
@@ -300,9 +314,9 @@ cell_fun_bivariate <- function
  col_hm,
  outline=FALSE,
  outline_style=c("none",
+    "darker",
     "contrast",
     "lighter",
-    "darker",
     "black",
     "same"),
  abbrev=FALSE,
@@ -396,7 +410,7 @@ cell_fun_bivariate <- function
       }
 
       outline_col <- NA;
-      if (outline || !"none" %in% outline_style) {
+      if (outline && !"none" %in% outline_style) {
          if ("contrast" %in% outline_style) {
             outline_col <- jamba::setTextContrastColor(cell_color);
          } else if ("lighter" %in% outline_style) {
@@ -437,7 +451,8 @@ cell_fun_bivariate <- function
                gp=grid::gpar(
                   col=rect_col,
                   fill=cell_color));
-            text_col <- jamba::setTextContrastColor(cell_color);
+            text_col <- jamba::setTextContrastColor(cell_color,
+               useGrey=15);
             # draw the point
             grid::grid.points(x=x,
                y=y,
@@ -458,7 +473,9 @@ cell_fun_bivariate <- function
                   col=outline_col,
                   fill=cell_color));
          }
-         text_col <- "black";
+         text_col <- jamba::setTextContrastColor(cell_color,
+            useGrey=15);
+         # text_col <- "black";
       } else {
          grid::grid.rect(x=x,
             y=y,
@@ -472,15 +489,31 @@ cell_fun_bivariate <- function
 
       if (cex > 0 && !"" %in% cell_label) {
          fontsize <- (10 * cex);
-         grid::grid.text(cell_label,
-            x=x,
-            y=y,
-            rot=rot,
-            gp=grid::gpar(
-               fontsize=fontsize,
-               fontface=1,
-               col=text_col
-            ));
+         # grid::grid.text(cell_label,
+         if (jamba::check_pkg_installed("shadowtext")) {
+            shadowtext::grid.shadowtext(cell_label,
+               x=x,
+               y=y,
+               rot=rot,
+               bg.colour=jamba::alpha2col(alpha=0.3,
+                  jamba::setTextContrastColor(text_col)),
+               bg.r=0.2,
+               gp=grid::gpar(
+                  fontsize=fontsize,
+                  fontface=1,
+                  col=text_col
+               ));
+         } else {
+            grid::grid.text(cell_label,
+               x=x,
+               y=y,
+               rot=rot,
+               gp=grid::gpar(
+                  fontsize=fontsize,
+                  fontface=1,
+                  col=text_col
+               ));
+         }
       }
    }
    cell_fun_return

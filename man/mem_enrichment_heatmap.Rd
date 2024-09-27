@@ -31,7 +31,7 @@ mem_enrichment_heatmap(
   color_by_column = FALSE,
   cex.axis = 1,
   lens = 3,
-  cexCellnote = 0,
+  cexCellnote = 1,
   column_title = NULL,
   row_names_max_width = grid::unit(300, "mm"),
   column_names_max_height = grid::unit(300, "mm"),
@@ -42,7 +42,8 @@ mem_enrichment_heatmap(
   direction_cutoff = 0,
   gene_count_max = NULL,
   top_annotation = NULL,
-  show = NULL,
+  outline = TRUE,
+  show_enrich = NULL,
   use_raster = FALSE,
   do_plot = TRUE,
   ...
@@ -160,6 +161,21 @@ This value is only used when \code{heatmap_legend_param} is not defined.}
 customized annotation at the top of the heatmap. The order of
 columns must match the order of columns in the data displayed
 in the heatmap.}
+
+\item{outline}{\code{logical} default TRUE, whether to draw an outline
+for each heatmap cell. Note: The outline is not drawn for
+\code{style="dotplot"} which already adds lines through the middle
+of each cell, not the border of each cell.}
+
+\item{show_enrich}{\code{numeric} default NULL, indicating which of the
+enrichment metrics to show as a label in each cell.
+When only one type is shown, there is no prefix, but for multiple
+types, a prefix is shown for each. The metrics in order include:
+\enumerate{
+\item "-log10P"
+\item "z-score"
+\item "number of genes"
+}}
 
 \item{use_raster}{\code{logical} passed to \code{ComplexHeatmap::Heatmap()}
 indicating whether to rasterize the heatmap output, used when

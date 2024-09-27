@@ -769,6 +769,7 @@ mem_gene_path_heatmap <- function
          hjust=0, vjust=0)
       text_legend2 <- ComplexHeatmap::Legend(
          title=paste0(lname),
+         # title_gp=grid::gpar(font=2),
          grob=caption_grob,
          title_position="topleft",
          type="grid")
@@ -1224,6 +1225,17 @@ mem_gene_path_heatmap <- function
 #'    customized annotation at the top of the heatmap. The order of
 #'    columns must match the order of columns in the data displayed
 #'    in the heatmap.
+#' @param outline `logical` default TRUE, whether to draw an outline
+#'    for each heatmap cell. Note: The outline is not drawn for
+#'    `style="dotplot"` which already adds lines through the middle
+#'    of each cell, not the border of each cell.
+#' @param show_enrich `numeric` default NULL, indicating which of the
+#'    enrichment metrics to show as a label in each cell.
+#'    When only one type is shown, there is no prefix, but for multiple
+#'    types, a prefix is shown for each. The metrics in order include:
+#'    1. "-log10P"
+#'    2. "z-score"
+#'    3. "number of genes"
 #' @param use_raster `logical` passed to `ComplexHeatmap::Heatmap()`
 #'    indicating whether to rasterize the heatmap output, used when
 #'    `style="heatmap"`. Rasterization is not relevant to dotplot output
@@ -1264,7 +1276,7 @@ mem_enrichment_heatmap <- function
  color_by_column=FALSE,
  cex.axis=1,
  lens=3,
- cexCellnote=0.0,
+ cexCellnote=1,
  column_title=NULL,
  row_names_max_width=grid::unit(300, "mm"),
  column_names_max_height=grid::unit(300, "mm"),
@@ -1275,7 +1287,8 @@ mem_enrichment_heatmap <- function
  direction_cutoff=0,
  gene_count_max=NULL,
  top_annotation=NULL,
- show=NULL,
+ outline=TRUE,
+ show_enrich=NULL,
  use_raster=FALSE,
  do_plot=TRUE,
  ...)
@@ -1502,6 +1515,17 @@ mem_enrichment_heatmap <- function
          anno_legends <- list();
       }
 
+      # custom cell label, hide 2 when directional data are not available
+      if (2 %in% show_enrich && length(use_direction) == 0) {
+         show_enrich <- setdiff(show_enrich, 2);
+      }
+      use_prefix <- NULL;
+      if (length(show_enrich) > 1) {
+         use_prefix <- c(
+            "-log10P: ",
+            "z-score: ",
+            "genes: ")[show_enrich]
+      }
       # improved cell_fun
       if (apply_direction) {
          tcount <- jamba::tcount;
@@ -1556,11 +1580,10 @@ mem_enrichment_heatmap <- function
             size_by=size_by,
             outline_style="darker",
             col_hm=use_col_fn,
-            show=show,
+            show=show_enrich,
+            outline=outline,
             cex=cexCellnote,
-            prefix=c("z-score: ",
-               "-log10P: ",
-               "genes: ")[show],
+            prefix=use_prefix,
             ...
          );
          anno_legends <- c(anno_legends,
@@ -1574,6 +1597,7 @@ mem_enrichment_heatmap <- function
          #    };
          # }
          show_heatmap_legend <- TRUE;
+         # remove show_enrich=2 if no supporting directional data is present
          cell_fun_custom <- cell_fun_bivariate(
             list(
                use_matrix,
@@ -1585,12 +1609,11 @@ mem_enrichment_heatmap <- function
             size_by=3,
             outline_style="darker",
             col_hm=use_col_fn,
-            show=show,
+            show=show_enrich,
+            outline=outline,
             cex=cexCellnote,
             type="univariate",
-            prefix=c("z-score: ",
-               "-log10P: ",
-               "genes: ")[show],
+            prefix=use_prefix,
             ...
          );
       }

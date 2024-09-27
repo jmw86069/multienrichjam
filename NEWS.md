@@ -1,5 +1,8 @@
 # multienrichjam 0.0.90.900
 
+* Added `shadowtext` to Suggests, optionally adds contrast to
+`mem_enrichment_heatmap()` when using `show_enrich`.
+
 ## changes to existing functions
 
 * `mem_plot_folio()`
@@ -24,6 +27,12 @@
    * The geneIM legend label now uses title case for consistency:
    "Gene Hit By Enrichment", rather than "enrichments per gene" which
    was not correct wording.
+
+* `mem_enrichment_heatmap()`
+
+   * Renamed previously unused arg `show` to `show_enrich` so it is
+   passed cleanly via `...` using `mem_plot_folio()`, added help doc.
+   It adds optional label with -log10P, z-score, and/or number of genes.
 
 * `importIPAenrichment()`
 

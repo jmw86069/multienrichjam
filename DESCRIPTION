@@ -28,7 +28,8 @@ Imports: jamba (>= 0.0.88.900),
     bezier
 Suggests: knitr,
     rmarkdown,
-    ahull
+    ahull,
+    shadowtext
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

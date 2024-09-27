@@ -11,7 +11,7 @@ cell_fun_bivariate(
   cex = 1,
   col_hm,
   outline = FALSE,
-  outline_style = c("none", "contrast", "lighter", "darker", "black", "same"),
+  outline_style = c("none", "darker", "contrast", "lighter", "black", "same"),
   abbrev = FALSE,
   show = NULL,
   rot = 0,
@@ -43,6 +43,17 @@ is provided, this argument is ignored.}
 \item{outline}{\code{logical} indicating whether to draw an outline around
 each heatmap cell}
 
+\item{outline_style}{\code{character} string indicating the type of outline
+to draw, which also requires \code{outline=TRUE}. Options:
+\itemize{
+\item none: uses no outline even when \code{outline=TRUE}
+\item darker: always uses a darker color (or black)
+\item contrast: uses a contrasting color \code{setTextContrastColor()}
+\item lighter: always uses a lighter color (or white)
+\item black: always uses \code{"black"}
+\item same: use the same color as the fill color
+}}
+
 \item{abbrev}{\code{logical} indicating whether numeric values should
 be abbreviated using \code{jamba::asSize(..., kiloSize=1000)} which
 effectively reduces large numbers to \code{k} for thousands, \code{M} for
@@ -62,6 +73,15 @@ one value.}
 \item{mcolor}{\code{character} matrix of R colors, with same \code{nrow()}
 and \code{ncol()} or each matrix in \code{m}. When \code{mcolor} is supplied,
 the colors are used directly, and \code{col_hm} is not used.}
+
+\item{pch}{\code{numeric} point type, used only when \code{size_fun}
+is also defined. Together these arguments allow customized points.}
+
+\item{size_fun}{\code{function} used to define point size, only when \code{pch}
+is also defined. Together these arguments allow customized points.}
+
+\item{grid_color}{\code{character} valid R color used with \code{style="dotplot"}
+to draw lines through the center of each cell.}
 
 \item{type}{\code{character} string indicating whether the color function
 uses bivariate or univariate logic. This argument is intended to
@@ -132,10 +152,10 @@ lgds <- make_legend_bivariate(col_bivariate,
    xlab="z-score");
 ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
 
-lgds <- make_legend_bivariate(col_bivariate,
-   row_breaks=seq(from=0, to=1, by=0.25),
+lgds2 <- make_legend_bivariate(col_bivariate,
+   row_breaks=seq(from=0, to=2, by=0.25),
    ylab="-log10pvalue");
-ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
+ComplexHeatmap::draw(hm, annotation_legend_list=lgds2)
 
 # heatmap using point circles
 ctmax <- 6;
