@@ -117,7 +117,7 @@
 #' @export
 importIPAenrichment <- function
 (ipaFile,
- headerGrep="(^|\t)((expr.|-log.|)p-value|Pvalue|Score\t|Symbol\t|Ratio\t|Consistency.Score|Master.Regulator\t)",
+ headerGrep="(^|\t)((expr.|-log.|)p-value|Pvalue|Score($|\t)|Symbol($|\t)|Ratio($|\t)|Consistency.Score|Master.Regulator($|\t))",
  ipaNameGrep=c("Pathway",
     "Regulator$",
     "Regulators",

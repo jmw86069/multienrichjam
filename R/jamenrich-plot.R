@@ -130,30 +130,23 @@
 #'    recognized as `NA` by `ComplexHeatmap::Heatmap()`.
 #' @param rotate_heatmap `logical` indicating whether the entire heatmap
 #'    should be rotated so that pathway names are displayed as rows,
-#'    and genes as columns. Notes on how arguments are applied to rows
-#'    and columns:
-#'    * Column arguments applied to rows:
-#'    `column_split`, `column_title`, `cluster_columns`,
-#'    `column_fontsize`, `column_cex`
-#'    are applied to rows since they refer to pathway data;
-#'    * Row arguments applied to columns:
-#'    `row_split`, `row_title`, `cluster_rows`, `row_fontsize`, `row_cex`
-#'    are applied to columns since they refer to gene data;
-#'    * Arguments applied directly to columns:
-#'    `column_method`, `column_title_rot`
-#'    are applied directly to heatmap columns since they
-#'    refer to the output heatmap options.
-#'    * Arguments applied directly to rows:
-#'    `row_method`, `row_title_rot`
-#'    are applied directly to heatmap rows since they
-#'    refer to the output heatmap options.
+#'    and genes as columns.
+#'    When enabled, arguments referring to columns and rows are flipped,
+#'    so "column" arguments will continue to affect pathways/sets,
+#'    and "row" arguments will continue to affect genes.
+#'    This includes `column_method` and `row_method` as of 0.0.90.900.
+#'    * Exceptions:
+#'    * `row_title_rot` is only applied to rows, due to its purpose.
+#'    * `column_names_rot` is only applied to columns, also due to
+#'    its purpose.
 #' @param seed `numeric` value passed to `set.seed()` to allow
 #'    reproducible results, typically with clustering operations.
 #' @param colramp `character` name of color, color gradient, or a
 #'    vector of colors, anything compatible with input to
 #'    `jamba::getColorRamp()`.
 #' @param column_names_max_height `grid::unit` passed to
-#'    `ComplexHeatmap::Heatmap()`.
+#'    `ComplexHeatmap::Heatmap()`. When supplied as `numeric` it is
+#'    converted to units in "mm".
 #' @param column_names_rot `numeric` passed to
 #'    `ComplexHeatmap::Heatmap()`.
 #' @param show_gene_legend,show_pathway_legend `logical` whether to show
@@ -246,7 +239,7 @@ mem_gene_path_heatmap <- function
  na_col="white",
  rotate_heatmap=FALSE,
  colramp="Reds",
- column_names_max_height=grid::unit(18, "cm"),
+ column_names_max_height=grid::unit(180, "mm"),
  column_names_rot=90,
  show_gene_legend=FALSE,
  show_pathway_legend=TRUE,
@@ -263,6 +256,15 @@ mem_gene_path_heatmap <- function
    if (length(colnames(mem$memIM)) == 0) {
       colnames(mem$memIM) <- rownames(mem$enrichIM);
    }
+   if (length(column_names_max_height) == 0) {
+      column_names_max_height <- grid::unit(180, "mm")
+   } else if (!grid::is.unit(column_names_max_height)) {
+      if (is.numeric(column_names_max_height)) {
+         column_names_max_height <- grid::unit(column_names_max_height, "mm")
+      } else {
+         column_names_max_height <- grid::unit(180, "mm")
+      }
+   }
    memIM <- mem$memIM;
    if (length(genes) > 0) {
       memIM <- memIM[intersect(rownames(memIM), genes),,drop=FALSE];
@@ -275,7 +277,7 @@ mem_gene_path_heatmap <- function
    }
 
    if (length(name) == 0) {
-      name <- "enrichments\nper gene";
+      name <- "Gene Hits By\nEnrichment";
    }
 
    # gene_annotations: im, direction
@@ -724,18 +726,26 @@ mem_gene_path_heatmap <- function
       paste0(jamba::formatInt(length(genes)),
          " ", gene_type, ifelse(length(genes) != 1, "s")),
       paste0(jamba::formatInt(length(sets)),
-         " ", gene_type, ifelse(length(genes) != 1, "s")));
+         " ", set_type, ifelse(length(genes) != 1, "s")));
    if (TRUE %in% rotate_heatmap) {
       caption <- paste(caption, c("(columns)", "(rows)"));
    } else {
       caption <- paste(caption, c("(rows)", "(columns)"));
    }
    ## Generate caption as Legend
+   caption_clustering <- c(
+      paste0(gene_type, "s = '", row_method, "'"),
+      paste0(set_type, "s = '", column_method, "'"))
+   caption_im_weights <- c(
+      paste0(gene_type, "IM weight: ", format(gene_im_weight, digits=3)),
+      paste0(set_type, " IM weight: ", format(enrich_im_weight, digits=3)))
+   if (TRUE %in% rotate_heatmap) {
+      caption_clustering <- rev(caption_clustering);
+      caption_im_weights <- rev(caption_im_weights);
+   }
    caption_list <- list(
       Summary=caption,
-      Clustering=c(
-         paste0(set_type, "s = '", column_method, "'"),
-         paste0(gene_type, "s = '", row_method, "'")),
+      Clustering=caption_clustering,
       Filtering=jamba::rmNA(c(
          paste0("enrichment P <= ", p_cutoff),
          ifelse(min_gene_ct > 1,
@@ -744,9 +754,7 @@ mem_gene_path_heatmap <- function
          ifelse(min_set_ct > 1,
             paste0(set_type, "s per ", gene_type, " >= ", min_set_ct),
             NA))),
-      `IM weights`=c(
-         paste0(set_type, " IM weight: ", format(enrich_im_weight, digits=3)),
-         paste0(gene_type, "IM weight: ", format(gene_im_weight, digits=3))))
+      `IM weights`=caption_im_weights)
    # make convenient text summary
    caption <- paste0(collapse="\n",
       paste0(names(caption_list), ":\n"),
@@ -961,28 +969,33 @@ mem_gene_path_heatmap <- function
                "Error in Heatmap(), calling without '...', error is shown below:");
             print(e);
          }
-         ComplexHeatmap::Heatmap(memIM[genes, sets, drop=FALSE],
+         ComplexHeatmap::Heatmap(
+            matrix=memIM[genes, sets, drop=FALSE],
             border=TRUE,
             name=name,
             na_col=na_col,
             cluster_columns=cluster_columns,
+            cluster_column_slices=cluster_column_slices,
             cluster_rows=cluster_rows,
+            cluster_row_slices=cluster_row_slices,
             clustering_distance_columns=column_method,
             clustering_distance_rows=row_method,
             top_annotation=top_annotation,
             col=col_hm,
+            show_heatmap_legend=show_heatmap_legend,
             left_annotation=left_annotation,
             row_names_gp=grid::gpar(fontsize=row_fontsize),
             column_names_gp=grid::gpar(fontsize=column_fontsize),
             column_names_rot=column_names_rot,
+            column_names_max_height=column_names_max_height,
             column_title=column_title,
             row_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
-            use_raster=use_raster,
-            raster_device=raster_device,
             row_title_rot=row_title_rot,
             row_split=row_split,
-            column_split=column_split);
+            column_split=column_split,
+            use_raster=use_raster,
+            raster_device=raster_device)
       })
       # add caption in attributes
       attr(hm, "caption") <- caption;
@@ -1009,26 +1022,30 @@ mem_gene_path_heatmap <- function
       );
       hm <- tryCatch({
          jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
-            t(memIM[genes,sets,drop=FALSE]),
+            matrix=t(memIM[genes,sets,drop=FALSE]),
             border=TRUE,
             name=name,
             na_col=na_col,
-            cluster_rows=cluster_columns,
-            cluster_columns=cluster_rows,
-            clustering_distance_columns=column_method,
-            clustering_distance_rows=row_method,
+            cluster_rows=cluster_columns,  # flipped
+            cluster_column_slices=cluster_row_slices, # flipped
+            cluster_columns=cluster_rows,  # flipped
+            cluster_row_slices=cluster_column_slices, # flipped
+            clustering_distance_columns=row_method, # flipped
+            clustering_distance_rows=column_method, # flipped
             top_annotation=top_annotation,
             col=col_hm,
+            show_heatmap_legend=show_heatmap_legend,
             left_annotation=left_annotation,
-            row_names_gp=grid::gpar(fontsize=column_fontsize),
-            column_names_gp=grid::gpar(fontsize=row_fontsize),
-            column_names_rot=column_names_rot,
-            row_title=column_title,
-            column_title=row_title,
+            row_names_gp=grid::gpar(fontsize=column_fontsize), # flipped
+            column_names_gp=grid::gpar(fontsize=row_fontsize), # flipped
+            column_names_rot=column_names_rot, # NOT flipped
+            row_names_max_width=column_names_max_height, # flipped
+            row_title=column_title, # flipped
+            column_title=row_title, # flipped
             heatmap_legend_param=heatmap_legend_param,
-            row_title_rot=row_title_rot,
-            column_split=row_split,
-            row_split=column_split,
+            row_title_rot=row_title_rot, # NOT flipped
+            column_split=row_split, # flipped
+            row_split=column_split, # flipped
             use_raster=use_raster,
             raster_device=raster_device,
             ...);
@@ -1040,28 +1057,32 @@ mem_gene_path_heatmap <- function
             print(e);
          }
          ComplexHeatmap::Heatmap(
-            t(memIM[genes,sets,drop=FALSE]),
+            matrix=t(memIM[genes,sets,drop=FALSE]),
             border=TRUE,
             name=name,
             na_col=na_col,
             cluster_rows=cluster_columns,
+            cluster_column_slices=cluster_row_slices,
             cluster_columns=cluster_rows,
-            clustering_distance_columns=column_method,
-            clustering_distance_rows=row_method,
+            cluster_row_slices=cluster_column_slices,
+            clustering_distance_columns=row_method,
+            clustering_distance_rows=column_method,
             top_annotation=top_annotation,
             col=col_hm,
+            show_heatmap_legend=show_heatmap_legend,
             left_annotation=left_annotation,
             row_names_gp=grid::gpar(fontsize=column_fontsize),
             column_names_gp=grid::gpar(fontsize=row_fontsize),
             column_names_rot=column_names_rot,
+            row_names_max_width=column_names_max_height, # flipped
             row_title=column_title,
             column_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
-            use_raster=use_raster,
-            raster_device=raster_device,
             row_title_rot=row_title_rot,
             column_split=row_split,
-            row_split=column_split);
+            row_split=column_split,
+            use_raster=use_raster,
+            raster_device=raster_device)
       })
       # add caption in attributes
       attr(hm, "caption") <- caption;
@@ -1245,8 +1266,8 @@ mem_enrichment_heatmap <- function
  lens=3,
  cexCellnote=0.0,
  column_title=NULL,
- row_names_max_width=grid::unit(30, "cm"),
- column_names_max_height=grid::unit(30, "cm"),
+ row_names_max_width=grid::unit(300, "mm"),
+ column_names_max_height=grid::unit(300, "mm"),
  heatmap_legend_param=NULL,
  hm_cell_size=NULL,
  legend_height=grid::unit(6, "cm"),

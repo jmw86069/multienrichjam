@@ -1,3 +1,37 @@
+# multienrichjam 0.0.90.900
+
+## changes to existing functions
+
+* `mem_plot_folio()`
+
+   * help docs changed to use the correct name
+   `mem_gene_path_heatmap()` from incorrect `mem_gene_pathway_heatmap()`.
+   * The `column_anno_padding`,`row_anno_padding` are now properly
+   applied before creating each heatmap, then reverted to previous
+   state before returning data.
+   * The Enrichment Heatmap default now uses `style="dotplot_inverted"`,
+   for previous behavior use `style="dotplot"`.
+
+* `mem_gene_path_heatmap()`
+
+   * Fixed visual bug where caption labels indicated "genes" twice, instead
+   of "genes" and "pathways".
+   * When `rotate_heatmap=TRUE`, arguments are more consistently flipped
+   from row to column, and help docs are updated to be explicit about
+   which arguments are flipped, and which two are not.
+   * The heatmap caption uses consistent order to describe rows, columns,
+   and reverses the order when `rotate_heatmap=TRUE`.
+   * The geneIM legend label now uses title case for consistency:
+   "Gene Hit By Enrichment", rather than "enrichments per gene" which
+   was not correct wording.
+
+* `importIPAenrichment()`
+
+   * Fixed issue with `"Analysis Ready Molecules"` not having proper
+   header column pattern matching, causing some imports to skip
+   applying the user-defined gene symbol.
+
+
 # multienrichjam 0.0.89.900
 
 ## changes to existing functions

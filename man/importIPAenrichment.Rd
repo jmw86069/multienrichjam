@@ -7,7 +7,7 @@
 importIPAenrichment(
   ipaFile,
   headerGrep =
-    "(^|\\t)((expr.|-log.|)p-value|Pvalue|Score\\t|Symbol\\t|Ratio\\t|Consistency.Score|Master.Regulator\\t)",
+    "(^|\\t)((expr.|-log.|)p-value|Pvalue|Score($|\\t)|Symbol($|\\t)|Ratio($|\\t)|Consistency.Score|Master.Regulator($|\\t))",
   ipaNameGrep = c("Pathway", "Regulator$", "Regulators", "Regulator", "Disease",
     "Toxicity", "Category", "Categories", "Function", "Symbol$", "^ID$",
     "My.(Lists|Pathways)"),

@@ -32,7 +32,7 @@ mem_plot_folio(
   repulse = 4,
   use_shadowText = FALSE,
   color_by_column = FALSE,
-  style = "dotplot",
+  style = "dotplot_inverted",
   enrich_im_weight = 0.3,
   gene_im_weight = 0.5,
   colorize_by_gene = TRUE,
@@ -141,7 +141,7 @@ will auto-detect whether there is directionality present in the
 data, and will set \code{apply_direction=TRUE} only when there are non-NA
 values that differ from zero.}
 
-\item{rotate_heatmap}{\code{logical} passed to \code{mem_gene_pathway_heatmap()}
+\item{rotate_heatmap}{\code{logical} passed to \code{mem_gene_path_heatmap()()}
 and only this function, default \code{FALSE}. It indicates whether to
 rotate the heatmap to have gene columns and pathway rows.
 If you find most people tilt their head to read the pathways,
@@ -150,10 +150,10 @@ it might be preferable.}
 \item{row_anno_padding, column_anno_padding}{\code{grid::unit} or \code{numeric}
 which will be converted to "mm" units. These values control the
 space between the heatmap body and row/column annotations,
-respectively, only relevant for \code{mem_gene_pathway_heatmap()}.
+respectively, only relevant for \code{mem_gene_path_heatmap()()}.
 The value is only applied during \code{draw()} and cannot be
 defined in the \code{Heatmap} object itself, which is why it is
-included here and not \code{mem_gene_pathway_heatmap()}.}
+included here and not \code{mem_gene_path_heatmap()()}.}
 
 \item{do_plot}{\code{logical} indicating whether to render each plot.
 When \code{do_plot=FALSE} the plot objects will be created and returned,

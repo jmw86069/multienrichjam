@@ -355,7 +355,7 @@
 #'    will auto-detect whether there is directionality present in the
 #'    data, and will set `apply_direction=TRUE` only when there are non-NA
 #'    values that differ from zero.
-#' @param rotate_heatmap `logical` passed to `mem_gene_pathway_heatmap()`
+#' @param rotate_heatmap `logical` passed to `mem_gene_path_heatmap()()`
 #'    and only this function, default `FALSE`. It indicates whether to
 #'    rotate the heatmap to have gene columns and pathway rows.
 #'    If you find most people tilt their head to read the pathways,
@@ -363,10 +363,10 @@
 #' @param row_anno_padding,column_anno_padding `grid::unit` or `numeric`
 #'    which will be converted to "mm" units. These values control the
 #'    space between the heatmap body and row/column annotations,
-#'    respectively, only relevant for `mem_gene_pathway_heatmap()`.
+#'    respectively, only relevant for `mem_gene_path_heatmap()()`.
 #'    The value is only applied during `draw()` and cannot be
 #'    defined in the `Heatmap` object itself, which is why it is
-#'    included here and not `mem_gene_pathway_heatmap()`.
+#'    included here and not `mem_gene_path_heatmap()()`.
 #' @param do_plot `logical` indicating whether to render each plot.
 #'    When `do_plot=FALSE` the plot objects will be created and returned,
 #'    but the plot itself will not be rendered. This option may be
@@ -416,7 +416,7 @@ mem_plot_folio <- function
  repulse=4,
  use_shadowText=FALSE,
  color_by_column=FALSE,
- style="dotplot",
+ style="dotplot_inverted",
  enrich_im_weight=0.3,
  gene_im_weight=0.5,
  colorize_by_gene=TRUE,
@@ -444,6 +444,34 @@ mem_plot_folio <- function
    plot_num <- 0;
    if (length(do_which) == 0) {
       do_which <- seq_len(50);
+   }
+
+   #############################################################
+   # Apply optional heatmap padding parameters
+   rowpad <- NULL;
+   columnpad <- NULL;
+   if (length(row_anno_padding) > 0) {
+      if (!grid::is.unit(row_anno_padding)) {
+         row_anno_padding <- grid::unit(row_anno_padding, "mm");
+      }
+      rowpad <- ComplexHeatmap::ht_opt("ROW_ANNO_PADDING")
+      ComplexHeatmap::ht_opt(ROW_ANNO_PADDING=row_anno_padding)
+   }
+   if (length(column_anno_padding) > 0) {
+      if (!grid::is.unit(column_anno_padding)) {
+         column_anno_padding <- grid::unit(column_anno_padding, "mm");
+      }
+      columnpad <- ComplexHeatmap::ht_opt("COLUMN_ANNO_PADDING")
+      ComplexHeatmap::ht_opt(COLUMN_ANNO_PADDING=column_anno_padding)
+   }
+   # revert changes later
+   revert_hm_padding <- function(...){
+      if (length(rowpad) > 0) {
+         ComplexHeatmap::ht_opt(ROW_ANNO_PADDING=rowpad)
+      }
+      if (length(columnpad) > 0) {
+         ComplexHeatmap::ht_opt(COLUMN_ANNO_PADDING=columnpad)
+      }
    }
 
    #############################################################
@@ -538,20 +566,6 @@ mem_plot_folio <- function
          do_plot=do_plot,
          ...);
       if (do_plot) {
-         if (length(row_anno_padding) > 0) {
-            if (!grid::is.unit(row_anno_padding)) {
-               row_anno_padding <- grid::unit(row_anno_padding, "mm");
-            }
-            rowpad <- ComplexHeatmap::ht_opt("ROW_ANNO_PADDING")
-            ComplexHeatmap::ht_opt(ROW_ANNO_PADDING=row_anno_padding)
-         }
-         if (length(column_anno_padding) > 0) {
-            if (!grid::is.unit(column_anno_padding)) {
-               column_anno_padding <- grid::unit(column_anno_padding, "mm");
-            }
-            columnpad <- ComplexHeatmap::ht_opt("COLUMN_ANNO_PADDING")
-            ComplexHeatmap::ht_opt(COLUMN_ANNO_PADDING=column_anno_padding)
-         }
          if (!color_by_column) {
             if ("annotation_legend_list" %in% names(attributes(mem_hm))) {
                annotation_legend_list <- attributes(mem_hm)$annotation_legend_list;
@@ -567,12 +581,6 @@ mem_plot_folio <- function
                }
             }
          }
-         if (length(row_anno_padding) > 0) {
-            ComplexHeatmap::ht_opt(ROW_ANNO_PADDING=rowpad)
-         }
-         if (length(column_anno_padding) > 0) {
-            ComplexHeatmap::ht_opt(COLUMN_ANNO_PADDING=columnpad)
-         }
       }
       ret_vals$enrichment_hm <- mem_hm;
    }
@@ -581,6 +589,7 @@ mem_plot_folio <- function
    #############################################################
    ## Gene-Pathway Heatmap
    if (length(do_which) > 0 && !any(do_which > plot_num)) {
+      revert_hm_padding();
       return(invisible(ret_vals));
    }
    ## All subsequent plots depend upon mem_gene_path_heatmap()
@@ -696,7 +705,10 @@ mem_plot_folio <- function
          NULL;
       });
       if (length(cnet_collapsed) == 0) {
-         return(list(mem=mem, clusters_mem=clusters_mem, ret_vals=ret_vals))
+         revert_hm_padding();
+         return(list(mem=mem,
+            clusters_mem=clusters_mem,
+            ret_vals=ret_vals))
       }
       igraph::V(cnet_collapsed)$pie.color <- lapply(
          igraph::V(cnet_collapsed)$pie.color, function(i){
@@ -983,6 +995,8 @@ mem_plot_folio <- function
    } else {
       plot_num <- plot_num + pathway_clusters_n;
    }
+
+   revert_hm_padding();
 
    invisible(ret_vals);
 }

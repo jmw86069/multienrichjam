@@ -39,7 +39,7 @@ mem_gene_path_heatmap(
   na_col = "white",
   rotate_heatmap = FALSE,
   colramp = "Reds",
-  column_names_max_height = grid::unit(18, "cm"),
+  column_names_max_height = grid::unit(180, "mm"),
   column_names_rot = 90,
   show_gene_legend = FALSE,
   show_pathway_legend = TRUE,
@@ -178,24 +178,16 @@ recognized as \code{NA} by \code{ComplexHeatmap::Heatmap()}.}
 
 \item{rotate_heatmap}{\code{logical} indicating whether the entire heatmap
 should be rotated so that pathway names are displayed as rows,
-and genes as columns. Notes on how arguments are applied to rows
-and columns:
+and genes as columns.
+When enabled, arguments referring to columns and rows are flipped,
+so "column" arguments will continue to affect pathways/sets,
+and "row" arguments will continue to affect genes.
+This includes \code{column_method} and \code{row_method} as of 0.0.90.900.
 \itemize{
-\item Column arguments applied to rows:
-\code{column_split}, \code{column_title}, \code{cluster_columns},
-\code{column_fontsize}, \code{column_cex}
-are applied to rows since they refer to pathway data;
-\item Row arguments applied to columns:
-\code{row_split}, \code{row_title}, \code{cluster_rows}, \code{row_fontsize}, \code{row_cex}
-are applied to columns since they refer to gene data;
-\item Arguments applied directly to columns:
-\code{column_method}, \code{column_title_rot}
-are applied directly to heatmap columns since they
-refer to the output heatmap options.
-\item Arguments applied directly to rows:
-\code{row_method}, \code{row_title_rot}
-are applied directly to heatmap rows since they
-refer to the output heatmap options.
+\item Exceptions:
+\item \code{row_title_rot} is only applied to rows, due to its purpose.
+\item \code{column_names_rot} is only applied to columns, also due to
+its purpose.
 }}
 
 \item{colramp}{\code{character} name of color, color gradient, or a
@@ -203,7 +195,8 @@ vector of colors, anything compatible with input to
 \code{jamba::getColorRamp()}.}
 
 \item{column_names_max_height}{\code{grid::unit} passed to
-\code{ComplexHeatmap::Heatmap()}.}
+\code{ComplexHeatmap::Heatmap()}. When supplied as \code{numeric} it is
+converted to units in "mm".}
 
 \item{column_names_rot}{\code{numeric} passed to
 \code{ComplexHeatmap::Heatmap()}.}
