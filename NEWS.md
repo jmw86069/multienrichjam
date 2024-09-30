@@ -1,3 +1,9 @@
+# multienrichjam 0.0.90.950
+
+## bug fixes
+
+* `make_point_hull()` fixed typo specific to "right" alignment.
+
 # multienrichjam 0.0.90.900
 
 * Added `shadowtext` to Suggests, optionally adds contrast to

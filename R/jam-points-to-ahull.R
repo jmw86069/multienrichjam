@@ -455,7 +455,7 @@ make_point_hull <- function
             use_mxys <- which.max(mxys[,2]);
          } else if ("bottom" %in% label_preset) {
             use_mxys <- which.min(mxys[,2]);
-         } else if ("right" %in% label_preset5) {
+         } else if ("right" %in% label_preset) {
             use_mxys <- which.max(mxys[,1]);
          } else {
             use_mxys <- which.min(mxys[,1]);
