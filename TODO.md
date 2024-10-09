@@ -1,5 +1,12 @@
 # TODO
 
+## 09oct2024
+
+* `fixSetLabels()`
+
+   * Define better default replacements.
+   * Consider using default from/to, with option for user-defined additions.
+
 ## 09sep2024
 
 * Consider using `mem_enrichment_heatmap()` as the top_annotation

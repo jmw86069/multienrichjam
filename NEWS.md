@@ -1,3 +1,10 @@
+# multienrichjam 0.0.91.900
+
+## changes
+
+* Moved `.onLoad()` to `zzz.R`
+* Moved `fixSetLabels()` to its own R file for convenience.
+
 # multienrichjam 0.0.90.950
 
 ## bug fixes
