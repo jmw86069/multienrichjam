@@ -4,6 +4,16 @@
 
 * Moved `.onLoad()` to `zzz.R`
 * Moved `fixSetLabels()` to its own R file for convenience.
+* `fixSetLabels()`
+
+   * default argument change `width=40`, previously 25.
+   * arguments `words_from`,`words_to` were edited to add more
+   commonly observed patterns.
+   * new arguments `add_from`,`add_to` for user-defined replacements,
+   to use in addition to the default replacements `word_from`,`word_to`.
+   * new argument `do_abbreviations=TRUE` to help shorten common phrass
+   * new arguments `abbrev_from`,`abbrev_to` are used with
+   `do_abbreviations=TRUE`. These are opinionated changes.
 
 # multienrichjam 0.0.90.950
 

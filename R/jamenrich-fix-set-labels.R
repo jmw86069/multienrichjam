@@ -8,48 +8,85 @@
 #' gene set and pathways labels to be slightly more legible. It
 #' operates on either a character vector, or an igraph object.
 #'
+#' * To use custom from,to replacements, along with the default replacements,
+#' supply the custom replacements with arguments `add_from`,`add_to`.
+#' * To use custom from,to replacements, without applying the defaults,
+#' supply the custom replacements with arguments `words_from`,`words_to`.
+#'
 #' @return vector or igraph object, to match the input `x`.
 #'
 #' @family jam igraph functions
 #'
-#' @param x character vector, or `igraph` object. When an `igraph`
-#'    object is supplied, the `V(g)$name` attribute is used as the
-#'    basis of generating a label, which is then stored as `V(g)$label`.
-#' @param wrap logical indicating whether to apply word wrap, based upon
+#' @param x any of the following objects:
+#'    * `character` vector
+#'    * `igraph` object. The `V(g)$name` attribute is used as the input,
+#'    and the resulting label is then stored as `V(g)$label`.
+#' @param wrap `logical` indicating whether to apply word wrap, based upon
 #'    the supplied `width` argument.
 #' @param width integer value used when `wrap=TRUE`, it is sent to
 #'    `base::strwrap()`.
-#' @param maxNchar numeric value or `Inf` to limit the maximum characters
+#' @param maxNchar `numeric` value or `Inf` to limit the maximum characters
 #'    allowed for each string. This option is preferred when `wrap=TRUE`
 #'    is not feasible, for example heatmap labels. When `NULL` or `Inf`
 #'    no limit is applied. See `base::nchar()`.
-#' @param suffix character value used as a suffix when `maxNchar` is used,
-#'    the string is shortened so that the shortened string and suffix
-#'    values are `maxNchar` characters long. It serves as an indicator
-#'    that the string label has been shortened.
-#' @param nodeType character value compared to the vertex attribute
-#'    `"nodeType"` when the input `x` is an `igraph` object. This option
-#'    is used to restrict label changes to certain nodes. When `NULL` or
-#'    `nodeType="any"` then all node labels are updated.
-#' @param adjustCase logical indicating whether to adjust the uppercase
-#'    and lowercase lettering.
-#' @param removeGrep character regular expression pattern used to remove
-#'    patterns from the resulting label. The default values remove the
-#'    prefix used in MsigDB canonical pathway names, which is a prefix
-#'    indicating the source of each pathway.
-#' @param words_from,words_to character vectors of words to match
-#'    in case-insensitive manner, to be replaced with fixed-case
-#'    alternatives. It uses perl-based regular expression matching
-#'    in `base::gsub()`, and the `\\b` expression to enforce a
-#'    word boundary, either via delimiter, whitespace, or the end
-#'    of the string.
-#' @param ... additional arguments are ignored.
+#' @param suffix `character` value, default `"..."`, used
+#'    when `maxNchar` is below `Inf`.
+#'    When a string is shortened to `maxNchar`, the `suffix` helps indicate
+#'    that there was additional text.
+#' @param nodeType `character` string ussed when `x` is `igraph`,
+#'    to limit changes to nodes by attribute values in `"nodeType"`.
+#'    Use `"any"` or `NULL` to affect all nodes.
+#' @param do_abbreviations `logical`, default TRUE, whether to apply
+#'    `abbrev_from,abbrev_to`. These patterns are intended specifically
+#'    to help shorten a long phrase, possibly removing words, or using
+#'    common abbreviations.
+#' @param adjustCase `logical`, default TRUE,  indicating whether to
+#'    adjust the uppercase and lowercase lettering by calling
+#'    `jamba::ucfirst()`. The default sets all characters to lowercase,
+#'    then applies uppercase to the first letter of each word.
+#' @param lowercaseAll `logical` used only when `adjustCase=TRUE`,
+#'    passed to `jamba::ucfirst()`
+#' @param removeGrep `character` regular expression pattern used to remove
+#'    patterns from the resulting label.
+#'    * The default removes common canonical pathway source prefix terms
+#'    use in MSigDB data, for example KEGG, BIOCARTA, PID, etc.
+#'    Use `""` or `NULL` to skip this step.
+#'    * Multiple values can be defined, they are applied in order.
+#' @param words_from,words_to `character` vectors of pattern, replacement,
+#'    respectively. The pattern is matched in case-insensitive manner,
+#'    with case-sensitive replacements where applicable.
+#'    It uses perl-based regular expression matching with
+#'    `base::gsub()`, so that the expression `\\b` can be used
+#'    to enforce a word boundary, either via delimiter, whitespace, or
+#'    the end of the string.
+#' @param add_from,add_to `character` vectors used in addition to
+#'    `words_from`,`words_to`.
+#'    * These values are applied after `words_from`,`words_to`, so that
+#'    user-defined replacements have priority.
+#' @param abbrev_from,abbrev_to `character` vectors used when
+#'    `do_abbreviations=TRUE`. These defaults are "opinionated",
+#'    they are intended to shorten common phrases which do not
+#'    seem critical to understanding the meaning of most biological
+#'    pathways.
+#'    Some abbreviations are used for relatively common phrases
+#'    and terms, for which the abbreviation seems to be unambiguous
+#'    and fairly widely recognized.
+#'    Examples:
+#'    * "Extracellular Matrix" becomes "ECM"
+#'    * "Mitochondrial" becomes "Mito"
+#'    * " Pathway" at the end of a phrase is removed, as it is not
+#'    required to understand the rest of the label.
+#'    * "Signaling by " at the start of a phrase is removed, as
+#'    it also is not typically necessary to understand the label.
+#' @param ... additional arguments are passed to `jamba::ucfirst(x, ...)`,
+#'    for example `firstWordOnly=TRUE` will capitalize only the first word.
 #'
 #' @examples
 #' x <- c("KEGG_INSULIN_SIGNALING_PATHWAY",
 #'    "KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY",
 #'    "KEGG_NEUROTROPHIN_SIGNALING_PATHWAY");
 #' fixSetLabels(x);
+#' fixSetLabels(x, do_abbreviations=FALSE);
 #'
 #' jamba::nullPlot();
 #' jamba::drawLabels(txt=x,
@@ -59,45 +96,106 @@
 fixSetLabels <- function
 (x,
  wrap=TRUE,
- width=25,
+ width=40,
  maxNchar=Inf,
  suffix="...",
- nodeType=c("Set","Gene","any"),
+ nodeType=c("Set",
+    "Gene",
+    "any"),
+ do_abbreviations=TRUE,
  adjustCase=TRUE,
- removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST)[_.]",
- words_from=c("als", "ii", "iii", "iv", "v", "tgf",
-    "nfkb", "trna", "rrna",
-    "mirna", "mrna", "snrna", "snorna",
-    "scrna", "lincrna"),
- words_to=c("ALS", "II", "III", "IV", "V", "TGF",
-    "NFKB", "tRNA", "rRNA",
-    "miRNA", "mRNA", "snRNA", "snoRNA",
-    "scRNA", "lincRNA"),
+ lowercaseAll=TRUE,
+ removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP)[_. ]",
+ words_from=c("als",
+    "ii", "iii", "iv", "v",  "vi", "Vii", "Viii", "ix", "x",
+    "trna", "rrna", "rna", "dna", "mirna", "mrna", "snrna", "snorna",
+    "scrna", "lincrna",
+    "Il", "Ecm", "Nk",
+    "Pi3k.Akt", "Akt", "Pi3k", "tgf", "nfkb", "NK.Kappa.B",
+    "C Jun", "C Fos", "Ap 1", "Apoe",
+    "([AG])tpase", "Kras", "Uv",
+    "([TB]|NK) Cell"),
+ words_to=c("ALS",
+    "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+    "tRNA", "rRNA", "RNA", "DNA", "miRNA", "mRNA", "snRNA", "snoRNA",
+    "scRNA", "lincRNA",
+    "IL", "ECM", "NK",
+    "PI3K/AKT", "AKT", "PI3K", "TGF", "NFKB", "NFKB",
+    "C-jun", "C-fos", "AP-1", "APOE",
+    "\\1TPase", "KRAS", "UV",
+    "\\1-cell"),
+ add_from=NULL,
+ add_to=NULL,
+ abbrev_from=c(
+    "Extracellular.Matrix",
+    "Mitochondri(um|a|al)",
+    "Interferon",
+    "Subsequent",
+    "Signaling (pathway|system)",
+    "Of The",
+    "^Signaling by ", # remove leading "Signaling by" as unnecessary
+    " Pathway[s]*$"), # remove trailing " pathway" as unnecessary
+ abbrev_to=c(
+    "ECM",
+    "Mito",
+    "IFN",
+    "Signaling",
+    "Of",
+    "",
+    "",
+    ""),
  ...)
 {
+   # validate nodeType
    nodeType <- match.arg(nodeType);
-   if (jamba::igrepHas("igraph", class(x))) {
+   if (inherits(x, "igraph")) {
       if ("any" %in% nodeType) {
          which_nodes <- seq_len(igraph::vcount(x));
       } else {
          which_nodes <- which(igraph::V(x)$nodeType %in% nodeType);
       }
-      xPrep <- gsub("_", " ",
-         gsub(removeGrep,
-            "",
-            ignore.case=TRUE,
-            igraph::V(x)$name[which_nodes]));
+      for (i in seq_along(removeGrep)) {
+         xPrep <- gsub("[_ ]+", " ",
+            gsub(removeGrep[[i]],
+               "",
+               ignore.case=TRUE,
+               igraph::V(x)$name[which_nodes]));
+      }
    } else {
       which_nodes <- seq_along(x);
-      xPrep <- gsub("_", " ",
-         gsub(removeGrep,
-            "",
-            ignore.case=TRUE,
-            x));
+      for (i in seq_along(removeGrep)) {
+         xPrep <- gsub("[_ ]+", " ",
+            gsub(removeGrep[[i]],
+               "",
+               ignore.case=TRUE,
+               x));
+      }
    }
-   if (adjustCase) {
-      xPrep <- jamba::ucfirst(tolower(xPrep));
+   if (TRUE %in% adjustCase) {
+      xPrep <- jamba::ucfirst(xPrep,
+         lowercaseAll=lowercaseAll,
+         ...);
    }
+
+   ## Confirm words_from,words_to have identical length
+   if (length(words_from) > 0) {
+      words_to <- rep(words_to, length.out=length(words_from))
+   }
+   ## When add_from,add_to are defined
+   if (length(add_from) > 0) {
+      add_to <- rep(add_to, length.out=length(add_from))
+      # append to words_from
+      words_from <- c(words_from, add_from)
+      words_to <- c(words_to, add_to)
+   }
+   ## When abbrev_from,abbrev_to are defined
+   if (TRUE %in% do_abbreviations && length(abbrev_from) > 0) {
+      abbrev_to <- rep(abbrev_to, length.out=length(abbrev_from))
+      # append to words_from
+      words_from <- c(words_from, abbrev_from)
+      words_to <- c(words_to, abbrev_to)
+   }
+
    ## Optionally replace certain words with fixed capitalization
    if (length(words_from) > 0 && length(words_to) == length(words_from)) {
       for (i in seq_along(words_from)) {

@@ -23,9 +23,9 @@ for `mem_gene_path_heatmap()`, including for example the dotplot format.
 
 ## 04sep2024
 
-* Fix the `row_title` for the enrichment heatmap when called by
+* DONE. Fix the `row_title` for the enrichment heatmap when called by
 `mem_plot_folio()`, currently it uses numbers instead of `LETTERS`.
-* Consider option for fixed-attribute cells for `mem_enrichment_heatmap()`
+* DONE. Consider option for fixed-attribute cells for `mem_enrichment_heatmap()`
 when used with dot plot, so each cell is square with the circle centered.
 * Consider returning updated `igraph` from `jam_igraph()`
 
