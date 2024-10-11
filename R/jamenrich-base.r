@@ -619,14 +619,10 @@ multiEnrichMap <- function
       verbose=(verbose - 1) > 0,
       emptyValue=1,
       GmtT=msigdbGmtT);
-   jamba::printDebug("enrichLsetNames:");print(enrichLsetNames);# debug
-   jamba::printDebug("enrichIM 1:");print(enrichIM);# debug
    match1 <- match(enrichLsetNames, rownames(enrichIM));
    match2 <- match(names(enrichList), colnames(enrichIM));
    enrichIM <- enrichIM[match1, match2, drop=FALSE];
-   jamba::printDebug("enrichIM 2:");print(enrichIM);# debug
    rownames(enrichIM) <- enrichLsetNames;
-   jamba::printDebug("enrichIM 3:");print(enrichIM);# debug
    colnames(enrichIM) <- names(enrichList);
 
    if (all(is.na(enrichIM))) {
