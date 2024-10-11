@@ -1,3 +1,22 @@
+# multienrichjam 0.0.92.900
+
+## bug fixes
+
+* `enrichList2df()`
+
+   * Fixed bug which occurred only when `enrichList` had length=1,
+   which caused gene/pathway to be out of sync.
+   The bug appeared to be caused only with single-enrichment input,
+   and must have been relatively recent.
+   * Added numerous `testthat` entries to cover this bug, and various
+   permutations. Will rapidly add more test cases to cover various
+   core behaviors and expectations with `multiEnrichMap()`.
+
+## changes
+
+* moved `enrichList2DF()` to its own .R file.
+
+
 # multienrichjam 0.0.91.900
 
 ## changes

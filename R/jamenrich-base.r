@@ -412,7 +412,8 @@ multiEnrichMap <- function
       # populate geneHitIM if empty
       if (length(geneHitList) > 0 && length(geneHitIM) == 0) {
          if (is.numeric(geneHitList[[1]])) {
-            geneHitIM <- list2imSigned(geneHitList);
+            # 0.0.92.900
+            geneHitIM <- jamba::rmNA(naValue=0, list2imSigned(geneHitList))
          } else {
             geneHitIM <- list2im(geneHitList);
          }
@@ -618,10 +619,14 @@ multiEnrichMap <- function
       verbose=(verbose - 1) > 0,
       emptyValue=1,
       GmtT=msigdbGmtT);
+   jamba::printDebug("enrichLsetNames:");print(enrichLsetNames);# debug
+   jamba::printDebug("enrichIM 1:");print(enrichIM);# debug
    match1 <- match(enrichLsetNames, rownames(enrichIM));
    match2 <- match(names(enrichList), colnames(enrichIM));
    enrichIM <- enrichIM[match1, match2, drop=FALSE];
+   jamba::printDebug("enrichIM 2:");print(enrichIM);# debug
    rownames(enrichIM) <- enrichLsetNames;
+   jamba::printDebug("enrichIM 3:");print(enrichIM);# debug
    colnames(enrichIM) <- names(enrichList);
 
    if (all(is.na(enrichIM))) {
@@ -1144,277 +1149,6 @@ enrichList2IM <- function
    return(enrichIMP);
 }
 
-#' Convert enrichList to data.frame
-#'
-#' Convert enrichList to data.frame
-#'
-#' @family jam conversion functions
-#'
-#' @export
-enrichList2df <- function
-(enrichList,
- keyColname=c("itemsetID",
-    "ID",
-    "Name"),
- geneColname=c("geneNames",
-    "Genes"),
- geneCountColname=c("geneCount",
-    "geneHits",
-    "Count"),
- pvalueColname=c("P-value",
-    "pvalue",
-    "Pval"),
- pvalueFloor=1e-200,
- msigdbGmtT=NULL,
- geneDelim="[,/ ]",
- verbose=FALSE,
- debug=0,
-...)
-{
-   ## Purpose is to combine a list of enrichment data.frames into one data.frame
-   if (!suppressPackageStartupMessages(require(matrixStats))) {
-      stop("enrichList2df() requires the matrixStats package.");
-   }
-   iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
-   # version 0.0.56.900: changed to use enrichList which tests all results not
-   # just the first in the list
-   keyColname <- find_colname(keyColname, enrichList);
-   geneColname <- find_colname(geneColname, enrichList);
-   geneCountColname <- find_colname(geneCountColname, enrichList);
-   pvalueColname <- find_colname(pvalueColname, enrichList);
-   if (verbose) {
-      jamba::printDebug("enrichList2df(): ",
-         "colnames(iDF1):",
-         colnames(iDF1));
-      jamba::printDebug("enrichList2df(): ",
-         "keyColname:",
-         keyColname);
-      jamba::printDebug("enrichList2df(): ",
-         "geneColname:",
-         geneColname);
-      jamba::printDebug("enrichList2df(): ",
-         "geneCountColname:",
-         geneCountColname);
-      jamba::printDebug("enrichList2df(): ",
-         "pvalueColname:",
-         pvalueColname);
-   }
-   ## Keep the best result for these columns as the exemplar
-   enrichCols <- c(`P-value`="lo",
-      pathGenes="hi",
-      geneHits="hi",
-      geneCount="hi");
-   names(enrichCols)[1] <- head(pvalueColname, 1);
-   names(enrichCols)[4] <- head(geneCountColname, 1);
-   enrichCols <- enrichCols[unique(names(enrichCols))];
-
-   ## Get first non-NULL data.frame from enrichList
-   if (!jamba::igrepHas("data.frame", class(head(jamba::rmNULL(enrichList), 1)))) {
-      iDF <- as.data.frame(jamba::rmNULL(enrichList)[[1]]);
-   } else {
-      iDF <- jamba::rmNULL(enrichList)[[1]];
-   }
-
-   if (verbose) {
-      jamba::printDebug("enrichList2df(): ",
-         "enrichCols (before):");
-      print(enrichCols);
-      jamba::printDebug("enrichList2df(): ",
-         "colnames(iDF):", colnames(iDF));
-   }
-   enrichCols <- enrichCols[names(enrichCols) %in% colnames(iDF)];
-   enrichColsHi <- names(enrichCols)[enrichCols %in% "hi"];
-   #c("pathGenes","geneHits");
-   enrichColsLo <- names(enrichCols)[enrichCols %in% "lo"];
-   #enrichColsLo <- c("P-value");
-   keepCols <- setdiff(jamba::unvigrep("gene", colnames(iDF)),
-      c(enrichColsHi, enrichColsLo, keyColname, geneColname));
-
-   ## Create a P-value incidence matrix
-   if (verbose) {
-      jamba::printDebug("enrichList2df(): ",
-         "enrichCols (after):");
-      print(enrichCols);
-      jamba::printDebug("enrichList2df(): ",
-         "jamba::sdim(enrichL):");
-      print(jamba::sdim(enrichList));
-   }
-   enrichValuesM <- do.call(cbind, lapply(jamba::nameVector(names(enrichCols)), function(iCol){
-      useType <- enrichCols[iCol];
-      enrichIMP <- list2imSigned(lapply(enrichList, function(iDF){
-         if (!jamba::igrepHas("data.frame", class(iDF))) {
-            iDF <- as.data.frame(iDF);
-         }
-         if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
-            if (verbose) {
-               jamba::printDebug("enrichList2df(): ",
-                  "Some ", iCol, " values are less than ",
-                  "pvalueFloor:",
-                  pvalueFloor);
-               print(table(iDF[,iCol] <= pvalueFloor));
-            }
-            iDF[iDF[,iCol] <= pvalueFloor, iCol] <- pvalueFloor;
-         } else if (jamba::igrepHas("[/]", iDF[,iCol])) {
-            iDF[,iCol] <- as.numeric(gsub("[/].*$", "", iDF[,iCol]));
-         }
-         if (length(jamba::tcount(iDF[[keyColname]], minCount=2)) > 0) {
-            stop("enrichList2df(): There are duplicate values in iDF[[keyColname]], please resolve.");
-         }
-         if (verbose) {
-            jamba::printDebug("enrichList2df(): ",
-               "head(iDF):");
-            print(head(iDF));
-         }
-         jamba::nameVector(iDF[,c(iCol,keyColname)]);
-      }));
-      if (useType %in% "lo") {
-         enrichIMP[enrichIMP == 0] <- 1;
-         # jamba::nameVector(matrixStats::rowMins(enrichIMP), rownames(enrichIMP));
-         jamba::nameVector(apply(enrichIMP, 1, min, na.rm=TRUE), rownames(enrichIMP));
-      } else if (useType %in% "hi") {
-         # jamba::nameVector(matrixStats::rowMaxs(enrichIMP), rownames(enrichIMP));
-         jamba::nameVector(apply(enrichIMP, 1, max, na.rm=TRUE), rownames(enrichIMP));
-      }
-   }));
-   if (verbose) {
-      jamba::printDebug("enrichList2df(): ",
-         "dim(enrichValuesM):",
-         dim(enrichValuesM));
-      print(head(enrichValuesM));
-   }
-   if (debug == 1) {
-      return(list(enrichCols=enrichCols,
-         enrichValuesM=enrichValuesM,
-         enrichList=enrichList));
-   }
-
-   ## Generate list with genes per pathway
-   allGenes <- jamba::mixedSort(unique(unlist(lapply(enrichList, function(iDF){
-      if (!jamba::igrepHas("data.frame", class(iDF))) {
-         iDF <- as.data.frame(iDF);
-      }
-      unlist(
-         strsplit(
-            as.character(iDF[,geneColname]),
-            geneDelim));
-   }))));
-
-   ## If GmtT is supplied, use it to determine genes per pathway
-   if (length(msigdbGmtT) > 0) {
-      enrichGeneL <- as(msigdbGmtT[
-         match(rownames(enrichValuesM), msigdbGmtT@itemsetInfo[,keyColname]),
-         jamba::rmNA(match(allGenes, msigdbGmtT@itemInfo[,1]))], "list");
-      names(enrichGeneL) <- rownames(enrichValuesM);
-      enrichGeneVL <- list(jamba::cPaste(enrichGeneL, doSort=FALSE));
-      names(enrichGeneVL) <- geneColname;
-      enrichGeneLen <- lengths(enrichGeneL);
-   } else {
-      ## if GmtT is not supplied, use the pathway enrichment data as a substitute
-      enrichL1L1 <- lapply(jamba::nameVectorN(enrichList), function(iName){
-         iDF <- enrichList[[iName]];
-         if (!jamba::igrepHas("data.frame", class(iDF))) {
-            iDF <- as.data.frame(iDF);
-         }
-         iDF <- jamba::renameColumn(iDF,
-            from=geneColname,
-            to=iName);
-         iDF[,c(keyColname,iName)];
-      });
-      enrichL1L <- jamba::mergeAllXY(enrichL1L1);
-      enrichL1V <- jamba::nameVector(
-         gsub("^[,/ ]+|[,/ ]+$",
-            "",
-            jamba::pasteByRow(
-               enrichL1L[,-match(keyColname, colnames(enrichL1L)),drop=FALSE],
-               sep=",")),
-         enrichL1L[[keyColname]]);
-      #enrichGeneL <- as.list(unique(
-      #   CharacterList(
-      #      strsplit(
-      #         enrichL1V,
-      #         geneDelim))));
-      enrichGeneL <- strsplit(
-         enrichL1V,
-         geneDelim);
-      enrichGeneVL <- list(jamba::cPaste(enrichGeneL, doSort=FALSE));
-      names(enrichGeneVL) <- geneColname;
-      enrichGeneLen <- lengths(enrichGeneL);
-   }
-
-   if (debug == 2) {
-      return(list(enrichCols=enrichCols,
-         enrichValuesM=enrichValuesM,
-         enrichList=enrichList,
-         enrichGeneLen=enrichGeneLen,
-         enrichGeneL=enrichGeneL));
-   }
-
-   ## Create data.frame with annotation columns, only keep the first
-   ## occurrence of any non-NA value
-   if (verbose) {
-      jamba::printDebug("enrichList2df(): ",
-         "head(enrichL1L):");
-      print(str(head(enrichL1L)));
-      jamba::printDebug("enrichList2df(): ",
-         "dim(enrichValuesM):",
-         dim(enrichValuesM));
-   }
-   keepColDF <- jamba::renameColumn(
-      data.frame(row.names=rownames(enrichValuesM),
-         keyColname=rep(NA, nrow(enrichValuesM))),
-      from="keyColname",
-      to=keyColname);
-   for (iName in names(enrichList)) {
-      iDF <- enrichList[[iName]];
-      if (verbose) {
-         jamba::printDebug("iName:", iName);
-         jamba::printDebug("dim(iDF):", dim(iDF));
-      }
-      keyVals <- iDF[,keyColname];
-      keyValsUse <- setdiff(keyVals, jamba::rmNA(keepColDF[,keyColname]));
-      if (verbose) {
-         jamba::printDebug("iName:", iName,
-            ", length(keyVals):", length(keyVals),
-            ", length(keyValsUse):", length(keyValsUse));
-         jamba::printDebug("head(iDF):");
-         print(head(iDF));
-         jamba::printDebug("head(keepColDF):");
-         print(head(keepColDF));
-      }
-      if (length(keyValsUse) > 0) {
-         keepColDF[keyValsUse,keyColname] <- keyValsUse;
-         for (keepCol in keepCols) {
-            keyNew <- iDF[match(keyValsUse, iDF[,keyColname]),keepCol];
-            if (length(keyNew) > 0) {
-               keepColDF[keyValsUse,keepCol] <- keyNew;
-            }
-         }
-      }
-      rm(iDF);
-   }
-   if (debug == 3) {
-      return(list(enrichCols=enrichCols,
-         enrichValuesM=enrichValuesM,
-         enrichList=enrichList,
-         enrichGeneLen=enrichGeneLen,
-         enrichGeneL=enrichGeneL,
-         keepColDF=keepColDF));
-   }
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "Creating enrichDF.");
-   }
-   enrichDF <- data.frame(check.names=FALSE,
-      stringsAsFactors=FALSE,
-      enrichValuesM,
-      keepColDF,
-      as.data.frame(enrichGeneVL));
-   enrichDF[["allGeneHits"]] <- enrichGeneLen;
-   #whichCol1 <- max(which(colnames(enrichDF) %in% names(enrichCols))) + 1;
-   #enrichDF <- insertDFcols(enrichDF, colnum=whichCol1,
-   #   insertDF=data.frame(allGeneHits=enrichGeneLen));
-   enrichDF;
-}
 
 #' Create enrichMap igraph object
 #'
