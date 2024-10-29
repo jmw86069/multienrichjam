@@ -352,6 +352,7 @@ mem_gene_path_heatmap <- function
       if (length(row_split) == 0) {
          if (nrow(memIM) < 5) {
             row_split <- NULL;
+            row_title <- NULL;
          } else {
             row_split <- jamba::noiseFloor(floor(nrow(memIM)^(1/2.5)),
                ceiling=12);
@@ -363,10 +364,15 @@ mem_gene_path_heatmap <- function
       }
       if (length(column_split) == 0) {
          if (ncol(memIM) < 5) {
-            column_split <- NULL;
+            if (ncol(memIM) < 2) {
+               column_split <- NULL;
+               column_title <- NULL;
+            } else {
+               column_split <- ncol(memIM);
+            }
          } else {
             ncol_x <- (5 + ncol(memIM)/1.5) ^ (1/2);
-            column_split <- jamba::noiseFloor(floor(ncol_x), ceiling=10);
+            column_split <- jamba::noiseFloor(floor(ncol_x), ceiling=8);
             if (verbose) {
                jamba::printDebug("mem_gene_path_heatmap(): ",
                   "auto_split column_split:", column_split);
@@ -382,6 +388,7 @@ mem_gene_path_heatmap <- function
       }
       if (row_split <= 1) {
          row_split <- NULL;
+         row_title <- NULL;
          if (length(row_title) > 1) {
             row_title <- NULL;
          }
@@ -933,7 +940,6 @@ mem_gene_path_heatmap <- function
          left_annotation <- do.call(ComplexHeatmap::rowAnnotation,
             gene_arglist);
       }
-
       hm <- tryCatch({
          jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
             matrix=memIM[genes, sets, drop=FALSE],
@@ -955,10 +961,10 @@ mem_gene_path_heatmap <- function
             column_names_rot=column_names_rot,
             column_names_max_height=column_names_max_height,
             column_title=column_title,
-            row_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
-            row_title_rot=row_title_rot,
             row_split=row_split,
+            row_title=row_title,
+            row_title_rot=row_title_rot,
             column_split=column_split,
             use_raster=use_raster,
             raster_device=raster_device,
@@ -990,10 +996,10 @@ mem_gene_path_heatmap <- function
             column_names_rot=column_names_rot,
             column_names_max_height=column_names_max_height,
             column_title=column_title,
-            row_title=row_title,
             heatmap_legend_param=heatmap_legend_param,
-            row_title_rot=row_title_rot,
             row_split=row_split,
+            row_title=row_title,
+            row_title_rot=row_title_rot,
             column_split=column_split,
             use_raster=use_raster,
             raster_device=raster_device)

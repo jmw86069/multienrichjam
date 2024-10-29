@@ -153,7 +153,7 @@ multiEnrichMap <- function
  enrichLens=0,
  enrichNumLimit=4,
  nEM=500,
- min_count=1,
+ min_count=3,
  topEnrichN=20,
  topEnrichSources=c("gs_cat", "gs_subat"),
  topEnrichCurateFrom=NULL,
@@ -453,6 +453,16 @@ multiEnrichMap <- function
    geneIM <- geneHitIM;
 
    #####################################################################
+   ## store thresholds for reference
+   thresholds <- list(
+      min_count=min_count,
+      cutoffRowMinP=cutoffRowMinP,
+      overlapThreshold=overlapThreshold,
+      topEnrichN=topEnrichN,
+      topEnrichSources=topEnrichSources,
+      topEnrichNameGrep=topEnrichNameGrep)
+
+   #####################################################################
    ## Optionally run topEnrichBySource()
    if ((length(topEnrichN) > 0 && all(topEnrichN > 0)) ||
          length(subsetSets) > 0 ||
@@ -605,6 +615,7 @@ multiEnrichMap <- function
          iDF[[nameColname]];
       }
    })));
+   jamba::printDebug("enrichLsetNames:");print(enrichLsetNames);# debug
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "enrichIM <- enrichList2IM() with    pvalueColname:",
@@ -624,6 +635,7 @@ multiEnrichMap <- function
    enrichIM <- enrichIM[match1, match2, drop=FALSE];
    rownames(enrichIM) <- enrichLsetNames;
    colnames(enrichIM) <- names(enrichList);
+   jamba::printDebug("enrichIM:");print(enrichIM);# debug
 
    if (all(is.na(enrichIM))) {
       if (verbose) {
@@ -872,6 +884,8 @@ multiEnrichMap <- function
             as.character(mem$multiEnrichDF[[geneColname]]),
             mem$multiEnrichDF[[nameColname]]),
          geneDelim));
+   # 0.0.93.900 - enforce consistent order
+   memIM <- memIM[, enrichLsetNames, drop=FALSE];
    mem$memIM <- memIM;
 
 
@@ -990,11 +1004,15 @@ multiEnrichMap <- function
    #######################################################
    ## Add all colnames to the mem object
    colnamesL <- list(
-      geneColname=geneColname,
       keyColname=keyColname,
       nameColname=nameColname,
+      geneColname=geneColname,
+      countColname=countColname,
+      pvalueColname=pvalueColname,
       descriptionColname=descriptionColname,
-      pvalueColname=pvalueColname);
+      directionColname=directionColname,
+      pathGenes=pathGenes,
+      geneHits=geneHits)
    mem$colnames <- colnamesL;
 
    ## Add p_cutoff to output

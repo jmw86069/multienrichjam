@@ -553,7 +553,7 @@ mem_plot_folio <- function
          color_by_column=color_by_column,
          row_cex=row_cex,
          row_method=row_method,
-         row_split=pathway_column_split,
+         row_split=length(gphm_pw_order),
          row_title=names(gphm_pw_order),
          row_title_rot=0,
          cluster_rows=gp_hm_hclust,

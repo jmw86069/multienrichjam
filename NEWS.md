@@ -1,3 +1,23 @@
+# multienrichjam 0.0.93.900
+
+## changes
+
+* `multiEnrichMap()`
+
+   * New default `min_count=3` instead of previous `min_count=1`.
+   * Updated `mem$colnames` to include all detected colnames, adding
+   countColname, directionColname, pathGenes, geneHits.
+   The order now matches function argument order.
+   * Added new component `mem$thresholds` with `cutoffRowMinP`, `min_count`,
+   `overlapThreshold` (may not be necessary), and the `topEnrichSource*`
+   arguments, sufficient to reproduce the method.
+
+* `mem_gene_path_heatmap()`
+
+   * Changed ceiling for auto-detected pathway clusters to 8, from 10.
+
+* Added more tests, including much of `multiEnrichMap()`
+
 # multienrichjam 0.0.92.900
 
 ## bug fixes
@@ -15,7 +35,6 @@
 ## changes
 
 * moved `enrichList2DF()` to its own .R file.
-
 
 # multienrichjam 0.0.91.900
 

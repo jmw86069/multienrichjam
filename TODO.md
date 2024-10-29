@@ -1,5 +1,46 @@
 # TODO
 
+## 29oct2024
+
+* General goal is to reduce label overlaps in Cnet plots
+
+   * Many options, including considering `ggraph` ot `tidygraph`, however
+   both require re-creating pie/jampie graph node shapes that display both
+   fill colors and border outline (without hiding adjacent borders).
+   These strategies would not respect edge bundling, so that would either
+   be lost or would require porting to ggplot ecosystem somehow. Sigh.
+   Then use `ggrepel` for non-overlapping labels.
+   * Ideal world: There exists some `grid` tool for non-overlapping labels,
+   and not `ggplot2`.
+   * A simpler option is to allow direct x/y coordinate label adjustment.
+   Current approach requires angle and distance from node center. Difficult
+   to move one label "up and left a tiny amount". If given ability to
+   adjust a label, it could be possible to adjust all labels to reduce
+   overlaps.
+   Potential workflow:
+   
+      * Define label coordinates after calculating angle and distance
+      from node center per usual.
+      * Apply adjustments.
+      * Apply user-provided adjustments. Easiest approach.
+      Default nudge matrix is c(0, 0) for all nodes.
+      Edit for specific nodes, relative to plot layout coordinates.
+      
+      * Future: Automated adjustments.
+      
+         * Use `strwidth()` and `strheight()` to define bounding boxes.
+         * Adjust bounding boxes?
+         * The `plotrix` approach performs radial search in local space.
+         It works best when labels are placed in smart order, e.g. center
+         in a cluster, then working out toward edges.
+         Define clusters? Define center of each cluster. Sort labels by
+         distance from cluster center.
+         * Force-directed: calc overlap of two labels, center of overlap,
+         center of bounding box, calculate angle, relative "strength",
+         and repel along the opposite angle.
+      
+
+
 ## 09oct2024
 
 * `fixSetLabels()`

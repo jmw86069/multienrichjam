@@ -20,7 +20,7 @@ multiEnrichMap(
   enrichLens = 0,
   enrichNumLimit = 4,
   nEM = 500,
-  min_count = 1,
+  min_count = 3,
   topEnrichN = 20,
   topEnrichSources = c("gs_cat", "gs_subat"),
   topEnrichCurateFrom = NULL,
