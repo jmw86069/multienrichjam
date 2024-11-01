@@ -1,3 +1,11 @@
+# multienrichjam 0.0.94.900
+
+## changes
+
+* `multiEnrichMap()`
+
+   * Silenced unintended verbose output.
+
 # multienrichjam 0.0.93.900
 
 ## changes

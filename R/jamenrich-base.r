@@ -615,7 +615,7 @@ multiEnrichMap <- function
          iDF[[nameColname]];
       }
    })));
-   jamba::printDebug("enrichLsetNames:");print(enrichLsetNames);# debug
+   # jamba::printDebug("enrichLsetNames:");print(enrichLsetNames);# debug
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "enrichIM <- enrichList2IM() with    pvalueColname:",
@@ -635,7 +635,7 @@ multiEnrichMap <- function
    enrichIM <- enrichIM[match1, match2, drop=FALSE];
    rownames(enrichIM) <- enrichLsetNames;
    colnames(enrichIM) <- names(enrichList);
-   jamba::printDebug("enrichIM:");print(enrichIM);# debug
+   # jamba::printDebug("enrichIM:");print(enrichIM);# debug
 
    if (all(is.na(enrichIM))) {
       if (verbose) {
