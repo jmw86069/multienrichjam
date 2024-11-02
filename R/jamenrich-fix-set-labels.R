@@ -105,15 +105,41 @@ fixSetLabels <- function
  do_abbreviations=TRUE,
  adjustCase=TRUE,
  lowercaseAll=TRUE,
- removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP)[_. ]",
+ removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
  words_from=c("als",
     "ii", "iii", "iv", "v",  "vi", "Vii", "Viii", "ix", "x",
     "trna", "rrna", "rna", "dna", "mirna", "mrna", "snrna", "snorna",
     "scrna", "lincrna",
     "Il", "Ecm", "Nk",
     "Pi3k.Akt", "Akt", "Pi3k", "tgf", "nfkb", "NK.Kappa.B",
+    "Pi3kaktmtorsignaling", "Pi3kaktmtor",
+    "PI3kakt", "aktmtor", "mtorsignaling",
+    "Pi3kci", "Pi3kgamma", "Pi 3k",
+    "Ppar(alpha|a)", "Ppar(gamma|g)", "Ppar",
+    "Udp N Acetyl Glucosamine",
+    "Mtor", "Gpcr", "Gpcrs",
+    "Tnfa|Tnfalpha", "Tnfr1", "Tnfr2", "Tnfs", "Tnf", "Tnfsf", "Tnfrelated",
+    "Tgf(beta|b)", "Tgfbr", "TGF Beta",
+    "Akt1", "Igf1akt",
+    "Foxo", "Hdacs", "Hdac", "Hat", "Hats",
+    "Nicotinic Acetylcholine Receptors|Acetylcholine Nicotinic Receptors",
+    "G CSF", "Gm Csf", "M Csf",
+    "IL([0-9]+)[-. _]([0-9]+)pathway",
+    "Jak Stat([1-9]*)", "Mkk3 6pathway",
+    "MAP([23]*)K([0-9]*)", "P38[ ]*MAPK", "MAPK1 3", "Erk MAPK", "Erk", "Erks",
+    "Interferon([a-z]*)",
+    "([A-Za-z0-9]+[a-qs-z])mediated",
+    "Lncrna|Lincrna", "Microrna([s]*)",
+    "125 DIHYDROXYVITAMIN D3",
+    "Tweak", "Er",
+    "Vegfavegfr2", "Vegfr1 2", "Vegf", "Vegfr([1-9]*)", "Egfr", "Egfrviii",
+    "Egfegfr",
+    "Smad2 3(pathway|nuclear)", "Smad2 3",
+    "Nf Kb", "Nfkappab",
     "C Jun", "C Fos", "Ap 1", "Apoe",
     "([AG])tpase", "Kras", "Uv",
+    "Sarscov2", "Sars Cov ([12])", "Sars Cov", "Covid19",
+    "Cellspecific", "([a-zA-Z0-9]+)like",
     "([TB]|NK) Cell"),
  words_to=c("ALS",
     "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
@@ -121,33 +147,82 @@ fixSetLabels <- function
     "scRNA", "lincRNA",
     "IL", "ECM", "NK",
     "PI3K/AKT", "AKT", "PI3K", "TGF", "NFKB", "NFKB",
+    "PI3K/AKT/mTOR Signaling", "PI3K/AKT/mTOR",
+    "PI3K/AKT", "AKT/mTOR", "mTOR Signaling",
+    "PI3KCI", "PI3Kgamma", "PI3K",
+    "PPARalpha", "PPARgamma", "PPAR",
+    "UDP-GlcNAc",
+    "mTOR", "GPCR", "GPCRs",
+    "TNFa", "TNFR1", "TNFR2", "TNFs", "TNF", "TNFSF", "TNF-related",
+    "TGFbeta", "TGFbeta-Receptor", "TGFbeta",
+    "AKT1", "IGF1/AKT",
+    "FOXO", "HDACs", "HDAC", "HAT", "HATs",
+    "Nicotinic Acetylcholine Receptors", #"nAChRs",
+    "G-CSF", "GM-CSF", "M-CSF",
+    "IL-\\1/IL-\\2 Pathway",
+    "JAK/STAT\\1", "MKK3/MKK6 Pathway",
+    "MAP\\1K\\2", "p38-MAPK", "MAPK1/MAPK3", "ERK-MAPK", "ERK", "ERKs",
+    "IFN\\1",
+    "\\1-Mediated",
+    "lncRNA", "microRNA\\1",
+    "1,25-dihydroxyvitamin D3",
+    "TWEAK", "ER",
+    "VEGFA/VEGFR2", "VEGFR1/VEGFR2", "VEGF", "VEGFR\\1", "EGFR", "EGFRvIII",
+    "EGF/EGFR",
+    "Smad2/3 \\1", "Smad2/3",
+    "NFKB", "NFKB",
     "C-jun", "C-fos", "AP-1", "APOE",
     "\\1TPase", "KRAS", "UV",
+    "SARS-CoV-2", "SARS-CoV-\\1", "SARS-CoV", "COVID19",
+    "Cell-Specific", "\\1-Like",
     "\\1-cell"),
  add_from=NULL,
  add_to=NULL,
  abbrev_from=c(
     "Extracellular.Matrix",
-    "Mitochondri(um|a|al)",
+    "Mitochondri(um|a|al|on)",
     "Interferon",
+    "(IL|Interleukin[ ]*)([0-9]+)",
     "Subsequent",
     "Signaling (pathway|system)",
     "Of The",
     "^Signaling by ", # remove leading "Signaling by" as unnecessary
-    " Pathway[s]*$"), # remove trailing " pathway" as unnecessary
+    " Pathway[s]*$", # remove trailing " pathway" as unnecessary
+    "Expression",
+    "The Role "),
  abbrev_to=c(
     "ECM",
     "Mito",
     "IFN",
+    "IL-\\2",
+    "",
     "Signaling",
     "Of",
     "",
     "",
-    ""),
+    "Expr.",
+    "Role "),
  ...)
 {
    # validate nodeType
    nodeType <- match.arg(nodeType);
+   # validate length for from,to pairs
+   if (length(words_from) != length(words_to)) {
+     stop(paste0(
+       "length(words_from) does not equal length(words_to).",
+       "Please remedy."));
+   }
+   if (length(add_from) != length(add_to)) {
+     stop(paste0(
+       "length(add_from) does not equal length(add_to).",
+       "Please remedy."));
+   }
+   if (length(abbrev_from) != length(abbrev_to)) {
+     stop(paste0(
+       "length(abbrev_from) does not equal length(abbrev_to).",
+       "Please remedy."));
+   }
+
    if (inherits(x, "igraph")) {
       if ("any" %in% nodeType) {
          which_nodes <- seq_len(igraph::vcount(x));

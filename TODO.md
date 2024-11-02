@@ -1,5 +1,10 @@
 # TODO
 
+## 01nov2024
+
+* Minor: Consider using `cli` for messaging, for consistency with tidyverse.
+
+
 ## 29oct2024
 
 * General goal is to reduce label overlaps in Cnet plots

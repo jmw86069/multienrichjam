@@ -6,6 +6,12 @@
 
    * Silenced unintended verbose output.
 
+* `fixSetLabels()`
+
+   * Added extensive corrections for common MSigDB abbreviations.
+   Many should probably be moved to a file or improved structure,
+   and not the function arguments. For now it solves the problem.
+
 # multienrichjam 0.0.93.900
 
 ## changes
