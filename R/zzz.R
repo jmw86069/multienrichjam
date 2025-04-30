@@ -1,11 +1,12 @@
 
 .onLoad <- function
 (libname,
-   pkgname)
+ pkgname)
 {
    ## define new igraph vertex shape "coloredrectangle"
    # confirm shape has not already been added
-   if (!"coloredrectangle" %in% igraph::shapes()) {
+   suppressPackageStartupMessages(igraph_shapes <- igraph::shapes());
+   if (!"coloredrectangle" %in% igraph_shapes) {
       igraph::add_shape("coloredrectangle",
          # clip=igraph::shape_noclip,
          clip=shape.coloredrectangle.clip,
@@ -13,7 +14,7 @@
    }
 
    ## define new igraph vertex shape "coloredrectangle"
-   if (!"ellipse" %in% igraph::shapes()) {
+   if (!"ellipse" %in% igraph_shapes) {
       igraph::add_shape("ellipse",
          clip=shape.ellipse.clip,
          # clip=igraph::shape_noclip,
@@ -21,7 +22,7 @@
    }
 
    ## define new igraph vertex shape "jampie"
-   if (!"jampie" %in% igraph::shapes()) {
+   if (!"jampie" %in% igraph_shapes) {
       igraph::add_shape("jampie",
          clip=shape.jampie.clip,
          plot=shape.jampie.plot);

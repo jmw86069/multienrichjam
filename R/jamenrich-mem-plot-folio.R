@@ -385,8 +385,6 @@
 #'    the title and column labels, and widths of the color key and
 #'    dendrogram.
 #'
-#' @importFrom dplyr %>%
-#'
 #' @export
 mem_plot_folio <- function
 (mem,
@@ -728,10 +726,15 @@ mem_plot_folio <- function
             "subsetCnetIgraph()");
       }
       cnet_collapsed <- tryCatch({
-         cnet_collapsed %>%
-            subsetCnetIgraph(remove_blanks=TRUE,
-               repulse=repulse,
-               verbose=verbose>1);
+         cnet_collapsed <- subsetCnetIgraph(
+            cnet_collapsed,
+            remove_blanks=TRUE,
+            repulse=repulse,
+            verbose=verbose > 1);
+         # cnet_collapsed %>%
+         #    subsetCnetIgraph(remove_blanks=TRUE,
+         #       repulse=repulse,
+         #       verbose=verbose>1);
       }, error=function(e){
          if (verbose) {
             jamba::printDebug("mem_plot_folio(): ",
@@ -740,10 +743,15 @@ mem_plot_folio <- function
             print(e);
          }
          cnet_collapsed <- tryCatch({
-            cnet_collapsed %>%
-               subsetCnetIgraph(remove_blanks=FALSE,
-                  repulse=repulse,
-                  verbose=verbose>1);
+            cnet_collapsed <- subsetCnetIgraph(
+               cnet_collapsed,
+               remove_blanks=FALSE,
+               repulse=repulse,
+               verbose=verbose>1);
+            # cnet_collapsed %>%
+            #    subsetCnetIgraph(remove_blanks=FALSE,
+            #       repulse=repulse,
+            #       verbose=verbose>1);
          }, error=function(e2){
             jamba::printDebug("mem_plot_folio(): ",
                "subsetCnetIgraph() error during ",
@@ -903,10 +911,14 @@ mem_plot_folio <- function
          clusters_mem_n <- rank_mem_clusters(mem,
             clusters_mem,
             per_cluster=exemplar_n,
+            byCols=byCols,
             ...);
-         cnet_exemplar <- cnet %>%
-            subsetCnetIgraph(includeSets=clusters_mem_n$set,
-               ...);
+         cnet_exemplar <- subsetCnetIgraph(cnet,
+            includeSets=clusters_mem_n$set,
+            ...);
+         # cnet_exemplar <- cnet %>%
+         #    subsetCnetIgraph(includeSets=clusters_mem_n$set,
+         #       ...);
          plot_num <- plot_num + 1;
          if (length(do_which) == 0 || plot_num %in% do_which) {
             if (verbose) {
@@ -963,10 +975,15 @@ mem_plot_folio <- function
                   sep="");
             }
             cluster_sets <- unique(unlist(clusters_mem[[cluster_name]]));
-            cnet_cluster <- cnet %>%
-               subsetCnetIgraph(includeSets=cluster_sets,
-                  repulse=repulse,
-                  ...);
+            cnet_cluster <- subsetCnetIgraph(
+               cnet,
+               includeSets=cluster_sets,
+               repulse=repulse,
+               ...);
+            # cnet_cluster <- cnet %>%
+            #    subsetCnetIgraph(includeSets=cluster_sets,
+            #       repulse=repulse,
+            #       ...);
             cnet_title <- paste0("Cnet plot for cluster ",
                cluster_name);
             cnet_cluster <- igraph::set_graph_attr(cnet_cluster,

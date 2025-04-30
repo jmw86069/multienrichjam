@@ -1,3 +1,27 @@
+# multienrichjam 0.0.95.900
+
+## S4 objects
+
+* `Mem` - Multi-Enrichment
+
+   * Still todo: Convert most functions to import/export `Mem`
+
+## bug fixes
+
+* `mem_plot_folio()` fixed exemplar Cnet plots ignoring the `byCols` when
+choosing the exemplar pathway to display.
+
+## changes
+
+* `multiEnrichMap()`
+
+   * Added `"thresholds"` to `list` output.
+
+* `importIPAenrichment()` more gracefully handles optional data such
+as "Networks" which do not return traditional gene symbols, but a
+collection of IPA entries with no clearly associated cross-reference
+information. As a result, these columns are skipped.
+
 # multienrichjam 0.0.94.900
 
 ## changes

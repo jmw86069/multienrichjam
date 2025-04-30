@@ -1,7 +1,7 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.94.900
+Version: 0.0.95.900
 Authors@R: person(given="James M.", family="Ward",
     email="jmw86069@gmail.com", role=c("aut", "cre"))
 Maintainer: James M. Ward <jmw86069@gmail.com>
@@ -11,7 +11,7 @@ Description: Methods to analyze multiple gene set enrichment results,
     results. New igraph node shape "coloredrectangle".
 Depends: R (>= 3.5.0)
 biocViews:
-Imports: jamba (>= 0.0.88.900),
+Imports: jamba (>= 1.0.4),
     colorjam (>= 0.0.23.900),
     igraph,
     qgraph,
@@ -35,11 +35,10 @@ Suggests:
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Remotes: github::jmw86069/jamba,
-    github::jmw86069/colorjam
+Remotes: github::jmw86069/colorjam
 URL: http://github.com/jmw86069/multienrichjam
 BugReports: http://github.com/jmw86069/multienrichjam/issues
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Config/testthat/edition: 3

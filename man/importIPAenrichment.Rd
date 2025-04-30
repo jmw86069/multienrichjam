@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-import.R
 \name{importIPAenrichment}
 \alias{importIPAenrichment}
-\title{Import Ingenuity IPA enrichment results}
+\title{Import Ingenuity Pathway Analysis 'IPA' results}
 \usage{
 importIPAenrichment(
   ipaFile,
@@ -115,21 +115,28 @@ contains a section \code{"Analysis Ready Molecules"}.}
 \item{...}{additional arguments are ignored.}
 }
 \value{
-list of \code{data.frame} objects, where each \code{data.frame}
+\code{list} of \code{data.frame} objects, where each \code{data.frame}
 contains enrichment data for one of the Ingenuity IPA
 enrichment tests.
 }
 \description{
-Import Ingenuity IPA enrichment results
+Import Ingenuity Pathway Analysis 'IPA' results
 }
 \details{
-This function parses Ingenuity IPA enrichment data into
-a form usable as a list of  enrichment \code{data.frame}
+This function parses Ingenuity Pathway Analysis ('IPA')
+enrichment data into a \code{list} of enrichment \code{data.frame}
 objects for downstream analysis. Each \code{data.frame}
-will represent the results of one Ingenuity IPA
-enrichment test.
+represents the results of one Ingenuity IPA section, however
+not all sections represent statistical results.
+\subsection{Motivation}{
+\enumerate{
+\item Separate multiple IPA enrichment tables.
+\item Rename colnames to be consistent.
+\item Revert IPA gene aliases to original user input (optional).
+}
+}
 
-The input data can be one of four forms:
+\subsection{Input format}{
 \enumerate{
 \item \code{ipaFile} can be a text \code{.txt} file,
 where the text file contains all IPA enrichment data in
@@ -144,20 +151,34 @@ Excel worksheet tab.
 This option is intended when the IPA data has already
 been imported into R as separate \code{data.frame} objects.
 }
-
-The basic motivation for this function is two-fold:
-\enumerate{
-\item Separate multiple IPA enrichment tables.
-\item Rename colnames to be consistent.
 }
 
-When using \code{"Export All"} from IPA, the default text format
+\subsection{Notes}{
+
+When using \code{"Export All"} from 'IPA', the default text format
 includes multiple enrichment tables concatenated together in one
 file. Each enrichment table contains its own unique column
 headers, with descriptive text in the line preceding the
 column headers. This function is intended to separate the
 enrichment tables into a list of \code{data.frame} objects, and
 retain the descriptive text as names of the list.
+}
+
+\subsection{Troubleshooting}{
+\itemize{
+\item A common error occurs when reverting IPA gene symbols
+to the original user-supplied identifier, by default
+\code{revert_ipa_xref=TRUE}.
+For errors during this step, consider \code{revert_ipa_xref=FALSE}
+which will retain the gene symbol as recognized by IPA.
+The downside of this approach is that it may be more difficult
+to equate to the input identifier.
+In that case look at the "Analysis Ready Molecules" \code{data.frame}
+which should contain the
+user-provided values as "ID"; the IPA recognized symbol as "Name",
+and optionally a column "Symbol" which is edited by multienrichjam.
+}
+}
 }
 \seealso{
 Other jam import functions: 

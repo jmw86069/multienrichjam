@@ -8,7 +8,7 @@
 #' of the border itself. As a result, each polygon border for
 #' two adjacent polygons can be displayed without overlapping the other.
 #'
-#' @return `list` with elements `x` and `y` representing adjusted
+#' @returns `list` with elements `x` and `y` representing adjusted
 #'    polygon coordinates. In the event that input `x` and `y`
 #'    coordinates represent multiple polygons, the output `x` and `y`
 #'    will also have `NA` values positioned between each polygon.
@@ -465,11 +465,15 @@ adjust_polygon_border <- function
    return(retvals);
 }
 
-#' @rdname adjust_polygon_border
+#' Adjust rectangle border
 #'
-#' `adjust_rect_border()` is a convenience wrapper to `adjust_polygon_border()`
+#' Adjust rectangle border
+#'
+#' adjust_rect_border() is a convenience wrapper to `adjust_polygon_border()`
 #' intended for use with `graphics::symbols()` in the form
 #' `graphics::symbols(x, y, rectangles)`.
+#'
+#' @rdname adjust_polygon_border
 #'
 #' @export
 adjust_rect_border <- function

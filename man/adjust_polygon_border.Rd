@@ -2,6 +2,7 @@
 % Please edit documentation in R/jam-polygon-borders.R
 \name{adjust_polygon_border}
 \alias{adjust_polygon_border}
+\alias{adjust_rect_border}
 \title{Adjust polygon border to inner or outer edge}
 \usage{
 adjust_polygon_border(
@@ -12,6 +13,18 @@ adjust_polygon_border(
   inner_cex = 1.001,
   lwd = par("lwd"),
   lwd_buffer = 0,
+  verbose = FALSE,
+  ...
+)
+
+adjust_rect_border(
+  x,
+  y,
+  rectangles = NULL,
+  type = "inner",
+  lwd = par("lwd"),
+  lwd_buffer = 0,
+  lwd_inch = 1/96,
   verbose = FALSE,
   ...
 )
@@ -49,12 +62,18 @@ will also have \code{NA} values positioned between each polygon.
 }
 \description{
 Adjust polygon border to inner or outer edge
+
+Adjust rectangle border
 }
 \details{
 This function intends to allow displaying a polygon border
 where the line itself only covers the inner or outer edge
 of the border itself. As a result, each polygon border for
 two adjacent polygons can be displayed without overlapping the other.
+
+adjust_rect_border() is a convenience wrapper to \code{adjust_polygon_border()}
+intended for use with \code{graphics::symbols()} in the form
+\code{graphics::symbols(x, y, rectangles)}.
 }
 \examples{
 a <- head(seq(from=0, to=360, length.out=6), 3) + 90;

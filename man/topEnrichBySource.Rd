@@ -219,10 +219,12 @@ comparative analysis.
 \seealso{
 Other jam enrichment functions: 
 \code{\link{add_pathway_direction}()},
-\code{\link{multiEnrichMap}()}
+\code{\link{multiEnrichMap}()},
+\code{\link{multienrichjam}()}
 
 Other jam enrichment functions: 
 \code{\link{add_pathway_direction}()},
-\code{\link{multiEnrichMap}()}
+\code{\link{multiEnrichMap}()},
+\code{\link{multienrichjam}()}
 }
 \concept{jam enrichment functions}

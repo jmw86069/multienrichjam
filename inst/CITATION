@@ -1,0 +1,11 @@
+bibentry(
+   "Article",
+   title = "Hippocampal Subregions Express Distinct Dendritic Transcriptomes that Reveal Differences in Mitochondrial Function in CA2",
+   author = "Shannon Farris, James M. Ward, Kelly E. Carstens, Mahsa Samadi, Yu Wang, Serena M. Dudek",
+   year = 2019,
+   journal = "Cell Reports",
+   volume = 29,
+   number = 2,
+   pages = "522-539",
+   doi = "10.1016/j.celrep.2019.08.093"
+)

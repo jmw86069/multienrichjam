@@ -208,6 +208,7 @@ multiEnrichMap <- function
  #GmtTname="msigdbGmtTv50human",
  msigdbGmtT=NULL,
  #msigdbGmtT=msigdbGmtTv50human2,
+ returnType=c("list", "Mem"),
  verbose=FALSE,
  ...)
 {
@@ -267,16 +268,18 @@ multiEnrichMap <- function
    ##
    mem <- list();
 
+   returnType <- match.arg(returnType);
+
    ## Some data checks
-   if (suppressPackageStartupMessages(!require(igraph))) {
-      stop("multiEnrichMap() requires the igraph package.")
-   }
-   if (suppressPackageStartupMessages(!require(DOSE))) {
-      stop("multiEnrichMap() requires the DOSE package.")
-   }
-   if (suppressPackageStartupMessages(!require(IRanges))) {
-      stop("multiEnrichMap() requires the IRanges package.")
-   }
+   # if (suppressPackageStartupMessages(!require(igraph))) {
+   #    stop("multiEnrichMap() requires the igraph package.")
+   # }
+   # if (suppressPackageStartupMessages(!require(DOSE))) {
+   #    stop("multiEnrichMap() requires the DOSE package.")
+   # }
+   # if (suppressPackageStartupMessages(!require(IRanges))) {
+   #    stop("multiEnrichMap() requires the IRanges package.")
+   # }
    if (length(names(enrichList)) == 0) {
       stop("multiEnrichMap() requires names(enrichList).")
    }
@@ -1016,8 +1019,12 @@ multiEnrichMap <- function
    mem$colnames <- colnamesL;
 
    ## Add p_cutoff to output
+   mem$thresholds <- thresholds;
    mem$p_cutoff <- cutoffRowMinP;
 
+   if ("Mem" %in% returnType) {
+      mem <- list_to_Mem(mem);
+   }
    return(mem);
 }
 
@@ -1362,7 +1369,10 @@ enrichMapJam <- function
          #printDebug("match() worked with enrichResult data.frame Name colname.");
          iColnames <- jamba::unvigrep("^name$", colnames(y));
          for (iY in iColnames) {
-            g <- g %>% igraph::set_vertex_attr(iY, value=y[iMatch,,drop=FALSE][[iY]]);
+            g <- igraph::set_vertex_attr(graph=g,
+               name=iY,
+               value=y[iMatch, ,drop=FALSE][[iY]]);
+            # g <- g %>% igraph::set_vertex_attr(iY, value=y[iMatch,,drop=FALSE][[iY]]);
          }
       } else {
          ## Attempt to merge additional pathway annotation from GmtT

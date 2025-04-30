@@ -1,15 +1,21 @@
 
-#' Import Ingenuity IPA enrichment results
+#' Import Ingenuity Pathway Analysis 'IPA' results
 #'
-#' Import Ingenuity IPA enrichment results
+#' Import Ingenuity Pathway Analysis 'IPA' results
 #'
-#' This function parses Ingenuity IPA enrichment data into
-#' a form usable as a list of  enrichment `data.frame`
+#' This function parses Ingenuity Pathway Analysis ('IPA')
+#' enrichment data into a `list` of enrichment `data.frame`
 #' objects for downstream analysis. Each `data.frame`
-#' will represent the results of one Ingenuity IPA
-#' enrichment test.
+#' represents the results of one Ingenuity IPA section, however
+#' not all sections represent statistical results.
 #'
-#' The input data can be one of four forms:
+#' ## Motivation
+#'
+#' 1. Separate multiple IPA enrichment tables.
+#' 2. Rename colnames to be consistent.
+#' 3. Revert IPA gene aliases to original user input (optional).
+#'
+#' ## Input format
 #'
 #' 1. `ipaFile` can be a text `.txt` file,
 #' where the text file contains all IPA enrichment data in
@@ -24,12 +30,9 @@
 #' This option is intended when the IPA data has already
 #' been imported into R as separate `data.frame` objects.
 #'
-#' The basic motivation for this function is two-fold:
+#' ## Notes
 #'
-#' 1. Separate multiple IPA enrichment tables.
-#' 2. Rename colnames to be consistent.
-#'
-#' When using `"Export All"` from IPA, the default text format
+#' When using `"Export All"` from 'IPA', the default text format
 #' includes multiple enrichment tables concatenated together in one
 #' file. Each enrichment table contains its own unique column
 #' headers, with descriptive text in the line preceding the
@@ -37,7 +40,21 @@
 #' enrichment tables into a list of `data.frame` objects, and
 #' retain the descriptive text as names of the list.
 #'
-#' @return list of `data.frame` objects, where each `data.frame`
+#' ## Troubleshooting
+#'
+#' * A common error occurs when reverting IPA gene symbols
+#' to the original user-supplied identifier, by default
+#' `revert_ipa_xref=TRUE`.
+#' For errors during this step, consider `revert_ipa_xref=FALSE`
+#' which will retain the gene symbol as recognized by IPA.
+#' The downside of this approach is that it may be more difficult
+#' to equate to the input identifier.
+#' In that case look at the "Analysis Ready Molecules" `data.frame`
+#' which should contain the
+#' user-provided values as "ID"; the IPA recognized symbol as "Name",
+#' and optionally a column "Symbol" which is edited by multienrichjam.
+#'
+#' @returns `list` of `data.frame` objects, where each `data.frame`
 #'    contains enrichment data for one of the Ingenuity IPA
 #'    enrichment tests.
 #'
@@ -423,36 +440,75 @@ importIPAenrichment <- function
          #    - removed things like "(and others)", and "(complex)"
          # - Name: contains the original IPA label
          ipaxref <- ipaDFL[[arm]]
-         to_updates <- setdiff(names(ipaDFL), arm);
-         ipaDFL2 <- lapply(jamba::nameVector(to_updates), function(to_update){
-            ipadf <- ipaDFL[[to_update]]
-            ipadf_gl <- strsplit(ipadf$geneNames, ",")
-            ipadf_gldf <- data.frame(
-               Num=rep(seq_len(nrow(ipadf)), lengths(ipadf_gl)),
-               IPA_Symbol=unlist(ipadf_gl))
-            # Note this step may not be complete, it only converts 1-to-1.
-            # Some entries are "MAPK (and others)", and it appears that
-            # IPA simply chooses one to represent the row.
-            # For example, HSPA1A and HSPA1B are provided at input,
-            # they are combined into one row "HSPA1A/HSPA1B" which uses
-            # "HSPA1B" as the exemplar since it is more significant.
-            ipadf_gldf$User_Symbol <- ipaxref$ID[match(ipadf_gldf$IPA_Symbol,
-               ipaxref$Symbol)];
-            US_na <- is.na(ipadf_gldf$User_Symbol);
-            if (any(US_na)) {
-               # some entries may not match, then use the IPA symbol
-               ipadf_gldf$User_Symbol[US_na] <- ipadf_gldf$IPA_Symbol[US_na]
+         if (nrow(ipaxref) > 0) {
+            to_updates <- jamba::nameVector(setdiff(names(ipaDFL), arm));
+            ipaDFL2 <- lapply(to_updates, function(to_update){
+               ipadf <- ipaDFL[[to_update]]
+               use_genecol <- provigrep(
+                  unique(c(
+                     "geneNames",
+                     "participating regulators")),
+                  colnames(ipadf))
+               if (verbose) {
+                  jamba::printDebug("Updating gene xrefs for to_update:",
+                     to_update);
+                  jamba::printDebug("Updating gene xrefs for use_genecol:",
+                     use_genecol);
+                  # jamba::printDebug("head(ipadf):");# debug
+                  # print(head(ipadf, 10));# debug
+               }
+               if (length(use_genecol) == 0) {
+                  if (verbose) {
+                     jamba::printDebug("No changes made to gene xrefs.");
+                  }
+                  return(ipaDFL[[to_update]]);
+               }
+               ## version 0.0.95.900
+               # ipadf_gl <- strsplit(ipadf$geneNames, ",")
+               ipadf_gl <- strsplit(ipadf[[use_genecol]], ",")
+               # change Num to factor so it gracefully accepts empty values
+               ipadf_gldf <- data.frame(
+                  Num=factor(rep(seq_len(nrow(ipadf)), lengths(ipadf_gl)),
+                     levels=seq_len(nrow(ipadf))),
+                  IPA_Symbol=unlist(ipadf_gl))
+               if (verbose) {
+                  jamba::printDebug("table(lengths(ipadf_gl)):");
+                  print(table(lengths(ipadf_gl)));
+                  if (any(lengths(ipadf_gl) == 0)) {
+                     ix1 <- head(which(lengths(ipadf_gl) == 0));
+                     jamba::printDebug("Some rows with zero-length gene values:");
+                     print(head(ipadf[ix1, , drop=FALSE]));
+                  }
+                  printDebug("length(unique(ipadf_gldf$Num)):",
+                     length(unique(ipadf_gldf$Num)));
+               }
+               # Note this step may not be complete, it only converts 1-to-1.
+               # Some entries are "MAPK (and others)", and it appears that
+               # IPA simply chooses one to represent the row.
+               # For example, HSPA1A and HSPA1B are provided at input,
+               # they are combined into one row "HSPA1A/HSPA1B" which uses
+               # "HSPA1B" as the exemplar since it is more significant.
+               match_ipa <- match(ipadf_gldf$IPA_Symbol,
+                  ipaxref$Symbol)
+               ipadf_gldf$User_Symbol <- ifelse(!is.na(match_ipa),
+                  ipaxref$ID[match_ipa],
+                  ipadf_gldf$IPA_Symbol)
+               # paste sorted, unique genes for each pathway
+               new_geneNames <- jamba::cPasteSU(
+                  split(ipadf_gldf$User_Symbol, ipadf_gldf$Num))
+               if (verbose) {
+                  jamba::printDebug("head(ipadf_gldf):");
+                  print(head(ipadf_gldf, 10));
+                  printDebug("length(new_geneNames):", length(new_geneNames));
+               }
+               ipadf$geneNames <- new_geneNames;
+               ipadf
+            })
+            ipaDFL[to_updates] <- ipaDFL2[to_updates];
+            if (verbose) {
+               jamba::printDebug("importIPAenrichment(): ",
+                  "Updated gene symbols to user input values.");
             }
-            # paste sorted, unique genes for each pathway
-            new_geneNames <- jamba::cPasteSU(
-               split(ipadf_gldf$User_Symbol, ipadf_gldf$Num))
-            ipadf$geneNames <- new_geneNames;
-            ipadf
-         })
-         ipaDFL[to_updates] <- ipaDFL2[to_updates];
-         if (verbose) {
-            jamba::printDebug("importIPAenrichment(): ",
-               "Updated gene symbols to user input values.");
          }
       }
    }

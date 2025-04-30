@@ -34,11 +34,11 @@ similar techniques from a variety of other R packages.
 \seealso{
 Other jam list functions: 
 \code{\link{colors_from_list}()},
-\code{\link{im2list_dep}()},
 \code{\link{im2list}()},
+\code{\link{im2list_dep}()},
 \code{\link{imSigned2list}()},
 \code{\link{list2concordance}()},
-\code{\link{list2imSigned}()},
-\code{\link{list2im}()}
+\code{\link{list2im}()},
+\code{\link{list2imSigned}()}
 }
 \concept{jam list functions}

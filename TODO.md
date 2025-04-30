@@ -1,5 +1,117 @@
 # TODO
 
+## 27mar2025
+
+* Consider approach to store/cache edge bundling for a given layout.
+* Consider longer-term use of tidygraph/ggraph environment, which
+requires creating pie node type geom, and foregoing edge bundling
+until eventually that logic can be ported into that system.
+
+## 13mar2025
+
+* S4 `Mem` object should probably also include Mpf output in optional slots.
+* DONE. Fix: `mem_plot_folio()` ignores `byCols` when sorting exemplar pathways.
+
+## 12feb2025
+
+* `importIPAenrichment()`
+
+   * Update to match new variations in the "Export All" text output from IPA.
+
+## 15dec2024
+
+* `mem_enrichment_heatmap()`, and `mem_plot_folio()`
+
+   * Consider option to abbreviate pathway names on the fly.
+   Column names are sometimes too ridiculously long,
+   and `column_names_max_height` isn't effective enough.
+
+* Functions using `nodeset` names
+
+   * Protect against sorting errors, e.g. `nodeset="D,A"` should
+   recognize nodeset whose sorted label is: `"A,D"`
+   * See `adjust_cnet_nodeset()` and argument `set_nodes`
+
+## 04dec2024
+
+* Fix bug "Error in gp_hm@column_dend_param$fun(t(gp_hm@matrix)) :
+  attempt to apply non-function"
+
+   * Seems caused by small number of pathways in the memIM/enrichIM matrix.
+
+* Consider removing `sf`.
+
+   * Potentially replace with direct calls to `polyclip`.
+   * Replace with `JamPolygon`, which would suggest replacing with `grid`.
+   This would be a "hobby option" - would require updating JamPolygon.
+
+## 12nov2024
+
+* Ideas for S4 helper functions / accessors
+
+   * `exemplars()` - extract exemplar pathways for Gene-Pathway clusters
+   * `as_data_frame()` - convert to formal data.frame format
+   
+      * `Mem`
+      * `Mpf` - one section to describe each pathway cluster
+
+## 02nov2024
+
+* S4 objects to consider creating:
+
+   * `Mem` - MultiEnrichMent
+   
+      * Consider storing MPF clustering params here
+      * Consider storing pathway clusters here, to allow custom assignment
+      of pathways to clusters in mpf
+   
+   * `MPF` - Mem Plot Folio
+   
+      * Consider storing `mem_plot_folio()` output as fixed object.
+      Alternative is to add into `Mem` above.
+   
+   * `Cnet` - Can it inherit from `igraph`?
+   (I'm really unsure that it would be more benefit than hassle.)
+
+      * Methodology
+      
+         * Apparently yes. See `setOldClass()`;
+         virtual slot `.Data` for S3 object;
+         `as(x, "S3)` to convert to S3 form;
+         `extends(class(x))` as equivalent of S3 inheritance;
+         see https://stackoverflow.com/questions/64683532/r-as-method-for-converting-custom-s4-class
+      
+      * Benefits
+      
+         * Enforce constraints unique to Cnet-type objects: `nodeType`,
+         `cnet_nodesets`, etc.
+         * Direct the `plot()` function to `jam_igraph()`.
+         * Direct other "cnet" functions to use this object type.
+
+* `mem_plot_folio()`
+
+   * Consider adding Mem params to the heatmap legend, e.g.
+   
+      * `Top Pathways N (topEnrichN)`
+      * `Gene min count`
+      * `Number of pathway clusters`
+      
+   * Add Multi-Enrichment Plot to the workflow, `mem2emap()`.
+
+* Add `mem_cnet_heatmap()` - "Cnet-Heatmap"
+
+   * Cnet network plot (center) surrounded by heatmaps for each Cnet cluster.
+   
+
+* Consider compatibility with other Bioconductor S4 object classes:
+
+   * `clusterProfiler::enrichResult` - used to some extent already here
+   * `clusterProfiler::gseaResult` - not used directly here
+   Ref: https://doi.org/10.1016/j.xinn.2021.100141
+   * `EGSEA::EGSEAResults`, see `topSets()`, `plotHeatmap()`, `plotPathway()`,
+   `plotMethods()`, `plotSummary()`, `plotGOGraph()`, `plotBars()`,
+   `limmaTopTable()`
+
 ## 01nov2024
 
 * Minor: Consider using `cli` for messaging, for consistency with tidyverse.
