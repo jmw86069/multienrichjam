@@ -527,7 +527,7 @@ cnetplot_internalJam <- function
          pvalue <- pvalue[showCategory];
       }
    }
-   g <- enrichplot:::list2graph(inputList);
+   g <- list2graph_ggt(inputList);
    #g <- DOSE::setting.graph.attributes(g);
    lengthOfCategory <- length(inputList);
 

@@ -1,3 +1,8 @@
+# multienrichjam 0.0.96.900
+
+* Quick update to restore `list2graph()` removed from non-exported remote function.
+Added `list2graph_ggt()`.
+
 # multienrichjam 0.0.95.900
 
 ## S4 objects
