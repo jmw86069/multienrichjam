@@ -1,3 +1,15 @@
+# multienrichjam 0.0.97.900
+
+## updates to existing functions
+
+* `importIPAenrichment()`
+
+   * Fixed error when importing IPA data where some analysis results
+   included two or more gene columns, such as "Causal Networks".
+   * Added documentation to `revert_ipa_xref=TRUE` argument default,
+   suggesting `revert_ipa_xref=FALSE` for microarray platforms for
+   example.
+
 # multienrichjam 0.0.96.900
 
 * Quick update to restore `list2graph()` removed from non-exported remote function.

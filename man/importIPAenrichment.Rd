@@ -120,19 +120,55 @@ contains enrichment data for one of the Ingenuity IPA
 enrichment tests.
 }
 \description{
-Import Ingenuity Pathway Analysis 'IPA' results
+Import Ingenuity Pathway Analysis 'IPA' results, by default
+reverting IPA symbols to input values
 }
 \details{
 This function parses Ingenuity Pathway Analysis ('IPA')
-enrichment data into a \code{list} of enrichment \code{data.frame}
-objects for downstream analysis. Each \code{data.frame}
-represents the results of one Ingenuity IPA section, however
-not all sections represent statistical results.
+enrichment data into a \code{list} of \code{data.frame}
+objects for downstream analysis.
+Each \code{data.frame} represents the results of one Ingenuity IPA test,
+however not all sections contain gene set enrichment results.
+
+By default, the argument \code{revert_ipa_xref=TRUE} will convert the
+IPA gene symbol values back to the original identifier.
+In most cases* this behavior is desirable, with caveats:
+\itemize{
+\item When using platform data (for example microarray data) which
+use a non-gene identifier, it is recommended to use
+\code{revert_ipa_xref=FALSE}. In these cases, the IPA gene symbol
+may be more user-friendly in multienrichjam.
+\itemize{
+\item This option would be helpful to view the IPA gene symbols
+as they appear in the IPA report - even if the symbols
+sometimes do not match the input row identifiers.
+}
+\item It is helpful to use \code{revert_ipa_xref=TRUE} when the identifier
+will also be used to compare to the source data, for example
+if trying to make an expression heatmap of the genes involved
+in enrichment results.
+\itemize{
+\item This option would convert IPA gene symbol back to Affymetrix
+probeset ID, for example, if the probeset ID values were
+used as the primary identifier for each measurement.
+The probeset ID might be convenient to align with the input
+data matrix.
+\item The primary reason for this option is when providing
+gene symbols as input to IPA, some will be renamed to IPA
+preferred gene symbols, which would therefore be difficult
+to match with the gene symbols provided to IPA.
+}
+}
+
+In any case, the output \code{list} should contain an entry
+"Analysis Ready Molecules" with the full IPA data table used
+for the analysis. This \code{data.frame} will also contain any
+statistical columns, if provided to IPA upfront.
 \subsection{Motivation}{
 \enumerate{
 \item Separate multiple IPA enrichment tables.
 \item Rename colnames to be consistent.
-\item Revert IPA gene aliases to original user input (optional).
+\item Revert IPA gene aliases to original user input (default but optional).
 }
 }
 
