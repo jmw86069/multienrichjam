@@ -200,7 +200,7 @@ jam_plot_igraph <- function
  mark.col=NULL,
  mark.alpha=0.2,
  mark.border=NULL,
- mark.expand=8,
+ mark.expand=NULL,
  mark.lwd=2,
  mark.lty=1,
  mark.smooth=TRUE,
@@ -267,9 +267,11 @@ jam_plot_igraph <- function
       }
    }
 
-   if (use_shadowText) {
-      text <- jamba::shadowText;
-   }
+   ## avoid this technique, but all text() must occur here
+   # if (use_shadowText) {
+   #    text <- jamba::shadowText;
+   # }
+
    if (length(params) == 0) {
       if (verbose) {
          jamba::printDebug("jam_plot_igraph(): ",
@@ -370,7 +372,8 @@ jam_plot_igraph <- function
    }
 
    arrow.mode <- get_igraph_arrow_mode(graph, arrow.mode)
-   maxv <- max(vertex.size)
+   maxv <- max(vertex.size, na.rm=TRUE)
+   medv <- median(vertex.size, na.rm=TRUE)
 
    ## Optional axis range scaling
    if (TRUE %in% rescale) {
@@ -441,6 +444,28 @@ jam_plot_igraph <- function
          max_xy_range <- max(c(
             abs(diff(range(xlim))),
             abs(diff(range(ylim)))));
+
+         # check for mark.expand=NULL
+         if (length(mark.expand) == 0) {
+            ## use half the pre-adjusted vertex.size
+            # medv * 200 * (1.8 / max_xy_range) / 2
+            ## using 1.9 since the xy limits expand a little along the way
+            # mark.expand <- (medv * 200 * (1.8 / max_xy_range) / 2);
+            #
+            ## Todo:
+            ## 1. Consider adjustment based upon number of nodes,
+            ##    fewer nodes should slightly increase the mark.expand,
+            ##    Some type of exponent factor perhaps?
+            ## 2. Consider calculating mark.expand per group?
+            med_adj_size <- medv * 200 * (1.9 / max_xy_range);
+            mark.expand <- (med_adj_size + 0) / 2 + 0.0;
+            if (verbose) {
+               jamba::printDebug("Auto mark.expand: ", mark.expand);
+               jamba::printDebug("medv (postadjusted): ", medv);
+               jamba::printDebug("median vertex.size:  ", med_adj_size);
+            }
+         }
+
          mark.expand <- rep(mark.expand,
             length.out=length(mark.groups));
          expand.by <- (mark.expand / 200) * max_xy_range;
@@ -706,13 +731,23 @@ jam_plot_igraph <- function
                         new.edge.label.cex)
                   }
                   for (k in split(seq_along(text_subsets), text_subsets)) {
-                     text(lx[k],
-                        ly[k],
-                        label[k],
-                        col=edge.label.color[k],
-                        font=edge.label.font[k],
-                        family=head(edge.label.family[k], 1),
-                        cex=edge.label.cex[k])
+                     if (use_shadowText) {
+                        jamba::shadowText(lx[k],
+                           ly[k],
+                           label[k],
+                           col=edge.label.color[k],
+                           font=edge.label.font[k],
+                           family=head(edge.label.family[k], 1),
+                           cex=edge.label.cex[k])
+                     } else {
+                        text(lx[k],
+                           ly[k],
+                           label[k],
+                           col=edge.label.color[k],
+                           font=edge.label.font[k],
+                           family=head(edge.label.family[k], 1),
+                           cex=edge.label.cex[k])
+                     }
                   }
                }
             }
@@ -870,13 +905,23 @@ jam_plot_igraph <- function
                      new.edge.label.cex)
                }
                for (k in split(seq_along(text_subsets), text_subsets)) {
-                  text(lc.x[k],
-                     lc.y[k],
-                     labels=edge.labels[k],
-                     col=edge.label.color[k],
-                     family=head(edge.label.family[k], 1),
-                     font=edge.label.font[k],
-                     cex=edge.label.cex[k])
+                  if (use_shadowText) {
+                     jamba::shadowText(lc.x[k],
+                        lc.y[k],
+                        labels=edge.labels[k],
+                        col=edge.label.color[k],
+                        family=head(edge.label.family[k], 1),
+                        font=edge.label.font[k],
+                        cex=edge.label.cex[k])
+                  } else {
+                     text(lc.x[k],
+                        lc.y[k],
+                        labels=edge.labels[k],
+                        col=edge.label.color[k],
+                        family=head(edge.label.family[k], 1),
+                        font=edge.label.font[k],
+                        cex=edge.label.cex[k])
+                  }
                }
             }
          }
@@ -1024,13 +1069,23 @@ jam_plot_igraph <- function
                label.cex,
                vertex.label.cex)
          }
-         text(x,
-            y,
-            labels=labels,
-            col=label.color,
-            family=label.family,
-            font=label.font,
-            cex=label.cex)
+         if (use_shadowText) {
+            jamba::shadowText(x,
+               y,
+               labels=labels,
+               col=label.color,
+               family=label.family,
+               font=label.font,
+               cex=label.cex)
+         } else {
+            text(x,
+               y,
+               labels=labels,
+               col=label.color,
+               family=label.family,
+               font=label.font,
+               cex=label.cex)
+         }
       } else {
          if ("labels" %in% debug) {
             jamba::printDebug("jam_plot_igraph(): ",
@@ -1058,22 +1113,34 @@ jam_plot_igraph <- function
          # iterate each font family
          for (v in nodes_by_family) {
             family1 <- label.family[head(v, 1)];
-            text(
-               x[v],
-               y[v],
-               labels=if1(labels, v),
-               col=if1(label.color, v),
-               family=family1,
-               font=if1(label.font, v),
-               cex=if1(label.cex, v))
+            if (use_shadowText) {
+               jamba::shadowText(
+                  x[v],
+                  y[v],
+                  labels=if1(labels, v),
+                  col=if1(label.color, v),
+                  family=family1,
+                  font=if1(label.font, v),
+                  cex=if1(label.cex, v))
+            } else {
+               text(
+                  x[v],
+                  y[v],
+                  labels=if1(labels, v),
+                  col=if1(label.color, v),
+                  family=family1,
+                  font=if1(label.font, v),
+                  cex=if1(label.cex, v))
+            }
          }
       }
       par(opar)
    }
-   if (use_shadowText) {
-      #text <- graphics::text;
-      rm(text)
-   }
-   rm(x, y)
+   ## avoid this process
+   # if (use_shadowText) {
+   #    rm(text)
+   # }
+   ## remnant from igraph:::plot.igraph() not needed here
+   # rm(x, y)
    invisible(NULL)
 }

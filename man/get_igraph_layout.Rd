@@ -48,6 +48,7 @@ as a \code{function} it is used to define a specific layout matrix.
 Other jam utility functions: 
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
+\code{\link{bulk_cnet_adjustments}()},
 \code{\link{call_fn_ellipsis_deprecated}()},
 \code{\link{cell_fun_bivariate}()},
 \code{\link{collapse_mem_clusters}()},

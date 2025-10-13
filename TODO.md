@@ -1,5 +1,57 @@
 # TODO
 
+## 09oct2025
+
+* New function: layout with fixed nodes
+
+   * Purpose is to "make it easy" to apply relayout while holding
+   a subset of nodes fixed in place. Simple wrapper around existing
+   capability, similar to `adjust_cnet_set_relayout_gene()`.
+   Potential to relayout one nodeset, keeping all others static.
+
+* DONE. Support "script-like" Cnet adjustments.
+
+   * Simple text line: node/nodeset:x:y:spacing:rotate
+
+* Performance:
+
+   * Response drawing a plot is noticeably slow in R-shiny context,
+   some basic strategies of speeding the process should be applied.
+   * Consider storing "edge bundling group" in `igraph` edge attributes,
+   since an edge can only belong to one "bundle".
+   For Cnet, the default is the Cnet nodeset, however any set
+   of edges can be bundled.
+   * Consider pre-calculating edge bunding splines, then caching in
+   `igraph` attributes for re-use.
+   It must be invalidated by: new layout; any change to layout coordinates.
+   Rotating the igraph layout could also rotate the bundled splines.
+   * Consider pre-calculating mark group alpha hull polygons.
+   
+* DONE. R-shiny Cnet Adjustment Tool 'ShinyCat' prototype
+
+   * Use `jam_graph()`, associate mouse click x,y to specific node
+
+* DONE. `summarize_igraph_spacing()`
+
+   * Defaults: scaled, within-nodeset, each group
+   * call `get_cnet_nodeset()` when not supplied
+
+* Improve igraph node label placement:
+
+   * Consider adding `label.adjx`, `label.adjy` to nudge a label,
+   to be applied after `label.dist` and `label.degrees`.
+   Unclear if units should be "relative" (by layout) or "absolute",
+   "relative" seems more convenient as a default.
+   * Reducing label overlaps is a time sink and should be easier,
+   or automated, or both.
+   Related to whether ggraph/tidygraph rendering will ever become viable.
+   If yes then use ggrepel.
+   Using ggraph/tidygraph requires porting `jam_igraph()` features:
+   edge bundling, node shapes (jampie, coloredrectangle).
+   If no, then decide whether to use grid or base R graphics to estimate
+   label sizes, then implement non-overlapping labels (somehow).
+   Ultimately, that process would use `label.adjx`, `label.adjy`.
+
 ## 27mar2025
 
 * Consider approach to store/cache edge bundling for a given layout.
@@ -25,6 +77,7 @@ until eventually that logic can be ported into that system.
    * Consider option to abbreviate pathway names on the fly.
    Column names are sometimes too ridiculously long,
    and `column_names_max_height` isn't effective enough.
+   * Add the clustering method info to legend as in `mem_gene_path_heatmap()`.
 
 * Functions using `nodeset` names
 

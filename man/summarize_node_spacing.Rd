@@ -2,49 +2,61 @@
 % Please edit documentation in R/jamenrich-summarize-node-spacing.R
 \name{summarize_node_spacing}
 \alias{summarize_node_spacing}
-\title{Summarize spacing between igraph nodes given a layout}
+\title{Summarize spacing between igraph nodes or node groups}
 \usage{
 summarize_node_spacing(
   g,
   layout = NULL,
   nodes = NULL,
+  scaled = TRUE,
+  each_group = TRUE,
   node_groups = NULL,
-  each_group = FALSE,
-  scaled = FALSE,
-  dist_type = c("nearest_node", "all_nodes"),
+  dist_type = c("all", "nearest_node", "all_nodes"),
   verbose = FALSE,
+  debug = FALSE,
   ...
 )
 }
 \arguments{
 \item{g}{\code{igraph} object}
 
-\item{layout}{passed together with \code{g} to \code{get_igraph_layout()}}
+\item{layout}{\code{numeric} matrix with x,y coordinates, or NULL (default)
+to call \code{get_igraph_layout()} which uses either:
+\code{igraph::graph_attr(g, 'layout')} (preferred) or
+\code{igraph::V(g)$x} and \code{igraph::V(g)$y} (deprecated in igraph).}
 
 \item{nodes}{\code{character} with optional node names, or \code{integer}
 index of nodes in \code{g} to define a subset of nodes for which
 statistics are calculated. Useful to focus on a specific subset
 of nodes, for example one or two Cnet nodesets.}
 
-\item{node_groups}{\code{list} implemented to use nodesets. The intent is to
-define node groups, then calculate statistics of node spacing across
-and within node groups.}
-
-\item{each_group}{\code{logical} indicating whether to include each node group
-when \code{node_groups} is also supplied.}
-
-\item{scaled}{\code{logical} indicating whether to report spacing
+\item{scaled}{\code{logical}, default TRUE, whether to report percent spacing
 relative to the max x-axis/y-axis range, similar to the \code{min_percent}
-and \code{percent_spacing} argument units in other node spacing functions.}
+and \code{percent_spacing} argument units in other node spacing functions.
+Note that percent spacing is scaled from 0 to 100.}
 
-\item{dist_type}{\code{character} string indicating the type of distance to
-summarize:
+\item{each_group}{\code{logical}, default TRUE, whether to summarize each
+node group. When \code{node_groups} is NULL, by default it will use
+\code{get_cnet_nodesets()}.}
+
+\item{node_groups}{\code{list} of vectors named by node group, where each
+vector contains vertex names \code{igraph::V(g)$name}.
 \itemize{
-\item \code{"nearest_node"} only uses the nearest node to each node, which is
-helpful when trying to ensure all nodes have a minimum distance
+\item The purpose is to help summarize spacing within and across node groups.
+\item For Cnet plot data, when \code{each_group=TRUE} and \code{node_groups=NULL},
+it will call \code{get_cnet_nodesets()} to use Cnet nodesets as node groups.
+\item Cnet nodesets were the primary motivation for this function,
+however it also works well using network communities.
+}}
+
+\item{dist_type}{\code{character} string, default 'nearest_node' with
+the distance summary to provide:
+\itemize{
+\item \code{"nearest_node"} only the nearest node distance,
+helpful to assess whether all nodes have a minimum distance
 from other nodes.
-\item \code{"all_nodes"} uses all node distances from each node, which is
-helpful when assessing the overall spacing between nodes.
+\item \code{"all_nodes"} all node distances from each node,
+helpful to assess the overall spacing between nodes.
 }}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
@@ -52,33 +64,90 @@ helpful when assessing the overall spacing between nodes.
 \item{...}{additional arguments are passed to internal functions.}
 }
 \value{
-\code{data.frame} with summary information about node distances
-for connected nodes (only where edges connect any two nodes),
-and unconnected nodes (only where two nodes are not connected
-by an edge). When \code{node_groups} is defined, the summary
-also includes each individual node group.
+\code{list} of \code{numeric} matrix data, named by the summary used.
+\itemize{
+\item Columns: 'Min', 'Q1', 'Median', 'Mean', 'Q3', 'Max'.
+\item Rows when \code{each_group=TRUE} include each \code{names(node_groups)}.
+\item Rows with \code{each_group=FALSE} include 'all', 'edge', 'nonedge'.
+The 'edge' represents only node-node connected by an edge;
+'nonedge' represents only node-node not connected by an edge;
+and 'all' includes all node-node pairings.
+\item The list names when \code{each_group=FALSE}:
+\itemize{
+\item 'summary' with overall summary values
+}
+\item The list names when \code{each_group=TRUE}:
+\itemize{
+\item 'nearest_within': nearest-node, within each node group
+\item 'nearest_across': nearest-node, across each node group
+\item 'all_within': all-nodes, within each node group
+\item 'all_across': all-nodes, across each node group
+}
+}
 }
 \description{
-Summarize spacing between igraph nodes given a layout
+Summarize spacing between igraph nodes or node groups
 }
 \details{
 This function is a simple wrapper to calculate typical distances
-between nodes in a given network layout. It is experimental,
-and intended to provide helpful information when determining
-an appropriate value for \code{percent_spacing} to use for example
-with \code{apply_nodeset_spacing()}. The optimal value depends upon
-the number of nodes overall, also the number of nodes in
-each nodeset, and the relative position of each nodeset
-in layout coordinates.
+between nodes or node groups in a given network layout.
 
-The \code{node_groups} argument is intended to provide summary data
-for each node group (for example Cnet \code{nodesets}) so that
-individual node groups can be adjusted accordingly.
+It is intended to help determine values to use for \code{percent_spacing}
+with \code{apply_nodeset_spacing()}.
+The optimal value is subjective, and depends upon
+the total number of nodes, and the relative spacing of nodes in
+subgroups such as Cnet nodesets, or igraph community clusters.
+
+Specific to Cnet plots and bipartite graphs, there are two
+important metrics:
+\enumerate{
+\item Within-group spacing
+\itemize{
+\item 'nearest_within' matrix, column 'Median' is useful
+to assess the spacing within each group of nodes.
+}
+\item Across-group spacing
+\itemize{
+\item 'nearest_across' matrix, column 'Min' is useful to assess
+the minimum distance between two node groups.
+Column 'Q1' may be useful to determine whether a node group has
+substantial overlaps with another node group.
+}
+}
+
+Even still, sometimes the node groups overlap each other, which
+is not summarized here.
+}
+\section{Todo}{
+Re-evaluate how to represent summary values that cannot be calculated.
+For example, a nodeset with only one node cannot calculate within-nodeset
+distances.
+
+Background:
+\itemize{
+\item Typically, \code{min(NULL)} returns \code{Inf} (infinite).
+If there were no node-node distances, the calculation would return \code{Inf}.
+\item Currently, this function returns \code{NA} for such cases.
+The main motivation is for downstream summary statistics, for example
+taking column median or column mean with argument \code{na.rm=TRUE}
+for convenience.
+}
+}
+
+\examples{
+cnet <- make_cnet_test(num_sets=2)
+igraph::V(cnet)$size <- igraph::V(cnet)$size * 2;
+igraph::V(cnet)$label.cex <- igraph::V(cnet)$label.cex * 2;
+jam_igraph(cnet)
+summarize_node_spacing(cnet)
+summarize_node_spacing(cnet, dist_type="all_nodes")
+
 }
 \seealso{
 Other jam utility functions: 
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
+\code{\link{bulk_cnet_adjustments}()},
 \code{\link{call_fn_ellipsis_deprecated}()},
 \code{\link{cell_fun_bivariate}()},
 \code{\link{collapse_mem_clusters}()},

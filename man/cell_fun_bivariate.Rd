@@ -195,6 +195,7 @@ ComplexHeatmap::draw(hm2, annotation_legend_list=lgds)
 Other jam utility functions: 
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
+\code{\link{bulk_cnet_adjustments}()},
 \code{\link{call_fn_ellipsis_deprecated}()},
 \code{\link{collapse_mem_clusters}()},
 \code{\link{colorRamp2D}()},

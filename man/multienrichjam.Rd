@@ -136,7 +136,7 @@ where names match the names of each enrichment in \code{enrichList}.
 }
 }
 \description{
-Prepare MultiEnrichMap data from enrichList
+Prepare MultiEnrichMap data from enrichList (In progress)
 }
 \details{
 This function performs most of the work of comparing multiple

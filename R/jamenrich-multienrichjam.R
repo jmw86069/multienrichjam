@@ -2,7 +2,7 @@
 
 #' Prepare MultiEnrichMap data from enrichList
 #'
-#' Prepare MultiEnrichMap data from enrichList
+#' Prepare MultiEnrichMap data from enrichList (In progress)
 #'
 #' This function performs most of the work of comparing multiple
 #' enrichment results.
@@ -215,6 +215,7 @@ multienrichjam <- function
    ## - create pathway-gene incidence matrix
    ##
    mem <- list();
+   stop("This function is work-in-progress, please use multiEnrichMap().");
 
    returnType <- match.arg(returnType);
 

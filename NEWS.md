@@ -1,3 +1,54 @@
+# multienrichjam 0.0.98.900
+
+* Added dependencies: shiny, shinydashboard
+
+## New R-shiny app for Cnet plot adjustments
+
+* R-shiny Cnet Adjustment Tool (ShinyCat)
+
+   * `launch_shinycat()` takes `g` as input, returns an `environment`
+   containing 'adj_cnet' with the adjusted `igraph` object.
+   * Intended to make my life a easier when making a zillion tiny
+   adjustments to a Cnet plot as a final figure.
+   * Nodeset adjustments: x,y coordinates; percent spacing, rotation.
+   * Node adjustments: x,y coordinates; label angle; label distance.
+
+## new functions
+
+* `bulk_cnet_adjustments()`
+
+   * takes `data.frame` input for nodesets, and nodes, to apply adjustments
+   with just one function call.
+
+## updates to existing functions
+
+* `jam_plot_igraph()` (the internal function)
+
+   * Removed the `rm(x, y)` to remove warning when y does not exist.
+   * Call `jamba::shadowText()` directly rather than overriding `text()`.
+   * New default `mark.expand=NULL` uses half the median vertex.size.
+
+* `make_point_hull()`
+
+   * Accepts `lwd=0` and hides the border.
+
+* `jam_igraph()`
+
+   * New default: `mark.expand=NULL` uses half the median vertex.size,
+   calculated within `jam_plot_igraph()`.
+
+* `summarize_node_spacing()`
+
+   * Updated help docs, and output data format to return `list` of matrices.
+   * Default uses node groups (Cnet nodesets), named by nodeset.
+
+* `apply_nodeset_spacing()` now calls `summarize_node_spacing()`
+
+## In progress
+
+* S4 'Mem' object implementation is in progress, some helper functions are
+included for future use.
+
 # multienrichjam 0.0.97.900
 
 ## updates to existing functions

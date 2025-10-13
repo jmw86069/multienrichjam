@@ -16,7 +16,7 @@ jam_plot_igraph(
   mark.col = NULL,
   mark.alpha = 0.2,
   mark.border = NULL,
-  mark.expand = 8,
+  mark.expand = NULL,
   mark.lwd = 2,
   mark.lty = 1,
   mark.smooth = TRUE,

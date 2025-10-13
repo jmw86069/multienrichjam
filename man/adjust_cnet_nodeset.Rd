@@ -9,8 +9,8 @@ adjust_cnet_nodeset(
   set_nodes = NULL,
   x = 0,
   y = 0,
-  expand = 0,
   percent_spacing = NULL,
+  expand = 0,
   rotate_degrees = 0,
   cnet_nodesets = NULL,
   verbose = FALSE,
@@ -33,6 +33,13 @@ cluster, as a convenience option.}
 in the node set, based upon the overall range of x and y values
 in the layout coordinates.}
 
+\item{percent_spacing}{\code{numeric} within node spacing as percentage of
+the max x/y layout ranges. This option is preferred to \code{expand}
+when trying to keep nodeset spacing consistent for the overall layout.
+As a general rule, use \code{summarize_node_spacing(g)$nearest_within}
+with column 'Median' to determine node spacing for each nodeset,
+then adjust each nodeset to relatively consistent median spacing.}
+
 \item{expand}{\code{numeric} the relative amount to expand node coordinates,
 where \code{expand=0} does no expansion, \code{expand=1} will expand coordinates
 100\% of the distance to the center of the cluster, twice the original
@@ -44,7 +51,9 @@ degrees to adjust the node coordinates, relative to the center of
 the coordinates.}
 
 \item{cnet_nodesets}{\code{list} optional to provide the known nodesets
-upfront, in order to avoid re-determining the nodesets.}
+upfront, in order to avoid re-determining the nodesets.
+Otherwise \code{get_cnet_nodesets()} is called, which for
+large networks may introduce a small time lag.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
