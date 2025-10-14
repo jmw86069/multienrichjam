@@ -22,13 +22,19 @@ shinycat_ui <- function
 
    sidebar <- shinydashboard::dashboardSidebar(
       shinydashboard::sidebarMenu(
-         shinydashboard::menuItem("Cnet Plot",
+         shinydashboard::menuItem("Cnet Adjustment Tool",
             tabName="cnet_tab1",
             icon=shiny::icon("chart-line")),
-         shinydashboard::menuItem("Adjustment Table",
-            tabName="adjustment_tab2",
-            icon=shiny::icon("table"))
+         shiny::downloadButton("download_graph",
+            icon=shiny::icon("download"),
+            style="padding: 5px; margin-left: 10px;",
+            label="Save as .RData"),
+         shiny::textOutput("save_message")
+         # shinydashboard::menuItem("Adjustment Table",
+         #    tabName="adjustment_tab1",
+         #    icon=shiny::icon("table"))
       ),
+      htmltools::hr(),
       htmltools::h4("Visual Options"),
       shiny::checkboxGroupInput("display_settings",
          label="Display Settings",
@@ -37,24 +43,46 @@ shinycat_ui <- function
             "Highlight Nodesets",
             "Bundle Edges"),
          selected=NULL),
+      htmltools::h5("Node Factor"),
       div(class="inline-input",
-         htmltools::tags$label("Node size:",
-            `for`="node_factor",
+         htmltools::tags$label("Genes:",
+            `for`="gene_node_factor",
             style="margin: 0;"),
-         shiny::numericInput("node_factor",
+         shiny::numericInput("gene_node_factor",
             label=NULL,
-            min=-3, max=3, step=0.25, value=0)
+            min=0.1, max=3, step=0.1, value=1)
       ),
       div(class="inline-input",
-         htmltools::tags$label("Label size:",
-            `for`="label_factor",
+         htmltools::tags$label("Sets:",
+            `for`="set_node_factor",
             style="margin: 0;"),
-         shiny::numericInput("label_factor",
+         shiny::numericInput("set_node_factor",
             label=NULL,
-            min=-3, max=3, step=0.25, value=0)
+            min=0.1, max=3, step=0.1, value=1)
+      ),
+      shiny::conditionalPanel(
+         condition='input.display_settings.includes("Display Node Labels")',
+         htmltools::h5("Label Factor"),
+         div(class="inline-input",
+            htmltools::tags$label("Genes:",
+               `for`="gene_label_factor",
+               style="margin: 0;"),
+            shiny::numericInput("gene_label_factor",
+               label=NULL,
+               min=0.1, max=3, step=0.1, value=1)
+         ),
+         div(class="inline-input",
+            htmltools::tags$label("Sets:",
+               `for`="set_label_factor",
+               style="margin: 0;"),
+            shiny::numericInput("set_label_factor",
+               label=NULL,
+               min=0.1, max=3, step=0.1, value=1)
+         )
       ),
       htmltools::hr(),
       shiny::uiOutput("node_ui"),
+      htmltools::hr(),
       shiny::uiOutput("nodeset_ui")
    )
    ## Prototype using left/right, up/down buttons
@@ -72,6 +100,24 @@ shinycat_ui <- function
       #    column(2, actionButton("down_btn", label = "\u2193")),  # Down arrow
       #    column(5, "")
       # )
+
+   # adjustment tab to consider:
+   # - display the nodeset_adj, node_adj data.frame adjustments
+   # - button to save the current igraph object to RData file
+   adjustment_tab <- shiny::fluidPage(
+      shiny::fluidRow(
+         shiny::column(
+            width=12,
+            style="padding:0px",
+            shinydashboardPlus::box(
+               shiny::downloadButton("download_graph",
+                  icon=shiny::icon("download"),
+                  label="Save as .RData"),
+               shiny::textOutput("save_message")
+            )
+         )
+      )
+   )
 
    cnet_tab <- shiny::fluidPage(
       shiny::fluidRow(
@@ -106,6 +152,7 @@ shinycat_ui <- function
    body <- shinydashboard::dashboardBody(
       shinydashboard::tabItems(
          shinydashboard::tabItem(tabName="cnet_tab1", cnet_tab)
+         # shinydashboard::tabItem(tabName="adjustment_tab1", adjustment_tab)
       )
    )
 
@@ -118,6 +165,20 @@ shinycat_ui <- function
          }
          .btn {
            padding: 0px;
+         }
+         hr {
+           margin-bottom: 2px;
+           margin-top: 2px;
+         }
+         h4 {
+           margin-left: 10px;
+           margin-bottom: 2px;
+           margin-top: 2px;
+         }
+         h5 {
+           margin-left: 10px;
+           margin-bottom: 0px;
+           font-weight: bold;
          }
          label {
            margin-bottom: 1px;
@@ -158,6 +219,27 @@ shinycat_ui <- function
 #'
 #' Launch ShinyCAT: Cnet Adjustment Tool
 #'
+#' This function launches the R-shiny app 'ShinyCat' to manipulate
+#' a Cnet `igraph` object, which is expected to contain node (vertex)
+#' attribute 'nodeType' with values 'Gene' and 'Set'.
+#'
+#' There are two ways to retain the resulting igraph object:
+#'
+#' 1. Capture the output of this function, an `environment` described below.
+#' 2. Click "Adjustments" then "Save RData", which stores the 'igraph`
+#' object as 'adj_cnet'.
+#'
+#' The function returns an `environment` inside which are two objects:
+#'
+#' * 'g': the `igraph` data input
+#' * 'adj_cnet': the adjusted Cnet `igraph` output
+#'
+#' Additionally, the 'adj_cnet' object contains two attributes:
+#'
+#' * 'nodeset_adj', 'node_adj': `data.frame` objects used by
+#' `bulk_cnet_adjustments()` to convert 'g' into 'adj_cnet'.
+#'
+#'
 #' @param g `igraph` object, or can be NULL if the variable 'g' is
 #'    defined in 'envir'.
 #' @param envir `environment` assigned to the R-shiny function space,
@@ -187,10 +269,12 @@ shinycat_ui <- function
 #' @family jam shiny functions
 #'
 #' @examples
+#' # create Cnet test data
 #' g <- make_cnet_test();
 #' cnetenv <- new.env();
-#' assign("g", g, envir=cnetenv);
-#' launch_shinycat();
+#'
+#' # you must catch the output to use the resulting igraph object
+#' output_envir <- launch_shinycat();
 #'
 #' @export
 launch_shinycat <- function

@@ -44,11 +44,37 @@ It also contains two attributes for reference:
 \description{
 Launch ShinyCAT: Cnet Adjustment Tool
 }
+\details{
+This function launches the R-shiny app 'ShinyCat' to manipulate
+a Cnet \code{igraph} object, which is expected to contain node (vertex)
+attribute 'nodeType' with values 'Gene' and 'Set'.
+
+There are two ways to retain the resulting igraph object:
+\enumerate{
+\item Capture the output of this function, an \code{environment} described below.
+\item Click "Adjustments" then "Save RData", which stores the 'igraph`
+object as 'adj_cnet'.
+}
+
+The function returns an \code{environment} inside which are two objects:
+\itemize{
+\item 'g': the \code{igraph} data input
+\item 'adj_cnet': the adjusted Cnet \code{igraph} output
+}
+
+Additionally, the 'adj_cnet' object contains two attributes:
+\itemize{
+\item 'nodeset_adj', 'node_adj': \code{data.frame} objects used by
+\code{bulk_cnet_adjustments()} to convert 'g' into 'adj_cnet'.
+}
+}
 \examples{
+# create Cnet test data
 g <- make_cnet_test();
 cnetenv <- new.env();
-assign("g", g, envir=cnetenv);
-launch_shinycat();
+
+# you must catch the output to use the resulting igraph object
+output_envir <- launch_shinycat();
 
 }
 \seealso{

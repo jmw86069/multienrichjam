@@ -1,3 +1,13 @@
+# multienrichjam 0.0.99.900
+
+## Updates
+
+* `launch_shinycat()`
+
+   * Added buttom "Download as .RData" to save for re-use.
+   * Added docs describing how to save the environment.
+   * Node and label factors are applied to Gene and Set nodes.
+
 # multienrichjam 0.0.98.900
 
 * Added dependencies: shiny, shinydashboard

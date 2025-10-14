@@ -291,21 +291,21 @@ shinycat_server <- function
             igraph::V(use_cnet)[use_active_node]$frame.color <- "orange";
          }
       }
-      use_node_factor <- input$node_factor;
-      use_node_factor <- ifelse(use_node_factor >= 0,
-         use_node_factor + 1,
-         1 / (2^(use_node_factor * -2) / 2))
-      use_label_factor <- input$label_factor;
-      use_label_factor <- ifelse(use_label_factor >= 0,
-         use_label_factor + 1,
-         1 / (2^(use_label_factor * -2) / 2))
+      use_node_factor_l <- list(nodeType=c(
+         Gene=input$gene_node_factor,
+         Set=input$set_node_factor));
+      use_label_factor_l <- list(nodeType=c(
+         Gene=input$gene_label_factor,
+         Set=input$set_label_factor));
+      # use_label_factor <- ifelse(use_label_factor >= 0,
+      #    use_label_factor + 1,
+      #    1 / (2^((use_label_factor - 0.5) * -2) / 2))
 
       withr::with_par(list(mar=c(0.5, 0.5, 0.5, 0.5)), {
          multienrichjam::jam_igraph(
             x=use_cnet,
-            # g,
-            label_factor=use_label_factor,
-            node_factor=use_node_factor,
+            label_factor_l=use_label_factor_l,
+            node_factor_l=use_node_factor_l,
             mark.groups=mark.groups,
             mark.col=mark.col,
             mark.expand=mark.expand,
@@ -313,6 +313,35 @@ shinycat_server <- function
             render_nodelabels=render_nodelabels,
             use_shadowText=use_shadowText)
       })
+   })
+
+   ###############################
+   # download RData
+   download_filename <- shiny::reactiveVal("")
+   output$download_graph <- shiny::downloadHandler(
+      filename=function() {
+         use_filename <- paste0("Shinycat_cnet_",
+            format(Sys.time(), "%Y%m%d.%I%M%S%P"),
+            ".RData");
+         download_filename(use_filename);
+         use_filename;
+      },
+      content=function(file) {
+         adj_cnet <- adjusted_cnet();
+         nodeset_adj <- adjust_nodeset();
+         node_adj <- adjust_node();
+         attr(adj_cnet, "nodeset_adj") <- nodeset_adj;
+         attr(adj_cnet, "node_adj") <- node_adj;
+         save(adj_cnet,
+            file=file)
+      }
+   )
+   output$save_message <- shiny::renderText({
+      if (!"" %in% download_filename()) {
+         paste0(
+            # "Download file: '",
+            download_filename())
+      }
    })
 
    ###############################
@@ -435,9 +464,13 @@ shinycat_server <- function
       }
       htmltools::tagList(
          # htmltools::h4(paste0(" Node: ", active_node())),
-         htmltools::tags$b("Node: ", style="margin: 0px 0px 0px 10px; font-size: 120%;"),
-         htmltools::tags$em(active_node(), style="margin: 0px 0px 0px 10px; font-size: 120%; color: gold; font-weight: bold;"),
-         htmltools::br(),
+         htmltools::tags$b("Node: ",
+            style="margin: 0px 0px 0px 10px; font-size: 120%;"),
+         htmltools::tags$em(active_node(),
+            style=paste("margin: 0px 0px 0px 10px;",
+               "font-size: 120%; color: gold;",
+               "font-weight: bold;")),
+            htmltools::br(),
          # div(class="inline-input",
          #    shiny::actionButton("node_x_minus", "<-"),
          #    shiny::actionButton("node_x_plus", "->")),
@@ -491,8 +524,12 @@ shinycat_server <- function
       }
       htmltools::tagList(
          # htmltools::h4(paste0(htmltools::tags$b("Nodeset: "), active_nodeset()),
-         htmltools::tags$b("Nodeset: ", style="margin: 0px 0px 0px 10px; font-size: 120%;"),
-         htmltools::tags$em(active_nodeset(), style="margin: 0px 0px 0px 10px; font-size: 120%; color: gold; font-weight: bold;"),
+         htmltools::tags$b("Nodeset: ",
+            style="margin: 0px 0px 0px 10px; font-size: 120%;"),
+         htmltools::tags$em(active_nodeset(),
+            style=paste("margin: 0px 0px 0px 10px;",
+               "font-size: 120%; color: gold;",
+               "font-weight: bold;")),
          htmltools::br(),
          # shiny::verbatimTextOutput("selected_nodeset_info"),
          div(class="inline-input",
@@ -520,10 +557,10 @@ shinycat_server <- function
                min=1, max=10, step=0.2, value=3)
          ),
          div(class="inline-input",
-            htmltools::tags$label("Spacing:",
-               `for`="nodeset_spacing",
+            htmltools::tags$label("Rotation:",
+               `for`="nodeset_rotation",
                style="margin: 0;"),
-            shiny::numericInput("nodeset_spacing",
+            shiny::numericInput("nodeset_rotation",
                label=NULL,
                min=-180, max=180, step=5, value=0)
          )

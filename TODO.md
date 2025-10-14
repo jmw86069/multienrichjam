@@ -1,5 +1,32 @@
 # TODO
 
+## 14oct2025
+
+* ShinyCat
+
+   * DONE. Add option to save igraph object to a local file
+   * DONE (removed). Add (or remove) data table tab
+   * DONE. Document how to retain data
+
+* igraph shapes
+
+   * clean up use of pie.border, pie.lwd, pie.width,
+   frame.color, frame.width, frame.lwd
+   Official igraph now uses "width" instead of "lwd" so probably best.
+   * Consider JamPolygon? Would also require `grid`, which would require
+   porting all `igraph` shapes to `grid` equivalents.
+   Competes with long-term goal to integrate with ggplot2/tidygraph/ggraph.
+
+* tidygraph/ggraph long-term
+
+   * ggraph requires porting 'jampie' (and potentially 'coloredrectangle')
+   vertex shapes into ggplot2/ggraph.
+   * ggraph may require porting edge bundling to ggraph.
+   * ggraph may require porting 'qfr' layout to include argument 'repulse'.
+   * tidygraph workflows may warrant creating examples which use tidy-oriented
+   logic instead of base R (igraph-like) syntax.
+
+
 ## 09oct2025
 
 * New function: layout with fixed nodes
