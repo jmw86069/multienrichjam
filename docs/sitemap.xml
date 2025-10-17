@@ -1,381 +1,142 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/TODO.html</loc>
-  </url>
-  <url>
-    <loc>/TODO_freshenGenes.html</loc>
-  </url>
-  <url>
-    <loc>/articles/importIPA.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/cnet_heatmap_guide.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/mem_function_notes.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_pathway_direction.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adjust_cnet_nodeset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adjust_cnet_set_relayout_gene.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adjust_polygon_border.html</loc>
-  </url>
-  <url>
-    <loc>/reference/apply_cnet_direction.html</loc>
-  </url>
-  <url>
-    <loc>/reference/apply_color_cap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/apply_nodeset_spacing.html</loc>
-  </url>
-  <url>
-    <loc>/reference/avg_angles.html</loc>
-  </url>
-  <url>
-    <loc>/reference/avg_colors_by_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/call_fn_ellipsis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/call_fn_ellipsis_deprecated.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cell_fun_bivariate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cnet2df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cnet2im.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cnetplotJam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cnetplot_internalJam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/collapse_mem_clusters.html</loc>
-  </url>
-  <url>
-    <loc>/reference/colorRamp2D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/color_edges_by_nodegroups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/color_edges_by_nodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/color_edges_by_nodes_deprecated.html</loc>
-  </url>
-  <url>
-    <loc>/reference/color_nodes_by_nodegroups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/colors_from_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/communities2nodegroups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/curateIPAcolnames.html</loc>
-  </url>
-  <url>
-    <loc>/reference/deconcat_df2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/default_igraph_values.html</loc>
-  </url>
-  <url>
-    <loc>/reference/display_colorRamp2D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/drawEllipse.html</loc>
-  </url>
-  <url>
-    <loc>/reference/edge_bundle_bipartite.html</loc>
-  </url>
-  <url>
-    <loc>/reference/edge_bundle_nodegroups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enrichDF2enrichResult.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enrichList2IM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enrichList2df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enrichList2geneHitList.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enrichMapJam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_mem_genes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_mem_sets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/find_colname.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fixSetLabels.html</loc>
-  </url>
-  <url>
-    <loc>/reference/flip_edges.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_bipartite_nodeset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_cnet_nodeset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_hull_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_igraph_arrow_mode.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_igraph_layout.html</loc>
-  </url>
-  <url>
-    <loc>/reference/grid_with_title.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gsubs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gsubs_remove.html</loc>
-  </url>
-  <url>
-    <loc>/reference/handle_igraph_param_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heatmap_column_order.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heatmap_column_order_deprecated.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heatmap_row_order.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heatmap_row_order_deprecated.html</loc>
-  </url>
-  <url>
-    <loc>/reference/igraph2pieGraph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/im2list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/im2list_dep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/imSigned2list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/imSigned2list_dep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/importIPAenrichment.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/isColorBlank.html</loc>
-  </url>
-  <url>
-    <loc>/reference/jam_igraph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/jam_igraph_arrows.html</loc>
-  </url>
-  <url>
-    <loc>/reference/jam_mypie.html</loc>
-  </url>
-  <url>
-    <loc>/reference/jam_plot_igraph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/label_communities.html</loc>
-  </url>
-  <url>
-    <loc>/reference/layout_with_qfr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/layout_with_qfrf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/list2concordance.html</loc>
-  </url>
-  <url>
-    <loc>/reference/list2im.html</loc>
-  </url>
-  <url>
-    <loc>/reference/list2imSigned.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_cnet_test.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_legend_bivariate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_point_hull.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mem2emap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/memIM2cnet.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mem_enrichment_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mem_find_overlap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mem_gene_path_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mem_legend.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mem_multienrichplot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mem_plot_folio.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mergeAllXY.html</loc>
-  </url>
-  <url>
-    <loc>/reference/multiEnrichMap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nodegroups2communities.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nudge_igraph_node.html</loc>
-  </url>
-  <url>
-    <loc>/reference/order_colors.html</loc>
-  </url>
-  <url>
-    <loc>/reference/parse_igraph_plot_params.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_layout_scale.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rank_mem_clusters.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rectifyPiegraph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/relayout_with_qfr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/removeIgraphBlanks.html</loc>
-  </url>
-  <url>
-    <loc>/reference/removeIgraphSinglets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reorderIgraphNodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rotate_coordinates.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rotate_igraph_layout.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shape.coloredrectangle.plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shape.ellipse.clip.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shape.ellipse.plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shape.jampie.plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sort_colors.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sort_colors_deprecated.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spread_igraph_labels.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subgraph_jam.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subsetCnetIgraph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset_igraph_components.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset_mem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summarize_node_spacing.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sync_igraph_communities.html</loc>
-  </url>
-  <url>
-    <loc>/reference/topEnrichBySource.html</loc>
-  </url>
-  <url>
-    <loc>/reference/topEnrichListBySource.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unnestList.html</loc>
-  </url>
-  <url>
-    <loc>/reference/with_qfr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/xyAngle.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://jmw86069.github.io/multienrichjam/404.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/articles/importIPA.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/articles/index.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/authors.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/cnet_heatmap_guide.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/index.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/mem_function_notes.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/multienrichjam_dev_notes.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/news/index.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/add_pathway_direction.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/adjust_cnet_nodeset.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/adjust_cnet_set_relayout_gene.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/adjust_polygon_border.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/apply_cnet_direction.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/apply_color_cap.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/apply_nodeset_spacing.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/ashape.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/avg_angles.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/bulk_cnet_adjustments.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/call_fn_ellipsis.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/call_fn_ellipsis_deprecated.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/check_Mem.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/cnet2df.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/cnet2im.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/cnetplotJam.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/cnetplot_internalJam.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/colors_from_list.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/color_edges_by_nodegroups.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/color_edges_by_nodes.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/color_edges_by_nodes_deprecated.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/color_nodes_by_nodegroups.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/communities2nodegroups.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/deconcat_df2.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/default_igraph_values.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/display_colorRamp2D.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/drawEllipse.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/edge_bundle_bipartite.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/edge_bundle_nodegroups.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/enrichDF2enrichResult.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/enrichList2df.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/enrichList2geneHitList.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/enrichList2IM.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/enrichMapJam.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/filter_mem_genes.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/filter_mem_sets.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/find_colname.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/find_enrich_colnames.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/flip_edges.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/get_bipartite_nodeset.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/get_cnet_nodeset.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/get_hull_data.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/get_igraph_arrow_mode.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/get_igraph_layout.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/grid_with_title.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/gsubs.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/gsubs_remove.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/handle_igraph_param_list.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/heatmap_column_order.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/heatmap_column_order_deprecated.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/heatmap_row_order.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/heatmap_row_order_deprecated.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/highlight_edges_by_node.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/im2list.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/im2list_dep.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/importIPAenrichment.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/imSigned2list.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/imSigned2list_dep.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/index.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/isColorBlank.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_igraph.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_igraph_arrows.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_mypie.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_plot_igraph.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/label_communities.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/launch_shinycat.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/layout_with_qfr.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/layout_with_qfrf.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/list2concordance.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/list2im.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/list2imSigned.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/make_cnet_test.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/make_legend_bivariate.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/make_point_hull.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/Mem-class.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/Mem-methods.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem2emap.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/memIM2cnet.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/Memtest.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_find_overlap.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_gene_path_heatmap.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_legend.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_multienrichplot.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mergeAllXY.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/multienrichjam.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/nodegroups2communities.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/nudge_igraph_node.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/order_colors.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/parse_igraph_plot_params.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/plot_layout_scale.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/rank_mem_clusters.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/rectifyPiegraph.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/relayout_with_qfr.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/removeIgraphBlanks.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/removeIgraphSinglets.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/reorderIgraphNodes.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/rotate_coordinates.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/rotate_igraph_layout.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/shape.coloredrectangle.plot.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.clip.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.plot.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/shape.jampie.plot.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/shinycat_server.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/shinycat_ui.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/some_vector.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/sort_colors.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/sort_colors_deprecated.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/spread_igraph_labels.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/subgraph_jam.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/subsetCnetIgraph.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/subset_igraph_components.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/subset_mem.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/summarize_node_spacing.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/sync_igraph_communities.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/topEnrichBySource.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/unnestList.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/with_qfr.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/xyAngle.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/TODO.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/TODO_freshenGenes.html</loc></url>
 </urlset>
+

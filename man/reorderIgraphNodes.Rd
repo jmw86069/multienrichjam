@@ -115,7 +115,7 @@ to the same pathways. When this happens, the genes
 are sorted to group the colors.
 }
 \examples{
-if (require(igraph)) {
+require(igraph)
    c3 <- c("red", "gold", "blue");
    c3l <- list(c3[1], c3[2], c3[3],
       c3[c(1,2)], c3[c(1,3)], c3[c(2,3)],
@@ -139,54 +139,57 @@ if (require(igraph)) {
    V(g2)$color <- lapply(V(g2)$pie.color, colorjam::blend_colors)
 
    g2 <- relayout_with_qfr(g2, repulse=7, do_reorder=FALSE);
-   g2b <- nudge_igraph_node(g2, nodes_xy=list(Pathway=c(0, -0.2)));
-   g2b <- spread_igraph_labels(g2b, do_reorder=FALSE)
+   g2b <- spread_igraph_labels(g2, do_reorder=FALSE)
    igraph::V(g2b)$label.family <- "Arial"
 
-   opar <- par("mar"=c(1, 1, 4, 1), xpd=TRUE);
+   withr::with_par(list(mar=c(1, 1, 4, 1), xpd=TRUE), {
    jam_igraph(g2b,
       main="Unordered",
       label_dist_factor=3,
       label_factor=0.7,
-      node_factor=2,
+      node_factor=1.2,
       use_shadowText=TRUE)
    jam_igraph(reorderIgraphNodes(g2b),
       main="reorder_igraph_nodes()",
       label_dist_factor=3,
       label_factor=0.7,
-      node_factor=2,
+      node_factor=1.2,
       use_shadowText=TRUE);
-   jam_igraph(reorderIgraphNodes(g2b, nodeSortBy=c("-y","x")),
-      main="reorderIgraphNodes(nodeSortBy=c(\"-y\",\"x\"))",
+   jam_igraph(
+      reorderIgraphNodes(g2b, nodeSortBy=c("-y","x"), orderByAspect=FALSE),
+      main='reorderIgraphNodes(nodeSortBy=c("-y", "x"))',
       label_dist_factor=3,
       label_factor=0.7,
-      node_factor=2,
+      node_factor=1.2,
       use_shadowText=TRUE);
 
    jam_igraph(
       reorderIgraphNodes(g2b,
-         nodeSortBy=c("-y", "x"),
-         sortAttributes=c("-pie.color.length", "pie.color", "color", "label", "name")),
+         nodeSortBy=c("-y", "x"), orderByAspect=FALSE,
+         sortAttributes=c("-pie.color.length", "pie.color",
+            "color", "label", "name")),
       main="reorder_igraph_nodes() by pie.color.length",
       label_dist_factor=3,
       label_factor=0.7,
-      node_factor=2,
+      node_factor=1.2,
       use_shadowText=TRUE);
-   par(opar);
+   })
 
    g2c <- g2b;
    set.seed(12)
    V(g2c)$frame.color <- sample(c("firebrick3", "#DDDDDD", "dodgerblue3"),
       replace=TRUE, size=igraph::vcount(g2c))
-   opar <- par("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE);
+   V(g2c)$frame.width <- 3;
+   V(g2c)$pie.lwd <- 3;
+   withr::with_par(list("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE), {
    jam_igraph(reorderIgraphNodes(g2c,
       nodeSortBy=c("-y", "x")),
       main="reorder_igraph_nodes() including frame.color",
       label_dist_factor=3,
       label_factor=0.7,
-      node_factor=2,
+      node_factor=1.2,
       use_shadowText=TRUE);
-   par(opar);
+   })
 
    g2d <- reorderIgraphNodes(g2b);
    set.seed(12)
@@ -202,30 +205,30 @@ if (require(igraph)) {
    })
    g2e <- reorderIgraphNodes(g2d,
       nodeSortBy=c("-y", "x"));
-   opar <- par("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE);
-   options("inner_pie_border"=TRUE);
+   withr::with_par(list("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE), {
+   withr::with_options(list("inner_pie_border"=TRUE), {
    jam_igraph(g2e,
       main="reorder_igraph_nodes() including frame.color",
       label_dist_factor=3,
       label_factor=0.7,
-      node_factor=2,
+      node_factor=1.2,
       use_shadowText=TRUE);
-   par(opar);
+   })})
 
+   # frame color sorting
    g2f <- g2e;
    igraph::V(g2f)["GeneV"]$frame.color <- "green";
    igraph::V(g2f)["GeneE"]$frame.color <- "green";
-   opar <- par("lwd"=5, mar=c(1, 1, 4, 1), xpd=TRUE);
-   options("inner_pie_border"=TRUE);
+   withr::with_par(list("lwd"=5, mar=c(1, 1, 4, 1), xpd=TRUE), {
+   withr::with_options(list("inner_pie_border"=TRUE), {
    jam_igraph(g2f,
       main="reorder_igraph_nodes() including frame.color",
       label_dist_factor=3,
       label_factor=0.7,
-      node_factor=2,
+      node_factor=1.2,
       use_shadowText=TRUE);
-   par(opar);
+   })})
 
-}
 
 }
 \seealso{
@@ -246,6 +249,7 @@ Other jam igraph functions:
 \code{\link{fixSetLabels}()},
 \code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
+\code{\link{highlight_edges_by_node}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},

@@ -20,6 +20,8 @@
 #'
 #' * TBD
 #'
+#' @importClassesFrom DOSE enrichResult
+#' 
 #' @param object `Mem` object
 #'
 #' @family Mem
@@ -84,28 +86,61 @@ check_Mem <- function
 #'
 #' ## Slots
 #'
-#' * enrichList
-#' * enrichLabels
-#' * colorV
-#' * geneHitList
-#' * geneHitIM
-#' * memIM
-#' * geneIM
-#' * enrichIM
-#' * multiEnrichDF
-#' * multiEnrichResult
-#' * thresholds
-#' * colnames
+#' * **enrichList**: `list` of `enrichResults` named by enrichment test.
+#' * **enrichLabels**: `character` vector with custom enrichment labels,
+#' named by enrichment test.
+#' * **colorV**: `character` vector of R colors, named by enrichment test.
+#' * **geneHitList**: `list` of vectors named by enrichment test.
+#' Vectors are either:<br>
+#' `character` vector of genes tested as hits for enrichment, or<br>
+#' `integer` vector named by genes with values indicating
+#' the directionality, using `1` or `-1`.
+#' * **geneHitIM**: `numeric` matrix with enrichment tests as colnames, and
+#' genes as rownames.<br>
+#' Values are `1` or `0` to indicate gene hits tested,<br>
+#' optionally `1` or `-1` to indicate directionality.
+#' * **memIM**: `numeric` matrix with gene sets / pathways as colnames, and
+#' genes as rownames.<br>
+#' Values are `1` or `0` indicating genes present in each pathway.
+#' * **geneIM**: `numeric` matrix with enrichment test as colnames, and genes
+#' as rownames.<br>
+#' This matrix differs from 'geneHitIM' in that it only includes
+#' genes also in 'memIM', and in that order.
+#' * **enrichIM**: `numeric` matrix with enrichment test as colnames, and
+#' gene sets / pathways as rownames.<br>
+#' Matrix values are enrichment P-values,
+#' using the appropriate adjusted P-value or FDR to represent significance.
+#' * **multiEnrichDF**: `data.frame` with single combined enrichment table.<br>
+#' Data include union of genes involved in each pathway, and
+#' lowest P-value observed across all enrichment tests.
+#' * **multiEnrichResult**: `enrichResult` equivalent of 'multiEnrichDF'.<br>
+#' It is intended to facilitate use in `enrichplot` functions.
+#' * **thresholds**: `list` of thresholds used when calling `multiEnrichMap()`.
+#' * **colnames**: `list` to associate actual colnames in 'enrichList'
+#' with the conceptual names used in multienrichjam.
 #'
-#' * geneIMcolors
-#' * geneIMdirection
+#' * **geneIMcolors**: `character` matrix with enrichment test colnames, and
+#' gene rownames.<br>
+#' Values are colors assigned using 'colorV'.
+#' * **geneIMdirection**: `numeric` matrix equivalent to 'geneIM' with values
+#' `1` and `-1` indicating directionality.<br>
+#' When no directionality is provided, all values will be `1` or `0`.
 #'
-#' * enrichIMcolors
-#' * enrichIMdirection
-#' * enrichIMgeneCount
+#' * **enrichIMcolors**: `character` matrix with enrichment test colnames, and
+#' gene set / pathway rownames.<br>
+#' Values are color gradients using the
+#' appropriate P-value threshold used with `multiEnrichMap()`.
+#' * **enrichIMdirection**: `numeric` matrix equivalent to 'enrichIM' with values
+#' indicating directional score.<br>
+#' Directional scores may include a IPA z-score or other directional
+#' score where available.<br>
+#' When not available, all values are `1`.
+#' * **enrichIMgeneCount**: `integer` matrix equivalent to 'enrichIM'.<br>
+#' Values are the number of genes involved in the enrichment of each pathway.
 #'
 #' @family Mem
-#'
+#' @rdname Mem-class
+#' @aliases Mem
 #' @examples
 #' # See vignettes for a full walk-through
 #'
@@ -132,10 +167,14 @@ setClass("Mem",
 );
 setValidity("Mem", method=check_Mem)
 
-#' Subset Mem object
+#' Subset a Mem object
 #'
+#' @param x `Mem` object
+#' @param i `character` or `integer` with gene set / pathway names
+#' @param j `character` or `integer` with enrichment names
+#' @param ... additional arguments are ignored for '['.
 #' @docType methods
-#' @rdname Mem-methods
+#' @describeIn Mem-class Subset a Mem object
 #' @export
 setMethod("[",
    signature=c(x="Mem",
@@ -257,24 +296,32 @@ setMethod("[",
    }
 )
 
-#' Coerce legacy multiEnrichMap list format to Mem object
+#' Memtest S4 Mem object for testing in multienrichjam
 #'
-#' Coerce legacy multiEnrichMap list format to `Mem` S4 object
+#' Mem object for testing in multienrichjam, with 'Newborns' and
+#' 'OlderChildren' described in
+#' Reese et al 2019 [https://doi.org/10.1016/j.jaci.2018.11.043].
 #'
 #' @family Mem
+#' @format `Mem` object containing two enrichment tests
+#' @rdname Memtest
+"Memtest"
+
+#' @describeIn Mem-class Convert list to Mem S4 object
 #'
-#' @param x `list` output from `multiEnrichMap()`
-#' @param ... additional arguments are ignored
+#' @returns `list_to_Mem()` returns a `Mem` S4 object.
+#'
+#' @param mem `list` output from `multiEnrichMap()`
 #'
 #' @examples
-#' jamsession::load_object("test_mem")
-#' test_mem$thresholds <- list(p_cutoff=0.05, min_count=3)
-#' Mem <- list_to_Mem(test_mem)
+#' # list_to_Mem examples
+#' data(Memtest)
+#' mem <- as(Memtest, "list")
+#' Mem <- list_to_Mem(mem)
 #'
 #' @export
 list_to_Mem <- function
-(x,
- ...)
+(mem)
 {
    #
    use_slots=c(
@@ -298,38 +345,39 @@ list_to_Mem <- function
    )
 
    # Some slots can be added with defaults
-   if (!"geneIMdirection" %in% names(x)) {
+   if (!"geneIMdirection" %in% names(mem)) {
       x$geneIMdirection <- (abs(x$geneIM) > 0) * 1;
    }
 
-   if (!all(names(use_slots) %in% names(x))) {
-      missing_slots <- setdiff(names(use_slots), names(x));
+   if (!all(names(use_slots) %in% names(mem))) {
+      missing_slots <- setdiff(names(use_slots), names(mem));
       stop(paste0(
          "Not all required slot names were provided:\n",
          jamba::cPaste(missing_slots, sep=", ")))
    }
    # print(jamba::sdim(x[names(use_slots)]));# debug
    Mem <- new("Mem",
-      enrichList=x$enrichList,
-      enrichLabels=x$enrichLabels,
-      colorV=x$colorV,
-      geneHitList=x$geneHitList,
-      geneHitIM=x$geneHitIM,
-      memIM=x$memIM,
-      geneIM=x$geneIM,
-      enrichIM=x$enrichIM,
-      multiEnrichDF=x$multiEnrichDF,
-      multiEnrichResult=x$multiEnrichResult,
-      thresholds=x$thresholds,
-      colnames=x$colnames,
-      enrichIMcolors=x$enrichIMcolors,
-      enrichIMdirection=x$enrichIMdirection,
-      enrichIMgeneCount=x$enrichIMgeneCount,
-      geneIMcolors=x$geneIMcolors,
-      geneIMdirection=x$geneIMdirection
+      enrichList=mem$enrichList,
+      enrichLabels=mem$enrichLabels,
+      colorV=mem$colorV,
+      geneHitList=mem$geneHitList,
+      geneHitIM=mem$geneHitIM,
+      memIM=mem$memIM,
+      geneIM=mem$geneIM,
+      enrichIM=mem$enrichIM,
+      multiEnrichDF=mem$multiEnrichDF,
+      multiEnrichResult=mem$multiEnrichResult,
+      thresholds=mem$thresholds,
+      colnames=mem$colnames,
+      enrichIMcolors=mem$enrichIMcolors,
+      enrichIMdirection=mem$enrichIMdirection,
+      enrichIMgeneCount=mem$enrichIMgeneCount,
+      geneIMcolors=mem$geneIMcolors,
+      geneIMdirection=mem$geneIMdirection
    )
    return(Mem);
 }
+
 
 if (!isGeneric("summary")) {
    setGeneric("summary",
@@ -338,11 +386,11 @@ if (!isGeneric("summary")) {
 
 #' Extract some elements of potentially long vector for display
 #'
-#' Extract some elements of potentially long vector for display
-#'
-#' @docType methods
-#' @rdname Mem-methods
-#' @export
+#' Extract some elements of potentially long vector for display,
+#' using ellipses when there are more than 'maxToShow' entries.
+#' 
+#' @keywords internal
+#' @noRd
 some_vector <- function
 (x,
  maxToShow=5,
@@ -439,6 +487,9 @@ setMethod("show", "Mem",
 # setAs() to convert Mem back to mem using list format
 # as(Mem, "list")
 
+#' @name as
+#' @rdname Mem-class
+#' @aliases coerce
 setAs("Mem", "list",
    function(from) {
       use_slots=c(
@@ -468,6 +519,152 @@ setAs("Mem", "list",
       new_list
    })
 
+#' @describeIn Mem-class Coerce `Mem` object to legacy 'mem' `list` format
+#' @aliases coerce
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#'
+#' @returns `Mem_to_list()` returns a `list` suitable for ther mem functions.
+#'
+#' @examples
+#' # examples for Mem_to_list and as(Mem, "list")
+#' data(Memtest)
+#' mem1 <- Mem_to_list(Memtest)
+#' mem2 <- as(Memtest, "list")
+#' identical(mem1, mem2)
+#'
+#' @export
+Mem_to_list <- function
+(x,
+   ...)
+{
+   #
+   if (!inherits(x, "Mem")) {
+      stop("Input must be 'Mem'")
+   }
+   as(x, "list")
+}
+
+
+setGeneric("enrichments", signature="x",
+   function(x, ...) standardGeneric("enrichments")
+)
+
+#' The enrichment names from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Names for the enrichment tests in a Mem object
+#' @export
+setMethod("enrichments", "Mem", function(x) names(x@enrichList))
+
+#' The enrichment names from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Names for the enrichment tests in a Mem object
+#' @export
+setMethod("names", "Mem", function(x) names(x@enrichList))
+
+
+setGeneric("geneIM", signature="x",
+   function(x, ...) standardGeneric("geneIM")
+)
+
+#' The matrix of genes tested versus enrichment tests from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class The matrix of genes tested versus enrichment tests
+#' @export
+setMethod("geneIM", "Mem",
+   function(x, ...) x@geneIM
+)
+
+setGeneric("enrichIM", signature="x",
+   function(x, ...) standardGeneric("enrichIM")
+)
+
+#' The pathway/P-value matrix from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class The pathway/P-value matrix
+#' @export
+setMethod("enrichIM", "Mem",
+   function(x, ...) x@enrichIM
+)
+
+setGeneric("memIM", signature="x",
+   function(x, ...) standardGeneric("memIM")
+)
+
+#' The gene-pathway incidence matrix from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class The gene-pathway incidence matrix
+#' @export
+setMethod("memIM", "Mem",
+   function(x, ...) x@memIM
+)
+
+setGeneric("genes", signature="x",
+   function(x, ...) standardGeneric("genes")
+)
+
+#' List genes represented in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class List genes represented
+#' @export
+setMethod("genes", "Mem",
+   function(x, ...) rownames(x@geneIM)
+)
+
+setGeneric("thresholds", signature="x",
+   function(x, ...) standardGeneric("thresholds")
+)
+
+#' List thresholds defined in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class List thresholds defined
+#' @export
+setMethod("thresholds", "Mem",
+   function(x, ...) x@thresholds
+)
+
+setGeneric("sets", signature="x",
+   function(x, ...) standardGeneric("sets")
+)
+
+#' List gene sets represented in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class List gene sets represented
+#' @export
+setMethod("sets", "Mem",
+   function(x, ...) rownames(x@enrichIM)
+)
+
+# future expansion:
+#
+# - cbind: combine two Mem objects, concatenating the enrichments,
+#      and making new geneIM, enrichIM, memIM
+
 # Consider: cbind() to combine two Mem objects, different enrichments
 # Consider: rbind() to combine two Mem objects, same enrichments, new pathways
 # - probably need to require identical colnames and thresholds
@@ -484,27 +681,3 @@ setAs("Mem", "list",
 # - geneIM
 # - enrichIM
 # - memIM
-
-setMethod("names", "Mem", function(x) names(x@enrichList))
-
-
-setGeneric("geneIM", signature="x",
-   function(x, ...) standardGeneric("geneIM")
-)
-setMethod("geneIM", "Mem",
-   function(x, ...) x@geneIM
-)
-
-setGeneric("enrichIM", signature="x",
-   function(x, ...) standardGeneric("enrichIM")
-)
-setMethod("enrichIM", "Mem",
-   function(x, ...) x@enrichIM
-)
-
-setGeneric("memIM", signature="x",
-   function(x, ...) standardGeneric("memIM")
-)
-setMethod("memIM", "Mem",
-   function(x, ...) x@memIM
-)

@@ -1,9 +1,27 @@
 # TODO
 
-## 14oct2025
+## 17oct2025
 
+* Add vignette for `clusterProfiler` and `msigdbr`.
+* IN PROGRESS. Convert to Mem S4 object
+
+   * Update all functions to accept 'mem' or 'Mem' input.
+   * Update `multiEnrichMap()` to return 'Mem'.
+   Consider removing all sections which create cnet/emap objects.
+
+* Add emap to `mem_plot_folio()`, or at least "make it easy".
+* Add Cnet-Heatmap and supporting functions.
+* Add testthis unit tests for key behaviors.
 * ShinyCat
 
+   * Fix bug: singlet node is highlighted, nodesets cannot be highlighted.
+   * Consider `shinydashboard::tabBox()` for inputs; or `bsplus::bs_accordion()`
+   * Consider adding global layout options
+   
+      * Relayout with new repulse threshold. Should "nullify" other adjustments.
+      * Nodeset spacing overall. (Rather than having to click each nodeset)
+   
+   * DONE. Consider highlighting edges around the highlighted node/nodeset
    * DONE. Add option to save igraph object to a local file
    * DONE (removed). Add (or remove) data table tab
    * DONE. Document how to retain data
@@ -26,6 +44,9 @@
    * tidygraph workflows may warrant creating examples which use tidy-oriented
    logic instead of base R (igraph-like) syntax.
 
+* reduce R dependencies
+
+   * DONE. alphahull - requires sp, ggplot2, spatstat. Port `alphahull::ashape()`
 
 ## 09oct2025
 

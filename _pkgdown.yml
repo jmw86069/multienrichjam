@@ -1,6 +1,15 @@
+destination: docs
+home:
+  title: Analysis and Visualization of Multiple Gene Set Enrichments
+  description: Multi-enrichment analysis, visualization, pathway clustering,
+    and enhancements to facilitate interpretation of complex biological data.
+figures:
+  fig.width: 8
+  fig.height: 8
 template:
-  params:
-    bootswatch: cosmo
+  bootstrap: 5
+  bootswatch: cosmo
+url: https://jmw86069.github.io/multienrichjam/
 reference:
 - title: Enrichment functions
   desc: Functions that manipulate enrichment or multiple enrichment results.
@@ -22,6 +31,14 @@ reference:
   desc: Functions specific to Cnet igraph objects
   contents:
   - has_concept("jam cnet igraph functions")
+- title: R-shiny functions
+  desc: Functions supporting ShinyCat
+  contents:
+  - has_concept("jam shiny functions")
+- title: Mem functions
+  desc: Functions supporting Mem S4 object use
+  contents:
+  - has_concept("Mem")
 - title: igraph vertex shapes
   desc: Functions that provide custom igraph vertex shapes
   contents:
@@ -38,6 +55,11 @@ reference:
   desc: Functions to import enrichment data
   contents:
   - has_concept("jam import functions")
+- title: Internal igraph functions
+  desc: Functions typically for internal use by other Jam functions, or
+     which were internal igraph functions.
+  contents:
+  - has_concept("jam igraph internal functions")
 - title: Internal igraph functions
   desc: Functions typically for internal use by other Jam functions, or
      which were internal igraph functions.

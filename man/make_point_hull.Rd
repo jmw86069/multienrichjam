@@ -17,7 +17,7 @@ make_point_hull(
   max_iterations = 100,
   do_plot = FALSE,
   add = FALSE,
-  hull_method = c("default", "alphahull", "igraph", "sf", "chull"),
+  hull_method = c("default", "ahull", "alphahull", "igraph", "sf", "chull"),
   smooth = TRUE,
   shape = 1/2,
   label = NULL,
@@ -42,7 +42,7 @@ used only when \code{buffer} is not supplied.}
 around each point. This value is used if provided, otherwise
 \code{expand} is used to derive a value for \code{buffer}.}
 
-\item{alpha}{\code{numeric} value passed to \code{alphahull::ashape()} when
+\item{alpha}{\code{numeric} value passed to \code{ashape()} when
 hull_method is \code{"alphahull"}. This value determines the level of
 detail of the resulting hull.}
 
@@ -52,7 +52,7 @@ behavior.}
 \item{lwd, lty}{line width and line type parameters, respectively.}
 
 \item{max_iterations}{\code{integer} number of attempts to call
-\code{alphahull::ashape()} with varying values of \code{alpha}. Each iteration
+\code{ashape()} with varying values of \code{alpha}. Each iteration
 checks to confirm the resulting polygon includes all input points.}
 
 \item{do_plot}{\code{logical} indicating whether to plot the polygon
@@ -66,7 +66,7 @@ to open a new plot prior to drawing the hull.}
 \itemize{
 \item \code{"default"} - will use \code{"alphahull"} if the \code{alphahull} R package
 is available.
-\item \code{"alphahull"} - use \code{alphahull::ashape()} which is the preferred
+\item \code{"alphahull"} - use \code{ashape()} which is the preferred
 method, in fact the only available option that will allow a concave
 shape in the output.
 \item \code{"igraph"} - calls hidden function \code{igraph:::convex_hull()} as
@@ -108,7 +108,7 @@ Make alpha hull from points
 }
 \details{
 This function makes an alpha hull around points, calling
-\code{alphahull::ashape()} then piecing together the somewhat
+\code{ashape()} then piecing together the somewhat
 random set of outer edges into a coherent polygon.
 }
 \examples{
@@ -116,36 +116,25 @@ set.seed(12)
 n <- 22
 xy <- cbind(x=sample(seq_len(n), size=n, replace=TRUE),
    y=sample(seq_len(n), size=n, replace=TRUE));
-xy <- rbind(xy, xy[1,,drop=FALSE])
+xy <- rbind(xy, xy[1, , drop=FALSE])
 x4 <- sf::st_multipoint(xy)
 
-if (jamba::check_pkg_installed("alphahull")) {
-   plot(x4, col="red", pch=20, cex=3,
-      main="hull_method='alphahull'")
-   phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-      hull_method="alphahull",
-      label="alphahull",
-      add=TRUE, xpd=TRUE)
-}
+plot(x4, col="red", pch=20, cex=3,
+   main="hull_method='ahull'")
+phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
+   hull_method="ahull",
+   label="ahull",
+   add=TRUE, xpd=TRUE)
 
 plot(x4, col="red", pch=20, cex=3,
    main="hull_method='chull'")
 phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
    add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="chull")
 
-plot(x4, col="red", pch=20, cex=3,
-   main="hull_method='igraph'")
-phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-   add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="igraph")
-
-plot(x4, col="red", pch=20, cex=3,
-   main="hull_method='sf'")
-phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-   add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="sf")
-
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{ashape}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{bulk_cnet_adjustments}()},
@@ -159,6 +148,7 @@ Other jam utility functions:
 \code{\link{filter_mem_genes}()},
 \code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
+\code{\link{find_enrich_colnames}()},
 \code{\link{get_hull_data}()},
 \code{\link{get_igraph_layout}()},
 \code{\link{gsubs_remove}()},

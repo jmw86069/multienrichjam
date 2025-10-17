@@ -6,6 +6,8 @@
 #' @returns `character` of recognized colnames named by the type
 #'    of column, using `NA` for any column types not found.
 #'
+#' @family jam utility functions
+#'
 #' @param x `data.frame`, `enrichList`, `Mem`, or `list` of `data.frame`
 #'    objects.
 #' @param keyColname `character` default 'ID' indicating the primary

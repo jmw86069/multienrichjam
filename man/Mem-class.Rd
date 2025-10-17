@@ -3,40 +3,161 @@
 \docType{class}
 \name{Mem-class}
 \alias{Mem-class}
+\alias{Mem}
+\alias{[,Mem,ANY,ANY,ANY-method}
+\alias{list_to_Mem}
+\alias{as}
+\alias{coerce}
+\alias{Mem_to_list}
+\alias{enrichments,Mem-method}
+\alias{names,Mem-method}
+\alias{geneIM,Mem-method}
+\alias{enrichIM,Mem-method}
+\alias{memIM,Mem-method}
+\alias{genes,Mem-method}
+\alias{thresholds,Mem-method}
+\alias{sets,Mem-method}
 \title{Mem class}
+\usage{
+\S4method{[}{Mem,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
+
+list_to_Mem(mem)
+
+Mem_to_list(x, ...)
+
+\S4method{enrichments}{Mem}(x)
+
+\S4method{names}{Mem}(x)
+
+\S4method{geneIM}{Mem}(x, ...)
+
+\S4method{enrichIM}{Mem}(x, ...)
+
+\S4method{memIM}{Mem}(x, ...)
+
+\S4method{genes}{Mem}(x, ...)
+
+\S4method{thresholds}{Mem}(x, ...)
+
+\S4method{sets}{Mem}(x, ...)
+}
+\arguments{
+\item{x}{\code{Mem} object}
+
+\item{i}{\code{character} or \code{integer} with gene set / pathway names}
+
+\item{j}{\code{character} or \code{integer} with enrichment names}
+
+\item{...}{additional arguments are ignored}
+
+\item{mem}{\code{list} output from \code{multiEnrichMap()}}
+}
+\value{
+\code{list_to_Mem()} returns a \code{Mem} S4 object.
+
+\code{Mem_to_list()} returns a \code{list} suitable for ther mem functions.
+}
 \description{
 Mem class containing results from \code{multiEnrichMap()}.
 }
 \details{
 \subsection{Slots}{
 \itemize{
-\item enrichList
-\item enrichLabels
-\item colorV
-\item geneHitList
-\item geneHitIM
-\item memIM
-\item geneIM
-\item enrichIM
-\item multiEnrichDF
-\item multiEnrichResult
-\item thresholds
-\item colnames
-\item geneIMcolors
-\item geneIMdirection
-\item enrichIMcolors
-\item enrichIMdirection
-\item enrichIMgeneCount
+\item \strong{enrichList}: \code{list} of \code{enrichResults} named by enrichment test.
+\item \strong{enrichLabels}: \code{character} vector with custom enrichment labels,
+named by enrichment test.
+\item \strong{colorV}: \code{character} vector of R colors, named by enrichment test.
+\item \strong{geneHitList}: \code{list} of vectors named by enrichment test.
+Vectors are either:\if{html}{\out{<br>}}
+\code{character} vector of genes tested as hits for enrichment, or\if{html}{\out{<br>}}
+\code{integer} vector named by genes with values indicating
+the directionality, using \code{1} or \code{-1}.
+\item \strong{geneHitIM}: \code{numeric} matrix with enrichment tests as colnames, and
+genes as rownames.\if{html}{\out{<br>}}
+Values are \code{1} or \code{0} to indicate gene hits tested,\if{html}{\out{<br>}}
+optionally \code{1} or \code{-1} to indicate directionality.
+\item \strong{memIM}: \code{numeric} matrix with gene sets / pathways as colnames, and
+genes as rownames.\if{html}{\out{<br>}}
+Values are \code{1} or \code{0} indicating genes present in each pathway.
+\item \strong{geneIM}: \code{numeric} matrix with enrichment test as colnames, and genes
+as rownames.\if{html}{\out{<br>}}
+This matrix differs from 'geneHitIM' in that it only includes
+genes also in 'memIM', and in that order.
+\item \strong{enrichIM}: \code{numeric} matrix with enrichment test as colnames, and
+gene sets / pathways as rownames.\if{html}{\out{<br>}}
+Matrix values are enrichment P-values,
+using the appropriate adjusted P-value or FDR to represent significance.
+\item \strong{multiEnrichDF}: \code{data.frame} with single combined enrichment table.\if{html}{\out{<br>}}
+Data include union of genes involved in each pathway, and
+lowest P-value observed across all enrichment tests.
+\item \strong{multiEnrichResult}: \code{enrichResult} equivalent of 'multiEnrichDF'.\if{html}{\out{<br>}}
+It is intended to facilitate use in \code{enrichplot} functions.
+\item \strong{thresholds}: \code{list} of thresholds used when calling \code{multiEnrichMap()}.
+\item \strong{colnames}: \code{list} to associate actual colnames in 'enrichList'
+with the conceptual names used in multienrichjam.
+\item \strong{geneIMcolors}: \code{character} matrix with enrichment test colnames, and
+gene rownames.\if{html}{\out{<br>}}
+Values are colors assigned using 'colorV'.
+\item \strong{geneIMdirection}: \code{numeric} matrix equivalent to 'geneIM' with values
+\code{1} and \code{-1} indicating directionality.\if{html}{\out{<br>}}
+When no directionality is provided, all values will be \code{1} or \code{0}.
+\item \strong{enrichIMcolors}: \code{character} matrix with enrichment test colnames, and
+gene set / pathway rownames.\if{html}{\out{<br>}}
+Values are color gradients using the
+appropriate P-value threshold used with \code{multiEnrichMap()}.
+\item \strong{enrichIMdirection}: \code{numeric} matrix equivalent to 'enrichIM' with values
+indicating directional score.\if{html}{\out{<br>}}
+Directional scores may include a IPA z-score or other directional
+score where available.\if{html}{\out{<br>}}
+When not available, all values are \code{1}.
+\item \strong{enrichIMgeneCount}: \code{integer} matrix equivalent to 'enrichIM'.\if{html}{\out{<br>}}
+Values are the number of genes involved in the enrichment of each pathway.
 }
 }
 }
+\section{Functions}{
+\itemize{
+\item \code{x[i}: Subset a Mem object
+
+\item \code{list_to_Mem()}: Convert list to Mem S4 object
+
+\item \code{Mem_to_list()}: Coerce \code{Mem} object to legacy 'mem' \code{list} format
+
+\item \code{enrichments(Mem)}: Names for the enrichment tests in a Mem object
+
+\item \code{names(Mem)}: Names for the enrichment tests in a Mem object
+
+\item \code{geneIM(Mem)}: The matrix of genes tested versus enrichment tests
+
+\item \code{enrichIM(Mem)}: The pathway/P-value matrix
+
+\item \code{memIM(Mem)}: The gene-pathway incidence matrix
+
+\item \code{genes(Mem)}: List genes represented
+
+\item \code{thresholds(Mem)}: List thresholds defined
+
+\item \code{sets(Mem)}: List gene sets represented
+
+}}
 \examples{
 # See vignettes for a full walk-through
+
+# list_to_Mem examples
+data(Memtest)
+mem <- as(Memtest, "list")
+Mem <- list_to_Mem(mem)
+
+# examples for Mem_to_list and as(Mem, "list")
+data(Memtest)
+mem1 <- Mem_to_list(Memtest)
+mem2 <- as(Memtest, "list")
+identical(mem1, mem2)
 
 }
 \seealso{
 Other Mem: 
-\code{\link{check_Mem}()},
-\code{\link{list_to_Mem}()}
+\code{\link{Memtest}},
+\code{\link{check_Mem}()}
 }
 \concept{Mem}

@@ -374,8 +374,8 @@ cell_fun_bivariate <- function
       } else if ("bivariate" %in% type) {
          cell_value2 <- m[[2]][i, j];
          cell_color <- col_hm(x=cell_value1,
-            y=cell_value2,
-            ...);
+            y=cell_value2)
+            # ...);
       } else {
          cell_color <- col_hm(cell_value1);
       }
@@ -490,7 +490,7 @@ cell_fun_bivariate <- function
       if (cex > 0 && !"" %in% cell_label) {
          fontsize <- (10 * cex);
          # grid::grid.text(cell_label,
-         if (jamba::check_pkg_installed("shadowtext")) {
+         if (requireNamespace("shadowtext", quietly=TRUE)) {
             shadowtext::grid.shadowtext(cell_label,
                x=x,
                y=y,
@@ -827,16 +827,17 @@ make_legend_bivariate <- function
    return(legend_list);
 }
 
-
+#' @keywords internal
+#' @noRd
 cell_fun_points <- function
 (j,
-   i,
-   x,
-   y,
-   width,
-   height,
-   fill,
-   col_hm)
+ i,
+ x,
+ y,
+ width,
+ height,
+ fill,
+ col_hm)
 {
    cell_value <- jamba::rmNA(naValue=0,
       use_matrix[i, j]);

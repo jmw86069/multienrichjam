@@ -76,59 +76,6 @@ shinycat_server <- function
          apply_negative=TRUE,
          nodesets=nodesets)
 
-      if (FALSE) {
-         # operate on a copy of the original
-         adj_cnet <- g;
-         if (inherits(nodeset_adj, "data.frame") && nrow(nodeset_adj) > 0) {
-            # test the difference from starting point
-            percent_spacing_diff <- (
-               nodeset_adj$percent_spacing -
-                  default_spacing[rownames(nodeset_adj)]);
-            nodeset_which <- which(nodeset_adj$x != 0 |
-                  nodeset_adj$y != 0 |
-                  percent_spacing_diff != 0 |
-                  nodeset_adj$rotate_degrees != 0);
-            # adjust each
-            for (i in nodeset_which) {
-               adj_cnet <- adjust_cnet_nodeset(adj_cnet,
-                  set_nodes=strsplit(nodeset_adj$nodeset[i], ",")[[1]],
-                  x=nodeset_adj$x[i],
-                  y=nodeset_adj$y[i],
-                  percent_spacing=nodeset_adj$percent_spacing[i],
-                  rotate_degrees=nodeset_adj$rotate_degrees[i])
-            }
-         }
-
-         # node adjustments
-         if (inherits(node_adj, "data.frame") && nrow(node_adj) > 0) {
-            # node x,y coordinates
-            node_which <- which(node_adj$x != 0 |
-                  node_adj$y != 0);
-            if (length(node_which) > 0) {
-               adj_cnet <- nudge_igraph_node(adj_cnet,
-                  nodes=node_adj$node[node_which],
-                  x=node_adj$x[node_which],
-                  y=node_adj$y[node_which])
-            }
-
-            # label.dist
-            node_which_l <- which(node_adj$label.degree != 0 |
-                  node_adj$label.dist != 0);
-            if (length(node_which_l) > 0) {
-               matchv <- match(node_adj$node[node_which_l],
-                  igraph::V(adj_cnet)$name);
-               # distance
-               igraph::V(adj_cnet)[matchv]$label.dist <- (
-                  igraph::V(adj_cnet)[matchv]$label.dist +
-                     node_adj$label.dist[node_which_l])
-               # angle
-               igraph::V(adj_cnet)[matchv]$label.degree <- (
-                  igraph::V(adj_cnet)[matchv]$label.degree +
-                     jamba::deg2rad(
-                        node_adj$label.degree[node_which_l])) %% (pi*2);
-            }
-         }
-      }
       attr(adj_cnet, "nodeset_adj") <- nodeset_adj;
       attr(adj_cnet, "node_adj") <- node_adj;
       assign("adj_cnet",
@@ -205,8 +152,9 @@ shinycat_server <- function
       if (!is.null(active_node()) && any(nchar(active_node()) > 0)) {
          use_active_node <- active_node();
          # only for Cnet igraph do we look for nodesets
-         if ("nodeType" %in% va) {
-            nodesets <- get_cnet_nodeset(g);
+         if ("nodeType" %in% va && length(nodesets) > 0) {
+            ## no need to calculate, it should be defined already
+            # nodesets <- get_cnet_nodeset(g);
             nsdf <- data.frame(node=unlist(nodesets),
                nodeset=rep(names(nodesets), lengths(nodesets)));
             nsdf1 <- subset(nsdf, node %in% use_active_node);
@@ -232,6 +180,8 @@ shinycat_server <- function
                # update reactive variable active_nodeset
                active_nodeset("");
             }
+         } else {
+            active_nodeset("");
          }
       } else {
          # update reactive variable active_nodeset
@@ -259,7 +209,14 @@ shinycat_server <- function
       use_cnet <- adjusted_cnet()
 
       # highlight the active node?
+      # currently, jampie nodes cannot have wider frame.lwd than pie.lwd
+      # so the pie.lwd must be increased
       if (length(use_active_node) == 1) {
+         # highlight edges
+         use_cnet <- highlight_edges_by_node(use_cnet,
+            node=use_active_node,
+            highlight_cex=3,
+            nonhighlight_alpha=0.6);
          #
          if (any(c("pie", "jampie") %in% igraph::V(use_cnet)$shape) &&
                "pie.lwd" %in% igraph::vertex_attr_names(use_cnet)) {
@@ -306,7 +263,7 @@ shinycat_server <- function
             x=use_cnet,
             label_factor_l=use_label_factor_l,
             node_factor_l=use_node_factor_l,
-            mark.groups=mark.groups,
+            mark.groups=unname(mark.groups),
             mark.col=mark.col,
             mark.expand=mark.expand,
             edge_bundling=edge_bundling,

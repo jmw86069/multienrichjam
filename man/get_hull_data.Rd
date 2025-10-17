@@ -7,7 +7,7 @@
 get_hull_data(
   x,
   verbose = FALSE,
-  hull_method = "alphahull",
+  hull_method = "ahull",
   buffer = NULL,
   alpha = NULL,
   expand = 0.1,
@@ -21,7 +21,7 @@ get_hull_data(
 
 \item{hull_method}{\code{character} string with the preferred hull method.}
 
-\item{alpha}{\code{numeric} passed to \code{alphahull:ashape()}}
+\item{alpha}{\code{numeric} passed to \code{ashape()}}
 
 \item{expand}{\code{numeric} used to define \code{alpha} based upon coordinate range.}
 
@@ -37,6 +37,7 @@ relevant.
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{ashape}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{bulk_cnet_adjustments}()},
@@ -50,6 +51,7 @@ Other jam utility functions:
 \code{\link{filter_mem_genes}()},
 \code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
+\code{\link{find_enrich_colnames}()},
 \code{\link{get_igraph_layout}()},
 \code{\link{gsubs_remove}()},
 \code{\link{handle_igraph_param_list}()},

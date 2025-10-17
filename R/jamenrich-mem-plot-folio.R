@@ -229,7 +229,7 @@
 #'
 #' @family jam plot functions
 #'
-#' @return `list` is returned via `invisible()`, which contains each
+#' @returns `list` returned using `invisible()`, containing each
 #'    plot object enabled by the argument `do_which`:
 #'    * `enrichment_hm` is a Heatmap object from `ComplexHeatmap`
 #'    that contains the enrichment P-value heatmap. Note that this
@@ -287,28 +287,30 @@
 #' @param mem `list` object created by `multiEnrichMap()`. Specifically
 #'    the object is expected to contain `colorV`, `enrichIM`,
 #'    `memIM`, `geneIM`.
-#' @param do_which integer vector of plots to produce. When `do_which`
+#' @param do_which `integer` vector of plots to produce. When `do_which`
 #'    is `NULL`, then all plots are produced. This argument is intended
 #'    to help produce one plot from a folio, therefore each plot is referred
 #'    by the number of the plot, in order.
-#' @param p_cutoff numeric value indicating the enrichment P-value threshold
+#' @param p_cutoff `numeric` value indicating the enrichment P-value threshold
 #'    used for `multiEnrichMap()`, but when `NULL` this value is taken
 #'    from the `mem` input, or `0.05` is used by default.
-#' @param p_floor numeric value indicating the lowest enrichment P-value
+#' @param p_floor `numeric` value indicating the lowest enrichment P-value
 #'    used in the color gradient on the Enrichment Heatmap.
-#' @param main character string used as a title on Cnet plots.
-#' @param use_raster logical indicating whether to use raster heatmaps,
-#'    passed to `ComplexHeatmap::Heatmap()`.
-#' @param min_gene_ct,min_set_ct integer values passed to
+#' @param main `character` string used as a title on Cnet plots.
+#' @param use_raster `logical` default FALSE, deprecated,
+#'    whether to use raster heatmaps, passed to `ComplexHeatmap::Heatmap()`.
+#'    * Note that `use_raster=TRUE` may produce visual artifacts, and
+#'    changing this argument is no longer supported
+#' @param min_gene_ct,min_set_ct `integer` values passed to
 #'    `mem_gene_path_heatmap()`. The `min_gene_ct` requires each set
 #'    to contain `min_gene_ct` genes, and `min_set_ct` requires each gene
 #'    to be present in at least `min_set_ct` sets.
-#' @param min_set_ct_each minimum number of genes required for each set,
+#' @param min_set_ct_each `integer` minimum genes required for each set,
 #'    required for at least one enrichment test.
-#' @param column_method,row_method arguments passed to
+#' @param column_method,row_method `character` arguments passed to
 #'    `ComplexHeatmap::Heatmap()` which indicate the distance method used
 #'    to cluster columns and rows, respectively.
-#' @param exemplar_range integer vector (or `NULL`) used to create Cnet
+#' @param exemplar_range `integer` vector (or `NULL`) used to create Cnet
 #'    exemplar plots, using this many exemplars per cluster.
 #' @param pathway_column_split,gene_row_split `integer` value passed
 #'    as `column_split` and `row_split`, respectively, to
@@ -322,7 +324,7 @@
 #'    multiple values are supplied, values are used to the number
 #'    of splits, and recycled as needed. In that case, repeated
 #'    values are made unique by `jamba::makeNames()`.
-#' @param cex.main,cex.sub numeric values passed to `title()` which
+#' @param cex.main,cex.sub `numeric` values passed to `title()` which
 #'    size the default title and sub-title in Cnet plots.
 #' @param row_cex,column_cex `numeric` character expansion factor, used
 #'    to adjust the relative size of row and column labels,
@@ -392,7 +394,7 @@ mem_plot_folio <- function
  p_cutoff=NULL,
  p_floor=1e-10,
  main="",
- use_raster=TRUE,
+ use_raster=FALSE,
  min_gene_ct=1,
  min_set_ct=1,
  min_set_ct_each=4,
@@ -431,6 +433,11 @@ mem_plot_folio <- function
  verbose=FALSE,
  ...)
 {
+   # accept Mem input, convert to list for now
+   if (inherits(mem, "Mem")) {
+      mem <- Mem_to_list(Mem)
+   }
+   # validate arguments
    if (length(p_cutoff) == 0) {
       if ("p_cutoff" %in% names(mem)) {
          p_cutoff <- mem$p_cutoff;
@@ -480,6 +487,7 @@ mem_plot_folio <- function
       jamba::printDebug("mem_plot_folio(): ",
          "Gene-pathway heatmap (pre-emptive)");
    }
+   use_raster <- FALSE;
    gp_hm <- mem_gene_path_heatmap(mem,
       p_cutoff=p_cutoff,
       p_floor=p_floor,

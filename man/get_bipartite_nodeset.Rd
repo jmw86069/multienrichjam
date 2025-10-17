@@ -89,6 +89,7 @@ Other jam igraph functions:
 \code{\link{enrichMapJam}()},
 \code{\link{fixSetLabels}()},
 \code{\link{flip_edges}()},
+\code{\link{highlight_edges_by_node}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},

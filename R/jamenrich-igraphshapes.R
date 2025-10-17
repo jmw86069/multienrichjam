@@ -196,7 +196,6 @@ shape.coloredrectangle.plot <- function
       }
       p;
    }
-
    vertex.coloredrect.equalize_sizes <- getparam("coloredrect.equalize_sizes");
    if (length(vertex.coloredrect.equalize_sizes) == 0) {
       vertex.coloredrect.equalize_sizes <- FALSE;
@@ -570,12 +569,14 @@ shape.coloredrectangle.clip <- function
 
    # get relevant global options
    verbose <- getOption("verbose", FALSE);
-   equalize_sizes <- getOption("coloredrectangle.equalize_sizes", vertex.coloredrect.equalize_sizes)
+   equalize_sizes <- getOption("coloredrectangle.equalize_sizes",
+      vertex.coloredrect.equalize_sizes)
 
    vertex.coloredrect.color <- getparam("coloredrect.color");
    if (length(vertex.coloredrect.color) == 0) {
       vertex.coloredrect.color <- getparam("pie.color");
    }
+
    vertex.coloredrect.ncol <- getparam("coloredrect.ncol");
    if (length(vertex.coloredrect.ncol) == 0) {
       vertex.coloredrect.ncol <- ceiling(lengths(vertex.coloredrect.color)/2);
@@ -586,7 +587,6 @@ shape.coloredrectangle.clip <- function
          lengths(vertex.coloredrect.color) /
             vertex.coloredrect.ncol);
    }
-
    # validate the number of colors will fit inside ncol,nrow
    vertex.coloredrect.ncells <- vertex.coloredrect.ncol * vertex.coloredrect.nrow;
    if (any(lengths(vertex.coloredrect.color) > vertex.coloredrect.ncells)) {
@@ -609,14 +609,19 @@ shape.coloredrectangle.clip <- function
    if (any(size1_na)) {
       vertex.size1[size1_na] <- vertex.size2[size1_na] / 2;
    }
+   # use vcount estimate since coords and el are for edges
+   vcount_estimate <- max(c(length(vertex.size1), length(vertex.size2),
+      length(vertex.coloredrect.ncol), length(vertex.coloredrect.nrow),
+      max(el)))
    # convert size to graph coordinates
-   vertex.size1 <- rep(1/200 * vertex.size1, length.out=nrow(coords));
-   vertex.size2 <- rep(1/200 * vertex.size2, length.out=nrow(coords));
+   # 0.0.100.900 - use vcount_estimate instead of coords
+   vertex.size1 <- rep(1/200 * vertex.size1, length.out=vcount_estimate);
+   vertex.size2 <- rep(1/200 * vertex.size2, length.out=vcount_estimate);
    # Use size2 to define the size of each square
    # with consistent square size for all nodes
    vertex.size1 <- vertex.size2 * 2.5 * vertex.coloredrect.ncol;
    vertex.size2 <- vertex.size2 * 2.5 * vertex.coloredrect.nrow;
-
+   
    # optionally adjust nodes for consistent max height/width
    if (equalize_sizes) {
       if (2 %in% equalize_sizes) {
@@ -1050,6 +1055,7 @@ shape.jampie.plot <- function
  v=NULL,
  params)
 {
+   # local scope for parameters provided
    getparam <- function(pname) {
       p <- params("vertex", pname)
       if (length(p) != 1 && !is.null(v)) {
@@ -1059,7 +1065,9 @@ shape.jampie.plot <- function
    }
    vertex.color <- getparam("color")
    vertex.frame.color <- getparam("frame.color")
+   # Todo: Resolve frame.lwd or frame.width
    vertex.frame.lwd <- getparam("frame.lwd")
+   vertex.frame.width <- getparam("frame.width")
    vertex.size <- rep(1/200 * getparam("size"),
       length.out=nrow(coords))
    vertex.pie <- getparam("pie")
@@ -1113,6 +1121,7 @@ shape.jampie.plot <- function
    }
 
    vertex.pie.lwd <- getparam("pie.lwd")
+   vertex.pie.width <- getparam("pie.width")
    if (length(vertex.pie.lwd) == 0) {
       vertex.pie.lwd <- default_igraph_values()$vertex$pie.lwd;
    }
@@ -1142,6 +1151,7 @@ shape.jampie.plot <- function
       length.out=nrow(coords))
 
    ## Convert for loop to lapply that obtains polygon coordinates
+   ## so the render can be vectorized
    if (TRUE) {
       #jamba::printDebug("Calculating pie node polygons using ",
       #   "jam_mypie()");
@@ -1287,8 +1297,11 @@ shape.jampie.clip <- function
          vertex.pie.lwd <- rep(vertex.pie.lwd,
             length.out=length(vertex.pie))
       }
-      vertex.pie.lwd <- rep(vertex.pie.lwd,
-         lengths(vertex.pie))
+      vertex.pie.lwd <- split(
+         rep(vertex.pie.lwd,
+            lengths(vertex.pie)),
+         rep(seq_len(vmax),
+            lengths(vertex.pie)))
    }
    vertex.pie.lwd.max <- sapply(vertex.pie.lwd, max)
 
@@ -1306,10 +1319,13 @@ shape.jampie.clip <- function
       is.na(vertex.frame.color) | jamba::col2alpha(vertex.frame.color) < 0.01,
       0,
       vertex.frame.lwd);
-   new.frame.lwd <- ifelse(vertex.frame.lwd > vertex.pie.lwd.max & vertex.pie.lwd.max > 0,
-      vertex.pie.lwd.max,
-      vertex.frame.lwd)
-   vertex.frame.lwd <- new.frame.lwd;
+   # frame.lwd cannot be larger than the pie.lwd.max
+   if (TRUE) {
+      new.frame.lwd <- ifelse(vertex.frame.lwd > vertex.pie.lwd.max & vertex.pie.lwd.max > 0,
+         vertex.pie.lwd.max,
+         vertex.frame.lwd)
+      vertex.frame.lwd <- new.frame.lwd;
+   }
 
    overall_lwd <- rep(
       pmax(
@@ -1510,16 +1526,23 @@ jam_mypie <- function
       is.na(frame.color) | jamba::col2alpha(frame.color) < 0.01,
       0,
       frame.lwd);
+   # if lwd.max is non-zero, frame.lwd can be no larger than lwd.max
    new.frame.lwd <- ifelse(frame.lwd > lwd.max & lwd.max > 0,
       lwd.max,
       frame.lwd)
    frame.lwd <- new.frame.lwd;
+   #
    # frame border is adjusted based upon frame.lwd
    # however for frame border to be drawn with proper vectorization
    # order alongside pie wedges, it should share the same wedge lwd
    # since the wedge is drawn over the frame border, hiding all
    # but the effective frame.lwd.
+   #
+   # if lwd.max is non-zero, frame.lwd can be no smaller than lwd.max
    use.frame.lwd <- ifelse(lwd.max > 0 & frame.lwd < lwd.max,
+      lwd.max, frame.lwd);
+   # allow frame to be zero
+   use.frame.lwd <- ifelse(lwd.max > 0 & frame.lwd < lwd.max & frame.lwd > 0,
       lwd.max, frame.lwd);
 
    if (TRUE %in% inner_pie_border) {
@@ -1527,12 +1550,17 @@ jam_mypie <- function
       # each line width is 1/96 inches, so: 96 points / inch
       # 96 * (device_width inches) / x_width = points per x-coordinate
       # 1inch/96pt * x_width/dev_inch = x_width/pt
-      # inner_adjustment <- (par("lwd")/96) * diff(par("usr")[1:2]) / par("pin")[1]
-      inner_adjustment <- (lwd / 96) * diff(par("usr")[1:2]) / par("pin")[1]
-      outer_adjustment <- (frame.lwd / 96) * diff(par("usr")[1:2]) / par("pin")[1]
+      #
+      # Note it uses par("usr") which requires or opens a graphics device
+      inner_adjustment <- ((lwd / 96) *
+            diff(par("usr")[1:2]) / par("pin")[1]);
+      outer_adjustment <- ((frame.lwd / 96) *
+            diff(par("usr")[1:2]) / par("pin")[1]);
 
       # radii <- radius + (inner_adjustment) - max(outer_adjustment);
-      radii <- radius + (inner_adjustment)*(max(inner_adjustment)/inner_adjustment) - max(outer_adjustment);
+      radii <- (radius +
+            (inner_adjustment)*(max(inner_adjustment)/inner_adjustment) -
+            max(outer_adjustment));
       radius <- radius + max(inner_adjustment) - max(outer_adjustment);
       if (length(frame.color) == 0 || all(is.na(frame.color))) {
          # no frame is displayed, therefore make the node slightly larger

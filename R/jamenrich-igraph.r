@@ -1164,7 +1164,7 @@ cnet2im <- function
 #'
 #' @examples
 #' require(igraph);
-#' g <- graph.full(n=3);
+#' g <- make_full_graph(n=3);
 #' V(g)$name <- c("nodeA", "nodeB", "nodeC");
 #' V(g)$shape <- "coloredrectangle";
 #' V(g)$coloredrect.names <- split(
@@ -1178,11 +1178,12 @@ cnet2im <- function
 #' V(g)$size2 <- c(3, 3, 3);
 #'
 #' color_v <- rep("white", 21);
-#' color_v[c(1,3,7,9,15,19,20,21)] <- colorjam::rainbowJam(5);
+#' k <- c(1, 3, 7, 9, 15, 19, 20, 21);
+#' color_v[k] <- rep(colorjam::rainbowJam(5), length.out=length(k))
 #' V(g)$coloredrect.color <- split(
 #'    color_v,
 #'    rep(V(g)$name, c(2,3,2)*3));
-#' par("mfrow"=c(2,2));
+#' withr::with_par(list(mfrow=c(2, 2)), {
 #' lg <- layout_nicely(g);
 #' jam_igraph(g, layout=lg, use_shadowText=TRUE);
 #'
@@ -1198,9 +1199,10 @@ cnet2im <- function
 #' g4 <- removeIgraphBlanks(g, constrain="ncol");
 #' jam_igraph(g4, layout=lg, use_shadowText=TRUE,
 #'    main="constrain='ncol'");
-#'
+#' })
+#' 
 #' #
-#' g7 <- graph.full(n=7);
+#' g7 <- make_full_graph(n=7);
 #' V(g7)$coloredrect.color <- lapply(c(1,2,3,4,2,3,4),
 #'    function(i){colorjam::rainbowJam(i)});
 #' V(g7)$coloredrect.ncol <- c(1,1,1,1,2,3,4);
@@ -1268,10 +1270,10 @@ removeIgraphBlanks <- function
          alpha_max=alpha_max);
 
       ## Check for all blanks
-      all_blank <- lapply(crBlanksL, all);
-      if (any(all_blank)) {
-         #
-      }
+      # all_blank <- sapply(crBlanksL, all);
+      # if (any(all_blank)) {
+      #    #
+      # }
 
       crLengths <- lengths(iCrColorL);
       crSplitV <- rep(factor(seq_len(igraph::vcount(g))), crLengths);
@@ -1766,7 +1768,7 @@ rectifyPiegraph <- function
 #' @param ... additional arguments are ignored.
 #'
 #' @examples
-#' if (require(igraph)) {
+#' require(igraph)
 #'    c3 <- c("red", "gold", "blue");
 #'    c3l <- list(c3[1], c3[2], c3[3],
 #'       c3[c(1,2)], c3[c(1,3)], c3[c(2,3)],
@@ -1790,54 +1792,57 @@ rectifyPiegraph <- function
 #'    V(g2)$color <- lapply(V(g2)$pie.color, colorjam::blend_colors)
 #'
 #'    g2 <- relayout_with_qfr(g2, repulse=7, do_reorder=FALSE);
-#'    g2b <- nudge_igraph_node(g2, nodes_xy=list(Pathway=c(0, -0.2)));
-#'    g2b <- spread_igraph_labels(g2b, do_reorder=FALSE)
+#'    g2b <- spread_igraph_labels(g2, do_reorder=FALSE)
 #'    igraph::V(g2b)$label.family <- "Arial"
 #'
-#'    opar <- par("mar"=c(1, 1, 4, 1), xpd=TRUE);
+#'    withr::with_par(list(mar=c(1, 1, 4, 1), xpd=TRUE), {
 #'    jam_igraph(g2b,
 #'       main="Unordered",
 #'       label_dist_factor=3,
 #'       label_factor=0.7,
-#'       node_factor=2,
+#'       node_factor=1.2,
 #'       use_shadowText=TRUE)
 #'    jam_igraph(reorderIgraphNodes(g2b),
 #'       main="reorder_igraph_nodes()",
 #'       label_dist_factor=3,
 #'       label_factor=0.7,
-#'       node_factor=2,
+#'       node_factor=1.2,
 #'       use_shadowText=TRUE);
-#'    jam_igraph(reorderIgraphNodes(g2b, nodeSortBy=c("-y","x")),
-#'       main="reorderIgraphNodes(nodeSortBy=c(\"-y\",\"x\"))",
+#'    jam_igraph(
+#'       reorderIgraphNodes(g2b, nodeSortBy=c("-y","x"), orderByAspect=FALSE),
+#'       main='reorderIgraphNodes(nodeSortBy=c("-y", "x"))',
 #'       label_dist_factor=3,
 #'       label_factor=0.7,
-#'       node_factor=2,
+#'       node_factor=1.2,
 #'       use_shadowText=TRUE);
 #'
 #'    jam_igraph(
 #'       reorderIgraphNodes(g2b,
-#'          nodeSortBy=c("-y", "x"),
-#'          sortAttributes=c("-pie.color.length", "pie.color", "color", "label", "name")),
+#'          nodeSortBy=c("-y", "x"), orderByAspect=FALSE,
+#'          sortAttributes=c("-pie.color.length", "pie.color",
+#'             "color", "label", "name")),
 #'       main="reorder_igraph_nodes() by pie.color.length",
 #'       label_dist_factor=3,
 #'       label_factor=0.7,
-#'       node_factor=2,
+#'       node_factor=1.2,
 #'       use_shadowText=TRUE);
-#'    par(opar);
+#'    })
 #'
 #'    g2c <- g2b;
 #'    set.seed(12)
 #'    V(g2c)$frame.color <- sample(c("firebrick3", "#DDDDDD", "dodgerblue3"),
 #'       replace=TRUE, size=igraph::vcount(g2c))
-#'    opar <- par("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE);
+#'    V(g2c)$frame.width <- 3;
+#'    V(g2c)$pie.lwd <- 3;
+#'    withr::with_par(list("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE), {
 #'    jam_igraph(reorderIgraphNodes(g2c,
 #'       nodeSortBy=c("-y", "x")),
 #'       main="reorder_igraph_nodes() including frame.color",
 #'       label_dist_factor=3,
 #'       label_factor=0.7,
-#'       node_factor=2,
+#'       node_factor=1.2,
 #'       use_shadowText=TRUE);
-#'    par(opar);
+#'    })
 #'
 #'    g2d <- reorderIgraphNodes(g2b);
 #'    set.seed(12)
@@ -1853,30 +1858,30 @@ rectifyPiegraph <- function
 #'    })
 #'    g2e <- reorderIgraphNodes(g2d,
 #'       nodeSortBy=c("-y", "x"));
-#'    opar <- par("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE);
-#'    options("inner_pie_border"=TRUE);
+#'    withr::with_par(list("lwd"=4, mar=c(1, 1, 4, 1), xpd=TRUE), {
+#'    withr::with_options(list("inner_pie_border"=TRUE), {
 #'    jam_igraph(g2e,
 #'       main="reorder_igraph_nodes() including frame.color",
 #'       label_dist_factor=3,
 #'       label_factor=0.7,
-#'       node_factor=2,
+#'       node_factor=1.2,
 #'       use_shadowText=TRUE);
-#'    par(opar);
+#'    })})
 #'
+#'    # frame color sorting
 #'    g2f <- g2e;
 #'    igraph::V(g2f)["GeneV"]$frame.color <- "green";
 #'    igraph::V(g2f)["GeneE"]$frame.color <- "green";
-#'    opar <- par("lwd"=5, mar=c(1, 1, 4, 1), xpd=TRUE);
-#'    options("inner_pie_border"=TRUE);
+#'    withr::with_par(list("lwd"=5, mar=c(1, 1, 4, 1), xpd=TRUE), {
+#'    withr::with_options(list("inner_pie_border"=TRUE), {
 #'    jam_igraph(g2f,
 #'       main="reorder_igraph_nodes() including frame.color",
 #'       label_dist_factor=3,
 #'       label_factor=0.7,
-#'       node_factor=2,
+#'       node_factor=1.2,
 #'       use_shadowText=TRUE);
-#'    par(opar);
+#'    })})
 #'
-#' }
 #'
 #' @export
 reorderIgraphNodes <- function

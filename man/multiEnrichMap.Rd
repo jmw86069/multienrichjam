@@ -50,8 +50,15 @@ multiEnrichMap(
 )
 }
 \arguments{
-\item{enrichList}{\code{list} of \code{enrichResult} objects, whose
-names are used in subsequent derived results.}
+\item{enrichList}{\code{list} of \code{enrichResult} or \code{data.frame} objects.
+\itemize{
+\item The \code{names(enrichList)} are used in subsequent results.
+\item Note that \code{data.frame} are converted to \code{enrichResult} using
+\code{enrichDF2enrichResult(x, ...)} where the '...' ellipses are
+used to recognize colnames.
+\item Recommendation is to confirm each \code{data.frame} is properly
+converted to \code{enrichResult} upfront.
+}}
 
 \item{geneHitList}{\code{list} of character vectors, or
 \code{list} of \code{numeric} vectors whose names represent genes, or

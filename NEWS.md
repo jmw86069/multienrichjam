@@ -1,3 +1,25 @@
+# multienrichjam 0.0.100.900
+
+## Updates
+
+* ShinyCat Cnet Adjustment Tool
+
+   * Now highlights edges of the selected node.
+
+* `Mem`, `Mem-class` methods more fully documented.
+* Fixed warnings during jampie,coloredrectangle igraph shape rendering.
+* Moved dependency on alphahull to Enhances
+
+## New functions
+
+* `highlight_edges_by_node()`
+
+   * Given one or more nodes, it colors and expands the width of all edges.
+   * Optionally de-emphasizes non-highlighted edges with alpha transparency.
+
+* `list_to_Mem()`, `Mem_to_list()` for interconversion with S4 'Mem' object.
+* `ashape()` and internal functions for alpha hull calculation.
+
 # multienrichjam 0.0.99.900
 
 ## Updates

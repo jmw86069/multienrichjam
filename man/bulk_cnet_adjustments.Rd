@@ -68,6 +68,7 @@ by \code{launch_shinycat()}.
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{ashape}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{call_fn_ellipsis_deprecated}()},
@@ -80,6 +81,7 @@ Other jam utility functions:
 \code{\link{filter_mem_genes}()},
 \code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
+\code{\link{find_enrich_colnames}()},
 \code{\link{get_hull_data}()},
 \code{\link{get_igraph_layout}()},
 \code{\link{gsubs_remove}()},

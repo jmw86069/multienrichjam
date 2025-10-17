@@ -42,8 +42,13 @@
 #' * colorV: named vector of colors assigned to each enrichment,
 #' where names match the names of each enrichment in `enrichList`.
 #'
-#' @param enrichList `list` of `enrichResult` objects, whose
-#'    names are used in subsequent derived results.
+#' @param enrichList `list` of `enrichResult` or `data.frame` objects.
+#'    * The `names(enrichList)` are used in subsequent results.
+#'    * Note that `data.frame` are converted to `enrichResult` using
+#'    `enrichDF2enrichResult(x, ...)` where the '...' ellipses are
+#'    used to recognize colnames.
+#'    * Recommendation is to confirm each `data.frame` is properly
+#'    converted to `enrichResult` upfront.
 #' @param geneHitList `list` of character vectors, or
 #'    `list` of `numeric` vectors whose names represent genes, or
 #'    or `NULL`. When `NULL` the gene hit list for each enrichment
@@ -283,6 +288,22 @@ multiEnrichMap <- function
    if (length(names(enrichList)) == 0) {
       stop("multiEnrichMap() requires names(enrichList).")
    }
+
+   ## Convert list of data.frame to enrichResult
+   enrichList <- lapply(jamba::nameVectorN(enrichList), function(iname){
+      ier <- enrichList[[iname]];
+      if (inherits(ier, "enrichResult")) {
+         return(ier)
+      }
+      if (inherits(ier, "data.frame")) {
+         if (verbose) {
+            jamba::printDebug("multiEnrichMap(): ",
+               "Converting '", iname, "' from data.frame")
+         }
+         ier <- enrichDF2enrichResult(ier,
+            ...)
+      }
+   })
 
    ## Define some default colnames
    #nameColname <- "Name";

@@ -75,7 +75,7 @@ list2im <- function
    }
 
    ## Convert to transactions
-   xT <- as(x, "transactions");
+   xT <- as(jamba::uniques(x), "transactions");
 
    ## Extract the matrix
    xM <- t(as(xT, "matrix")*1);
@@ -421,8 +421,9 @@ im2list <- function
    }
 
    l <- lapply(jamba::nameVector(x_cols), function(i){
-      i_empty <- as(empty, class(x[,i]));
-      has_value <- (!x[,i] %in% i_empty);
+      # i_empty <- as(empty, class(x[, i]));
+      # has_value <- (!x[, i] %in% i_empty);
+      has_value <- (!x[, i] %in% empty);
       x_rows[has_value];
    });
    return(l);

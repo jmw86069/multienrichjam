@@ -32,6 +32,6 @@ General guidance for Mem objects:
 \seealso{
 Other Mem: 
 \code{\link{Mem-class}},
-\code{\link{list_to_Mem}()}
+\code{\link{Memtest}}
 }
 \concept{Mem}

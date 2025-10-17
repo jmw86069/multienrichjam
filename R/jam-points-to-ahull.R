@@ -3,7 +3,7 @@
 #' Make alpha hull from points
 #'
 #' This function makes an alpha hull around points, calling
-#' `alphahull::ashape()` then piecing together the somewhat
+#' `ashape()` then piecing together the somewhat
 #' random set of outer edges into a coherent polygon.
 #'
 #' @return `numeric` matrix with polygon coordinates, where
@@ -21,7 +21,7 @@
 #' @param buffer `numeric` value indicating the absolute buffer width
 #'    around each point. This value is used if provided, otherwise
 #'    `expand` is used to derive a value for `buffer`.
-#' @param alpha `numeric` value passed to `alphahull::ashape()` when
+#' @param alpha `numeric` value passed to `ashape()` when
 #'    hull_method is `"alphahull"`. This value determines the level of
 #'    detail of the resulting hull.
 #' @param seed `numeric` seed used with `set.seed()` to define reproducible
@@ -30,7 +30,7 @@
 #'    the resulting hull polygon.
 #' @param lwd,lty line width and line type parameters, respectively.
 #' @param max_iterations `integer` number of attempts to call
-#'    `alphahull::ashape()` with varying values of `alpha`. Each iteration
+#'    `ashape()` with varying values of `alpha`. Each iteration
 #'    checks to confirm the resulting polygon includes all input points.
 #' @param do_plot `logical` indicating whether to plot the polygon
 #'    output.
@@ -40,7 +40,7 @@
 #' @param hull_method `character` string indicating the hull method to use:
 #'    * `"default"` - will use `"alphahull"` if the `alphahull` R package
 #'    is available.
-#'    * `"alphahull"` - use `alphahull::ashape()` which is the preferred
+#'    * `"alphahull"` - use `ashape()` which is the preferred
 #'    method, in fact the only available option that will allow a concave
 #'    shape in the output.
 #'    * `"igraph"` - calls hidden function `igraph:::convex_hull()` as
@@ -67,32 +67,20 @@
 #' n <- 22
 #' xy <- cbind(x=sample(seq_len(n), size=n, replace=TRUE),
 #'    y=sample(seq_len(n), size=n, replace=TRUE));
-#' xy <- rbind(xy, xy[1,,drop=FALSE])
+#' xy <- rbind(xy, xy[1, , drop=FALSE])
 #' x4 <- sf::st_multipoint(xy)
 #'
-#' if (jamba::check_pkg_installed("alphahull")) {
-#'    plot(x4, col="red", pch=20, cex=3,
-#'       main="hull_method='alphahull'")
-#'    phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-#'       hull_method="alphahull",
-#'       label="alphahull",
-#'       add=TRUE, xpd=TRUE)
-#' }
+#' plot(x4, col="red", pch=20, cex=3,
+#'    main="hull_method='ahull'")
+#' phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
+#'    hull_method="ahull",
+#'    label="ahull",
+#'    add=TRUE, xpd=TRUE)
 #'
 #' plot(x4, col="red", pch=20, cex=3,
 #'    main="hull_method='chull'")
 #' phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
 #'    add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="chull")
-#'
-#' plot(x4, col="red", pch=20, cex=3,
-#'    main="hull_method='igraph'")
-#' phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-#'    add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="igraph")
-#'
-#' plot(x4, col="red", pch=20, cex=3,
-#'    main="hull_method='sf'")
-#' phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-#'    add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="sf")
 #'
 #' @export
 make_point_hull <- function
@@ -109,6 +97,7 @@ make_point_hull <- function
  do_plot=FALSE,
  add=FALSE,
  hull_method=c("default",
+    "ahull",
     "alphahull",
     "igraph",
     "sf",
@@ -140,11 +129,11 @@ make_point_hull <- function
    }
    hull_method <- match.arg(hull_method);
    if ("default" %in% hull_method) {
-      if (jamba::check_pkg_installed("alphahull")) {
-         hull_method <- "alphahull"
-      } else {
-         hull_method <- "chull"
-      }
+      # if (jamba::check_pkg_installed("alphahull")) {
+         hull_method <- "ahull"
+      # } else {
+      #    hull_method <- "chull"
+      # }
       if (verbose) {
          jamba::printDebug("make_point_hull(): ",
             "hull_method: ",
@@ -217,6 +206,12 @@ make_point_hull <- function
          break;
       }
       alpha <- alpha * 1.2;
+   }
+   if (verbose) {
+      nshow <- ifelse(length(mxys) > 0, nrow(mxys), length(mxys));
+      jamba::printDebug("make_point_hull(): ",
+         "Iterated ", iteration, " times, ",
+         nshow, " mxys points.");
    }
    if (length(mxys) == 0 || nrow(mxys) < 3) {
       return(NULL)
@@ -345,7 +340,7 @@ make_point_hull <- function
 #' @param x `numeric` matrix with x,y coordinates
 #' @param verbose `logical` indicating whether to print verbose output
 #' @param hull_method `character` string with the preferred hull method.
-#' @param alpha `numeric` passed to `alphahull:ashape()`
+#' @param alpha `numeric` passed to `ashape()`
 #' @param expand `numeric` used to define `alpha` based upon coordinate range.
 #' @param ... additional arguments are ignored.
 #'
@@ -355,20 +350,25 @@ make_point_hull <- function
 get_hull_data <- function
 (x,
  verbose=FALSE,
- hull_method="alphahull",
+ hull_method="ahull",
  buffer=NULL,
  alpha=NULL,
  expand=0.1,
  ...)
 {
    hiA <- list(alpha=NULL);
-   if ("alphahull" %in% hull_method) {
+   if (any(c("ahull", "alphahull") %in% hull_method)) {
       if (verbose) {
          jamba::printDebug("get_hull_data(): ",
             "hull_method: ", hull_method);
       }
-      hiA <- alphahull::ashape(x,
-         alpha=alpha)
+      if ("alphahull" %in% hull_method) {
+         hiA <- alphahull::ashape(x,
+            alpha=alpha)
+      } else {
+         hiA <- ashape(x,
+            alpha=alpha)
+      }
       if (nrow(hiA$edges) <= 2) {
          # 2 or 0 edges means the hull is not a true polygon hull
          return(NULL)

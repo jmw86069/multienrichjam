@@ -23,6 +23,7 @@ matrix consistent with the subset of \code{igraph} nodes.
 }
 \seealso{
 Other jam utility functions: 
+\code{\link{ashape}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{bulk_cnet_adjustments}()},
@@ -36,6 +37,7 @@ Other jam utility functions:
 \code{\link{filter_mem_genes}()},
 \code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
+\code{\link{find_enrich_colnames}()},
 \code{\link{get_hull_data}()},
 \code{\link{get_igraph_layout}()},
 \code{\link{gsubs_remove}()},
@@ -68,6 +70,7 @@ Other jam igraph functions:
 \code{\link{fixSetLabels}()},
 \code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
+\code{\link{highlight_edges_by_node}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},

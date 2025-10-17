@@ -86,7 +86,7 @@ make the remaining colors more visibly distinct.
 }
 \examples{
 require(igraph);
-g <- graph.full(n=3);
+g <- make_full_graph(n=3);
 V(g)$name <- c("nodeA", "nodeB", "nodeC");
 V(g)$shape <- "coloredrectangle";
 V(g)$coloredrect.names <- split(
@@ -100,11 +100,12 @@ V(g)$label.dist <- 3;
 V(g)$size2 <- c(3, 3, 3);
 
 color_v <- rep("white", 21);
-color_v[c(1,3,7,9,15,19,20,21)] <- colorjam::rainbowJam(5);
+k <- c(1, 3, 7, 9, 15, 19, 20, 21);
+color_v[k] <- rep(colorjam::rainbowJam(5), length.out=length(k))
 V(g)$coloredrect.color <- split(
    color_v,
    rep(V(g)$name, c(2,3,2)*3));
-par("mfrow"=c(2,2));
+withr::with_par(list(mfrow=c(2, 2)), {
 lg <- layout_nicely(g);
 jam_igraph(g, layout=lg, use_shadowText=TRUE);
 
@@ -120,9 +121,10 @@ jam_igraph(g3, layout=lg, use_shadowText=TRUE,
 g4 <- removeIgraphBlanks(g, constrain="ncol");
 jam_igraph(g4, layout=lg, use_shadowText=TRUE,
    main="constrain='ncol'");
+})
 
 #
-g7 <- graph.full(n=7);
+g7 <- make_full_graph(n=7);
 V(g7)$coloredrect.color <- lapply(c(1,2,3,4,2,3,4),
    function(i){colorjam::rainbowJam(i)});
 V(g7)$coloredrect.ncol <- c(1,1,1,1,2,3,4);
@@ -155,6 +157,7 @@ Other jam igraph functions:
 \code{\link{fixSetLabels}()},
 \code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
+\code{\link{highlight_edges_by_node}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_igraph}()},
 \code{\link{jam_plot_igraph}()},

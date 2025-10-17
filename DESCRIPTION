@@ -1,18 +1,25 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.99.900
-Authors@R: person(given="James M.", family="Ward",
-    email="jmw86069@gmail.com", role=c("aut", "cre"))
+Version: 0.0.100.900
+Authors@R: c(
+    person(given="James M.",
+       family="Ward",
+       email="jmw86069@gmail.com",
+       comment=c(ORCID="0000-0002-9510-2848"),
+       role=c("aut", "cre", "cph")))
 Maintainer: James M. Ward <jmw86069@gmail.com>
 Description: Methods to analyze multiple gene set enrichment results,
-    extending EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu)
+    visualize gene-pathway relationships, cluster pathways, create
+    concept network plots, and render igraph networks with edge bundling
+    for bipartite graphs.
+    Extends EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu)
     functions specifically to explore and compare multiple enrichment
-    results. New igraph node shape "coloredrectangle".
+    results.
 Depends: R (>= 3.5.0)
 biocViews:
 Imports: jamba (>= 1.0.4),
-    colorjam (>= 0.0.23.900),
+    colorjam (>= 0.0.33.900),
     igraph,
     qgraph,
     dplyr,
@@ -31,14 +38,15 @@ Imports: jamba (>= 1.0.4),
 Suggests: 
     knitr,
     rmarkdown,
-    ahull,
-    shadowtext,
     testthat (>= 3.0.0)
+Enhances:
+    alphahull,
+    shadowtext
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Remotes: github::jmw86069/colorjam
-URL: http://github.com/jmw86069/multienrichjam
+URL: https://jmw86069.github.io/multienrichjam/
 BugReports: http://github.com/jmw86069/multienrichjam/issues
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

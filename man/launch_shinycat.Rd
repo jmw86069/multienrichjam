@@ -74,7 +74,7 @@ g <- make_cnet_test();
 cnetenv <- new.env();
 
 # you must catch the output to use the resulting igraph object
-output_envir <- launch_shinycat();
+# output_envir <- launch_shinycat();
 
 }
 \seealso{

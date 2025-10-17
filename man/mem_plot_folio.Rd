@@ -10,7 +10,7 @@ mem_plot_folio(
   p_cutoff = NULL,
   p_floor = 1e-10,
   main = "",
-  use_raster = TRUE,
+  use_raster = FALSE,
   min_gene_ct = 1,
   min_set_ct = 1,
   min_set_ct_each = 4,
@@ -53,36 +53,40 @@ mem_plot_folio(
 the object is expected to contain \code{colorV}, \code{enrichIM},
 \code{memIM}, \code{geneIM}.}
 
-\item{do_which}{integer vector of plots to produce. When \code{do_which}
+\item{do_which}{\code{integer} vector of plots to produce. When \code{do_which}
 is \code{NULL}, then all plots are produced. This argument is intended
 to help produce one plot from a folio, therefore each plot is referred
 by the number of the plot, in order.}
 
-\item{p_cutoff}{numeric value indicating the enrichment P-value threshold
+\item{p_cutoff}{\code{numeric} value indicating the enrichment P-value threshold
 used for \code{multiEnrichMap()}, but when \code{NULL} this value is taken
 from the \code{mem} input, or \code{0.05} is used by default.}
 
-\item{p_floor}{numeric value indicating the lowest enrichment P-value
+\item{p_floor}{\code{numeric} value indicating the lowest enrichment P-value
 used in the color gradient on the Enrichment Heatmap.}
 
-\item{main}{character string used as a title on Cnet plots.}
+\item{main}{\code{character} string used as a title on Cnet plots.}
 
-\item{use_raster}{logical indicating whether to use raster heatmaps,
-passed to \code{ComplexHeatmap::Heatmap()}.}
+\item{use_raster}{\code{logical} default FALSE, deprecated,
+whether to use raster heatmaps, passed to \code{ComplexHeatmap::Heatmap()}.
+\itemize{
+\item Note that \code{use_raster=TRUE} may produce visual artifacts, and
+changing this argument is no longer supported
+}}
 
-\item{min_gene_ct, min_set_ct}{integer values passed to
+\item{min_gene_ct, min_set_ct}{\code{integer} values passed to
 \code{mem_gene_path_heatmap()}. The \code{min_gene_ct} requires each set
 to contain \code{min_gene_ct} genes, and \code{min_set_ct} requires each gene
 to be present in at least \code{min_set_ct} sets.}
 
-\item{min_set_ct_each}{minimum number of genes required for each set,
+\item{min_set_ct_each}{\code{integer} minimum genes required for each set,
 required for at least one enrichment test.}
 
-\item{column_method, row_method}{arguments passed to
+\item{column_method, row_method}{\code{character} arguments passed to
 \code{ComplexHeatmap::Heatmap()} which indicate the distance method used
 to cluster columns and rows, respectively.}
 
-\item{exemplar_range}{integer vector (or \code{NULL}) used to create Cnet
+\item{exemplar_range}{\code{integer} vector (or \code{NULL}) used to create Cnet
 exemplar plots, using this many exemplars per cluster.}
 
 \item{pathway_column_split, gene_row_split}{\code{integer} value passed
@@ -99,7 +103,7 @@ multiple values are supplied, values are used to the number
 of splits, and recycled as needed. In that case, repeated
 values are made unique by \code{jamba::makeNames()}.}
 
-\item{cex.main, cex.sub}{numeric values passed to \code{title()} which
+\item{cex.main, cex.sub}{\code{numeric} values passed to \code{title()} which
 size the default title and sub-title in Cnet plots.}
 
 \item{row_cex, column_cex}{\code{numeric} character expansion factor, used
@@ -178,7 +182,7 @@ dendrogram.
 }}
 }
 \value{
-\code{list} is returned via \code{invisible()}, which contains each
+\code{list} returned using \code{invisible()}, containing each
 plot object enabled by the argument \code{do_which}:
 \itemize{
 \item \code{enrichment_hm} is a Heatmap object from \code{ComplexHeatmap}

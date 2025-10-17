@@ -507,6 +507,7 @@ Other jam igraph functions:
 \code{\link{fixSetLabels}()},
 \code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
+\code{\link{highlight_edges_by_node}()},
 \code{\link{igraph2pieGraph}()},
 \code{\link{jam_plot_igraph}()},
 \code{\link{label_communities}()},
