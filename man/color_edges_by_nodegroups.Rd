@@ -48,7 +48,6 @@ Other jam igraph functions:
 \code{\link{cnetplotJam}()},
 \code{\link{cnetplot_internalJam}()},
 \code{\link{color_edges_by_nodes}()},
-\code{\link{color_edges_by_nodes_deprecated}()},
 \code{\link{color_nodes_by_nodegroups}()},
 \code{\link{communities2nodegroups}()},
 \code{\link{drawEllipse}()},

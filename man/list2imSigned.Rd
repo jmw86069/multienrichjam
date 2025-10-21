@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-sets.r
 \name{list2imSigned}
 \alias{list2imSigned}
-\title{convert list to signeddirectional incidence matrix}
+\title{convert list to directional incidence matrix}
 \usage{
 list2imSigned(x, emptyValue = NA, verbose = FALSE, ...)
 }
@@ -17,7 +17,7 @@ incidence matrix.}
 \item{...}{additional arguments are passed to \code{list2im()}.}
 }
 \value{
-numeric matrix with rownames defined by vector names from
+\code{numeric} matrix with rownames defined by vector names from
 each vector in the input list. The colnames are defined by
 names of the input list if they exist.
 list. Values in the matrix are values from each vector.
@@ -73,9 +73,7 @@ list2imSigned(L2);
 Other jam list functions: 
 \code{\link{colors_from_list}()},
 \code{\link{im2list}()},
-\code{\link{im2list_dep}()},
 \code{\link{imSigned2list}()},
-\code{\link{imSigned2list_dep}()},
 \code{\link{list2concordance}()},
 \code{\link{list2im}()}
 }

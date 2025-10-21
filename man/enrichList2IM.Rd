@@ -36,9 +36,7 @@ refers to P-values.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
-\item{GmtT}{(not currently implemented), alternative gene set object
-format that uses \code{arules::transactions} class, an efficient
-object with robust access functions in \code{arules}.}
+\item{GmtT}{(not currently implemented), alternative gene set object}
 
 \item{...}{additional arguments are ignored.}
 }

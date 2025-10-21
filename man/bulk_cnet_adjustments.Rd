@@ -71,7 +71,6 @@ Other jam utility functions:
 \code{\link{ashape}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
-\code{\link{call_fn_ellipsis_deprecated}()},
 \code{\link{cell_fun_bivariate}()},
 \code{\link{collapse_mem_clusters}()},
 \code{\link{colorRamp2D}()},

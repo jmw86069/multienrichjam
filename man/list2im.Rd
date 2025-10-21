@@ -4,25 +4,37 @@
 \alias{list2im}
 \title{convert list to incidence matrix}
 \usage{
-list2im(x, keepCounts = FALSE, emptyValue = 0, verbose = FALSE, ...)
+list2im(
+  x,
+  empty = 0,
+  do_sparse = FALSE,
+  keepCounts = FALSE,
+  sort_rows = FALSE,
+  ...
+)
 }
 \arguments{
-\item{x}{list of vectors}
+\item{x}{\code{list} of item vectors, where vector values are item names}
 
-\item{keepCounts}{boolean indicating whether to return values indicating
-the number of occurrences of each item.}
+\item{empty}{\code{numeric} used for missing or empty values, default 0.}
 
-\item{emptyValue}{any single value that should be used for blank entries,
-by default zero \code{0}. Use \code{emptyValue=NA} to return \code{NA} for missing
-entries.}
+\item{do_sparse}{\code{logical} default FALSE, whether to return sparse Matrix.
+When \code{do_sparse=TRUE}, it sets \code{keepCounts=FALSE} since a sparse Matrix
+does not represent counts.}
 
-\item{verbose}{boolean indicating whether to print verbose output.}
+\item{keepCounts}{\code{logical} default FALSE, whether to include the count
+of any duplicated items.}
+
+\item{sort_rows}{\code{logical} default FALSE, whether to sort rows using
+\code{jamba::mixedOrder()}, or \code{function} can be supplied to use
+another sort algorithm.}
 
 \item{...}{additional arguments are ignored.}
 }
 \value{
-numeric matrix whose rownames were vector items of the input list,
-and whole colnames were list names.
+\code{numeric} matrix with values 0 or 1 indicating absense or
+presence of each item (row) in each set (column).
+The sets are derived from \code{names(x)}.
 }
 \description{
 convert list to incidence matrix
@@ -30,27 +42,12 @@ convert list to incidence matrix
 \details{
 This function converts a list of vectors into an incidence matrix, where
 the rows are the vector items and the columns are the list names.
-It uses an object from the \code{arules} package called
-\code{arules::transactions} which offers highly efficient methods
-for interconverting from list to matrix. The
-\code{\link[arules]{transactions}} class is itself an enhanced data matrix,
-which stores data using sparse matrix object type from the
-\code{\link{Matrix}} package, but also associates a \code{data.frame} to both
-the rows and columns of the matrix to offer additional row and column
-annotation, as needed.
-
-Performance benchmarks showed high speed of converting a list to a matrix,
-but also that the resulting matrix was substantially smaller (5-20 times)
-then comparable methods producing a data matrix.
-
-When argument \code{keepCounts=TRUE}, the method of applying counts only
-updates entries with multiple instances, which helps make this step
-relatively fast.
 }
 \examples{
 L1 <- list(A=c("C","A","B","A"),
    D=c("D","E","F","D"),
    A123=c(1:8,3,5),
+   B=c("A1", "A2", "A10"),
    T=LETTERS[7:9]);
 # Default behavior is to make items unique
 list2im(L1);
@@ -58,14 +55,18 @@ list2im(L1);
 # Option to report the counts
 list2im(L1, keepCounts=TRUE);
 
+# Option to sort item rows with jamba::mixedOrder()
+list2im(L1, sort_rows=TRUE);
+
+# Option to sort item rows with vanilla sort()
+list2im(L1, sort_rows=sort);
+
 }
 \seealso{
 Other jam list functions: 
 \code{\link{colors_from_list}()},
 \code{\link{im2list}()},
-\code{\link{im2list_dep}()},
 \code{\link{imSigned2list}()},
-\code{\link{imSigned2list_dep}()},
 \code{\link{list2concordance}()},
 \code{\link{list2imSigned}()}
 }

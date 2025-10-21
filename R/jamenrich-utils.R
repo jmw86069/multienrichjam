@@ -325,154 +325,26 @@ enrichList2geneHitList <- function
    return(geneHitList);
 }
 
-#' Return Heatmap row order (deprecated)
-#'
-#' Return Heatmap row order as a list of character vectors
-#'
-#' @family jam deprecated functions
-#'
-#' This function is deprecated, and is fully replaced
-#' by `jamba::heatmap_row_order()`.
-#'
-#' This function is a helpful utility to return the fully
-#' qualified list of rownames in a `ComplexHeatmap::Heatmap`
-#' object.
-#'
-#' This function also works with `ComplexHeatmap::HeatmapList`
-#' objects.
-#'
-#' @export
-heatmap_row_order_deprecated <- function
-(hm)
-{
-   ##
-   if ("HeatmapList" %in% class(hm)) {
-      hm <- hm@ht_list[[1]];
-   }
-   x <- lapply(ComplexHeatmap::row_order(hm), function(i){
-      hm@row_names_param$labels[i]
-   });
-   if (length(hm@row_title) == length(x)) {
-      names(x) <- hm@row_title;
-   }
-   x;
-}
-
-#' Return Heatmap column order
-#'
-#' Return Heatmap column order as a list of character vectors (deprecated)
-#'
-#' @family jam deprecated functions
-#'
-#' This function is deprecated, and is fully replaced
-#' by `jamba::heatmap_column_order()`.
-#'
-#' This function is a helpful utility to return the fully
-#' qualified list of colnames in a `ComplexHeatmap::Heatmap`
-#' object.
-#'
-#' @export
-heatmap_column_order_deprecated <- function
-(hm)
-{
-   ##
-   if ("HeatmapList" %in% class(hm)) {
-      hm <- hm@ht_list[[1]];
-   }
-   x <- lapply(ComplexHeatmap::column_order(hm), function(i){
-      hm@column_names_param$labels[i]
-   });
-   if (length(hm@column_title) == length(x)) {
-      names(x) <- hm@column_title;
-   }
-   x;
-}
-
-#' Sort colors (deprecated)
-#'
-#' Sort colors (deprecated)
-#'
-#' This function is deprecated, please use `colorjam::sort_colors()`.
-#'
-#' This function is intended to be a very rapid method to sort
-#' colors, based upon hue, then chroma descending, then luminance
-#' descending.
-#'
-#' @family jam deprecated functions
-#'
-#' @examples
-#' x <- jamba::nameVector(colors());
-#'
-#' ## Basic color sort
-#' c2 <- sort_colors_deprecated(x);
-#' jamba::showColors(c2, main="cmin=4");
-#'
-#' ## Increase filtering of unsaturated colors
-#' c3 <- sort_colors_deprecated(x, c_min=20);
-#' jamba::showColors(c3, main="cmin=20");
-#'
-#' ## Increase filtering of unsaturated colors
-#' c4 <- sort_colors_deprecated(x, c_min=50);
-#' jamba::showColors(c4, main="cmin=50");
-#'
-#' @export
-sort_colors_deprecated <- function
-(x,
- sort_by=c("h", "-c", "-l"),
- c_min=4,
- grey_hue=359,
- hue_offset=0,
- ...)
-{
-   ## hue_offset=-12 makes red the first color,
-   ## and moves pink to the end with purple
-   if (length(x) == 0) {
-      return(x);
-   }
-   x_sort <- data.frame(input=x);
-   if (any(c("h","c","l","-c", "-l") %in% sort_by)) {
-      x_hcl <- farver::decode_colour(x, to="hcl");
-      x_hcl[,"h"] <- jamba::rmNA(naValue=0, x_hcl[,"h"]);
-      x_hcl[,"c"] <- jamba::rmNA(naValue=c_min, x_hcl[,"c"]);
-      x_hcl[,"l"] <- jamba::rmNA(naValue=0, x_hcl[,"l"]);
-      x_hcl[,"h"] <- (x_hcl[,"h"] + hue_offset) %% 360;
-      if (any(x_hcl[,"c"] <= c_min)) {
-         c_is_min <- which(x_hcl[,"c"] <= c_min);
-         x_hcl[c_is_min,"h"] <- grey_hue;
-         x_hcl[c_is_min,"c"] <- c_min;
-      }
-      x_hcl <- round(x_hcl/4)*4;
-      x_sort <- cbind(x_sort, x_hcl);
-   }
-   if (any(c("s","v","-s","-v") %in% sort_by)) {
-      x_hcl[,"s"] <- jamba::rmNA(naValue=0, x_hcl[,"s"]);
-      x_hcl[,"v"] <- jamba::rmNA(naValue=0, x_hcl[,"v"]);
-      x_sv <- 100*farver::decode_colour(x, to="hsv")[,c("s","v"),drop=FALSE];
-      x_sort <- cbind(x_sort, x_sv);
-   }
-   if (any(c("a","b","-a","-b") %in% sort_by)) {
-      x_hcl[,"a"] <- jamba::rmNA(naValue=0, x_hcl[,"a"]);
-      x_hcl[,"b"] <- jamba::rmNA(naValue=0, x_hcl[,"b"]);
-      x_ab <- round(farver::decode_colour(x, to="lab")[,c("a","b"),drop=FALSE]);
-      x_sort <- cbind(x_sort, x_ab);
-   }
-   x_sorted <- jamba::mixedSortDF(data.frame(x_sort),
-      byCols=sort_by);
-   #x[x_sorted$i];
-   x_sorted$input;
-}
 
 #' Order colors
 #'
 #' @family jam utility functions
-#'
+#' 
+#' @param x `character` vector of colors
+#' @param sort_by `character` vector with color colnames used for sorting,
+#'    passed as argument 'byCols' to `colorjam::sort_colors()`.
+#' @param ... additional arguments are passed to `colorjam::sort_colors()`.
+#' 
+#' @examples
+#' set.seed(123);
+#' x <- sample(grep("royal|^golden", colors(), value=TRUE))
+#' x_sorted <- x[order_colors(x)];
+#' jamba::showColors(list(input=x, sorted=x_sorted))
+#' 
 #' @export
 order_colors <- function
 (x,
- sort_by=c("H", "-C", "-L"),
- c_min=4,
- grey_hue=359,
- hue_offset=0,
+ sort_by=c("H", "-L", "-C"),
  ...)
 {
    ## hue_offset=-12 makes red the first color,

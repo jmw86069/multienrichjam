@@ -40,9 +40,7 @@ more colors, the fallback sort uses \code{colorjam::sort_colors()}.
 \seealso{
 Other jam list functions: 
 \code{\link{im2list}()},
-\code{\link{im2list_dep}()},
 \code{\link{imSigned2list}()},
-\code{\link{imSigned2list_dep}()},
 \code{\link{list2concordance}()},
 \code{\link{list2im}()},
 \code{\link{list2imSigned}()}

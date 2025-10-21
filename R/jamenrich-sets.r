@@ -2,111 +2,107 @@
 # R functions handling sets and list
 
 #' convert list to incidence matrix
-#'
+#' 
 #' convert list to incidence matrix
-#'
+#' 
 #' This function converts a list of vectors into an incidence matrix, where
 #' the rows are the vector items and the columns are the list names.
-#' It uses an object from the `arules` package called
-#' `arules::transactions` which offers highly efficient methods
-#' for interconverting from list to matrix. The
-#' \code{\link[arules]{transactions}} class is itself an enhanced data matrix,
-#' which stores data using sparse matrix object type from the
-#' \code{\link{Matrix}} package, but also associates a `data.frame` to both
-#' the rows and columns of the matrix to offer additional row and column
-#' annotation, as needed.
-#'
-#' Performance benchmarks showed high speed of converting a list to a matrix,
-#' but also that the resulting matrix was substantially smaller (5-20 times)
-#' then comparable methods producing a data matrix.
-#'
-#' When argument `keepCounts=TRUE`, the method of applying counts only
-#' updates entries with multiple instances, which helps make this step
-#' relatively fast.
-#'
+#' 
 #' @family jam list functions
-#'
-#' @param x list of vectors
-#' @param keepCounts boolean indicating whether to return values indicating
-#'    the number of occurrences of each item.
-#' @param emptyValue any single value that should be used for blank entries,
-#'    by default zero `0`. Use `emptyValue=NA` to return `NA` for missing
-#'    entries.
-#' @param verbose boolean indicating whether to print verbose output.
+#' 
+#' @returns `numeric` matrix with values 0 or 1 indicating absense or
+#'    presence of each item (row) in each set (column).
+#'    The sets are derived from `names(x)`.
+#' 
+#' @param x `list` of item vectors, where vector values are item names
+#' @param empty `numeric` used for missing or empty values, default 0.
+#' @param do_sparse `logical` default FALSE, whether to return sparse Matrix.
+#'    When `do_sparse=TRUE`, it sets `keepCounts=FALSE` since a sparse Matrix
+#'    does not represent counts.
+#' @param keepCounts `logical` default FALSE, whether to include the count
+#'    of any duplicated items.
+#' @param sort_rows `logical` default FALSE, whether to sort rows using
+#'    `jamba::mixedOrder()`, or `function` can be supplied to use
+#'    another sort algorithm.
 #' @param ... additional arguments are ignored.
-#'
-#' @return numeric matrix whose rownames were vector items of the input list,
-#'    and whole colnames were list names.
-#'
+#' 
 #' @examples
 #' L1 <- list(A=c("C","A","B","A"),
 #'    D=c("D","E","F","D"),
 #'    A123=c(1:8,3,5),
+#'    B=c("A1", "A2", "A10"),
 #'    T=LETTERS[7:9]);
 #' # Default behavior is to make items unique
 #' list2im(L1);
 #'
 #' # Option to report the counts
 #' list2im(L1, keepCounts=TRUE);
-#'
+#' 
+#' # Option to sort item rows with jamba::mixedOrder()
+#' list2im(L1, sort_rows=TRUE);
+#' 
+#' # Option to sort item rows with vanilla sort()
+#' list2im(L1, sort_rows=sort);
+#' 
 #' @export
 list2im <- function
 (x,
+ empty=0,
+ do_sparse=FALSE,
  keepCounts=FALSE,
- emptyValue=0,
- verbose=FALSE,
+ sort_rows=FALSE,
  ...)
 {
-   ## Purpose is to convert a list of vectors into an incident matrix
-   ## using the arules package
-   emptyValue <- head(emptyValue, 1);
-   if (!suppressPackageStartupMessages(require(arules))) {
-      stop("list2im() requires the arules package.");
+   # optionally count items present multiple times
+   if (TRUE %in% do_sparse) {
+      keepCounts <- FALSE;
    }
    if (TRUE %in% keepCounts) {
       xCt <- jamba::rmNULL(lapply(x, jamba::tcount, minCount=2));
       if (length(xCt) == 0) {
-         if (verbose) {
-            jamba::printDebug("list2im():",
-               "No duplicate values observed.");
-         }
          keepCounts <- FALSE;
       }
    }
-
-   ## Convert to transactions
-   xT <- as(jamba::uniques(x), "transactions");
-
-   ## Extract the matrix
-   xM <- t(as(xT, "matrix")*1);
-   if (1 == 2) {
-      xM <- as.matrix(xT@data*1);
-      if (ncol(xT@itemsetInfo) > 0) {
-         colnames(xM) <- xT@itemsetInfo[,1];
-      }
-      if (ncol(xT@itemInfo) > 0) {
-         rownames(xM) <- xT@itemInfo[,1];
-      }
+   
+   # generate unique items
+   setnamesunion <- Reduce("union", x)
+   if (length(empty) == 0) {
+      empty <- NA
+   } else {
+      empty <- head(empty, 1)
    }
-   if (length(emptyValue) > 0 && !c(0) %in% emptyValue) {
-      xM[xM %in% 0] <- emptyValue;
+   setlistim <- do.call(cbind, lapply(x, function(i) {
+      i_match <- match(i, setnamesunion)
+      j <- rep(empty, length(setnamesunion))
+      j[i_match] <- 1
+      j
+   }))
+   rownames(setlistim) <- setnamesunion
+   if (TRUE %in% do_sparse && requireNamespace("Matrix", quietly=TRUE)) {
+      setlistim <- as(as(as(setlistim, "nMatrix"), "generalMatrix"), 
+         "CsparseMatrix")
    }
    if (TRUE %in% keepCounts) {
-      if (verbose) {
-         jamba::printDebug("list2im(): ",
-            "Applying item counts to the incidence matrix ",
-            format(big.mark=",", length(xCt)),
-            " items.");
-      }
       for (i in names(xCt)) {
-         #xM[names(xCt),,drop=FALSE]
-         xM[names(xCt[[i]]),i] <- xCt[[i]];
+         setlistim[names(xCt[[i]]), i] <- xCt[[i]];
       }
    }
-   return(xM);
+   
+   # optionally sort rows
+   if (nrow(setlistim) > 1) {
+      if (inherits(sort_rows, "function")) {
+         use_rows <- sort_rows(rownames(setlistim))
+         setlistim <- setlistim[match(use_rows, rownames(setlistim)), ];
+      } else if (TRUE %in% sort_rows) {
+         setlistim <- setlistim[jamba::mixedOrder(rownames(setlistim)), ];
+      }
+   }
+   
+   return(setlistim)
 }
 
-#' convert list to signeddirectional incidence matrix
+
+#' convert list to directional incidence matrix
 #'
 #' convert list to directional incidence matrix
 #'
@@ -136,7 +132,7 @@ list2im <- function
 #'
 #' @family jam list functions
 #'
-#' @return numeric matrix with rownames defined by vector names from
+#' @returns `numeric` matrix with rownames defined by vector names from
 #'    each vector in the input list. The colnames are defined by
 #'    names of the input list if they exist.
 #'    list. Values in the matrix are values from each vector.
@@ -198,10 +194,8 @@ list2imSigned <- function
    #}
    ## For this step, only use unique elements, since we overwrite the value with the sign anyway
    imx <- list2im(lapply(x, names),
-      makeUnique=TRUE,
       emptyValue=NA,
       keepCounts=FALSE,
-      verbose=verbose,
       ...);
    imx[] <- imx[] * 0;
    ## TODO: handle multiple values somehow... but not yet.
@@ -315,61 +309,6 @@ list2concordance <- function
 #'
 #' Values of `NA` are converted to zero `0` and therefore ignored.
 #'
-#' This function uses the `transactions` class from the `arules`
-#' R package, which in our testing is substantially faster than
-#' similar techniques from a variety of other R packages.
-#'
-#' @family jam list functions
-#'
-#' @return `list` of `character vectors`, where list names
-#'    are defined by `colnames(x)`, and vectors contain values
-#'    from `rownames(x)`.
-#'
-#'
-im2list_dep <- function
-(x,
- verbose=FALSE,
- ...)
-{
-   ## The reciprocal of list2im, it takes an incidence matrix,
-   ## and returns a list, named by colnames(x), of rownames(x)
-   ## where the value is not zero
-   if (!suppressWarnings(suppressPackageStartupMessages(require(arules)))) {
-      stop("The arules package is required for im2list().");
-   }
-   if (!is.matrix(x)) {
-      xRownames <- rownames(x);
-      xColnames <- colnames(x);
-      x <- tryCatch({
-         as.matrix(x);
-      }, error=function(e){
-         as(x, "matrix");
-      });
-      rownames(x) <- xRownames;
-      colnames(x) <- xColnames;
-   }
-   if (any(is.na(x))) {
-      x <- jamba::rmNA(naValue=0, x);
-   }
-   as(as(t(x), "transactions"), "list");
-}
-
-#' convert incidence matrix to list
-#'
-#' convert incidence matrix to list
-#'
-#' This function converts an incidence `matrix`, or equivalent
-#' `data.frame`, to a list. The `matrix` should contain either
-#' numeric values such as `c(0, 1)`, or logical values such
-#' as `c(TRUE,FALSE)`, otherwise values are considered either
-#' zero == `FALSE`, or non-zero == `TRUE`.
-#'
-#' The resulting list will be named by `colnames(x)` of the input,
-#' and will contain members named by `rownames(x)` which are
-#' either non-zero, or contain `TRUE`.
-#'
-#' Values of `NA` are converted to zero `0` and therefore ignored.
-#'
 #' @family jam list functions
 #'
 #' @param x `matrix` or equivalent object with `colnames(x)` indicating
@@ -429,54 +368,6 @@ im2list <- function
    return(l);
 }
 
-#' convert signed incidence matrix to list
-#'
-#' convert signed incidence matrix to list
-#'
-#' This function converts an signed incidence `matrix`
-#' that contains positive and negative values, or equivalent
-#' `data.frame`, to a list of named vectors containing values
-#' `c(-1, 1)` to indicate signed direction.
-#' The input `matrix` should contain numeric values where
-#' positive and negative values indicate directionality.
-#' When the input contains only logical values `c(TRUE,FALSE)`
-#' the direction is assumed to be `+1` positive.
-#'
-#' Values of `NA` are converted to zero `0` and therefore ignored.
-#'
-#' This function uses the `transactions` class from the `arules`
-#' R package, which in our testing is substantially faster than
-#' similar techniques from a variety of other R packages.
-#'
-#' @family jam list functions
-#'
-#' @return `list` of named numeric vectors, where list names
-#'    are defined by `colnames(x)`, and vector names are derived
-#'    from `rownames(x)`. Values in each vector indicate the
-#'    signed direction, `c(-1,1)`.
-#'
-#'
-imSigned2list_dep <- function
-(x,
- verbose=FALSE,
- ...)
-   {
-   ## The reciprocal of list2im, it takes an incidence matrix,
-   ## and returns a list, named by colnames(x), of rownames(x)
-   ## where the value is not zero
-   if (!suppressWarnings(suppressPackageStartupMessages(require(arules)))) {
-      stop("The arules package is required for imSigned2list_dep().");
-   }
-   if (any(is.na(x))) {
-      x <- jamba::rmNA(naValue=0, x);
-   }
-   xUp <- as(as(t(x > 0), "transactions"), "list");
-   xDn <- as(as(t(x < 0), "transactions"), "list");
-   lapply(jamba::nameVector(colnames(x)), function(i){
-      c(jamba::nameVector(rep(1, length.out=length(xUp[[i]])), xUp[[i]]),
-         jamba::nameVector(rep(-1, length.out=length(xDn[[i]])), xDn[[i]]));
-   });
-}
 
 #' convert signed incidence matrix to list
 #'

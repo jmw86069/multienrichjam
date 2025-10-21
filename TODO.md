@@ -2,6 +2,8 @@
 
 ## 17oct2025
 
+* DONE. Remove all dependencies on arules::transactions
+* Clean up the IPA vignette figure sizes, move rambling text to the end.
 * Add vignette for `clusterProfiler` and `msigdbr`.
 * IN PROGRESS. Convert to Mem S4 object
 

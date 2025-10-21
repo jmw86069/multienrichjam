@@ -1,5 +1,5 @@
 ---
-title: "How to import and use Ingenuity IPA enrichment data"
+title: "How to use Ingenuity IPA enrichment results"
 output:
   rmarkdown::html_vignette:
     df_print: kable
@@ -37,21 +37,25 @@ options("stringsAsFactors"=FALSE, "warn"=-1);
 This document describes steps recommended for using Ingenuity
 IPA enrichment data.
 
-Ingenuity IPA enrichment data can be exported using a function
-`"Export All"` which by default creates one text file,
-concatenating each enrichment table into one large file.
+Ingenuity IPA enrichment results should be exported from the IPA
+app.
+* Open an IPA pathway analysis result.
+* Click `"Export All"` at the top-right.
+* Choose either "Text .txt" or "Excel".
+
+   * The Excel file must be`.xlsx` format.
+
+
 
 This workflow demonstrates the import process using two
 IPA enrichment files used by Reese et al 2019
 https://doi.org/10.1016/j.jaci.2018.11.043
 to compare enrichment results in newborns to older children.
 
-It therefore requires IPA enrichment results have already
-been exported in text format from IPA.
+### Import IPA data
 
-### Import IPA data from text files
-
-To import an IPA text file, use `importIPAenrichment()`:
+To import an IPA text file, use `importIPAenrichment()`.
+It works the same when importing Excel `.xlsx` format.
 
 ```{r, import_ipa_1}
 newborn_txt <- system.file("extdata",
@@ -60,18 +64,17 @@ newborn_txt <- system.file("extdata",
 newborn_dfl <- importIPAenrichment(newborn_txt);
 ```
 
-The result is a list of `data.frame` objects, where each
-`data.frame` represents one enrichment test. A convenient
-way to see the dimensions of each `data.frame` is with
-the function `jamba::sdim()`:
+The result is a `list`, named by the IPA analysis.
+Each element contains one `data.frame` with analysis results.
+Shown below is a summary of results, with number of rows and columns,
+created with `jamba::sdim()`.
 
 ```{r, ipa_1_sdim}
 sdim(newborn_dfl);
 ```
 
-For MultiEnrichMap, we typically want to analyze multiple
-IPA enrichment files, so we can wrap the call in
-an `lapply()` function:
+In `multienrichjam`, you may want to analyze multiple IPA analyses.
+The example below uses `lapply()` to import multiple IPA files.
 
 ```{r, import_ipa_1_2}
 newborn_txt <- system.file("extdata",
@@ -80,34 +83,44 @@ newborn_txt <- system.file("extdata",
 olderchildren_txt <- system.file("extdata",
    "OlderChildren-IPA.txt",
    package="multienrichjam");
+
 ipa_files <- c(Newborns=newborn_txt,
    OlderChildren=olderchildren_txt)
 
 ipa_l <- lapply(ipa_files, importIPAenrichment);
 ```
 
-Now we can check the dimensions within each list using
+A summary of the list of lists is shown below, using
 `jamba::ssdim()`:
 
 ```{r, ipa_ssdim}
 ssdim(ipa_l);
 ```
 
-In most cases, each IPA file should contain the same
-enrichment tests, for example `"Canonical Pathways"`,
-`"Upstream Regulators"`, `"Diseases and Bio Functions"`,
-etc. However, it is not always the case, so it is
-recommended to check and verify each IPA file contains
-at least the enrichment tests needed for downstream analysis.
 
-## Analyze IPA enrichments from one enrichment test
+### Analyze IPA enrichments from one enrichment test
 
-IPA performs multiple enrichment tests, which are
-done independently and with unique assumptions
-and caveats. Therefore, I recommend using one
-enrichment test at a time in MultiEnrichMap.
+We recommend analyzing one type of IPA analysis at a time.
+The most common datatypes to use in `multienrichjam`:
 
-Extract one `data.frame` from each result:
+* **"Canonical Pathways:**: IPA curated pathways (most common*).
+* **"Upstream Regulators"**: IPA curated regulators that are predicted
+to have 'upstream' effects in cell signaling.
+* **"Diseases and Bio Functions"**: IPA curated disease-associated
+pathways, which include category and sub-category annotations.
+* **"Tox Functions"**: IPA curated toxicity-associated
+pathways, which also include category and sub-category annotations.
+
+**"Analysis Ready Molecules"**: is a `data.frame` that contains the
+IPA gene cross-reference, which stores what *you* called a gene, and
+what *IPA* recognized for their analysis.
+
+* By default `revert_ipa_xref=TRUE` which converts IPA results to *your* gene.
+* If you provided microarray or platform identifiers, such as
+Affymetrix `'1007_s_at'` or Agilent `'ID A_14_P109686'`, you may
+prefer to use `revert_ipa_xref=FALSE`.
+
+Extract 'Canonical Pathways' from each IPA result, for example:
 
 ```{r, extract_canonical}
 library(igraph)
@@ -116,7 +129,17 @@ enrichList_canonical <- lapply(ipa_l, function(i){
    i[["Canonical Pathways"]];
 });
 sdim(enrichList_canonical);
+```
 
+### Convert to enrichResult (optional)
+
+Each `data.frame` can be converted to `enrichResult`.
+It is not strictly necessary, but may be useful to use with
+functions related to `clusterProfiler`, for example `ggtangle::cnetplot()`
+not necessary for `multienrich
+which you can select the P-value column
+
+```{r, extract_canonical_er}
 ## Convert data.frame to enrichResult
 ## multienrichjam::enrichDF2enrichResult
 er_canonical <- lapply(enrichList_canonical, function(i){
@@ -138,16 +161,17 @@ kable_coloring(
 
 ```
 
-### run multiEnrichMap()
+## run multiEnrichMap()
 
 Now given a list of `data.frame` results, we can
 run `multiEnrichMap()`:
 
 ```{r, mem_canonical, fig.height=9, fig.width=10}
 mem_canonical <- multiEnrichMap(er_canonical,
+   verbose=TRUE,
    enrichBaseline=1,
    cutoffRowMinP=0.05,
-   topEnrichN=20)
+   topEnrichN=5)
 ```
 
 Output is a `list` containing summary results.
@@ -209,106 +233,6 @@ The object returned `mem_canonical_plots` is a `list`
 of the graphical objects.
 
 
-### Commentary on the "Plot Folio"
-
-#### Where is Enrich Map?
-
-In practice, we rarely find benefit from the multi-enrichment map.
-The network shows pathways connected to pathways based upon Jaccard overlap
-of the genes involved in enrichment of each pathway.
-
-This network view was often disorganized, not clearly clustered,
-and lacked ability to see which genes drive the overlaps between
-pathways.
-
-Perhaps it works best for the highly structured Gene Ontology (GO),
-but in our hands GO was just not insightful for the broad range of
-experiments we were analyzing.
-
-#### Concept network (Cnet)
-
-We gravitated toward the Cnet plot, a clever idea by Dr. Guangchang Yu
-to visualize pathways connected to genes, where genes also connect
-naturally to other pathways.
-
-For many of our collaborators, this plot is visually intuitive.
-It also answers the next question people often have:
-
->"What are the shared genes?"
-
-Our subtle customization is to color genes by enrichment
-to show which genes are shared or unique across enrichments.
-
-The gene nodes are sorted by color, and optionally by border,
-to help organize patterns.
-
-#### Cnet cluster plot
-
-The evolution of Cnet plots led to two conceptual ideas,
-both driven by the "too many pathways" problem:
-
-1. **Cnet using "exemplar pathways"**
-
-   * This option is not comprehensive, as it only shows a subset
-   of pathways.
-   * This option will not show every gene involved in enrichment.
-   * Its main utility is to produce a clean figure.
-   Ultimately, this is also a core goal of multienrichjam.
-   * This option is ideal when there are relevant pathways known
-   to be relevant to the experiment, and when Option 2 (below)
-   is too complex.
-   * Option 1 is the path chosen by the `ggtangle` component of the
-   `clusterProfiler` suite by Dr. Yu.
-   It displays the top N pathways, with default `showCategory=5`.
-   In our experience, the "top N" are not always the most
-   representative, nor the most interesting.
-   So we extended multienrichjam accordingly.
-
-2. **Cnet using pathway clusters**
-
-   * This option is intended to be more comprehensive,
-   less complex than plotting 20 pathways individually,
-   but more complex than "Cnet exemplars" above.
-   * This option will show every gene involved in enrichment.
-   * This option is the main utility of multienrichjam.
-   * Pathways are clustered based upon the genes they contain.
-   The approach is similar to Enrichment Map (Bader lab) use of
-   Jaccard overlap.
-   However, clustering is a rich field with many important
-   techniques not captured by a simple overlap coefficient.
-
-Option 2 has several important benefits
-
-* **Reduces redundancy among pathways.**
-
-   * When the genes involved in pathway enrichment
-   are identical across several pathways,
-   they naturally cluster together.
-   * Over much time, we observed that gene-pathway clustering provides
-   a rich overview of the data involved, and gives insight into
-   the underlying pathways and supporting data.
-
-* **Avoids clustering by P-value**
-
-   * To be frank, our original approach was to plot the P-value
-   matrix of test versus pathway.
-   As a heatmap, it naturally  provides clusters, and it sometimes
-   fortuitously appears biologically relevant.
-   * **We learned that clustering by P-value is incorrect.**
-   Instead, we recommend using the underlying gene content of the pathways.
-   The purpose is to group pathways conceptually, and enrichment P-value
-   is not an indication of biology.
-
-* **Provides functional sub-groups for interpretation.**
-
-   * Ideally, nearly identical pathways are grouped together and
-   are "easily summarized" by a scientist.
-   * More often, pathway clusters contain similar pathways, grouped because
-   they also share "core genes" across these pathways.
-   * This is an exciting finding in itself, and turns out to be the major
-   step forward in interpreting pathway enrichment findings.
-   Unfortunately, it doesn't provide an "easy summary" to use as a label.
-
 ### Cnet Cluster Plot
 
 The Cnet Cluster Plot is often the focus of manuscript figures.
@@ -331,116 +255,45 @@ jam_igraph(cnet,
 
 ```
 
-#### ShinyCat
+### ShinyCat for Custom Cnet Layout
 
-The R-shiny Cnet Adjustment Tool **ShinyCat**.
+The R-shiny Cnet Adjustment Tool **ShinyCat** is intended to help polish
+the Cnet plot layout when making a final figure.
 
-There are several functions to help customize a Cnet `igraph` object,
-however these are more easily applied by `launch_shinycat()`.
+The R-shiny app uses several functions:
 
-Make sure to assign the output to a variable, or to click "Save RData"
-from within the R-shiny app.
+* `nudge_igraph_node()`: mode individual nodes
+* `adjust_cnet_nodeset()`: adjust spacing, position, rotation of a nodeset
+* `reorder_igraph_nodes()`: sort nodes in a group by color
+* `spread_igraph_labels()`: arrage labels radially away from incoming edges
+* `bulk_cnet_adjustments()`: several operations applied in bulk
 
-```{r shinycat, eval=FALSE}
+> Make sure to assign the output to a variable, or to click "Save RData"
+from within the R-shiny app. For example:
+
+```{r shinycat_1, eval=FALSE}
 output_env <- launch_shinycat(g=cnet)
+```
 
+The output is stored in an `environment` called `output_env`.
+
+```{r shinycat_2, eval=FALSE}
 # obtain the output data
 adj_cnet <- output_env$adj_cnet;
+```
 
+Then the new Cnet plot can be plotted, for example:
+
+```{r shinycat_3, eval=FALSE}
 # jam_graph
 jam_igraph(adj_cnet,
    node_factor=2,
    use_shadowText=TRUE,
    label_factor_l=list(nodeType=c(Gene=2, Set=1)))
-
 ```
 
 
-### Multi-Enrichment Map
-
-We can view the "Multi Enrichment Map" itself
-with `mem_multienrichplot()`.
-
-This network connects pathways when they meet a Jaccard
-overlap coefficient threshold based upon the shared genes
-between the pathways.
-The default overlap is stored by `multiEnrichMap()`
-in the output object `mem_canonical`.
-
-
-```{r, mem_plot_1, fig.height=12, fig.width=10}
-g <- mem_multienrichplot(mem_canonical,
-   do_plot=FALSE,
-   overlap=0.3,
-   node_factor=2,
-   repulse=3.5)
-jam_igraph(g,
-   node_factor=2,
-   use_shadowText=TRUE)
-title(main="overlap=0.3")
-```
-
-You can provide the Jaccard overlap threshold directly,
-with argument `overlap`. Values should be between 0 and 1.
-
-The threshold can be estimated by `mem_find_overlap()`,
-based upon network connectivity.
-
-```{r, mem_plot_1b, fig.height=12, fig.width=10}
-use_overlap <- mem_find_overlap(mem_canonical);
-g <- mem_multienrichplot(mem_canonical,
-   overlap=use_overlap,
-   do_plot=FALSE,
-   node_factor=3,
-   repulse=3.5)
-jam_igraph(g,
-   node_factor=3,
-   use_shadowText=TRUE)
-title(main=paste0("overlap=", use_overlap))
-```
-
-
-Notice there are distinct subnetworks, called "components",
-which are not connected to each other.
-
-You can pull out a component with `subset_igraph_components()`.
-Components are ordered by size, largest to smallest,
-so you can keep the largest using argument `keep=1`,
-or the second largest with `keep=2`, and so on.
-
-We also call two other helper functions:
-
-1. `removeIgraphBlanks()`
-
-   * removes blank colors from multi-color
-   nodes, such as pie nodes, or colored rectangle nodes.
-   * It helps show only the remaining colors without the whitespace.
-
-2. `relayout_with_qfr()`
-
-   * Fruchterman-Reingold layout, with argument `repulse` used
-   to adjust the spacing between nodes.
-   * Also updates other useful attributes, and spreads the node labels
-   to reduce label overlaps.
-
-```{r, mem_plot_2}
-## You can alternatively pull out any other component
-g_sub <- subset_igraph_components(g, keep=1);
-
-## Re-apply network layout, and remove blank colors
-g_sub <- relayout_with_qfr(repulse=3.5,
-   removeIgraphBlanks(g_sub))
-
-## Plot
-jam_igraph(g_sub,
-   node_factor=3,
-   label_factor=2,
-   use_shadowText=TRUE)
-```
-
-
-
-#### Enrichment P-value Heatmap
+### Enrichment P-value Heatmap
 
 `mem_enrichment_heatmap()` produces a heatmap with Enrichment
 versus pathway, with -log10(P-value) in the heatmap.
@@ -481,7 +334,7 @@ memhm <- mem_enrichment_heatmap(mem_canonical,
 ```
 
 
-#### Gene-Pathway Heatmap
+### Gene-Pathway Heatmap
 
 We can view the pathway-gene matrix using the function
 
@@ -610,6 +463,90 @@ jam_igraph(cnet3,
 mem_legend(mem_canonical);
 ```
 
+
+### Multi-Enrichment Map
+
+We can view the "Multi Enrichment Map" itself
+with `mem_multienrichplot()`.
+
+This network connects pathways when they meet a Jaccard
+overlap coefficient threshold based upon the shared genes
+between the pathways.
+The default overlap is stored by `multiEnrichMap()`
+in the output object `mem_canonical`.
+
+
+```{r, mem_plot_1, fig.height=12, fig.width=10}
+g <- mem_multienrichplot(mem_canonical,
+   do_plot=FALSE,
+   overlap=0.3,
+   node_factor=2,
+   repulse=3.5)
+jam_igraph(g,
+   node_factor=2,
+   use_shadowText=TRUE)
+title(main="overlap=0.3")
+```
+
+You can provide the Jaccard overlap threshold directly,
+with argument `overlap`. Values should be between 0 and 1.
+
+The threshold can be estimated by `mem_find_overlap()`,
+based upon network connectivity.
+
+```{r, mem_plot_1b, fig.height=12, fig.width=10}
+use_overlap <- mem_find_overlap(mem_canonical);
+g <- mem_multienrichplot(mem_canonical,
+   overlap=use_overlap,
+   do_plot=FALSE,
+   node_factor=3,
+   repulse=3.5)
+jam_igraph(g,
+   node_factor=3,
+   use_shadowText=TRUE)
+title(main=paste0("overlap=", use_overlap))
+```
+
+
+Notice there are distinct subnetworks, called "components",
+which are not connected to each other.
+
+You can pull out a component with `subset_igraph_components()`.
+Components are ordered by size, largest to smallest,
+so you can keep the largest using argument `keep=1`,
+or the second largest with `keep=2`, and so on.
+
+We also call two other helper functions:
+
+1. `removeIgraphBlanks()`
+
+   * removes blank colors from multi-color
+   nodes, such as pie nodes, or colored rectangle nodes.
+   * It helps show only the remaining colors without the whitespace.
+
+2. `relayout_with_qfr()`
+
+   * Fruchterman-Reingold layout, with argument `repulse` used
+   to adjust the spacing between nodes.
+   * Also updates other useful attributes, and spreads the node labels
+   to reduce label overlaps.
+
+```{r, mem_plot_2}
+## You can alternatively pull out any other component
+g_sub <- subset_igraph_components(g, keep=1);
+
+## Re-apply network layout, and remove blank colors
+g_sub <- relayout_with_qfr(repulse=3.5,
+   removeIgraphBlanks(g_sub))
+
+## Plot
+jam_igraph(g_sub,
+   node_factor=3,
+   label_factor=2,
+   use_shadowText=TRUE)
+```
+
+
 ### jam_igraph() for igraph plots
 
 `jam_igraph()` is a customized `igraph::plot()`, with benefits:
@@ -663,3 +600,104 @@ jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
    use_shadowText=TRUE)
 ```
 
+
+
+### Commentary on "Mem Plot Folio"
+
+#### Where is Enrich Map?
+
+In practice, we rarely find benefit from the multi-enrichment map.
+The network shows pathways connected to pathways based upon Jaccard overlap
+of the genes involved in enrichment of each pathway.
+
+This network view was often disorganized, not clearly clustered,
+and lacked ability to see which genes drive the overlaps between
+pathways.
+
+Perhaps it works best for the highly structured Gene Ontology (GO),
+but in our hands GO was just not insightful for the broad range of
+experiments we were analyzing.
+
+#### Concept network (Cnet)
+
+We gravitated toward the Cnet plot, a clever idea by Dr. Guangchang Yu
+to visualize pathways connected to genes, where genes also connect
+naturally to other pathways.
+
+For many of our collaborators, this plot is visually intuitive.
+It also answers the next question people often have:
+
+>"What are the shared genes?"
+
+Our subtle customization is to color genes by enrichment
+to show which genes are shared or unique across enrichments.
+
+The gene nodes are sorted by color, and optionally by border,
+to help organize patterns.
+
+#### Cnet cluster plot
+
+The evolution of Cnet plots led to two conceptual ideas,
+both driven by the "too many pathways" problem:
+
+1. **Cnet using "exemplar pathways"**
+
+   * This option is not comprehensive, as it only shows a subset
+   of pathways.
+   * This option will not show every gene involved in enrichment.
+   * Its main utility is to produce a clean figure.
+   Ultimately, this is also a core goal of multienrichjam.
+   * This option is ideal when there are relevant pathways known
+   to be relevant to the experiment, and when Option 2 (below)
+   is too complex.
+   * Option 1 is the path chosen by the `ggtangle` component of the
+   `clusterProfiler` suite by Dr. Yu.
+   It displays the top N pathways, with default `showCategory=5`.
+   In our experience, the "top N" are not always the most
+   representative, nor the most interesting.
+   So we extended multienrichjam accordingly.
+
+2. **Cnet using pathway clusters**
+
+   * This option is intended to be more comprehensive,
+   less complex than plotting 20 pathways individually,
+   but more complex than "Cnet exemplars" above.
+   * This option will show every gene involved in enrichment.
+   * This option is the main utility of multienrichjam.
+   * Pathways are clustered based upon the genes they contain.
+   The approach is similar to Enrichment Map (Bader lab) use of
+   Jaccard overlap.
+   However, clustering is a rich field with many important
+   techniques not captured by a simple overlap coefficient.
+
+Option 2 has several important benefits
+
+* **Reduces redundancy among pathways.**
+
+   * When the genes involved in pathway enrichment
+   are identical across several pathways,
+   they naturally cluster together.
+   * Over much time, we observed that gene-pathway clustering provides
+   a rich overview of the data involved, and gives insight into
+   the underlying pathways and supporting data.
+
+* **Avoids clustering by P-value**
+
+   * To be frank, our original approach was to plot the P-value
+   matrix of test versus pathway.
+   As a heatmap, it naturally  provides clusters, and it sometimes
+   fortuitously appears biologically relevant.
+   * **We learned that clustering by P-value is incorrect.**
+   Instead, we recommend using the underlying gene content of the pathways.
+   The purpose is to group pathways conceptually, and enrichment P-value
+   is not an indication of biology.
+
+* **Provides functional sub-groups for interpretation.**
+
+   * Ideally, nearly identical pathways are grouped together and
+   are "easily summarized" by a scientist.
+   * More often, pathway clusters contain similar pathways, grouped because
+   they also share "core genes" across these pathways.
+   * This is an exciting finding in itself, and turns out to be the major
+   step forward in interpreting pathway enrichment findings.
+   Unfortunately, it doesn't provide an "easy summary" to use as a label.

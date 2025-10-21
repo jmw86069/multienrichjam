@@ -1,3 +1,10 @@
+# multienrichjam 0.0.101.900
+
+## Updates
+
+* Removed deprecated functions.
+* Removed mention of arules.
+
 # multienrichjam 0.0.100.900
 
 ## Updates

@@ -61,8 +61,7 @@ values.}
 \item{pvalueColname}{\code{character} value of the \code{colname(enrichDF)}
 containing enrichment P-values to use in downstream processing.}
 
-\item{msigdbGmtT}{optional gmtT object, a representation of
-\code{arules::transactions-class}. (Not currently implemented.)}
+\item{msigdbGmtT}{optional GmtT object (not currently implemented)}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 

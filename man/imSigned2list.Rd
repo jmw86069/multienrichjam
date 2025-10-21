@@ -58,8 +58,6 @@ imSigned2list(im != 0);
 Other jam list functions: 
 \code{\link{colors_from_list}()},
 \code{\link{im2list}()},
-\code{\link{im2list_dep}()},
-\code{\link{imSigned2list_dep}()},
 \code{\link{list2concordance}()},
 \code{\link{list2im}()},
 \code{\link{list2imSigned}()}

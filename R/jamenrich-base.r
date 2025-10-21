@@ -1078,8 +1078,6 @@ multiEnrichMap <- function
 #'    refers to P-values.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param GmtT (not currently implemented), alternative gene set object
-#'    format that uses `arules::transactions` class, an efficient
-#'    object with robust access functions in `arules`.
 #' @param ... additional arguments are ignored.
 #'
 #' @export

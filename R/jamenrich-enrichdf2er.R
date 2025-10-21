@@ -35,8 +35,7 @@
 #'    values.
 #' @param pvalueColname `character` value of the `colname(enrichDF)`
 #'    containing enrichment P-values to use in downstream processing.
-#' @param msigdbGmtT optional gmtT object, a representation of
-#'    `arules::transactions-class`. (Not currently implemented.)
+#' @param msigdbGmtT optional GmtT object (not currently implemented)
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'

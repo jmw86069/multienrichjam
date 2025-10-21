@@ -4,17 +4,25 @@
 \alias{order_colors}
 \title{Order colors}
 \usage{
-order_colors(
-  x,
-  sort_by = c("H", "-C", "-L"),
-  c_min = 4,
-  grey_hue = 359,
-  hue_offset = 0,
-  ...
-)
+order_colors(x, sort_by = c("H", "-L", "-C"), ...)
+}
+\arguments{
+\item{x}{\code{character} vector of colors}
+
+\item{sort_by}{\code{character} vector with color colnames used for sorting,
+passed as argument 'byCols' to \code{colorjam::sort_colors()}.}
+
+\item{...}{additional arguments are passed to \code{colorjam::sort_colors()}.}
 }
 \description{
 Order colors
+}
+\examples{
+set.seed(123);
+x <- sample(grep("royal|^golden", colors(), value=TRUE))
+x_sorted <- x[order_colors(x)];
+jamba::showColors(list(input=x, sorted=x_sorted))
+
 }
 \seealso{
 Other jam utility functions: 
@@ -22,7 +30,6 @@ Other jam utility functions:
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
 \code{\link{bulk_cnet_adjustments}()},
-\code{\link{call_fn_ellipsis_deprecated}()},
 \code{\link{cell_fun_bivariate}()},
 \code{\link{collapse_mem_clusters}()},
 \code{\link{colorRamp2D}()},

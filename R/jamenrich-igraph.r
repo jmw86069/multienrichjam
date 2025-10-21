@@ -2699,64 +2699,11 @@ subgraph_jam <- function
    return(graph);
 }
 
-#' Color igraph edges using node colors (deprecated)
-#'
-#' Color igraph edges using node colors (deprecated)
-#'
-#' Note: This function is deprecated in favor of
-#' `color_edges_by_nodes()`.
-#'
-#' This function uses the average color for the two nodes
-#' involved in each edge, and applies that as the new edge color.
-#'
-#' The color for each node depends upon the node shape, where
-#' shape `"pie"` uses the average color from `"pie.color"`, and
-#' shape `"coloredrectangle"` uses the avereage color from
-#' `"coloredrect.color"`. Everything else uses `"color"`.
-#'
-#' This function relies upon `avg_colors_by_list()` to
-#' blend multiple colors together.
-#'
-#' @param g `igraph` object
-#' @param alpha `NULL` or numeric vector with value between 0 and 1,
-#'    where 0 is transparent and 1 is non-transparent. When supplied,
-#'    this value is passed to `jamba::alpha2col()` to apply alpha
-#'    transparency to each edge color.
-#' @param ... additional arguments are ignored.
-#'
-#' @family jam igraph functions
-#'
-#' @export
-color_edges_by_nodes_deprecated <- function
-(g,
- alpha=NULL,
- ...)
-{
-   edge_m <- igraph::as_edgelist(g, names=FALSE);
-   g_colors <- ifelse(igraph::V(g)$shape %in% "circle",
-      igraph::V(g)$color,
-      ifelse(igraph::V(g)$shape %in% "pie",
-         igraph::V(g)$pie.color,
-         ifelse(igraph::V(g)$shape %in% "coloredrectangle",
-            igraph::V(g)$coloredrect.color,
-            "#FFFFFF00")));
-   g_color <- avg_colors_by_list(g_colors);
-   edge_m[] <- g_color[edge_m];
-   edge_l <- as.list(data.frame(t(edge_m)));
-   edge_colors <- avg_colors_by_list(edge_l);
-   if (length(alpha) > 0) {
-      edge_colors <- jamba::alpha2col(edge_colors,
-         alpha=alpha);
-   }
-   igraph::E(g)$color <- unname(edge_colors);
-   return(g);
-}
-
 
 #' Ordered colors from a list of color vectors
 #'
 #' Ordered colors from a list of color vectors
-#'
+#' 
 #' This function takes a list of colors and returns the unique
 #' order of colors based upon the order in vectors of the list.
 #' It is mainly intended to be called by `reorderIgraphNodes()`,
