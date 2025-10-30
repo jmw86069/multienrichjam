@@ -49,29 +49,30 @@ mem_plot_folio(
 )
 }
 \arguments{
-\item{mem}{\code{list} object created by \code{multiEnrichMap()}. Specifically
-the object is expected to contain \code{colorV}, \code{enrichIM},
-\code{memIM}, \code{geneIM}.}
+\item{mem}{\code{Mem} or \code{list} object from \code{multiEnrichMap()}.}
 
 \item{do_which}{\code{integer} vector of plots to produce. When \code{do_which}
 is \code{NULL}, then all plots are produced. This argument is intended
 to help produce one plot from a folio, therefore each plot is referred
 by the number of the plot, in order.}
 
-\item{p_cutoff}{\code{numeric} value indicating the enrichment P-value threshold
-used for \code{multiEnrichMap()}, but when \code{NULL} this value is taken
-from the \code{mem} input, or \code{0.05} is used by default.}
+\item{p_cutoff}{\code{numeric} value, default NULL is taken from \code{mem},
+indicating the enrichment P-value threshold.}
 
-\item{p_floor}{\code{numeric} value indicating the lowest enrichment P-value
-used in the color gradient on the Enrichment Heatmap.}
+\item{p_floor}{\code{numeric} with the lowest enrichment P-value
+used in the color gradient on the Enrichment Heatmap.
+The purpose is to prevent very low P-values from shifting the
+color gradient too far from the \code{p_cutoff} causing those colors
+to be pale and nearly white.}
 
 \item{main}{\code{character} string used as a title on Cnet plots.}
 
 \item{use_raster}{\code{logical} default FALSE, deprecated,
 whether to use raster heatmaps, passed to \code{ComplexHeatmap::Heatmap()}.
 \itemize{
-\item Note that \code{use_raster=TRUE} may produce visual artifacts, and
-changing this argument is no longer supported
+\item Note that \code{use_raster=TRUE} may produce visual artifacts especially
+with argument \code{colorize_by_gene=TRUE} in \code{mem_gene_path_heatmap()}.
+Changing this argument is no longer supported
 }}
 
 \item{min_gene_ct, min_set_ct}{\code{integer} values passed to
@@ -80,7 +81,10 @@ to contain \code{min_gene_ct} genes, and \code{min_set_ct} requires each gene
 to be present in at least \code{min_set_ct} sets.}
 
 \item{min_set_ct_each}{\code{integer} minimum genes required for each set,
-required for at least one enrichment test.}
+in at least one enrichment test. The distinction from \code{min_set_ct}
+is that this threshold requires this number of genes in one
+enrichment, while \code{min_set_ct} applies the threshold to the
+combined multi-enrichment data.}
 
 \item{column_method, row_method}{\code{character} arguments passed to
 \code{ComplexHeatmap::Heatmap()} which indicate the distance method used

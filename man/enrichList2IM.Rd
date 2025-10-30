@@ -29,16 +29,32 @@ the column headers in the resulting incidence matrix.}
 the value to place in each cell of the incidence matrix.}
 
 \item{emptyValue}{\code{numeric} value used to fill empty cells in the
-incidence matrix. When \code{NULL} and \code{valueColname} contains
-"gene", "count", "num", "hit" then \code{emptyValue=0}, otherwise
-\code{emptyValue=1} is used with the assumption that \code{valueColname}
-refers to P-values.}
+incidence matrix, default NA.
+\itemize{
+\item NA is used by default, indicating absence of a value.
+\item When \code{NULL} and \code{valueColname} contains
+"gene", "count", "num", "hit" then \code{emptyValue=0}.
+\item Otherwise \code{emptyValue=1} is used with the assumption that
+\code{valueColname} refers to P-values.
+}}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
-\item{GmtT}{(not currently implemented), alternative gene set object}
+\item{GmtT}{(not currently implemented), alternative gene set object.
+In future it may enable passing additional annotations associated
+with each gene set, including description, source, category, etc.}
 
 \item{...}{additional arguments are ignored.}
+}
+\value{
+incidence \code{matrix} with \code{numeric} values using the
+the enrichment P-value (or FDR or Q-value as defined).
+Technically it is a "value incidence matrix" where non-NA values
+are derived from the source data, and NA represents absense of
+a value in the source data.
+It is possible to have a value '0' (pure zero) which represents
+presence of a value, where that value was '0', if the P-value
+reported by an enrichment tool rounded to zero.
 }
 \description{
 Convert enrichList to IM incidence matrix
@@ -48,7 +64,7 @@ This function takes a \code{list} of \code{enrichResult} objects
 and creates an incidence matrix using the value defined
 by \code{valueColname}.
 
-TODO: Port to use \code{venndir::list2im_value()}, which itself
+TODO: Consider using \code{venndir::list2im_value()}, which itself
 may be moved to its own proper R package for set and list
 manipulation, without the dependencies incurred by \code{venndir}.
 }

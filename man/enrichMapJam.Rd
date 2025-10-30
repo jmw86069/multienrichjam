@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-base.r
 \name{enrichMapJam}
 \alias{enrichMapJam}
-\title{Create enrichMap igraph object}
+\title{Create enrichMap igraph object from enrichResult}
 \usage{
 enrichMapJam(
   x,
@@ -35,10 +35,14 @@ to define the default node label font and size.}
 \item{keyColname, nodeLabel, descriptionColname}{\code{character} vectors
 indicating the colname to use for the node name and label.}
 
-\item{nodeLabelFunc}{\code{function}, default NULL, with option to apply
-to \code{V(g)$name} in order to create \code{V(g)$label}.
-One suggestion is to use \code{fixSetLabels()}
-which applies word wrap, and optional max character length.}
+\item{nodeLabelFunc}{\code{function}, default NULL uses
+\code{fixSetLabels(x, width=30, ...)}. Use 'FALSE' to keep labels unchanged.
+Note that the \code{igraph} node name remains the same as input,
+and label is used as the visual label on the graph.
+\itemize{
+\item When providing a custom function, note that each node is called
+individually and therefore the call is not vectorized.
+}}
 
 \item{overlapThreshold}{\code{numeric} value indicating the minimum
 Jaccard overlap, where edges with lower values are deleted from
@@ -50,10 +54,10 @@ the \code{igraph} object.}
 when the input \code{x} is a \code{data.frame}.}
 }
 \value{
-\code{igraph} object, whose nodes represent each enriched pathway,
-and are sized based upon the number of genes involved in the
-enrichment, and are colored based upon the \code{log10(Pvalue)}
-using \code{colorjam::vals2colorLevels()}, a function that applies
+\code{igraph} object with nodes representing each pathway,
+sized based upon the number of genes involved in enrichment, and
+colored based upon the \code{-log10(Pvalue)}
+using \code{colorjam::col_linear_xf()}, a function that applies
 a color gradient to a numeric range.
 Each edge has attributes: \code{overlap} containing Jaccard overlap,
 \code{overlap_count} with the number of genes in common between
@@ -61,17 +65,18 @@ the two nodes, and \code{overlap_max_pct} with the maximum percent
 overlap between two nodes (overlap count)/(smaller node size).
 }
 \description{
-Create enrichMap igraph object from enrichResult.
+Create enrichMap igraph object from enrichResult
 }
 \details{
-This function could also be called \code{enrichResult2emap()}.
+This function is a minor customization to \code{enrichplot::emapplot()},
+which takes a single \code{enrichResult} and produces an Enrichment map
+network. For the equivalent function using \code{Mem} as input, see
+\code{mem2emap()}.
 
-This function is a minor extension to the original function
-DOSE::enrichMap() which is now rewritten in the source package
-to \code{enrichplot::emapplot()}. The major differences:
+The major differences compared with \code{enrichplot}:
 \itemize{
-\item This function returns an \code{igraph} object, which can be manipulated
-using network-related functions.
+\item An \code{igraph} object is returned instead of \code{ggplot} object, since the
+\code{igraph} object can be manipulated and is useful to review.
 \item This function calculates overlap using \code{dist(...,method="binary")}
 which is a much faster method for calculating the Jaccard overlap.
 \item This function also calculates the overlap count, another helpful

@@ -90,11 +90,13 @@ list2im <- function
    
    # optionally sort rows
    if (nrow(setlistim) > 1) {
+      if (isTRUE(sort_rows)) {
+         sort_rows <- jamba::mixedSort;
+      }
       if (inherits(sort_rows, "function")) {
-         use_rows <- sort_rows(rownames(setlistim))
-         setlistim <- setlistim[match(use_rows, rownames(setlistim)), ];
-      } else if (TRUE %in% sort_rows) {
-         setlistim <- setlistim[jamba::mixedOrder(rownames(setlistim)), ];
+         use_rows <- sort_rows(rownames(setlistim));
+         rowmatch <- match(use_rows, rownames(setlistim));
+         setlistim <- setlistim[rowmatch, , drop=FALSE];
       }
    }
    
@@ -194,7 +196,7 @@ list2imSigned <- function
    #}
    ## For this step, only use unique elements, since we overwrite the value with the sign anyway
    imx <- list2im(lapply(x, names),
-      emptyValue=NA,
+      empty=NA,
       keepCounts=FALSE,
       ...);
    imx[] <- imx[] * 0;
@@ -355,9 +357,9 @@ im2list <- function
    # vicious bug when options("warn"=2) forcing warnings into errors
    # For now, force to max warn=1.
    # Who would do such a thing.
-   if (getOption("warn", -1) > 1) {
-      options("warn", 1)
-   }
+   # if (getOption("warn", -1) > 1) {
+   #    options("warn", 1)
+   # }
 
    l <- lapply(jamba::nameVector(x_cols), function(i){
       # i_empty <- as(empty, class(x[, i]));

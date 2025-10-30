@@ -8,7 +8,7 @@ mem_enrichment_heatmap(
   mem,
   style = c("dotplot_inverted", "dotplot", "heatmap"),
   apply_direction = FALSE,
-  p_cutoff = mem$p_cutoff,
+  p_cutoff = NULL,
   min_count = 1,
   p_floor = 1e-10,
   point_size_factor = 1,
@@ -50,8 +50,7 @@ mem_enrichment_heatmap(
 )
 }
 \arguments{
-\item{mem}{\code{list} object created by \code{multiEnrichMap()}. Specifically
-the object is expected to contain \code{enrichIM}.}
+\item{mem}{\code{Mem} or legacy \code{list} mem created by \code{multiEnrichMap()}.}
 
 \item{style}{\code{character} string indicating the style of heatmap:
 \code{"heatmap"} produces a regular heatmap, shaded by \code{log10(Pvalue)};

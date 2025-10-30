@@ -1,5 +1,47 @@
 # TODO
 
+## 29oct2025
+
+* Mem S4 object updates:
+
+   * Consider S4Vectors types for 'thresholds' which would allow editing 
+   an entry in place with 'thresholds(Mem)$p_cutoff <- 0.1' syntax.
+   * Consider better mechanism to rename pathway gene sets with `sets()<-`,
+   specifically so that the `enrichList` results are also kept consistent.
+   Perhaps an alias to change from original name to custom name?
+   * Consider adding `BiocGenerics` for generic S4 functions,
+   also to use class versioning with slot `.__classVersion`.
+   * Consider removing some slots and replacing the accessor with function:
+   
+      * `geneIMcolors` and `enrichIMcolors` could be done using
+      with dynamic method which applies `colorV`,`p_cutoff`,`min_count` to
+      produce the color matrix. Would enable changing thresholds and having
+      up-to-date data. Also would remove the slot and reduce S4 complexity.
+      * `multiEnrichDF`,`multiEnrichResult`
+
+* Consider S4 classes:
+
+   * `MemPlotFolio`
+   * `multiEnrichResult` - simple extension to `enrichResult`?
+   * `enrichResultList` - need to determine if it enables something useful,
+   other than just making it clear the type of data
+
+## 23oct2025
+
+* Organize vignettes using diataxis philosophy
+
+   * Tutorial: Use IPA; Use clusterProfiler
+   * How-to:
+   
+      * Define pathway-gene clustering parameters
+      * Customize Mem Enrichment Heatmap
+      * Adjust Cnet plot layout
+
+   * Explanation:
+   
+      * Determine appropriate parameters for `multiEnrichMap()`
+      * Decide Cnet strategy for a visual summary
+
 ## 17oct2025
 
 * DONE. Remove all dependencies on arules::transactions

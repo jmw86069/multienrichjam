@@ -1,5 +1,6 @@
 ---
 title: "How to use Ingenuity IPA enrichment results"
+name: importIPA
 output:
   rmarkdown::html_vignette:
     df_print: kable
@@ -15,8 +16,8 @@ vignette: >
 # }
 
 knitr::opts_chunk$set(
-  collapse=TRUE,
-  comment="#>",
+   collapse=TRUE,
+   comment="#>",
    fig.height=12,
    fig.width=10,
    fig.align="center",
@@ -168,7 +169,6 @@ run `multiEnrichMap()`:
 
 ```{r, mem_canonical, fig.height=9, fig.width=10}
 mem_canonical <- multiEnrichMap(er_canonical,
-   verbose=TRUE,
    enrichBaseline=1,
    cutoffRowMinP=0.05,
    topEnrichN=5)
@@ -218,7 +218,7 @@ Mem Plot Folio then provides a series of visualizations:
    * One plot for each pathway cluster
 
 ```{r, mem_folio, fig.height=16, fig.width=10}
-mem_canonical_plots <- multienrichjam::mem_plot_folio(mem_canonical,
+mem_canonical_plots <- mem_plot_folio(mem_canonical,
    pathway_column_split=4,
    column_cex=0.7,
    node_factor=1,
@@ -602,102 +602,3 @@ jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
 
 
 
-### Commentary on "Mem Plot Folio"
-
-#### Where is Enrich Map?
-
-In practice, we rarely find benefit from the multi-enrichment map.
-The network shows pathways connected to pathways based upon Jaccard overlap
-of the genes involved in enrichment of each pathway.
-
-This network view was often disorganized, not clearly clustered,
-and lacked ability to see which genes drive the overlaps between
-pathways.
-
-Perhaps it works best for the highly structured Gene Ontology (GO),
-but in our hands GO was just not insightful for the broad range of
-experiments we were analyzing.
-
-#### Concept network (Cnet)
-
-We gravitated toward the Cnet plot, a clever idea by Dr. Guangchang Yu
-to visualize pathways connected to genes, where genes also connect
-naturally to other pathways.
-
-For many of our collaborators, this plot is visually intuitive.
-It also answers the next question people often have:
-
->"What are the shared genes?"
-
-Our subtle customization is to color genes by enrichment
-to show which genes are shared or unique across enrichments.
-
-The gene nodes are sorted by color, and optionally by border,
-to help organize patterns.
-
-#### Cnet cluster plot
-
-The evolution of Cnet plots led to two conceptual ideas,
-both driven by the "too many pathways" problem:
-
-1. **Cnet using "exemplar pathways"**
-
-   * This option is not comprehensive, as it only shows a subset
-   of pathways.
-   * This option will not show every gene involved in enrichment.
-   * Its main utility is to produce a clean figure.
-   Ultimately, this is also a core goal of multienrichjam.
-   * This option is ideal when there are relevant pathways known
-   to be relevant to the experiment, and when Option 2 (below)
-   is too complex.
-   * Option 1 is the path chosen by the `ggtangle` component of the
-   `clusterProfiler` suite by Dr. Yu.
-   It displays the top N pathways, with default `showCategory=5`.
-   In our experience, the "top N" are not always the most
-   representative, nor the most interesting.
-   So we extended multienrichjam accordingly.
-
-2. **Cnet using pathway clusters**
-
-   * This option is intended to be more comprehensive,
-   less complex than plotting 20 pathways individually,
-   but more complex than "Cnet exemplars" above.
-   * This option will show every gene involved in enrichment.
-   * This option is the main utility of multienrichjam.
-   * Pathways are clustered based upon the genes they contain.
-   The approach is similar to Enrichment Map (Bader lab) use of
-   Jaccard overlap.
-   However, clustering is a rich field with many important
-   techniques not captured by a simple overlap coefficient.
-
-Option 2 has several important benefits
-
-* **Reduces redundancy among pathways.**
-
-   * When the genes involved in pathway enrichment
-   are identical across several pathways,
-   they naturally cluster together.
-   * Over much time, we observed that gene-pathway clustering provides
-   a rich overview of the data involved, and gives insight into
-   the underlying pathways and supporting data.
-
-* **Avoids clustering by P-value**
-
-   * To be frank, our original approach was to plot the P-value
-   matrix of test versus pathway.
-   As a heatmap, it naturally  provides clusters, and it sometimes
-   fortuitously appears biologically relevant.
-   * **We learned that clustering by P-value is incorrect.**
-   Instead, we recommend using the underlying gene content of the pathways.
-   The purpose is to group pathways conceptually, and enrichment P-value
-   is not an indication of biology.
-
-* **Provides functional sub-groups for interpretation.**
-
-   * Ideally, nearly identical pathways are grouped together and
-   are "easily summarized" by a scientist.
-   * More often, pathway clusters contain similar pathways, grouped because
-   they also share "core genes" across these pathways.
-   * This is an exciting finding in itself, and turns out to be the major
-   step forward in interpreting pathway enrichment findings.
-   Unfortunately, it doesn't provide an "easy summary" to use as a label.

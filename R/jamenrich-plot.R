@@ -3,20 +3,154 @@
 #'
 #' MultiEnrichment Heatmap of Genes and Pathways
 #'
-#' This function takes the `mem` list output from
+#' This function takes the `Mem` output from
 #' `multiEnrichMap()` and creates a gene-by-pathway incidence
 #' matrix heatmap, using `ComplexHeatmap::Heatmap()`.
+#' The major output of this function is to define pathway
+#' clusters which influences other figures produced by
+#' `mem_plot_folio()`: the enrichment heatmap; Cnet cluster plots;
+#' Cnet exemplars.
+#' 
 #' It uses three basic sources of data to annotate the heatmap:
 #'
-#' 1. `mem$memIM` the gene-set incidence matrix
-#' 2. `mem$geneIM` the gene incidence matrix by dataset
-#' 3. `mem$enrichIM` the pathway enrichment P-value matrix by dataset
-#'
-#' It will try to estimate a reasonable number of column and row
-#' splits in the dendrogram, based solely upon the number of
-#' columns and rows. These guesses can be controlled with argument
-#' `column_split` and `row_split`, respectively.
-#'
+#' 1. `memIM` the gene-set incidence matrix
+#' 2. `geneIM` the gene incidence matrix by dataset
+#' 3. `enrichIM` the pathway enrichment P-value matrix by dataset
+#' 
+#' ## Pathway and gene clusters
+#' 
+#' When `column_split` (pathways) or `row_split` (genes) are
+#' not defined, a reasonable number is assigned to split columns
+#' and rows, respectively. The specific number is controlled by
+#' defining an integer number. The splits are named using
+#' `column_title` and `row_title`, which defaults `LETTERS` and
+#' `letters`, respectively.
+#' 
+#' Custom pathway clusters (columns) can be defined by defining
+#' `column_split` as a vector named by values in `sets(Mem)`,
+#' with values used to define the name for each cluster.
+#' When provided as a `factor` it will honor the factor level order.
+#' 
+#' When a subset of `sets(Mem)` are provided, it will also subset
+#' the `Mem` object to show only the matching sets, however it does
+#' not re-apply row and column filtering described above.
+#' It is recommended to use argument 'sets' to subset the pathway
+#' gene sets upfront, then use `column_split` with names that
+#' match 'sets'.
+#' 
+#' Alternatively, `column_split` can be supplied as a `data.frame`
+#' with rownames that match `sets(Mem)`, in which case column values
+#' are combined using `jamba::pasteByRowOrdered()` which also keeps
+#' factor level order.
+#' 
+#' Custom gene clusters (rows) can be defined with `row_split` using
+#' the same mechanism as with `column_split` described above,
+#' with names that match `genes(Mem)` as appropriate.
+#' 
+#' ### Column pathway clustering
+#' 
+#' Columns (pathways) are clustered using a combination of the gene-pathway
+#' incidence matrix, and the -log10 P-values shown along the
+#' pathway axis (usually columns). The purpose is to allow the
+#' enrichment P-value to influence the clustering together with
+#' the gene content. The balance is adjusted using
+#' `enrich_im_weight`, default 0.3, and where 0.0 will ignore the
+#' enrichment P-values during clustering. Higher values will tend
+#' to create clusters that represent shared/unique *significant*
+#' pathways, and less determined based solely on the gene content.
+#' 
+#' Note that the enrichment P-value matrix used during clustering
+#' is adjusted by using `p_cutoff` and `p_floor`.
+#' Values above the `p_cutoff` are converted to 1 so they do not
+#' influence clustering. Values below `p_floor` are converted to
+#' `p_floor` so they influence clustering only at the level of
+#' other values at `p_floor`.
+#' 
+#' The default `cluster_columns=TRUE` will employ `amap::hcluster()`
+#' as a convenient and efficient one-step distance-hierarchical clustering
+#' approach, using `cluster_method` as the distance method. A custom
+#' function can be supplied with `cluster_columns` as long as the
+#' output is 'hclust' or can be coerced to 'hclust'.
+#' 
+#' The clustering distance method `column_method` uses default 'binary',
+#' which treats any non-zero value as 1.
+#' In this case, the relative weight is not important since all non-zero
+#' values are equivalent.
+#' However, `column_method='euclidean'`, current default in `mem_plot_folio()`
+#' may improve the output when adjusting the relative weight of
+#' enrichment P-values with incidence matrix.
+#' 
+#' ### Gene clustering
+#' 
+#' Rows (genes) are clustered using a combination of the gene-pathway
+#' incidence matrix, and the 'geneIM' or 'geneIMdirection' matrix data
+#' shown, as defined with `gene_annotations`. The relative weight of
+#' these matrices is controlled with `gene_im_weight` with default 0.5,
+#' which gives equal weight to each matrix. By default, when directional
+#' gene values are shown the directional matrix is used with clustering.
+#' 
+#' The default `cluster_rows=TRUE` will employ `amap::hcluster()` as
+#' described for Pathway clustering, or `cluster_rows` can be a custom
+#' function that produces 'hclust' or can be coerced to 'hclust'.
+#' 
+#' When `row_method='binary'` the relative weight of gene incidence matrix
+#' and the pathway-gene matrix is not important, since all non-zero
+#' values are treated as 1 during clustering. The `mem_plot_folio()`
+#' default uses 'euclidean' to improve the effect of the relative
+#' weight of these two matrices.
+#' 
+#' Gene clusters are not often used for downstream analysis, for
+#' example they do not form clusters in the Cnet plots, and are not
+#' (yet) used for other analysis in multienrichjam.
+#' However, gene clusters are quite useful when interpreting
+#' pathway-gene data.
+#' 
+#' It is helpful in practice to refer to a gene cluster by name:
+#' "The genes in cluster 'd' all appear to be cytokines."
+#' (Also maybe there should be better names, but that's for
+#' another time.)
+#' 
+#' Gene clusters may form what we call "hot spots", where
+#' most of a gene cluster is colorized and associated with
+#' one or more pathway clusters.
+#' A hot spot indicates a set of genes shared across multiple pathways,
+#' a "core" set of genes which may have serve an important functional
+#' basis in several pathways.
+#' 
+#' An example might be mitogen-activated protein kinase (MAPK) genes,
+#' which typically involve a multi-step kinase call signaling
+#' cascade. Pathways which involve one MAPK would very often
+#' involve each MAPK at subsequent steps in the cascade.
+#' In fact, MAPK genes are often the core signaling mechanism of
+#' numerous apparently unrelated pathways - we refer to it as the
+#' "internal wiring" of the signaling in a cell, as an analogy to
+#' a building which may use wiring to pass along any number of messages.
+#' Different cell types may employ the MAPK cascade to send a message,
+#' and this message may have different meaning across cell types,
+#' and indeed may have meaning based upon the cell state.
+#' 
+#' ## Filtering
+#' 
+#' A subset of pathways can be defined with argument `sets`,
+#' which may be useful to prepare this plot for a set of
+#' "exemplar pathways" which represent key pathways of interest
+#' for a study.
+#' 
+#' Similar for genes with argument `genes`, however this option
+#' is less commonly used.
+#' 
+#' Pathways and genes can be subset by number of occurrences
+#' of each, for example:
+#' 
+#' * `min_gene_ct`: minimum occurrences of a gene across pathways,
+#' which also means the number of pathways in which a gene
+#' occurs.
+#' * `min_set_ct`: minimum occurrences of a set (pathway) across genes,
+#' which means the number of genes in the set across all enrichments.
+#' * `min_set_ct_each`: minimum occurrences of a set (pathway) across genes.
+#' It requires at least `min_set_ct_each` genes in at least one enrichment,
+#' which is consistent with `min_count` in `multiEnrichMap()`.
+#' 
 #' When pathways are filtered by `min_gene_ct`, `min_set_ct`,
 #' and `min_set_ct_each`, the order of operations is as follows:
 #'
@@ -28,31 +162,32 @@
 #' based upon the required number of genes. Only after those pathways
 #' are removed can the number of occurrences of each gene be judged
 #' appropriately.
+#' 
 #'
 #' @family jam plot functions
 #'
-#' @param mem `list` object created by `multiEnrichMap()`. Specifically
-#'    the object is expected to contain `colorV`, `enrichIM`,
-#'    `memIM`, `geneIM`.
-#' @param genes character vector of genes to include in the heatmap,
+#' @param mem `Mem` or `list` object created by `multiEnrichMap()`.
+#' @param genes `character` vector of genes to include in the heatmap,
 #'    all other genes will be excluded.
-#' @param sets character vector of sets (pathways) to include in the heatmap,
+#' @param sets `character` vector of sets (pathways) to include in the heatmap,
 #'    all other sets will be excluded.
-#' @param min_gene_ct minimum number of occurrences of each gene
+#' @param min_gene_ct `integer` minimum number of occurrences of each gene
 #'    across the pathways, all other genes are excluded.
-#' @param min_set_ct minimum number of genes required for each set,
+#' @param min_set_ct `integer` minimum number of genes required for each set,
 #'    all other sets are excluded.
-#' @param min_set_ct_each minimum number of genes required for each set,
-#'    required for at least one enrichment test.
+#' @param min_set_ct_each `integer` minimum number of genes required
+#'    for each set, required for at least one enrichment test.
 #' @param column_fontsize,row_fontsize `numeric`
 #'    passed as `fontsize` to `ComplexHeatmap::Heatmap()`
 #'    to define a specific fontsize for column and row labels. When
 #'    `NULL` the nrow/ncol of the heatmap are used to infer a reasonable
 #'    starting point fontsize, which can be adjusted with `column_cex`
 #'    and `row_cex`.
-#' @param row_method,column_method character string of the distance method
-#'    to use for row and column clustering. The clustering is performed
-#'    by `amap::hcluster()`.
+#' @param row_method,column_method `character` string with distance method,
+#'    default is 'binary' which considers all non-zero values to be 1.
+#'    It is used for row and column hierarchical clustering
+#'    by `amap::hcluster()`. It offers more methods than `hclust()`
+#'    hence its use here.
 #' @param enrich_im_weight `numeric` value between 0 and 1 (default 0.3),
 #'    the relative weight of enrichment `-log10 P-value` and overall
 #'    gene-pathway incidence matrix when clustering pathways.
@@ -75,55 +210,70 @@
 #'    (since values are typically all `(0, 1)`.
 #' @param gene_annotations `character` string indicating which annotation(s)
 #'    to display alongside the gene axis of the heatmap.
-#'    By default it uses `"im", "direction"`, and `"direction"` is removed
-#'    when `mem$geneIMdirection` is not available.
-#'    * `"im"` displays the gene incidence matrix `mem$geneIM` using
-#'    categorical colors defined by `mem$colorV`.
-#'    * `"direction"` displays the gene directionality `mem$geneIMdirection`
+#'    * Default is `"im", "direction"`, and `"default"` which will hide
+#'    the `"direction"` if all non-zero values are positive.
+#'    * When `"im"` is present, the colored incidence matrix is displayed.
+#'    * When `"direction"` is present, the directional matrix is displayed
 #'    using colors defined by `colorjam::col_div_xf(1.2)`.
+#'    * When both `"im"` and `"direction"` are present, they are displayed
+#'    in the order defined.
 #'    * When no values are given, the gene annotation is not displayed.
-#'    * When two values are given, the annotations are displayed in the
-#'    order they are provided.
 #' @param annotation_suffix `character` vector named by values permitted
 #'    by `gene_annotations`, with optional suffix to add to the annotation
-#'    labels. For example it may be helpful to add "hit" or "dir" to
-#'    distinguish the enrichment labels.
-#' @param name character value passed to `ComplexHeatmap::Heatmap()`,
-#'    used as a label above the heatmap color legend.
-#' @param p_cutoff numeric value of the enrichment P-value cutoff,
+#'    labels. For example, as by default, it may be helpful to add
+#'    "hit" or "dir" to distinguish the enrichment labels.
+#' @param name `character` value passed to `ComplexHeatmap::Heatmap()`,
+#'    used as a label above the heatmap color legend. Default `NULL`
+#'    uses "Gene Hits by Enrichment".
+#' @param p_cutoff `numeric` value of the enrichment P-value cutoff,
 #'    above which P-values are not colored, and are therefore white.
 #'    The enrichment P-values are displayed as an annotated heatmap
 #'    at the top of the main heatmap. Any cell that has a color meets
-#'    at least the minimum P-value threshold. This value by default
-#'    is taken from input `mem`, using `mem$p_cutoff`, for
+#'    at least the minimum P-value threshold. The default
+#'    is taken from input `mem` for
 #'    consistency with the input multienrichment analysis.
-#' @param column_split,row_split optional arguments passed to
-#'    `ComplexHeatmap::Heatmap()` to split the heatmap by columns
-#'    or rows, respectively.
-#'    * when `row_split` is `NULL`
-#'    and `auto_split=TRUE`, it will determine an appropriate number
-#'    of clusters based upon the number of rows. To turn off row `split`,
-#'    use `row_split=NULL` or `row_split=0` or `row_split=1`;
-#'    likewise for `column_split`.
-#'    * when `row_split` or `column_split` are supplied as a named
-#'    vector, the names are aligned with `sets` to be displayed
-#'    in the heatmap, and will use the `intersect()` of the two.
-#'    When data is clustered, `cluster_row_slices=FALSE` and
-#'    `cluster_column_slices=FALSE` such that the dendrogram will
-#'    be broken into separate pieces.
-#' @param column_title optional character string with title to display
-#'    above the heatmap.
-#' @param row_title optional character string with title to display
-#'    beside the heatmap. Note when `row_split` is defined, the
-#'    `row_title` is applied to each heatmap section.
-#' @param row_title_rot `numeric` value indicating the rotation of
+#' @param column_split,row_split row and column split, default NULL,
+#'    detects an appropriate number of clusters.
+#'    Passed to `ComplexHeatmap::Heatmap()`.
+#'    * To turn off split use `1`.
+#'    * To specify a fixed number of clusters, use an `integer` value.
+#'    The value may be changed if the underlying data does not support
+#'    that number of clusters.
+#'    * To specify fixed clusters by name, use an atomic vector
+#'    named by the rownames `genes(Mem)` or colnames `sets(Mem)` with
+#'    values which will become the cluster names. When supplying a
+#'    `factor` the factor level order will be maintained.
+#'    * Alternatively, supply a `data.frame` whose rownames match
+#'    the `genes(Mem)` rows or `sets(Mem)` columns, respectively.
+#'    In this case, column values are combined using
+#'    `jamba::pasteByRowOrdered()` which also maintains factor level
+#'    order.
+#'    * When supplying either an atomic vector or `data.frame`
+#'    the actual names will be used to subset the resulting `Mem` data
+#'    if there are fewer names provided than exist in `Mem`.
+#'    Note that the `Mem` data are not subset again by other filter
+#'    criteria, for example `min_set_ct`, `min_gene_ct`, etc.
+#'    * The `column_title` argument is used when
+#' @param auto_split `logical` whether to determine clusters when column_split
+#'    or row_split is NULL, default TRUE.
+#' @param column_title optional `character` string or vector
+#'    to display above the column splits. Default uses `LETTERS`
+#'    with length to match the number of clusters.
+#'    When there is only one column cluster, it is not named unless
+#'    `column_title` also has length 1.
+#' @param row_title optional `character` string or vector
+#'    to display to the left side of the heatmap row splits.
+#'    The default uses `letters` to match the number of row clusters.
+#'    When there is only one row cluster, it is not named unless
+#'    `row_title` also has length 1.
+#' @param row_title_rot `numeric` value, default 0, the rotation of
 #'    `row_title` text, where `0` is not rotated, and `90` is rotated
 #'    90 degrees.
-#' @param colorize_by_gene `logical` indicating whether to color the
-#'    main heatmap body using the colors from `geneIM` which represents
-#'    each enrichment in which a given gene is involved. Colors are
-#'    blended using `colorjam::blend_colors()`, using colors from
-#'    `mem$colorV`, applied to `mem$geneIM`.
+#' @param colorize_by_gene `logical` default TRUE, whether to color the
+#'    main heatmap body using the colors from `geneIM` to indicate
+#'    each enrichment in which a given gene is involved.
+#'    Colors are blended using `colorjam::blend_colors()`,
+#'    using colors from `colorV` in the `geneIMcolors(Mem)`.
 #' @param na_col `character` string indicating the color to use for
 #'    NA or missing values. Typically this argument is only used
 #'    when `colorize_by_gene=TRUE`, where entries with no color are
@@ -139,60 +289,61 @@
 #'    * `row_title_rot` is only applied to rows, due to its purpose.
 #'    * `column_names_rot` is only applied to columns, also due to
 #'    its purpose.
-#' @param seed `numeric` value passed to `set.seed()` to allow
-#'    reproducible results, typically with clustering operations.
-#' @param colramp `character` name of color, color gradient, or a
-#'    vector of colors, anything compatible with input to
-#'    `jamba::getColorRamp()`.
+#' @param colramp `character`, default "Reds", with name of color,
+#'    color gradient, or a vector of colors, anything that can be converted
+#'    to a color gradient by `jamba::getColorRamp()`.
 #' @param column_names_max_height `grid::unit` passed to
 #'    `ComplexHeatmap::Heatmap()`. When supplied as `numeric` it is
-#'    converted to units in "mm".
+#'    converted to units in "mm". Default 180 mm.
 #' @param column_names_rot `numeric` passed to
 #'    `ComplexHeatmap::Heatmap()`.
-#' @param show_gene_legend,show_pathway_legend `logical` whether to show
-#'    the gene IM and pathway IM legends, respectively.
-#'    * The gene IM legend is `FALSE` by default, since it only describes the
+#' @param show_gene_legend,show_pathway_legend `logical`,
+#'    whether to show the gene IM and pathway IM legends, respectively.
+#'    * The gene IM legend is FALSE by default, since it only describes the
 #'    color used for each column, and is somewhat redundant with the pathway
 #'    IM legend.
-#'    * The pathway IM legend displays the color scale including the range
-#'    of enrichment P-values colorized.
-#' @param show_heatmap_legend `numeric` or `logical`, (default 8)
-#'    with the maximum number of labels to use for the heatmap color legend.
-#'    The heatmap color legend includes all the
-#'    the possible blended colors based upon the gene IM data.
+#'    * The pathway IM default is TRUE, it displays the color scale
+#'    including the range of enrichment P-values colorized.
+#' @param show_heatmap_legend `numeric` or `logical`, (default 8),
+#'    the maximum number of labels to use for the heatmap color legend.
+#'    When 'colorize_by_gene' is TRUE, the heatmap legend would include
+#'    all possible blended colors using gene IM data, which frankly can
+#'    become too much.
 #'    * When `logical`, `TRUE` is converted to `8` by default.
 #'    * When there are more legend items than than `show_heatmap_legend`
-#'    the color legend will only display singlet colors.
+#'    the color legend will only display singlet colors, which means
+#'    only one color per individual set defined in colorV.
+#'    * This legend can be created and extracted from the
+#'    output `Heatmap` object to be displayed independently for
+#'    publishable figures if necessary.
 #' @param use_raster `logical` passed to `ComplexHeatmap::Heatmap()`,
-#'    (default TRUE), indicating whether to rasterize the heatmap body.
-#'    If the heatmap appears too blurry, use `FALSE` which will render each
-#'    heatmap cell individually. For very large heatmaps this can create
-#'    a very large PDF file size, and may introduce visual artifacts
-#'    if the output dimensions are smaller than 1 cell per pixel.
+#'    default FALSE, whether to rasterize the heatmap body.
+#'    This option is recommended FALSE when 'colorize_by_gene' is TRUE,
+#'    due to the way the rasterization is handled at matrix level.
+#'    For very large heatmaps you may try 'colorize_by_gene=FALSE'
+#'    and 'use_raster=TRUE' to reduce the figure size with PDF and SVG
+#'    output, and will improve visual fidelity in some cases.
 #' @param seed `numeric` value passed to `set.seed()` to define a
-#'    reproducible random seed.
+#'    reproducible random seed during row and column clustering.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to `ComplexHeatmap::Heatmap()`
 #'    for customization. However, if `...` causes an error, the same
 #'    `ComplexHeatmap::Heatmap()` function is called without `...`,
 #'    which is intended to allow overloading `...` for different
 #'    functions.
-#'
-#' @returns `Heatmap` object defined in `ComplexHeatmap::Heatmap()`, with
-#'    additional attributes:
-#'    * `"caption"` - a `character` string with caption that described
-#'    the data dimensions and clustering parameters.
-#'    * `"caption_legendlist"` - a `ComplexHeatmap::Legends` object suitable
-#'    to be included with Heatmap legends using
+#' 
+#' @returns `Heatmap` object defined in `ComplexHeatmap::Heatmap()` with
+#'    custom attributes with the method caption:
+#'    * `"caption"`: `character` string with method details.
+#'    * `"caption_legendlist"`: `ComplexHeatmap::Legends` object suitable
+#'    to be included with Heatmap legends by
 #'    `draw(hm, annotation_legend_list=caption_legendlist)`, or
-#'    drawn with `grid::grid.draw(caption_legendlist)`.
-#'    * `"draw_caption"` - a `function` that will draw the caption in the
-#'    bottom-left corner of the heatmap by default, to be called
+#'    or drawn directly `grid::grid.draw(caption_legendlist)`.
+#'    * `"draw_caption"` - `function` that will draw the caption in the
+#'    bottom-right corner of the device by default, to be called
 #'    with `attr(hm, "draw_caption")()` or `draw_caption()`.
 #'
-#'    In addition, the returned object can be interrogated with two helper
-#'    functions that help define the row and column clusters, and the
-#'    exact order of labels as they appear in the heatmap.
+#'    The `Heatmap` row and column order can be retrieved:
 #'    1. `jamba::heatmap_row_order()` - returns a `list` of vectors of
 #'    rownames in the order they appear in the heatmap, with list names
 #'    defined by row split.
@@ -218,16 +369,17 @@ mem_gene_path_heatmap <- function
  enrich_im_weight=0.3,
  gene_im_weight=0.5,
  gene_annotations=c("im",
-    "direction"),
+    "direction",
+    "default"),
  annotation_suffix=c(im="hit",
     direction="dir"),
  simple_anno_size=grid::unit(6, "mm"),
  cluster_columns=NULL,
  cluster_rows=NULL,
- cluster_row_slices=TRUE,
- cluster_column_slices=TRUE,
+ cluster_row_slices=FALSE,
+ cluster_column_slices=FALSE,
  name=NULL,
- p_cutoff=mem$p_cutoff,
+ p_cutoff=NULL,
  p_floor=1e-10,
  row_split=NULL,
  column_split=NULL,
@@ -253,6 +405,28 @@ mem_gene_path_heatmap <- function
    if (length(seed) > 0) {
       set.seed(head(seed, 1));
    }
+   
+   # Recognize Mem or mem (list) input
+   Mem <- NULL;
+   if (inherits(mem, "Mem")) {
+      Mem <- mem;
+      mem <- Mem_to_list(Mem);
+   } else {
+      Mem <- list_to_Mem(mem);
+   }
+   
+   # fill some default arguments
+   if (length(p_cutoff) == 0) {
+      if ("p_cutoff" %in% names(thresholds(Mem))) {
+         p_cutoff <- thresholds(Mem)$p_cutoff;
+      } else if ("cutoffRowMinP" %in% names(thresholds(Mem))) {
+         p_cutoff <- thresholds(Mem)[["cutoffRowMinP"]];
+      } else {
+         jamba::printDebug("thresholds:");print(thresholds(Mem));# debug
+         p_cutoff <- 1;
+      }
+   }
+   
    if (length(colnames(mem$memIM)) == 0) {
       colnames(mem$memIM) <- rownames(mem$enrichIM);
    }
@@ -267,7 +441,7 @@ mem_gene_path_heatmap <- function
    }
    memIM <- mem$memIM;
    if (length(genes) > 0) {
-      memIM <- memIM[intersect(rownames(memIM), genes),,drop=FALSE];
+      memIM <- memIM[intersect(rownames(memIM), genes), , drop=FALSE];
    }
    if (length(sets) > 0) {
       memIM <- memIM[,intersect(colnames(memIM), sets),drop=FALSE];
@@ -282,26 +456,34 @@ mem_gene_path_heatmap <- function
 
    # gene_annotations: im, direction
    gene_annotations <- intersect(gene_annotations,
-      c("im", "direction"));
-   if ("direction" %in% gene_annotations && !"geneIMdirection" %in% names(mem)) {
-      gene_annotations <- setdiff(gene_annotations, "direction");
-      if (verbose) {
-         jamba::printDebug("mem_gene_path_heatmap(): ",
-            c("gene_annotations='direction'",
-               " was removed because ",
-               "mem$geneIMdirection",
-               " is not available."),
-            sep="")
+      c("im", "direction", "default"));
+   if ("direction" %in% gene_annotations) {
+      if ("default" %in% gene_annotations &&
+            all(jamba::rmNA(naValue=0, geneIMdirection(Mem)) >= 0)) {
+         gene_annotations <- setdiff(gene_annotations, "direction");
+         if (!"im" %in% gene_annotations) {
+            gene_annotations <- "im";
+         }
+         if (verbose) {
+            jamba::printDebug("mem_gene_path_heatmap(): ",
+               c("gene_annotations='direction'",
+                  " was removed by 'default' ",
+                  "and all non-zero geneIMdirection were positive",
+                  " is not available."),
+               sep="")
+         }
       }
    }
 
    ## TODO:
    ## apply min_set_ct_each alongside p_cutoff to ensure the
    ## pathways with min_set_ct_each also meet p_cutoff
-   met_p_cutoff <- (mem$enrichIM[colnames(memIM),,drop=FALSE] <= p_cutoff)
-   met_min_set_ct_each <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$geneIM)), function(icol){
-      colSums(mem$geneIM[rownames(memIM),icol] * (memIM != 0)) >= min_set_ct_each;
-   }));
+   met_p_cutoff <- (mem$enrichIM[colnames(memIM), , drop=FALSE] <= p_cutoff)
+   met_min_set_ct_each <- do.call(cbind,
+      lapply(jamba::nameVector(colnames(mem$geneIM)), function(icol){
+         colSums(mem$geneIM[rownames(memIM), icol] * (memIM != 0)) >= min_set_ct_each;
+      })
+   );
    met_criteria <- rowSums(met_p_cutoff & met_min_set_ct_each) > 0;
    if (any(!met_criteria) && verbose) {
       jamba::printDebug("mem_gene_path_heatmap(): ",
@@ -314,7 +496,7 @@ mem_gene_path_heatmap <- function
          " and min_set_ct_each >= ",
          min_set_ct_each);
    }
-   memIM <- memIM[,met_criteria,drop=FALSE];
+   memIM <- memIM[, met_criteria, drop=FALSE];
 
    ## apply min_set_ct to each enrichment test
    memIMsetct <- colSums(memIM > 0);
@@ -325,7 +507,7 @@ mem_gene_path_heatmap <- function
             min_set_ct);
       }
       sets <- colnames(memIM)[memIMsetct >= min_set_ct];
-      memIM <- memIM[,sets,drop=FALSE];
+      memIM <- memIM[, sets, drop=FALSE];
    }
    memIMgenect <- rowSums(memIM > 0);
    if (any(memIMgenect < min_gene_ct)) {
@@ -335,150 +517,68 @@ mem_gene_path_heatmap <- function
             min_gene_ct);
       }
       genes <- rownames(memIM)[memIMgenect >= min_gene_ct];
-      memIM <- memIM[genes,,drop=FALSE];
+      memIM <- memIM[genes, , drop=FALSE];
    }
 
    ## Additional step to ensure columns and rows are not empty
-   memIM <- memIM[,colSums(memIM > 0) > 0,drop=FALSE];
-   memIM <- memIM[rowSums(memIM > 0) > 0,,drop=FALSE];
+   memIM <- memIM[, colSums(memIM > 0) > 0, drop=FALSE];
+   memIM <- memIM[rowSums(memIM > 0) > 0, , drop=FALSE];
    if (any(dim(memIM) == 0)) {
       stop("No remaining data after filtering.");
+   }
+   if (!identical(mem$memIM, memIM)) {
+      if (verbose) {
+         jamba::printDebug("mem_gene_path_heatmap(): ",
+            "Subsetting Mem object.");
+      }
+      Mem <- Mem[rownames(memIM), colnames(memIM), ];
+      mem <- Mem_to_list(Mem);
+      memIM <- memIM(Mem);
    }
    genes <- rownames(memIM);
    sets <- colnames(memIM);
 
-   ## Validate row_split, row_title, column_split, column_title
-   if (auto_split) {
-      if (length(row_split) == 0) {
-         if (nrow(memIM) < 5) {
-            row_split <- NULL;
-            row_title <- NULL;
-         } else {
-            row_split <- jamba::noiseFloor(floor(nrow(memIM)^(1/2.5)),
-               ceiling=12);
-            if (verbose) {
-               jamba::printDebug("mem_gene_path_heatmap(): ",
-                  "auto_split row_split:", row_split);
-            }
-         }
+   
+   ## Handle row/column split, clustering, subsetting
+   hrcs <- handle_rowcol_splits(
+      Mem=Mem,
+      auto_split=auto_split,
+      row_split=row_split,
+      row_title=row_title,
+      gene_im_weight=gene_im_weight,
+      cluster_rows=cluster_rows,
+      row_method=row_method,
+      column_split=column_split,
+      column_title=column_title,
+      cluster_columns=cluster_columns,
+      column_method=column_method,
+      enrich_im_weight=enrich_im_weight,
+      p_cutoff=p_cutoff,
+      p_floor=p_floor,
+      ...)
+   if (!identical(Mem, hrcs$Mem)) {
+      if (verbose) {
+         jamba::printDebug("mem_gene_path_heatmap(): ",
+            "Subsetting Mem after handle_rowcol_split().");
       }
-      if (length(column_split) == 0) {
-         if (ncol(memIM) < 5) {
-            if (ncol(memIM) < 2) {
-               column_split <- NULL;
-               column_title <- NULL;
-            } else {
-               column_split <- ncol(memIM);
-            }
-         } else {
-            ncol_x <- (5 + ncol(memIM)/1.5) ^ (1/2);
-            column_split <- jamba::noiseFloor(floor(ncol_x), ceiling=8);
-            if (verbose) {
-               jamba::printDebug("mem_gene_path_heatmap(): ",
-                  "auto_split column_split:", column_split);
-            }
-         }
-      }
+      Mem <- hrcs$Mem;
+      mem <- Mem_to_list(Mem);
+      genes <- genes(Mem);
+      sets <- sets(Mem);
+      memIM <- mem$memIM;
    }
-   if (length(row_split) == 1 && is.numeric(row_split)) {
-      if (row_split > length(genes)) {
-         row_split <- min(c(
-            ceiling(length(genes)^(1/3)),
-            10));
-      }
-      if (row_split <= 1) {
-         row_split <- NULL;
-         row_title <- NULL;
-         if (length(row_title) > 1) {
-            row_title <- NULL;
-         }
-      } else {
-         if (length(row_title) > 1) {
-            row_title <- jamba::makeNames(
-               rep(row_title,
-                  length.out=row_split),
-               ...);
-         }
-      }
-   }
-   if (length(row_split) > 0 && !is.numeric(row_split)) {
-      cluster_row_slices=FALSE;
-      # align row_split with genes
-      if (length(names(row_split)) > 0) {
-         if (!any(genes %in% names(row_split))) {
-            stop("names(row_split) do not match any genes");
-         }
-         genes <- intersect(genes, names(row_split));
-         row_split <- row_split[genes];
-         memIM <- memIM[genes, , drop=FALSE];
-      }
-      if (length(row_title) > 0) {
-         if (grepl("frame|matrix|tbl", ignore.case=TRUE, class(row_split))) {
-            row_split_v <- jamba::pasteByRow(row_split);
-            row_title <- jamba::makeNames(
-               rep(row_title,
-                  length.out=length(unique(row_split_v))),
-               ...);
-         } else {
-            row_title <- jamba::makeNames(
-               rep(row_title,
-                  length.out=length(unique(row_split))),
-               ...);
-         }
-      }
-   }
-
-   if (length(column_split) == 1 && is.numeric(column_split)) {
-      if (column_split > length(sets)) {
-         column_split <- length(sets);
-      }
-      if (column_split <= 1) {
-         column_split <- NULL;
-         if (length(column_title) > 1) {
-            column_title <- NULL;
-         }
-      } else {
-         if (length(column_title) == 0) {
-            column_title <- LETTERS;
-         }
-         if (length(column_title) > 1) {
-            column_title <- jamba::makeNames(
-               rep(column_title,
-                  length.out=column_split),
-               ...);
-         }
-      }
-   }
-   if (length(column_split) > 0 && !is.numeric(column_split)) {
-      cluster_column_slices=FALSE;
-      # align column_split with sets
-      if (length(names(column_split)) > 0) {
-         if (!any(sets %in% names(column_split))) {
-            stop("names(column_split) do not match any sets");
-         }
-         sets <- intersect(sets, names(column_split));
-         column_split <- column_split[sets];
-         memIM <- memIM[, sets, drop=FALSE];
-      }
-      if (length(column_title) > 0) {
-         if (grepl("frame|matrix|tbl", ignore.case=TRUE, class(column_split))) {
-            column_split_v <- jamba::pasteByRow(column_split);
-            column_title <- jamba::makeNames(
-               rep(column_title,
-                  length.out=length(unique(column_split_v))),
-               ...);
-         } else {
-            column_title <- jamba::makeNames(
-               rep(column_title,
-                  length.out=length(unique(column_split))),
-               ...);
-         }
-      }
-   }
-
+   row_split <- hrcs$row_split;
+   row_title <- hrcs$row_title;
+   cluster_rows <- hrcs$cluster_rows;
+   column_split <- hrcs$column_split;
+   column_title <- hrcs$column_title;
+   cluster_columns <- hrcs$cluster_columns;
+   
    ## Automatic fontsize
    if (length(row_fontsize) == 0) {
-      row_fontsize <- row_cex * 60/(nrow(memIM))^(1/2);
+      row_fontsize <- jamba::noiseFloor(row_cex * 60/(nrow(memIM))^(1/2),
+         minimum=1,
+         ceiling=18);
    }
    if (length(column_fontsize) == 0) {
       column_fontsize <- jamba::noiseFloor(column_cex * 60/(ncol(memIM))^(1/2),
@@ -511,114 +611,7 @@ mem_gene_path_heatmap <- function
                   lens=3)))
       )
    });
-   ## Cluster columns
-   # if cluster_columns=NULL or cluster_columns=TRUE
-   if (length(cluster_columns) == 0 ||
-         (length(cluster_columns) == 1 &&
-               is.logical(cluster_columns) &&
-               cluster_columns %in% TRUE)) {
-      # Assemble the P-value matrix with gene incidence matrix
-      # and cluster altogether, which has the benefit/goal of
-      # accentuating similar enrichment profiles which also have
-      # similar gene content.
-      if (!length(enrich_im_weight) == 1 || any(enrich_im_weight > 1)) {
-         enrich_im_weight <- 0.3;
-      }
-      enrich_weight <- round(enrich_im_weight * 10);
-      im_weight <- 10 - enrich_weight;
-      min_weight <- max(c(1, min(c(enrich_weight, im_weight))));
-      enrich_weight <- enrich_weight / min_weight;
-      im_weight <- im_weight / min_weight;
-      ## 0.0.31.900 use column_matrix with enrich_im_weight adjustment
-      column_matrix <- cbind(
-         jamba::noiseFloor(
-            -log10(mem$enrichIM[sets,,drop=FALSE]),
-            minimum=-log10(p_cutoff+1e-5),
-            newValue=0,
-            ceiling=-log10(p_floor)) * enrich_weight,
-            # ceiling=10) * enrich_weight,
-         t((mem$memIM[genes, sets, drop=FALSE]) * im_weight) # non-incidence
-         # t((mem$memIM[genes, sets, drop=FALSE] != 0) * 1) * im_weight # incidence
-      );
-      if (is.numeric(column_split)) {
-         if (length(seed) > 0) {
-            set.seed(head(seed, 1));
-         }
-         cluster_columns <- amap::hcluster(
-            link="ward",
-            column_matrix,
-            method=column_method);
-      } else {
-         cluster_column_slices=FALSE;
-         cluster_columns <- function(x, ...){
-            if (length(seed) > 0) {
-               set.seed(head(seed, 1));
-            }
-            userows <- rownames(x);
-            use_x <- jamba::rmNA(naValue=0,
-               column_matrix[match(userows, rownames(column_matrix)), , drop=FALSE]);
-            amap::hcluster(use_x,
-               link="ward",
-               method=column_method)
-         }
-      }
-   }
-   ## Cluster rows
-   if (length(cluster_rows) == 0 ||
-         (length(cluster_rows) == 1 && is.logical(cluster_rows) && cluster_rows)) {
-      if (!length(gene_im_weight) == 1 || any(gene_im_weight > 1)) {
-         gene_im_weight <- 0.5;
-      }
-      gene_weight <- round(gene_im_weight * 100)/10;
-      im_weight <- 10 - gene_weight;
-      min_weight <- max(c(1, min(c(gene_weight, im_weight))));
-      gene_weight <- gene_weight / min_weight;
-      im_weight <- im_weight / min_weight;
-      use_gene_im <- mem$geneIM;
-      if ("geneIMdirection" %in% names(mem)) {
-         # TODO: verify what to do when geneIM has 1 and geneIMdirection is NA,
-         # which implies direction is "not known". For now we use 1 to maintain
-         # the geneIM value.
-         use_gene_im <- use_gene_im * jamba::rmNA(mem$geneIMdirection, naValue=1);
-      }
-      if (im_weight == 0) {
-         row_matrix <- (use_gene_im[genes, , drop=FALSE]) * gene_weight;
-      } else if (gene_weight == 0) {
-         row_matrix <- ((mem$memIM[genes,sets,drop=FALSE]) * im_weight); # not incidence
-         # row_matrix <- ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight; # incidence
-      } else {
-         row_matrix <- cbind(
-            (use_gene_im[genes, , drop=FALSE]) * gene_weight,
-            ((mem$memIM[genes, sets, drop=FALSE])) * im_weight)
-         # note: do not convert memIM to incidence
-         # below: convert to incidence matrix format
-         # ((mem$memIM[genes,sets,drop=FALSE] != 0) * 1) * im_weight)
-      }
-      if (is.numeric(row_split)) {
-         if (length(seed) > 0) {
-            set.seed(head(seed, 1));
-         }
-         cluster_rows <- amap::hcluster(
-            link="ward",
-            row_matrix,
-            method=row_method);
-      } else {
-         cluster_row_slices=FALSE;
-         cluster_rows <- function(x, ...){
-            if (length(seed) > 0) {
-               set.seed(head(seed, 1));
-            }
-            userows <- rownames(x);
-            usematrix <- jamba::rmNA(naValue=0,
-               row_matrix[x, , drop=FALSE]);
-            amap::hcluster(
-               usematrix,
-               link="ward",
-               method=row_method);
-         }
-      }
-   }
-
+   
    ## Optionally colorize the matrix by gene
    if (colorize_by_gene) {
       ## Convert rows to blended colors
@@ -850,7 +843,8 @@ mem_gene_path_heatmap <- function
          show_legend=show_pathway_legend,
          annotation_legend_param=path_annotation_legend_param,
          col=col_iml4,
-         df=-log10(mem$enrichIM[sets,,drop=FALSE]),
+         df=data.frame(check.names=FALSE,
+            -log10(mem$enrichIM[sets,,drop=FALSE])),
          gap=grid::unit(0, "mm")
       );
       # scalable approach to annotations
@@ -971,7 +965,7 @@ mem_gene_path_heatmap <- function
             ...);
       }, error=function(e){
          # same as above but without ...
-         if (verbose) {
+         if (TRUE || verbose) {
             jamba::printDebug("mem_gene_path_heatmap(): ",
                "Error in Heatmap(), calling without '...', error is shown below:");
             print(e);
@@ -1142,8 +1136,7 @@ mem_gene_path_heatmap <- function
 #'
 #' @family jam plot functions
 #'
-#' @param mem `list` object created by `multiEnrichMap()`. Specifically
-#'    the object is expected to contain `enrichIM`.
+#' @param mem `Mem` or legacy `list` mem created by `multiEnrichMap()`.
 #' @param style `character` string indicating the style of heatmap:
 #'    `"heatmap"` produces a regular heatmap, shaded by `log10(Pvalue)`;
 #'    `"dotplot"` produces a dotplot, where the dot size is proportional
@@ -1259,7 +1252,7 @@ mem_enrichment_heatmap <- function
     "dotplot",
     "heatmap"),
  apply_direction=FALSE,
- p_cutoff=mem$p_cutoff,
+ p_cutoff=NULL,
  min_count=1,
  p_floor=1e-10,
  point_size_factor=1,
@@ -1301,7 +1294,24 @@ mem_enrichment_heatmap <- function
 {
    #
    style <- match.arg(style);
-
+   Mem <- NULL;
+   if (inherits(mem, "Mem")) {
+      Mem <- mem;
+      mem <- Mem_to_list(Mem);
+   } else {
+      Mem <- list_to_Mem(mem);
+   }
+   
+   if (length(p_cutoff) == 0) {
+      if ("p_cutoff" %in% names(thresholds(Mem))) {
+         p_cutoff <- thresholds(Mem)$p_cutoff;
+      } else if ("cutoffRowMinP" %in% names(thresholds(Mem))) {
+         p_cutoff <- thresholds(Mem)[["cutoffRowMinP"]];
+      } else {
+         p_cutoff <- 1;
+      }
+   }
+   
    col_logp <- circlize::colorRamp2(
       breaks=c(-log10(p_cutoff + 1e-10),
          seq(from=-log10(p_cutoff),
@@ -1323,26 +1333,22 @@ mem_enrichment_heatmap <- function
 
    if (length(sets) > 0) {
       # version 0.0.76.900 change order to retain sets ordering by default
-      # sets <- intersect(rownames(mem$enrichIM), sets);
-      sets <- intersect(sets, rownames(mem$enrichIM));
-
-      i_changes <- jamba::vigrep("^enrichIM", names(mem));
-      for (i_change in i_changes) {
-         i_match <- match(sets, rownames(mem[[i_change]]));
-         mem[[i_change]] <- mem[[i_change]][i_match,,drop=FALSE];
-      }
+      # sets <- intersect(rownames(enrichIM(Mem)), sets);
+      sets <- intersect(sets, sets(Mem));
+      Mem <- Mem[, sets, ]
+      mem <- Mem_to_list(Mem)
    } else {
-      sets <- rownames(mem$enrichIM);
+      sets <- sets(Mem);
    }
-   if (any(dim(mem$enrichIM) == 0)) {
+   if (any(dim(Mem) == 0)) {
       stop("No remaining data after filtering.");
    }
-   if (ncol(mem$enrichIM) > 1) {
+   if (ncol(enrichIM(Mem)) > 1) {
       if (is.logical(cluster_rows) && TRUE %in% cluster_rows) {
          cluster_rows <- amap::hcluster(
             link="ward",
             jamba::noiseFloor(
-               -log10(mem$enrichIM[sets,,drop=FALSE]),
+               -log10(enrichIM(Mem)[sets,,drop=FALSE]),
                minimum=-log10(p_cutoff+1e-5),
                newValue=0,
                ceiling=-log10(p_floor)),
@@ -1356,7 +1362,7 @@ mem_enrichment_heatmap <- function
          cluster_columns <- amap::hcluster(
             link="ward",
             jamba::noiseFloor(
-               t(-log10(mem$enrichIM[sets,,drop=FALSE])),
+               t(-log10(enrichIM(Mem)[sets,,drop=FALSE])),
                minimum=-log10(p_cutoff+1e-5),
                newValue=0,
                ceiling=-log10(p_floor)),
@@ -1375,12 +1381,14 @@ mem_enrichment_heatmap <- function
 
    ## Automatic fontsize
    if (length(column_fontsize) == 0) {
-      row_fontsize <- jamba::noiseFloor(row_cex * 60/(nrow(mem$enrichIM))^(1/2),
+      row_fontsize <- jamba::noiseFloor(
+         row_cex * 60/(nrow(enrichIM(Mem)))^(1/2),
          minimum=1,
          ceiling=18);
    }
    if (length(column_fontsize) == 0) {
-      column_fontsize <- jamba::noiseFloor(column_cex * 60/(ncol(mem$enrichIM))^(1/2),
+      column_fontsize <- jamba::noiseFloor(
+         column_cex * 60/(ncol(enrichIM(Mem)))^(1/2),
          minimum=1,
          ceiling=20);
    }
@@ -1394,15 +1402,17 @@ mem_enrichment_heatmap <- function
    }
 
    # optionally apply direction
-   if (apply_direction && "enrichIMdirection" %in% names(mem)) {
-      use_matrix <- -log10(mem$enrichIM);
+   has_negative <- any(
+      jamba::rmNA(naValue=0, enrichIMdirection(Mem)) < 0);
+   if (TRUE %in% apply_direction && has_negative) {
+      use_matrix <- -log10(enrichIM(Mem));
       # use_direction contains z-score values at or above direction_cutoff
       # otherwise it is set to zero
       use_direction <- (
-         (abs(mem$enrichIMdirection) >= direction_cutoff) *
-         mem$enrichIMdirection);
+         (abs(enrichIMdirection(Mem)) >= direction_cutoff) *
+         enrichIMdirection(Mem));
    } else {
-      use_matrix <- -log10(mem$enrichIM);
+      use_matrix <- -log10(enrichIM(Mem));
       use_direction <- NULL;
       apply_direction <- FALSE;
    }
@@ -1459,7 +1469,7 @@ mem_enrichment_heatmap <- function
          ...);
    } else {
       if (length(gene_count_max) == 0) {
-         ctmax <- ceiling(max(mem$enrichIMgeneCount, na.rm=TRUE));
+         ctmax <- ceiling(max(Mem@enrichIMgeneCount, na.rm=TRUE));
       } else {
          ctmax <- gene_count_max;
       }
@@ -1579,7 +1589,7 @@ mem_enrichment_heatmap <- function
             list(
                use_direction,
                use_matrix,
-               mem$enrichIMgeneCount),
+               Mem@enrichIMgeneCount),
             invert=grepl("invert", style),
             pch=pch,
             size_fun=ct_approxfun,
@@ -1608,7 +1618,7 @@ mem_enrichment_heatmap <- function
             list(
                use_matrix,
                use_direction,
-               mem$enrichIMgeneCount),
+               Mem@enrichIMgeneCount),
             invert=grepl("invert", style),
             pch=pch,
             size_fun=ct_approxfun,
@@ -1645,18 +1655,10 @@ mem_enrichment_heatmap <- function
             length(row_gap) > 0 &&
             any(as.numeric(row_gap) > 0) &&
             length(hm_height) == 1) {
-         # if (verbose) {
-         #    jamba::printDebug("mem_enrichment_heatmap(): ",
-         #       "Adjusted hm_height by row_split and row_gap.");# debug
-         # }
          if (is.numeric(row_split) &&
                length(row_split) == 1 &&
                row_split > 1) {
             hm_height <- hm_height + (row_split - 1) * row_gap;
-            # if (verbose) {
-            #    print(hm_height);# debug
-            #    print(hm_height);# debug
-            # }
          }
       }
 
@@ -1699,29 +1701,32 @@ mem_enrichment_heatmap <- function
    }
 
    if ("heatmap" %in% style && color_by_column) {
-      hm_sets <- rownames(mem$enrichIM)[ComplexHeatmap::row_order(hm)];
+      hm_sets <- rownames(enrichIM(Mem))[ComplexHeatmap::row_order(hm)];
       ## Prepare fresh image colors using p_cutoff and p_floor
-      enrichIMcolors <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$enrichIM)), function(i){
-         x <- -log10(mem$enrichIM[,i]);
-         cr1 <- circlize::colorRamp2(
-            breaks=c(-log10(p_cutoff + 1e-10),
-               seq(from=-log10(p_cutoff), to=-log10(p_floor), length.out=24)),
-            colors=c("white",
-               getColorRamp(mem$colorV[i],
-                  n=24,
-                  trimRamp=c(1, 0),
-                  lens=lens)));
-         cr1(x);
-      }));
+      enrichIMcolors <- do.call(cbind,
+         lapply(jamba::nameVector(colnames(enrichIM(Mem))), function(i){
+            x <- -log10(enrichIM(Mem)[,i]);
+            cr1 <- circlize::colorRamp2(
+               breaks=c(-log10(p_cutoff + 1e-10),
+                  seq(from=-log10(p_cutoff),
+                     to=-log10(p_floor),
+                     length.out=24)),
+               colors=c("white",
+                  getColorRamp(mem$colorV[i],
+                     n=24,
+                     trimRamp=c(1, 0),
+                     lens=lens)));
+            cr1(x);
+         }));
       #enrichIMcolors <- colorjam::matrix2heatColors(
-      #   x=-log10(mem$enrichIM),
+      #   x=-log10(enrichIM(Mem)),
       #   colorV=mem$colorV,
       #   baseline=-log10(p_cutoff),
       #   numLimit=-log10(p_floor),
       #   lens=lens);
       if (do_plot) {
-         jamba::imageByColors(enrichIMcolors[hm_sets,,drop=FALSE],
-            cellnote=sapply(mem$enrichIM[hm_sets,,drop=FALSE],
+         jamba::imageByColors(enrichIMcolors[hm_sets, , drop=FALSE],
+            cellnote=sapply(enrichIM(Mem)[hm_sets, , drop=FALSE],
                base::format.pval,
                eps=1e-50,
                digits=2),
@@ -1734,8 +1739,8 @@ mem_enrichment_heatmap <- function
             ...);
       }
       retlist <- list(
-         matrix=enrichIMcolors[hm_sets,,drop=FALSE],
-         cellnote=sapply(mem$enrichIM[hm_sets,,drop=FALSE],
+         matrix=enrichIMcolors[hm_sets, , drop=FALSE],
+         cellnote=sapply(enrichIM(Mem)[hm_sets, , drop=FALSE],
             base::format.pval,
             eps=1e-50,
             digits=2),
@@ -1753,9 +1758,9 @@ mem_enrichment_heatmap <- function
 
 #' MultiEnrichMap plot
 #'
-#' MultiEnrichMap plot
+#' MultiEnrichMap plot, deprecated
 #'
-#' This function is likely to be replaced by `mem2emap()`.
+#' This function is replaced by `mem2emap()` and is deprecated.
 #'
 #' This function takes output from `multiEnrichMap()` and produces
 #' customized "multiple enrichMap" plots using an igraph network.
@@ -1778,7 +1783,7 @@ mem_enrichment_heatmap <- function
 #' @family jam igraph functions
 #' @family jam plot functions
 #'
-#' @param mem `list` object output from `multiEnrichMap()`, specifically
+#' @param mem legacy `list` mem from `multiEnrichMap()`, specifically
 #'    containing elements `"multiEnrichMap","multiEnrichMap2"` which
 #'    are expected to be `igraph` objects.
 #' @param overlap numeric value between 0 and 1, indicating the Jaccard
@@ -1866,13 +1871,13 @@ mem_multienrichplot <- function
    if (length(overlap) > 0 && overlap > 0) {
       delete_edges <- which(igraph::E(g)$overlap < overlap);
       if (length(delete_edges) > 0) {
-         g <- igraph::delete.edges(g, delete_edges);
+         g <- igraph::delete_edges(g, delete_edges);
       }
    }
    if (length(overlap_count) > 0 && "overlap_count" %in% igraph::list.edge.attributes(g)) {
       delete_edges <- which(igraph::E(g)$overlap_count < overlap_count);
       if (length(delete_edges) > 0) {
-         g <- igraph::delete.edges(g, delete_edges);
+         g <- igraph::delete_edges(g, delete_edges);
       }
    }
    if (remove_blanks) {
@@ -2008,6 +2013,11 @@ mem_legend <- function
  ...)
 {
    ##
+   Mem <- NULL;
+   if (inherits(mem, "Mem")) {
+      Mem <- mem;
+      mem <- Mem_to_list(Mem);
+   }
    directional_column <- match.arg(directional_column);
    if (!is.list(mem) || !"colorV" %in% names(mem)) {
       stop("Input mem must be a list with element 'colorV'");

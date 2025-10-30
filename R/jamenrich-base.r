@@ -76,61 +76,79 @@
 #' @param subsetSets `character` vector of optional set names to
 #'    use in the analysis, useful to analyze only a specific subset
 #'    of known pathways.
-#' @param overlapThreshold `numeric` value between 0 and 1, indicating
-#'    the Jaccard overlap score above which two pathways will be linked
-#'    in the EnrichMap `igraph` network. By default, pathways whose
-#'    genes overlap more than `0.1` will be connected, which is roughly
-#'    equivalent to about a 10% overlap. Note that the Jaccard coefficient
-#'    is adversely affected when pathway sets differ in size by more than
-#'    about 5-fold.
-#' @param cutoffRowMinP `numeric` value between 0 and 1, indicating the
-#'    enrichment P-value required by at least one enrichment result, to
-#'    be retained in downstream analyses. This P-value can be confirmed
-#'    in the returned list element `"enrichIM"`, which is a matrix of
-#'    P-values by pathway and enrichment.
-#' @param enrichBaseline `numeric` value indicating the `-log10(P-value)`
-#'    at which colors are defined as non-blank in color gradients.
-#'    This value is typically derived from `cutoffRowMinP` to ensure
-#'    that colors are only applied when a pathway meets this significance
-#'    threshold.
-#' @param enrichLens `numeric` value indicating the "lens" to apply to
-#'    color gradients, where numbers above 0 make the color ramp more
-#'    compressed, so colors are more vivid at lower numeric values.
+#' @param overlapThreshold `numeric` (deprecated), value between 0 and 1,
+#'    used to define the Enrichment Map, which is only created for legacy
+#'    output enabled with `returnType="list"`.
+#'    * To create a Multi-Enrichment Map `igraph` object, see `mem2emap()`.
+#'    * overlapThreshold is the Jaccard overlap score above which
+#'    two pathways will be linked in the resulting network.
+#' @param p_cutoff `numeric` value between 0 and 1, default 0.05,
+#'    enrichment P-value required by at least one enrichment result to
+#'    be retained in downstream analyses.
+#'    This P-value can be reviewed in `enrichIM(Mem)` of the output,
+#'    which is a matrix of P-values by pathway and enrichment.
+#'    The column header assigned as P-value is stored in
+#'    `headers(Mem)$pvalueColname`.
+#' @param cutoffRowMinP (deprecated in favor of 'p_cutoff').
+#'    When it is non-NULL, it will be used for backward compatibility.
+#' @param enrichBaseline `numeric` value, default uses `-log10(p_cutoff)`,
+#'    the -log10 P-value threshold required for the color gradient to assign
+#'    a color associated with enrichment.
+#'    * In other words, P-values that do not meet this
+#'    threshold are not colored in the color gradient for enrichment
+#'    P-values.
+#'    * To color all P-values use `enrichBaseline=0`.
+#' @param enrichLens `numeric` value, default 0, indicating the "lens"
+#'    to enhance the intensity of color gradients. Numbers above 0 make
+#'    the color ramp more compressed, and more vivid at lower numeric values.
 #' @param enrichNumLimit `numeric` value indicating the `-log10(P-value)`
 #'    above which each color gradient is considered the maximum color,
 #'    useful to apply a fixed threshold for each color gradient.
-#' @param nEM `integer` number, to define the maximum number of pathway
-#'    nodes to include in the EnrichMap `igraph` network. This argument
-#'    is passed to `enrichMapJam()`.
-#' @param topEnrichN `integer` value with the maximum rows to retain
-#'    from each `enrichList` table, by source. Set `topEnrichN=0` or
-#'    `topEnrichN=NULL` to disable subsetting for the top rows.
+#' @param nEM `integer` (deprecated) maximum pathways to include in the
+#'    Enrichment Map, which is only created for legacy
+#'    output enabled with `returnType="list"`.
+#'    * To create a Multi-Enrichment Map `igraph` object, see `mem2emap()`.
+#' @param topEnrichN `integer` maximum rows to retain from each
+#'    `enrichResult` in 'enrichList', for each source when supplied.
+#'    Set `topEnrichN=0` or `topEnrichN=NULL` to retain all rows.
+#'    Only rows where the pathway met other filtering criteria in at
+#'    least one enrichment in 'enrichList' will be retained.
 #' @param topEnrichSources,topEnrichCurateFrom,topEnrichCurateTo,topEnrichSourceSubset,topEnrichDescriptionGrep,topEnrichNameGrep
 #'    arguments passed to `topEnrichListBySource()` when `topEnrichN`
 #'    is greater than `0`. The default values are used only when
 #'    input data matches these patterns.
 #' @param keyColname,nameColname,geneColname,pvalueColname,descriptionColname
-#'    `character` vector in each case indicating the colnames
-#'    for `key`, `name`, `gene`, `pvalue`, and `description`,
-#'    respectively. Each vector is passed to `find_colname()` to find
-#'    a suitable matching colname for each `data.frame` in
-#'    `enrichList`.
+#'    `character` vector in each case with text strings or patterns to
+#'    use when matching or prioritizing colnames to assign to each type:
+#'    * `key`: The primary unique key for each pathway
+#'    * `name`: The short name for each pathway
+#'    * `gene`: column with delimited gene symbols or identifiers tested
+#'    for enrichment of each pathway.
+#'    * `pvalue`: column with enrichment P-value, typically prioritizing
+#'    either 'qvalue' or 'p.adjust'. Per `enrichResult` convention,
+#'    the selected column is renamed to 'pvalue'.
+#'    * `description`: longer description associated with the pathway.
+#'    
+#'    Each vector is passed to `find_colname()` to find
+#'    a suitable matching colname for each entry in `enrichList`.
+#'    That function prioritizes full colname matches, then leading or
+#'    trailing matches, then substring.
 #' @param descriptionCurateFrom,descriptionCurateTo `character` vectors
 #'    with patterns and replacements, passed to `gsubs()`, intended to
 #'    help curate common descriptions to shorter, perhaps more
 #'    user-friendly labels. One example is removing the prefix
 #'    `"Genes annotated by the GO term "` from Gene Ontology pathways.
-#'    These label can be manually curated later, but it is often
-#'    more convenient to curate them upfront in order to keep the
-#'    different result objects consistent.
+#'    These label can be manually curated later in the `Mem-class`
+#'    methods, specifically `sets()<-` will allows assignment of custom
+#'    names.
 #' @param pathGenes,geneHits `character` values indicating the colnames
 #'    that contain the number of pathway genes, and the number of gene
-#'    hits, respectively.
+#'    hits, respectively. These values are optional, and not specifically
+#'    used by multienrichjam.
 #' @param geneDelim `character` pattern used with `strsplit()` to
-#'    split multiple gene values into a list of vectors. The default
-#'    for `enrichResult` objects is `"/"`, but the default for other
-#'    sources is often `","`. The default pattern `"[,/ ]+"` splits
-#'    by either `"/"`, `","`, or whitespace `" "`.
+#'    split multiple gene values into a list of vectors.
+#'    The default (required) delimiter for `enrichResult` objects
+#'    is `'/'`. A common alternative is `','` (comma-delimited).
 #' @param verbose `logical` indicating whether to print verbose output.
 #'    For `verbose` to cascade to internal functions, use `verbose=2`.
 #' @param ... additional arguments are passed to various internal
@@ -140,7 +158,9 @@
 #' ## See the Vignette for a full walkthrough example
 #'
 #' @family jam enrichment functions
-#'
+#' 
+#' @importFrom lifecycle deprecated
+#' 
 #' @export
 multiEnrichMap <- function
 (enrichList,
@@ -152,15 +172,16 @@ multiEnrichMap <- function
  byrow=FALSE,
  enrichLabels=NULL,
  subsetSets=NULL,
- overlapThreshold=0.1,
- cutoffRowMinP=0.05,
- enrichBaseline=-log10(cutoffRowMinP),
+ overlapThreshold=deprecated(), # deprecated
+ p_cutoff=0.05,
+ cutoffRowMinP=deprecated(),
+ enrichBaseline=-log10(p_cutoff),
  enrichLens=0,
  enrichNumLimit=4,
  nEM=500,
  min_count=3,
  topEnrichN=20,
- topEnrichSources=c("gs_cat", "gs_subat"),
+ topEnrichSources=c("gs_cat", "gs_subcat"),
  topEnrichCurateFrom=NULL,
  topEnrichCurateTo=NULL,
  topEnrichSourceSubset=NULL,
@@ -213,7 +234,7 @@ multiEnrichMap <- function
  #GmtTname="msigdbGmtTv50human",
  msigdbGmtT=NULL,
  #msigdbGmtT=msigdbGmtTv50human2,
- returnType=c("list", "Mem"),
+ returnType=c("Mem", "list"),
  verbose=FALSE,
  ...)
 {
@@ -460,7 +481,8 @@ multiEnrichMap <- function
          print(jamba::sdim(geneHitList));
       }
       # also create geneHitIM for consistency
-      geneHitIM <- list2im(geneHitList);
+      geneHitIM <- list2im(geneHitList,
+         sort_rows=jamba::mixedSort);
    }
    # At this point geneHitList and geneHitIM should both exist.
    # Note: There is no strict guarantee that geneHitIM contains all entries
@@ -477,14 +499,34 @@ multiEnrichMap <- function
    geneIM <- geneHitIM;
 
    #####################################################################
+   ## deprecated arguments
+   if (lifecycle::is_present(cutoffRowMinP)) {
+      lifecycle::deprecate_warn("0.0.101.900",
+         "multienrichjam::multiEnrichMap(cutoffRowMinP)",
+         "multienrichjam::multiEnrichMap(p_cutoff)");
+      p_cutoff <- cutoffRowMinP;
+   }
+   if ("list" %in% returnType) {
+      if (lifecycle::is_present(overlapThreshold)) {
+         lifecycle::deprecate_warn("0.0.101.900",
+            "multienrichjam::multiEnrichMap(overlapThreshold)");
+      } else {
+         overlapThreshold <- 0.1;
+      }
+   }
+   
+   #####################################################################
    ## store thresholds for reference
    thresholds <- list(
       min_count=min_count,
-      cutoffRowMinP=cutoffRowMinP,
-      overlapThreshold=overlapThreshold,
+      p_cutoff=p_cutoff,
+      # cutoffRowMinP=cutoffRowMinP,
       topEnrichN=topEnrichN,
       topEnrichSources=topEnrichSources,
       topEnrichNameGrep=topEnrichNameGrep)
+   if ("list" %in% returnType) {
+      thresholds$overlapThreshold <- overlapThreshold;
+   }
 
    #####################################################################
    ## Optionally run topEnrichBySource()
@@ -499,7 +541,7 @@ multiEnrichMap <- function
       enrichList <- topEnrichListBySource(enrichList,
          n=topEnrichN,
          min_count=min_count,
-         p_cutoff=cutoffRowMinP,
+         p_cutoff=p_cutoff,
          sourceColnames=topEnrichSources,
          pvalueColname=pvalueColname,
          directionColname=directionColname,
@@ -566,7 +608,7 @@ multiEnrichMap <- function
             lengths(geneHitList));
       }
    }
-
+   
    #####################################################################
    ## geneIMdirection (if geneHitIM is supplied)
    geneIMdirection <- NULL;
@@ -629,17 +671,95 @@ multiEnrichMap <- function
    mem$geneIMdirection <- geneIMdirection;
 
    #####################################################################
+   ## make nameColname values unique even when duplicated
+   ##
+   ## (Pathway Commons has several "Glycolysis" and "Gluconeogenesis")
+   ## 0.0.101.900 - check for duplicated name
+   ## - if it can be made unique with id:name then use that
+   ##   to define a unique suffix number
+   ## - if duplicated with no other ID then create unique suffix number
+   ##   anyway.
+   ##
+   check_suffix <- " jam";
+   namechecks <- lapply(enrichList, function(ier){
+      # if (all(ier@result[[nameColname]] == ier@result[[keyColname]])) {
+      #    return(FALSE)
+      # }
+      dfcheck <- data.frame(
+         key=ier@result[[keyColname]],
+         name=ier@result[[nameColname]])
+      dfcheck$keyname <- paste0(dfcheck$key,
+         rep(":", length.out=nrow(dfcheck)),
+         dfcheck$name)
+      # dfcheck$keyname <- ifelse(dfcheck$key == dfcheck$name,
+      #    dfcheck$name,
+      #    paste0(dfcheck$key, ":", dfcheck$name))
+      dupe_keynames <- unique(dfcheck$keyname[duplicated(dfcheck$keyname)]);
+      if (length(dupe_keynames) > 0) {
+         k <- dfcheck$keyname %in% dupe_keynames;
+         dfcheck$name[k] <- jamba::makeNames(dfcheck$name[k],
+            suffix=check_suffix);
+      }
+      dfcheck
+   })
+   # make one data.frame
+   namecheck <- unique(jamba::rbindList(namechecks));
+   # check unversioned duplicate name
+   check_suffix_re <- paste0(check_suffix, "[0-9]+$")
+   if (any(grepl(check_suffix_re, namecheck$name))) {
+      # unversioned stem of versioned names
+      versioned_names <- unique(gsub(check_suffix_re, "",
+         grepv(check_suffix_re, namecheck$name)))
+      k <- (namecheck$name %in% versioned_names);
+      if (any(k)) {
+         namecheck$name[k] <- paste0(namecheck$name[k],
+            check_suffix, "1");
+      }
+      namecheck <- unique(namecheck);
+   }
+   
+   if (any(duplicated(namecheck$name))) {
+      # isolate duplicates to rename
+      dupenames <- unique(namecheck$name[duplicated(namecheck$name)])
+      dupedf <- jamba::mixedSortDF(
+         subset(namecheck, name %in% dupenames),
+         byCols=c("name", "key"))
+      # create unique names
+      dupedf$newname <- jamba::makeNames(dupedf$name,
+         suffix=check_suffix)
+      # dupedf$keyname <- paste0(dupedf$key, ":", dupedf$name)
+
+      # apply names to enrichList
+      enrichList <- lapply(enrichList, function(ier){
+         if (nrow(ier@result) == 0) {
+            return(ier)
+         }
+         ier_keyname <- paste0(ier@result[[keyColname]],
+            ":",
+            ier@result[[nameColname]])
+         k <- match(ier_keyname, dupedf$keyname)
+         if (any(!is.na(k))) {
+            ier_newname <- ifelse(is.na(k),
+               ier@result[[nameColname]],
+               dupedf$newname[k])
+            ier@result[[nameColname]] <- ier_newname;
+         }
+         ier
+      })
+   }
+   
+   #####################################################################
    ## enrichIM incidence matrix using -log10(P-value)
    ##
    ## Note: the rownames use values from descriptionColname
+   ##
    enrichLsetNames <- unique(unlist(lapply(enrichList, function(iDF){
-      if (!jamba::igrepHas("data.frame", class(iDF))) {
+      if (!inherits(iDF, "data.frame")) {
          as.data.frame(iDF)[[nameColname]];
       } else {
          iDF[[nameColname]];
       }
    })));
-   # jamba::printDebug("enrichLsetNames:");print(enrichLsetNames);# debug
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "enrichIM <- enrichList2IM() with    pvalueColname:",
@@ -654,12 +774,12 @@ multiEnrichMap <- function
       verbose=(verbose - 1) > 0,
       emptyValue=1,
       GmtT=msigdbGmtT);
+   
    match1 <- match(enrichLsetNames, rownames(enrichIM));
    match2 <- match(names(enrichList), colnames(enrichIM));
    enrichIM <- enrichIM[match1, match2, drop=FALSE];
    rownames(enrichIM) <- enrichLsetNames;
    colnames(enrichIM) <- names(enrichList);
-   # jamba::printDebug("enrichIM:");print(enrichIM);# debug
 
    if (all(is.na(enrichIM))) {
       if (verbose) {
@@ -688,10 +808,6 @@ multiEnrichMap <- function
       jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIM):");
       print(head(enrichIM));
-      #printDebug("multiEnrichMap(): ",
-      #   "head(enrichIMM[,useCols]):");
-      #ch(head(enrichIMM[,useCols]));
-      #print(rowMins(na.rm=TRUE, head(enrichIMM[,useCols])) <= cutoffRowMinP);
    }
 
    #####################################################################
@@ -786,14 +902,13 @@ multiEnrichMap <- function
    #####################################################################
    ## Subset for at least one significant enrichment P-value
    # i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols,drop=FALSE], na.rm=TRUE) <= cutoffRowMinP)];
-   i1use <- rownames(enrichIMM)[(apply(enrichIMM[,useCols,drop=FALSE], 1, min, na.rm=TRUE) <= cutoffRowMinP)];
+   i1use <- rownames(enrichIMM)[(apply(enrichIMM[,useCols,drop=FALSE], 1, min, na.rm=TRUE) <= p_cutoff)];
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "nrow(enrichIM):",
          jamba::formatInt(nrow(enrichIM)),
          ", nrow(filtered for minimum P-value):",
          jamba::formatInt(length(i1use)));
-      #ch(head(enrichIMM));
    }
 
    #####################################################################
@@ -846,7 +961,9 @@ multiEnrichMap <- function
 
    #####################################################################
    ## Some cleaning of Description
-   if (length(descriptionColname) == 1 &&
+   # 0.0.101.900 - not used for now, will use sets(Mem)<- in future
+   if (FALSE &&
+         length(descriptionColname) == 1 &&
          descriptionColname %in% colnames(enrichDF)) {
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
@@ -856,10 +973,6 @@ multiEnrichMap <- function
       }
       descriptionColnameFull <- paste0(descriptionColname, "Full");
       enrichDF[,descriptionColnameFull] <- enrichDF[,descriptionColname];
-      #enrichDF[,descriptionColname] <- memAdjustLabel(
-      #   x=enrichDF[,descriptionColname],
-      #   descriptionCurateFrom=descriptionCurateFrom,
-      #   descriptionCurateTo=descriptionCurateTo);
    }
 
    #####################################################################
@@ -907,7 +1020,8 @@ multiEnrichMap <- function
          jamba::nameVector(
             as.character(mem$multiEnrichDF[[geneColname]]),
             mem$multiEnrichDF[[nameColname]]),
-         geneDelim));
+         geneDelim),
+      sort_rows=jamba::mixedSort);
    # 0.0.93.900 - enforce consistent order
    memIM <- memIM[, enrichLsetNames, drop=FALSE];
    mem$memIM <- memIM;
@@ -915,54 +1029,58 @@ multiEnrichMap <- function
 
    #####################################################################
    ## Convert enrichResult to enrichMap igraph network
+   # 0.0.101.900 - remove unless output is legacy mem list
+   # in favor of using mem_plot_folio() or mem2emap()
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "converting enrichER to igraph enrichMap with enrichMapJam().");
    }
-   enrichEM <- multienrichjam::enrichMapJam(enrichER,
-      overlapThreshold=overlapThreshold,
-      msigdbGmtT=msigdbGmtT,
-      doPlot=FALSE,
-      n=nEM,
-      # keyColname="ID",
-      keyColname=keyColname,
-      nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
-      vertex.label.cex=0.5,
-      verbose=verbose)
-      # verbose=(verbose - 1) > 0);
-   ## jamba::normScale(..., low=0) scales range 0 to maximum, into 0 to 1
-   ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
-   igraph::V(enrichEM)$size_orig <- igraph::V(enrichEM)$size;
-   igraph::V(enrichEM)$size <- (jamba::normScale(igraph::V(enrichEM)$size, low=0) + 0.3) * 8;
-   igraph::E(enrichEM)$color <- "#99999977";
-
-   mem$multiEnrichMap <- enrichEM;
-
-   ## Convert EnrichMap to piegraph
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "running igraph2pieGraph() on enrichMap.");
-      jamba::printDebug("multiEnrichMap(): ",
-         "head(enrichIMcolors)");
-      print(head(enrichIMcolors));
+   if ("list" %in% returnType) {
+      enrichEM <- enrichMapJam(enrichER,
+         overlapThreshold=overlapThreshold,
+         msigdbGmtT=msigdbGmtT,
+         doPlot=FALSE,
+         n=nEM,
+         # keyColname="ID",
+         keyColname=keyColname,
+         nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
+         vertex.label.cex=0.5,
+         verbose=verbose)
+         # verbose=(verbose - 1) > 0);
+      ## jamba::normScale(..., low=0) scales range 0 to maximum, into 0 to 1
+      ## then add 0.3, then multiple by 8. Final range is 2.4 to 10.4
+      igraph::V(enrichEM)$size_orig <- igraph::V(enrichEM)$size;
+      igraph::V(enrichEM)$size <- (jamba::normScale(igraph::V(enrichEM)$size, low=0) + 0.3) * 8;
+      igraph::E(enrichEM)$color <- "#99999977";
+   
+      mem$multiEnrichMap <- enrichEM;
+   
+      ## Convert EnrichMap to piegraph
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "running igraph2pieGraph() on enrichMap.");
+         jamba::printDebug("multiEnrichMap(): ",
+            "head(enrichIMcolors)");
+         print(head(enrichIMcolors));
+      }
+      enrichEMpieUse <- igraph2pieGraph(g=enrichEM,
+         defineLayout=FALSE,
+         valueIMcolors=enrichIMcolors[i1use,useCols,drop=FALSE],
+         verbose=(verbose - 1) > 0);
+   
+      ## Use colored rectangles
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "running rectifyPiegraph() on enrichMap.");
+      }
+      enrichEMpieUseSub2 <- rectifyPiegraph(enrichEMpieUse,
+         nrow=nrow,
+         ncol=ncol,
+         byrow=byrow);
+      igraph::V(enrichEMpieUseSub2)$size <- (jamba::normScale(igraph::V(enrichEMpieUseSub2)$size) + 0.3) * 6;
+      igraph::V(enrichEMpieUseSub2)$size2 <- igraph::V(enrichEMpieUseSub2)$size2 / 2;
+      mem$multiEnrichMap2 <- enrichEMpieUseSub2;
    }
-   enrichEMpieUse <- igraph2pieGraph(g=enrichEM,
-      defineLayout=FALSE,
-      valueIMcolors=enrichIMcolors[i1use,useCols,drop=FALSE],
-      verbose=(verbose - 1) > 0);
-
-   ## Use colored rectangles
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "running rectifyPiegraph() on enrichMap.");
-   }
-   enrichEMpieUseSub2 <- rectifyPiegraph(enrichEMpieUse,
-      nrow=nrow,
-      ncol=ncol,
-      byrow=byrow);
-   igraph::V(enrichEMpieUseSub2)$size <- (jamba::normScale(igraph::V(enrichEMpieUseSub2)$size) + 0.3) * 6;
-   igraph::V(enrichEMpieUseSub2)$size2 <- igraph::V(enrichEMpieUseSub2)$size2 / 2;
-   mem$multiEnrichMap2 <- enrichEMpieUseSub2;
 
    #######################################################
    ## Create a CnetPlot
@@ -970,60 +1088,65 @@ multiEnrichMap <- function
    ## data, and if downstream workflows would typically
    ## only need a Cnet Plot on a subset of pathways and
    ## genes.
-   gCt <- nrow(enrichER);
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "creating cnetPlot with cnetplotJam().");
+   #
+   # 0.0.101.900 - omit this step unless output is legacy list
+   # in favor of using mem_plot_folio() or mem2cnet()
+   if ("list" %in% returnType) {
+      gCt <- nrow(enrichER);
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "creating cnetPlot with cnetplotJam().");
+      }
+      gCnet <- cnetplotJam(enrichER,
+         showCategory=gCt,
+         categorySize=geneCountColname,
+         doPlot=FALSE,
+         nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
+         verbose=(verbose - 1) > 0);
+      igraph::V(gCnet)$nodeType <- "Gene";
+      igraph::V(gCnet)[seq_len(gCt)]$nodeType <- "Set";
+      mem$multiCnetPlot <- gCnet;
+   
+      #######################################################
+      ## Convert to coloredrectangle
+      igraph::V(gCnet)[seq_len(gCt)]$name <- toupper(igraph::V(gCnet)[seq_len(gCt)]$name);
+      ## Enrichment IM colors
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "running igraph2pieGraph(",
+            "enrichIMcolors",
+            ") on Cnet Plot.");
+      }
+      gCnetPie1 <- igraph2pieGraph(g=gCnet,
+         defineLayout=FALSE,
+         valueIMcolors=enrichIMcolors[i1use,useCols,drop=FALSE],
+         verbose=(verbose - 1) > 0);
+      mem$multiCnetPlot1 <- gCnetPie1;
+      ## Gene IM colors
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "running igraph2pieGraph(",
+            "geneIMcolors",
+            ").");
+      }
+      gCnetPie <- igraph2pieGraph(g=gCnetPie1,
+         defineLayout=FALSE,
+         valueIMcolors=geneIMcolors[,useCols,drop=FALSE],
+         verbose=(verbose - 1) > 0);
+      mem$multiCnetPlot1b <- gCnetPie;
+   
+      #######################################################
+      ## Now convert CnetPlot to use coloredrectangle
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "running rectifyPiegraph() on Cnet Plot.");
+      }
+      gCnetPie2 <- rectifyPiegraph(gCnetPie,
+         nrow=nrow,
+         ncol=ncol,
+         byrow=byrow);
+      mem$multiCnetPlot2 <- gCnetPie2;
    }
-   gCnet <- cnetplotJam(enrichER,
-      showCategory=gCt,
-      categorySize=geneCountColname,
-      doPlot=FALSE,
-      nodeLabel=c(nameColname, descriptionColname, keyColname, "ID"),
-      verbose=(verbose - 1) > 0);
-   igraph::V(gCnet)$nodeType <- "Gene";
-   igraph::V(gCnet)[seq_len(gCt)]$nodeType <- "Set";
-   mem$multiCnetPlot <- gCnet;
-
-   #######################################################
-   ## Convert to coloredrectangle
-   igraph::V(gCnet)[seq_len(gCt)]$name <- toupper(igraph::V(gCnet)[seq_len(gCt)]$name);
-   ## Enrichment IM colors
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "running igraph2pieGraph(",
-         "enrichIMcolors",
-         ") on Cnet Plot.");
-   }
-   gCnetPie1 <- igraph2pieGraph(g=gCnet,
-      defineLayout=FALSE,
-      valueIMcolors=enrichIMcolors[i1use,useCols,drop=FALSE],
-      verbose=(verbose - 1) > 0);
-   mem$multiCnetPlot1 <- gCnetPie1;
-   ## Gene IM colors
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "running igraph2pieGraph(",
-         "geneIMcolors",
-         ").");
-   }
-   gCnetPie <- igraph2pieGraph(g=gCnetPie1,
-      defineLayout=FALSE,
-      valueIMcolors=geneIMcolors[,useCols,drop=FALSE],
-      verbose=(verbose - 1) > 0);
-   mem$multiCnetPlot1b <- gCnetPie;
-
-   #######################################################
-   ## Now convert CnetPlot to use coloredrectangle
-   if (verbose) {
-      jamba::printDebug("multiEnrichMap(): ",
-         "running rectifyPiegraph() on Cnet Plot.");
-   }
-   gCnetPie2 <- rectifyPiegraph(gCnetPie,
-      nrow=nrow,
-      ncol=ncol,
-      byrow=byrow);
-   mem$multiCnetPlot2 <- gCnetPie2;
 
    #######################################################
    ## Add all colnames to the mem object
@@ -1041,7 +1164,7 @@ multiEnrichMap <- function
 
    ## Add p_cutoff to output
    mem$thresholds <- thresholds;
-   mem$p_cutoff <- cutoffRowMinP;
+   # mem$p_cutoff <- cutoffRowMinP;
 
    if ("Mem" %in% returnType) {
       mem <- list_to_Mem(mem);
@@ -1057,11 +1180,20 @@ multiEnrichMap <- function
 #' and creates an incidence matrix using the value defined
 #' by `valueColname`.
 #'
-#' TODO: Port to use `venndir::list2im_value()`, which itself
+#' TODO: Consider using `venndir::list2im_value()`, which itself
 #' may be moved to its own proper R package for set and list
 #' manipulation, without the dependencies incurred by `venndir`.
 #'
 #' @family jam conversion functions
+#' 
+#' @returns incidence `matrix` with `numeric` values using the
+#'    the enrichment P-value (or FDR or Q-value as defined).
+#'    Technically it is a "value incidence matrix" where non-NA values
+#'    are derived from the source data, and NA represents absense of
+#'    a value in the source data.
+#'    It is possible to have a value '0' (pure zero) which represents
+#'    presence of a value, where that value was '0', if the P-value
+#'    reported by an enrichment tool rounded to zero.
 #'
 #' @param enrichList `list` of `enrichResult` objects
 #' @param addAnnotations `logical` not implemented, this argument
@@ -1072,14 +1204,18 @@ multiEnrichMap <- function
 #' @param valueColname `character` used to match colnames to determine
 #'    the value to place in each cell of the incidence matrix.
 #' @param emptyValue `numeric` value used to fill empty cells in the
-#'    incidence matrix. When `NULL` and `valueColname` contains
-#'    "gene", "count", "num", "hit" then `emptyValue=0`, otherwise
-#'    `emptyValue=1` is used with the assumption that `valueColname`
-#'    refers to P-values.
+#'    incidence matrix, default NA.
+#'    * NA is used by default, indicating absence of a value.
+#'    * When `NULL` and `valueColname` contains
+#'    "gene", "count", "num", "hit" then `emptyValue=0`.
+#'    * Otherwise `emptyValue=1` is used with the assumption that
+#'    `valueColname` refers to P-values.
 #' @param verbose `logical` indicating whether to print verbose output.
-#' @param GmtT (not currently implemented), alternative gene set object
+#' @param GmtT (not currently implemented), alternative gene set object.
+#'    In future it may enable passing additional annotations associated
+#'    with each gene set, including description, source, category, etc.
 #' @param ... additional arguments are ignored.
-#'
+#' 
 #' @export
 enrichList2IM <- function
 (enrichList,
@@ -1116,7 +1252,8 @@ enrichList2IM <- function
       # data.frame(check.names=FALSE,
        # enrichList[[1]]));
    if (length(emptyValue) == 0) {
-      if (jamba::igrepHas("gene|count|hits|num|score|total|sum", valueColname1)) {
+      if (jamba::igrepHas("gene|count|hits|num|score|total|sum",
+         valueColname1)) {
          emptyValue <- 0;
       } else {
          emptyValue <- 1;
@@ -1165,8 +1302,10 @@ enrichList2IM <- function
       # }
       x;
    });
-   enrichIMP <- as.data.frame(list2imSigned(enrichIMP1,
-      emptyValue=emptyValue));
+   enrichIMP <- data.frame(check.names=FALSE,
+      list2imSigned(enrichIMP1,
+         emptyValue=emptyValue,
+         sort_rows=jamba::mixedSort));
 
    if (nrow(enrichIMP) == 0) {
       return(enrichIMP);
@@ -1180,28 +1319,30 @@ enrichList2IM <- function
    #    enrichIMP[is.na(enrichIMP) | enrichIMP == 0] <- emptyValue;
    # }
 
-   # option method not yet implemented for using GmtT objects
-   if (addAnnotations && length(GmtT) > 0) {
-      ## Add information about pathways to the data.frame
-      enrichIMPinfo <- GmtT@itemsetInfo[match(rownames(enrichIMP), GmtT@itemsetInfo[,keyColname]),];
-      enrichIMP[,colnames(enrichIMPinfo)] <- enrichIMPinfo;
-   }
+   ## optional method not yet implemented for using GmtT objects
+   # if (addAnnotations && length(GmtT) > 0) {
+   #    ## Add information about pathways to the data.frame
+   #    ematch <- match(rownames(enrichIMP), GmtT@itemsetInfo[,keyColname])
+   #    enrichIMPinfo <- GmtT@itemsetInfo[ematch, , drop=FALSE];
+   #    enrichIMP[,colnames(enrichIMPinfo)] <- enrichIMPinfo;
+   # }
    return(enrichIMP);
 }
 
 
-#' Create enrichMap igraph object
+#' Create enrichMap igraph object from enrichResult
 #'
-#' Create enrichMap igraph object from enrichResult.
+#' Create enrichMap igraph object from enrichResult
 #'
-#' This function could also be called `enrichResult2emap()`.
+#' This function is a minor customization to `enrichplot::emapplot()`,
+#' which takes a single `enrichResult` and produces an Enrichment map
+#' network. For the equivalent function using `Mem` as input, see
+#' `mem2emap()`.
+#' 
+#' The major differences compared with `enrichplot`:
 #'
-#' This function is a minor extension to the original function
-#' DOSE::enrichMap() which is now rewritten in the source package
-#' to `enrichplot::emapplot()`. The major differences:
-#'
-#' * This function returns an `igraph` object, which can be manipulated
-#' using network-related functions.
+#' * An `igraph` object is returned instead of `ggplot` object, since the
+#' `igraph` object can be manipulated and is useful to review.
 #' * This function calculates overlap using `dist(...,method="binary")`
 #' which is a much faster method for calculating the Jaccard overlap.
 #' * This function also calculates the overlap count, another helpful
@@ -1210,10 +1351,10 @@ enrichList2IM <- function
 #' required threshold. Many spurious network connections are removed
 #' with this filter, and it appears to be a helpful option.
 #'
-#' @return `igraph` object, whose nodes represent each enriched pathway,
-#'    and are sized based upon the number of genes involved in the
-#'    enrichment, and are colored based upon the `log10(Pvalue)`
-#'    using `colorjam::vals2colorLevels()`, a function that applies
+#' @returns `igraph` object with nodes representing each pathway,
+#'    sized based upon the number of genes involved in enrichment, and
+#'    colored based upon the `-log10(Pvalue)`
+#'    using `colorjam::col_linear_xf()`, a function that applies
 #'    a color gradient to a numeric range.
 #'    Each edge has attributes: `overlap` containing Jaccard overlap,
 #'    `overlap_count` with the number of genes in common between
@@ -1231,10 +1372,12 @@ enrichList2IM <- function
 #'    to define the default node label font and size.
 #' @param keyColname,nodeLabel,descriptionColname `character` vectors
 #'    indicating the colname to use for the node name and label.
-#' @param nodeLabelFunc `function`, default NULL, with option to apply
-#'    to `V(g)$name` in order to create `V(g)$label`.
-#'    One suggestion is to use `fixSetLabels()`
-#'    which applies word wrap, and optional max character length.
+#' @param nodeLabelFunc `function`, default NULL uses
+#'    `fixSetLabels(x, width=30, ...)`. Use 'FALSE' to keep labels unchanged.
+#'    Note that the `igraph` node name remains the same as input,
+#'    and label is used as the visual label on the graph.
+#'    * When providing a custom function, note that each node is called
+#'    individually and therefore the call is not vectorized.
 #' @param overlapThreshold `numeric` value indicating the minimum
 #'    Jaccard overlap, where edges with lower values are deleted from
 #'    the `igraph` object.
@@ -1263,19 +1406,15 @@ enrichMapJam <- function
    ## Purpose is to customize enrichMap() to work with data
    ## generated outside clusterProfiler
    ##
-   if (suppressPackageStartupMessages(!require(reshape2))) {
-      stop("enrichMapJam() requires the reshape2 package is required for melt().");
-   }
-   #if (suppressPackageStartupMessages(!require(igraph))) {
-   #   stop("enrichMapJam() requires the igraph package.");
-   #}
-   if (suppressPackageStartupMessages(!require(DOSE))) {
-      stop("enrichMapJam() requires the DOSE package.");
-   }
    if (is.null(nodeLabelFunc)) {
-      nodeLabelFunc <- function(i){
-         paste(collapse="\n",strwrap(width=30, jamba::ucfirst(gsub("_", " ", tolower(i)))));
-      }
+      # 0.0.101.900 - use fixSetLabels for consistency, not custom function
+      nodeLabelFunc <- function(x, width=30, ...)
+         fixSetLabels(x, width=width, ...);
+      # nodeLabelFunc <- function(i){
+      #    paste(collapse="\n",
+      #       strwrap(width=30,
+      #          jamba::ucfirst(gsub("_", " ", tolower(i)))));
+      # }
    }
    if (jamba::igrepHas("data.*frame", class(x))) {
       if (verbose) {
@@ -1348,9 +1487,10 @@ enrichMapJam <- function
 
       ## Jaccard coefficient is given as output from
       ## 1-dist(method="binary")
-      wIM <- list2im(geneSets);
+      wIM <- list2im(geneSets,
+         sort_rows=jamba::mixedSort);
       # wIM <- venndir::list2im_opt(geneSets, do_sparse=FALSE);
-      w <- 1-as.matrix(dist(t(wIM), method="binary"));
+      w <- (1 - as.matrix(dist(t(wIM), method="binary")));
       ## overlap counts, use sign() to count each gene only once
       wct <- t(sign(wIM)) %*% sign(wIM);
       ## min counts per cell
@@ -1360,20 +1500,33 @@ enrichMapJam <- function
       wctmaxpct <- wct / wctmin;
       colnames(w) <- rownames(w) <- y[[nodeLabel]][match(colnames(w), y$ID)];
 
-      wd <- reshape2::melt(w);
-      wctd <- reshape2::melt(wct);
-      wctmaxpctd <- reshape2::melt(wctmaxpct);
-
+      ## 0.0.101.900 - replace reshape2 with tidyr?
+      tidymelt <- function(x) {
+         xdf <- data.frame(check.names=FALSE,
+            tidyr::pivot_longer(
+               data.frame(check.names=FALSE,
+                  set=rownames(x), x),
+               cols=colnames(x)))
+         colnames(xdf)[1:2] <- c("Var1", "Var2");
+         xdf
+      }
+      # wd <- reshape2::melt(w);
+      # wctd <- reshape2::melt(wct);
+      # wctmaxpctd <- reshape2::melt(wctmaxpct);
+      wd <- tidymelt(w);
+      wctd <- tidymelt(wct);
+      wctmaxpctd <- tidymelt(wctmaxpct);
+      
       wd1 <- match(wd[,1], colnames(w));
       wd2 <- match(wd[,2], colnames(w));
       w_keep <- (wd1 > wd2);
-      wd <- wd[w_keep,,drop=FALSE];
-      wctd <- wctd[w_keep,,drop=FALSE];
-      wctmaxpctd <- wctmaxpctd[w_keep,,drop=FALSE];
+      wd <- subset(wd, w_keep);
+      wctd <- subset(wctd, w_keep);
+      wctmaxpctd <- subset(wctmaxpctd, w_keep);
 
-      g <- igraph::graph.data.frame(wd[, -3], directed=FALSE);
+      g <- igraph::graph_from_data_frame(wd[, -3, drop=FALSE], directed=FALSE);
       igraph::E(g)$width <- sqrt(wd[, 3] * 20);
-      igraph::E(g)$overlap <- wd[,3];
+      igraph::E(g)$overlap <- wd[, 3];
       igraph::E(g)$overlap_count <- wctd[, 3];
       igraph::E(g)$overlap_max_pct <- wctmaxpctd[, 3];
       igraph::V(g)$pvalue <- pvalue[igraph::V(g)$name];
@@ -1419,15 +1572,20 @@ enrichMapJam <- function
       }
 
       ## Delete edges where overlap is below a threshold
-      g <- igraph::delete.edges(g, igraph::E(g)[igraph::E(g)$overlap < overlapThreshold]);
+      g <- igraph::delete_edges(g, igraph::E(g)[igraph::E(g)$overlap < overlapThreshold]);
 
       pvalue <- igraph::V(g)$pvalue;
 
-      nodeColor <- colorjam::vals2colorLevels(-log10(pvalue),
-         col="Reds",
-         numLimit=4,
-         baseline=0,
-         lens=2);
+      # 0.0.101.900 - use colorjam::col_linear_df() which uses circlize
+      # likely to be slightly less intense but more accurate
+      nodeColor <- colorjam::col_linear_xf(4,
+         lens=2,
+         colramp="Reds")(-log10(pvalue))
+      # nodeColor <- colorjam::vals2colorLevels(-log10(pvalue),
+      #    col="Reds",
+      #    numLimit=4,
+      #    baseline=0,
+      #    lens=2);
       igraph::V(g)$color <- nodeColor;
 
       if (is(x, "gseaResult")) {
@@ -1447,7 +1605,7 @@ enrichMapJam <- function
       node_size <- (jamba::normScale(log10(cnt2+1) * 10, low=0) + 0.2) * 10;
       igraph::V(g)$size <- node_size;
 
-      if (length(nodeLabelFunc) > 0 && is.function(nodeLabelFunc)) {
+      if (is.function(nodeLabelFunc)) {
          igraph::V(g)$label <- sapply(igraph::V(g)$name, nodeLabelFunc);
       }
    }

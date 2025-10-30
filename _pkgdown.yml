@@ -69,3 +69,8 @@ reference:
   desc: Functions moved to the jamba package
   contents:
   - has_concept("jam deprecated functions")
+articles:
+- title: "Tutorials"
+  contents:
+  - importClusterProfiler
+  - importIPA

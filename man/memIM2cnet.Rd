@@ -70,7 +70,7 @@ mem2cnet(
 )
 }
 \arguments{
-\item{memIM}{\code{numeric} matrix, or \code{mem} output in \code{list} format. When
+\item{memIM}{\code{numeric} matrix, or \code{Mem}, or legacy \code{list} mem format. When
 \code{mem} format is supplied, relevant arguments which are empty will
 use corresponding data from \code{mem}, for example \code{geneIM}, \code{geneIMcolors},
 \code{enrichIM}, \code{enrichIMcolors}.}

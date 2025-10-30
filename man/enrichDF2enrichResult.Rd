@@ -17,6 +17,7 @@ enrichDF2enrichResult(
   geneSep = ",",
   pvalueColname = c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
   descriptionColname = c("Description", "Name", "Pathway", "ID"),
+  readable = NULL,
   msigdbGmtT = NULL,
   verbose = FALSE,
   ...
@@ -61,20 +62,27 @@ values.}
 \item{pvalueColname}{\code{character} value of the \code{colname(enrichDF)}
 containing enrichment P-values to use in downstream processing.}
 
+\item{readable}{\code{logical} default NULL, sets the 'readable' flag for
+the resulting \code{enrichResult} object.}
+
 \item{msigdbGmtT}{optional GmtT object (not currently implemented)}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
 }
+\value{
+\code{DOSE::enrichResult-class} object.
+}
 \description{
 Convert data.frame to enrichResult
 }
 \details{
-This function takes a data.frame containing gene set enrichment
-results, and converts it to a proper \code{enrichResult} object,
-compatible with methods provided by the \code{clusterProfiler}
-package.
+This function takes a \code{data.frame} containing gene set enrichment
+results, and converts it to a proper 'enrichResult' object
+defined in \code{DOSE::enrichResult-class}.
+This object is supported by other functions in the \code{clusterProfiler}
+suite of tools.
 }
 \seealso{
 Other jam conversion functions: 

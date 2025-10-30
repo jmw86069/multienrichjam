@@ -284,29 +284,33 @@
 #'    or by calling a specific cluster `jam_igraph(cnet_clusters[["A"]])`.
 #'
 #'
-#' @param mem `list` object created by `multiEnrichMap()`. Specifically
-#'    the object is expected to contain `colorV`, `enrichIM`,
-#'    `memIM`, `geneIM`.
+#' @param mem `Mem` or `list` object from `multiEnrichMap()`.
 #' @param do_which `integer` vector of plots to produce. When `do_which`
 #'    is `NULL`, then all plots are produced. This argument is intended
 #'    to help produce one plot from a folio, therefore each plot is referred
 #'    by the number of the plot, in order.
-#' @param p_cutoff `numeric` value indicating the enrichment P-value threshold
-#'    used for `multiEnrichMap()`, but when `NULL` this value is taken
-#'    from the `mem` input, or `0.05` is used by default.
-#' @param p_floor `numeric` value indicating the lowest enrichment P-value
+#' @param p_cutoff `numeric` value, default NULL is taken from `mem`,
+#'    indicating the enrichment P-value threshold.
+#' @param p_floor `numeric` with the lowest enrichment P-value
 #'    used in the color gradient on the Enrichment Heatmap.
+#'    The purpose is to prevent very low P-values from shifting the
+#'    color gradient too far from the `p_cutoff` causing those colors
+#'    to be pale and nearly white.
 #' @param main `character` string used as a title on Cnet plots.
 #' @param use_raster `logical` default FALSE, deprecated,
 #'    whether to use raster heatmaps, passed to `ComplexHeatmap::Heatmap()`.
-#'    * Note that `use_raster=TRUE` may produce visual artifacts, and
-#'    changing this argument is no longer supported
+#'    * Note that `use_raster=TRUE` may produce visual artifacts especially
+#'    with argument `colorize_by_gene=TRUE` in `mem_gene_path_heatmap()`.
+#'    Changing this argument is no longer supported
 #' @param min_gene_ct,min_set_ct `integer` values passed to
 #'    `mem_gene_path_heatmap()`. The `min_gene_ct` requires each set
 #'    to contain `min_gene_ct` genes, and `min_set_ct` requires each gene
 #'    to be present in at least `min_set_ct` sets.
 #' @param min_set_ct_each `integer` minimum genes required for each set,
-#'    required for at least one enrichment test.
+#'    in at least one enrichment test. The distinction from `min_set_ct`
+#'    is that this threshold requires this number of genes in one
+#'    enrichment, while `min_set_ct` applies the threshold to the
+#'    combined multi-enrichment data.
 #' @param column_method,row_method `character` arguments passed to
 #'    `ComplexHeatmap::Heatmap()` which indicate the distance method used
 #'    to cluster columns and rows, respectively.
@@ -434,17 +438,25 @@ mem_plot_folio <- function
  ...)
 {
    # accept Mem input, convert to list for now
+   Mem <- NULL;
    if (inherits(mem, "Mem")) {
+      Mem <- mem;
       mem <- Mem_to_list(Mem)
+   } else {
+      Mem <- list_to_Mem(mem);
    }
    # validate arguments
+   # fill some default arguments
    if (length(p_cutoff) == 0) {
-      if ("p_cutoff" %in% names(mem)) {
-         p_cutoff <- mem$p_cutoff;
+      if ("p_cutoff" %in% names(thresholds(Mem))) {
+         p_cutoff <- thresholds(Mem)$p_cutoff;
+      } else if ("cutoffRowMinP" %in% names(thresholds(Mem))) {
+         p_cutoff <- thresholds(Mem)[["cutoffRowMinP"]];
       } else {
-         p_cutoff <- 0.05;
+         p_cutoff <- 1;
       }
    }
+   
    ret_vals <- list();
    plot_num <- 0;
    if (length(do_which) == 0) {
@@ -512,19 +524,20 @@ mem_plot_folio <- function
    # Extract hclust object for re-use in the enrichment heatmap
    use_sets <- colnames(gp_hm@matrix);
    gphm_pw_order <- NULL;
+
    if (rotate_heatmap) {
       gp_hm_hclust <- gp_hm@row_dend_param$obj;
       if (length(gp_hm_hclust) == 0) {
          gp_hm_hclust <- gp_hm@row_dend_param$fun(t(gp_hm@matrix));
       }
       use_sets <- rownames(gp_hm@matrix);
-      gphm_pw_order <- jamba::heatmap_row_order(gp_hm);
+      suppressWarnings(gphm_pw_order <- jamba::heatmap_row_order(gp_hm))
    } else {
       gp_hm_hclust <- gp_hm@column_dend_param$obj;
       if (length(gp_hm_hclust) == 0) {
          gp_hm_hclust <- gp_hm@column_dend_param$fun(t(gp_hm@matrix));
       }
-      gphm_pw_order <- jamba::heatmap_column_order(gp_hm);
+      suppressWarnings(gphm_pw_order <- jamba::heatmap_column_order(gp_hm))
    }
 
 
@@ -660,9 +673,9 @@ mem_plot_folio <- function
    }
    ## Obtain heatmap pathway clusters
    if (rotate_heatmap) {
-      clusters_mem <- jamba::heatmap_row_order(gp_hm);
+      suppressWarnings(clusters_mem <- jamba::heatmap_row_order(gp_hm))
    } else {
-      clusters_mem <- jamba::heatmap_column_order(gp_hm);
+      suppressWarnings(clusters_mem <- jamba::heatmap_column_order(gp_hm))
    }
    ret_vals$clusters_mem <- clusters_mem;
    ## Get number of pathway clusters
@@ -924,9 +937,6 @@ mem_plot_folio <- function
          cnet_exemplar <- subsetCnetIgraph(cnet,
             includeSets=clusters_mem_n$set,
             ...);
-         # cnet_exemplar <- cnet %>%
-         #    subsetCnetIgraph(includeSets=clusters_mem_n$set,
-         #       ...);
          plot_num <- plot_num + 1;
          if (length(do_which) == 0 || plot_num %in% do_which) {
             if (verbose) {
@@ -971,7 +981,8 @@ mem_plot_folio <- function
 
    #############################################################
    ## Cnet each cluster
-   if (length(do_which) == 0 || any(plot_num + seq_len(pathway_clusters_n) %in% do_which)) {
+   if (length(do_which) == 0 ||
+         any((plot_num + seq_len(pathway_clusters_n)) %in% do_which)) {
       cnet_clusters <- list();
       for (cluster_name in names(clusters_mem)) {
          plot_num <- plot_num + 1;

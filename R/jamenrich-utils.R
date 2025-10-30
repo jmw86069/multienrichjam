@@ -269,15 +269,33 @@ mem_find_overlap <- function
 #' This function is mainly for internal use in multienrichjam,
 #' it takes a list of `enrichResult` objects, and determines
 #' the full set of genes involved in each `enrichResult`.
-#'
+#' 
+#' Note that genes are sorted using `jamba::mixedSort()` for
+#' alpha-numeric sorting, based upon version sorting.
+#' 
 #' This function also works with `ComplexHeatmap::HeatmapList`
 #' objects.
 #'
 #' @family jam utility functions
 #'
-#' @return `list` of character vectors, containing the unique
+#' @returns `list` of character vectors, containing the unique
 #' set of genes involved in each enrichment.
-#'
+#' 
+#' @param enrichList `list` of `enrichResult` objects
+#' @param geneColname `character` string with the column name containing
+#'    delimited gene identifiers.
+#' @param geneDelim `character` regular expression used to split delimited
+#'    gene values. By default, `enrichResult` uses '/' forward slash
+#'    as delimiter, however the default here will split any space or
+#'    comma as well.
+#' @param make_unique `logical` default TRUE, whether to return only unique
+#'    genes per set, or potentially multiple genes per set. Typically there
+#'    should only ever be one instance of a gene per set, but through a
+#'    variety of other mechanisms they may exist, for example if two gene
+#'    identifiers are resolved into the same gene symbol.
+#' @param verbose `logical` whether to print verbose output.
+#' @param ... additional arguments are ignored.
+#' 
 #' @export
 enrichList2geneHitList <- function
 (enrichList,
@@ -299,7 +317,7 @@ enrichList2geneHitList <- function
    };
    geneHitList <- lapply(enrichList, function(iDF){
       ## Split text field of delimited genes into proper vector
-      if (!jamba::igrepHas("data.frame", class(iDF))) {
+      if (!inherits(iDF, "data.frame")) {
          if (verbose) {
             jamba::printDebug("enrichList2geneHitList(): ",
                "head(iDF, 3):");
@@ -379,7 +397,7 @@ order_colors <- function
 #'
 #' @family jam utility functions
 #'
-#' @param mem `list` object output from `multiEnrichMap()`
+#' @param mem `Mem` or legacy `list` mem output from `multiEnrichMap()`
 #' @param clusters `list` containing set names, that must match
 #'    `colnames(mem$memIM)` and `rownames(mem$enrichIM)`.
 #' @param choose optional vector indicating which clusters to
@@ -415,6 +433,14 @@ rank_mem_clusters <- function
  verbose=FALSE,
  ...)
 {
+   Mem <- NULL;
+   if (inherits(mem, "Mem")) {
+      Mem <- mem;
+      mem <- Mem_to_list(Mem);
+   } else {
+      Mem <- list_to_Mem(mem);
+   }
+   
    if (!all(c("memIM") %in% names(mem))) {
       stop("mem must be a list with components: 'memIM'");
    }

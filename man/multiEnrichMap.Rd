@@ -14,15 +14,16 @@ multiEnrichMap(
   byrow = FALSE,
   enrichLabels = NULL,
   subsetSets = NULL,
-  overlapThreshold = 0.1,
-  cutoffRowMinP = 0.05,
-  enrichBaseline = -log10(cutoffRowMinP),
+  overlapThreshold = deprecated(),
+  p_cutoff = 0.05,
+  cutoffRowMinP = deprecated(),
+  enrichBaseline = -log10(p_cutoff),
   enrichLens = 0,
   enrichNumLimit = 4,
   nEM = 500,
   min_count = 3,
   topEnrichN = 20,
-  topEnrichSources = c("gs_cat", "gs_subat"),
+  topEnrichSources = c("gs_cat", "gs_subcat"),
   topEnrichCurateFrom = NULL,
   topEnrichCurateTo = NULL,
   topEnrichSourceSubset = NULL,
@@ -44,7 +45,7 @@ multiEnrichMap(
   geneDelim = "[,/ ]+",
   GmtTname = NULL,
   msigdbGmtT = NULL,
-  returnType = c("list", "Mem"),
+  returnType = c("Mem", "list"),
   verbose = FALSE,
   ...
 )
@@ -93,70 +94,97 @@ as an optional alternative to \code{names(enrichList)}.}
 use in the analysis, useful to analyze only a specific subset
 of known pathways.}
 
-\item{overlapThreshold}{\code{numeric} value between 0 and 1, indicating
-the Jaccard overlap score above which two pathways will be linked
-in the EnrichMap \code{igraph} network. By default, pathways whose
-genes overlap more than \code{0.1} will be connected, which is roughly
-equivalent to about a 10\% overlap. Note that the Jaccard coefficient
-is adversely affected when pathway sets differ in size by more than
-about 5-fold.}
+\item{overlapThreshold}{\code{numeric} (deprecated), value between 0 and 1,
+used to define the Enrichment Map, which is only created for legacy
+output enabled with \code{returnType="list"}.
+\itemize{
+\item To create a Multi-Enrichment Map \code{igraph} object, see \code{mem2emap()}.
+\item overlapThreshold is the Jaccard overlap score above which
+two pathways will be linked in the resulting network.
+}}
 
-\item{cutoffRowMinP}{\code{numeric} value between 0 and 1, indicating the
-enrichment P-value required by at least one enrichment result, to
-be retained in downstream analyses. This P-value can be confirmed
-in the returned list element \code{"enrichIM"}, which is a matrix of
-P-values by pathway and enrichment.}
+\item{p_cutoff}{\code{numeric} value between 0 and 1, default 0.05,
+enrichment P-value required by at least one enrichment result to
+be retained in downstream analyses.
+This P-value can be reviewed in \code{enrichIM(Mem)} of the output,
+which is a matrix of P-values by pathway and enrichment.
+The column header assigned as P-value is stored in
+\code{headers(Mem)$pvalueColname}.}
 
-\item{enrichBaseline}{\code{numeric} value indicating the \code{-log10(P-value)}
-at which colors are defined as non-blank in color gradients.
-This value is typically derived from \code{cutoffRowMinP} to ensure
-that colors are only applied when a pathway meets this significance
-threshold.}
+\item{cutoffRowMinP}{(deprecated in favor of 'p_cutoff').
+When it is non-NULL, it will be used for backward compatibility.}
 
-\item{enrichLens}{\code{numeric} value indicating the "lens" to apply to
-color gradients, where numbers above 0 make the color ramp more
-compressed, so colors are more vivid at lower numeric values.}
+\item{enrichBaseline}{\code{numeric} value, default uses \code{-log10(p_cutoff)},
+the -log10 P-value threshold required for the color gradient to assign
+a color associated with enrichment.
+\itemize{
+\item In other words, P-values that do not meet this
+threshold are not colored in the color gradient for enrichment
+P-values.
+\item To color all P-values use \code{enrichBaseline=0}.
+}}
+
+\item{enrichLens}{\code{numeric} value, default 0, indicating the "lens"
+to enhance the intensity of color gradients. Numbers above 0 make
+the color ramp more compressed, and more vivid at lower numeric values.}
 
 \item{enrichNumLimit}{\code{numeric} value indicating the \code{-log10(P-value)}
 above which each color gradient is considered the maximum color,
 useful to apply a fixed threshold for each color gradient.}
 
-\item{nEM}{\code{integer} number, to define the maximum number of pathway
-nodes to include in the EnrichMap \code{igraph} network. This argument
-is passed to \code{enrichMapJam()}.}
+\item{nEM}{\code{integer} (deprecated) maximum pathways to include in the
+Enrichment Map, which is only created for legacy
+output enabled with \code{returnType="list"}.
+\itemize{
+\item To create a Multi-Enrichment Map \code{igraph} object, see \code{mem2emap()}.
+}}
 
-\item{topEnrichN}{\code{integer} value with the maximum rows to retain
-from each \code{enrichList} table, by source. Set \code{topEnrichN=0} or
-\code{topEnrichN=NULL} to disable subsetting for the top rows.}
+\item{topEnrichN}{\code{integer} maximum rows to retain from each
+\code{enrichResult} in 'enrichList', for each source when supplied.
+Set \code{topEnrichN=0} or \code{topEnrichN=NULL} to retain all rows.
+Only rows where the pathway met other filtering criteria in at
+least one enrichment in 'enrichList' will be retained.}
 
 \item{topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep}{arguments passed to \code{topEnrichListBySource()} when \code{topEnrichN}
 is greater than \code{0}. The default values are used only when
 input data matches these patterns.}
 
-\item{keyColname, nameColname, geneColname, pvalueColname, descriptionColname}{\code{character} vector in each case indicating the colnames
-for \code{key}, \code{name}, \code{gene}, \code{pvalue}, and \code{description},
-respectively. Each vector is passed to \code{find_colname()} to find
-a suitable matching colname for each \code{data.frame} in
-\code{enrichList}.}
+\item{keyColname, nameColname, geneColname, pvalueColname, descriptionColname}{\code{character} vector in each case with text strings or patterns to
+use when matching or prioritizing colnames to assign to each type:
+\itemize{
+\item \code{key}: The primary unique key for each pathway
+\item \code{name}: The short name for each pathway
+\item \code{gene}: column with delimited gene symbols or identifiers tested
+for enrichment of each pathway.
+\item \code{pvalue}: column with enrichment P-value, typically prioritizing
+either 'qvalue' or 'p.adjust'. Per \code{enrichResult} convention,
+the selected column is renamed to 'pvalue'.
+\item \code{description}: longer description associated with the pathway.
+}
+
+Each vector is passed to \code{find_colname()} to find
+a suitable matching colname for each entry in \code{enrichList}.
+That function prioritizes full colname matches, then leading or
+trailing matches, then substring.}
 
 \item{descriptionCurateFrom, descriptionCurateTo}{\code{character} vectors
 with patterns and replacements, passed to \code{gsubs()}, intended to
 help curate common descriptions to shorter, perhaps more
 user-friendly labels. One example is removing the prefix
 \code{"Genes annotated by the GO term "} from Gene Ontology pathways.
-These label can be manually curated later, but it is often
-more convenient to curate them upfront in order to keep the
-different result objects consistent.}
+These label can be manually curated later in the \code{Mem-class}
+methods, specifically \verb{sets()<-} will allows assignment of custom
+names.}
 
 \item{pathGenes, geneHits}{\code{character} values indicating the colnames
 that contain the number of pathway genes, and the number of gene
-hits, respectively.}
+hits, respectively. These values are optional, and not specifically
+used by multienrichjam.}
 
 \item{geneDelim}{\code{character} pattern used with \code{strsplit()} to
-split multiple gene values into a list of vectors. The default
-for \code{enrichResult} objects is \code{"/"}, but the default for other
-sources is often \code{","}. The default pattern \code{"[,/ ]+"} splits
-by either \code{"/"}, \code{","}, or whitespace \code{" "}.}
+split multiple gene values into a list of vectors.
+The default (required) delimiter for \code{enrichResult} objects
+is \code{'/'}. A common alternative is \code{','} (comma-delimited).}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.
 For \code{verbose} to cascade to internal functions, use \code{verbose=2}.}
@@ -215,7 +243,6 @@ argument \code{colorV}, otherwise colors are assigned using
 \seealso{
 Other jam enrichment functions: 
 \code{\link{add_pathway_direction}()},
-\code{\link{multienrichjam}()},
 \code{\link{topEnrichBySource}()}
 }
 \concept{jam enrichment functions}

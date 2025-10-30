@@ -34,14 +34,17 @@ Imports: jamba (>= 1.0.4),
     sf,
     bezier,
     shiny,
-    shinydashboard
+    shinydashboard,
+    tidyr,
+    lifecycle
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 Enhances:
     alphahull,
-    shadowtext
+    shadowtext,
+    vdiffr
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

@@ -10,11 +10,11 @@
 #' 2. `"geneIM"` the gene incidence matrix
 #' 3. `"enrichIM"` the pathway enrichment matrix
 #'
-#' @return `igraph` object with Concept network data, containing
+#' @returns `igraph` object with Concept network data, containing
 #'    pathways connected to genes. Each node has attribute `"nodeType"`
 #'    of either `"Set"` or `"Gene"`.
 #'
-#' @param memIM `numeric` matrix, or `mem` output in `list` format. When
+#' @param memIM `numeric` matrix, or `Mem`, or legacy `list` mem format. When
 #'    `mem` format is supplied, relevant arguments which are empty will
 #'    use corresponding data from `mem`, for example `geneIM`, `geneIMcolors`,
 #'    `enrichIM`, `enrichIMcolors`.
@@ -105,9 +105,18 @@ memIM2cnet <- function
    geneLabelColor <- head(geneLabelColor, 1);
    categoryLabelColor <- head(categoryLabelColor, 1);
 
-   ## Accept memIM as list mem output from multiEnrichMap()
-   if (is.list(memIM) &&
+   if (inherits(mem, "Mem")) {
+      memIM <- memIM(mem);
+      geneIM <- geneIM(mem);
+      geneIMcolors <- mem@geneIMcolors;
+      geneIMdirection <- geneIMdirection(mem);
+      enrichIM <- enrichIM(mem);
+      enrichIMcolors <- mem@enrichIMcolors;
+      enrichIMdirection <- enrichIMdirection(mem);
+      colorV <- mem@colorV;
+   } else if (is.list(memIM) &&
          "memIM" %in% names(memIM)) {
+      ## Accept memIM as list mem output from multiEnrichMap()
       if (length(geneIM) == 0) {
          geneIM <- memIM[["geneIM"]];
       }

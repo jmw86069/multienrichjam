@@ -53,7 +53,7 @@ test_that("multiEnrichMap", {
    testthat::expect_setequal(
       colnames(mem$memIM),
       desc)
-   testthat::expect_equivalent(
+   testthat::expect_equal(ignore_attr=TRUE,
       colSums(mem$memIM)[desc],
       test_enrichdf[pw, "Count"])
 
@@ -79,7 +79,8 @@ test_that("multiEnrichMap", {
 
    ## mem_plot_folio
    # gene-path heatmap
-   mpf2 <- mem_plot_folio(mem, do_plot=TRUE, do_which=2)
+   mpf2 <- mem_plot_folio(mem, do_plot=FALSE,
+      do_which=2, gene_column_split=1, gene_column_title="A")
    testthat::expect_contains(
       names(mpf2),
       "gp_hm")
@@ -89,12 +90,13 @@ test_that("multiEnrichMap", {
          "3 sets (columns)",
          "enrichment P <= 0.05"))
    # enrichment heatmap
-   mpf1 <- mem_plot_folio(mem, do_plot=TRUE, do_which=1)
+   mpf1 <- mem_plot_folio(mem, do_plot=FALSE, do_which=1)
    testthat::expect_contains(
       names(mpf1),
       "enrichment_hm")
    # Cnet plot 1
-   mpf3 <- mem_plot_folio(mem, do_plot=TRUE, do_which=3)
+   mpf3 <- mem_plot_folio(mem, do_plot=FALSE,
+      pathway_column_split=3, do_which=3)
    testthat::expect_contains(
       names(mpf3),
       "cnet_collapsed")

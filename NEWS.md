@@ -1,9 +1,57 @@
 # multienrichjam 0.0.101.900
 
+
+## Breaking changes
+
+* Migrated to the new S4 `Mem-class` object! Most functions accept either
+`Mem` or legacy `list` mem format.
+* `multiEnrichMap()` now returns S4 `Mem` object by default,
+via `returnType="Mem"`.
+The legacy `list` mem format is available with `returnType="list"`.
+* `Mem_to_list()` converts `Mem-class` to legacy list mem format.
+* Removed unofficial functions which were never used:
+filter_mem_genes(), filter_mem_sets(), subset_mem().
+
 ## Updates
 
-* Removed deprecated functions.
-* Removed mention of arules.
+* Added vignette for using `clusterProfiler`, still work in progress.
+* Added test data objects: `Memtest` S4 object, and `Reese_genes`.
+* Removed mention of arules transactions objects.
+* Moved 'Mem Plot Concepts' into its own minimal vignette, still in progress.
+* Added 'tidyr' dependency, removed 'reshape2'.
+* Added 'vdiffr' to Enhances, and numerous visual unit tests.
+* Added 'lifecycle' dependency to help manage deprecated features and arguments.
+
+## changes to existing functions
+
+* `enrichDF2enrichResult()`
+
+   * new argument `readable=NULL` which when NULL will set the `logical`
+   value accordingly for the output `enrichResult` object, mostly useful
+   when using output with `clusterProfiler` related functions.
+
+* `mem_gene_path_heatmap()`
+
+   * Now expects Mem S4 object input, but accepts `list` legacy format.
+   * Refactored logic for column_split, row_split, column_title, row_title,
+   cluster_columns, cluster_rows.Now accepts integer, vector, data.frame,
+   function inputs. Added docs to explain.
+   * Now it tests the clustering before applying `cutree()` to confirm the
+   data supports the requested number of clusters - because with binary
+   matrix data, sometimes the distance is literally zero, preventing a cut.
+   * Fixed error when number of clusters requested using 
+   `column_split` or `row_split` did not match the number of title entries.
+
+* `multiEnrichMap()`
+
+   * Default output is now S4 'Mem' object, set with `returnType="Mem"`.
+   * Legacy behavior of creating the total Cnet plot objects, and EnrichMap
+   objects, are now only performed when `returnType="list"`.
+   These plots were no longer used, in favor of `mem_plot_folio()`
+   or `mem2emap()`.
+   * Added argument `p_cutoff` and deprecated `cutoffRowMinP`.
+   * Deprecated `overlapThreshold`, only used for EnrichMap which is skipped.
+
 
 # multienrichjam 0.0.100.900
 

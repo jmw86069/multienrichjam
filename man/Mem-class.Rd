@@ -11,15 +11,30 @@
 \alias{Mem_to_list}
 \alias{enrichments,Mem-method}
 \alias{names,Mem-method}
-\alias{geneIM,Mem-method}
-\alias{enrichIM,Mem-method}
-\alias{memIM,Mem-method}
-\alias{genes,Mem-method}
-\alias{thresholds,Mem-method}
+\alias{enrichments<-,Mem-method}
 \alias{sets,Mem-method}
+\alias{sets<-,Mem-method}
+\alias{genes,Mem-method}
+\alias{genes<-,Mem-method}
+\alias{geneIM,Mem-method}
+\alias{geneIMdirection,Mem-method}
+\alias{geneIMcolors,Mem-method}
+\alias{enrichList,Mem-method}
+\alias{enrichIM,Mem-method}
+\alias{enrichIMcolors,Mem-method}
+\alias{enrichIMdirection,Mem-method}
+\alias{enrichIMgeneCount,Mem-method}
+\alias{memIM,Mem-method}
+\alias{geneHitIM,Mem-method}
+\alias{headers,Mem-method}
+\alias{colorV,Mem-method}
+\alias{colorV<-,Mem-method}
+\alias{thresholds,Mem-method}
+\alias{dim,Mem-method}
+\alias{dimnames,Mem-method}
 \title{Mem class}
 \usage{
-\S4method{[}{Mem,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{Mem,ANY,ANY,ANY}(x, i, j, k, drop = FALSE)
 
 list_to_Mem(mem)
 
@@ -29,31 +44,65 @@ Mem_to_list(x, ...)
 
 \S4method{names}{Mem}(x)
 
-\S4method{geneIM}{Mem}(x, ...)
+\S4method{enrichments}{Mem}(x) <- value
 
-\S4method{enrichIM}{Mem}(x, ...)
+\S4method{sets}{Mem}(x, ...)
 
-\S4method{memIM}{Mem}(x, ...)
+\S4method{sets}{Mem}(x) <- value
 
 \S4method{genes}{Mem}(x, ...)
 
+\S4method{genes}{Mem}(x) <- value
+
+\S4method{geneIM}{Mem}(x, ...)
+
+\S4method{geneIMdirection}{Mem}(x, ...)
+
+\S4method{geneIMcolors}{Mem}(x, ...)
+
+\S4method{enrichList}{Mem}(x, ...)
+
+\S4method{enrichIM}{Mem}(x, ...)
+
+\S4method{enrichIMcolors}{Mem}(x, ...)
+
+\S4method{enrichIMdirection}{Mem}(x, ...)
+
+\S4method{enrichIMgeneCount}{Mem}(x, ...)
+
+\S4method{memIM}{Mem}(x, ...)
+
+\S4method{geneHitIM}{Mem}(x, ...)
+
+\S4method{headers}{Mem}(x)
+
+\S4method{colorV}{Mem}(x, ...)
+
+\S4method{colorV}{Mem}(x) <- value
+
 \S4method{thresholds}{Mem}(x, ...)
 
-\S4method{sets}{Mem}(x, ...)
+\S4method{dim}{Mem}(x)
+
+\S4method{dimnames}{Mem}(x)
 }
 \arguments{
 \item{x}{\code{Mem} object}
 
-\item{i}{\code{character} or \code{integer} with gene set / pathway names}
+\item{i}{\code{character} or \code{integer} with gene names}
 
-\item{j}{\code{character} or \code{integer} with enrichment names}
+\item{j}{\code{character} or \code{integer} with pathway names}
+
+\item{drop}{\code{logical} always set to FALSE for Mem objects.}
+
+\item{mem}{\code{list} output from \code{multiEnrichMap()}}
 
 \item{...}{additional arguments are ignored}
 
-\item{mem}{\code{list} output from \code{multiEnrichMap()}}
+\item{value}{\code{character} vector of names to assign to pathway gene sets}
 }
 \value{
-\code{list_to_Mem()} returns a \code{Mem} S4 object.
+\code{list_to_Mem()} returns a \code{Mem} S4 object, from 'list' or 'Mem' input.
 
 \code{Mem_to_list()} returns a \code{list} suitable for ther mem functions.
 }
@@ -93,7 +142,7 @@ lowest P-value observed across all enrichment tests.
 \item \strong{multiEnrichResult}: \code{enrichResult} equivalent of 'multiEnrichDF'.\if{html}{\out{<br>}}
 It is intended to facilitate use in \code{enrichplot} functions.
 \item \strong{thresholds}: \code{list} of thresholds used when calling \code{multiEnrichMap()}.
-\item \strong{colnames}: \code{list} to associate actual colnames in 'enrichList'
+\item \strong{headers}: \code{list} to associate actual colnames (headers) in 'enrichList'
 with the conceptual names used in multienrichjam.
 \item \strong{geneIMcolors}: \code{character} matrix with enrichment test colnames, and
 gene rownames.\if{html}{\out{<br>}}
@@ -117,27 +166,66 @@ Values are the number of genes involved in the enrichment of each pathway.
 }
 \section{Functions}{
 \itemize{
-\item \code{x[i}: Subset a Mem object
+\item \code{x[i}: Subset a Mem object, \code{Mem[i, j, k]},
+where \code{i} are genes, \code{j} are pathways, and \code{k} are enrichments.
 
-\item \code{list_to_Mem()}: Convert list to Mem S4 object
+\item \code{list_to_Mem()}: Convert legacy \code{list} mem format to S4 \code{Mem}
 
-\item \code{Mem_to_list()}: Coerce \code{Mem} object to legacy 'mem' \code{list} format
+\item \code{Mem_to_list()}: Coerce S4 \code{Mem} to legacy \code{list} mem format
 
 \item \code{enrichments(Mem)}: Names for the enrichment tests in a Mem object
 
 \item \code{names(Mem)}: Names for the enrichment tests in a Mem object
 
-\item \code{geneIM(Mem)}: The matrix of genes tested versus enrichment tests
+\item \code{enrichments(Mem) <- value}: Assign names for the enrichment tests in a Mem object
 
-\item \code{enrichIM(Mem)}: The pathway/P-value matrix
+\item \code{sets(Mem)}: List pathway gene set names in a Mem object
 
-\item \code{memIM(Mem)}: The gene-pathway incidence matrix
+\item \code{sets(Mem) <- value}: Assign pathway gene set names to a Mem object
 
 \item \code{genes(Mem)}: List genes represented
 
+\item \code{genes(Mem) <- value}: Assign gene names in a Mem object
+
+\item \code{geneIM(Mem)}: The gene-enrichment matrix of genes represented in
+enrichment tests.
+
+\item \code{geneIMdirection(Mem)}: The matrix of genes tested versus enrichment tests, with directionality.
+
+\item \code{geneIMcolors(Mem)}: The matrix of colors indicating genes in each enrichment test
+
+\item \code{enrichList(Mem)}: The list of enrichResult data in an Mem object
+
+\item \code{enrichIM(Mem)}: The pathway/P-value matrix
+
+\item \code{enrichIMcolors(Mem)}: The pathway/directional enrichment color matrix
+
+\item \code{enrichIMdirection(Mem)}: The pathway-enrichment directional score matrix
+
+\item \code{enrichIMgeneCount(Mem)}: Pathway-enrichment gene count matrix, genes involved
+in enrichment of each pathway, for each enrichment test.
+
+\item \code{memIM(Mem)}: The gene-pathway incidence matrix
+
+\item \code{geneHitIM(Mem)}: The matrix of genes tested for enrichment, including
+genes not associated with enrichment results.
+
+\item \code{headers(Mem)}: Enrichment data column headers associated to
+enrichResult data in a Mem object
+
+\item \code{colorV(Mem)}: List colors assigned to  represented
+
+\item \code{colorV(Mem) <- value}: Assign colors to enrichments in a Mem object. If
+supplied 'value' matches the number of 'enrichments(x)', colors are
+assigned in the order supplied.
+Otherwise, 'names(value)' must be present in 'enrichments(x)',
+and values are assigned in matching order.
+
 \item \code{thresholds(Mem)}: List thresholds defined
 
-\item \code{sets(Mem)}: List gene sets represented
+\item \code{dim(Mem)}: dimensions in order of genes, sets, and enrichments
+
+\item \code{dimnames(Mem)}: dimension names for each genes, sets, and enrichments
 
 }}
 \examples{

@@ -30,7 +30,7 @@ mem_multienrichplot(
 )
 }
 \arguments{
-\item{mem}{\code{list} object output from \code{multiEnrichMap()}, specifically
+\item{mem}{legacy \code{list} mem from \code{multiEnrichMap()}, specifically
 containing elements \verb{"multiEnrichMap","multiEnrichMap2"} which
 are expected to be \code{igraph} objects.}
 
@@ -95,10 +95,10 @@ are updated in the \code{igraph} object, so in principle a
 simple call to \code{plot(...)} should suffice.
 }
 \description{
-MultiEnrichMap plot
+MultiEnrichMap plot, deprecated
 }
 \details{
-This function is likely to be replaced by \code{mem2emap()}.
+This function is replaced by \code{mem2emap()} and is deprecated.
 
 This function takes output from \code{multiEnrichMap()} and produces
 customized "multiple enrichMap" plots using an igraph network.

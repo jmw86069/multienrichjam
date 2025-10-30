@@ -19,7 +19,7 @@
 #'
 #' @family jam igraph functions
 #'
-#' @param mem `list` object output from `multiEnrichMap()`
+#' @param mem `Mem` or legacy `list` mem output from `multiEnrichMap()`
 #' @param overlap `numeric` value between 0 and 1 indicating the Jaccard
 #'    overlap coefficient required between any two pathways in order to
 #'    create a network edge connecting these two pathways. Typically,
@@ -62,9 +62,9 @@
 mem2emap <- function
 (mem,
  overlap=0.2,
- p_cutoff=mem$p_cutoff,
+ p_cutoff=NULL,
  min_count=4,
- colorV=mem$colorV,
+ colorV=NULL,
  cluster_function=igraph::cluster_walktrap,
  cluster_list=NULL,
  num_keep_terms=3,
@@ -80,22 +80,39 @@ mem2emap <- function
 {
    #
    # determine nodes to include
+   if (is.list(mem) && "enrichIM" %in% names(mem)) {
+      mem <- list_to_Mem(mem)
+   }
+   if (length(p_cutoff) == 0) {
+      if ("p_cutoff" %in% names(thresholds(mem))) {
+         p_cutoff <- thresholds(mem)$p_cutoff;
+      } else if ("cutoffRowMinP" %in% names(thresholds(mem))) {
+         p_cutoff <- thresholds(mem)[["cutoffRowMinP"]];
+      } else {
+         p_cutoff <- 1;
+      }
+   }
+   if (length(colorV) == 0) {
+      colorV <- mem@colorV
+   }
+   
    if (length(cluster_list) > 0) {
       enrich_rows_use <- unname(unlist(cluster_list));
    } else {
-      enrich_use <- (mem$enrichIM <= p_cutoff) * 1;
+      enrich_use <- (enrichIM(mem) <= p_cutoff) * 1;
 
       # optionally apply min_count when defined, and when present in the mem data
-      if (min_count > 1 && "enrichIMgeneCount" %in% names(mem)) {
-         enrich_use <- (enrich_use > 0 & mem$enrichIMgeneCount >= min_count) * 1;
+      if (min_count > 1) {
+         enrich_use <- (enrich_use > 0 &
+               mem@enrichIMgeneCount >= min_count) * 1;
       }
-      rownames(enrich_use) <- rownames(mem$enrichIM);
+      rownames(enrich_use) <- rownames(enrichIM(mem));
       enrich_rows_use <- rownames(enrich_use)[rowSums(enrich_use) > 0]
    }
-   if (length(enrich_rows_use) < nrow(mem$enrichIM)) {
+   if (length(enrich_rows_use) < nrow(enrichIM(mem))) {
       jamba::printDebug("mem2emap(): ",
          "Note that ",
-         (nrow(mem$enrichIM) - length(enrich_rows_use)),
+         (nrow(enrichIM(mem)) - length(enrich_rows_use)),
          " pathways were removed due to filtering thresholds.");
    }
    if (length(enrich_rows_use) == 0) {
@@ -107,11 +124,13 @@ mem2emap <- function
 
    # convert memIM to Jaccard overlap matrix
    col_match <- match(enrich_rows_use,
-      colnames(mem$memIM));
+      colnames(memIM(mem)));
    if (any(is.na(col_match))) {
-      stop("There is a mismatch in rownames(mem$enrichIM) and colnames(mem$memIM).")
+      stop("There is a mismatch in rownames(enrichIM(mem)) and colnames(memIM(mem)).")
    }
-   jacc_overlap <- 1 - as.matrix(dist(t(mem$memIM[, col_match, drop=FALSE]), method="binary"));
+   jacc_overlap <- 1 - as.matrix(
+      dist(t(memIM(mem)[, col_match, drop=FALSE]),
+         method="binary"));
 
    # convert to graph using Jaccard overlap threshold
    jacc_overlap_filtered <- jacc_overlap * (jacc_overlap >= overlap)
@@ -134,32 +153,35 @@ mem2emap <- function
       repulse=repulse)
 
 
-   imatch <- match(V(jacc_g)$name, rownames(enrich_use))
+   imatch <- match(igraph::V(jacc_g)$name, rownames(enrich_use))
    igraph::V(jacc_g)$pie.color <- lapply(imatch, function(i){
       colorV[colnames(enrich_use)[enrich_use[i, ] != 0]]
    })
-   igraph::V(jacc_g)$pie <- lapply(V(jacc_g)$pie.color, function(i){
+   igraph::V(jacc_g)$pie <- lapply(igraph::V(jacc_g)$pie.color, function(i){
       rep(1, length(i))
    })
    igraph::V(jacc_g)$shape <- "jampie";
 
    # optionally apply direction to pie frame color
-   if (TRUE %in% apply_direction &&
-         "enrichIMdirection" %in% names(mem)) {
+   has_negative <- any(
+      jamba::rmNA(naValue=0, enrichIMdirection(mem)) < 0);
+   # Todo: decide if these criteria are flexible enough
+   if (TRUE %in% apply_direction && has_negative) {
       # define color gradient for border color
       dir_col_fn <- colorjam::col_div_xf(
          direction_max,
          floor=direction_floor,
-         colramp=getColorRamp(
+         colramp=jamba::getColorRamp(
             "RdBu_r",
             divergent=TRUE,
             trimRamp=c(1, 1)))
       # apply color to borders
       pie_borders <- lapply(seq_len(igraph::vcount(jacc_g)), function(i){
-         j <- match(igraph::V(jacc_g)$name[i], rownames(mem$enrichIMdirection));
+         j <- match(igraph::V(jacc_g)$name[i],
+            rownames(enrichIMdirection(mem)));
          k <- igraph::V(jacc_g)$pie.color[[i]];
          knames <- names(k);
-         dir_col_fn(mem$enrichIMdirection[j, knames])
+         dir_col_fn(enrichIMdirection(mem)[j, knames])
       })
       igraph::V(jacc_g)$pie.border <- pie_borders;
       igraph::V(jacc_g)$pie.lwd <- 3;
@@ -177,7 +199,7 @@ mem2emap <- function
             Crange=c(60, 90),
             Lrange=c(50, 85)))
 
-   } else if (length(cluster_function) == 1 && is.function(cluster_function)) {
+   } else if (is.function(cluster_function)) {
       wc <- cluster_function(jacc_g)
       # define list
       nodegroups_wc <- split(igraph::V(jacc_g)$name, wc$membership)
@@ -188,26 +210,6 @@ mem2emap <- function
          num_keep_terms=num_keep_terms);
       nodegroups_wc_labels <- wc$cluster_names;
       names(nodegroups_wc) <- nodegroups_wc_labels;
-      # nodegroups_wc_labels <- cPaste(
-      #    sep=keep_terms_sep,
-      #    lapply(nodegroups_wc, function(i){
-      #       j <- tolower(unlist(strsplit(i, "[\t ]+")));
-      #       # convert cd4-positive to cd4
-      #       j <- gsub("-(positive|negative|type|mediated|induced)|[(),:;\n]+", "", j)
-      #       # remove catchwords
-      #       catchwords <- c(
-      #          "the", "an", "a", "of", "in", "between", "to", "and",
-      #          "involved", "response", "peptide", "protein", "gene",
-      #          "system", "organization", "role", "formation", "enhanced",
-      #          "mediated", "expression", "compound", "process",
-      #          "acid", "cells",
-      #          "activity", "regulation", "positive", "negative", "cell",
-      #          "signaling", "pathway", "activation")
-      #       j <- j[!j %in% catchwords & nchar(j) > 1];
-      #       names(head(tcount(j), num_keep_terms))
-      #    }))
-      # names(nodegroups_wc) <- nodegroups_wc_labels;
-      # wc$cluster_names <- nodegroups_wc_labels;
 
       # bonus points: define mark.group colors by node colors
       if (TRUE %in% color_by_nodes) {

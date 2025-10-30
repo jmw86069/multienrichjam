@@ -412,7 +412,9 @@ topEnrichBySource <- function
          return(iDFsub)
       }
       ## descriptionGrep
+      did_filter <- FALSE;
       if (length(descriptionColname) > 0 && length(descriptionGrep) > 0) {
+         did_filter <- TRUE;
          descr_keep_vals <- jamba::provigrep(descriptionGrep,
             iDFsub[[descriptionColname]]);
          if (length(descr_keep_vals) > 0) {
@@ -426,6 +428,7 @@ topEnrichBySource <- function
       }
       ## nameGrep
       if (length(nameColname) > 0 && length(nameGrep) > 0) {
+         did_filter <- TRUE;
          name_keep_vals <- jamba::provigrep(nameGrep,
             iDFsub[[nameColname]]);
          if (length(descr_keep_vals) > 0) {
@@ -438,16 +441,33 @@ topEnrichBySource <- function
       }
       ## subsetSets
       if (length(nameColname) > 0 && length(subsetSets) > 0) {
-         subset_keep <- (tolower(iDFsub[[nameColname]]) %in% tolower(subsetSets));
+         did_filter <- TRUE;
+         # 0.0.101.900: compare lowercase, no punctuation/whitespace
+         lc_nomarks <- function(x){
+            gsub("^[ ]*|[ ]*$", "",
+               gsub("[-!^(){}&%:; \t.,'_\"]+", " ",
+                  tolower(x)))
+         }
+         subset_keep <- (lc_nomarks(iDFsub[[nameColname]]) %in%
+               lc_nomarks(subsetSets));
       } else {
          subset_keep <- rep(NA, nrow(iDFsub))
       }
       # 0.0.87.900 - new logic uses OR instead of AND
-      m_keep <- cbind(descr_keep, name_keep, subset_keep);
-      rows_keep <- (!apply(m_keep, 1, max, na.rm=TRUE) %in% 0);
-      # rows_keep <- (descr_keep & name_keep & subset_keep);
-      if (any(!rows_keep)) {
-         iDFsub <- subset(iDFsub, rows_keep);
+      # 0.0.101.900 - only apply when filtering was performed
+      rows_keep <- rep(TRUE, nrow(iDFsub));
+      if (TRUE %in% did_filter) {
+         m_keep <- cbind(descr_keep, name_keep, subset_keep);
+         rows_keep <- (!apply(m_keep, 1, max, na.rm=TRUE) %in% 0);
+         if (any(!rows_keep)) {
+            if (verbose) {
+               jamba::printDebug("topEnrichBySource(): ",
+                  "Filtered subset ", iSubset, ": ",
+                  sum(rows_keep), " retained, ",
+                  sum(!rows_keep), " dropped.")
+            }
+            iDFsub <- subset(iDFsub, rows_keep);
+         }
       }
       iDFtop <- head(iDFsub, n);
       iDFtop;

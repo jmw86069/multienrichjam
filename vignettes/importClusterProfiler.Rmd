@@ -1,0 +1,225 @@
+---
+title: "How to use clusterProfiler enrichment results"
+name: importClusterProfiler
+output:
+  rmarkdown::html_vignette:
+    df_print: jamba::kable_coloring
+vignette: >
+  %\VignetteIndexEntry{How to use clusterProfiler enrichment results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   collapse=TRUE,
+   comment="#>",
+   fig.height=12,
+   fig.width=10,
+   fig.align="center",
+   dev="ragg_png"
+)
+```
+
+```{r setup}
+library(multienrichjam)
+library(jamba);
+library(colorjam);
+suppressPackageStartupMessages(library(ComplexHeatmap))
+options("stringsAsFactors"=FALSE, "warn"=-1)
+```
+
+
+# clusterProfiler enrichment
+
+This document describes steps recommended for clusterProfiler
+enrichment data, which include specific objects such as
+`enrichResults` and others.
+
+Refer to the
+[clusterProfiler e-Book](https://yulab-smu.top/biomedical-knowledge-mining-book/index.html),
+an outstanding and comprehensive guide to using
+clusterProfiler to generate gene set enrichment data.
+
+There are two general approaches:
+
+1. Run `clusterProfiler::enricher()` for a `list` of experiments.
+2. Use an existing `list` of `clusterProfiler::enricher()` results.
+
+
+## Run clusterProfiler enrichment
+
+The example below demonstrates how to prepare canonical pathways from
+[MSigDB](https://www.gsea-msigdb.org/gsea/msigdb)
+to use for gene set enrichment. These pathways are used with a list of genes
+in `Reese_genes` to test for enrichment.
+
+
+### MSigDB Canonical Pathways
+
+The `msigdbr` R package is used to download necessary data,
+following the guidance in the clusterProfiler e-Book:
+[MSigDb analysis](https://yulab-smu.top/biomedical-knowledge-mining-book/universal-api.html#msigdb-analysis).
+See `msigdbr::msigdbr()` for more details.
+
+#### MSigDB Collections
+
+The `msigdbr` package offers convenient access to collections of
+gene sets available from MSigDB, shown below.
+
+```{r msigdbr-collections, results='asis'}
+msigdb_collections <- msigdbr::msigdbr_collections(db_species="HS")
+msigdb_collections
+```
+
+#### MSigDB Canonical Pathways
+
+This tutorial uses `collection = "C2"` because it
+contains all canonical pathway gene sets from multiple sources.
+The canonical pathways are then filtered by retaining the
+subset with `gs_subcollection` containing `"CP"`.
+
+There are two columns used by `clusterProfiler::enricher()`:
+
+1. gs_name - the gene set name
+2. gene - usually gene symbol
+
+Using these two columns, the `data.frame` needs to retain only unique rows.
+
+```{r msigdbr-c2, results='asis'}
+# C2 canonical pathways
+msig_cp <- subset(
+   msigdbr::msigdbr(
+      species = "Homo sapiens",
+      collection="C2"),
+   grepl("CP", gs_subcollection))
+msig_cp_gs <- unique(data.frame(msig_cp[, c("gs_name", "gene_symbol")]))
+head(msig_cp_gs, 10)
+```
+
+### Run enricher()
+
+The [clusterProfiler documentation](https://yulab-smu.top/biomedical-knowledge-mining-book/universal-api.html#msigdb-ora)
+for `enricher()` is straightforward for over-representation analysis (ORA).
+Note that other clusterProfiler enrich* tools can be used, for example
+`clusterProfiler::enrichKEGG()`, `clusterProfiler::enrichPC()`.
+
+> The most important argument to include:  
+>
+> `pvalueCutoff=1`
+>
+> which retains all enrichment results without filtering.  
+> The P-value will be filtered later by multienrichjam.
+
+This example uses `Reese_genes` containing genes identified
+by Reese *et al* 2019
+[https://doi.org/10.1016/j.jaci.2018.11.043] in
+**Epigenome-wide meta-analysis of DNA methylation and childhood asthma**.
+
+The data are stored as a `list` of significant genes, so we iterate the
+list using `lapply()`.
+
+```{r run_enrichr, results='asis'}
+# Gene hit lists
+data(Reese_genes)
+
+# enricher() for each element of a list
+erlist <- lapply(Reese_genes, function(igenes){
+   er <- clusterProfiler::enricher(igenes,
+      pvalueCutoff=1,
+      TERM2GENE=msig_cp_gs,
+      minGSSize=5, maxGSSize=5000)
+})
+
+# Optionally run enrichPC() which tests PathwayCommons
+erlist2 <- lapply(Reese_genes, function(igenes){
+   er <- clusterProfiler::enrichPC(igenes,
+      pvalueCutoff=1,
+      minGSSize=1, maxGSSize=5000)
+})
+
+```
+
+## Multi-Enrichment Analysis
+
+The `erlist` from the previous step will be the input to `multiEnrichMap()`.
+
+```{r run_mem, results='asis'}
+mem <- multiEnrichMap(erlist,
+   pvalueColname="qvalue",
+   cutoffRowMinP=0.2,
+   min_count=2,
+   topEnrichN=20)
+   # verbose=TRUE,
+sdim(mem)
+```
+
+
+### Mem Plot Folio
+
+The `mem_plot_folio()` represents a key step in the analysis workflow.
+Several downstream results are directly dependent upon the options
+chosen here:
+
+Pathway clusters are defined by analyst parameters:
+
+* The number of pathways clusters
+* The relative weight of the gene-pathway incidence matrix.
+* The method used for clustering.
+
+Mem Plot Folio then provides a series of visualizations:
+
+1. **Enrichment P-value heatmap** often as a dot plot
+2. **Gene-pathway heatmap**, clustered by column and by row
+3. **Cnet cluster plots**
+
+   a. Pathway clusters are labeled by `LETTERS` ("A", "B", "C", "D", etc.)
+   b. The second plot labels clusters by the top `n` pathway names
+   c. The third plot is (b) and hides the gene labels.
+
+4. **Cnet exemplar plots**
+
+   * Includes 1 exemplar pathway per cluster.
+   * Includes 2 exemplars per cluster.
+   * Includes 3 exemplars per cluster.
+
+5. **Cnet per cluster**
+
+   * One plot for each pathway cluster
+
+```{r, mem_folio, fig.height=16, fig.width=10}
+mpf <- mem_plot_folio(mem,
+   pathway_column_split=4,
+   column_cex=0.7,
+   node_factor=1,
+   use_shadowText=TRUE,
+   label_factor=1.2,
+   do_which=c(2),
+   main="Canonical Pathways")
+```
+
+
+
+### Cnet Cluster Plot
+
+The Cnet Cluster Plot is often the focus of manuscript figures.
+The typical workflow is demonstrated below.
+
+```{r, cnet_cluster, fig.height=12, fig.width=10}
+# generate the data
+mpf4 <- mem_plot_folio(mem,
+   pathway_column_split=4,
+   do_which=c(4),
+   do_plot=FALSE)
+
+# extract the cnet
+cnet <- mpf4$cnet_collapsed_set;
+
+# jam_graph
+jam_igraph(cnet,
+   node_factor=2,
+   use_shadowText=TRUE,
+   label_dist_factor=5,
+   label_factor_l=list(nodeType=c(Gene=2, Set=1.3)))
+
+```

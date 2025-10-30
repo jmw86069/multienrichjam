@@ -19,15 +19,15 @@ mem_gene_path_heatmap(
   column_method = "binary",
   enrich_im_weight = 0.3,
   gene_im_weight = 0.5,
-  gene_annotations = c("im", "direction"),
+  gene_annotations = c("im", "direction", "default"),
   annotation_suffix = c(im = "hit", direction = "dir"),
   simple_anno_size = grid::unit(6, "mm"),
   cluster_columns = NULL,
   cluster_rows = NULL,
-  cluster_row_slices = TRUE,
-  cluster_column_slices = TRUE,
+  cluster_row_slices = FALSE,
+  cluster_column_slices = FALSE,
   name = NULL,
-  p_cutoff = mem$p_cutoff,
+  p_cutoff = NULL,
   p_floor = 1e-10,
   row_split = NULL,
   column_split = NULL,
@@ -51,24 +51,22 @@ mem_gene_path_heatmap(
 )
 }
 \arguments{
-\item{mem}{\code{list} object created by \code{multiEnrichMap()}. Specifically
-the object is expected to contain \code{colorV}, \code{enrichIM},
-\code{memIM}, \code{geneIM}.}
+\item{mem}{\code{Mem} or \code{list} object created by \code{multiEnrichMap()}.}
 
-\item{genes}{character vector of genes to include in the heatmap,
+\item{genes}{\code{character} vector of genes to include in the heatmap,
 all other genes will be excluded.}
 
-\item{sets}{character vector of sets (pathways) to include in the heatmap,
+\item{sets}{\code{character} vector of sets (pathways) to include in the heatmap,
 all other sets will be excluded.}
 
-\item{min_gene_ct}{minimum number of occurrences of each gene
+\item{min_gene_ct}{\code{integer} minimum number of occurrences of each gene
 across the pathways, all other genes are excluded.}
 
-\item{min_set_ct}{minimum number of genes required for each set,
+\item{min_set_ct}{\code{integer} minimum number of genes required for each set,
 all other sets are excluded.}
 
-\item{min_set_ct_each}{minimum number of genes required for each set,
-required for at least one enrichment test.}
+\item{min_set_ct_each}{\code{integer} minimum number of genes required
+for each set, required for at least one enrichment test.}
 
 \item{column_fontsize, row_fontsize}{\code{numeric}
 passed as \code{fontsize} to \code{ComplexHeatmap::Heatmap()}
@@ -77,9 +75,11 @@ to define a specific fontsize for column and row labels. When
 starting point fontsize, which can be adjusted with \code{column_cex}
 and \code{row_cex}.}
 
-\item{row_method, column_method}{character string of the distance method
-to use for row and column clustering. The clustering is performed
-by \code{amap::hcluster()}.}
+\item{row_method, column_method}{\code{character} string with distance method,
+default is 'binary' which considers all non-zero values to be 1.
+It is used for row and column hierarchical clustering
+by \code{amap::hcluster()}. It offers more methods than \code{hclust()}
+hence its use here.}
 
 \item{enrich_im_weight}{\code{numeric} value between 0 and 1 (default 0.3),
 the relative weight of enrichment \verb{-log10 P-value} and overall
@@ -109,67 +109,83 @@ with the gene-pathway incidence matrix, giving each matrix equal weight
 
 \item{gene_annotations}{\code{character} string indicating which annotation(s)
 to display alongside the gene axis of the heatmap.
-By default it uses \verb{"im", "direction"}, and \code{"direction"} is removed
-when \code{mem$geneIMdirection} is not available.
 \itemize{
-\item \code{"im"} displays the gene incidence matrix \code{mem$geneIM} using
-categorical colors defined by \code{mem$colorV}.
-\item \code{"direction"} displays the gene directionality \code{mem$geneIMdirection}
+\item Default is \verb{"im", "direction"}, and \code{"default"} which will hide
+the \code{"direction"} if all non-zero values are positive.
+\item When \code{"im"} is present, the colored incidence matrix is displayed.
+\item When \code{"direction"} is present, the directional matrix is displayed
 using colors defined by \code{colorjam::col_div_xf(1.2)}.
+\item When both \code{"im"} and \code{"direction"} are present, they are displayed
+in the order defined.
 \item When no values are given, the gene annotation is not displayed.
-\item When two values are given, the annotations are displayed in the
-order they are provided.
 }}
 
 \item{annotation_suffix}{\code{character} vector named by values permitted
 by \code{gene_annotations}, with optional suffix to add to the annotation
-labels. For example it may be helpful to add "hit" or "dir" to
-distinguish the enrichment labels.}
+labels. For example, as by default, it may be helpful to add
+"hit" or "dir" to distinguish the enrichment labels.}
 
-\item{name}{character value passed to \code{ComplexHeatmap::Heatmap()},
-used as a label above the heatmap color legend.}
+\item{name}{\code{character} value passed to \code{ComplexHeatmap::Heatmap()},
+used as a label above the heatmap color legend. Default \code{NULL}
+uses "Gene Hits by Enrichment".}
 
-\item{p_cutoff}{numeric value of the enrichment P-value cutoff,
+\item{p_cutoff}{\code{numeric} value of the enrichment P-value cutoff,
 above which P-values are not colored, and are therefore white.
 The enrichment P-values are displayed as an annotated heatmap
 at the top of the main heatmap. Any cell that has a color meets
-at least the minimum P-value threshold. This value by default
-is taken from input \code{mem}, using \code{mem$p_cutoff}, for
+at least the minimum P-value threshold. The default
+is taken from input \code{mem} for
 consistency with the input multienrichment analysis.}
 
-\item{column_split, row_split}{optional arguments passed to
-\code{ComplexHeatmap::Heatmap()} to split the heatmap by columns
-or rows, respectively.
+\item{column_split, row_split}{row and column split, default NULL,
+detects an appropriate number of clusters.
+Passed to \code{ComplexHeatmap::Heatmap()}.
 \itemize{
-\item when \code{row_split} is \code{NULL}
-and \code{auto_split=TRUE}, it will determine an appropriate number
-of clusters based upon the number of rows. To turn off row \code{split},
-use \code{row_split=NULL} or \code{row_split=0} or \code{row_split=1};
-likewise for \code{column_split}.
-\item when \code{row_split} or \code{column_split} are supplied as a named
-vector, the names are aligned with \code{sets} to be displayed
-in the heatmap, and will use the \code{intersect()} of the two.
-When data is clustered, \code{cluster_row_slices=FALSE} and
-\code{cluster_column_slices=FALSE} such that the dendrogram will
-be broken into separate pieces.
+\item To turn off split use \code{1}.
+\item To specify a fixed number of clusters, use an \code{integer} value.
+The value may be changed if the underlying data does not support
+that number of clusters.
+\item To specify fixed clusters by name, use an atomic vector
+named by the rownames \code{genes(Mem)} or colnames \code{sets(Mem)} with
+values which will become the cluster names. When supplying a
+\code{factor} the factor level order will be maintained.
+\item Alternatively, supply a \code{data.frame} whose rownames match
+the \code{genes(Mem)} rows or \code{sets(Mem)} columns, respectively.
+In this case, column values are combined using
+\code{jamba::pasteByRowOrdered()} which also maintains factor level
+order.
+\item When supplying either an atomic vector or \code{data.frame}
+the actual names will be used to subset the resulting \code{Mem} data
+if there are fewer names provided than exist in \code{Mem}.
+Note that the \code{Mem} data are not subset again by other filter
+criteria, for example \code{min_set_ct}, \code{min_gene_ct}, etc.
+\item The \code{column_title} argument is used when
 }}
 
-\item{column_title}{optional character string with title to display
-above the heatmap.}
+\item{auto_split}{\code{logical} whether to determine clusters when column_split
+or row_split is NULL, default TRUE.}
 
-\item{row_title}{optional character string with title to display
-beside the heatmap. Note when \code{row_split} is defined, the
-\code{row_title} is applied to each heatmap section.}
+\item{column_title}{optional \code{character} string or vector
+to display above the column splits. Default uses \code{LETTERS}
+with length to match the number of clusters.
+When there is only one column cluster, it is not named unless
+\code{column_title} also has length 1.}
 
-\item{row_title_rot}{\code{numeric} value indicating the rotation of
+\item{row_title}{optional \code{character} string or vector
+to display to the left side of the heatmap row splits.
+The default uses \code{letters} to match the number of row clusters.
+When there is only one row cluster, it is not named unless
+\code{row_title} also has length 1.}
+
+\item{row_title_rot}{\code{numeric} value, default 0, the rotation of
 \code{row_title} text, where \code{0} is not rotated, and \code{90} is rotated
 90 degrees.}
 
-\item{colorize_by_gene}{\code{logical} indicating whether to color the
-main heatmap body using the colors from \code{geneIM} which represents
-each enrichment in which a given gene is involved. Colors are
-blended using \code{colorjam::blend_colors()}, using colors from
-\code{mem$colorV}, applied to \code{mem$geneIM}.}
+\item{colorize_by_gene}{\code{logical} default TRUE, whether to color the
+main heatmap body using the colors from \code{geneIM} to indicate
+each enrichment in which a given gene is involved.
+Colors are blended using \code{colorjam::blend_colors()},
+using colors from \code{colorV} in the \code{geneIMcolors(Mem)}.}
 
 \item{na_col}{\code{character} string indicating the color to use for
 NA or missing values. Typically this argument is only used
@@ -190,46 +206,52 @@ This includes \code{column_method} and \code{row_method} as of 0.0.90.900.
 its purpose.
 }}
 
-\item{colramp}{\code{character} name of color, color gradient, or a
-vector of colors, anything compatible with input to
-\code{jamba::getColorRamp()}.}
+\item{colramp}{\code{character}, default "Reds", with name of color,
+color gradient, or a vector of colors, anything that can be converted
+to a color gradient by \code{jamba::getColorRamp()}.}
 
 \item{column_names_max_height}{\code{grid::unit} passed to
 \code{ComplexHeatmap::Heatmap()}. When supplied as \code{numeric} it is
-converted to units in "mm".}
+converted to units in "mm". Default 180 mm.}
 
 \item{column_names_rot}{\code{numeric} passed to
 \code{ComplexHeatmap::Heatmap()}.}
 
-\item{show_gene_legend, show_pathway_legend}{\code{logical} whether to show
-the gene IM and pathway IM legends, respectively.
+\item{show_gene_legend, show_pathway_legend}{\code{logical},
+whether to show the gene IM and pathway IM legends, respectively.
 \itemize{
-\item The gene IM legend is \code{FALSE} by default, since it only describes the
+\item The gene IM legend is FALSE by default, since it only describes the
 color used for each column, and is somewhat redundant with the pathway
 IM legend.
-\item The pathway IM legend displays the color scale including the range
-of enrichment P-values colorized.
+\item The pathway IM default is TRUE, it displays the color scale
+including the range of enrichment P-values colorized.
 }}
 
-\item{show_heatmap_legend}{\code{numeric} or \code{logical}, (default 8)
-with the maximum number of labels to use for the heatmap color legend.
-The heatmap color legend includes all the
-the possible blended colors based upon the gene IM data.
+\item{show_heatmap_legend}{\code{numeric} or \code{logical}, (default 8),
+the maximum number of labels to use for the heatmap color legend.
+When 'colorize_by_gene' is TRUE, the heatmap legend would include
+all possible blended colors using gene IM data, which frankly can
+become too much.
 \itemize{
 \item When \code{logical}, \code{TRUE} is converted to \code{8} by default.
 \item When there are more legend items than than \code{show_heatmap_legend}
-the color legend will only display singlet colors.
+the color legend will only display singlet colors, which means
+only one color per individual set defined in colorV.
+\item This legend can be created and extracted from the
+output \code{Heatmap} object to be displayed independently for
+publishable figures if necessary.
 }}
 
 \item{use_raster}{\code{logical} passed to \code{ComplexHeatmap::Heatmap()},
-(default TRUE), indicating whether to rasterize the heatmap body.
-If the heatmap appears too blurry, use \code{FALSE} which will render each
-heatmap cell individually. For very large heatmaps this can create
-a very large PDF file size, and may introduce visual artifacts
-if the output dimensions are smaller than 1 cell per pixel.}
+default FALSE, whether to rasterize the heatmap body.
+This option is recommended FALSE when 'colorize_by_gene' is TRUE,
+due to the way the rasterization is handled at matrix level.
+For very large heatmaps you may try 'colorize_by_gene=FALSE'
+and 'use_raster=TRUE' to reduce the figure size with PDF and SVG
+output, and will improve visual fidelity in some cases.}
 
 \item{seed}{\code{numeric} value passed to \code{set.seed()} to define a
-reproducible random seed.}
+reproducible random seed during row and column clustering.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
@@ -240,23 +262,20 @@ which is intended to allow overloading \code{...} for different
 functions.}
 }
 \value{
-\code{Heatmap} object defined in \code{ComplexHeatmap::Heatmap()}, with
-additional attributes:
+\code{Heatmap} object defined in \code{ComplexHeatmap::Heatmap()} with
+custom attributes with the method caption:
 \itemize{
-\item \code{"caption"} - a \code{character} string with caption that described
-the data dimensions and clustering parameters.
-\item \code{"caption_legendlist"} - a \code{ComplexHeatmap::Legends} object suitable
-to be included with Heatmap legends using
+\item \code{"caption"}: \code{character} string with method details.
+\item \code{"caption_legendlist"}: \code{ComplexHeatmap::Legends} object suitable
+to be included with Heatmap legends by
 \code{draw(hm, annotation_legend_list=caption_legendlist)}, or
-drawn with \code{grid::grid.draw(caption_legendlist)}.
-\item \code{"draw_caption"} - a \code{function} that will draw the caption in the
-bottom-left corner of the heatmap by default, to be called
+or drawn directly \code{grid::grid.draw(caption_legendlist)}.
+\item \code{"draw_caption"} - \code{function} that will draw the caption in the
+bottom-right corner of the device by default, to be called
 with \code{attr(hm, "draw_caption")()} or \code{draw_caption()}.
 }
 
-In addition, the returned object can be interrogated with two helper
-functions that help define the row and column clusters, and the
-exact order of labels as they appear in the heatmap.
+The \code{Heatmap} row and column order can be retrieved:
 \enumerate{
 \item \code{jamba::heatmap_row_order()} - returns a \code{list} of vectors of
 rownames in the order they appear in the heatmap, with list names
@@ -270,20 +289,157 @@ defined by row split.
 MultiEnrichment Heatmap of Genes and Pathways
 }
 \details{
-This function takes the \code{mem} list output from
+This function takes the \code{Mem} output from
 \code{multiEnrichMap()} and creates a gene-by-pathway incidence
 matrix heatmap, using \code{ComplexHeatmap::Heatmap()}.
+The major output of this function is to define pathway
+clusters which influences other figures produced by
+\code{mem_plot_folio()}: the enrichment heatmap; Cnet cluster plots;
+Cnet exemplars.
+
 It uses three basic sources of data to annotate the heatmap:
 \enumerate{
-\item \code{mem$memIM} the gene-set incidence matrix
-\item \code{mem$geneIM} the gene incidence matrix by dataset
-\item \code{mem$enrichIM} the pathway enrichment P-value matrix by dataset
+\item \code{memIM} the gene-set incidence matrix
+\item \code{geneIM} the gene incidence matrix by dataset
+\item \code{enrichIM} the pathway enrichment P-value matrix by dataset
+}
+\subsection{Pathway and gene clusters}{
+
+When \code{column_split} (pathways) or \code{row_split} (genes) are
+not defined, a reasonable number is assigned to split columns
+and rows, respectively. The specific number is controlled by
+defining an integer number. The splits are named using
+\code{column_title} and \code{row_title}, which defaults \code{LETTERS} and
+\code{letters}, respectively.
+
+Custom pathway clusters (columns) can be defined by defining
+\code{column_split} as a vector named by values in \code{sets(Mem)},
+with values used to define the name for each cluster.
+When provided as a \code{factor} it will honor the factor level order.
+
+When a subset of \code{sets(Mem)} are provided, it will also subset
+the \code{Mem} object to show only the matching sets, however it does
+not re-apply row and column filtering described above.
+It is recommended to use argument 'sets' to subset the pathway
+gene sets upfront, then use \code{column_split} with names that
+match 'sets'.
+
+Alternatively, \code{column_split} can be supplied as a \code{data.frame}
+with rownames that match \code{sets(Mem)}, in which case column values
+are combined using \code{jamba::pasteByRowOrdered()} which also keeps
+factor level order.
+
+Custom gene clusters (rows) can be defined with \code{row_split} using
+the same mechanism as with \code{column_split} described above,
+with names that match \code{genes(Mem)} as appropriate.
+\subsection{Column pathway clustering}{
+
+Columns (pathways) are clustered using a combination of the gene-pathway
+incidence matrix, and the -log10 P-values shown along the
+pathway axis (usually columns). The purpose is to allow the
+enrichment P-value to influence the clustering together with
+the gene content. The balance is adjusted using
+\code{enrich_im_weight}, default 0.3, and where 0.0 will ignore the
+enrichment P-values during clustering. Higher values will tend
+to create clusters that represent shared/unique \emph{significant}
+pathways, and less determined based solely on the gene content.
+
+Note that the enrichment P-value matrix used during clustering
+is adjusted by using \code{p_cutoff} and \code{p_floor}.
+Values above the \code{p_cutoff} are converted to 1 so they do not
+influence clustering. Values below \code{p_floor} are converted to
+\code{p_floor} so they influence clustering only at the level of
+other values at \code{p_floor}.
+
+The default \code{cluster_columns=TRUE} will employ \code{amap::hcluster()}
+as a convenient and efficient one-step distance-hierarchical clustering
+approach, using \code{cluster_method} as the distance method. A custom
+function can be supplied with \code{cluster_columns} as long as the
+output is 'hclust' or can be coerced to 'hclust'.
+
+The clustering distance method \code{column_method} uses default 'binary',
+which treats any non-zero value as 1.
+In this case, the relative weight is not important since all non-zero
+values are equivalent.
+However, \code{column_method='euclidean'}, current default in \code{mem_plot_folio()}
+may improve the output when adjusting the relative weight of
+enrichment P-values with incidence matrix.
 }
 
-It will try to estimate a reasonable number of column and row
-splits in the dendrogram, based solely upon the number of
-columns and rows. These guesses can be controlled with argument
-\code{column_split} and \code{row_split}, respectively.
+\subsection{Gene clustering}{
+
+Rows (genes) are clustered using a combination of the gene-pathway
+incidence matrix, and the 'geneIM' or 'geneIMdirection' matrix data
+shown, as defined with \code{gene_annotations}. The relative weight of
+these matrices is controlled with \code{gene_im_weight} with default 0.5,
+which gives equal weight to each matrix. By default, when directional
+gene values are shown the directional matrix is used with clustering.
+
+The default \code{cluster_rows=TRUE} will employ \code{amap::hcluster()} as
+described for Pathway clustering, or \code{cluster_rows} can be a custom
+function that produces 'hclust' or can be coerced to 'hclust'.
+
+When \code{row_method='binary'} the relative weight of gene incidence matrix
+and the pathway-gene matrix is not important, since all non-zero
+values are treated as 1 during clustering. The \code{mem_plot_folio()}
+default uses 'euclidean' to improve the effect of the relative
+weight of these two matrices.
+
+Gene clusters are not often used for downstream analysis, for
+example they do not form clusters in the Cnet plots, and are not
+(yet) used for other analysis in multienrichjam.
+However, gene clusters are quite useful when interpreting
+pathway-gene data.
+
+It is helpful in practice to refer to a gene cluster by name:
+"The genes in cluster 'd' all appear to be cytokines."
+(Also maybe there should be better names, but that's for
+another time.)
+
+Gene clusters may form what we call "hot spots", where
+most of a gene cluster is colorized and associated with
+one or more pathway clusters.
+A hot spot indicates a set of genes shared across multiple pathways,
+a "core" set of genes which may have serve an important functional
+basis in several pathways.
+
+An example might be mitogen-activated protein kinase (MAPK) genes,
+which typically involve a multi-step kinase call signaling
+cascade. Pathways which involve one MAPK would very often
+involve each MAPK at subsequent steps in the cascade.
+In fact, MAPK genes are often the core signaling mechanism of
+numerous apparently unrelated pathways - we refer to it as the
+"internal wiring" of the signaling in a cell, as an analogy to
+a building which may use wiring to pass along any number of messages.
+Different cell types may employ the MAPK cascade to send a message,
+and this message may have different meaning across cell types,
+and indeed may have meaning based upon the cell state.
+}
+
+}
+
+\subsection{Filtering}{
+
+A subset of pathways can be defined with argument \code{sets},
+which may be useful to prepare this plot for a set of
+"exemplar pathways" which represent key pathways of interest
+for a study.
+
+Similar for genes with argument \code{genes}, however this option
+is less commonly used.
+
+Pathways and genes can be subset by number of occurrences
+of each, for example:
+\itemize{
+\item \code{min_gene_ct}: minimum occurrences of a gene across pathways,
+which also means the number of pathways in which a gene
+occurs.
+\item \code{min_set_ct}: minimum occurrences of a set (pathway) across genes,
+which means the number of genes in the set across all enrichments.
+\item \code{min_set_ct_each}: minimum occurrences of a set (pathway) across genes.
+It requires at least \code{min_set_ct_each} genes in at least one enrichment,
+which is consistent with \code{min_count} in \code{multiEnrichMap()}.
+}
 
 When pathways are filtered by \code{min_gene_ct}, \code{min_set_ct},
 and \code{min_set_ct_each}, the order of operations is as follows:
@@ -296,6 +452,7 @@ in order to remove pathways which were not deemed "significant"
 based upon the required number of genes. Only after those pathways
 are removed can the number of occurrences of each gene be judged
 appropriately.
+}
 }
 }
 \seealso{

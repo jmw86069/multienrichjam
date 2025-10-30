@@ -7,9 +7,9 @@
 mem2emap(
   mem,
   overlap = 0.2,
-  p_cutoff = mem$p_cutoff,
+  p_cutoff = NULL,
   min_count = 4,
-  colorV = mem$colorV,
+  colorV = NULL,
   cluster_function = igraph::cluster_walktrap,
   cluster_list = NULL,
   num_keep_terms = 3,
@@ -25,7 +25,7 @@ mem2emap(
 )
 }
 \arguments{
-\item{mem}{\code{list} object output from \code{multiEnrichMap()}}
+\item{mem}{\code{Mem} or legacy \code{list} mem output from \code{multiEnrichMap()}}
 
 \item{overlap}{\code{numeric} value between 0 and 1 indicating the Jaccard
 overlap coefficient required between any two pathways in order to

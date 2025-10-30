@@ -18,10 +18,10 @@ test_that("Mem", {
    )
 
    erlist <- list(EnrichmentA=enrichDF2enrichResult(test_enrichdf))
-   mem <- multiEnrichMap(erlist)
+   Mem <- multiEnrichMap(erlist)
 
    # convert to Mem
-   Mem <- list_to_Mem(mem)
+   mem <- Mem_to_list(Mem)
    testthat::expect_setequal(
       class(Mem),
       "Mem")
@@ -30,9 +30,15 @@ test_that("Mem", {
    new_mem <- as(Mem, "list")
    # geneIMdirection was added during import, so omit during the comparison
    new_names <- setdiff(names(new_mem), "geneIMdirection")
-   testthat::expect_setequal(
+   testthat::expect_equal(
       new_mem[new_names],
       mem[new_names])
+   
+   # confirm all dimensions are identical
+   Mem_names <- gsub("colnames", "headers", new_names)
+   testthat::expect_equal(ignore_attr=TRUE,
+      sdim(Mem)[Mem_names, ],
+      sdim(new_mem)[new_names, ])
 
    # accessors
    testthat::expect_setequal(
@@ -64,10 +70,10 @@ test_that("Mem", {
    testthat::expect_equal(
       rownames(Mem@geneIM),
       rownames(Mem@memIM))
-
+   testthat::expect_equal(
+      rownames(mem$enrichIM),
+      colnames(mem$memIM))
+   
 
 })
 
-test_that("Mem.asList", {
-
-})

@@ -315,7 +315,13 @@ make_point_hull <- function
          if (length(label.y.nudge) == 1 && !label.y.nudge == 0) {
             label_y <- label_y + label.y.nudge;
          }
-         jamba::drawLabels(txt=label,
+         # 0.0.101.900 - convert list to delimited string
+         if (is.list(label)) {
+            label <- jamba::cPaste(label,
+               sep=", \n")
+         }
+         
+         jamba::drawLabels(txt=unlist(label),
             labelCex=label.cex,
             boxCexAdjust=c(2.2, 2.2),
             x=label_x, y=label_y,

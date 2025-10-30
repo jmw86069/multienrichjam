@@ -13,6 +13,27 @@ enrichList2geneHitList(
   ...
 )
 }
+\arguments{
+\item{enrichList}{\code{list} of \code{enrichResult} objects}
+
+\item{geneColname}{\code{character} string with the column name containing
+delimited gene identifiers.}
+
+\item{geneDelim}{\code{character} regular expression used to split delimited
+gene values. By default, \code{enrichResult} uses '/' forward slash
+as delimiter, however the default here will split any space or
+comma as well.}
+
+\item{make_unique}{\code{logical} default TRUE, whether to return only unique
+genes per set, or potentially multiple genes per set. Typically there
+should only ever be one instance of a gene per set, but through a
+variety of other mechanisms they may exist, for example if two gene
+identifiers are resolved into the same gene symbol.}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
+
+\item{...}{additional arguments are ignored.}
+}
 \value{
 \code{list} of character vectors, containing the unique
 set of genes involved in each enrichment.
@@ -24,6 +45,9 @@ Extract gene hit list from list of enrichResult
 This function is mainly for internal use in multienrichjam,
 it takes a list of \code{enrichResult} objects, and determines
 the full set of genes involved in each \code{enrichResult}.
+
+Note that genes are sorted using \code{jamba::mixedSort()} for
+alpha-numeric sorting, based upon version sorting.
 
 This function also works with \code{ComplexHeatmap::HeatmapList}
 objects.
@@ -39,8 +63,6 @@ Other jam utility functions:
 \code{\link{colorRamp2D}()},
 \code{\link{deconcat_df2}()},
 \code{\link{display_colorRamp2D}()},
-\code{\link{filter_mem_genes}()},
-\code{\link{filter_mem_sets}()},
 \code{\link{find_colname}()},
 \code{\link{find_enrich_colnames}()},
 \code{\link{get_hull_data}()},
@@ -55,7 +77,6 @@ Other jam utility functions:
 \code{\link{rank_mem_clusters}()},
 \code{\link{rotate_coordinates}()},
 \code{\link{subgraph_jam}()},
-\code{\link{subset_mem}()},
 \code{\link{summarize_node_spacing}()},
 \code{\link{xyAngle}()}
 }

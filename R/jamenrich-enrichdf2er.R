@@ -2,10 +2,13 @@
 #'
 #' Convert data.frame to enrichResult
 #'
-#' This function takes a data.frame containing gene set enrichment
-#' results, and converts it to a proper `enrichResult` object,
-#' compatible with methods provided by the `clusterProfiler`
-#' package.
+#' This function takes a `data.frame` containing gene set enrichment
+#' results, and converts it to a proper 'enrichResult' object
+#' defined in `DOSE::enrichResult-class`.
+#' This object is supported by other functions in the `clusterProfiler`
+#' suite of tools.
+#' 
+#' @returns `DOSE::enrichResult-class` object.
 #'
 #' @param enrichDF `data.frame` representing gene set enrichment
 #'    results.
@@ -35,6 +38,8 @@
 #'    values.
 #' @param pvalueColname `character` value of the `colname(enrichDF)`
 #'    containing enrichment P-values to use in downstream processing.
+#' @param readable `logical` default NULL, sets the 'readable' flag for
+#'    the resulting `enrichResult` object.
 #' @param msigdbGmtT optional GmtT object (not currently implemented)
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
@@ -56,6 +61,7 @@ enrichDF2enrichResult <- function
  geneSep=",",
  pvalueColname=c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
  descriptionColname=c("Description", "Name", "Pathway", "ID"),
+ readable=NULL,
  msigdbGmtT=NULL,
  verbose=FALSE,
  ...)
@@ -127,6 +133,17 @@ enrichDF2enrichResult <- function
    enrichDF2[["geneID"]] <- gsub(geneDelim,
       "/",
       enrichDF2[["geneID"]]);
+   
+   ## set readable when needed
+   if (length(readable) == 0) {
+      readable <- FALSE;
+      # if any alphabetic or -_ we consider it "readable" and not ENTREZID
+      if (jamba::igrepHas("[-_a-zA-Z]", enrichDF2[["geneID"]])) {
+         readable <- TRUE;
+      }
+   } else {
+      readable <- head(as.logical(readable), 1);
+   }
 
    ## Validate input colnames
    keyColname <- intersect(keyColname, colnames(enrichDF));
@@ -292,6 +309,6 @@ enrichDF2enrichResult <- function
       organism="UNKNOWN",
       keytype="UNKNOWN",
       ontology="UNKNOWN",
-      readable=FALSE);
+      readable=readable);
    x;
 }
