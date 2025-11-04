@@ -422,7 +422,6 @@ mem_gene_path_heatmap <- function
       } else if ("cutoffRowMinP" %in% names(thresholds(Mem))) {
          p_cutoff <- thresholds(Mem)[["cutoffRowMinP"]];
       } else {
-         jamba::printDebug("thresholds:");print(thresholds(Mem));# debug
          p_cutoff <- 1;
       }
    }
@@ -748,11 +747,18 @@ mem_gene_path_heatmap <- function
       Clustering=caption_clustering,
       Filtering=jamba::rmNA(c(
          paste0("enrichment P <= ", p_cutoff),
-         ifelse(min_gene_ct > 1,
-            paste0(gene_type, "s per ", set_type, " >= ", min_gene_ct),
+         ifelse(min_set_ct_each > 1,
+            paste0(gene_type, "s per ",
+               set_type, " >= ", min_set_ct_each,
+               "\n(within enrichment)"),
             NA),
-         ifelse(min_set_ct > 1,
-            paste0(set_type, "s per ", gene_type, " >= ", min_set_ct),
+         ifelse(min_gene_ct > 1,
+            paste0(set_type, "s per ",
+               gene_type, " >= ", min_gene_ct),
+            NA),
+         ifelse(min_set_ct > min_set_ct_each,
+            paste0(gene_type, "s per ",
+               set_type, " >= ", min_set_ct),
             NA))),
       `IM weights`=caption_im_weights)
    # make convenient text summary
@@ -1874,7 +1880,7 @@ mem_multienrichplot <- function
          g <- igraph::delete_edges(g, delete_edges);
       }
    }
-   if (length(overlap_count) > 0 && "overlap_count" %in% igraph::list.edge.attributes(g)) {
+   if (length(overlap_count) > 0 && "overlap_count" %in% igraph::edge_attr_names(g)) {
       delete_edges <- which(igraph::E(g)$overlap_count < overlap_count);
       if (length(delete_edges) > 0) {
          g <- igraph::delete_edges(g, delete_edges);
@@ -1894,7 +1900,7 @@ mem_multienrichplot <- function
          ...);
    }
    ## Optionally label edges
-   label_edges <- head(intersect(label_edges, igraph::list.edge.attributes(g)), 1);
+   label_edges <- head(intersect(label_edges, igraph::edge_attr_names(g)), 1);
    if (length(label_edges) > 0) {
       if (!"label" %in% label_edges) {
          edge_text <- igraph::edge_attr(g, label_edges);

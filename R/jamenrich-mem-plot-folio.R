@@ -306,10 +306,13 @@
 #'    `mem_gene_path_heatmap()`. The `min_gene_ct` requires each set
 #'    to contain `min_gene_ct` genes, and `min_set_ct` requires each gene
 #'    to be present in at least `min_set_ct` sets.
-#' @param min_set_ct_each `integer` minimum genes required for each set,
-#'    in at least one enrichment test. The distinction from `min_set_ct`
-#'    is that this threshold requires this number of genes in one
-#'    enrichment, while `min_set_ct` applies the threshold to the
+#' @param min_set_ct_each `integer`, default NULL, minimum genes per set
+#'    in at least one enrichment test.
+#'    * Default NULL uses `thresholds(mem)$min_count` to use the same
+#'    criteria.
+#'    * The distinction from `min_set_ct` is that this threshold
+#'    requires this number of genes in one enrichment,
+#'    while `min_set_ct` applies the threshold to the
 #'    combined multi-enrichment data.
 #' @param column_method,row_method `character` arguments passed to
 #'    `ComplexHeatmap::Heatmap()` which indicate the distance method used
@@ -401,7 +404,7 @@ mem_plot_folio <- function
  use_raster=FALSE,
  min_gene_ct=1,
  min_set_ct=1,
- min_set_ct_each=4,
+ min_set_ct_each=NULL,
  column_method="euclidean",
  row_method="euclidean",
  exemplar_range=c(1, 2, 3),
@@ -456,6 +459,13 @@ mem_plot_folio <- function
          p_cutoff <- 1;
       }
    }
+   if (length(min_set_ct_each) == 0) {
+      if ("min_count" %in% names(thresholds(Mem))) {
+         min_set_ct_each <- thresholds(Mem)$min_count;
+      } else {
+         min_set_ct_each <- 1;
+      }
+   }
    
    ret_vals <- list();
    plot_num <- 0;
@@ -490,6 +500,7 @@ mem_plot_folio <- function
          ComplexHeatmap::ht_opt(COLUMN_ANNO_PADDING=columnpad)
       }
    }
+   on.exit(add=TRUE, expr={revert_hm_padding()})
 
    #############################################################
    # First step: Define the Gene-Pathway Heatmap
@@ -812,7 +823,7 @@ mem_plot_folio <- function
       }
       ## Draw Cnet collapsed with top n labels
       #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
-      if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
+      if ("set_labels" %in% igraph::vertex_attr_names(cnet_collapsed)) {
          igraph::V(cnet_collapsed)$label <- ifelse(
             nchar(jamba::rmNA(naValue="", igraph::V(cnet_collapsed)$set_labels)) > 0,
             igraph::V(cnet_collapsed)$set_labels,
@@ -853,7 +864,7 @@ mem_plot_folio <- function
                sep="");
          }
          if (length(igraph::V(cnet_collapsed)$label) == 0) {
-            if ("set_labels" %in% igraph::list.vertex.attributes(cnet_collapsed)) {
+            if ("set_labels" %in% igraph::vertex_attr_names(cnet_collapsed)) {
                igraph::V(cnet_collapsed)$label <- ifelse(
                   nchar(jamba::rmNA(naValue="",
                      igraph::V(cnet_collapsed)$set_labels)) > 0,

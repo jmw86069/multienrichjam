@@ -43,52 +43,55 @@
 #'    a color. The default assigns red for positive values, blue
 #'    for negative values, and white for zero, using
 #'    `colorjam::col_div_xf(1.2)`.
-#' @param col_l_max `numeric` maximum HCL Lightness permitted for
-#'    output colors, for example because the middle color in `"RdBu_r"`
-#'    is nearly white, it may be preferable to apply a darker grey
-#'    color.
-#' @param hide_solo_pie `logical` indicating whether a single-color
-#'    border should only be applied to `"frame.color"` and not to
-#'    individual `"pie.border"` entries.
-#'    * When `hide_solo_pie=TRUE` and all wedges (one or more) will
-#'    have the same `pie.border` color, then `pie.border` is defined
-#'    as `NA`, and instead the `frame.color` is assigned to this color.
-#'    Both `pie.lwd` and `frame.lwd` will be assigned `border_lwd`,
-#'    since `pie.border` is `NA` it will not be rendered, only the
-#'    `frame.color` will be rendered.
+#' @param col_l_max `numeric` maximum HCL Lightness, default 80, for
+#'    output colors. For example, the middle color in `"RdBu_r"`
+#'    is nearly white, the `col_l_max` can be used to apply a darker grey.
+#' @param hide_solo_pie `logical` default TRUE, whether a single-color
+#'    border for a multi-part pie node should only apply the color
+#'    to the overall node with 'frame.color', and not apply the color
+#'    to each pie wedge using 'pie.border'.
+#'    * Default `hide_solo_pie=TRUE`: when all wedges (one or more)
+#'    have the same `pie.border` color, the 'pie.border' is defined
+#'    as `NA`, and 'frame.color' is assigned to this color.
+#'    The effect is to display the outline color and not each wedge.
+#'    Both 'pie.lwd' and 'frame.lwd' will be assigned `border_lwd`,
+#'    and since 'pie.border' is `NA` it will not be rendered. Only the
+#'    'frame.color' will be rendered.
 #'    * When `hide_solo_pie=FALSE` each pie wedge border color is assigned
-#'    to `pie.border`, `frame.color` will be assigned `frame_blank`,
-#'    and `frame.lwd` will be assigned `frame_lwd_blank` which is useful
+#'    to 'pie.border', `frame.color` will be assigned 'frame_blank',
+#'    and 'frame.lwd' will be assigned 'frame_lwd_blank' which is useful
 #'    for displaying a small outer frame for each node.
 #' @param frame_blank `character` string to define the color used
-#'    for `"frame.color"` when colors are defined in `"pie.border"`.
+#'    for 'frame.color' when colors are defined in 'pie.border'.
+#'    The default uses the igraph defaults, currently 'black'.
 #'    In this case, the frame is drawn around the inner `pie.border`
 #'    colors, and only serves to add visual clarity. The frame border
-#'    can be blank (`frame_blank="transparent"`) or can be a thinner line,
+#'    can be blank `frame_blank="transparent"` or can be a thinner line,
 #'    controlled with `frame_lwd_blank=0.2`.
-#'    By default, the default igraph vertex `frame.color` is used,
-#'    defined by `default_igraph_values()$vertex$frame.color`.
-#' @param frame_lwd_blank `numeric` line width for nodes that have "blank"
-#'    frame, which means the `pie.border` colors are defined. In this case
+#' @param frame_lwd_blank `numeric` line width, default 0.2,
+#'    for nodes that have "blank" frame, which also means the
+#'    'pie.border' colors must also defined. In this case
 #'    the frame border can be invisible (`frame_lwd_blank=0`) or
 #'    a very thin line (default `frame_lwd_blank=0.2`) to surround the
-#'    inner borders drawn with `pie.border`.
-#' @param border_lwd `numeric` line width used whenever a node is matched
-#'    with `rownames(hitim)`. When the colors are applied to `pie.color`,
-#'    the border is defined with `pie.lwd`. When colors are applied to
-#'    `frame.color`, the border is defined with `frame.lwd`.
-#'    (Soon to become `frame.width`.)
-#' @param do_reorder `logical` indicating whether to call
-#'    `reorder_igraph_nodes()` on the resulting `igraph`, so that
-#'    the border color can be used in the sort conditions.
-#'    Note that when `do_reorder=TRUE`, other relevant arguments are passed
-#'    through `...` to `reorder_igraph_nodes()` such as:
-#'    * `colorV` - which controls the expected order of colors, and
-#'    should be supplied if known upfront.
-#'    * `sortAttributes` - usually contains appropriate default values
-#'    * `nodeSortBy` - usually contains appropriate default values
-#'    * `orderByAspect=TRUE` - controls whether left-right and top-bottom
-#'    order is affected by the aspect ratio of each nodeset.
+#'    inner borders drawn with 'pie.border'.
+#' @param border_lwd `numeric` line width, default 2, used when a node
+#'    matches `rownames(hitim)`.
+#'    When the colors are applied to 'pie.color',
+#'    the border is defined with 'pie.lwd'.
+#'    When colors are applied to 'frame.color', the border is defined
+#'    with 'frame.lwd'.
+#' @param do_reorder `logical` default FALSE, whether to reorder nodes
+#'    by node attributes such as color and border, by calling
+#'    `reorder_igraph_nodes()`.
+#'    When `do_reorder=TRUE`, other relevant arguments are passed
+#'    through `...` to `reorder_igraph_nodes()` in particular:
+#'    * `colorV`: to control the expected order of colors.
+#'    It should be supplied if known upfront.
+#'    * `sortAttributes`: to customize the default attribute sort order.
+#'    * `nodeSortBy`: to customize the x-/y- axis arrangement.
+#'    * `orderByAspect`: to enable x-/y- sorting by the aspect ratio of
+#'    nodes in the group. For example, tall-skinny node groups should sort by
+#'    y-axis first, short-wide node groups should sort by x-axis first.
 #' @param ... additional arguments are passed to `reorder_igraph_nodes()`
 #'    when `do_reorder=TRUE`.
 #'
@@ -154,6 +157,8 @@ apply_cnet_direction <- function
          # only apply direction when the node name matches rownames(hitim)
          if (length(ienrich) > 0 &&
                iname %in% rownames(hitim)) {
+            # jamba::printDebug("hitim:");print(hitim);# debug
+            # jamba::printDebug("ienrich:");print(ienrich);# debug
             ipieborder <- jamba::nameVector(
                cap_color_l(col(hitim[iname, ienrich]), col_l_max),
                ienrich)

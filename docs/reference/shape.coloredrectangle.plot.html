@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -208,31 +205,31 @@ drawn as an outer border and slightly increases the size of the node.</p>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fl">10</span>;</span></span>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"coloredrectangle"</span>;</span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">1.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"Each square is consistent size by vertex.size2\n"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, cex.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">0.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"'vertex.coloredrect.equalize_sizes=FALSE' or\n"</span>,</span></span>
 <span class="r-in"><span>   <span class="st">"'options(coloredrectangle.equalize_sizes=FALSE'"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="shape.coloredrectangle.plot-1.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="shape.coloredrectangle.plot-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># equalize shortest side to size2</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>, vertex.coloredrect.equalize_sizes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>, vertex.coloredrect.equalize_sizes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">1.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"The shortest side is fixed by vertex.size2\n"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, cex.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">0.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"'vertex.coloredrect.equalize_sizes=TRUE' or\n"</span>,</span></span>
 <span class="r-in"><span>   <span class="st">"'options(coloredrectangle.equalize_sizes=TRUE'"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="shape.coloredrectangle.plot-2.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="shape.coloredrectangle.plot-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># equalize longest side to size2</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>, vertex.coloredrect.equalize_sizes<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>, vertex.coloredrect.equalize_sizes<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">1.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"The longest side is fixed by vertex.size2\n"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, cex.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">0.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"'vertex.coloredrect.equalize_sizes=2' or\n"</span>,</span></span>
 <span class="r-in"><span>   <span class="st">"'options(coloredrectangle.equalize_sizes=2'"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="shape.coloredrectangle.plot-3.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="shape.coloredrectangle.plot-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

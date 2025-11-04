@@ -1,34 +1,52 @@
 ---
-title: "How to use clusterProfiler enrichment results"
+title: "Multienrichment with clusterProfiler"
 name: importClusterProfiler
 output:
-  rmarkdown::html_vignette:
-    df_print: jamba::kable_coloring
+  BiocStyle::html_document:
+    df_print: kable
+    fig_width: 10
+    fig_height: 12
 vignette: >
-  %\VignetteIndexEntry{How to use clusterProfiler enrichment results}
+  %\VignetteIndexEntry{Multienrichment with clusterProfiler}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include=FALSE}
+use_dev <- "png";
+if (requireNamespace("ragg", quietly=TRUE)) {
+   use_dev <- "ragg_png";
+}
 knitr::opts_chunk$set(
    collapse=TRUE,
    comment="#>",
-   fig.height=12,
    fig.width=10,
+   fig.height=12,
+   out.width="100%",
    fig.align="center",
-   dev="ragg_png"
+   dev=use_dev
 )
 ```
 
 ```{r setup}
 library(multienrichjam)
 library(jamba);
-library(colorjam);
-suppressPackageStartupMessages(library(ComplexHeatmap))
-options("stringsAsFactors"=FALSE, "warn"=-1)
+# library(colorjam);
+# suppressPackageStartupMessages(library(ComplexHeatmap))
+options("warn"=-1)
 ```
 
+# msigdbr Requirement
+
+This guide requires the `msigdbr` R package from CRAN.
+
+```{r check_msigdbr, cache=FALSE, results='asis'}
+if (!requireNamespace("msigdbr", quietly=TRUE)) {
+   jamba::printDebugHtml("The ", "msigdbr",
+      " package is required for this vignette. Stopping here.")
+   knitr::knit_exit()
+}
+```
 
 # clusterProfiler enrichment
 
@@ -47,7 +65,9 @@ There are two general approaches:
 2. Use an existing `list` of `clusterProfiler::enricher()` results.
 
 
-## Run clusterProfiler enrichment
+# clusterProfiler enrichment
+
+## Prepare MSigDB Pathway Data
 
 The example below demonstrates how to prepare canonical pathways from
 [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb)
@@ -55,24 +75,28 @@ to use for gene set enrichment. These pathways are used with a list of genes
 in `Reese_genes` to test for enrichment.
 
 
-### MSigDB Canonical Pathways
-
 The `msigdbr` R package is used to download necessary data,
 following the guidance in the clusterProfiler e-Book:
 [MSigDb analysis](https://yulab-smu.top/biomedical-knowledge-mining-book/universal-api.html#msigdb-analysis).
 See `msigdbr::msigdbr()` for more details.
 
-#### MSigDB Collections
+### Review MSigDB Collections
 
 The `msigdbr` package offers convenient access to collections of
 gene sets available from MSigDB, shown below.
 
-```{r msigdbr-collections, results='asis'}
+```{r msigdbr-collections}
 msigdb_collections <- msigdbr::msigdbr_collections(db_species="HS")
-msigdb_collections
 ```
 
-#### MSigDB Canonical Pathways
+```{r msigdbr-collections-kdf, results='asis', echo=FALSE}
+kable_coloring(
+   caption="MSigDB Collections",
+   row.names=FALSE,
+   data.frame(msigdb_collections))
+```
+
+### MSigDB Canonical Pathways
 
 This tutorial uses `collection = "C2"` because it
 contains all canonical pathway gene sets from multiple sources.
@@ -86,7 +110,7 @@ There are two columns used by `clusterProfiler::enricher()`:
 
 Using these two columns, the `data.frame` needs to retain only unique rows.
 
-```{r msigdbr-c2, results='asis'}
+```{r msigdbr-c2, results='asis', eval=FALSE}
 # C2 canonical pathways
 msig_cp <- subset(
    msigdbr::msigdbr(
@@ -97,7 +121,19 @@ msig_cp_gs <- unique(data.frame(msig_cp[, c("gs_name", "gene_symbol")]))
 head(msig_cp_gs, 10)
 ```
 
-### Run enricher()
+For the purpose of this vignette, a subset of canonical
+pathways are available using `data(msig_test)`, and should only
+be used for this analysis.
+
+```{r msigdbr-c2-demo, echo=FALSE, results='asis'}
+data(msig_test)
+kable_coloring(
+   caption="MSigDB Canonical Pathways",
+   row.names=FALSE,
+   head(subset(msig_test, !duplicated(gs_name)), 10))
+```
+
+## Run enricher()
 
 The [clusterProfiler documentation](https://yulab-smu.top/biomedical-knowledge-mining-book/universal-api.html#msigdb-ora)
 for `enricher()` is straightforward for over-representation analysis (ORA).
@@ -108,13 +144,13 @@ Note that other clusterProfiler enrich* tools can be used, for example
 >
 > `pvalueCutoff=1`
 >
-> which retains all enrichment results without filtering.  
+> This option retains all enrichment results without filtering.  
 > The P-value will be filtered later by multienrichjam.
 
 This example uses `Reese_genes` containing genes identified
-by Reese *et al* 2019
-[https://doi.org/10.1016/j.jaci.2018.11.043] in
-**Epigenome-wide meta-analysis of DNA methylation and childhood asthma**.
+by [Reese *et al* 2019](https://doi.org/10.1016/j.jaci.2018.11.043) in
+**Epigenome-wide meta-analysis of DNA methylation and childhood asthma**
+https://doi.org/10.1016/j.jaci.2018.11.043.
 
 The data are stored as a `list` of significant genes, so we iterate the
 list using `lapply()`.
@@ -127,39 +163,49 @@ data(Reese_genes)
 erlist <- lapply(Reese_genes, function(igenes){
    er <- clusterProfiler::enricher(igenes,
       pvalueCutoff=1,
-      TERM2GENE=msig_cp_gs,
+      TERM2GENE=msig_test,
       minGSSize=5, maxGSSize=5000)
 })
+```
+
+You may also run a specific enrichment function in `clusterProfiler` such as
+`clusterProfiler::enrichPC()` which automatically uses **Pathway Commons**
+pathways.
+
+```{r run-enrichr-pc, results='asis'}
+data(Reese_genes)
 
 # Optionally run enrichPC() which tests PathwayCommons
 erlist2 <- lapply(Reese_genes, function(igenes){
    er <- clusterProfiler::enrichPC(igenes,
       pvalueCutoff=1,
-      minGSSize=1, maxGSSize=5000)
+      minGSSize=5, maxGSSize=5000)
 })
-
 ```
 
-## Multi-Enrichment Analysis
+# Run multiEnrichMap()
 
 The `erlist` from the previous step will be the input to `multiEnrichMap()`.
 
-```{r run_mem, results='asis'}
+```{r run-mem}
 mem <- multiEnrichMap(erlist,
    pvalueColname="qvalue",
+   p_cutoff=0.01,
    cutoffRowMinP=0.2,
    min_count=2,
    topEnrichN=20)
-   # verbose=TRUE,
-sdim(mem)
+```
+
+The default summary for `mem` describes the contents, shown below:
+
+```{r run-mem-summary}
+mem
 ```
 
 
-### Mem Plot Folio
+## Mem Plot Folio
 
 The `mem_plot_folio()` represents a key step in the analysis workflow.
-Several downstream results are directly dependent upon the options
-chosen here:
 
 Pathway clusters are defined by analyst parameters:
 
@@ -167,45 +213,35 @@ Pathway clusters are defined by analyst parameters:
 * The relative weight of the gene-pathway incidence matrix.
 * The method used for clustering.
 
-Mem Plot Folio then provides a series of visualizations:
+Mem Plot Folio then provides a series of visualizations, described
+in detail in `mem_plot_folio()`.
 
-1. **Enrichment P-value heatmap** often as a dot plot
-2. **Gene-pathway heatmap**, clustered by column and by row
-3. **Cnet cluster plots**
+**Only the first four plots are shown below** using `do_which=c(1, 2, 3, 4)`.
 
-   a. Pathway clusters are labeled by `LETTERS` ("A", "B", "C", "D", etc.)
-   b. The second plot labels clusters by the top `n` pathway names
-   c. The third plot is (b) and hides the gene labels.
-
-4. **Cnet exemplar plots**
-
-   * Includes 1 exemplar pathway per cluster.
-   * Includes 2 exemplars per cluster.
-   * Includes 3 exemplars per cluster.
-
-5. **Cnet per cluster**
-
-   * One plot for each pathway cluster
-
-```{r, mem_folio, fig.height=16, fig.width=10}
+```{r, mem-folio, fig.height=12, fig.width=10, out.width="100%", fig.alt=c("mem_plot_folio, plot 1, enrichment heatmap", "mem_plot_folio, plot 2, Gene-Pathway heatmap", "mem_plot_folio, plot 3, Cnet plot with Cluster Letters", "mem_plot_folio, plot 4, Cnet plot with Cluster Summary Labels")}
 mpf <- mem_plot_folio(mem,
    pathway_column_split=4,
-   column_cex=0.7,
-   node_factor=1,
+   column_cex=0.4, row_cex=0.4,
+   row_names_max_width = grid::unit(9, "cm"),
+   column_names_max_height = grid::unit(4, "cm"),
+   node_factor=2.5,
+   label_factor_l=list(nodeType=c(Set=0.7, Gene=1.5)),
    use_shadowText=TRUE,
-   label_factor=1.2,
-   do_which=c(2),
+   do_which=c(1, 2, 3, 4),
    main="Canonical Pathways")
 ```
 
 
 
-### Cnet Cluster Plot
+## Cnet Cluster Plot
 
-The Cnet Cluster Plot is often the focus of manuscript figures.
+The Cnet Cluster Plot is often the basis for manuscript figures.
 The typical workflow is demonstrated below.
 
-```{r, cnet_cluster, fig.height=12, fig.width=10}
+* `mpf4 <- mem_plot_folio(mem, do_which=4)` is used to generate the Cnet data.
+* `cnet <- mpf4$cnet_collapsed_set` retrieves the Cnet `igraph` object.
+
+```{r, cnet-cluster-data}
 # generate the data
 mpf4 <- mem_plot_folio(mem,
    pathway_column_split=4,
@@ -214,12 +250,62 @@ mpf4 <- mem_plot_folio(mem,
 
 # extract the cnet
 cnet <- mpf4$cnet_collapsed_set;
+```
 
-# jam_graph
+`jam_igraph()` is a custom plotting function with enhancements:
+
+* `node_factor=2` multiplies node size by 2.
+* `label_dist_factor=2` multiplies label distance from node center by 5.
+* `use_shadowText=TRUE` uses shadowing around the text labels.
+* `label_factor_l` resizes the node labels by 'nodeType' for Gene and Set.
+* It applies edge bundling, which helps with large networks.
+* It plots using vectorized optimization.
+
+```{r, cnet-cluster, fig.height=12, fig.width=10, out.width="100%", fig.alt="Cnet cluster plot suitable for customization."}
+# jam_graph instead of plot()
 jam_igraph(cnet,
    node_factor=2,
    use_shadowText=TRUE,
    label_dist_factor=5,
-   label_factor_l=list(nodeType=c(Gene=2, Set=1.3)))
+   label_factor_l=list(nodeType=c(Gene=2, Set=0.8)))
 
 ```
+
+
+## ShinyCat for Custom Cnet Layout
+
+The R-shiny Cnet Adjustment Tool **ShinyCat** is intended to help polish
+the Cnet plot layout when making a final figure.
+
+The R-shiny app uses several functions:
+
+* `nudge_igraph_node()`: mode individual nodes
+* `adjust_cnet_nodeset()`: adjust spacing, position, rotation of a nodeset
+* `reorder_igraph_nodes()`: sort nodes in a group by color
+* `spread_igraph_labels()`: arrage labels radially away from incoming edges
+* `bulk_cnet_adjustments()`: several operations applied in bulk
+
+> Make sure to assign the output to a variable, or to click "Save RData"
+from within the R-shiny app. For example:
+
+```{r shinycat-1, eval=FALSE}
+output_env <- launch_shinycat(g=cnet)
+```
+
+The output is stored in an `environment` called `output_env`.
+
+```{r shinycat-2, eval=FALSE}
+# obtain the output data
+adj_cnet <- output_env$adj_cnet;
+```
+
+Then the new Cnet plot can be plotted, for example:
+
+```{r shinycat-3, eval=FALSE}
+# jam_graph
+jam_igraph(adj_cnet,
+   node_factor=2,
+   use_shadowText=TRUE,
+   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+```
+

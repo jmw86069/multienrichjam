@@ -161,7 +161,7 @@ igraph::V(g1)$frame.color <- "black"
 igraph::V(g1)$size2 <- 10;
 igraph::V(g1)$shape <- "coloredrectangle";
 
-plot(g1, vertex.label="")
+jam_igraph(g1, vertex.label="")
 title(font.main=1, line=1.5, main=paste0(
    "Each square is consistent size by vertex.size2\n"))
 title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -169,7 +169,7 @@ title(font.main=1, cex.main=1, line=0.5, main=paste0(
    "'options(coloredrectangle.equalize_sizes=FALSE'"))
 
 # equalize shortest side to size2
-plot(g1, vertex.label="", vertex.coloredrect.equalize_sizes=TRUE)
+jam_igraph(g1, vertex.label="", vertex.coloredrect.equalize_sizes=TRUE)
 title(font.main=1, line=1.5, main=paste0(
    "The shortest side is fixed by vertex.size2\n"))
 title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -177,7 +177,7 @@ title(font.main=1, cex.main=1, line=0.5, main=paste0(
    "'options(coloredrectangle.equalize_sizes=TRUE'"))
 
 # equalize longest side to size2
-plot(g1, vertex.label="", vertex.coloredrect.equalize_sizes=2)
+jam_igraph(g1, vertex.label="", vertex.coloredrect.equalize_sizes=2)
 title(font.main=1, line=1.5, main=paste0(
    "The longest side is fixed by vertex.size2\n"))
 title(font.main=1, cex.main=1, line=0.5, main=paste0(

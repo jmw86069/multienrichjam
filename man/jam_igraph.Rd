@@ -173,10 +173,17 @@ be changed except for very customized uses. By default
 \code{plot_function=jam_plot_igraph()} which calls a modified variant of
 \code{igraph:::plot.igraph()}.}
 
-\item{mark.groups}{A list of vertex id vectors. It is interpreted as a set
-of vertex groups. Each vertex group is highlighted, by plotting a colored
-smoothed polygon around and \dQuote{under} it. See the arguments below to
-control the look of the polygons.}
+\item{mark.groups}{\code{list} or \code{igraph::components} object from one of
+the many igraph cluster functions.
+\itemize{
+\item When not explicitly supplied, it will use graph attributes
+"mark.groups" as a way of re-using stored sub-clusters.
+Graph attributes are defined by \code{mem2emap()} for example,
+\code{igraph::graph_attr(x, "mark.groups")}. Note 'mark.colors' is also
+used when defined together with 'mark.groups'.
+\item When 'mark.groups' is \code{FALSE}, it will not apply any 'mark.groups'
+even when graph attributes contain 'mark.groups'.
+}}
 
 \item{mark.shape}{A numeric scalar or vector. Controls the smoothness of the
 vertex group marking polygons. This is basically the \sQuote{shape}

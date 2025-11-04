@@ -2,12 +2,14 @@
 # various igraph internal functions that are required,
 # and which CRAN does not permit to be called directly.
 
-#' Parse igraph plot params
+#' Parse igraph plot params, internal function
 #'
 #' This function mimics the internal function `igraph:::i.parse.plot.params()`.
 #'
 #' @family jam igraph internal functions
-#'
+#' 
+#' @keywords internal
+#' @noRd
 parse_igraph_plot_params <- function
 (graph,
  params)
@@ -86,12 +88,27 @@ parse_igraph_plot_params <- function
 #' Default igraph parameter values
 #'
 #' Default igraph parameter values
+#' 
+#' Note that default values includes some new vertex parameters:
+#' * 'size.scaling': `logical` whether to apply relative size to nodes
+#' * 'relative.size': `numeric` vector length=2, the range of node scaled sizes
+#' 
+#' The 'relative.size' parameter is ignored by `jam_igraph()`.
+#' 
+#' Relative node scaling is performed by `jam_igraph()` using a method
+#' already implemented in multienrichjam prior to igraph 2.2.0.
+#' In future, `jam_igraph()` may implement the equivalent method in
+#' igraph 2.2.0+ for consistency.
 #'
 #' @family jam igraph internal functions
 #'
 #' @return `list` of default igraph plotting and data parameters,
 #'    including `"plot"`, `"vertex"`, and `"edge"`.
-#'
+#' 
+#' @examples
+#' # summary of default values for graph, vertex, edge
+#' jamba::ssdim(default_igraph_values())
+#' 
 #' @export
 default_igraph_values <- function
 ()
@@ -115,6 +132,7 @@ default_igraph_values <- function
          "#999999"),
       layout=function(graph, dim=2) {
          if ("layout" %in% igraph::graph_attr_names(graph)) {
+            # use existing layout graph attribute if present
             lay <- igraph::graph_attr(graph, "layout")
             if (is.function(lay)) {
                lay <- lay(graph)
@@ -122,6 +140,7 @@ default_igraph_values <- function
                lay
             }
          } else if (all(c("x", "y") %in% igraph::vertex_attr_names(graph))) {
+            # use x,y,z attributes if they exist
             if ("z" %in% igraph::vertex_attr_names(graph)) {
                lay <- cbind(igraph::V(graph)$x,
                   igraph::V(graph)$y,
@@ -131,22 +150,59 @@ default_igraph_values <- function
                   igraph::V(graph)$y)
             }
          } else if (igraph::vcount(graph) < 1000) {
-            lay <- igraph::layout_with_fr(graph,
+            lay <- layout_with_qfr(graph,
                dim=dim)
          } else {
             lay <- igraph::layout_with_drl(graph,
                dim=dim)
          }
-         # new in multienrichjam: rownames use V(graph)$name
-         if ("name" %in% igraph::vertex_attr_names(graph)) {
-            rownames(lay) <- igraph::vertex_attr(graph, "name")
+         # assign rownames to lay using "logic"
+         vnames <- igraph::V(graph)$name;
+         if (length(rownames(lay)) == 0) {
+            if (length(vnames) > 0) {
+               rownames(lay) <- vnames;
+            } else {
+               rownames(lay) <- seq_len(nrow(lay));
+            }
+         } else if (all(vnames %in% rownames(lay))) {
+            # all vertex names are present in lay,
+            # make sure they are aligned
+            if (length(rownames(lay)) == length(vnames) &&
+               all(rownames(lay) == vnames)) {
+               # all rows already in proper order
+               lay
+            } else {
+               lmatch <- match(vnames,
+                  rownames(lay));
+               lay <- lay[lmatch, , drop=FALSE];
+            }
+         } else if (!any(vnames %in% rownames(lay))) {
+            # no vertex names match lay
+            if (length(vnames) == nrow(lay)) {
+               # same number of values, so use them as-is
+               rownames(lay) <- vnames;
+            } else {
+               stop_msg <- paste0("graph attribute layout does not ",
+                  "align with vertex names, and has different length.")
+               stop(stop_msg);
+            }
+         } else {
+            # some vertex names are in lay, but not all
+            stop_msg <- paste0("graph attribute layout rownames match ",
+               "some but not all vertex names, and cannot be aligned ",
+               "properly.")
+            stop(stop_msg);
          }
+         # end rownames(lay)
+
+         # lay: layout with rownames to match node names
          lay
       },
       margin=c(0, 0, 0, 0),
       rescale=FALSE,
       asp=1,
       frame=FALSE,
+      # mark.groups?
       main=function(graph) {
          if (igraph::igraph_opt("annotate.plot")) {
             n <- graph$name[1]
@@ -172,6 +228,8 @@ default_igraph_values <- function
       color=1,
       size=15,
       size2=15,
+      size.scaling=FALSE,
+      relative.size=c(0.01, 0.025),
       label=function(graph, labels=NULL) {
          if (is.null(labels)) {
             if ("name" %in% igraph::vertex_attr_names(graph)) {

@@ -62,7 +62,7 @@ get_bipartite_nodeset <- function
    return_type <- match.arg(return_type);
 
    ## Enforce a "name" for each vertex node
-   if (!"name" %in% igraph::list.vertex.attributes(g)) {
+   if (!"name" %in% igraph::vertex_attr_names(g)) {
       igraph::V(g)$name <- as.character(seq_len(igraph::vcount(g)));
    }
 
@@ -80,7 +80,7 @@ get_bipartite_nodeset <- function
       neighbor_group_size=as.vector(table(neighbor_v)[neighbor_v]),
       neighbors=as.character(neighbor_v),
       neighbor=as.character(neighbor_v));
-   if (type %in% igraph::list.vertex.attributes(g)) {
+   if (type %in% igraph::vertex_attr_names(g)) {
       neighbor_df$type <- igraph::vertex_attr(g, type);
    }
 
@@ -407,7 +407,7 @@ edge_bundle_nodegroups <- function
    }
    colnames(layout_xy)[1:2] <- c("x", "y");
    vct <- igraph::vcount(g);
-   if (!"name" %in% igraph::list.vertex.attributes(g)) {
+   if (!"name" %in% igraph::vertex_attr_names(g)) {
       igraph::V(g)$name <- as.character(seq_len(vct));
    }
    rownames(layout_xy) <- igraph::V(g)$name;
@@ -621,8 +621,11 @@ edge_bundle_nodegroups <- function
             (clip_xy[,1] - midclip_ec[,"x3"])^2 +
             (clip_xy[,2] - midclip_ec[,"y3"])^2);
          doclip2_invalid <- (newclip_ec_dist > midclip_ec_dist);
+         # 0.0.101.900: fix mismatch error for some edge bundles
+         doclip2_invalid_use <- rep(FALSE, length(doclip2));
+         doclip2_invalid_use[doclip2] <- doclip2_invalid;
          if (any(doclip2_invalid)) {
-            midpoint_df$valid[doclip2 & doclip2_invalid] <- FALSE;
+            midpoint_df$valid[doclip2 & doclip2_invalid_use] <- FALSE;
          }
       }
       if (any(doclip1)) {
@@ -945,7 +948,7 @@ edge_bundle_nodegroups <- function
    })
    edge_spline_df <- jamba::rbindList(edge_splines);
 
-   edge_attr_names <- igraph::list.edge.attributes(g);
+   edge_attr_names <- igraph::edge_attr_names(g);
    if ("color" %in% edge_attr_names) {
       edge_spline_df$color <- igraph::E(g)$color[edge_spline_df$edge_row];
    } else {

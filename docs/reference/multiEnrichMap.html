@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -53,15 +50,16 @@
 <span>  byrow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  enrichLabels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subsetSets <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  overlapThreshold <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  cutoffRowMinP <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>  enrichBaseline <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">cutoffRowMinP</span><span class="op">)</span>,</span>
+<span>  overlapThreshold <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  p_cutoff <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  cutoffRowMinP <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  enrichBaseline <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">p_cutoff</span><span class="op">)</span>,</span>
 <span>  enrichLens <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  enrichNumLimit <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  nEM <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  min_count <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  topEnrichN <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  topEnrichSources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gs_cat"</span>, <span class="st">"gs_subat"</span><span class="op">)</span>,</span>
+<span>  topEnrichSources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gs_cat"</span>, <span class="st">"gs_subcat"</span><span class="op">)</span>,</span>
 <span>  topEnrichCurateFrom <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  topEnrichCurateTo <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  topEnrichSourceSubset <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -83,7 +81,7 @@
 <span>  geneDelim <span class="op">=</span> <span class="st">"[,/ ]+"</span>,</span>
 <span>  GmtTname <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  returnType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="st">"Mem"</span><span class="op">)</span>,</span>
+<span>  returnType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mem"</span>, <span class="st">"list"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -149,35 +147,43 @@ of known pathways.</p></dd>
 
 
 <dt id="arg-overlapthreshold">overlapThreshold<a class="anchor" aria-label="anchor" href="#arg-overlapthreshold"></a></dt>
-<dd><p><code>numeric</code> value between 0 and 1, indicating
-the Jaccard overlap score above which two pathways will be linked
-in the EnrichMap <code>igraph</code> network. By default, pathways whose
-genes overlap more than <code>0.1</code> will be connected, which is roughly
-equivalent to about a 10% overlap. Note that the Jaccard coefficient
-is adversely affected when pathway sets differ in size by more than
-about 5-fold.</p></dd>
+<dd><p><code>numeric</code> (deprecated), value between 0 and 1,
+used to define the Enrichment Map, which is only created for legacy
+output enabled with <code>returnType="list"</code>.</p><ul><li><p>To create a Multi-Enrichment Map <code>igraph</code> object, see <code><a href="mem2emap.html">mem2emap()</a></code>.</p></li>
+<li><p>overlapThreshold is the Jaccard overlap score above which
+two pathways will be linked in the resulting network.</p></li>
+</ul></dd>
+
+
+<dt id="arg-p-cutoff">p_cutoff<a class="anchor" aria-label="anchor" href="#arg-p-cutoff"></a></dt>
+<dd><p><code>numeric</code> value between 0 and 1, default 0.05,
+enrichment P-value required by at least one enrichment result to
+be retained in downstream analyses.
+This P-value can be reviewed in <code>enrichIM(Mem)</code> of the output,
+which is a matrix of P-values by pathway and enrichment.
+The column header assigned as P-value is stored in
+<code>headers(Mem)$pvalueColname</code>.</p></dd>
 
 
 <dt id="arg-cutoffrowminp">cutoffRowMinP<a class="anchor" aria-label="anchor" href="#arg-cutoffrowminp"></a></dt>
-<dd><p><code>numeric</code> value between 0 and 1, indicating the
-enrichment P-value required by at least one enrichment result, to
-be retained in downstream analyses. This P-value can be confirmed
-in the returned list element <code>"enrichIM"</code>, which is a matrix of
-P-values by pathway and enrichment.</p></dd>
+<dd><p>(deprecated in favor of 'p_cutoff').
+When it is non-NULL, it will be used for backward compatibility.</p></dd>
 
 
 <dt id="arg-enrichbaseline">enrichBaseline<a class="anchor" aria-label="anchor" href="#arg-enrichbaseline"></a></dt>
-<dd><p><code>numeric</code> value indicating the <code>-log10(P-value)</code>
-at which colors are defined as non-blank in color gradients.
-This value is typically derived from <code>cutoffRowMinP</code> to ensure
-that colors are only applied when a pathway meets this significance
-threshold.</p></dd>
+<dd><p><code>numeric</code> value, default uses <code>-log10(p_cutoff)</code>,
+the -log10 P-value threshold required for the color gradient to assign
+a color associated with enrichment.</p><ul><li><p>In other words, P-values that do not meet this
+threshold are not colored in the color gradient for enrichment
+P-values.</p></li>
+<li><p>To color all P-values use <code>enrichBaseline=0</code>.</p></li>
+</ul></dd>
 
 
 <dt id="arg-enrichlens">enrichLens<a class="anchor" aria-label="anchor" href="#arg-enrichlens"></a></dt>
-<dd><p><code>numeric</code> value indicating the "lens" to apply to
-color gradients, where numbers above 0 make the color ramp more
-compressed, so colors are more vivid at lower numeric values.</p></dd>
+<dd><p><code>numeric</code> value, default 0, indicating the "lens"
+to enhance the intensity of color gradients. Numbers above 0 make
+the color ramp more compressed, and more vivid at lower numeric values.</p></dd>
 
 
 <dt id="arg-enrichnumlimit">enrichNumLimit<a class="anchor" aria-label="anchor" href="#arg-enrichnumlimit"></a></dt>
@@ -187,15 +193,18 @@ useful to apply a fixed threshold for each color gradient.</p></dd>
 
 
 <dt id="arg-nem">nEM<a class="anchor" aria-label="anchor" href="#arg-nem"></a></dt>
-<dd><p><code>integer</code> number, to define the maximum number of pathway
-nodes to include in the EnrichMap <code>igraph</code> network. This argument
-is passed to <code><a href="enrichMapJam.html">enrichMapJam()</a></code>.</p></dd>
+<dd><p><code>integer</code> (deprecated) maximum pathways to include in the
+Enrichment Map, which is only created for legacy
+output enabled with <code>returnType="list"</code>.</p><ul><li><p>To create a Multi-Enrichment Map <code>igraph</code> object, see <code><a href="mem2emap.html">mem2emap()</a></code>.</p></li>
+</ul></dd>
 
 
 <dt id="arg-topenrichn">topEnrichN<a class="anchor" aria-label="anchor" href="#arg-topenrichn"></a></dt>
-<dd><p><code>integer</code> value with the maximum rows to retain
-from each <code>enrichList</code> table, by source. Set <code>topEnrichN=0</code> or
-<code>topEnrichN=NULL</code> to disable subsetting for the top rows.</p></dd>
+<dd><p><code>integer</code> maximum rows to retain from each
+<code>enrichResult</code> in 'enrichList', for each source when supplied.
+Set <code>topEnrichN=0</code> or <code>topEnrichN=NULL</code> to retain all rows.
+Only rows where the pathway met other filtering criteria in at
+least one enrichment in 'enrichList' will be retained.</p></dd>
 
 
 <dt id="arg-topenrichsources-topenrichcuratefrom-topenrichcurateto-topenrichsourcesubset-topenrichdescriptiongrep-topenrichnamegrep">topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep<a class="anchor" aria-label="anchor" href="#arg-topenrichsources-topenrichcuratefrom-topenrichcurateto-topenrichsourcesubset-topenrichdescriptiongrep-topenrichnamegrep"></a></dt>
@@ -205,11 +214,19 @@ input data matches these patterns.</p></dd>
 
 
 <dt id="arg-keycolname-namecolname-genecolname-pvaluecolname-descriptioncolname">keyColname, nameColname, geneColname, pvalueColname, descriptionColname<a class="anchor" aria-label="anchor" href="#arg-keycolname-namecolname-genecolname-pvaluecolname-descriptioncolname"></a></dt>
-<dd><p><code>character</code> vector in each case indicating the colnames
-for <code>key</code>, <code>name</code>, <code>gene</code>, <code>pvalue</code>, and <code>description</code>,
-respectively. Each vector is passed to <code><a href="find_colname.html">find_colname()</a></code> to find
-a suitable matching colname for each <code>data.frame</code> in
-<code>enrichList</code>.</p></dd>
+<dd><p><code>character</code> vector in each case with text strings or patterns to
+use when matching or prioritizing colnames to assign to each type:</p><ul><li><p><code>key</code>: The primary unique key for each pathway</p></li>
+<li><p><code>name</code>: The short name for each pathway</p></li>
+<li><p><code>gene</code>: column with delimited gene symbols or identifiers tested
+for enrichment of each pathway.</p></li>
+<li><p><code>pvalue</code>: column with enrichment P-value, typically prioritizing
+either 'qvalue' or 'p.adjust'. Per <code>enrichResult</code> convention,
+the selected column is renamed to 'pvalue'.</p></li>
+<li><p><code>description</code>: longer description associated with the pathway.</p></li>
+</ul><p>Each vector is passed to <code><a href="find_colname.html">find_colname()</a></code> to find
+a suitable matching colname for each entry in <code>enrichList</code>.
+That function prioritizes full colname matches, then leading or
+trailing matches, then substring.</p></dd>
 
 
 <dt id="arg-descriptioncuratefrom-descriptioncurateto">descriptionCurateFrom, descriptionCurateTo<a class="anchor" aria-label="anchor" href="#arg-descriptioncuratefrom-descriptioncurateto"></a></dt>
@@ -218,23 +235,23 @@ with patterns and replacements, passed to <code>gsubs()</code>, intended to
 help curate common descriptions to shorter, perhaps more
 user-friendly labels. One example is removing the prefix
 <code>"Genes annotated by the GO term "</code> from Gene Ontology pathways.
-These label can be manually curated later, but it is often
-more convenient to curate them upfront in order to keep the
-different result objects consistent.</p></dd>
+These label can be manually curated later in the <code>Mem-class</code>
+methods, specifically <code>sets()&lt;-</code> will allows assignment of custom
+names.</p></dd>
 
 
 <dt id="arg-pathgenes-genehits">pathGenes, geneHits<a class="anchor" aria-label="anchor" href="#arg-pathgenes-genehits"></a></dt>
 <dd><p><code>character</code> values indicating the colnames
 that contain the number of pathway genes, and the number of gene
-hits, respectively.</p></dd>
+hits, respectively. These values are optional, and not specifically
+used by multienrichjam.</p></dd>
 
 
 <dt id="arg-genedelim">geneDelim<a class="anchor" aria-label="anchor" href="#arg-genedelim"></a></dt>
 <dd><p><code>character</code> pattern used with <code><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit()</a></code> to
-split multiple gene values into a list of vectors. The default
-for <code>enrichResult</code> objects is <code>"/"</code>, but the default for other
-sources is often <code>","</code>. The default pattern <code>"[,/ ]+"</code> splits
-by either <code>"/"</code>, <code>","</code>, or whitespace <code>" "</code>.</p></dd>
+split multiple gene values into a list of vectors.
+The default (required) delimiter for <code>enrichResult</code> objects
+is <code>'/'</code>. A common alternative is <code>','</code> (comma-delimited).</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -287,7 +304,6 @@ argument <code>colorV</code>, otherwise colors are assigned using
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam enrichment functions:
 <code><a href="add_pathway_direction.html">add_pathway_direction</a>()</code>,
-<code><a href="multienrichjam.html">multienrichjam</a>()</code>,
 <code><a href="topEnrichBySource.html">topEnrichBySource</a>()</code></p></div>
     </div>
 

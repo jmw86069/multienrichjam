@@ -69,7 +69,7 @@ nudge_igraph_node <- function
       y <- c(y, sapply(nodes_xy, function(ixy){ixy[2]}));
    }
 
-   if (!"layout" %in% igraph::list.graph.attributes(g)) {
+   if (!"layout" %in% igraph::graph_attr_names(g)) {
       stop("g must have graph attribute 'layout'.");
    }
    layout <- igraph::graph_attr(g, "layout");

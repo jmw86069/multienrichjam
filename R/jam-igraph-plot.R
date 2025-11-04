@@ -185,6 +185,15 @@
 #' @param rescale `logical` indicating whether to rescale the layout
 #'    coordinates to `c(-1, 1)`. When `rescale=FALSE` the original
 #'    layout coordinates are used as-is without change.
+#' @param mark.groups `list` or `igraph::components` object from one of
+#'    the many igraph cluster functions.
+#'    * When not explicitly supplied, it will use graph attributes
+#'    "mark.groups" as a way of re-using stored sub-clusters.
+#'    Graph attributes are defined by `mem2emap()` for example,
+#'    `igraph::graph_attr(x, "mark.groups")`. Note 'mark.colors' is also
+#'    used when defined together with 'mark.groups'.
+#'    * When 'mark.groups' is `FALSE`, it will not apply any 'mark.groups'
+#'    even when graph attributes contain 'mark.groups'.
 #' @param node_factor `numeric` value multiplied by `igraph::V(x)$size` to adjust
 #'    the relative size of all nodes by a common numeric scalar value.
 #' @param edge_factor `numeric` value multiplied by `igraph::E(x)$width` to adjust
@@ -375,6 +384,7 @@ jam_igraph <- function
    environment(params)$p$plot$layout <- layout;
 
    vertex.size <- params("vertex", "size");
+   # jamba::printDebug("jam_igraph(): ", "params('vertex', 'size'): ", vertex.size);# debug
    vertex.size2 <- params("vertex", "size2");
 
    vertex.label.cex <- params("vertex", "label.cex");
@@ -520,7 +530,14 @@ jam_igraph <- function
    # store back in params object environment for persistence
    # vertex attributes
    # size, size2, label.cex, label.dist
+   # 0.0.101.900: divide by 200 and stop dividing by 200 in jampie shape plot
+   vertex.size <- vertex.size / 200;
+   vertex.size2 <- vertex.size2 / 200;
+   #
+   # assign to params environment for use by downstream functions
    environment(params)$p$vertex$size <- vertex.size;
+   # jamba::printDebug("assigned vertex.size: ", vertex.size);# debug
+   
    environment(params)$p$vertex$size2 <- vertex.size2;
    environment(params)$p$vertex$label.cex <- vertex.label.cex;
    environment(params)$p$vertex$label.dist <- vertex.label.dist;
@@ -546,6 +563,25 @@ jam_igraph <- function
       jamba::printDebug("jam_igraph(): ",
          "head(vertex.size, 20) after:",
          head(vertex.size, 20));
+   }
+   
+   # determine whether mark.groups is encoded in graph_attr
+   if (length(mark.groups) == 0 &&
+         "mark.groups" %in% igraph::graph_attr_names(x)) {
+      mark.groups <- igraph::graph_attr(x, "mark.groups");
+      # convert to list
+      mark.groups <- setNames(
+         split(mark.groups$names, mark.groups$membership),
+         jamba::cPaste(mark.groups$cluster_names, ",\n"))
+      # confirm all elements of mark.groups are present as node names
+      if (!all(unlist(mark.groups) %in% igraph::V(x)$name)) {
+         mark.groups <- NULL;
+      } else {
+         if (length(mark.col) == 0 &&
+               "mark.colors" %in% igraph::graph_attr_names(x)) {
+            mark.col <- igraph::graph_attr(x, "mark.colors");
+         }
+      }
    }
 
    plot_function(x=x,
@@ -584,6 +620,7 @@ jam_igraph <- function
       plot_grid=plot_grid,
       params=params,
       debug=debug);
+   return(invisible(params));
 }
 
 
@@ -653,7 +690,7 @@ handle_igraph_param_list <- function
    attr_type <- match.arg(attr_type);
    if (attr_type %in% c("node", "vertex")) {
       vct <- igraph::vcount(x);
-      x_attr_names <- igraph::list.vertex.attributes(x);
+      x_attr_names <- igraph::vertex_attr_names(x);
       if (length(i_values) == 0) {
          i_values <- igraph::vertex_attr(x, attr);
       }
@@ -663,7 +700,7 @@ handle_igraph_param_list <- function
       }
    } else if (attr_type %in% c("edge")) {
       ect <- igraph::ecount(x);
-      x_attr_names <- igraph::list.edge.attributes(x);
+      x_attr_names <- igraph::edge_attr_names(x);
       if (length(i_values) == 0) {
          i_values <- igraph::edge_attr(x, attr);
       }

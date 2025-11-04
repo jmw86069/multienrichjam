@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
@@ -39,8 +36,54 @@
 <div id="todo" class="section level1">
 
 <div class="section level2">
+<h2 id="id_29oct2025">29oct2025<a class="anchor" aria-label="anchor" href="#id_29oct2025"></a></h2>
+<ul><li>
+<p>Mem S4 object updates:</p>
+<ul><li><p>Consider S4Vectors types for ‘thresholds’ which would allow editing an entry in place with ‘thresholds(Mem)$p_cutoff &lt;- 0.1’ syntax.</p></li>
+<li><p>Consider better mechanism to rename pathway gene sets with <code>sets()&lt;-</code>, specifically so that the <code>enrichList</code> results are also kept consistent. Perhaps an alias to change from original name to custom name?</p></li>
+<li><p>Consider adding <code>BiocGenerics</code> for generic S4 functions, also to use class versioning with slot <code>.__classVersion</code>.</p></li>
+<li>
+<p>Consider removing some slots and replacing the accessor with function:</p>
+<ul><li>
+<code>geneIMcolors</code> and <code>enrichIMcolors</code> could be done using with dynamic method which applies <code>colorV</code>,<code>p_cutoff</code>,<code>min_count</code> to produce the color matrix. Would enable changing thresholds and having up-to-date data. Also would remove the slot and reduce S4 complexity.</li>
+<li>
+<code>multiEnrichDF</code>,<code>multiEnrichResult</code>
+</li>
+</ul></li>
+</ul></li>
+<li>
+<p>Consider S4 classes:</p>
+<ul><li><code>MemPlotFolio</code></li>
+<li>
+<code>multiEnrichResult</code> - simple extension to <code>enrichResult</code>?</li>
+<li>
+<code>enrichResultList</code> - need to determine if it enables something useful, other than just making it clear the type of data</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_23oct2025">23oct2025<a class="anchor" aria-label="anchor" href="#id_23oct2025"></a></h2>
+<ul><li>
+<p>Organize vignettes using diataxis philosophy</p>
+<ul><li><p>Tutorial: Use IPA; Use clusterProfiler</p></li>
+<li>
+<p>How-to:</p>
+<ul><li>Define pathway-gene clustering parameters</li>
+<li>Customize Mem Enrichment Heatmap</li>
+<li>Adjust Cnet plot layout</li>
+</ul></li>
+<li>
+<p>Explanation:</p>
+<ul><li>Determine appropriate parameters for <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>
+</li>
+<li>Decide Cnet strategy for a visual summary</li>
+</ul></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
 <h2 id="id_17oct2025">17oct2025<a class="anchor" aria-label="anchor" href="#id_17oct2025"></a></h2>
-<ul><li><p>Add vignette for <code>clusterProfiler</code> and <code>msigdbr</code>.</p></li>
+<ul><li><p>DONE. Remove all dependencies on arules::transactions</p></li>
+<li><p>Clean up the IPA vignette figure sizes, move rambling text to the end.</p></li>
+<li><p>Add vignette for <code>clusterProfiler</code> and <code>msigdbr</code>.</p></li>
 <li>
 <p>IN PROGRESS. Convert to Mem S4 object</p>
 <ul><li>Update all functions to accept ‘mem’ or ‘Mem’ input.</li>
@@ -334,7 +377,7 @@
 <li>
 <p>S4 object <code>Mem</code> to replace <code>list</code> returned by <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
 <ul><li><p>IT IS COMING</p></li>
-<li><p>Consider <code><a href="reference/multienrichjam.html">multienrichjam()</a></code> to replace <code>multiEnrichmap()</code>?</p></li>
+<li><p>Consider <code><a href="reference/multienrichjam-package.html">multienrichjam()</a></code> to replace <code>multiEnrichmap()</code>?</p></li>
 <li>
 <p><strong>slots</strong>:</p>
 <ul><li>geneIM (im, direction, colors): <code>matrix</code> objects</li>
@@ -622,7 +665,7 @@
 <ul><li>Should it use a separate Github repository? (Probably yes.) It looks like <code>"jokergoo/circlize_book"</code> is the repo for the bookdown site.</li>
 </ul></li>
 <li>
-<p>Refactor <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> - maybe new function <code><a href="reference/multienrichjam.html">multienrichjam()</a></code>?</p>
+<p>Refactor <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> - maybe new function <code><a href="reference/multienrichjam-package.html">multienrichjam()</a></code>?</p>
 <ul><li>
 <p>create <code>mem</code> S4 object with slots, print, summary functions</p>
 <ul><li>
@@ -1311,7 +1354,7 @@ gsub_vertex(g,
 <ul><li>would be useful to have an option to subset enrichments, this option would likely be useful to <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, and <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, so the effect could cascade to subsequent functions.</li>
 </ul></li>
 <li>
-<p>new function idea? <code><a href="reference/subset_mem.html">subset_mem()</a></code></p>
+<p>new function idea? <code>subset_mem()</code></p>
 <ul><li><p>Could be useful to accomplish the item above, to subset by enrichments prior to <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> related functions.</p></li>
 <li><p>The challenge is that subsetting only <code>enrichIM</code> does not also update corresponding <code>memIM</code> data. Data to be updated:</p></li>
 <li><p><code>geneIM</code>, <code>geneIMcolors</code>, <code>geneIMdirection</code> - simple subset by colnames</p></li>
@@ -1411,7 +1454,7 @@ gsub_vertex(g,
 <div class="section level2">
 <h2 id="id_20jul2021">20jul2021<a class="anchor" aria-label="anchor" href="#id_20jul2021"></a></h2>
 <ul><li>
-<p>Replace <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> with <code><a href="reference/multienrichjam.html">multienrichjam()</a></code> and simplify the arguments:</p>
+<p>Replace <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> with <code><a href="reference/multienrichjam-package.html">multienrichjam()</a></code> and simplify the arguments:</p>
 <ul><li>p_cutoff</li>
 <li>min_gene_count</li>
 <li>top_enrich_n</li>

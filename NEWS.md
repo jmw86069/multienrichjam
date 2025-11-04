@@ -52,6 +52,23 @@ filter_mem_genes(), filter_mem_sets(), subset_mem().
    * Added argument `p_cutoff` and deprecated `cutoffRowMinP`.
    * Deprecated `overlapThreshold`, only used for EnrichMap which is skipped.
 
+* `mem2emap()`
+
+   * Accepts `Mem` input.
+   * Applies `igraph::layout_components()` to layout multiple disconnected
+   sub-graphs together.
+   * New default `do_plot=FALSE` for broader compliance.
+
+* `mem2cnet()`
+
+   * New argument `remove_singlet_genes=TRUE` will hide singlet genes,
+   useful when plotting a subset Cnet with specific pathways.
+
+* `jam_igraph()`
+
+   * It will now apply graph attribute 'mark.groups' when defined, to help
+   re-use this sub-cluster information without having to keep adding it
+   to the plot function. To turn off this feature use `mark.groups=FALSE`.
 
 # multienrichjam 0.0.100.900
 

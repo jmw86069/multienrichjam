@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -56,6 +53,7 @@
 <span>  geneSep <span class="op">=</span> <span class="st">","</span>,</span>
 <span>  pvalueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P.Value"</span>, <span class="st">"Pvalue"</span>, <span class="st">"FDR"</span>, <span class="st">"adj.P.Val"</span><span class="op">)</span>,</span>
 <span>  descriptionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Description"</span>, <span class="st">"Name"</span>, <span class="st">"Pathway"</span>, <span class="st">"ID"</span><span class="op">)</span>,</span>
+<span>  readable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  msigdbGmtT <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -124,9 +122,13 @@ values.</p></dd>
 containing enrichment P-values to use in downstream processing.</p></dd>
 
 
+<dt id="arg-readable">readable<a class="anchor" aria-label="anchor" href="#arg-readable"></a></dt>
+<dd><p><code>logical</code> default NULL, sets the 'readable' flag for
+the resulting <code>enrichResult</code> object.</p></dd>
+
+
 <dt id="arg-msigdbgmtt">msigdbGmtT<a class="anchor" aria-label="anchor" href="#arg-msigdbgmtt"></a></dt>
-<dd><p>optional gmtT object, a representation of
-<code>arules::transactions-class</code>. (Not currently implemented.)</p></dd>
+<dd><p>optional GmtT object (not currently implemented)</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -138,11 +140,16 @@ containing enrichment P-values to use in downstream processing.</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p><code>DOSE::enrichResult-class</code> object.</p>
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function takes a data.frame containing gene set enrichment
-results, and converts it to a proper <code>enrichResult</code> object,
-compatible with methods provided by the <code>clusterProfiler</code>
-package.</p>
+    <p>This function takes a <code>data.frame</code> containing gene set enrichment
+results, and converts it to a proper 'enrichResult' object
+defined in <code>DOSE::enrichResult-class</code>.
+This object is supported by other functions in the <code>clusterProfiler</code>
+suite of tools.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

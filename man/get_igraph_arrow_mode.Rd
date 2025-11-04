@@ -15,7 +15,6 @@ This function mimics the internal function \code{igraph:::i.get.arrow.mode()}.
 \seealso{
 Other jam igraph internal functions: 
 \code{\link{default_igraph_values}()},
-\code{\link{jam_igraph_arrows}()},
-\code{\link{parse_igraph_plot_params}()}
+\code{\link{jam_igraph_arrows}()}
 }
 \concept{jam igraph internal functions}

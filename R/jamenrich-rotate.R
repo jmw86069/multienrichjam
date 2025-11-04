@@ -158,7 +158,7 @@ rotate_igraph_layout <- function
       ...);
 
    if (length(g) > 0) {
-      g <- igraph::set.graph.attribute(g,
+      g <- igraph::set_graph_attr(g,
          name="layout",
          value=layout);
       if (spread_labels) {

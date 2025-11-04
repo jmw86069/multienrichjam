@@ -9,7 +9,7 @@ Adjust rectangle border"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,10 +18,7 @@ Adjust rectangle border"></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -153,9 +150,9 @@ intended for use with <code><a href="https://rdrr.io/r/graphics/symbols.html" cl
 <span class="r-in"><span><span class="va">lwdl</span> <span class="op">&lt;-</span> <span class="fl">6</span>;</span></span>
 <span class="r-in"><span><span class="va">lwdr</span> <span class="op">&lt;-</span> <span class="fl">6</span>;</span></span>
 <span class="r-in"><span><span class="va">lwdo</span> <span class="op">&lt;-</span> <span class="fl">5</span>;</span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"ljoin"</span><span class="op">=</span><span class="st">"mitre"</span>,</span></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">local_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ljoin"</span><span class="op">=</span><span class="st">"mitre"</span>,</span></span>
 <span class="r-in"><span>   <span class="st">"lend"</span><span class="op">=</span><span class="st">"round"</span>,</span></span>
-<span class="r-in"><span>   <span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="cn">NULL</span>, bty<span class="op">=</span><span class="st">"L"</span>,</span></span>
 <span class="r-in"><span>   xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">30</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">15</span>, <span class="fl">10</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   <span class="co">#xlim=c(20, 30), ylim=c(0, 10),</span></span></span>
@@ -212,7 +209,7 @@ intended for use with <code><a href="https://rdrr.io/r/graphics/symbols.html" cl
 <span class="r-in"><span>   drawBox<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>   labelCex<span class="op">=</span><span class="fl">0.8</span>,</span></span>
 <span class="r-in"><span>   txt<span class="op">=</span><span class="st">"Solution: Both the inner and outer\nborders are visible."</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="adjust_polygon_border-1.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="adjust_polygon_border-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># another example using different border line widths</span></span></span>
@@ -274,7 +271,7 @@ intended for use with <code><a href="https://rdrr.io/r/graphics/symbols.html" cl
 <span class="r-in"><span>   drawBox<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>   labelCex<span class="op">=</span><span class="fl">0.8</span>,</span></span>
 <span class="r-in"><span>   txt<span class="op">=</span><span class="st">"Solution: The inner and outer\nborders are all visible."</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="adjust_polygon_border-2.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="adjust_polygon_border-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># final example showing how to draw an additional border</span></span></span>
@@ -357,7 +354,7 @@ intended for use with <code><a href="https://rdrr.io/r/graphics/symbols.html" cl
 <span class="r-in"><span>   drawBox<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>   labelCex<span class="op">=</span><span class="fl">0.8</span>,</span></span>
 <span class="r-in"><span>   txt<span class="op">=</span><span class="st">"Solution: Use 'lwd_buffer' with\nproper line widths.\n(red and yellow)"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="adjust_polygon_border-3.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="adjust_polygon_border-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># show the effect of col=NA</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="cn">NULL</span>, bty<span class="op">=</span><span class="st">"L"</span>,</span></span>
@@ -399,7 +396,7 @@ intended for use with <code><a href="https://rdrr.io/r/graphics/symbols.html" cl
 <span class="r-in"><span>   drawBox<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>   labelCex<span class="op">=</span><span class="fl">0.8</span>,</span></span>
 <span class="r-in"><span>   txt<span class="op">=</span><span class="st">"Solution: Use col='#FFFFFF01' to force\nproper sharp polygon corners."</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="adjust_polygon_border-4.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="adjust_polygon_border-4.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
@@ -460,7 +457,7 @@ intended for use with <code><a href="https://rdrr.io/r/graphics/symbols.html" cl
 <span class="r-in"><span>   col<span class="op">=</span><span class="cn">NA</span>,</span></span>
 <span class="r-in"><span>   border<span class="op">=</span><span class="st">"#FFFFEE88"</span>,</span></span>
 <span class="r-in"><span>   lwd<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="adjust_polygon_border-5.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="adjust_polygon_border-5.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -4,8 +4,9 @@ home:
   description: Multi-enrichment analysis, visualization, pathway clustering,
     and enhancements to facilitate interpretation of complex biological data.
 figures:
-  fig.width: 8
-  fig.height: 8
+  dev: ragg::agg_png
+  fig.width: 10
+  fig.height: 10
 template:
   bootstrap: 5
   bootswatch: cosmo
@@ -74,3 +75,4 @@ articles:
   contents:
   - importClusterProfiler
   - importIPA
+  - MemPlotConcepts

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -83,66 +80,69 @@ for negative values, and white for zero, using
 
 
 <dt id="arg-col-l-max">col_l_max<a class="anchor" aria-label="anchor" href="#arg-col-l-max"></a></dt>
-<dd><p><code>numeric</code> maximum HCL Lightness permitted for
-output colors, for example because the middle color in <code>"RdBu_r"</code>
-is nearly white, it may be preferable to apply a darker grey
-color.</p></dd>
+<dd><p><code>numeric</code> maximum HCL Lightness, default 80, for
+output colors. For example, the middle color in <code>"RdBu_r"</code>
+is nearly white, the <code>col_l_max</code> can be used to apply a darker grey.</p></dd>
 
 
 <dt id="arg-hide-solo-pie">hide_solo_pie<a class="anchor" aria-label="anchor" href="#arg-hide-solo-pie"></a></dt>
-<dd><p><code>logical</code> indicating whether a single-color
-border should only be applied to <code>"frame.color"</code> and not to
-individual <code>"pie.border"</code> entries.</p><ul><li><p>When <code>hide_solo_pie=TRUE</code> and all wedges (one or more) will
-have the same <code>pie.border</code> color, then <code>pie.border</code> is defined
-as <code>NA</code>, and instead the <code>frame.color</code> is assigned to this color.
-Both <code>pie.lwd</code> and <code>frame.lwd</code> will be assigned <code>border_lwd</code>,
-since <code>pie.border</code> is <code>NA</code> it will not be rendered, only the
-<code>frame.color</code> will be rendered.</p></li>
+<dd><p><code>logical</code> default TRUE, whether a single-color
+border for a multi-part pie node should only apply the color
+to the overall node with 'frame.color', and not apply the color
+to each pie wedge using 'pie.border'.</p><ul><li><p>Default <code>hide_solo_pie=TRUE</code>: when all wedges (one or more)
+have the same <code>pie.border</code> color, the 'pie.border' is defined
+as <code>NA</code>, and 'frame.color' is assigned to this color.
+The effect is to display the outline color and not each wedge.
+Both 'pie.lwd' and 'frame.lwd' will be assigned <code>border_lwd</code>,
+and since 'pie.border' is <code>NA</code> it will not be rendered. Only the
+'frame.color' will be rendered.</p></li>
 <li><p>When <code>hide_solo_pie=FALSE</code> each pie wedge border color is assigned
-to <code>pie.border</code>, <code>frame.color</code> will be assigned <code>frame_blank</code>,
-and <code>frame.lwd</code> will be assigned <code>frame_lwd_blank</code> which is useful
+to 'pie.border', <code>frame.color</code> will be assigned 'frame_blank',
+and 'frame.lwd' will be assigned 'frame_lwd_blank' which is useful
 for displaying a small outer frame for each node.</p></li>
 </ul></dd>
 
 
 <dt id="arg-frame-blank">frame_blank<a class="anchor" aria-label="anchor" href="#arg-frame-blank"></a></dt>
 <dd><p><code>character</code> string to define the color used
-for <code>"frame.color"</code> when colors are defined in <code>"pie.border"</code>.
+for 'frame.color' when colors are defined in 'pie.border'.
+The default uses the igraph defaults, currently 'black'.
 In this case, the frame is drawn around the inner <code>pie.border</code>
 colors, and only serves to add visual clarity. The frame border
-can be blank (<code>frame_blank="transparent"</code>) or can be a thinner line,
-controlled with <code>frame_lwd_blank=0.2</code>.
-By default, the default igraph vertex <code>frame.color</code> is used,
-defined by <code>default_igraph_values()$vertex$frame.color</code>.</p></dd>
+can be blank <code>frame_blank="transparent"</code> or can be a thinner line,
+controlled with <code>frame_lwd_blank=0.2</code>.</p></dd>
 
 
 <dt id="arg-frame-lwd-blank">frame_lwd_blank<a class="anchor" aria-label="anchor" href="#arg-frame-lwd-blank"></a></dt>
-<dd><p><code>numeric</code> line width for nodes that have "blank"
-frame, which means the <code>pie.border</code> colors are defined. In this case
+<dd><p><code>numeric</code> line width, default 0.2,
+for nodes that have "blank" frame, which also means the
+'pie.border' colors must also defined. In this case
 the frame border can be invisible (<code>frame_lwd_blank=0</code>) or
 a very thin line (default <code>frame_lwd_blank=0.2</code>) to surround the
-inner borders drawn with <code>pie.border</code>.</p></dd>
+inner borders drawn with 'pie.border'.</p></dd>
 
 
 <dt id="arg-border-lwd">border_lwd<a class="anchor" aria-label="anchor" href="#arg-border-lwd"></a></dt>
-<dd><p><code>numeric</code> line width used whenever a node is matched
-with <code>rownames(hitim)</code>. When the colors are applied to <code>pie.color</code>,
-the border is defined with <code>pie.lwd</code>. When colors are applied to
-<code>frame.color</code>, the border is defined with <code>frame.lwd</code>.
-(Soon to become <code>frame.width</code>.)</p></dd>
+<dd><p><code>numeric</code> line width, default 2, used when a node
+matches <code>rownames(hitim)</code>.
+When the colors are applied to 'pie.color',
+the border is defined with 'pie.lwd'.
+When colors are applied to 'frame.color', the border is defined
+with 'frame.lwd'.</p></dd>
 
 
 <dt id="arg-do-reorder">do_reorder<a class="anchor" aria-label="anchor" href="#arg-do-reorder"></a></dt>
-<dd><p><code>logical</code> indicating whether to call
-<code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> on the resulting <code>igraph</code>, so that
-the border color can be used in the sort conditions.
-Note that when <code>do_reorder=TRUE</code>, other relevant arguments are passed
-through <code>...</code> to <code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> such as:</p><ul><li><p><code>colorV</code> - which controls the expected order of colors, and
-should be supplied if known upfront.</p></li>
-<li><p><code>sortAttributes</code> - usually contains appropriate default values</p></li>
-<li><p><code>nodeSortBy</code> - usually contains appropriate default values</p></li>
-<li><p><code>orderByAspect=TRUE</code> - controls whether left-right and top-bottom
-order is affected by the aspect ratio of each nodeset.</p></li>
+<dd><p><code>logical</code> default FALSE, whether to reorder nodes
+by node attributes such as color and border, by calling
+<code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code>.
+When <code>do_reorder=TRUE</code>, other relevant arguments are passed
+through <code>...</code> to <code><a href="reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> in particular:</p><ul><li><p><code>colorV</code>: to control the expected order of colors.
+It should be supplied if known upfront.</p></li>
+<li><p><code>sortAttributes</code>: to customize the default attribute sort order.</p></li>
+<li><p><code>nodeSortBy</code>: to customize the x-/y- axis arrangement.</p></li>
+<li><p><code>orderByAspect</code>: to enable x-/y- sorting by the aspect ratio of
+nodes in the group. For example, tall-skinny node groups should sort by
+y-axis first, short-wide node groups should sort by x-axis first.</p></li>
 </ul></dd>
 
 

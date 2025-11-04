@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -253,10 +250,15 @@ be changed except for very customized uses. By default
 
 
 <dt id="arg-mark-groups">mark.groups<a class="anchor" aria-label="anchor" href="#arg-mark-groups"></a></dt>
-<dd><p>A list of vertex id vectors. It is interpreted as a set
-of vertex groups. Each vertex group is highlighted, by plotting a colored
-smoothed polygon around and “under” it. See the arguments below to
-control the look of the polygons.</p></dd>
+<dd><p><code>list</code> or <code><a href="https://r.igraph.org/reference/components.html" class="external-link">igraph::components</a></code> object from one of
+the many igraph cluster functions.</p><ul><li><p>When not explicitly supplied, it will use graph attributes
+"mark.groups" as a way of re-using stored sub-clusters.
+Graph attributes are defined by <code><a href="mem2emap.html">mem2emap()</a></code> for example,
+<code>igraph::graph_attr(x, "mark.groups")</code>. Note 'mark.colors' is also
+used when defined together with 'mark.groups'.</p></li>
+<li><p>When 'mark.groups' is <code>FALSE</code>, it will not apply any 'mark.groups'
+even when graph attributes contain 'mark.groups'.</p></li>
+</ul></dd>
 
 
 <dt id="arg-mark-shape">mark.shape<a class="anchor" aria-label="anchor" href="#arg-mark-shape"></a></dt>
@@ -484,7 +486,6 @@ to render group borders as with <code>mark.groups</code>.</p>
 <code><a href="cnetplot_internalJam.html">cnetplot_internalJam</a>()</code>,
 <code><a href="color_edges_by_nodegroups.html">color_edges_by_nodegroups</a>()</code>,
 <code><a href="color_edges_by_nodes.html">color_edges_by_nodes</a>()</code>,
-<code><a href="color_edges_by_nodes_deprecated.html">color_edges_by_nodes_deprecated</a>()</code>,
 <code><a href="color_nodes_by_nodegroups.html">color_nodes_by_nodegroups</a>()</code>,
 <code><a href="communities2nodegroups.html">communities2nodegroups</a>()</code>,
 <code><a href="drawEllipse.html">drawEllipse</a>()</code>,
@@ -538,7 +539,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>  mark.lwd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  mark.lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, mark.shape<span class="op">=</span><span class="fl">1</span>,</span></span>
 <span class="r-in"><span>  edge_bundling<span class="op">=</span><span class="st">"default"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="jam_igraph-1.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="jam_igraph-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create example cnet data</span></span></span>
 <span class="r-in"><span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_cnet_test.html">make_cnet_test</a></span><span class="op">(</span>num_sets<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
@@ -558,7 +559,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   node_factor_l<span class="op">=</span><span class="va">node_factor_l</span>,</span></span>
 <span class="r-in"><span>   label_factor<span class="op">=</span><span class="fl">0.6</span>,</span></span>
 <span class="r-in"><span>   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">1</span>, Set<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="jam_igraph-2.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="jam_igraph-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example using edge bundling by community detection</span></span></span>
@@ -571,7 +572,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span>,</span></span>
 <span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
 <span class="r-in"><span>   vertex.color<span class="op">=</span><span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://jmw86069.github.io/colorjam/reference/group2colors.html" class="external-link">group2colors</a></span><span class="op">(</span><span class="va">gcom</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="jam_igraph-3.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="jam_igraph-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cfuncs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cluster_leading_eigen<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_leading_eigen.html" class="external-link">cluster_leading_eigen</a></span>,</span></span>
 <span class="r-in"><span>   cluster_edge_betweenness<span class="op">=</span><span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/cluster_edge_betweenness.html" class="external-link">cluster_edge_betweenness</a></span>,</span></span>
@@ -590,10 +591,10 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>      mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
 <span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cfuncs</span><span class="op">)</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-plt img"><img src="jam_igraph-4.png" alt="" width="768" height="768"></span>
-<span class="r-plt img"><img src="jam_igraph-5.png" alt="" width="768" height="768"></span>
-<span class="r-plt img"><img src="jam_igraph-6.png" alt="" width="768" height="768"></span>
-<span class="r-plt img"><img src="jam_igraph-7.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="jam_igraph-4.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="jam_igraph-5.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="jam_igraph-6.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="jam_igraph-7.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># fancy example showing mark.groups and colorizing</span></span></span>
 <span class="r-in"><span><span class="co"># edges using node colors</span></span></span>
@@ -607,7 +608,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cluster_spinglass()\n"</span>,</span></span>
 <span class="r-in"><span>   <span class="st">"edge_bundling='nodegroups'"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="jam_igraph-8.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="jam_igraph-8.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># same but different edge_style</span></span></span>
 <span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span></span>
@@ -618,7 +619,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   bundle_style<span class="op">=</span><span class="st">"xspline"</span>,</span></span>
 <span class="r-in"><span>   detail<span class="op">=</span><span class="fl">14</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"bundle_style='xspline'"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="jam_igraph-9.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="jam_igraph-9.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># same but using node connections</span></span></span>
 <span class="r-in"><span><span class="fu">jam_igraph</span><span class="op">(</span><span class="va">g</span>,</span></span>
@@ -627,7 +628,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 <span class="r-in"><span>   nodegroups<span class="op">=</span><span class="va">gcom</span>,</span></span>
 <span class="r-in"><span>   mark.groups<span class="op">=</span><span class="va">gcom</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>main<span class="op">=</span><span class="st">"edge_bundling='connections'"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="jam_igraph-10.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="jam_igraph-10.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -44,9 +44,9 @@
 #' # highlight edges by node
 #' cnet1h <- highlight_edges_by_node(cnet1, "CA", nonhighlight_alpha=0.5)
 #' # plot the original
-#' jam_igraph(cnet1, node_factor=2, label_factor=2)
+#' jam_igraph(cnet1)
 #' # plot the highlighted variant
-#' jam_igraph(cnet1h, node_factor=2, label_factor=2, label_dist_factor=3)
+#' jam_igraph(cnet1h, label_dist_factor=3)
 #'
 #' # highlight edges using nodeset
 #' nodesets <- get_cnet_nodeset(cnet1)

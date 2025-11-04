@@ -33,60 +33,63 @@ a color. The default assigns red for positive values, blue
 for negative values, and white for zero, using
 \code{colorjam::col_div_xf(1.2)}.}
 
-\item{col_l_max}{\code{numeric} maximum HCL Lightness permitted for
-output colors, for example because the middle color in \code{"RdBu_r"}
-is nearly white, it may be preferable to apply a darker grey
-color.}
+\item{col_l_max}{\code{numeric} maximum HCL Lightness, default 80, for
+output colors. For example, the middle color in \code{"RdBu_r"}
+is nearly white, the \code{col_l_max} can be used to apply a darker grey.}
 
-\item{hide_solo_pie}{\code{logical} indicating whether a single-color
-border should only be applied to \code{"frame.color"} and not to
-individual \code{"pie.border"} entries.
+\item{hide_solo_pie}{\code{logical} default TRUE, whether a single-color
+border for a multi-part pie node should only apply the color
+to the overall node with 'frame.color', and not apply the color
+to each pie wedge using 'pie.border'.
 \itemize{
-\item When \code{hide_solo_pie=TRUE} and all wedges (one or more) will
-have the same \code{pie.border} color, then \code{pie.border} is defined
-as \code{NA}, and instead the \code{frame.color} is assigned to this color.
-Both \code{pie.lwd} and \code{frame.lwd} will be assigned \code{border_lwd},
-since \code{pie.border} is \code{NA} it will not be rendered, only the
-\code{frame.color} will be rendered.
+\item Default \code{hide_solo_pie=TRUE}: when all wedges (one or more)
+have the same \code{pie.border} color, the 'pie.border' is defined
+as \code{NA}, and 'frame.color' is assigned to this color.
+The effect is to display the outline color and not each wedge.
+Both 'pie.lwd' and 'frame.lwd' will be assigned \code{border_lwd},
+and since 'pie.border' is \code{NA} it will not be rendered. Only the
+'frame.color' will be rendered.
 \item When \code{hide_solo_pie=FALSE} each pie wedge border color is assigned
-to \code{pie.border}, \code{frame.color} will be assigned \code{frame_blank},
-and \code{frame.lwd} will be assigned \code{frame_lwd_blank} which is useful
+to 'pie.border', \code{frame.color} will be assigned 'frame_blank',
+and 'frame.lwd' will be assigned 'frame_lwd_blank' which is useful
 for displaying a small outer frame for each node.
 }}
 
 \item{frame_blank}{\code{character} string to define the color used
-for \code{"frame.color"} when colors are defined in \code{"pie.border"}.
+for 'frame.color' when colors are defined in 'pie.border'.
+The default uses the igraph defaults, currently 'black'.
 In this case, the frame is drawn around the inner \code{pie.border}
 colors, and only serves to add visual clarity. The frame border
-can be blank (\code{frame_blank="transparent"}) or can be a thinner line,
-controlled with \code{frame_lwd_blank=0.2}.
-By default, the default igraph vertex \code{frame.color} is used,
-defined by \code{default_igraph_values()$vertex$frame.color}.}
+can be blank \code{frame_blank="transparent"} or can be a thinner line,
+controlled with \code{frame_lwd_blank=0.2}.}
 
-\item{frame_lwd_blank}{\code{numeric} line width for nodes that have "blank"
-frame, which means the \code{pie.border} colors are defined. In this case
+\item{frame_lwd_blank}{\code{numeric} line width, default 0.2,
+for nodes that have "blank" frame, which also means the
+'pie.border' colors must also defined. In this case
 the frame border can be invisible (\code{frame_lwd_blank=0}) or
 a very thin line (default \code{frame_lwd_blank=0.2}) to surround the
-inner borders drawn with \code{pie.border}.}
+inner borders drawn with 'pie.border'.}
 
-\item{border_lwd}{\code{numeric} line width used whenever a node is matched
-with \code{rownames(hitim)}. When the colors are applied to \code{pie.color},
-the border is defined with \code{pie.lwd}. When colors are applied to
-\code{frame.color}, the border is defined with \code{frame.lwd}.
-(Soon to become \code{frame.width}.)}
+\item{border_lwd}{\code{numeric} line width, default 2, used when a node
+matches \code{rownames(hitim)}.
+When the colors are applied to 'pie.color',
+the border is defined with 'pie.lwd'.
+When colors are applied to 'frame.color', the border is defined
+with 'frame.lwd'.}
 
-\item{do_reorder}{\code{logical} indicating whether to call
-\code{reorder_igraph_nodes()} on the resulting \code{igraph}, so that
-the border color can be used in the sort conditions.
-Note that when \code{do_reorder=TRUE}, other relevant arguments are passed
-through \code{...} to \code{reorder_igraph_nodes()} such as:
+\item{do_reorder}{\code{logical} default FALSE, whether to reorder nodes
+by node attributes such as color and border, by calling
+\code{reorder_igraph_nodes()}.
+When \code{do_reorder=TRUE}, other relevant arguments are passed
+through \code{...} to \code{reorder_igraph_nodes()} in particular:
 \itemize{
-\item \code{colorV} - which controls the expected order of colors, and
-should be supplied if known upfront.
-\item \code{sortAttributes} - usually contains appropriate default values
-\item \code{nodeSortBy} - usually contains appropriate default values
-\item \code{orderByAspect=TRUE} - controls whether left-right and top-bottom
-order is affected by the aspect ratio of each nodeset.
+\item \code{colorV}: to control the expected order of colors.
+It should be supplied if known upfront.
+\item \code{sortAttributes}: to customize the default attribute sort order.
+\item \code{nodeSortBy}: to customize the x-/y- axis arrangement.
+\item \code{orderByAspect}: to enable x-/y- sorting by the aspect ratio of
+nodes in the group. For example, tall-skinny node groups should sort by
+y-axis first, short-wide node groups should sort by x-axis first.
 }}
 
 \item{...}{additional arguments are passed to \code{reorder_igraph_nodes()}

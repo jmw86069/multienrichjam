@@ -14,8 +14,14 @@
 #'    pathways connected to genes. Each node has attribute `"nodeType"`
 #'    of either `"Set"` or `"Gene"`.
 #'
-#' @param memIM `numeric` matrix, or `Mem`, or legacy `list` mem format. When
-#'    `mem` format is supplied, relevant arguments which are empty will
+#' @param mem one of the following:
+#'    * `Mem` S4 object, preferred. In this case, the arguments regarding
+#'    'geneIM' and 'enrichIM' data are taken directly from 'mem'.
+#'    * legacy `list` mem object, for backward compatibility,
+#'    * `numeric` matrix in the form of a `memIM` gene-pathway incidence
+#'    matrix. In this case, other arguments involving `geneIM` and `enrichIM`
+#'    matrices are required for correct behavior of this function.
+#'    When `mem` format is supplied, relevant arguments which are empty will
 #'    use corresponding data from `mem`, for example `geneIM`, `geneIMcolors`,
 #'    `enrichIM`, `enrichIMcolors`.
 #' @param categoryShape,geneShape `character` string indicating the
@@ -34,33 +40,61 @@
 #' @param frame_darkFactor `numeric` passed to `jamba::makeColorDarker()`
 #'    so the frame color is slightly darker than the node fill color.
 #' @param geneIM,geneIMcolors,geneIMdirection,enrichIM,enrichIMcolors,enrichIMdirection
-#'    `matrix` objects typically associated with `mem` output from
-#'    `multiEnrichMap()`, however they are optional so this function
-#'    can be applied broadly to any incidence matrix.
+#'    `matrix` data used only when the input 'mem' is not an `Mem` or legacy
+#'    `list` mem object which already contains these data.
+#'    When input 'mem' is supplied as a `matrix`, these value enable
+#'    this function to operate on nearly any custom data.
 #'    * `geneIMcolors` is used to define gene (row) node colors
 #'    * `enrichIMcolors` is used to define set (column) node colors
 #'    * `geneIMdirection`,`enrichIMdirection` is used to define optional
-#'    border colors defined by the direction, where -1 is down, 0 is no change, and
-#'    +1 is up. Use `direction_col` to define a custom color function.
+#'    border colors defined by the direction, where -1 is down,
+#'    0 is no change, and +1 is up.
+#'    Use `direction_col` to define a custom color function, however the
+#'    default uses the reversed "RdBu" Brewer color ramp with blue (down),
+#'    white (no change) and red (up).
 #' @param coloredrect_nrow,coloredrect_ncol,coloredrect_byrow arguments
 #'    used when `geneShape="coloredrectangle"`, to define layout and
 #'    placement of colors across columns in `geneIMcolors`. By default,
 #'    one row of colors is used.
-#' @param colorV `character` optional vector of R colors, named by enrichment
-#'    names that appear in `colnames(enrichIM)` when supplied. When
-#'    defined, these colors override those defined in `enrichIMcolors`.
-#' @param remove_blanks `logical` indicating whether to remove blank
-#'    subsections from each node, by calling `removeIgraphBlanks()`.
-#' @param spread_labels `logical` indicating whether to call
-#'    `spread_igraph_labels()` to orient labels radially away from incoming
-#'    edges.
+#' @param colorV `character` optional vector of R colors, taken from 'mem'
+#'    for `Mem` or legacy `list` mem objects.
+#'    When supplied, it should be a vector named to match
+#'    `colnames(enrichIM)`.
+#'    When defined, these colors override `enrichIMcolors`.
+#' @param direction_col `function` used to colorize node borders based
+#'    upon directionality. The default uses `colorjam::col_div_xf()`
+#'    which applies reverse Brewer "RdBu" for blue (down), white (no change),
+#'    and red (up) with threshold `1.2`.
+#' @param hide_solo_pie `logical` default TRUE, passed to
+#'    `apply_cnet_direction()` to determine whether to display border
+#'    only as one outer frame color when all colors are identical.
+#'    When FALSE, all pie wedges are individually colored.
+#' @param remove_blanks `logical` default TRUE, whether to remove blank
+#'    color subsections from each node, using `removeIgraphBlanks()`.
+#'    This argument is useful for 'pie', 'jampie', or 'coloredrectangle'
+#'    node shapes, so they will only indicate the relevant color.
+#' @param remove_singlet_genes `logical` default TRUE, whether to remove
+#'    singlet genes, which are genes (rows) not represented in any pathway
+#'    gene sets (columns).
+#' @param spread_labels `logical` default FALSE, whether to spread node
+#'    labels away from incoming edges, also adding label distance via
+#'    vertex attribute 'label.dist'.
+#'    This step calls `spread_igraph_labels()`, and can be customized
+#'    further by passing arguments through '...' ellipses.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions:
 #'    * when `remove_blanks=TRUE` it is passed to `removeIgraphBlanks()`
 #'    * when `spread_labels=TRUE` it is passed to `spread_igraph_labels()`
 #'
 #' @family jam igraph functions
-#'
+#' 
+#' @examples
+#' use_sets <- c("eNOS Signaling",
+#'    "Growth Hormone Signaling",
+#'    "mTOR Signaling")
+#' jam_igraph(mem2cnet(Memtest[, use_sets, ]),
+#'    use_shadowText=TRUE)
+#' 
 #' @export
 memIM2cnet <- function
 (memIM,
@@ -76,10 +110,10 @@ memIM2cnet <- function
  geneColor="#B3B3B3",
  categoryLabelColor="darkblue",
  geneLabelColor="grey25",
- categorySize=6,
- geneSize=3,
- categoryCex=0.8,
- geneCex=0.5,
+ categorySize=12,
+ geneSize=6,
+ categoryCex=1,
+ geneCex=0.8,
  # frame_darkFactor=1.4,
  frame_darkFactor=NULL,
  geneIM=NULL,
@@ -95,6 +129,7 @@ memIM2cnet <- function
  direction_col=colorjam::col_div_xf(1.2),
  hide_solo_pie=TRUE,
  remove_blanks=TRUE,
+ remove_singlet_genes=TRUE,
  spread_labels=FALSE,
  repulse=3.5,
  verbose=FALSE,
@@ -105,15 +140,24 @@ memIM2cnet <- function
    geneLabelColor <- head(geneLabelColor, 1);
    categoryLabelColor <- head(categoryLabelColor, 1);
 
-   if (inherits(mem, "Mem")) {
-      memIM <- memIM(mem);
-      geneIM <- geneIM(mem);
-      geneIMcolors <- mem@geneIMcolors;
-      geneIMdirection <- geneIMdirection(mem);
-      enrichIM <- enrichIM(mem);
-      enrichIMcolors <- mem@enrichIMcolors;
-      enrichIMdirection <- enrichIMdirection(mem);
-      colorV <- mem@colorV;
+   if (is.list(memIM) &&
+         "memIM" %in% names(memIM)) {
+      memIM <- tryCatch({
+         list_to_Mem(memIM)
+      }, error=function(e) {
+         memIM
+      })
+   }
+   if (inherits(memIM, "Mem")) {
+      Mem <- memIM;
+      memIM <- memIM(Mem);
+      geneIM <- geneIM(Mem);
+      geneIMcolors <- geneIMcolors(Mem);
+      geneIMdirection <- geneIMdirection(Mem);
+      enrichIM <- enrichIM(Mem);
+      enrichIMcolors <- enrichIMcolors(Mem);
+      enrichIMdirection <- enrichIMdirection(Mem);
+      colorV <- colorV(Mem);
    } else if (is.list(memIM) &&
          "memIM" %in% names(memIM)) {
       ## Accept memIM as list mem output from multiEnrichMap()
@@ -139,6 +183,27 @@ memIM2cnet <- function
          colorV <- memIM[["colorV"]];
       }
       memIM <- memIM[["memIM"]];
+   }
+   
+   if (TRUE %in% remove_singlet_genes) {
+      gene_cts <- rowSums(memIM != 0);
+      if (any(gene_cts == 0)) {
+         keep_genes <- rownames(memIM)[gene_cts > 0]
+         if (length(keep_genes) == 0) {
+            stop_msg <- paste0("No genes are present in any pathways.");
+            stop(stop_msg);
+         }
+         memIM <- memIM[keep_genes, , drop=FALSE]
+         if (length(geneIM) > 0) {
+            geneIM <- geneIM[keep_genes, , drop=FALSE]
+         }
+         if (length(geneIMcolors) > 0) {
+            geneIMcolors <- geneIMcolors[keep_genes, , drop=FALSE]
+         }
+         if (length(geneIMdirection) > 0) {
+            geneIMdirection <- geneIMdirection[keep_genes, , drop=FALSE]
+         }
+      }
    }
 
    # Confirm rownames and colnames do not contain duplicate values.
@@ -214,9 +279,9 @@ memIM2cnet <- function
    ## Convert to igraph
    if (verbose) {
       jamba::printDebug("memIM2cnet(): ",
-         "igraph::graph_from_incidence_matrix()");
+         "igraph::graph_from_biadjacency_matrix()");
    }
-   g <- igraph::graph_from_incidence_matrix(memIM != 0);
+   g <- igraph::graph_from_biadjacency_matrix(memIM != 0);
 
    ## Adjust aesthetics
    if (verbose) {
@@ -298,7 +363,7 @@ memIM2cnet <- function
          "coloredrect.names")
 
       for (j in i_node_attributes) {
-         if (!j %in% igraph::list.vertex.attributes(g)) {
+         if (!j %in% igraph::vertex_attr_names(g)) {
             if (verbose) {
                jamba::printDebug("mem2cnet(): ",
                   "Adding vertex attribute '", j, "'");
@@ -380,7 +445,7 @@ memIM2cnet <- function
          "coloredrect.value")
 
       for (j in i_set_attributes) {
-         if (!j %in% igraph::list.vertex.attributes(g)) {
+         if (!j %in% igraph::vertex_attr_names(g)) {
             if (jamba::igrepHas("color$", j)) {
                igraph::vertex_attr(g, j) <- as.list(igraph::V(g)$color);
             } else if (jamba::igrepHas("byrow", j)) {

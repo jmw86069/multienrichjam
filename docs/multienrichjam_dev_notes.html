@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
@@ -36,6 +33,7 @@
       <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/multienrichjam_dev_notes.md" class="external-link"><code>multienrichjam_dev_notes.md</code></a></small>
     </div>
 
+
 <div id="multienrichjam-dev-notes" class="section level1">
 
 <ul><li>
@@ -43,11 +41,17 @@
 <ul><li>When updating the shape functions while using ‘devtools’ for active development, you must also add the shape again to the R session.</li>
 </ul><pre><code><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/shapes.html" class="external-link">add_shape</a></span><span class="op">(</span><span class="st">"jampie"</span>,</span>
 <span>   clip<span class="op">=</span><span class="va">shape.jampie.clip</span>,</span>
+<span>   plot<span class="op">=</span><span class="va">shape.jampie.plot</span><span class="op">)</span></span>
+<span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/shapes.html" class="external-link">add_shape</a></span><span class="op">(</span><span class="st">"coloredrect"</span>,</span>
+<span>   clip<span class="op">=</span><span class="va">shape.jampie.clip</span>,</span>
 <span>   plot<span class="op">=</span><span class="va">shape.jampie.plot</span><span class="op">)</span></span></code></pre>
 </li>
 <li>
 <p>Adding generic methods for S4 objects</p>
-<ul><li>Test for existing generic function, the ‘getName=TRUE’ part tells what package provided the generic function <code>isGeneric("score", getName=TRUE)</code> <code>isGeneric("abbreviate", getName=TRUE)</code>
+<ul><li><p>Test for existing generic function, the ‘getName=TRUE’ part tells what package provided the generic function <code>isGeneric("score", getName=TRUE)</code> <code>isGeneric("abbreviate", getName=TRUE)</code></p></li>
+<li>
+<p>List all known S3 generic methods: <code>.knownS3Generics</code> - basic S3 generics <code>utils:::getKnownGenerics()</code> - more comprehensive S3 generics:</p>
+<p><code>names(.knownS3Generics)</code> <code>tools:::.internalGenerics</code> <code>tools:::.get_S3_primitive_generics()</code></p>
 </li>
 </ul></li>
 <li>
@@ -62,6 +66,147 @@
 </li>
 </ul></li>
 </ul></div>
+<div class="section level1">
+<h1 id="documentation-paradigm">Documentation paradigm<a class="anchor" aria-label="anchor" href="#documentation-paradigm"></a></h1>
+<ul><li>
+<p>Diataxis: Four types of documentation <a href="https://diataxis.fr/map/" class="external-link uri">https://diataxis.fr/map/</a></p>
+<ol style="list-style-type: decimal"><li>
+<p>Tutorials “Can you teach me to…?”</p>
+<ul><li>learning: a lesson</li>
+<li>learning a skill, in style of classroom lecture (R vignette)</li>
+<li>e.g. how to cook</li>
+</ul></li>
+<li>
+<p>How-to Guides “How do I…?”</p>
+<ul><li>goals: series of steps</li>
+<li>help achieve a particular goal</li>
+<li>put the skills from the tutorial to work</li>
+<li>e.g. specific recipe to cook</li>
+</ul></li>
+<li>
+<p>Reference “What is…?”</p>
+<ul><li>information: describe the machinery</li>
+<li>technical reference used when applying course to practical need (1 and 2)</li>
+<li>e.g. nutritional information</li>
+</ul></li>
+<li>
+<p>Explanation: “Why…?”</p>
+<ul><li>understanding: illuminate a topic</li>
+<li>away from the work, reflect on the practice and knowledge as a whole</li>
+<li>e.g. culinary social history</li>
+</ul></li>
+</ol></li>
+</ul></div>
+<div class="section level1">
+<h1 id="idea-list">Idea List<a class="anchor" aria-label="anchor" href="#idea-list"></a></h1>
+<ul><li>
+<p>Consider method to add genes into enrichment results <code>data.frame</code></p>
+<ul><li>Requires: pathway definitions (genes assigned)</li>
+<li>Requires: gene hits in the enrichment test</li>
+</ul></li>
+<li>
+<p>Consider <code>S4Vectors</code> object types for S4 object slots</p>
+<ul><li>Enables things like assignment within a vector or list</li>
+<li>Some preferred mechanisms for using <code>metadata()</code>
+</li>
+<li>S4 tips: <a href="https://bioconductor.org/help/course-materials/2017/Zurich/S4-classes-and-methods.html#reusing-existing-classes" class="external-link uri">https://bioconductor.org/help/course-materials/2017/Zurich/S4-classes-and-methods.html#reusing-existing-classes</a>
+</li>
+</ul></li>
+<li>
+<p>Consider tagging with “EDAM” for compatibility with Elixir toolset for example</p>
+<ul><li><a href="https://blog.bioconductor.org/posts/2025-07-18-edam/" class="external-link uri">https://blog.bioconductor.org/posts/2025-07-18-edam/</a></li>
+<li><a href="https://edamontology.org/page" class="external-link uri">https://edamontology.org/page</a></li>
+<li>Main goal is to aid discoverability of Bioconductor packages</li>
+<li>
+<code>BiocPkgTools</code>: manages Bioconductor dependencies, biocViews keywords <a href="https://github.com/seandavi/BiocPkgTools" class="external-link uri">https://github.com/seandavi/BiocPkgTools</a>
+</li>
+</ul></li>
+<li>
+<p>Consider alternative clustering methods to <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code></p>
+<ul><li><p>User can supply <code>cluster_columns</code> with custom function, as long as it returns ‘hclust’ compatible output to use with <code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree()</a></code>.</p></li>
+<li>
+<p><code>cluster::daisy(x, metric='gower')</code> apparently accepts mixed-type input.</p>
+<ul><li>It may handle binary ‘im’ data together with ‘enrichIM’ -log10(P-value). Needs testing, and would need to be told which columns are which type.</li>
+<li>It scales data to 0-1 using min-max, for directional data probably no scaling, and have it “pre-scaled”.</li>
+</ul></li>
+<li><p>Directional data is “ternary data” with values: <code>c(-1, 0, 1)</code>.</p></li>
+<li><p>“Ternary distance” could be used as a metric for ‘geneIMdirection’, e.g.: <code>sum(ifelse(x == y, 0, ifelse(x == 0 | y == 0, 1, 2)))</code> for each pair, (effectively <code>abs(x - y)</code> but needs to be matrix math). Then: <code>hclust(as.dist(ternary_distance))</code></p></li>
+<li><p>Cosine similarity emphasizes directionality more than magnitude.</p></li>
+<li><p>Create two distance matrices, combine then, then run <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust()</a></code>.</p></li>
+<li><p>Consider Multiple Correspondence Analysis (MCA) FactoMineR</p></li>
+</ul></li>
+</ul></div>
+<div class="section level1">
+<h1 id="bioconductor-compatibility-check">Bioconductor compatibility check<a class="anchor" aria-label="anchor" href="#bioconductor-compatibility-check"></a></h1>
+<ul><li>
+<p>Bioconductor ‘GSEABase’</p>
+<ul><li><a href="https://bioconductor.org/packages/3.22/bioc/html/GSEABase.html" class="external-link uri">https://bioconductor.org/packages/3.22/bioc/html/GSEABase.html</a></li>
+<li>
+<code>GeneSet</code> and <code>GeneSetCollection</code> objects</li>
+</ul></li>
+<li>
+<p>‘categoryCompare’</p>
+<ul><li>uses GSEABase::GeneSet</li>
+<li><a href="https://bioconductor.org/packages/3.22/bioc/vignettes/categoryCompare/inst/doc/categoryCompare_vignette.html" class="external-link uri">https://bioconductor.org/packages/3.22/bioc/vignettes/categoryCompare/inst/doc/categoryCompare_vignette.html</a></li>
+<li>Vignette has multiple enrichments as ‘enrichLists’ that are used downstream</li>
+</ul></li>
+<li>
+<p>‘EnrichmentBrowser’</p>
+<ul><li>wrapper front-end to numerous enrichment approaches</li>
+<li><a href="https://bioconductor.org/packages/3.22/bioc/vignettes/EnrichmentBrowser/inst/doc/EnrichmentBrowser.html" class="external-link uri">https://bioconductor.org/packages/3.22/bioc/vignettes/EnrichmentBrowser/inst/doc/EnrichmentBrowser.html</a></li>
+<li>Great discussion/review of points regarding enrichment backgrounds, “competitive” versus “self-contained”. <a href="https://bioconductor.org/packages/3.22/bioc/vignettes/EnrichmentBrowser/inst/doc/EnrichmentBrowser.html#125_Underlying_null:_competitive_vs_self-contained" class="external-link uri">https://bioconductor.org/packages/3.22/bioc/vignettes/EnrichmentBrowser/inst/doc/EnrichmentBrowser.html#125_Underlying_null:_competitive_vs_self-contained</a>
+</li>
+<li>great examples for obtaining gene sets from KEGG, Enrichr, others</li>
+</ul></li>
+<li>
+<p>‘zenith’ - also uses EnrichmentBrowser</p>
+<ul><li>great examples for obtaining gene sets from MSigDB, GO, etc</li>
+<li>
+<code>zenith_gsa()</code> returns <code>data.frame</code> suitable for input</li>
+<li>also returns t-statistic with + and - values (directionality, or under/over-representation?)</li>
+<li>uses <code><a href="https://rdrr.io/pkg/limma/man/camera.html" class="external-link">limma::camera()</a></code> which employs limma-DREAM analysis, accounting for correlation within gene expression traits. Need to learn more.</li>
+</ul></li>
+<li>
+<p>‘gage’</p>
+<ul><li>Clunky but might be useful, produces ‘greater’ and ‘less’ <code>data.frame</code> results, however the genes are not included in each row by default.</li>
+<li>
+<code>gageComp()</code> produces a simplified directional Venn, red/green text labels, and no indication of discordance, it only shows concordance.</li>
+</ul></li>
+</ul><p>*‘GOstats’</p>
+<ul><li><p>original hypergeometric Bioconductor R package - the o.g.</p></li>
+<li><p>returns <code>GOHyperGResult</code> object, data.frame-like</p></li>
+<li>
+<p>Others that produce <code>data.frame</code> that should “just work”:</p>
+<ul><li>‘roastgsa’ produces data.frame: <a href="https://bioconductor.org/packages/3.22/bioc/vignettes/roastgsa/inst/doc/roastgsaExample_RNAseq.html" class="external-link uri">https://bioconductor.org/packages/3.22/bioc/vignettes/roastgsa/inst/doc/roastgsaExample_RNAseq.html</a>
+</li>
+</ul></li>
+<li>
+<p>Bioconductor ‘sparrow’</p>
+<ul><li>
+<code>SparrowResult</code> object</li>
+<li><a href="https://bioconductor.org/packages/3.22/bioc/vignettes/sparrow/inst/doc/sparrow.html" class="external-link uri">https://bioconductor.org/packages/3.22/bioc/vignettes/sparrow/inst/doc/sparrow.html</a></li>
+<li><a href="https://bioconductor.org/packages/3.22/bioc/html/sparrow.html" class="external-link uri">https://bioconductor.org/packages/3.22/bioc/html/sparrow.html</a></li>
+</ul></li>
+</ul></div>
+<div class="section level1">
+<h1 id="for-reference">For reference<a class="anchor" aria-label="anchor" href="#for-reference"></a></h1>
+<p>Wow, an example of creating a package using a function from the R environment</p>
+<pre><code><span><span class="co"># custom function</span></span>
+<span><span class="va">say_hello</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">name</span> <span class="op">=</span> <span class="st">"my little friend"</span>, <span class="va">punct</span> <span class="op">=</span> <span class="st">"."</span><span class="op">)</span></span>
+<span><span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Hello, "</span>, <span class="va">name</span>, <span class="va">punct</span><span class="op">)</span>, <span class="st">"\n"</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># now add to R package</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://devtools.r-lib.org/reference/create.html" class="external-link">create</a></span><span class="op">(</span><span class="st">"say"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://devtools.r-lib.org/reference/wd.html" class="external-link">wd</a></span><span class="op">(</span><span class="st">"say"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dump.html" class="external-link">dump</a></span><span class="op">(</span><span class="st">"say_hello"</span>, file <span class="op">=</span> <span class="st">"R/say_hello.R"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">say_hello</span><span class="op">)</span>  <span class="co">## remove local copy</span></span>
+<span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span>     <span class="co">## load the package</span></span>
+<span><span class="fu">say_hello</span><span class="op">(</span><span class="op">)</span>    <span class="co">## this is the package-version</span></span></code></pre>
+</div>
+
 
   </main></div>
 

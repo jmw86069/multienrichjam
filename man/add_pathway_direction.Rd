@@ -65,7 +65,8 @@ The IPA Activation \code{"z-score"} uses the following formula:
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{z <- (N_genes_up - N_genes_down) / sqrt(N_genes_up + N_genes_down)
 }\if{html}{\out{</div>}}
 
-Citation for IPA formula: \link{https://doi.org/10.1093/bioinformatics/btt703}
+Citation for IPA formula: \href{https://doi.org/10.1093/bioinformatics/btt703}{Kramer 2014}
+https://doi.org/10.1093/bioinformatics/btt703,
 as referenced: \href{https://qiagen.my.salesforce-sites.com/KnowledgeBase/KnowledgeNavigatorPage?id=kA41i000000L5nQCAS&categoryName=BioX}{IPA FAQ - Statistical Calculations}
 }
 

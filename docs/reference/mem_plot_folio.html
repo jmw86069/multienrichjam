@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -52,7 +49,7 @@
 <span>  use_raster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  min_gene_ct <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  min_set_ct <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  min_set_ct_each <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  min_set_ct_each <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column_method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  row_method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
 <span>  exemplar_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
@@ -93,9 +90,7 @@
 
 
 <dl><dt id="arg-mem">mem<a class="anchor" aria-label="anchor" href="#arg-mem"></a></dt>
-<dd><p><code>list</code> object created by <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>. Specifically
-the object is expected to contain <code>colorV</code>, <code>enrichIM</code>,
-<code>memIM</code>, <code>geneIM</code>.</p></dd>
+<dd><p><code>Mem</code> or <code>list</code> object from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>.</p></dd>
 
 
 <dt id="arg-do-which">do_which<a class="anchor" aria-label="anchor" href="#arg-do-which"></a></dt>
@@ -106,14 +101,16 @@ by the number of the plot, in order.</p></dd>
 
 
 <dt id="arg-p-cutoff">p_cutoff<a class="anchor" aria-label="anchor" href="#arg-p-cutoff"></a></dt>
-<dd><p><code>numeric</code> value indicating the enrichment P-value threshold
-used for <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>, but when <code>NULL</code> this value is taken
-from the <code>mem</code> input, or <code>0.05</code> is used by default.</p></dd>
+<dd><p><code>numeric</code> value, default NULL is taken from <code>mem</code>,
+indicating the enrichment P-value threshold.</p></dd>
 
 
 <dt id="arg-p-floor">p_floor<a class="anchor" aria-label="anchor" href="#arg-p-floor"></a></dt>
-<dd><p><code>numeric</code> value indicating the lowest enrichment P-value
-used in the color gradient on the Enrichment Heatmap.</p></dd>
+<dd><p><code>numeric</code> with the lowest enrichment P-value
+used in the color gradient on the Enrichment Heatmap.
+The purpose is to prevent very low P-values from shifting the
+color gradient too far from the <code>p_cutoff</code> causing those colors
+to be pale and nearly white.</p></dd>
 
 
 <dt id="arg-main">main<a class="anchor" aria-label="anchor" href="#arg-main"></a></dt>
@@ -122,8 +119,9 @@ used in the color gradient on the Enrichment Heatmap.</p></dd>
 
 <dt id="arg-use-raster">use_raster<a class="anchor" aria-label="anchor" href="#arg-use-raster"></a></dt>
 <dd><p><code>logical</code> default FALSE, deprecated,
-whether to use raster heatmaps, passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>.</p><ul><li><p>Note that <code>use_raster=TRUE</code> may produce visual artifacts, and
-changing this argument is no longer supported</p></li>
+whether to use raster heatmaps, passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>.</p><ul><li><p>Note that <code>use_raster=TRUE</code> may produce visual artifacts especially
+with argument <code>colorize_by_gene=TRUE</code> in <code><a href="mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>.
+Changing this argument is no longer supported</p></li>
 </ul></dd>
 
 
@@ -135,8 +133,14 @@ to be present in at least <code>min_set_ct</code> sets.</p></dd>
 
 
 <dt id="arg-min-set-ct-each">min_set_ct_each<a class="anchor" aria-label="anchor" href="#arg-min-set-ct-each"></a></dt>
-<dd><p><code>integer</code> minimum genes required for each set,
-required for at least one enrichment test.</p></dd>
+<dd><p><code>integer</code>, default NULL, minimum genes per set
+in at least one enrichment test.</p><ul><li><p>Default NULL uses <code>thresholds(mem)$min_count</code> to use the same
+criteria.</p></li>
+<li><p>The distinction from <code>min_set_ct</code> is that this threshold
+requires this number of genes in one enrichment,
+while <code>min_set_ct</code> applies the threshold to the
+combined multi-enrichment data.</p></li>
+</ul></dd>
 
 
 <dt id="arg-column-method-row-method">column_method, row_method<a class="anchor" aria-label="anchor" href="#arg-column-method-row-method"></a></dt>

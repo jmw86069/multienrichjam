@@ -8,73 +8,114 @@ mem2emap(
   mem,
   overlap = 0.2,
   p_cutoff = NULL,
-  min_count = 4,
+  min_count = NULL,
   colorV = NULL,
   cluster_function = igraph::cluster_walktrap,
   cluster_list = NULL,
   num_keep_terms = 3,
   keep_terms_sep = ",\\n",
   repulse = 3.3,
-  remove_singlets = TRUE,
+  remove_singlets = FALSE,
   color_by_nodes = FALSE,
   apply_direction = TRUE,
   direction_max = 2,
   direction_floor = 0.5,
-  do_plot = TRUE,
+  seed = 123,
+  do_plot = FALSE,
+  verbose = FALSE,
   ...
 )
 }
 \arguments{
 \item{mem}{\code{Mem} or legacy \code{list} mem output from \code{multiEnrichMap()}}
 
-\item{overlap}{\code{numeric} value between 0 and 1 indicating the Jaccard
+\item{overlap}{\code{numeric}, default 0.2, value between 0 and 1 with Jaccard
 overlap coefficient required between any two pathways in order to
-create a network edge connecting these two pathways. Typically,
-\code{overlap=0.2} is default, which specifies roughly 20\% overlap
-in genes shared between two pathway nodes. Note these genes must be
-involved in enrichment, and therefore does not use all possible
-genes annotated to a pathway. Therefore connections are only
-created with enriched genes are shared between pathways.}
+create a network edge connecting these two pathways.
+\itemize{
+\item Jaccard overlap coefficient is reciprocal of Jaccard distance,
+using \code{(1 - Jaccard_distance)}.
+\item \code{overlap=0.2} is default, which specifies roughly 20\% overlap
+in genes shared between two pathway nodes.
+\item Note these genes must be involved in enrichment, and
+therefore does not use all possible genes annotated to a pathway.
+Therefore connections are only created with enriched genes
+are shared between pathways.
+}}
 
 \item{p_cutoff}{\code{numeric} threshold used for significant enrichment
-P-value, usually defined in the \code{mem} object.}
+P-value. The default NULL uses the value in the \code{mem} object.}
 
 \item{min_count}{\code{integer} threshold for minimum genes involved in
 enrichment in order for a pathway to be considered significant
-during this analysis.}
+during this analysis. When NULL it uses the threshold in \code{mem}.}
 
-\item{colorV}{\code{character} vector of R colors used for each enrichment.}
+\item{colorV}{\code{character} vector of R colors used for each enrichment.
+Default NULL uses colors defined in \code{mem}.}
 
-\item{cluster_function}{\code{function} used to cluster nodes in the resulting
-\code{igraph} object, used to help generate a visual summary.}
+\item{cluster_function}{\code{function}, default \code{igraph::cluster_walktrap},
+used to cluster \code{igraph} nodes in the resulting network graph.
+It is used to enhance the visual summary.
+\itemize{
+\item This function is not used when \code{cluster_list} is supplied.
+}}
 
-\item{num_keep_terms}{\code{integer} number of terms to keep from each
-pathway cluster, when \code{cluster_function} is supplied above. Common
-terms are removed from each pathway cluster, then remaining terms
-are sorted by decreasing occurrence, and used as a straightforward
-summary of pathways in each cluster.}
+\item{cluster_list}{\code{list} default NULL, optional list of pathway
+clusters, containing \code{character} vectors of \code{igraph} node/vertex
+names. It will be used instead of \code{cluster_function} when supplied.}
 
-\item{keep_terms_sep}{\code{character} string used to separated multiple
-pathway terms defined by \code{num_keep_terms} above.}
+\item{num_keep_terms}{\code{integer}, default 3, number of text terms to
+keep for each pathway cluster, used together with \code{cluster_function}.
+Common words are removed, remaining terms are sorted by decreasing
+occurrence, then used to summarize each cluster.}
 
-\item{repulse}{\code{numeric} value passed to \code{layout_with_qfr()}.}
+\item{keep_terms_sep}{\code{character} string, default '\n' newline,
+used to separate terms, used together with \code{num_keep_terms}.}
 
-\item{remove_singlets}{\code{logical} indicating whether to remove pathway
-singlets, which have no connections to any other pathways. It can
-help simplify busy figures, however removing a singlet pathway
-is not recommended because it may imply the pathways were not
-statistically significant, and in fact they were.}
+\item{repulse}{\code{numeric} value passed to \code{layout_with_qfr()},
+default 3.3.
+\itemize{
+\item Use repulse 'FALSE', 'NULL', or '0' will skip the layout, which
+is used by \code{mem_find_overlap()} to iterate numerous overlaps
+without spending time on layout each iteration.
+}}
 
-\item{color_by_nodes}{\code{logical} indicating whether to colorize pathway
-clusters based upon blending the node colors within each cluster.
+\item{remove_singlets}{\code{logical}, default TRUE, whether to remove pathway
+singlets which have no connections to any other pathways.
+\itemize{
+\item Using TRUE will help simplify busy figures, at the expense of
+being less complete.
+}}
+
+\item{color_by_nodes}{\code{logical}, default TRUE, whether to colorize pathway
+clusters using node colors in each cluster.
 Note that a mix of colors often turns brown, so this feature has
 unpredictable benefit.}
 
-\item{do_plot}{\code{logical} indicating whether to render the resulting
-plot.}
+\item{apply_direction}{\code{logical} default TRUE, whether to apply direction
+to the node border color, when supplied. Used with \code{direction_max}
+and \code{direction_floor}.}
+
+\item{direction_max}{\code{numeric}, default 2, indicating the directional
+score at which the maximum color is applied. Typically when using
+some derivative of z-score to represent directionality, values at or
+above 2 are effectively "maximum".}
+
+\item{direction_floor}{\code{numeric} default 0.5, the minimum directional score
+for any color to be applied, below which values are considered
+"non-directional". Typically when using some form of z-score, a value
+at or below 0.5 may be considered "not directional."}
+
+\item{seed}{\code{numeric} passed to \code{set.seed()} via the \code{layout_with_qfr()}
+layout algorithm, default 123.}
+
+\item{do_plot}{\code{logical}, default FALSE, whether to render the resulting
+plot using \code{jam_igraph()}.}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
 
 \item{...}{additional arguments are passed to \code{jam_igraph()} to customize
-the network plot.}
+the network plot, used when \code{do_plot=TRUE}.}
 }
 \description{
 Convert multiEnrichMap mem output to EnrichmentMap emap

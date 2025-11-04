@@ -89,13 +89,13 @@ layout_with_qfr <- function
    ##
    ## It also handles the changes made to igraph which produce a character
    ## edgelist instead of numeric edgelist
-   e <- igraph::get.edgelist(g, names=FALSE);
+   e <- igraph::as_edgelist(g, names=FALSE);
    if (length(seed) > 0) {
       set.seed(head(seed, 1));
    }
 
    ## Handle weights from E(g)$weight if supplied
-   if (length(weights) == 0 && "weight" %in% igraph::list.edge.attributes(g)) {
+   if (length(weights) == 0 && "weight" %in% igraph::edge_attr_names(g)) {
       if (verbose) {
          jamba::printDebug("layout_with_qfr(): ",
             "Using E(g)$weight to define weights during layout.");
@@ -242,7 +242,7 @@ relayout_with_qfr <- function
  ...)
 {
    # if layout exists, use that for init
-   if (length(init) == 0 && "layout" %in% igraph::list.graph.attributes(g)) {
+   if (length(init) == 0 && "layout" %in% igraph::graph_attr_names(g)) {
       init <- igraph::graph_attr(g, "layout");
       rownames(init) <- igraph::V(g)$name;
       if (verbose) {
@@ -1247,7 +1247,7 @@ removeIgraphBlanks <- function
    #ixV <- which(V(g)$shape %in% "coloredrectangle");
    ixV <- which(lengths(igraph::V(g)$coloredrect.color) > 0);
 
-   if ("coloredrect.color" %in% igraph::list.vertex.attributes(g)) {
+   if ("coloredrect.color" %in% igraph::vertex_attr_names(g)) {
       if (verbose) {
          jamba::printDebug("removeIgraphBlanks(): ",
             "Adjusting coloredrect nodes.");
@@ -1255,14 +1255,14 @@ removeIgraphBlanks <- function
       ## Rewrote code to use vectorized logic.
 
       ## Determine the coloredrect.ncol to use in resizing
-      ncolVbefore <- igraph::get.vertex.attribute(g, "coloredrect.ncol");
+      ncolVbefore <- igraph::vertex_attr(g, "coloredrect.ncol");
       if (length(ncolVbefore) == 0) {
-         ncolVbefore <- lengths(igraph::get.vertex.attribute(g, "coloredrect.color"));
+         ncolVbefore <- lengths(igraph::vertex_attr(g, "coloredrect.color"));
       }
-      nrowVbefore <- igraph::get.vertex.attribute(g, "coloredrect.nrow");
+      nrowVbefore <- igraph::vertex_attr(g, "coloredrect.nrow");
 
       ## Determine which pie wedges are blank
-      iCrColorL <- igraph::get.vertex.attribute(g, "coloredrect.color");
+      iCrColorL <- igraph::vertex_attr(g, "coloredrect.color");
       crBlanksL <- isColorBlank(iCrColorL,
          blankColor=blankColor,
          c_max=c_max,
@@ -1281,12 +1281,12 @@ removeIgraphBlanks <- function
       crBlanksV <- unlist(unname(crBlanksL));
       ## Iterate each attribute
       crAttrs <- intersect(c("coloredrect.color", "coloredrect.names"),
-         igraph::list.vertex.attributes(g));
+         igraph::vertex_attr_names(g));
       crAttr <- "coloredrect.color";
       crName <- "coloredrect.names";
 
-      crAttrL <- igraph::get.vertex.attribute(g, crAttr);
-      crNameL <- igraph::get.vertex.attribute(g, crName);
+      crAttrL <- igraph::vertex_attr(g, crAttr);
+      crNameL <- igraph::vertex_attr(g, crName);
       ## Confirm each attribute has the same lengths() as pieColorL
       if (!all(lengths(crAttrL) == crLengths)) {
          # Skip this crAttr since its values are
@@ -1300,11 +1300,11 @@ removeIgraphBlanks <- function
          }
       } else {
          ##
-         nrowV <- jamba::rmNULL(igraph::get.vertex.attribute(g, "coloredrect.nrow"),
+         nrowV <- jamba::rmNULL(igraph::vertex_attr(g, "coloredrect.nrow"),
             nullValue=1);
-         ncolV <- jamba::rmNULL(igraph::get.vertex.attribute(g, "coloredrect.ncol"),
+         ncolV <- jamba::rmNULL(igraph::vertex_attr(g, "coloredrect.ncol"),
             nullValue=1);
-         byrowV <- jamba::rmNULL(igraph::get.vertex.attribute(g, "coloredrect.byrow")*1,
+         byrowV <- jamba::rmNULL(igraph::vertex_attr(g, "coloredrect.byrow")*1,
             nullValue=TRUE);
          nprodV <- nrowV * ncolV;
          if (any(crLengths != nprodV)) {
@@ -1354,14 +1354,14 @@ removeIgraphBlanks <- function
             ncolV <- ifelse(nrowV == 1 | ncolV > 1, crLengthsNew, ncolV);
             nrowV <- ifelse(nrowV == 1 | ncolV > 1, 1, crLengthsNew);
 
-            g <- igraph::set.vertex.attribute(g,
+            g <- igraph::set_vertex_attr(g,
                name="coloredrect.nrow",
                value=nrowV);
-            g <- igraph::set.vertex.attribute(g,
+            g <- igraph::set_vertex_attr(g,
                name="coloredrect.ncol",
                value=ncolV);
             ## TODO: only update nodes that change
-            g <- igraph::set.vertex.attribute(g,
+            g <- igraph::set_vertex_attr(g,
                name=crAttr,
                value=crL);
          } else if (any(c("ncol","nrow") %in% constrain)) {
@@ -1481,19 +1481,19 @@ removeIgraphBlanks <- function
                   iMncol <- rep(nrowNcolByrowV[2], length(iMnrow));
                }
                iSet <- as.integer(names(iMvalsL));
-               g <- igraph::set.vertex.attribute(g,
+               g <- igraph::set_vertex_attr(g,
                   index=iSet,
                   name="coloredrect.ncol",
                   value=iMncol);
-               g <- igraph::set.vertex.attribute(g,
+               g <- igraph::set_vertex_attr(g,
                   index=iSet,
                   name="coloredrect.nrow",
                   value=iMnrow);
-               g <- igraph::set.vertex.attribute(g,
+               g <- igraph::set_vertex_attr(g,
                   index=iSet,
                   name="coloredrect.color",
                   value=iMvalsL);
-               g <- igraph::set.vertex.attribute(g,
+               g <- igraph::set_vertex_attr(g,
                   index=iSet,
                   name="coloredrect.names",
                   value=iMnamesL);
@@ -1511,12 +1511,12 @@ removeIgraphBlanks <- function
                "Resizing coloredrect nodes.");
          }
          ## Make multi-segment gene nodes wider
-         ncolVafter <- igraph::get.vertex.attribute(g, "coloredrect.ncol");
-         nrowVafter <- igraph::get.vertex.attribute(g, "coloredrect.nrow");
+         ncolVafter <- igraph::vertex_attr(g, "coloredrect.ncol");
+         nrowVafter <- igraph::vertex_attr(g, "coloredrect.nrow");
          resizeWhich <- (ncolVbefore != ncolVafter) |  (nrowVbefore != nrowVafter);
          if (any(resizeWhich)) {
             new_size2 <- nrowVbefore / nrowVafter *
-               jamba::rmNULL(igraph::get.vertex.attribute(g, name="size2"),
+               jamba::rmNULL(igraph::vertex_attr(g, name="size2"),
                   nullValue=default_igraph_values()$vertex$size2)
             if (length(new_size2) == 0) {
                new_size2 <- nrowVbefore / nrowVafter *
@@ -1530,7 +1530,7 @@ removeIgraphBlanks <- function
                      nullValue=default_igraph_values()$vertex$size2),
                   new_size2));
             }
-            g <- igraph::set.vertex.attribute(g,
+            g <- igraph::set_vertex_attr(g,
                name="size2",
                value=new_size2[resizeWhich],
                index=which(resizeWhich));
@@ -1542,7 +1542,7 @@ removeIgraphBlanks <- function
    if (applyToPie) {
       ## Adjust several pie attributes depending upon what is present
       pieAttrs <- intersect(c("pie", "pie.value", "pie.names", "pie.color"),
-         igraph::list.vertex.attributes(g));
+         igraph::vertex_attr_names(g));
 
       if ("pie.color" %in% pieAttrs) {
          if (verbose) {
@@ -1551,7 +1551,7 @@ removeIgraphBlanks <- function
          }
 
          ## Determine which pie wedges are blank
-         iPieColorL <- igraph::get.vertex.attribute(g, "pie.color");
+         iPieColorL <- igraph::vertex_attr(g, "pie.color");
          pieBlanksL <- isColorBlank(iPieColorL,
             blankColor=blankColor,
             c_max=c_max,
@@ -1564,7 +1564,7 @@ removeIgraphBlanks <- function
          pieBlanksV <- unlist(unname(pieBlanksL));
          ## Iterate each pie attribute
          for (pieAttr in pieAttrs) {
-            pieAttrL <- igraph::get.vertex.attribute(g, pieAttr);
+            pieAttrL <- igraph::vertex_attr(g, pieAttr);
             if (length(pieAttrL) > 0) {
                ## Confirm each attribute has the same lengths() as pieColorL
                if (!all(lengths(pieAttrL) == pieLengths)) {
@@ -1597,7 +1597,7 @@ removeIgraphBlanks <- function
                      # print(head(igraph::V(g)$pie.border[missing_x]))
                   }
                   ## TODO: only update nodes that change
-                  g <- igraph::set.vertex.attribute(g,
+                  g <- igraph::set_vertex_attr(g,
                      index=unique(pieSplitV[!pieBlanksV]),
                      name=pieAttr,
                      value=pieL);
@@ -2499,13 +2499,13 @@ spread_igraph_labels <- function
    }
    if (length(layout) == 0) {
       if (!force_relayout) {
-         if ("layout" %in% igraph::list.graph.attributes(g)) {
+         if ("layout" %in% igraph::graph_attr_names(g)) {
             if (verbose) {
                jamba::printDebug("spread_igraph_labels(): ",
                   "Using ","layout"," from graph attributes.");
             }
             layout <- g$layout;
-         } else if (all(c("x", "y") %in% igraph::list.vertex.attributes(g))) {
+         } else if (all(c("x", "y") %in% igraph::vertex_attr_names(g))) {
             if (verbose) {
                jamba::printDebug("spread_igraph_labels(): ",
                   "Using ","x,y"," from vertex attributes.");
@@ -2576,7 +2576,7 @@ spread_igraph_labels <- function
       g <- igraph::set_graph_attr(g, "layout", layout);
    }
    igraph::V(g)$label.degree <- jamba::deg2rad(g_angle);
-   if (!"label.dist" %in% igraph::list.vertex.attributes(g)) {
+   if (!"label.dist" %in% igraph::vertex_attr_names(g)) {
       igraph::V(g)$label.dist <- label_min_dist;
    } else {
       igraph::V(g)$label.dist <- pmax(igraph::V(g)$label.dist, label_min_dist);
@@ -2677,7 +2677,7 @@ subgraph_jam <- function
 (graph,
  v)
 {
-   if ("layout" %in% igraph::list.graph.attributes(graph)) {
+   if ("layout" %in% igraph::graph_attr_names(graph)) {
       g_layout <- igraph::graph_attr(graph, "layout");
       if (any(c("numeric","matrix") %in% class(g_layout))) {
          if (ncol(g_layout) == 2) {
@@ -2693,7 +2693,7 @@ subgraph_jam <- function
    }
    graph <- igraph::induced_subgraph(graph=graph,
       vids=v);
-   if ("layout" %in% igraph::list.graph.attributes(graph)) {
+   if ("layout" %in% igraph::graph_attr_names(graph)) {
       graph <- igraph::set_graph_attr(graph, "layout", g_layout_new);
    }
    return(graph);
@@ -2911,7 +2911,7 @@ flip_edges <- function
       print(edge_summary_df);
    }
 
-   edgeattrnames <- igraph::list.edge.attributes(g);
+   edgeattrnames <- igraph::edge_attr_names(g);
    edgeattrs <- lapply(jamba::nameVector(edgeattrnames), function(edgeattrname){
       igraph::edge_attr(g,
          name=edgeattrname,

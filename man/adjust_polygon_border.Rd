@@ -86,9 +86,9 @@ yr <- yl;
 lwdl <- 6;
 lwdr <- 6;
 lwdo <- 5;
-par("ljoin"="mitre",
+withr::local_par(list("ljoin"="mitre",
    "lend"="round",
-   "mar"=c(3, 3, 1, 1))
+   "mar"=c(3, 3, 1, 1)))
 plot(NULL, bty="L",
    xlim=c(-5, 30), ylim=c(-15, 10),
    #xlim=c(20, 30), ylim=c(0, 10),

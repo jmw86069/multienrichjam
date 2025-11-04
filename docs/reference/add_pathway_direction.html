@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -114,7 +111,8 @@ visualization functions.</p><div class="section">
 
 <p>The IPA Activation <code>"z-score"</code> uses the following formula:</p>
 <p></p><div class="sourceCode R"><pre><code><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">N_genes_up</span> <span class="op">-</span> <span class="va">N_genes_down</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">N_genes_up</span> <span class="op">+</span> <span class="va">N_genes_down</span><span class="op">)</span></span></code></pre><p></p></div>
-<p>Citation for IPA formula: https://doi.org/10.1093/bioinformatics/btt703
+<p>Citation for IPA formula: <a href="https://doi.org/10.1093/bioinformatics/btt703" class="external-link">Kramer 2014</a>
+https://doi.org/10.1093/bioinformatics/btt703,
 as referenced: <a href="https://qiagen.my.salesforce-sites.com/KnowledgeBase/KnowledgeNavigatorPage?id=kA41i000000L5nQCAS&amp;categoryName=BioX" class="external-link">IPA FAQ - Statistical Calculations</a></p>
 </div>
 
@@ -133,7 +131,6 @@ as referenced: <a href="https://qiagen.my.salesforce-sites.com/KnowledgeBase/Kno
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam enrichment functions:
 <code><a href="multiEnrichMap.html">multiEnrichMap</a>()</code>,
-<code><a href="multienrichjam.html">multienrichjam</a>()</code>,
 <code><a href="topEnrichBySource.html">topEnrichBySource</a>()</code></p></div>
     </div>
 

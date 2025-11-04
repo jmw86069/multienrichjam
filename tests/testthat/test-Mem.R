@@ -1,7 +1,7 @@
 
 # test-Mem.R
 
-test_that("Mem", {
+test_that("Mem constraints", {
    test_enrichdf <- data.frame(check.names=FALSE,
       row.names=paste("Pathway", LETTERS[5:1]),
       ID=paste("Pathway", LETTERS[5:1]),
@@ -37,8 +37,8 @@ test_that("Mem", {
    # confirm all dimensions are identical
    Mem_names <- gsub("colnames", "headers", new_names)
    testthat::expect_equal(ignore_attr=TRUE,
-      sdim(Mem)[Mem_names, ],
-      sdim(new_mem)[new_names, ])
+      jamba::sdim(Mem)[Mem_names, ],
+      jamba::sdim(new_mem)[new_names, ])
 
    # accessors
    testthat::expect_setequal(
@@ -77,3 +77,29 @@ test_that("Mem", {
 
 })
 
+test_that("Mem subset", {
+   data(Memtest)
+   Mem_dimnames <- dimnames(Memtest)
+
+   testthat::expect_equal(
+      lengths(Mem_dimnames),
+      c(genes=22, sets=16, enrichments=2))
+
+   testthat::expect_equal(
+      Mem_dimnames$genes,
+      sort(Mem_dimnames$genes))
+   testthat::expect_equal(
+      Mem_dimnames$sets[c(1, 9, 15)],
+      c("Huntington's Disease Signaling",
+         "eNOS Signaling",
+         "Growth Hormone Signaling"))
+   testthat::expect_equal(
+      Mem_dimnames$enrichments,
+      c("NewBorns",
+         "Older Kids"))
+
+   testthat::expect_equal(
+      enrichments(Memtest[, , c("Older Kids")]),
+      c("Older Kids"))
+   
+})

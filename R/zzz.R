@@ -1,30 +1,31 @@
 
+# 0.0.101.900: no longer skip this step when the shape already exists,
+#    presuming that calling this function is intended to overwrite
+#    any pre-existing node shapes.
+
 .onLoad <- function
 (libname,
  pkgname)
 {
+   ## Retrieve known igraph shapes, only used when checking
+   ## for pre-existing shapes.
+   # suppressPackageStartupMessages(igraph_shapes <- igraph::shapes());
+   
+   # if (!"coloredrectangle" %in% igraph_shapes) {
+   # }
    ## define new igraph vertex shape "coloredrectangle"
-   # confirm shape has not already been added
-   suppressPackageStartupMessages(igraph_shapes <- igraph::shapes());
-   if (!"coloredrectangle" %in% igraph_shapes) {
-      igraph::add_shape("coloredrectangle",
-         # clip=igraph::shape_noclip,
-         clip=shape.coloredrectangle.clip,
-         plot=shape.coloredrectangle.plot);
-   }
+   igraph::add_shape("coloredrectangle",
+      clip=shape.coloredrectangle.clip,
+      plot=shape.coloredrectangle.plot);
 
    ## define new igraph vertex shape "coloredrectangle"
-   if (!"ellipse" %in% igraph_shapes) {
-      igraph::add_shape("ellipse",
-         clip=shape.ellipse.clip,
-         # clip=igraph::shape_noclip,
-         plot=shape.ellipse.plot);
-   }
+   igraph::add_shape("ellipse",
+      clip=shape.ellipse.clip,
+      plot=shape.ellipse.plot);
 
    ## define new igraph vertex shape "jampie"
-   if (!"jampie" %in% igraph_shapes) {
-      igraph::add_shape("jampie",
-         clip=shape.jampie.clip,
-         plot=shape.jampie.plot);
-   }
+   igraph::add_shape("jampie",
+      clip=shape.jampie.clip,
+      plot=shape.jampie.plot);
+   
 }

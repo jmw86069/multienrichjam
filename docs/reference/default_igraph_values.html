@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -52,13 +49,89 @@
 including <code>"plot"</code>, <code>"vertex"</code>, and <code>"edge"</code>.</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Note that default values includes some new vertex parameters:</p><ul><li><p>'size.scaling': <code>logical</code> whether to apply relative size to nodes</p></li>
+<li><p>'relative.size': <code>numeric</code> vector length=2, the range of node scaled sizes</p></li>
+</ul><p>The 'relative.size' parameter is ignored by <code><a href="jam_igraph.html">jam_igraph()</a></code>.</p>
+<p>Relative node scaling is performed by <code><a href="jam_igraph.html">jam_igraph()</a></code> using a method
+already implemented in multienrichjam prior to igraph 2.2.0.
+In future, <code><a href="jam_igraph.html">jam_igraph()</a></code> may implement the equivalent method in
+igraph 2.2.0+ for consistency.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam igraph internal functions:
 <code><a href="get_igraph_arrow_mode.html">get_igraph_arrow_mode</a>()</code>,
-<code><a href="jam_igraph_arrows.html">jam_igraph_arrows</a>()</code>,
-<code><a href="parse_igraph_plot_params.html">parse_igraph_plot_params</a>()</code></p></div>
+<code><a href="jam_igraph_arrows.html">jam_igraph_arrows</a>()</code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># summary of default values for graph, vertex, edge</span></span></span>
+<span class="r-in"><span><span class="fu">jamba</span><span class="fu">::</span><span class="fu"><a href="https://jmw86069.github.io/jamba/reference/sdim.html" class="external-link">ssdim</a></span><span class="op">(</span><span class="fu">default_igraph_values</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $plot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         rows     class</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> palette    8 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> layout     1  function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> margin     4   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rescale    1   logical</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> asp        1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> frame      1   logical</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> main       1  function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sub        1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> xlab       1  function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ylab       1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $vertex</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    rows     class</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> color                 1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size                  1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size2                 1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> size.scaling          1   logical</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> relative.size         2   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label                 1  function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.degree          1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.color           1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.dist            1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.family          1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.font            1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.cex             1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> frame.color           1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> frame.lwd             1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> frame.width           1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape                 1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> pie                   1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> pie.color             6      list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> pie.border            1      list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> pie.angle             1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> pie.density           1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> pie.lty               1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> pie.lwd               1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> coloredrect.lwd       1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> coloredrect.border    1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $edge</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              rows     class</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> color           1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label           1  function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lty             1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> width           1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> loop.angle      1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> loopangle2      1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.family    1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.font      1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.cex       1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.color     1 character</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.x         0      NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> label.y         0      NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> arrow.size      1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> arrow.mode      1  function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> curved          1  function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> arrow.width     1   numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

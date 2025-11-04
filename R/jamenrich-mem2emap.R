@@ -20,62 +20,89 @@
 #' @family jam igraph functions
 #'
 #' @param mem `Mem` or legacy `list` mem output from `multiEnrichMap()`
-#' @param overlap `numeric` value between 0 and 1 indicating the Jaccard
+#' @param overlap `numeric`, default 0.2, value between 0 and 1 with Jaccard
 #'    overlap coefficient required between any two pathways in order to
-#'    create a network edge connecting these two pathways. Typically,
-#'    `overlap=0.2` is default, which specifies roughly 20% overlap
-#'    in genes shared between two pathway nodes. Note these genes must be
-#'    involved in enrichment, and therefore does not use all possible
-#'    genes annotated to a pathway. Therefore connections are only
-#'    created with enriched genes are shared between pathways.
+#'    create a network edge connecting these two pathways.
+#'    * Jaccard overlap coefficient is reciprocal of Jaccard distance,
+#'    using `(1 - Jaccard_distance)`.
+#'    * `overlap=0.2` is default, which specifies roughly 20% overlap
+#'    in genes shared between two pathway nodes.
+#'    * Note these genes must be involved in enrichment, and
+#'    therefore does not use all possible genes annotated to a pathway.
+#'    Therefore connections are only created with enriched genes
+#'    are shared between pathways.
 #' @param p_cutoff `numeric` threshold used for significant enrichment
-#'    P-value, usually defined in the `mem` object.
+#'    P-value. The default NULL uses the value in the `mem` object.
 #' @param min_count `integer` threshold for minimum genes involved in
 #'    enrichment in order for a pathway to be considered significant
-#'    during this analysis.
+#'    during this analysis. When NULL it uses the threshold in `mem`.
 #' @param colorV `character` vector of R colors used for each enrichment.
-#' @param cluster_function `function` used to cluster nodes in the resulting
-#'    `igraph` object, used to help generate a visual summary.
-#' @param num_keep_terms `integer` number of terms to keep from each
-#'    pathway cluster, when `cluster_function` is supplied above. Common
-#'    terms are removed from each pathway cluster, then remaining terms
-#'    are sorted by decreasing occurrence, and used as a straightforward
-#'    summary of pathways in each cluster.
-#' @param keep_terms_sep `character` string used to separated multiple
-#'    pathway terms defined by `num_keep_terms` above.
-#' @param repulse `numeric` value passed to `layout_with_qfr()`.
-#' @param remove_singlets `logical` indicating whether to remove pathway
-#'    singlets, which have no connections to any other pathways. It can
-#'    help simplify busy figures, however removing a singlet pathway
-#'    is not recommended because it may imply the pathways were not
-#'    statistically significant, and in fact they were.
-#' @param color_by_nodes `logical` indicating whether to colorize pathway
-#'    clusters based upon blending the node colors within each cluster.
+#'    Default NULL uses colors defined in `mem`.
+#' @param cluster_function `function`, default `igraph::cluster_walktrap`,
+#'    used to cluster `igraph` nodes in the resulting network graph.
+#'    It is used to enhance the visual summary.
+#'    * This function is not used when `cluster_list` is supplied.
+#' @param cluster_list `list` default NULL, optional list of pathway
+#'    clusters, containing `character` vectors of `igraph` node/vertex
+#'    names. It will be used instead of `cluster_function` when supplied.
+#' @param num_keep_terms `integer`, default 3, number of text terms to
+#'    keep for each pathway cluster, used together with `cluster_function`.
+#'    Common words are removed, remaining terms are sorted by decreasing
+#'    occurrence, then used to summarize each cluster.
+#' @param keep_terms_sep `character` string, default '\n' newline,
+#'    used to separate terms, used together with `num_keep_terms`.
+#' @param repulse `numeric` value passed to `layout_with_qfr()`,
+#'    default 3.3.
+#'    * Use repulse 'FALSE', 'NULL', or '0' will skip the layout, which
+#'    is used by `mem_find_overlap()` to iterate numerous overlaps
+#'    without spending time on layout each iteration.
+#' @param remove_singlets `logical`, default TRUE, whether to remove pathway
+#'    singlets which have no connections to any other pathways.
+#'    * Using TRUE will help simplify busy figures, at the expense of
+#'    being less complete.
+#' @param color_by_nodes `logical`, default TRUE, whether to colorize pathway
+#'    clusters using node colors in each cluster.
 #'    Note that a mix of colors often turns brown, so this feature has
 #'    unpredictable benefit.
-#' @param do_plot `logical` indicating whether to render the resulting
-#'    plot.
+#' @param apply_direction `logical` default TRUE, whether to apply direction
+#'    to the node border color, when supplied. Used with `direction_max`
+#'    and `direction_floor`.
+#' @param direction_max `numeric`, default 2, indicating the directional
+#'    score at which the maximum color is applied. Typically when using
+#'    some derivative of z-score to represent directionality, values at or
+#'    above 2 are effectively "maximum".
+#' @param direction_floor `numeric` default 0.5, the minimum directional score
+#'    for any color to be applied, below which values are considered
+#'    "non-directional". Typically when using some form of z-score, a value
+#'    at or below 0.5 may be considered "not directional."
+#' @param seed `numeric` passed to `set.seed()` via the `layout_with_qfr()`
+#'    layout algorithm, default 123.
+#' @param do_plot `logical`, default FALSE, whether to render the resulting
+#'    plot using `jam_igraph()`.
+#' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are passed to `jam_igraph()` to customize
-#'    the network plot.
+#'    the network plot, used when `do_plot=TRUE`.
 #'
 #' @export
 mem2emap <- function
 (mem,
  overlap=0.2,
  p_cutoff=NULL,
- min_count=4,
+ min_count=NULL,
  colorV=NULL,
  cluster_function=igraph::cluster_walktrap,
  cluster_list=NULL,
  num_keep_terms=3,
  keep_terms_sep=",\n",
  repulse=3.3,
- remove_singlets=TRUE,
+ remove_singlets=FALSE,
  color_by_nodes=FALSE,
  apply_direction=TRUE,
  direction_max=2,
  direction_floor=0.5,
- do_plot=TRUE,
+ seed=123,
+ do_plot=FALSE,
+ verbose=FALSE,
  ...)
 {
    #
@@ -83,6 +110,10 @@ mem2emap <- function
    if (is.list(mem) && "enrichIM" %in% names(mem)) {
       mem <- list_to_Mem(mem)
    }
+   if (!inherits(mem, "Mem")) {
+      stop("Input 'mem' must be class 'Mem' or coercible to 'Mem'.");
+   }
+   # apply default values from mem when not supplied
    if (length(p_cutoff) == 0) {
       if ("p_cutoff" %in% names(thresholds(mem))) {
          p_cutoff <- thresholds(mem)$p_cutoff;
@@ -92,8 +123,23 @@ mem2emap <- function
          p_cutoff <- 1;
       }
    }
+   if (verbose && p_cutoff < 1) {
+      jamba::printDebug("mem2emap(): ",
+         "p_cutoff: ", p_cutoff);
+   }
+   if (length(min_count) == 0) {
+      if ("min_count" %in% names(thresholds(mem))) {
+         min_count <- thresholds(mem)$min_count;
+      } else {
+         min_count <- 1;
+      }
+   }
+   if (verbose && min_count > 1) {
+      jamba::printDebug("mem2emap(): ",
+         "min_count: ", min_count);
+   }
    if (length(colorV) == 0) {
-      colorV <- mem@colorV
+      colorV <- colorV(mem)
    }
    
    if (length(cluster_list) > 0) {
@@ -109,17 +155,20 @@ mem2emap <- function
       rownames(enrich_use) <- rownames(enrichIM(mem));
       enrich_rows_use <- rownames(enrich_use)[rowSums(enrich_use) > 0]
    }
-   if (length(enrich_rows_use) < nrow(enrichIM(mem))) {
+   
+   # indicate whether the filtering reduced the overall pathways
+   if (TRUE %in% verbose && length(enrich_rows_use) < nrow(enrichIM(mem))) {
       jamba::printDebug("mem2emap(): ",
          "Note that ",
          (nrow(enrichIM(mem)) - length(enrich_rows_use)),
          " pathways were removed due to filtering thresholds.");
    }
    if (length(enrich_rows_use) == 0) {
-      stop(paste0(
+      stop_msg <- paste0(
          "No enrichment results met the thresholds given: p_cutoff<=",
          format(digits=3, p_cutoff),
-         ", min_count>=", min_count));
+         ", min_count>=", min_count);
+      stop(stop_msg);
    }
 
    # convert memIM to Jaccard overlap matrix
@@ -140,19 +189,56 @@ mem2emap <- function
       diag=FALSE,
       weighted=TRUE,
       add.colnames=NULL)
+   # Todo: define size by vcount
    igraph::V(jacc_g)$size <- 5;
 
    # optionally remove singlets
    if (TRUE %in% remove_singlets && length(cluster_list) == 0) {
+      if (verbose) {
+         jamba::printDebug("mem2emap(): ",
+            "Removing singlet nodes.");
+      }
       jacc_g <- removeIgraphSinglets(jacc_g)
    }
 
    # define layout
-   igraph::graph_attr(jacc_g, "layout") <- layout_with_qfr(
-      jacc_g,
-      repulse=repulse)
+   # Todo: consider using igraph::layout_components()
+   new_layout <- NULL;
+   jacc_g_comp <- igraph::components(jacc_g);
+   if (jacc_g_comp$no > 1) {
+      if (verbose) {
+         jamba::printDebug("mem2emap(): ",
+            "Applying layout_components() with layout_with_qfrf().");
+      }
+      if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
+         new_layout <- NULL;
+      } else {
+         new_layout <- igraph::layout_components(jacc_g,
+            layout=layout_with_qfrf(repulse=repulse,
+               seed=seed,
+               ...));
+         if (!all(rownames(new_layout) %in% igraph::V(jacc_g)$name)) {
+            rownames(new_layout) <- igraph::V(jacc_g)$name;
+         }
+      }
+   } else {
+      if (verbose) {
+         jamba::printDebug("mem2emap(): ",
+            "Applying layout_with_qfr().");
+      }
+      if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
+         new_layout <- NULL;
+      } else {
+         new_layout <- layout_with_qfr(
+            jacc_g,
+            seed=seed,
+            repulse=repulse,
+            ...)
+      }
+   }
+   igraph::graph_attr(jacc_g, "layout") <- new_layout;
 
-
+   # assign node colors
    imatch <- match(igraph::V(jacc_g)$name, rownames(enrich_use))
    igraph::V(jacc_g)$pie.color <- lapply(imatch, function(i){
       colorV[colnames(enrich_use)[enrich_use[i, ] != 0]]
@@ -191,6 +277,9 @@ mem2emap <- function
    }
 
    # cluster nodes
+   wc <- NULL;
+   mark.colors <- NULL;
+   nodegroups_wc <- NULL;
    if (length(cluster_list) > 0) {
       wc <- cluster_list;
       nodegroups_wc <- cluster_list;
@@ -209,7 +298,8 @@ mem2emap <- function
          keep_terms_sep=keep_terms_sep,
          num_keep_terms=num_keep_terms);
       nodegroups_wc_labels <- wc$cluster_names;
-      names(nodegroups_wc) <- nodegroups_wc_labels;
+      names(nodegroups_wc) <- jamba::cPaste(nodegroups_wc_labels,
+         keep_terms_sep)
 
       # bonus points: define mark.group colors by node colors
       if (TRUE %in% color_by_nodes) {
@@ -229,8 +319,8 @@ mem2emap <- function
       # bonus points: color edges by mark.group colors
    } else {
       wc <- NULL;
-      nodegroups_wc <- NULL;
       mark.colors <- NULL;
+      nodegroups_wc <- NULL;
    }
 
    if (TRUE %in% do_plot) {
@@ -244,6 +334,12 @@ mem2emap <- function
          mem=mem,
          do_direction=apply_direction)
    }
+   if (length(wc) > 0) {
+      igraph::graph_attr(jacc_g, "mark.groups") <- wc;
+      igraph::graph_attr(jacc_g, "mark.colors") <- mark.colors;
+      igraph::graph_attr(jacc_g, "nodegroups") <- nodegroups_wc;
+   }
+   
    return(invisible(jacc_g));
 }
 

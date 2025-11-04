@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -58,6 +55,57 @@
     </div>
 
     <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
+<dl><dt id="arg-num-sets">num_sets<a class="anchor" aria-label="anchor" href="#arg-num-sets"></a></dt>
+<dd><p><code>integer</code> number of sets, default 4.</p></dd>
+
+
+<dt id="arg-overlap-counts">overlap_counts<a class="anchor" aria-label="anchor" href="#arg-overlap-counts"></a></dt>
+<dd><p><code>integer</code> vector of counts, with length 'num_sets',
+default 'c(57, 20, 12, 5)'.</p></dd>
+
+
+<dt id="arg-row-prefix">row_prefix<a class="anchor" aria-label="anchor" href="#arg-row-prefix"></a></dt>
+<dd><p><code>character</code> default "" used as a prefix for rows names.</p></dd>
+
+
+<dt id="arg-column-prefix">column_prefix<a class="anchor" aria-label="anchor" href="#arg-column-prefix"></a></dt>
+<dd><p><code>character</code> default "Set" used as a prefix for
+set names.</p></dd>
+
+
+<dt id="arg-add-direction">add_direction<a class="anchor" aria-label="anchor" href="#arg-add-direction"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to include direction.</p></dd>
+
+
+<dt id="arg-set-colors">set_colors<a class="anchor" aria-label="anchor" href="#arg-set-colors"></a></dt>
+<dd><p><code>character</code> vector of colors per set.</p></dd>
+
+
+<dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
+<dd><p><code>numeric</code> used to fix the random seed.</p></dd>
+
+
+<dt id="arg-repulse">repulse<a class="anchor" aria-label="anchor" href="#arg-repulse"></a></dt>
+<dd><p><code>numeric</code> default 3.5, passed to <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code>.</p></dd>
+
+
+<dt id="arg-hide-solo-pie">hide_solo_pie<a class="anchor" aria-label="anchor" href="#arg-hide-solo-pie"></a></dt>
+<dd><p><code>logical</code> default TRUE, passed to <code><a href="memIM2cnet.html">mem2cnet()</a></code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>additional arguments are passed to <code><a href="memIM2cnet.html">mem2cnet()</a></code>.</p></dd>
+
+</dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p><code>igraph</code> object containing Cnet concept network data, specifically
+with vertex attribute 'nodeType' with values 'Gene' or 'Set'.</p>
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function simply creates an <code>igraph</code> object with attributes
 expected for a cnet plot object:</p><ul><li><p>node attribute <code>"nodeType"</code> with values <code>c("Gene", "Set")</code>.</p></li>
@@ -81,51 +129,66 @@ appropriately.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># by default, single-border-color pie is shown as circle</span></span></span>
 <span class="r-in"><span><span class="va">cnet1</span> <span class="op">&lt;-</span> <span class="fu">make_cnet_test</span><span class="op">(</span>border_lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>;</span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet1</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-1.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet1</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># hide_solo_pie=FALSE shows every pie wedge bordder</span></span></span>
 <span class="r-in"><span><span class="va">cnet2</span> <span class="op">&lt;-</span> <span class="fu">make_cnet_test</span><span class="op">(</span>hide_solo_pie<span class="op">=</span><span class="cn">FALSE</span>, border_lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet2</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-2.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet2</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Set nodes can be adjusted, reorienting the Gene nodes</span></span></span>
 <span class="r-in"><span><span class="va">cnet2_adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjust_cnet_set_relayout_gene.html">adjust_cnet_set_relayout_gene</a></span><span class="op">(</span><span class="va">cnet2</span>,</span></span>
 <span class="r-in"><span>   nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SetB"</span>, <span class="st">"SetD"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0</span><span class="op">)</span>, y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   repulse<span class="op">=</span><span class="fl">3.6</span><span class="op">)</span>;</span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet2_adj</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, label_dist_factor<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-3.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet2_adj</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, label_dist_factor<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># nodeset spacing can be enforced</span></span></span>
 <span class="r-in"><span><span class="va">cnet3</span> <span class="op">&lt;-</span> <span class="fu">make_cnet_test</span><span class="op">(</span>num_sets<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-4.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-4.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span><span class="va">cnet3_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="apply_nodeset_spacing.html">apply_nodeset_spacing</a></span><span class="op">(</span><span class="va">cnet3</span>,</span></span>
 <span class="r-in"><span>   percent_spacing<span class="op">=</span><span class="fl">7</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_sp</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-5.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_sp</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-5.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># a specific nodeset can be individually adjusted</span></span></span>
 <span class="r-in"><span><span class="va">cnet3_adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset</a></span><span class="op">(</span><span class="va">cnet3_sp</span>,</span></span>
 <span class="r-in"><span>   set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SetA"</span>, <span class="st">"SetB"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>, y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-6.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-6.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># several nodesets can be adjusted at once</span></span></span>
 <span class="r-in"><span><span class="va">cnet3_adj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset</a></span><span class="op">(</span><span class="va">cnet3_sp</span>,</span></span>
 <span class="r-in"><span>   set_nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"SetA,SetB"</span>, <span class="st">"SetA,SetC"</span>, <span class="st">"SetB,SetC"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>   x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0</span><span class="op">)</span>, y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj2</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-7.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj2</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-7.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># individual nodes can be nudged</span></span></span>
 <span class="r-in"><span><span class="va">cnet3_adj2_nudge</span> <span class="op">&lt;-</span> <span class="fu"><a href="nudge_igraph_node.html">nudge_igraph_node</a></span><span class="op">(</span><span class="va">cnet3_adj2</span>,</span></span>
 <span class="r-in"><span>   nodes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"T"</span><span class="op">)</span>, x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.02</span><span class="op">)</span>, y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj2_nudge</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, vertex.label.font<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-8.png" alt="" width="768" height="768"></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj2_nudge</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, vertex.label.font<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-8.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># nodes can be nudged in larger sets using nodes_xy</span></span></span>
 <span class="r-in"><span><span class="va">cnet3_adj2_nudge2</span> <span class="op">&lt;-</span> <span class="fu"><a href="nudge_igraph_node.html">nudge_igraph_node</a></span><span class="op">(</span><span class="va">cnet3_adj2</span>,</span></span>
@@ -135,9 +198,10 @@ appropriately.</p>
 <span class="r-in"><span>      AG<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.2</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>      Q<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj2_nudge2</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, vertex.label.font<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="make_cnet_test-9.png" alt="" width="768" height="768"></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_par.html" class="external-link">with_par</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span>,<span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3_adj2_nudge2</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, vertex.label.font<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="make_cnet_test-9.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

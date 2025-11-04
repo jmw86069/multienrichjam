@@ -168,13 +168,16 @@ avg_colors_by_list <- function
    return(x_extended);
 }
 
-#' Find best overlap threshold for EnrichMap
+#' Find recommended overlap threshold for EnrichMap
 #'
-#' Find best overlap threshold for EnrichMap
+#' Find recommended overlap threshold for EnrichMap
 #'
-#' This function implements a straightforward approach to determine
-#' a reasonable Jaccard overlap threshold for EnrichMap data.
-#' It finds the overlap threshold at which the first connected
+#' It implements a straightforward approach to determine
+#' a reasonable Jaccard overlap threshold for EnrichMap data,
+#' and is still very much open to improvement after more
+#' experience using it on varied datasets.
+#' 
+#' The method finds the overlap threshold at which the first connected
 #' component is no more than `max_cutoff` fraction of the whole
 #' network. This fraction is defined as the number of nodes in the
 #' largest connected component, divided by the total number of
@@ -185,43 +188,47 @@ avg_colors_by_list <- function
 #' seems to be a reasonably good place to start.
 #'
 #' @family jam utility functions
+#' 
+#' @returns `numeric` value with recommended Jaccard overlap coefficient.
 #'
 #' @param mem `list` output from `multiEnrichMap()`
-#' @param overlap_range numeric range of Jaccard overlap values
-#' @param overlap_count numeric value passed to `mem_multienrichplot()`
-#'    which is used to filter the multienrichmap by Jaccard overlap
-#'    and by overlap_count.
+#' @param overlap_range numeric range of Jaccard overlap values,
+#'    default `0.1, 0.99` using step `0.01`.
 #' @param max_cutoff numeric value between 0 and 1, to define the
 #'    maximum fraction of nodes in the largest connected component,
 #'    compared to the total number of non-singlet nodes.
+#' @param adjust `numeric` used to adjust the final overlap, default
+#'    `-0.01` will use the overlap one step before the max O score.
 #' @param debug logical indicating whether to return full debug
 #'    data, which is used internally to determine the best overlap
 #'    cutoff to use.
+#' @param ... additional arguments are passed to `mem2emap()`.
 #'
 #' @export
 mem_find_overlap <- function
 (mem,
- overlap_range=c(0.1,0.99),
- overlap_count=2,
- node_fraction=0.5,
+ overlap_range=c(0.1, 0.99),
  max_cutoff=0.4,
+ adjust=-0.01,
  debug=FALSE,
  ...)
 {
+   # define the range of values to attempt
    overlap_range <- range(overlap_range);
    oseq <- seq(from=overlap_range[1],
       to=overlap_range[2],
       by=0.01);
    odata <- lapply(jamba::nameVector(oseq), function(i){
-      g <- mem_multienrichplot(mem,
+      g <- mem2emap(mem,
          overlap=i,
-         remove_blanks=FALSE,
+         repulse=0,
          remove_singlets=TRUE,
-         spread_labels=FALSE,
-         do_plot=FALSE);
+         do_plot=FALSE,
+         ...)
       if (igraph::vcount(g) <= 1) {
          return(NULL);
       }
+      # Todo: consider cluster_walktrap() or something similar
       gc <- igraph::components(g);
       k <- rev(sort(gc$csize));
       c(k, frac_max=k[1] / sum(k));
@@ -236,9 +243,14 @@ mem_find_overlap <- function
    ## Calculate total nodes remaining in each case
    oct <- sapply(odata, function(i){sum(head(i, -1))});
    o_fraction <- oct / max(oct);
-   omax <- sapply(odata, function(i){unname(i["frac_max"])});
+   omax <- sapply(odata, function(i){
+      unname(i["frac_max"])
+   });
    o_score <- (1 - omax) * o_fraction;
    o_choose <- as.numeric(names(which.max(o_score)));
+   ## quick plot to review scores
+   # plot(x=as.numeric(names(o_score)), y=o_score,
+   #    xlab="overlap", ylab="o_score");# debug
 
    if (length(debug) > 0 && debug) {
       return(list(odata=odata,
@@ -248,7 +260,7 @@ mem_find_overlap <- function
          o_score=o_score));
    }
    if (length(o_choose) > 0) {
-      return(o_choose);
+      return(o_choose + adjust);
    } else {
       return(min(igraph::E(g)$overlap, na.rm=TRUE));
    }
@@ -257,9 +269,11 @@ mem_find_overlap <- function
          unname(i["frac_max"] <= max_cutoff_i);
       });
       if (any(omet)) {
-         return(as.numeric(names(head(omet[omet], 1))));
+         use_score <- as.numeric(names(head(omet[omet], 1)));
+         return(use_score + adjust);
       }
    }
+   return(NULL)
 }
 
 #' Extract gene hit list from list of enrichResult
@@ -517,7 +531,7 @@ rank_mem_clusters <- function
 #' want to collapse only the top `per_cluster` entries for each
 #' cluster, but the default is to include them all.
 #'
-#' @return By default `return_type="cnet"` and this function returns
+#' @returns By default `return_type="cnet"` and this function returns
 #'    an augmented Cnet plot. The labels of each cluster are defined
 #'    by the input `names(clusters)`, however an `igraph` attribute
 #'    `"set_labels"` includes an abbreviated label of the top ranked
@@ -633,12 +647,16 @@ collapse_mem_clusters <- function
    ## - count non-blank colors per column
    ## - determine fraction versus max column count
    cluster_enrichIMcolors <- jamba::rbindList(lapply(cluster_sets_l, function(iset1){
-      isetm1 <- mem$enrichIMcolors[iset1,,drop=FALSE]
+      isetm1 <- mem$enrichIMcolors[iset1, , drop=FALSE]
       # fix issue when only one row or one column
       isetm1_blank <- matrix(apply(isetm1, 2, isColorBlank), ncol=ncol(isetm1));
       color_counts <- colSums(!isetm1_blank);
       names(color_counts) <- colnames(isetm1);
       sapply(colnames(isetm1), function(k1){
+         if (max(color_counts) == 0) {
+            # should not occur, in theory
+            return("#FFFFFFFF");
+         }
          if ((color_counts[k1] / max(color_counts)) >= cluster_color_min_fraction) {
             unname(mem$colorV[k1])
          } else {
@@ -653,18 +671,23 @@ collapse_mem_clusters <- function
    cluster_mem <- mem;
    cluster_mem$memIM <- cluster_memIM;
    cluster_mem$enrichIM <- cluster_enrichIM;
+   # Todo: make this directional?
+   cluster_mem$enrichIMdirection <- cluster_enrichIM;
+   
    cluster_mem$enrichIMcolors <- cluster_enrichIMcolors;
    cluster_mem$enrichIMgeneCount <- cluster_enrichIMgeneCount;
 
-   ## For now remove some difficult-to-update objects
-   cluster_mem$multiEnrichDF <- NULL;
-   cluster_mem$multiEnrichResult <- NULL;
-   cluster_mem$multiEnrichMap <- NULL;
-   cluster_mem$multiEnrichMap2 <- NULL;
-   cluster_mem$multiCnetPlot <- NULL;
-   cluster_mem$multiCnetPlot1 <- NULL;
-   cluster_mem$multiCnetPlot1b <- NULL;
-   cluster_mem$multiCnetPlot2 <- NULL;
+   ## 0.0.101.900 - do not edit nor remove these objects bc
+   ## they are difficult to recreate in this context but
+   ## are required in the Mem object
+   # cluster_mem$multiEnrichDF <- data.frame()
+   # cluster_mem$multiEnrichResult <- list();
+   # cluster_mem$multiEnrichMap <- NULL;
+   # cluster_mem$multiEnrichMap2 <- NULL;
+   # cluster_mem$multiCnetPlot <- NULL;
+   # cluster_mem$multiCnetPlot1 <- NULL;
+   # cluster_mem$multiCnetPlot1b <- NULL;
+   # cluster_mem$multiCnetPlot2 <- NULL;
 
    ## Make Cnet plot
    if (verbose) {
@@ -674,6 +697,7 @@ collapse_mem_clusters <- function
    cnet <- memIM2cnet(cluster_mem,
       verbose=verbose,
       ...);
+   
    set_match <- match(names(cluster_sets),
       igraph::V(cnet)$name)
    igraph::V(cnet)$set_names <- "";

@@ -13,10 +13,10 @@ memIM2cnet(
   geneColor = "#B3B3B3",
   categoryLabelColor = "darkblue",
   geneLabelColor = "grey25",
-  categorySize = 6,
-  geneSize = 3,
-  categoryCex = 0.8,
-  geneCex = 0.5,
+  categorySize = 12,
+  geneSize = 6,
+  categoryCex = 1,
+  geneCex = 0.8,
   frame_darkFactor = NULL,
   geneIM = NULL,
   geneIMcolors = NULL,
@@ -31,6 +31,7 @@ memIM2cnet(
   direction_col = colorjam::col_div_xf(1.2),
   hide_solo_pie = TRUE,
   remove_blanks = TRUE,
+  remove_singlet_genes = TRUE,
   spread_labels = FALSE,
   repulse = 3.5,
   verbose = FALSE,
@@ -45,10 +46,10 @@ mem2cnet(
   geneColor = "#B3B3B3",
   categoryLabelColor = "darkblue",
   geneLabelColor = "grey25",
-  categorySize = 6,
-  geneSize = 3,
-  categoryCex = 0.8,
-  geneCex = 0.5,
+  categorySize = 12,
+  geneSize = 6,
+  categoryCex = 1,
+  geneCex = 0.8,
   frame_darkFactor = NULL,
   geneIM = NULL,
   geneIMcolors = NULL,
@@ -63,6 +64,7 @@ mem2cnet(
   direction_col = colorjam::col_div_xf(1.2),
   hide_solo_pie = TRUE,
   remove_blanks = TRUE,
+  remove_singlet_genes = TRUE,
   spread_labels = FALSE,
   repulse = 3.5,
   verbose = FALSE,
@@ -70,11 +72,6 @@ mem2cnet(
 )
 }
 \arguments{
-\item{memIM}{\code{numeric} matrix, or \code{Mem}, or legacy \code{list} mem format. When
-\code{mem} format is supplied, relevant arguments which are empty will
-use corresponding data from \code{mem}, for example \code{geneIM}, \code{geneIMcolors},
-\code{enrichIM}, \code{enrichIMcolors}.}
-
 \item{categoryShape, geneShape}{\code{character} string indicating the
 preferred default node shape. In general, \code{pie} shapes with one segment
 are converted to \code{circle} for simplicity during plot functions,
@@ -96,15 +93,19 @@ font size.}
 \item{frame_darkFactor}{\code{numeric} passed to \code{jamba::makeColorDarker()}
 so the frame color is slightly darker than the node fill color.}
 
-\item{geneIM, geneIMcolors, geneIMdirection, enrichIM, enrichIMcolors, enrichIMdirection}{\code{matrix} objects typically associated with \code{mem} output from
-\code{multiEnrichMap()}, however they are optional so this function
-can be applied broadly to any incidence matrix.
+\item{geneIM, geneIMcolors, geneIMdirection, enrichIM, enrichIMcolors, enrichIMdirection}{\code{matrix} data used only when the input 'mem' is not an \code{Mem} or legacy
+\code{list} mem object which already contains these data.
+When input 'mem' is supplied as a \code{matrix}, these value enable
+this function to operate on nearly any custom data.
 \itemize{
 \item \code{geneIMcolors} is used to define gene (row) node colors
 \item \code{enrichIMcolors} is used to define set (column) node colors
 \item \code{geneIMdirection},\code{enrichIMdirection} is used to define optional
-border colors defined by the direction, where -1 is down, 0 is no change, and
-+1 is up. Use \code{direction_col} to define a custom color function.
+border colors defined by the direction, where -1 is down,
+0 is no change, and +1 is up.
+Use \code{direction_col} to define a custom color function, however the
+default uses the reversed "RdBu" Brewer color ramp with blue (down),
+white (no change) and red (up).
 }}
 
 \item{coloredrect_nrow, coloredrect_ncol, coloredrect_byrow}{arguments
@@ -112,16 +113,36 @@ used when \code{geneShape="coloredrectangle"}, to define layout and
 placement of colors across columns in \code{geneIMcolors}. By default,
 one row of colors is used.}
 
-\item{colorV}{\code{character} optional vector of R colors, named by enrichment
-names that appear in \code{colnames(enrichIM)} when supplied. When
-defined, these colors override those defined in \code{enrichIMcolors}.}
+\item{colorV}{\code{character} optional vector of R colors, taken from 'mem'
+for \code{Mem} or legacy \code{list} mem objects.
+When supplied, it should be a vector named to match
+\code{colnames(enrichIM)}.
+When defined, these colors override \code{enrichIMcolors}.}
 
-\item{remove_blanks}{\code{logical} indicating whether to remove blank
-subsections from each node, by calling \code{removeIgraphBlanks()}.}
+\item{direction_col}{\code{function} used to colorize node borders based
+upon directionality. The default uses \code{colorjam::col_div_xf()}
+which applies reverse Brewer "RdBu" for blue (down), white (no change),
+and red (up) with threshold \code{1.2}.}
 
-\item{spread_labels}{\code{logical} indicating whether to call
-\code{spread_igraph_labels()} to orient labels radially away from incoming
-edges.}
+\item{hide_solo_pie}{\code{logical} default TRUE, passed to
+\code{apply_cnet_direction()} to determine whether to display border
+only as one outer frame color when all colors are identical.
+When FALSE, all pie wedges are individually colored.}
+
+\item{remove_blanks}{\code{logical} default TRUE, whether to remove blank
+color subsections from each node, using \code{removeIgraphBlanks()}.
+This argument is useful for 'pie', 'jampie', or 'coloredrectangle'
+node shapes, so they will only indicate the relevant color.}
+
+\item{remove_singlet_genes}{\code{logical} default TRUE, whether to remove
+singlet genes, which are genes (rows) not represented in any pathway
+gene sets (columns).}
+
+\item{spread_labels}{\code{logical} default FALSE, whether to spread node
+labels away from incoming edges, also adding label distance via
+vertex attribute 'label.dist'.
+This step calls \code{spread_igraph_labels()}, and can be customized
+further by passing arguments through '...' ellipses.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
@@ -129,6 +150,19 @@ edges.}
 \itemize{
 \item when \code{remove_blanks=TRUE} it is passed to \code{removeIgraphBlanks()}
 \item when \code{spread_labels=TRUE} it is passed to \code{spread_igraph_labels()}
+}}
+
+\item{mem}{one of the following:
+\itemize{
+\item \code{Mem} S4 object, preferred. In this case, the arguments regarding
+'geneIM' and 'enrichIM' data are taken directly from 'mem'.
+\item legacy \code{list} mem object, for backward compatibility,
+\item \code{numeric} matrix in the form of a \code{memIM} gene-pathway incidence
+matrix. In this case, other arguments involving \code{geneIM} and \code{enrichIM}
+matrices are required for correct behavior of this function.
+When \code{mem} format is supplied, relevant arguments which are empty will
+use corresponding data from \code{mem}, for example \code{geneIM}, \code{geneIMcolors},
+\code{enrichIM}, \code{enrichIMcolors}.
 }}
 }
 \value{
@@ -147,6 +181,14 @@ and uses three elements to create a Cnet plot:
 \item \code{"geneIM"} the gene incidence matrix
 \item \code{"enrichIM"} the pathway enrichment matrix
 }
+}
+\examples{
+use_sets <- c("eNOS Signaling",
+   "Growth Hormone Signaling",
+   "mTOR Signaling")
+jam_igraph(mem2cnet(Memtest[, use_sets, ]),
+   use_shadowText=TRUE)
+
 }
 \seealso{
 Other jam igraph functions: 

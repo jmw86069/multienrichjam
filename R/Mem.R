@@ -196,9 +196,9 @@ setMethod("[",
       if (missing(k)) k <- NULL;
       if (missing(drop)) drop <- FALSE;
       
-      ivals <- rownames(x@memIM);
-      jvals <- rownames(x@enrichIM);
-      kvals <- colnames(x@enrichIM);
+      ivals <- genes(x);
+      jvals <- sets(x);
+      kvals <- enrichments(x);
       
       # row subset by gene name
       if (length(i) > 0) {
@@ -213,7 +213,12 @@ setMethod("[",
                stop("i is out of bounds, does not match character gene names.")
             }
          }
-         if (length(i) > 0 && !all(i == ivals)) {
+         # update if provided values of different length, or
+         # with any change in values
+         i_update <- length(i) > 0 && (
+            !all(ivals %in% i) ||
+            (length(i) == length(ivals) && !all(ivals == i)) );
+         if (i_update) {
             islot_cols <- NULL
             islot_rows <- c("memIM",
                "geneIM",
@@ -246,7 +251,10 @@ setMethod("[",
                stop("j is out of bounds, does not match character set names.")
             }
          }
-         if (length(j) > 0 && !all(j == jvals)) {
+         j_update <- length(j) > 0 && (
+            !all(jvals %in% j) ||
+               (length(j) == length(jvals) && !all(jvals == j)) );
+         if (j_update) {
             jslot_cols <- c("memIM")
             jslot_rows <- c("enrichIM",
                "enrichIMcolors",
@@ -273,14 +281,16 @@ setMethod("[",
                stop("k is out of bounds, does not match set indices.");
             }
             k <- kvals[k];
-            jamba::printDebug("character k:");print(k);# debug
          } else if (inherits(k, c("character", "factor"))) {
             k <- as.character(k);
             if (!all(k %in% kvals)) {
                stop("k is out of bounds, does not match character enrichment names.")
             }
          }
-         if (length(k) > 0 && !all(k == kvals)) {
+         k_update <- length(k) > 0 && (
+            !all(kvals %in% k) ||
+               (length(k) == length(kvals) && !all(kvals == k)) );
+         if (k_update) {
             kslot_names <- c("enrichList",
                "enrichLabels",
                "colorV",
@@ -314,13 +324,26 @@ setMethod("[",
             geneColname <- x@headers[["geneColname"]];
             nameColname <- x@headers[["nameColname"]];
             geneDelim <- "[,/ ]+";
-            new_memIM <- list2im(
-               keepCounts=TRUE,
-               strsplit(
-                  jamba::nameVector(
-                     as.character(x@multiEnrichDF[[geneColname]]),
-                     x@multiEnrichDF[[nameColname]]),
-                  geneDelim));
+            # This step seems problematic, to use multiEnrichDF
+            # which is not updated effectively by sets()<- and genes()<-.
+            # Long-term it might be useful, for now use simpler approach
+            if (FALSE) {
+               new_memIM <- list2im(
+                  keepCounts=TRUE,
+                  strsplit(
+                     jamba::nameVector(
+                        as.character(x@multiEnrichDF[[geneColname]]),
+                        x@multiEnrichDF[[nameColname]]),
+                     geneDelim));
+            } else {
+               # strategy: multiply rowSums of the current geneIM
+               # which will properly update values to reflect the number
+               # of enrichments in which the gene was found.
+               geneIMrowsum <- rowSums(
+                  jamba::rmNA(naValue=0, abs(geneIM(x))),
+                  na.rm=TRUE);
+               new_memIM <- sign(memIM(x)) * geneIMrowsum;
+            }
             # empty the existing memIM since we cannot yet subset the columns
             # instead populate with columns that remain,
             # then consider subsetting columns afterward
@@ -330,7 +353,7 @@ setMethod("[",
             x@memIM[kmatchrow, kmatchcol] <- new_memIM;
             #
             # Todo:
-            # Subset memIM columns to remove empty pathways
+            # (Optional?) Subset memIM columns to remove empty pathways
          }
       }
       x;

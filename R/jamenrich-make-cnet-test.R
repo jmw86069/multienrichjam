@@ -12,47 +12,78 @@
 #' appropriately.
 #'
 #' @family jam cnet igraph functions
+#' 
+#' @returns `igraph` object containing Cnet concept network data, specifically
+#'    with vertex attribute 'nodeType' with values 'Gene' or 'Set'.
+#' 
+#' @param num_sets `integer` number of sets, default 4.
+#' @param overlap_counts `integer` vector of counts, with length 'num_sets',
+#'    default 'c(57, 20, 12, 5)'.
+#' @param row_prefix `character` default "" used as a prefix for rows names.
+#' @param column_prefix `character` default "Set" used as a prefix for
+#'    set names.
+#' @param add_direction `logical` default TRUE, whether to include direction.
+#' @param set_colors `character` vector of colors per set.
+#' @param seed `numeric` used to fix the random seed.
+#' @param repulse `numeric` default 3.5, passed to `layout_with_qfr()`.
+#' @param hide_solo_pie `logical` default TRUE, passed to `mem2cnet()`.
+#' @param ... additional arguments are passed to `mem2cnet()`.
 #'
 #' @examples
 #' # by default, single-border-color pie is shown as circle
 #' cnet1 <- make_cnet_test(border_lwd=2)
-#' par("mar"=c(0, 0, 0, 0) + 0.5);
-#' jam_igraph(cnet1, use_shadowText=TRUE)
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet1, use_shadowText=TRUE)
+#' })
 #'
 #' # hide_solo_pie=FALSE shows every pie wedge bordder
 #' cnet2 <- make_cnet_test(hide_solo_pie=FALSE, border_lwd=2)
-#' jam_igraph(cnet2, use_shadowText=TRUE)
-#'
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet2, use_shadowText=TRUE)
+#' })
+#' 
 #' # Set nodes can be adjusted, reorienting the Gene nodes
 #' cnet2_adj <- adjust_cnet_set_relayout_gene(cnet2,
 #'    nodes=c("SetB", "SetD"),
 #'    x=c(-0.1, 0), y=c(0, -0.2),
 #'    repulse=3.6);
-#' jam_igraph(cnet2_adj, use_shadowText=TRUE, label_dist_factor=0)
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet2_adj, use_shadowText=TRUE, label_dist_factor=0)
+#' })
 #'
 #' # nodeset spacing can be enforced
 #' cnet3 <- make_cnet_test(num_sets=3)
-#' jam_igraph(cnet3, use_shadowText=TRUE)
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet3, use_shadowText=TRUE)
+#' })
 #' cnet3_sp <- apply_nodeset_spacing(cnet3,
 #'    percent_spacing=7)
-#' jam_igraph(cnet3_sp, use_shadowText=TRUE)
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet3_sp, use_shadowText=TRUE)
+#' })
 #'
 #' # a specific nodeset can be individually adjusted
 #' cnet3_adj <- adjust_cnet_nodeset(cnet3_sp,
 #'    set_nodes=list(c("SetA", "SetB")),
 #'    x=c(-0.2), y=c(0.2))
-#' jam_igraph(cnet3_adj, use_shadowText=TRUE)
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet3_adj, use_shadowText=TRUE)
+#' })
 #'
 #' # several nodesets can be adjusted at once
 #' cnet3_adj2 <- adjust_cnet_nodeset(cnet3_sp,
 #'    set_nodes=list("SetA,SetB", "SetA,SetC", "SetB,SetC"),
 #'    x=c(-0.2, 0.2, 0), y=c(0.2, 0.2, -0.2))
-#' jam_igraph(cnet3_adj2, use_shadowText=TRUE)
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet3_adj2, use_shadowText=TRUE)
+#' })
 #'
 #' # individual nodes can be nudged
 #' cnet3_adj2_nudge <- nudge_igraph_node(cnet3_adj2,
 #'    nodes=c("T"), x=c(-0.02), y=c(0.1))
-#' jam_igraph(cnet3_adj2_nudge, use_shadowText=TRUE, vertex.label.font=2)
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet3_adj2_nudge, use_shadowText=TRUE, vertex.label.font=2)
+#' })
 #'
 #' # nodes can be nudged in larger sets using nodes_xy
 #' cnet3_adj2_nudge2 <- nudge_igraph_node(cnet3_adj2,
@@ -62,8 +93,9 @@
 #'       AG=c(-0.2, 0),
 #'       Q=c(0.2, 0)
 #' ))
-#' jam_igraph(cnet3_adj2_nudge2, use_shadowText=TRUE, vertex.label.font=2)
-#'
+#' withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
+#'    jam_igraph(cnet3_adj2_nudge2, use_shadowText=TRUE, vertex.label.font=2)
+#' })
 #'
 #' @export
 make_cnet_test <- function

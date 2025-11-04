@@ -307,7 +307,7 @@ fixSetLabels <- function
    }
    ## Update the proper data to return
    if (jamba::igrepHas("igraph", class(x))) {
-      if (!"label" %in% igraph::list.vertex.attributes(x)) {
+      if (!"label" %in% igraph::vertex_attr_names(x)) {
          igraph::V(x)$label <- igraph::V(x)$name;
       }
       igraph::V(x)[which_nodes]$label <- xNew;

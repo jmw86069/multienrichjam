@@ -2,14 +2,13 @@
 % Please edit documentation in R/jamenrich-utils.R
 \name{mem_find_overlap}
 \alias{mem_find_overlap}
-\title{Find best overlap threshold for EnrichMap}
+\title{Find recommended overlap threshold for EnrichMap}
 \usage{
 mem_find_overlap(
   mem,
   overlap_range = c(0.1, 0.99),
-  overlap_count = 2,
-  node_fraction = 0.5,
   max_cutoff = 0.4,
+  adjust = -0.01,
   debug = FALSE,
   ...
 )
@@ -17,27 +16,35 @@ mem_find_overlap(
 \arguments{
 \item{mem}{\code{list} output from \code{multiEnrichMap()}}
 
-\item{overlap_range}{numeric range of Jaccard overlap values}
-
-\item{overlap_count}{numeric value passed to \code{mem_multienrichplot()}
-which is used to filter the multienrichmap by Jaccard overlap
-and by overlap_count.}
+\item{overlap_range}{numeric range of Jaccard overlap values,
+default \verb{0.1, 0.99} using step \code{0.01}.}
 
 \item{max_cutoff}{numeric value between 0 and 1, to define the
 maximum fraction of nodes in the largest connected component,
 compared to the total number of non-singlet nodes.}
 
+\item{adjust}{\code{numeric} used to adjust the final overlap, default
+\code{-0.01} will use the overlap one step before the max O score.}
+
 \item{debug}{logical indicating whether to return full debug
 data, which is used internally to determine the best overlap
 cutoff to use.}
+
+\item{...}{additional arguments are passed to \code{mem2emap()}.}
+}
+\value{
+\code{numeric} value with recommended Jaccard overlap coefficient.
 }
 \description{
-Find best overlap threshold for EnrichMap
+Find recommended overlap threshold for EnrichMap
 }
 \details{
-This function implements a straightforward approach to determine
-a reasonable Jaccard overlap threshold for EnrichMap data.
-It finds the overlap threshold at which the first connected
+It implements a straightforward approach to determine
+a reasonable Jaccard overlap threshold for EnrichMap data,
+and is still very much open to improvement after more
+experience using it on varied datasets.
+
+The method finds the overlap threshold at which the first connected
 component is no more than \code{max_cutoff} fraction of the whole
 network. This fraction is defined as the number of nodes in the
 largest connected component, divided by the total number of

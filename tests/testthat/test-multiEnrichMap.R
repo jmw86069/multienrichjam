@@ -16,86 +16,98 @@ test_that("multiEnrichMap", {
    )
 
    erlist <- list(EnrichmentA=enrichDF2enrichResult(test_enrichdf))
-   mem <- multiEnrichMap(erlist)
+   Mem <- multiEnrichMap(erlist)
+   mem <- Mem_to_list(Mem)
 
    pw <- paste("Pathway", LETTERS[2:5]);
    testthat::expect_equal(
-      sort(rownames(mem$multiEnrichDF)),
+      sort(rownames(Mem@multiEnrichDF)),
       pw)
    testthat::expect_equal(
-      mem$multiEnrichDF[pw, c("pvalue", "ID", "Count", "Description")],
+      Mem@multiEnrichDF[pw, c("pvalue", "ID", "Count", "Description")],
       test_enrichdf[pw, c("pvalue", "ID", "Count", "Description")])
    testthat::expect_equal(
-      mem$multiEnrichDF[pw, "geneID"],
+      Mem@multiEnrichDF[pw, "geneID"],
       gsub("/", ",", test_enrichdf[pw, "geneID"]))
 
    # gene constraints
    geneset <- c("ACTB", "CALM1", "COL4A1", "ESR1", "FKBP5", "GAPDH",
       "MAPK3", "MAPK8", "PPIA", "PTEN", "SGK", "TTN", "ZBTB16");
    testthat::expect_setequal(
-      rownames(mem$memIM),
+      rownames(memIM(Mem)),
       geneset)
    testthat::expect_equal(
-      rownames(mem$geneIM),
+      rownames(geneIM(Mem)),
       geneset)
    testthat::expect_setequal(
-      rownames(mem$geneHitIM),
+      rownames(geneHitIM(Mem)),
       c(geneset, "TTP"))
    testthat::expect_equal(
-      rownames(mem$geneIM),
-      rownames(mem$geneIMcolors))
+      rownames(geneIM(Mem)),
+      rownames(geneIMcolors(Mem)))
    testthat::expect_equal(
-      rownames(mem$geneIM),
-      rownames(mem$memIM))
+      rownames(geneIM(Mem)),
+      rownames(memIM(Mem)))
 
    # memIM constraints
    desc <- paste("Description", LETTERS[2:5])
    testthat::expect_setequal(
-      colnames(mem$memIM),
+      colnames(memIM(Mem)),
       desc)
    testthat::expect_equal(ignore_attr=TRUE,
-      colSums(mem$memIM)[desc],
+      colSums(memIM(Mem))[desc],
       test_enrichdf[pw, "Count"])
 
    # memIM-enrichIM consistent order
    testthat::expect_equal(
-      colnames(mem$memIM),
-      rownames(mem$enrichIM))
+      colnames(memIM(Mem)),
+      rownames(enrichIM(Mem)))
    # memIM-geneIM consistent order
    testthat::expect_equal(
-      rownames(mem$memIM),
-      rownames(mem$geneIM))
+      rownames(memIM(Mem)),
+      rownames(geneIM(Mem)))
 
    # enrichIM constraints
    testthat::expect_equal(
-      rownames(mem$enrichIM),
-      rownames(mem$enrichIMcolors))
+      rownames(enrichIM(Mem)),
+      rownames(enrichIMcolors(Mem)))
    testthat::expect_equal(
-      rownames(mem$enrichIM),
-      rownames(mem$enrichIMgeneCount))
+      rownames(enrichIM(Mem)),
+      rownames(enrichIMgeneCount(Mem)))
    testthat::expect_equal(
-      rownames(mem$enrichIM),
-      rownames(mem$enrichIMdirection))
+      rownames(enrichIM(Mem)),
+      rownames(enrichIMdirection(Mem)))
 
    ## mem_plot_folio
    # gene-path heatmap
-   mpf2 <- mem_plot_folio(mem, do_plot=FALSE,
+   mpf2 <- mem_plot_folio(Mem, do_plot=FALSE,
       do_which=2, gene_column_split=1, gene_column_title="A")
    testthat::expect_contains(
       names(mpf2),
       "gp_hm")
    testthat::expect_contains(
       strsplit(mpf2$gp_hm_caption, "\n")[[1]],
+      c("13 genes (rows)",
+         "4 sets (columns)",
+         "enrichment P <= 0.05"))
+   
+   # gene-path heatmap with filtering criteria
+   mpf2b <- mem_plot_folio(Mem, do_plot=FALSE,
+      min_set_ct_each=4,
+      do_which=2, gene_column_split=1, gene_column_title="A")
+   testthat::expect_contains(
+      strsplit(mpf2b$gp_hm_caption, "\n")[[1]],
       c("11 genes (rows)",
          "3 sets (columns)",
          "enrichment P <= 0.05"))
+
    # enrichment heatmap
-   mpf1 <- mem_plot_folio(mem, do_plot=FALSE, do_which=1)
+   mpf1 <- mem_plot_folio(Mem, do_plot=FALSE, do_which=1)
    testthat::expect_contains(
       names(mpf1),
       "enrichment_hm")
    # Cnet plot 1
-   mpf3 <- mem_plot_folio(mem, do_plot=FALSE,
+   mpf3 <- mem_plot_folio(Mem, do_plot=FALSE,
       pathway_column_split=3, do_which=3)
    testthat::expect_contains(
       names(mpf3),
@@ -104,10 +116,20 @@ test_that("multiEnrichMap", {
    cnet1 <- mpf3$cnet_collapsed;
    testthat::expect_setequal(
       igraph::V(cnet1)$name,
-      c(setdiff(geneset, c("ESR1", "ZBTB16")), LETTERS[1:3]))
+      c(geneset, LETTERS[1:3]))
 
+   # Cnet plot 1b with filter critera
+   mpf3b <- mem_plot_folio(Mem, do_plot=FALSE,
+      min_set_ct_each=4,
+      pathway_column_split=3, do_which=3)
+   # verify nodes in the Cnet igraph
+   cnet1b <- mpf3b$cnet_collapsed;
+   testthat::expect_setequal(
+      igraph::V(cnet1b)$name,
+      c(setdiff(geneset, c("ESR1", "ZBTB16")), LETTERS[1:3]))
+   
    # Cnet plot 2
-   mpf4 <- mem_plot_folio(mem, do_plot=FALSE, do_which=4)
+   mpf4 <- mem_plot_folio(Mem, do_plot=FALSE, do_which=4)
    testthat::expect_contains(
       names(mpf4),
       "cnet_collapsed_set")

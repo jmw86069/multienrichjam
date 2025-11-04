@@ -9,7 +9,7 @@ clip function for igraph vertex shape jampie"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,10 +18,7 @@ clip function for igraph vertex shape jampie"></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -138,21 +135,21 @@ shape jampie.</p>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">plot.igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>,</span></span>
 <span class="r-in"><span>   vertex.shape<span class="op">=</span><span class="st">"pie"</span>, vertex.frame.color<span class="op">=</span><span class="st">"grey45"</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"shape='pie'\nigraph::plot.igraph()"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="shape.jampie.plot-1.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="shape.jampie.plot-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"shape='jampie', frame.color=NA\njam_igraph()"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="shape.jampie.plot-2.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="shape.jampie.plot-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>,</span></span>
 <span class="r-in"><span>   vertex.frame.lwd<span class="op">=</span><span class="fl">2</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"shape='jampie', frame.color='black'\njam_igraph()"</span>,</span></span>
 <span class="r-in"><span>   vertex.shape<span class="op">=</span><span class="st">"jampie"</span>, vertex.frame.color<span class="op">=</span><span class="st">"black"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="shape.jampie.plot-3.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="shape.jampie.plot-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>, vertex.frame.color<span class="op">=</span><span class="st">"black"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="shape.jampie.plot-4.png" alt="" width="768" height="768"></span>
+<span class="r-plt img"><img src="shape.jampie.plot-4.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># print pie.color data</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/vertex_attr.html" class="external-link">vertex_attr</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">pie.color</span><span class="op">)</span>;</span></span>

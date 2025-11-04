@@ -365,10 +365,6 @@ multiEnrichMap <- function
    }
    mem$enrichLabels <- enrichLabels;
 
-   ## Ensure that enrichBaseline is not greater than enrichNumLimit
-   if (enrichBaseline >= enrichNumLimit) {
-      enrichNumLimit <- enrichBaseline + 5;
-   }
    #####################################################################
    ## Define valid nrow and ncol for coloredrectangle igraph nodes
    if (length(nrow) == 0) {
@@ -514,7 +510,11 @@ multiEnrichMap <- function
          overlapThreshold <- 0.1;
       }
    }
-   
+   ## Ensure that enrichBaseline is not greater than enrichNumLimit
+   if (enrichBaseline >= enrichNumLimit) {
+      enrichNumLimit <- enrichBaseline + 5;
+   }
+
    #####################################################################
    ## store thresholds for reference
    thresholds <- list(
@@ -1467,7 +1467,7 @@ enrichMapJam <- function
    if (n == 0) {
       stop("`enrichMapJam()` found no enriched terms.")
    } else if (n == 1) {
-      g <- igraph::graph.empty(0, directed=FALSE);
+      g <- igraph::make_empty_graph(0, directed=FALSE);
       g <- igraph::add_vertices(g, nv=1);
       igraph::V(g)$name <- y[, descriptionColname];
       igraph::V(g)$color <- "red";

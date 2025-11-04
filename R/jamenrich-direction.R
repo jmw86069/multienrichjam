@@ -28,7 +28,8 @@
 #' z <- (N_genes_up - N_genes_down) / sqrt(N_genes_up + N_genes_down)
 #' ```
 #'
-#' Citation for IPA formula: [https://doi.org/10.1093/bioinformatics/btt703]
+#' Citation for IPA formula: [Kramer 2014](https://doi.org/10.1093/bioinformatics/btt703)
+#' https://doi.org/10.1093/bioinformatics/btt703,
 #' as referenced: [IPA FAQ - Statistical Calculations](https://qiagen.my.salesforce-sites.com/KnowledgeBase/KnowledgeNavigatorPage?id=kA41i000000L5nQCAS&categoryName=BioX)
 #'
 #' ## Direction calculation (deprecated)

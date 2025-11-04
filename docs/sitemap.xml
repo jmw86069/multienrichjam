@@ -1,7 +1,9 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://jmw86069.github.io/multienrichjam/404.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/articles/importClusterProfiler.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/articles/importIPA.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/articles/index.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/articles/MemPlotConcepts.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/authors.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/cnet_heatmap_guide.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/index.html</loc></url>
@@ -19,8 +21,6 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/avg_angles.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/bulk_cnet_adjustments.html</loc></url>
-<url><loc>https://jmw86069.github.io/multienrichjam/reference/call_fn_ellipsis.html</loc></url>
-<url><loc>https://jmw86069.github.io/multienrichjam/reference/call_fn_ellipsis_deprecated.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/check_Mem.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/cnet2df.html</loc></url>
@@ -62,6 +62,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/gsubs.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/gsubs_remove.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/handle_igraph_param_list.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/handle_rowcol_splits.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/heatmap_column_order.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/heatmap_column_order_deprecated.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/heatmap_row_order.html</loc></url>
@@ -101,7 +102,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_multienrichplot.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mergeAllXY.html</loc></url>
-<url><loc>https://jmw86069.github.io/multienrichjam/reference/multienrichjam.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/multienrichjam-package.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/nodegroups2communities.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/nudge_igraph_node.html</loc></url>

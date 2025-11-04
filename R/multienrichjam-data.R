@@ -4,7 +4,8 @@
 #' Reese 2019 cohort multienrichment data
 #' 
 #' Data used for multi-enrichment analysis as described in
-#' Reese et al 2019 [https://doi.org/10.1016/j.jaci.2018.11.043],
+#' [Reese et al 2019](https://doi.org/10.1016/j.jaci.2018.11.043)
+#' doi:10.1016/j.jaci.2018.11.043,
 #' **Epigenome-wide meta-analysis of DNA methylation and childhood asthma**.
 #' It is provided for convenient testing of multienrichjam.
 #' 
@@ -16,7 +17,8 @@
 #' @format Memtest is a `Mem` multi-enrichment object including two
 #'    enrichment tests 'Newborns' and 'OlderChildren'
 #' 
-#' @source Reese et al 2019 [https://doi.org/10.1016/j.jaci.2018.11.043],
+#' @source [Reese et al 2019](https://doi.org/10.1016/j.jaci.2018.11.043)
+#' doi:10.1016/j.jaci.2018.11.043,
 #' **Epigenome-wide meta-analysis of DNA methylation and childhood asthma**
 #' 
 #' @examples

@@ -232,6 +232,11 @@ jam_plot_igraph <- function
       stop("Not an igraph object")
    }
 
+   # use mark.groups==FALSE as hard sign not to include mark.groups
+   if (isFALSE(mark.groups)) {
+      mark.groups <- NULL;
+      mark.col <- NULL;
+   }
    # validate edge_bundling input
    if (length(edge_bundling) == 0 || "default" %in% edge_bundling) {
       # default will try to detect an appropriate method
@@ -280,7 +285,8 @@ jam_plot_igraph <- function
       params <- parse_igraph_plot_params(graph, list(...));
    }
 
-   vertex.size <- 1/200 * params("vertex", "size")
+   vertex.size <- 1/200 * params("vertex", "size");
+   # jamba::printDebug("jam_plot_igraph(): ", "vertex.size: ", vertex.size);# debug
    label.family <- params("vertex", "label.family")
    label.font <- params("vertex", "label.font")
    label.fontsize <- params("vertex", "label.fontsize")
@@ -1032,11 +1038,11 @@ jam_plot_igraph <- function
       x <- layout[, 1] +
          (label.dist *
                cos(-label.degree) *
-               (vertex.size + 6 * 8 * log10(2))/200);
+               (vertex.size + 6 * 8 * log10(2)) / 200 * 200/180);
       y <- layout[, 2] +
          (label.dist *
                sin(-label.degree) *
-               (vertex.size + 6 * 8 * log10(2))/200);
+               (vertex.size + 6 * 8 * log10(2)) / 200 * 200/180);
       if ("labels" %in% debug) {
          jamba::printDebug("jam_plot_igraph(): ",
             "labels x,y coords:");

@@ -45,11 +45,11 @@ color_edges_by_nodes <- function
    if (!"igraph" %in% class(g)) {
       stop("Input must be class 'igraph'");
    }
-   if (!"color" %in% igraph::list.vertex.attributes(g)) {
+   if (!"color" %in% igraph::vertex_attr_names(g)) {
       stop("Node attributes must contain 'color' in V(g)$color");
    }
    # get edge data.frame
-   if (!"name" %in% igraph::list.vertex.attributes(g)) {
+   if (!"name" %in% igraph::vertex_attr_names(g)) {
       vname <- as.character(seq_len(igraph::vcount(g)));
    } else {
       vname <- igraph::V(g)$name;
@@ -153,11 +153,11 @@ color_edges_by_nodegroups <- function
    if (!"igraph" %in% class(g)) {
       stop("Input must be class 'igraph'");
    }
-   if (!"color" %in% igraph::list.vertex.attributes(g)) {
+   if (!"color" %in% igraph::vertex_attr_names(g)) {
       stop("Node attributes must contain 'color' in V(g)$color");
    }
    # get edge data.frame
-   if (!"name" %in% igraph::list.vertex.attributes(g)) {
+   if (!"name" %in% igraph::vertex_attr_names(g)) {
       vname <- as.character(seq_len(igraph::vcount(g)));
    } else {
       vname <- igraph::V(g)$name;
@@ -271,11 +271,11 @@ color_nodes_by_nodegroups <- function
    if (!"igraph" %in% class(g)) {
       stop("Input must be class 'igraph'");
    }
-   if (!"color" %in% igraph::list.vertex.attributes(g)) {
+   if (!"color" %in% igraph::vertex_attr_names(g)) {
       stop("Node attributes must contain 'color' in V(g)$color");
    }
    # get edge data.frame
-   if (!"name" %in% igraph::list.vertex.attributes(g)) {
+   if (!"name" %in% igraph::vertex_attr_names(g)) {
       vname <- as.character(seq_len(igraph::vcount(g)));
    } else {
       vname <- igraph::V(g)$name;

@@ -13,7 +13,8 @@ enrichment tests 'Newborns' and 'OlderChildren'
 with a \code{character} vectors with genes associated with each cohort.
 }
 \source{
-Reese et al 2019 \link{https://doi.org/10.1016/j.jaci.2018.11.043},
+\href{https://doi.org/10.1016/j.jaci.2018.11.043}{Reese et al 2019}
+doi:10.1016/j.jaci.2018.11.043,
 \strong{Epigenome-wide meta-analysis of DNA methylation and childhood asthma}
 }
 \usage{
@@ -23,7 +24,8 @@ Reese_genes
 }
 \description{
 Data used for multi-enrichment analysis as described in
-Reese et al 2019 \link{https://doi.org/10.1016/j.jaci.2018.11.043},
+\href{https://doi.org/10.1016/j.jaci.2018.11.043}{Reese et al 2019}
+doi:10.1016/j.jaci.2018.11.043,
 \strong{Epigenome-wide meta-analysis of DNA methylation and childhood asthma}.
 It is provided for convenient testing of multienrichjam.
 }

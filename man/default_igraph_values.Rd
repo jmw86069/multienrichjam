@@ -13,10 +13,28 @@ including \code{"plot"}, \code{"vertex"}, and \code{"edge"}.
 \description{
 Default igraph parameter values
 }
+\details{
+Note that default values includes some new vertex parameters:
+\itemize{
+\item 'size.scaling': \code{logical} whether to apply relative size to nodes
+\item 'relative.size': \code{numeric} vector length=2, the range of node scaled sizes
+}
+
+The 'relative.size' parameter is ignored by \code{jam_igraph()}.
+
+Relative node scaling is performed by \code{jam_igraph()} using a method
+already implemented in multienrichjam prior to igraph 2.2.0.
+In future, \code{jam_igraph()} may implement the equivalent method in
+igraph 2.2.0+ for consistency.
+}
+\examples{
+# summary of default values for graph, vertex, edge
+jamba::ssdim(default_igraph_values())
+
+}
 \seealso{
 Other jam igraph internal functions: 
 \code{\link{get_igraph_arrow_mode}()},
-\code{\link{jam_igraph_arrows}()},
-\code{\link{parse_igraph_plot_params}()}
+\code{\link{jam_igraph_arrows}()}
 }
 \concept{jam igraph internal functions}

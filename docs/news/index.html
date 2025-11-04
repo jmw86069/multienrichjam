@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -36,6 +33,63 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.101.900" id="multienrichjam-00101900">multienrichjam 0.0.101.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00101900"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-0-101-900">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-101-900"></a></h3>
+<ul><li>Migrated to the new S4 <code>Mem-class</code> object! Most functions accept either <code>Mem</code> or legacy <code>list</code> mem format.</li>
+<li>
+<code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> now returns S4 <code>Mem</code> object by default, via <code>returnType="Mem"</code>. The legacy <code>list</code> mem format is available with <code>returnType="list"</code>.</li>
+<li>
+<code><a href="../reference/Mem-class.html">Mem_to_list()</a></code> converts <code>Mem-class</code> to legacy list mem format.</li>
+<li>Removed unofficial functions which were never used: filter_mem_genes(), filter_mem_sets(), subset_mem().</li>
+</ul></div>
+<div class="section level3">
+<h3 id="updates-0-0-101-900">Updates<a class="anchor" aria-label="anchor" href="#updates-0-0-101-900"></a></h3>
+<ul><li>Added vignette for using <code>clusterProfiler</code>, still work in progress.</li>
+<li>Added test data objects: <code>Memtest</code> S4 object, and <code>Reese_genes</code>.</li>
+<li>Removed mention of arules transactions objects.</li>
+<li>Moved ‘Mem Plot Concepts’ into its own minimal vignette, still in progress.</li>
+<li>Added ‘tidyr’ dependency, removed ‘reshape2’.</li>
+<li>Added ‘vdiffr’ to Enhances, and numerous visual unit tests.</li>
+<li>Added ‘lifecycle’ dependency to help manage deprecated features and arguments.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-101-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-101-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code></p>
+<ul><li>new argument <code>readable=NULL</code> which when NULL will set the <code>logical</code> value accordingly for the output <code>enrichResult</code> object, mostly useful when using output with <code>clusterProfiler</code> related functions.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code></p>
+<ul><li>Now expects Mem S4 object input, but accepts <code>list</code> legacy format.</li>
+<li>Refactored logic for column_split, row_split, column_title, row_title, cluster_columns, cluster_rows.Now accepts integer, vector, data.frame, function inputs. Added docs to explain.</li>
+<li>Now it tests the clustering before applying <code><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree()</a></code> to confirm the data supports the requested number of clusters - because with binary matrix data, sometimes the distance is literally zero, preventing a cut.</li>
+<li>Fixed error when number of clusters requested using <code>column_split</code> or <code>row_split</code> did not match the number of title entries.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>Default output is now S4 ‘Mem’ object, set with <code>returnType="Mem"</code>.</li>
+<li>Legacy behavior of creating the total Cnet plot objects, and EnrichMap objects, are now only performed when <code>returnType="list"</code>. These plots were no longer used, in favor of <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> or <code><a href="../reference/mem2emap.html">mem2emap()</a></code>.</li>
+<li>Added argument <code>p_cutoff</code> and deprecated <code>cutoffRowMinP</code>.</li>
+<li>Deprecated <code>overlapThreshold</code>, only used for EnrichMap which is skipped.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/mem2emap.html">mem2emap()</a></code></p>
+<ul><li>Accepts <code>Mem</code> input.</li>
+<li>Applies <code><a href="https://r.igraph.org/reference/merge_coords.html" class="external-link">igraph::layout_components()</a></code> to layout multiple disconnected sub-graphs together.</li>
+<li>New default <code>do_plot=FALSE</code> for broader compliance.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code></p>
+<ul><li>New argument <code>remove_singlet_genes=TRUE</code> will hide singlet genes, useful when plotting a subset Cnet with specific pathways.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>It will now apply graph attribute ‘mark.groups’ when defined, to help re-use this sub-cluster information without having to keep adding it to the plot function. To turn off this feature use <code>mark.groups=FALSE</code>.</li>
+</ul></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.100.900" id="multienrichjam-00100900">multienrichjam 0.0.100.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00100900"></a></h2>
 <div class="section level3">
@@ -617,11 +671,11 @@
 <div class="section level3">
 <h3 id="new-functions-0-0-72-900">new functions<a class="anchor" aria-label="anchor" href="#new-functions-0-0-72-900"></a></h3>
 <ul><li>
-<p><code><a href="../reference/subset_mem.html">subset_mem()</a></code></p>
+<p><code>subset_mem()</code></p>
 <ul><li>convenience function to subset an entire <code>mem</code> object by sets (pathways) or genes. It will subset all internal incidence matrix objects for consistency.</li>
-<li>This approach will become the preferred approach to display a specific set of pathways in a Cnet plot, by calling <code><a href="../reference/subset_mem.html">subset_mem()</a></code> then <code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code>.</li>
+<li>This approach will become the preferred approach to display a specific set of pathways in a Cnet plot, by calling <code>subset_mem()</code> then <code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code>.</li>
 <li>
-<code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> currently subsets <code>mem</code> data internally, but for consistency may call <code><a href="../reference/subset_mem.html">subset_mem()</a></code> instead. The arguments are designed to be very similar.</li>
+<code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> currently subsets <code>mem</code> data internally, but for consistency may call <code>subset_mem()</code> instead. The arguments are designed to be very similar.</li>
 </ul></li>
 <li>
 <p><code><a href="../reference/get_igraph_layout.html">get_igraph_layout()</a></code></p>
@@ -801,7 +855,7 @@
 <div class="section level3">
 <h3 id="changes-to-dependencies-0-0-68-900">changes to dependencies<a class="anchor" aria-label="anchor" href="#changes-to-dependencies-0-0-68-900"></a></h3>
 <ul><li>
-<code>arules</code> was removed as a dependency, as two functions that used its class <code>"transactions"</code> were rewritten to remove the requirement. The previous version of those functions are internal and renamed from: <code><a href="../reference/im2list.html">im2list()</a></code> to <code><a href="../reference/im2list_dep.html">im2list_dep()</a></code>; and <code><a href="../reference/imSigned2list.html">imSigned2list()</a></code> to <code><a href="../reference/imSigned2list_dep.html">imSigned2list_dep()</a></code>. The replacement functions should return identical data.</li>
+<code>arules</code> was removed as a dependency, as two functions that used its class <code>"transactions"</code> were rewritten to remove the requirement. The previous version of those functions are internal and renamed from: <code><a href="../reference/im2list.html">im2list()</a></code> to <code>im2list_dep()</code>; and <code><a href="../reference/imSigned2list.html">imSigned2list()</a></code> to <code>imSigned2list_dep()</code>. The replacement functions should return identical data.</li>
 <li>
 <code>bezier</code> was added as dependency to generate edge bundling curves, in head-to-head tests, it out-performed <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code>, and produced identical results to internal function <code>ggforce::bezierPath()</code>. Since <code>bezier</code> has no dependencies, this addition should feel small.</li>
 <li>
@@ -898,7 +952,7 @@
 <ul><li>calculates the optional rotation and size of the ellipse and adjusts the edge endpoints accordingly.</li>
 </ul></li>
 <li>
-<p><code><a href="../reference/parse_igraph_plot_params.html">parse_igraph_plot_params()</a></code></p>
+<p><code>parse_igraph_plot_params()</code></p>
 <ul><li>reproduces an internal <code>igraph</code> function, which cannot be called by CRAN-approved R packages.</li>
 </ul></li>
 <li>
@@ -1425,7 +1479,7 @@
 <div class="section level3">
 <h3 id="changes-to-existing-functions-0-0-45-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-45-900"></a></h3>
 <ul><li>
-<code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> was implemented twice (smh) so the older function was renamed <code><a href="../reference/color_edges_by_nodes_deprecated.html">color_edges_by_nodes_deprecated()</a></code>. The older function blended colors using a simpler approach with <code><a href="../reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> that took a very fast hue average; while the new function uses <code><a href="https://jmw86069.github.io/colorjam/reference/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code> that uses red-yellow-blue additive color blending model. Honestly the function <code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> is not used much yet, but is likely to be used more with community detection, and Cnet/community edge bundling. The new <code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> also applies alpha to the intermediate blended colors, to retain the relative weight of colors during the blending step.</li>
+<code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> was implemented twice (smh) so the older function was renamed <code>color_edges_by_nodes_deprecated()</code>. The older function blended colors using a simpler approach with <code><a href="../reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> that took a very fast hue average; while the new function uses <code><a href="https://jmw86069.github.io/colorjam/reference/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code> that uses red-yellow-blue additive color blending model. Honestly the function <code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> is not used much yet, but is likely to be used more with community detection, and Cnet/community edge bundling. The new <code><a href="../reference/color_edges_by_nodes.html">color_edges_by_nodes()</a></code> also applies alpha to the intermediate blended colors, to retain the relative weight of colors during the blending step.</li>
 </ul></div>
 </div>
     <div class="section level2">

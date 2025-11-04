@@ -86,7 +86,7 @@
 #' `coloredrect.ncol` and `coloredrect.nrow`, by applying the appropriate
 #' logic.
 #'
-#' @return the plot function returns an invisible `list` of
+#' @returns the plot function returns an invisible `list` of
 #'    `data.frame` objects which were used to draw the rectangle objects.
 #'    However the purpose of this function is the by-product that it
 #'    draws rectangles onto an igraph graph.
@@ -143,7 +143,7 @@
 #' igraph::V(g1)$size2 <- 10;
 #' igraph::V(g1)$shape <- "coloredrectangle";
 #'
-#' plot(g1, vertex.label="")
+#' jam_igraph(g1, vertex.label="")
 #' title(font.main=1, line=1.5, main=paste0(
 #'    "Each square is consistent size by vertex.size2\n"))
 #' title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -151,7 +151,7 @@
 #'    "'options(coloredrectangle.equalize_sizes=FALSE'"))
 #'
 #' # equalize shortest side to size2
-#' plot(g1, vertex.label="", vertex.coloredrect.equalize_sizes=TRUE)
+#' jam_igraph(g1, vertex.label="", vertex.coloredrect.equalize_sizes=TRUE)
 #' title(font.main=1, line=1.5, main=paste0(
 #'    "The shortest side is fixed by vertex.size2\n"))
 #' title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -159,7 +159,7 @@
 #'    "'options(coloredrectangle.equalize_sizes=TRUE'"))
 #'
 #' # equalize longest side to size2
-#' plot(g1, vertex.label="", vertex.coloredrect.equalize_sizes=2)
+#' jam_igraph(g1, vertex.label="", vertex.coloredrect.equalize_sizes=2)
 #' title(font.main=1, line=1.5, main=paste0(
 #'    "The longest side is fixed by vertex.size2\n"))
 #' title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -270,7 +270,8 @@ shape.coloredrectangle.plot <- function
             vertex.coloredrect.ncol);
    }
    # validate the number of colors will fit inside ncol,nrow
-   vertex.coloredrect.ncells <- vertex.coloredrect.ncol * vertex.coloredrect.nrow;
+   vertex.coloredrect.ncells <- (vertex.coloredrect.ncol *
+         vertex.coloredrect.nrow);
    if (any(lengths(vertex.coloredrect.color) > vertex.coloredrect.ncells)) {
       # expand ncol to accommodate all colors
       vertex.coloredrect.ncol <- pmax(vertex.coloredrect.ncol,
@@ -287,7 +288,8 @@ shape.coloredrectangle.plot <- function
    }
    vertex.coloredrect.lwd <- rep(vertex.coloredrect.lwd,
       length.out=length(vertex.coloredrect.color))
-   vertex.coloredrect.lwd <- lapply(seq_along(vertex.coloredrect.border), function(i){
+   vertex.coloredrect.lwd <- lapply(seq_along(vertex.coloredrect.border),
+      function(i){
       iborder <- vertex.coloredrect.border[[i]];
       ilwd <- vertex.coloredrect.lwd[[i]];
       ifelse(
@@ -295,7 +297,8 @@ shape.coloredrectangle.plot <- function
          0,
          ilwd)
    })
-   vertex.coloredrect.lwd.max <- sapply(vertex.coloredrect.lwd, max, na.rm=TRUE)
+   vertex.coloredrect.lwd.max <- sapply(vertex.coloredrect.lwd,
+      max, na.rm=TRUE)
 
    # version 0.0.68.900: refactor size1, size2 calculations
    vertex.size1 <- getparam("size");
@@ -311,9 +314,14 @@ shape.coloredrectangle.plot <- function
    if (any(size1_na)) {
       vertex.size1[size1_na] <- vertex.size2[size1_na] / 2;
    }
-   # convert size to graph coordinates
-   vertex.size1 <- rep(1/200 * vertex.size1, length.out=nrow(coords));
-   vertex.size2 <- rep(1/200 * vertex.size2, length.out=nrow(coords));
+   
+   ## convert size to graph coordinates
+   # vertex.size1 <- rep(1/200 * vertex.size1, length.out=nrow(coords));
+   # vertex.size2 <- rep(1/200 * vertex.size2, length.out=nrow(coords));
+   ## 0.0.101.900: stop dividing by 200 bc it is done in jam_igraph()
+   vertex.size1 <- rep(1/1 * vertex.size1, length.out=nrow(coords));
+   vertex.size2 <- rep(1/1 * vertex.size2, length.out=nrow(coords));
+   
    # Use size2 to define the size of each square
    # with consistent square size for all nodes
    vertex.size1 <- vertex.size2 * 5 * vertex.coloredrect.ncol;
@@ -458,7 +466,7 @@ shape.coloredrectangle.plot <- function
       ## Split into a list of data.frames, because symbols()
       ## can only use one value for lwd and lty.
       rectDFL <- split(rectDF,
-         jamba::pasteByRowOrdered(rectDF[,c("rect_type","lwd","lty")]));
+         jamba::pasteByRowOrdered(rectDF[,c("rect_type", "lwd", "lty")]));
       if (verbose) {
          jamba::printDebug("shape.coloredrectangle.plot(): ",
             "names(rectDFL):", names(rectDFL));
@@ -469,14 +477,13 @@ shape.coloredrectangle.plot <- function
          rectDFi$lwd <- ifelse(is.na(rectDFi$fg), 1, rectDFi$lwd);
          rectDFi$lwd <- ifelse(is.na(rectDFi$lwd) | rectDFi$lwd == 0,
             1, rectDFi$lwd);
-         # jamba::printDebug("rectDFi$lwd:");print(rectDFi$lwd);
-         # jamba::printDebug("head(rectDFi):");print(head(rectDFi));
+         
          if ("square" %in% rectDFi$rect_type[1]) {
             # jamba::printDebug("inner lwd: ", rectDFi$lwd);
             inner_coords <- adjust_rect_border(
                x=rectDFi$x,
                y=rectDFi$y,
-               rectangles=as.matrix(rectDFi[,c("rectx","recty")]),
+               rectangles=as.matrix(rectDFi[,c("rectx", "recty")]),
                type="inner",
                lwd=rectDFi$lwd);
             rectDFi$rectx <- inner_coords$rectangles[,1];
@@ -489,14 +496,15 @@ shape.coloredrectangle.plot <- function
                rectangles=as.matrix(rectDFi[,c("rectx","recty")]),
                type="outer",
                lwd=rectDFi$lwd);
-            rectDFi$rectx <- outer_coords$rectangles[,1];
-            rectDFi$recty <- outer_coords$rectangles[,2];
+            rectDFi$rectx <- outer_coords$rectangles[, 1];
+            rectDFi$recty <- outer_coords$rectangles[, 2];
          }
+         
          graphics::symbols(x=rectDFi$x,
             y=rectDFi$y,
             bg=rectDFi$bg,
             fg=rectDFi$fg,
-            rectangles=as.matrix(rectDFi[,c("rectx","recty")]),
+            rectangles=(as.matrix(rectDFi[,c("rectx", "recty")])),
             add=TRUE,
             inches=FALSE,
             lty=rectDFi$lty,
@@ -614,9 +622,13 @@ shape.coloredrectangle.clip <- function
       length(vertex.coloredrect.ncol), length(vertex.coloredrect.nrow),
       max(el)))
    # convert size to graph coordinates
-   # 0.0.100.900 - use vcount_estimate instead of coords
-   vertex.size1 <- rep(1/200 * vertex.size1, length.out=vcount_estimate);
-   vertex.size2 <- rep(1/200 * vertex.size2, length.out=vcount_estimate);
+   ## 0.0.100.900 - use vcount_estimate instead of coords
+   # vertex.size1 <- rep(1/200 * vertex.size1, length.out=vcount_estimate);
+   # vertex.size2 <- rep(1/200 * vertex.size2, length.out=vcount_estimate);
+   ## 0.0.101.900: stop dividing by 200 bc it is done in jam_igraph()
+   vertex.size1 <- rep(1/1 * vertex.size1, length.out=vcount_estimate);
+   vertex.size2 <- rep(1/1 * vertex.size2, length.out=vcount_estimate);
+   
    # Use size2 to define the size of each square
    # with consistent square size for all nodes
    vertex.size1 <- vertex.size2 * 2.5 * vertex.coloredrect.ncol;
@@ -638,11 +650,10 @@ shape.coloredrectangle.clip <- function
             pmin(vertex.coloredrect.ncol, vertex.coloredrect.nrow);
       }
    }
-
    vertex.size <- vertex.size1;
    if (verbose) {
-      jamba::printDebug("vertex.size1: ", vertex.size1);
-      jamba::printDebug("vertex.size2: ", vertex.size2);
+      jamba::printDebug("vertex.size1: ", paste0("'", vertex.size1, "'"));
+      jamba::printDebug("vertex.size2: ", paste0("'", vertex.size2, "'"));
    }
 
    rec.shift <- function(x0, y0, x1, y1, vsize, vsize2) {
@@ -758,7 +769,9 @@ shape.ellipse.plot <- function
    if (length(vertex.frame.width) != 1 && !is.null(v)) {
       vertex.frame.width <- vertex.frame.width[v];
    }
-   vertex.size <- 1/200 * params("vertex", "size");
+   ## 0.0.101.900: stop dividing by 200 bc it was added to jam_igraph()
+   # vertex.size <- 1/200 * params("vertex", "size");
+   vertex.size <- 1/1 * params("vertex", "size");
    if (length(vertex.size) != 1 && !is.null(v)) {
       vertex.size <- vertex.size[v];
    }
@@ -811,7 +824,9 @@ shape.ellipse.clip <- function
       return(coords)
    }
    # vertex size
-   vertex.size <- 1/200 * params("vertex", "size");
+   ## 0.0.101.900: stop dividing by 200 bc it was added to jam_igraph()
+   # vertex.size <- 1/200 * params("vertex", "size");
+   vertex.size <- 1/1 * params("vertex", "size");
    # vertex ellipse ratio, height:width
    vertex.ellipse.ratio <- params("vertex", "ellipse.ratio");
    if (length(vertex.ellipse.ratio) == 0) {
@@ -1068,8 +1083,10 @@ shape.jampie.plot <- function
    # Todo: Resolve frame.lwd or frame.width
    vertex.frame.lwd <- getparam("frame.lwd")
    vertex.frame.width <- getparam("frame.width")
-   vertex.size <- rep(1/200 * getparam("size"),
-      length.out=nrow(coords))
+   ## 0.0.101.900: stop dividing by 200 bc it is done in jam_igraph()
+   # vertex.size <- rep(1/200 * getparam("size"), length.out=nrow(coords))
+   vertex.size <- rep(1/1 * getparam("size"), length.out=nrow(coords))
+   
    vertex.pie <- getparam("pie")
 
    vertex.pie.color <- getparam("pie.color")
@@ -1281,7 +1298,10 @@ shape.jampie.clip <- function
       return(coords)
    }
    vertex.pie <- params("vertex", "pie")
-   vertex.size <- 1/200 * params("vertex", "size")
+   ## 0.0.101.900: stop dividing by 200 bc it is done in jam_igraph()
+   # vertex.size <- 1/200 * params("vertex", "size")
+   vertex.size <- 1/1 * params("vertex", "size")
+   
    # vmax <- max(c(el[,1], el[,2]));
    vmax <- length(vertex.pie);
    vertex.size <- rep(vertex.size, length.out=vmax);

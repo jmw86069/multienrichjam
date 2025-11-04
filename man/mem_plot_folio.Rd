@@ -13,7 +13,7 @@ mem_plot_folio(
   use_raster = FALSE,
   min_gene_ct = 1,
   min_set_ct = 1,
-  min_set_ct_each = 4,
+  min_set_ct_each = NULL,
   column_method = "euclidean",
   row_method = "euclidean",
   exemplar_range = c(1, 2, 3),
@@ -80,11 +80,16 @@ Changing this argument is no longer supported
 to contain \code{min_gene_ct} genes, and \code{min_set_ct} requires each gene
 to be present in at least \code{min_set_ct} sets.}
 
-\item{min_set_ct_each}{\code{integer} minimum genes required for each set,
-in at least one enrichment test. The distinction from \code{min_set_ct}
-is that this threshold requires this number of genes in one
-enrichment, while \code{min_set_ct} applies the threshold to the
-combined multi-enrichment data.}
+\item{min_set_ct_each}{\code{integer}, default NULL, minimum genes per set
+in at least one enrichment test.
+\itemize{
+\item Default NULL uses \code{thresholds(mem)$min_count} to use the same
+criteria.
+\item The distinction from \code{min_set_ct} is that this threshold
+requires this number of genes in one enrichment,
+while \code{min_set_ct} applies the threshold to the
+combined multi-enrichment data.
+}}
 
 \item{column_method, row_method}{\code{character} arguments passed to
 \code{ComplexHeatmap::Heatmap()} which indicate the distance method used

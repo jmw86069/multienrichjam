@@ -11,6 +11,9 @@
    igraph::add_shape("jampie",
       clip=shape.jampie.clip,
       plot=shape.jampie.plot)
+   igraph::add_shape("coloredrect",
+      clip=shape.jampie.clip,
+      plot=shape.jampie.plot)
    ```
 
 * Adding generic methods for S4 objects

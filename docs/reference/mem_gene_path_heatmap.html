@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,10 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/importIPA.html">How to import and use Ingenuity IPA enrichment data</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -58,15 +55,15 @@
 <span>  column_method <span class="op">=</span> <span class="st">"binary"</span>,</span>
 <span>  enrich_im_weight <span class="op">=</span> <span class="fl">0.3</span>,</span>
 <span>  gene_im_weight <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  gene_annotations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"im"</span>, <span class="st">"direction"</span><span class="op">)</span>,</span>
+<span>  gene_annotations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"im"</span>, <span class="st">"direction"</span>, <span class="st">"default"</span><span class="op">)</span>,</span>
 <span>  annotation_suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>im <span class="op">=</span> <span class="st">"hit"</span>, direction <span class="op">=</span> <span class="st">"dir"</span><span class="op">)</span>,</span>
 <span>  simple_anno_size <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">6</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>  cluster_columns <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cluster_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cluster_row_slices <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cluster_column_slices <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cluster_row_slices <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cluster_column_slices <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  p_cutoff <span class="op">=</span> <span class="va">mem</span><span class="op">$</span><span class="va">p_cutoff</span>,</span>
+<span>  p_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_floor <span class="op">=</span> <span class="fl">1e-10</span>,</span>
 <span>  row_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -95,34 +92,32 @@
 
 
 <dl><dt id="arg-mem">mem<a class="anchor" aria-label="anchor" href="#arg-mem"></a></dt>
-<dd><p><code>list</code> object created by <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>. Specifically
-the object is expected to contain <code>colorV</code>, <code>enrichIM</code>,
-<code>memIM</code>, <code>geneIM</code>.</p></dd>
+<dd><p><code>Mem</code> or <code>list</code> object created by <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>.</p></dd>
 
 
 <dt id="arg-genes">genes<a class="anchor" aria-label="anchor" href="#arg-genes"></a></dt>
-<dd><p>character vector of genes to include in the heatmap,
+<dd><p><code>character</code> vector of genes to include in the heatmap,
 all other genes will be excluded.</p></dd>
 
 
 <dt id="arg-sets">sets<a class="anchor" aria-label="anchor" href="#arg-sets"></a></dt>
-<dd><p>character vector of sets (pathways) to include in the heatmap,
+<dd><p><code>character</code> vector of sets (pathways) to include in the heatmap,
 all other sets will be excluded.</p></dd>
 
 
 <dt id="arg-min-gene-ct">min_gene_ct<a class="anchor" aria-label="anchor" href="#arg-min-gene-ct"></a></dt>
-<dd><p>minimum number of occurrences of each gene
+<dd><p><code>integer</code> minimum number of occurrences of each gene
 across the pathways, all other genes are excluded.</p></dd>
 
 
 <dt id="arg-min-set-ct">min_set_ct<a class="anchor" aria-label="anchor" href="#arg-min-set-ct"></a></dt>
-<dd><p>minimum number of genes required for each set,
+<dd><p><code>integer</code> minimum number of genes required for each set,
 all other sets are excluded.</p></dd>
 
 
 <dt id="arg-min-set-ct-each">min_set_ct_each<a class="anchor" aria-label="anchor" href="#arg-min-set-ct-each"></a></dt>
-<dd><p>minimum number of genes required for each set,
-required for at least one enrichment test.</p></dd>
+<dd><p><code>integer</code> minimum number of genes required
+for each set, required for at least one enrichment test.</p></dd>
 
 
 <dt id="arg-column-fontsize-row-fontsize">column_fontsize, row_fontsize<a class="anchor" aria-label="anchor" href="#arg-column-fontsize-row-fontsize"></a></dt>
@@ -135,9 +130,11 @@ and <code>row_cex</code>.</p></dd>
 
 
 <dt id="arg-row-method-column-method">row_method, column_method<a class="anchor" aria-label="anchor" href="#arg-row-method-column-method"></a></dt>
-<dd><p>character string of the distance method
-to use for row and column clustering. The clustering is performed
-by <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code>.</p></dd>
+<dd><p><code>character</code> string with distance method,
+default is 'binary' which considers all non-zero values to be 1.
+It is used for row and column hierarchical clustering
+by <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code>. It offers more methods than <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust()</a></code>
+hence its use here.</p></dd>
 
 
 <dt id="arg-enrich-im-weight">enrich_im_weight<a class="anchor" aria-label="anchor" href="#arg-enrich-im-weight"></a></dt>
@@ -168,80 +165,98 @@ with the gene-pathway incidence matrix, giving each matrix equal weight
 
 <dt id="arg-gene-annotations">gene_annotations<a class="anchor" aria-label="anchor" href="#arg-gene-annotations"></a></dt>
 <dd><p><code>character</code> string indicating which annotation(s)
-to display alongside the gene axis of the heatmap.
-By default it uses <code>"im", "direction"</code>, and <code>"direction"</code> is removed
-when <code>mem$geneIMdirection</code> is not available.</p><ul><li><p><code>"im"</code> displays the gene incidence matrix <code>mem$geneIM</code> using
-categorical colors defined by <code>mem$colorV</code>.</p></li>
-<li><p><code>"direction"</code> displays the gene directionality <code>mem$geneIMdirection</code>
+to display alongside the gene axis of the heatmap.</p><ul><li><p>Default is <code>"im", "direction"</code>, and <code>"default"</code> which will hide
+the <code>"direction"</code> if all non-zero values are positive.</p></li>
+<li><p>When <code>"im"</code> is present, the colored incidence matrix is displayed.</p></li>
+<li><p>When <code>"direction"</code> is present, the directional matrix is displayed
 using colors defined by <code>colorjam::col_div_xf(1.2)</code>.</p></li>
+<li><p>When both <code>"im"</code> and <code>"direction"</code> are present, they are displayed
+in the order defined.</p></li>
 <li><p>When no values are given, the gene annotation is not displayed.</p></li>
-<li><p>When two values are given, the annotations are displayed in the
-order they are provided.</p></li>
 </ul></dd>
 
 
 <dt id="arg-annotation-suffix">annotation_suffix<a class="anchor" aria-label="anchor" href="#arg-annotation-suffix"></a></dt>
 <dd><p><code>character</code> vector named by values permitted
 by <code>gene_annotations</code>, with optional suffix to add to the annotation
-labels. For example it may be helpful to add "hit" or "dir" to
-distinguish the enrichment labels.</p></dd>
+labels. For example, as by default, it may be helpful to add
+"hit" or "dir" to distinguish the enrichment labels.</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
-<dd><p>character value passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>,
-used as a label above the heatmap color legend.</p></dd>
+<dd><p><code>character</code> value passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>,
+used as a label above the heatmap color legend. Default <code>NULL</code>
+uses "Gene Hits by Enrichment".</p></dd>
 
 
 <dt id="arg-p-cutoff">p_cutoff<a class="anchor" aria-label="anchor" href="#arg-p-cutoff"></a></dt>
-<dd><p>numeric value of the enrichment P-value cutoff,
+<dd><p><code>numeric</code> value of the enrichment P-value cutoff,
 above which P-values are not colored, and are therefore white.
 The enrichment P-values are displayed as an annotated heatmap
 at the top of the main heatmap. Any cell that has a color meets
-at least the minimum P-value threshold. This value by default
-is taken from input <code>mem</code>, using <code>mem$p_cutoff</code>, for
+at least the minimum P-value threshold. The default
+is taken from input <code>mem</code> for
 consistency with the input multienrichment analysis.</p></dd>
 
 
 <dt id="arg-column-split-row-split">column_split, row_split<a class="anchor" aria-label="anchor" href="#arg-column-split-row-split"></a></dt>
-<dd><p>optional arguments passed to
-<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> to split the heatmap by columns
-or rows, respectively.</p><ul><li><p>when <code>row_split</code> is <code>NULL</code>
-and <code>auto_split=TRUE</code>, it will determine an appropriate number
-of clusters based upon the number of rows. To turn off row <code>split</code>,
-use <code>row_split=NULL</code> or <code>row_split=0</code> or <code>row_split=1</code>;
-likewise for <code>column_split</code>.</p></li>
-<li><p>when <code>row_split</code> or <code>column_split</code> are supplied as a named
-vector, the names are aligned with <code>sets</code> to be displayed
-in the heatmap, and will use the <code><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect()</a></code> of the two.
-When data is clustered, <code>cluster_row_slices=FALSE</code> and
-<code>cluster_column_slices=FALSE</code> such that the dendrogram will
-be broken into separate pieces.</p></li>
+<dd><p>row and column split, default NULL,
+detects an appropriate number of clusters.
+Passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>.</p><ul><li><p>To turn off split use <code>1</code>.</p></li>
+<li><p>To specify a fixed number of clusters, use an <code>integer</code> value.
+The value may be changed if the underlying data does not support
+that number of clusters.</p></li>
+<li><p>To specify fixed clusters by name, use an atomic vector
+named by the rownames <code>genes(Mem)</code> or colnames <code>sets(Mem)</code> with
+values which will become the cluster names. When supplying a
+<code>factor</code> the factor level order will be maintained.</p></li>
+<li><p>Alternatively, supply a <code>data.frame</code> whose rownames match
+the <code>genes(Mem)</code> rows or <code>sets(Mem)</code> columns, respectively.
+In this case, column values are combined using
+<code><a href="https://jmw86069.github.io/jamba/reference/pasteByRowOrdered.html" class="external-link">jamba::pasteByRowOrdered()</a></code> which also maintains factor level
+order.</p></li>
+<li><p>When supplying either an atomic vector or <code>data.frame</code>
+the actual names will be used to subset the resulting <code>Mem</code> data
+if there are fewer names provided than exist in <code>Mem</code>.
+Note that the <code>Mem</code> data are not subset again by other filter
+criteria, for example <code>min_set_ct</code>, <code>min_gene_ct</code>, etc.</p></li>
+<li><p>The <code>column_title</code> argument is used when</p></li>
 </ul></dd>
 
 
+<dt id="arg-auto-split">auto_split<a class="anchor" aria-label="anchor" href="#arg-auto-split"></a></dt>
+<dd><p><code>logical</code> whether to determine clusters when column_split
+or row_split is NULL, default TRUE.</p></dd>
+
+
 <dt id="arg-column-title">column_title<a class="anchor" aria-label="anchor" href="#arg-column-title"></a></dt>
-<dd><p>optional character string with title to display
-above the heatmap.</p></dd>
+<dd><p>optional <code>character</code> string or vector
+to display above the column splits. Default uses <code>LETTERS</code>
+with length to match the number of clusters.
+When there is only one column cluster, it is not named unless
+<code>column_title</code> also has length 1.</p></dd>
 
 
 <dt id="arg-row-title">row_title<a class="anchor" aria-label="anchor" href="#arg-row-title"></a></dt>
-<dd><p>optional character string with title to display
-beside the heatmap. Note when <code>row_split</code> is defined, the
-<code>row_title</code> is applied to each heatmap section.</p></dd>
+<dd><p>optional <code>character</code> string or vector
+to display to the left side of the heatmap row splits.
+The default uses <code>letters</code> to match the number of row clusters.
+When there is only one row cluster, it is not named unless
+<code>row_title</code> also has length 1.</p></dd>
 
 
 <dt id="arg-row-title-rot">row_title_rot<a class="anchor" aria-label="anchor" href="#arg-row-title-rot"></a></dt>
-<dd><p><code>numeric</code> value indicating the rotation of
+<dd><p><code>numeric</code> value, default 0, the rotation of
 <code>row_title</code> text, where <code>0</code> is not rotated, and <code>90</code> is rotated
 90 degrees.</p></dd>
 
 
 <dt id="arg-colorize-by-gene">colorize_by_gene<a class="anchor" aria-label="anchor" href="#arg-colorize-by-gene"></a></dt>
-<dd><p><code>logical</code> indicating whether to color the
-main heatmap body using the colors from <code>geneIM</code> which represents
-each enrichment in which a given gene is involved. Colors are
-blended using <code><a href="https://jmw86069.github.io/colorjam/reference/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code>, using colors from
-<code>mem$colorV</code>, applied to <code>mem$geneIM</code>.</p></dd>
+<dd><p><code>logical</code> default TRUE, whether to color the
+main heatmap body using the colors from <code>geneIM</code> to indicate
+each enrichment in which a given gene is involved.
+Colors are blended using <code><a href="https://jmw86069.github.io/colorjam/reference/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code>,
+using colors from <code>colorV</code> in the <code>geneIMcolors(Mem)</code>.</p></dd>
 
 
 <dt id="arg-na-col">na_col<a class="anchor" aria-label="anchor" href="#arg-na-col"></a></dt>
@@ -266,15 +281,15 @@ its purpose.</p></li>
 
 
 <dt id="arg-colramp">colramp<a class="anchor" aria-label="anchor" href="#arg-colramp"></a></dt>
-<dd><p><code>character</code> name of color, color gradient, or a
-vector of colors, anything compatible with input to
-<code><a href="https://jmw86069.github.io/jamba/reference/getColorRamp.html" class="external-link">jamba::getColorRamp()</a></code>.</p></dd>
+<dd><p><code>character</code>, default "Reds", with name of color,
+color gradient, or a vector of colors, anything that can be converted
+to a color gradient by <code><a href="https://jmw86069.github.io/jamba/reference/getColorRamp.html" class="external-link">jamba::getColorRamp()</a></code>.</p></dd>
 
 
 <dt id="arg-column-names-max-height">column_names_max_height<a class="anchor" aria-label="anchor" href="#arg-column-names-max-height"></a></dt>
 <dd><p><code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a></code> passed to
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>. When supplied as <code>numeric</code> it is
-converted to units in "mm".</p></dd>
+converted to units in "mm". Default 180 mm.</p></dd>
 
 
 <dt id="arg-column-names-rot">column_names_rot<a class="anchor" aria-label="anchor" href="#arg-column-names-rot"></a></dt>
@@ -283,37 +298,43 @@ converted to units in "mm".</p></dd>
 
 
 <dt id="arg-show-gene-legend-show-pathway-legend">show_gene_legend, show_pathway_legend<a class="anchor" aria-label="anchor" href="#arg-show-gene-legend-show-pathway-legend"></a></dt>
-<dd><p><code>logical</code> whether to show
-the gene IM and pathway IM legends, respectively.</p><ul><li><p>The gene IM legend is <code>FALSE</code> by default, since it only describes the
+<dd><p><code>logical</code>,
+whether to show the gene IM and pathway IM legends, respectively.</p><ul><li><p>The gene IM legend is FALSE by default, since it only describes the
 color used for each column, and is somewhat redundant with the pathway
 IM legend.</p></li>
-<li><p>The pathway IM legend displays the color scale including the range
-of enrichment P-values colorized.</p></li>
+<li><p>The pathway IM default is TRUE, it displays the color scale
+including the range of enrichment P-values colorized.</p></li>
 </ul></dd>
 
 
 <dt id="arg-show-heatmap-legend">show_heatmap_legend<a class="anchor" aria-label="anchor" href="#arg-show-heatmap-legend"></a></dt>
-<dd><p><code>numeric</code> or <code>logical</code>, (default 8)
-with the maximum number of labels to use for the heatmap color legend.
-The heatmap color legend includes all the
-the possible blended colors based upon the gene IM data.</p><ul><li><p>When <code>logical</code>, <code>TRUE</code> is converted to <code>8</code> by default.</p></li>
+<dd><p><code>numeric</code> or <code>logical</code>, (default 8),
+the maximum number of labels to use for the heatmap color legend.
+When 'colorize_by_gene' is TRUE, the heatmap legend would include
+all possible blended colors using gene IM data, which frankly can
+become too much.</p><ul><li><p>When <code>logical</code>, <code>TRUE</code> is converted to <code>8</code> by default.</p></li>
 <li><p>When there are more legend items than than <code>show_heatmap_legend</code>
-the color legend will only display singlet colors.</p></li>
+the color legend will only display singlet colors, which means
+only one color per individual set defined in colorV.</p></li>
+<li><p>This legend can be created and extracted from the
+output <code>Heatmap</code> object to be displayed independently for
+publishable figures if necessary.</p></li>
 </ul></dd>
 
 
 <dt id="arg-use-raster">use_raster<a class="anchor" aria-label="anchor" href="#arg-use-raster"></a></dt>
 <dd><p><code>logical</code> passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>,
-(default TRUE), indicating whether to rasterize the heatmap body.
-If the heatmap appears too blurry, use <code>FALSE</code> which will render each
-heatmap cell individually. For very large heatmaps this can create
-a very large PDF file size, and may introduce visual artifacts
-if the output dimensions are smaller than 1 cell per pixel.</p></dd>
+default FALSE, whether to rasterize the heatmap body.
+This option is recommended FALSE when 'colorize_by_gene' is TRUE,
+due to the way the rasterization is handled at matrix level.
+For very large heatmaps you may try 'colorize_by_gene=FALSE'
+and 'use_raster=TRUE' to reduce the figure size with PDF and SVG
+output, and will improve visual fidelity in some cases.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
 <dd><p><code>numeric</code> value passed to <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> to define a
-reproducible random seed.</p></dd>
+reproducible random seed during row and column clustering.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -330,19 +351,16 @@ functions.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>Heatmap</code> object defined in <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>, with
-additional attributes:</p><ul><li><p><code>"caption"</code> - a <code>character</code> string with caption that described
-the data dimensions and clustering parameters.</p></li>
-<li><p><code>"caption_legendlist"</code> - a <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legends.html" class="external-link">ComplexHeatmap::Legends</a></code> object suitable
-to be included with Heatmap legends using
+    <p><code>Heatmap</code> object defined in <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> with
+custom attributes with the method caption:</p><ul><li><p><code>"caption"</code>: <code>character</code> string with method details.</p></li>
+<li><p><code>"caption_legendlist"</code>: <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legends.html" class="external-link">ComplexHeatmap::Legends</a></code> object suitable
+to be included with Heatmap legends by
 <code>draw(hm, annotation_legend_list=caption_legendlist)</code>, or
-drawn with <code>grid::grid.draw(caption_legendlist)</code>.</p></li>
-<li><p><code>"draw_caption"</code> - a <code>function</code> that will draw the caption in the
-bottom-left corner of the heatmap by default, to be called
+or drawn directly <code>grid::grid.draw(caption_legendlist)</code>.</p></li>
+<li><p><code>"draw_caption"</code> - <code>function</code> that will draw the caption in the
+bottom-right corner of the device by default, to be called
 with <code>attr(hm, "draw_caption")()</code> or <code>draw_caption()</code>.</p></li>
-</ul><p>In addition, the returned object can be interrogated with two helper
-functions that help define the row and column clusters, and the
-exact order of labels as they appear in the heatmap.</p><ol><li><p><code><a href="https://jmw86069.github.io/jamba/reference/heatmap_row_order.html" class="external-link">jamba::heatmap_row_order()</a></code> - returns a <code>list</code> of vectors of
+</ul><p>The <code>Heatmap</code> row and column order can be retrieved:</p><ol><li><p><code><a href="https://jmw86069.github.io/jamba/reference/heatmap_row_order.html" class="external-link">jamba::heatmap_row_order()</a></code> - returns a <code>list</code> of vectors of
 rownames in the order they appear in the heatmap, with list names
 defined by row split.</p></li>
 <li><p><code><a href="https://jmw86069.github.io/jamba/reference/heatmap_column_order.html" class="external-link">jamba::heatmap_column_order()</a></code> - returns a <code>list</code> of vectors of
@@ -351,17 +369,144 @@ defined by row split.</p></li>
 </ol></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function takes the <code>mem</code> list output from
+    <p>This function takes the <code>Mem</code> output from
 <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code> and creates a gene-by-pathway incidence
 matrix heatmap, using <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code>.
-It uses three basic sources of data to annotate the heatmap:</p><ol><li><p><code>mem$memIM</code> the gene-set incidence matrix</p></li>
-<li><p><code>mem$geneIM</code> the gene incidence matrix by dataset</p></li>
-<li><p><code>mem$enrichIM</code> the pathway enrichment P-value matrix by dataset</p></li>
-</ol><p>It will try to estimate a reasonable number of column and row
-splits in the dendrogram, based solely upon the number of
-columns and rows. These guesses can be controlled with argument
-<code>column_split</code> and <code>row_split</code>, respectively.</p>
-<p>When pathways are filtered by <code>min_gene_ct</code>, <code>min_set_ct</code>,
+The major output of this function is to define pathway
+clusters which influences other figures produced by
+<code><a href="mem_plot_folio.html">mem_plot_folio()</a></code>: the enrichment heatmap; Cnet cluster plots;
+Cnet exemplars.</p>
+<p>It uses three basic sources of data to annotate the heatmap:</p><ol><li><p><code>memIM</code> the gene-set incidence matrix</p></li>
+<li><p><code>geneIM</code> the gene incidence matrix by dataset</p></li>
+<li><p><code>enrichIM</code> the pathway enrichment P-value matrix by dataset</p></li>
+</ol><div class="section">
+<h3 id="pathway-and-gene-clusters">Pathway and gene clusters<a class="anchor" aria-label="anchor" href="#pathway-and-gene-clusters"></a></h3>
+
+
+<p>When <code>column_split</code> (pathways) or <code>row_split</code> (genes) are
+not defined, a reasonable number is assigned to split columns
+and rows, respectively. The specific number is controlled by
+defining an integer number. The splits are named using
+<code>column_title</code> and <code>row_title</code>, which defaults <code>LETTERS</code> and
+<code>letters</code>, respectively.</p>
+<p>Custom pathway clusters (columns) can be defined by defining
+<code>column_split</code> as a vector named by values in <code>sets(Mem)</code>,
+with values used to define the name for each cluster.
+When provided as a <code>factor</code> it will honor the factor level order.</p>
+<p>When a subset of <code>sets(Mem)</code> are provided, it will also subset
+the <code>Mem</code> object to show only the matching sets, however it does
+not re-apply row and column filtering described above.
+It is recommended to use argument 'sets' to subset the pathway
+gene sets upfront, then use <code>column_split</code> with names that
+match 'sets'.</p>
+<p>Alternatively, <code>column_split</code> can be supplied as a <code>data.frame</code>
+with rownames that match <code>sets(Mem)</code>, in which case column values
+are combined using <code><a href="https://jmw86069.github.io/jamba/reference/pasteByRowOrdered.html" class="external-link">jamba::pasteByRowOrdered()</a></code> which also keeps
+factor level order.</p>
+<p>Custom gene clusters (rows) can be defined with <code>row_split</code> using
+the same mechanism as with <code>column_split</code> described above,
+with names that match <code>genes(Mem)</code> as appropriate.</p><div class="section">
+<h4 id="column-pathway-clustering">Column pathway clustering<a class="anchor" aria-label="anchor" href="#column-pathway-clustering"></a></h4>
+
+
+<p>Columns (pathways) are clustered using a combination of the gene-pathway
+incidence matrix, and the -log10 P-values shown along the
+pathway axis (usually columns). The purpose is to allow the
+enrichment P-value to influence the clustering together with
+the gene content. The balance is adjusted using
+<code>enrich_im_weight</code>, default 0.3, and where 0.0 will ignore the
+enrichment P-values during clustering. Higher values will tend
+to create clusters that represent shared/unique <em>significant</em>
+pathways, and less determined based solely on the gene content.</p>
+<p>Note that the enrichment P-value matrix used during clustering
+is adjusted by using <code>p_cutoff</code> and <code>p_floor</code>.
+Values above the <code>p_cutoff</code> are converted to 1 so they do not
+influence clustering. Values below <code>p_floor</code> are converted to
+<code>p_floor</code> so they influence clustering only at the level of
+other values at <code>p_floor</code>.</p>
+<p>The default <code>cluster_columns=TRUE</code> will employ <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code>
+as a convenient and efficient one-step distance-hierarchical clustering
+approach, using <code>cluster_method</code> as the distance method. A custom
+function can be supplied with <code>cluster_columns</code> as long as the
+output is 'hclust' or can be coerced to 'hclust'.</p>
+<p>The clustering distance method <code>column_method</code> uses default 'binary',
+which treats any non-zero value as 1.
+In this case, the relative weight is not important since all non-zero
+values are equivalent.
+However, <code>column_method='euclidean'</code>, current default in <code><a href="mem_plot_folio.html">mem_plot_folio()</a></code>
+may improve the output when adjusting the relative weight of
+enrichment P-values with incidence matrix.</p>
+</div>
+
+<div class="section">
+<h4 id="gene-clustering">Gene clustering<a class="anchor" aria-label="anchor" href="#gene-clustering"></a></h4>
+
+
+<p>Rows (genes) are clustered using a combination of the gene-pathway
+incidence matrix, and the 'geneIM' or 'geneIMdirection' matrix data
+shown, as defined with <code>gene_annotations</code>. The relative weight of
+these matrices is controlled with <code>gene_im_weight</code> with default 0.5,
+which gives equal weight to each matrix. By default, when directional
+gene values are shown the directional matrix is used with clustering.</p>
+<p>The default <code>cluster_rows=TRUE</code> will employ <code><a href="https://rdrr.io/pkg/amap/man/hcluster.html" class="external-link">amap::hcluster()</a></code> as
+described for Pathway clustering, or <code>cluster_rows</code> can be a custom
+function that produces 'hclust' or can be coerced to 'hclust'.</p>
+<p>When <code>row_method='binary'</code> the relative weight of gene incidence matrix
+and the pathway-gene matrix is not important, since all non-zero
+values are treated as 1 during clustering. The <code><a href="mem_plot_folio.html">mem_plot_folio()</a></code>
+default uses 'euclidean' to improve the effect of the relative
+weight of these two matrices.</p>
+<p>Gene clusters are not often used for downstream analysis, for
+example they do not form clusters in the Cnet plots, and are not
+(yet) used for other analysis in multienrichjam.
+However, gene clusters are quite useful when interpreting
+pathway-gene data.</p>
+<p>It is helpful in practice to refer to a gene cluster by name:
+"The genes in cluster 'd' all appear to be cytokines."
+(Also maybe there should be better names, but that's for
+another time.)</p>
+<p>Gene clusters may form what we call "hot spots", where
+most of a gene cluster is colorized and associated with
+one or more pathway clusters.
+A hot spot indicates a set of genes shared across multiple pathways,
+a "core" set of genes which may have serve an important functional
+basis in several pathways.</p>
+<p>An example might be mitogen-activated protein kinase (MAPK) genes,
+which typically involve a multi-step kinase call signaling
+cascade. Pathways which involve one MAPK would very often
+involve each MAPK at subsequent steps in the cascade.
+In fact, MAPK genes are often the core signaling mechanism of
+numerous apparently unrelated pathways - we refer to it as the
+"internal wiring" of the signaling in a cell, as an analogy to
+a building which may use wiring to pass along any number of messages.
+Different cell types may employ the MAPK cascade to send a message,
+and this message may have different meaning across cell types,
+and indeed may have meaning based upon the cell state.</p>
+</div>
+
+
+</div>
+
+<div class="section">
+<h3 id="filtering">Filtering<a class="anchor" aria-label="anchor" href="#filtering"></a></h3>
+
+
+<p>A subset of pathways can be defined with argument <code>sets</code>,
+which may be useful to prepare this plot for a set of
+"exemplar pathways" which represent key pathways of interest
+for a study.</p>
+<p>Similar for genes with argument <code>genes</code>, however this option
+is less commonly used.</p>
+<p>Pathways and genes can be subset by number of occurrences
+of each, for example:</p><ul><li><p><code>min_gene_ct</code>: minimum occurrences of a gene across pathways,
+which also means the number of pathways in which a gene
+occurs.</p></li>
+<li><p><code>min_set_ct</code>: minimum occurrences of a set (pathway) across genes,
+which means the number of genes in the set across all enrichments.</p></li>
+<li><p><code>min_set_ct_each</code>: minimum occurrences of a set (pathway) across genes.
+It requires at least <code>min_set_ct_each</code> genes in at least one enrichment,
+which is consistent with <code>min_count</code> in <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>.</p></li>
+</ul><p>When pathways are filtered by <code>min_gene_ct</code>, <code>min_set_ct</code>,
 and <code>min_set_ct_each</code>, the order of operations is as follows:</p><ol><li><p><code>min_set_ct_each</code>, <code>min_set_ct</code> - these filters are applied
 before filtering genes, in order to ensure all genes are present
 from the start.</p></li>
@@ -371,6 +516,8 @@ based upon the required number of genes. Only after those pathways
 are removed can the number of occurrences of each gene be judged
 appropriately.</p></li>
 </ol></div>
+
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam plot functions:

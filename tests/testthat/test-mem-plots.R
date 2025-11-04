@@ -5,13 +5,20 @@ testthat::test_that("mem_plots", {
    #
    # test first gp heatmap
    set.seed(123)
+   hco <- NULL;
+   hro <- NULL;
    gp_hm <- mem_gene_path_heatmap(Memtest, column_split=4,
       row_split=3, column_cex=0.5)
+   # withr::local_options(list(warn=-1));
+   withr::with_options(list(warn=-1), {
+      hco <- jamba::heatmap_column_order(gp_hm);
+      hro <- jamba::heatmap_row_order(gp_hm);
+   })
    testthat::expect_equal(
-      lengths(jamba::heatmap_row_order(gp_hm)),
+      lengths(hro),
       c(a=4, b=3, c=15))
    testthat::expect_equal(
-      lengths(jamba::heatmap_column_order(gp_hm)),
+      lengths(hco),
       c(A=6, B=4, C=2, D=4))
    gp_hm_fn <- function() {
       ComplexHeatmap::draw(gp_hm,
@@ -24,7 +31,9 @@ testthat::test_that("mem_plots", {
    }
 
    # column_split with named vector
-   hco <- heatmap_column_order(gp_hm)
+   withr::with_options(list(warn=-1), {
+      hco <- jamba::heatmap_column_order(gp_hm)
+   })
    gcs <- jamba::nameVector(rep(names(hco), lengths(hco)), unlist(hco))
    gcs[] <- gsub("[BC]+", "BC", gcs)
    gcs <- factor(gcs, levels=c("BC", "A", "D"))
@@ -36,15 +45,20 @@ testthat::test_that("mem_plots", {
          annotation_legend_list=attributes(gp_hm)$caption_legendlist,
          merge_legends=TRUE)
    }
+   withr::with_options(list(warn=-1), {
+      hco <- jamba::heatmap_column_order(gp_hm_colgrp);
+   })
    testthat::expect_equal(
-      lengths(jamba::heatmap_column_order(gp_hm_colgrp)),
+      lengths(hco),
       c(BC=6, A=6, D=4))
 
    # custom cluster_columns function
    if (requireNamespace("cluster", quietly=TRUE)) {
       gp_hm_clfn <- function() {
          colfn <- function(x){
-            stats::hclust(cluster::daisy(x, metric="gower"))
+            withr::with_options(list(warn=-1), {
+               stats::hclust(cluster::daisy(x, metric="gower"))
+            })
          }
          gp_hm_colfn <- mem_gene_path_heatmap(Memtest,
             column_method="gower",
@@ -66,11 +80,15 @@ testthat::test_that("mem_plots", {
       do_which=c(1, 2, 4), do_plot=FALSE,
       row_method="euclidean",
       gene_row_split=3, column_cex=0.5)
+   withr::with_options(list(warn=-1), {
+      hro <- jamba::heatmap_row_order(mpf$gp_hm);
+      hco <- jamba::heatmap_column_order(mpf$gp_hm);
+   })
    testthat::expect_equal(
-      lengths(jamba::heatmap_row_order(mpf$gp_hm)),
+      lengths(hro),
       c(a=18, b=2, c=2))
    testthat::expect_equal(
-      lengths(jamba::heatmap_column_order(mpf$gp_hm)),
+      lengths(hco),
       c(A=6, B=4, C=2, D=4))
    gp_hm_fn <- function() {
       ComplexHeatmap::draw(mpf$gp_hm,
