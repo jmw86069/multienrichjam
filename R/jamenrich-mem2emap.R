@@ -49,7 +49,7 @@
 #'    keep for each pathway cluster, used together with `cluster_function`.
 #'    Common words are removed, remaining terms are sorted by decreasing
 #'    occurrence, then used to summarize each cluster.
-#' @param keep_terms_sep `character` string, default '\n' newline,
+#' @param keep_terms_sep `character` string, default is comma-newline,
 #'    used to separate terms, used together with `num_keep_terms`.
 #' @param repulse `numeric` value passed to `layout_with_qfr()`,
 #'    default 3.3.

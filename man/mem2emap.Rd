@@ -69,7 +69,7 @@ keep for each pathway cluster, used together with \code{cluster_function}.
 Common words are removed, remaining terms are sorted by decreasing
 occurrence, then used to summarize each cluster.}
 
-\item{keep_terms_sep}{\code{character} string, default '\n' newline,
+\item{keep_terms_sep}{\code{character} string, default is comma-newline,
 used to separate terms, used together with \code{num_keep_terms}.}
 
 \item{repulse}{\code{numeric} value passed to \code{layout_with_qfr()},
