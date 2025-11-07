@@ -62,18 +62,7 @@ and is only intended as a quick visual review.}
 \description{
 Nudge igraph layout by node
 }
-\seealso{
-Other jam cnet igraph functions: 
-\code{\link{adjust_cnet_nodeset}()},
-\code{\link{adjust_cnet_set_relayout_gene}()},
-\code{\link{apply_cnet_direction}()},
-\code{\link{apply_nodeset_spacing}()},
-\code{\link{get_cnet_nodeset}()},
-\code{\link{make_cnet_test}()},
-\code{\link{rotate_igraph_layout}()}
-}
-\concept{jam cnet igraph functions}
-\concept{jam igraph functions
+\concept{jam igraph layouts
 
 This function takes an \code{igraph} object that contains a layout
 stored in graph attributes, \code{graph_attr(g, "layout")}, and adjusts

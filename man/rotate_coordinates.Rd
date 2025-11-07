@@ -97,10 +97,10 @@ Other jam utility functions:
 \code{\link{ashape}()},
 \code{\link{avg_angles}()},
 \code{\link{avg_colors_by_list}()},
-\code{\link{bulk_cnet_adjustments}()},
 \code{\link{cell_fun_bivariate}()},
 \code{\link{collapse_mem_clusters}()},
 \code{\link{colorRamp2D}()},
+\code{\link{curateIPAcolnames}()},
 \code{\link{deconcat_df2}()},
 \code{\link{display_colorRamp2D}()},
 \code{\link{enrichList2geneHitList}()},
@@ -116,7 +116,6 @@ Other jam utility functions:
 \code{\link{mem_find_overlap}()},
 \code{\link{order_colors}()},
 \code{\link{rank_mem_clusters}()},
-\code{\link{subgraph_jam}()},
 \code{\link{summarize_node_spacing}()},
 \code{\link{xyAngle}()}
 }

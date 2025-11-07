@@ -67,31 +67,12 @@ In any event, this function is intended to replicated the effect done
 by \code{launch_shinycat()}.
 }
 \seealso{
-Other jam utility functions: 
-\code{\link{ashape}()},
-\code{\link{avg_angles}()},
-\code{\link{avg_colors_by_list}()},
-\code{\link{cell_fun_bivariate}()},
-\code{\link{collapse_mem_clusters}()},
-\code{\link{colorRamp2D}()},
-\code{\link{deconcat_df2}()},
-\code{\link{display_colorRamp2D}()},
-\code{\link{enrichList2geneHitList}()},
-\code{\link{find_colname}()},
-\code{\link{find_enrich_colnames}()},
-\code{\link{get_hull_data}()},
-\code{\link{get_igraph_layout}()},
-\code{\link{gsubs_remove}()},
-\code{\link{handle_igraph_param_list}()},
-\code{\link{isColorBlank}()},
-\code{\link{make_legend_bivariate}()},
-\code{\link{make_point_hull}()},
-\code{\link{mem_find_overlap}()},
-\code{\link{order_colors}()},
-\code{\link{rank_mem_clusters}()},
-\code{\link{rotate_coordinates}()},
-\code{\link{subgraph_jam}()},
-\code{\link{summarize_node_spacing}()},
-\code{\link{xyAngle}()}
+Other jam cnet utilities: 
+\code{\link{adjust_cnet_nodeset}()},
+\code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_nodeset_spacing}()},
+\code{\link{get_cnet_nodeset}()},
+\code{\link{launch_shinycat}()},
+\code{\link{make_cnet_test}()}
 }
-\concept{jam utility functions}
+\concept{jam cnet utilities}

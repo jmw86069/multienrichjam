@@ -1,5 +1,57 @@
-# multienrichjam 0.0.101.900
+# multienrichjam 0.0.102.900
 
+* Added "Versioned" to 'Mem' class, to handle changes over time.
+* Added more S4 "setter" methods, to keep rownames geneHitIM
+consistent with geneIM since they may not be identical.
+* Updated `Reese_genes` and `Memtest` with Entrez ID and updated symbols.
+* Re-organized the pkgdown function families, trying to make it simpler.
+
+## General changes
+
+* Added 'Biobase' to Imports, to use class 'Versioned'.
+* Added 'methods' to Imports, imported several functions.
+* S4-related code was moved to prepare for Bioconductor:
+'AllClasses.R', 'AllGenerics.R', 'methods-Mem.R'.
+* Added 'S4Vectors' dependency, then imported `as.list()` to avoid
+weird C stack error by recursive loop, when unloading multienrichjam.
+Reproducible by unload, but seemed to occur in other rare cases,
+e.g. unit testing, creating vignettes, pkgdown, perhaps others.
+This approach seems to load S4 method appropriately upfront.
+
+## Mem S4 changes
+
+* `Mem-class` now contains `'Versioned'` Biobase class, which assigns a
+class version to help with future compatibility. It should help
+convert old versions of `Mem` objects to the current format, allowing
+me to change the format over time as needed.
+* Added `updateObject` generic method for `Mem` S4 objects. It currently
+adds a version to any un-versioned S4 Mem object.
+* Updated `genes<-` so it also updates `geneHitIM(x)`, and gives a warning
+if for some reason not all `genes(x)` are present in
+`rownames(geneHitIM(x))`.
+* Added `geneHitIM<-` which also confirms all `genes(x)` and `enrichments(x)`
+are correctly represented.
+* Similarly added: `geneIMcolors<-`, `geneIMdirection<-`,
+`enrichIMdirection<-`, `enrichIMcolors<-`
+* Added 'Mem-slots' help topic, to describe the `Mem` slots even though
+it is not intended for end users. The move was motivated to keep the
+`Mem-class` page clean.
+
+## Changes to package data
+
+* `Reese_genes` was updated to assign Entrez gene ID values as `names()`.
+The Entrez ID is useful for other pathway enrichment methods, such as
+clusterProfiler and ReactomePA functions.
+Three genes were updated to use more current Entrez gene symbols,
+as of November 2025:
+BC034424 -> HEXA; INADL -> PATJ; SLC24A6 -> SLC8B1.
+* `Memtest` was updated:
+
+   * to use the full `Reese_genes` incidence matrix for `geneHitIM(Memtest)`.
+   * to apply updated `Reese_genes` to `genes(Memtest)`, and
+   `enrichList` 'geneID' columns.
+
+# multienrichjam 0.0.101.900
 
 ## Breaking changes
 

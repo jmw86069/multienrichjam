@@ -592,7 +592,7 @@ importIPAenrichment <- function
 #' by disease category and storing the range of enrichment
 #' P-values.
 #'
-#' @family jam import functions
+#' @family jam utility functions
 #'
 #' @param jDF data.frame from one Ingenuity IPA enrichment test.
 #' @param ipaNameGrep vector of regular expression patterns

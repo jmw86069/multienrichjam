@@ -222,8 +222,8 @@ in detail in `mem_plot_folio()`.
 mpf <- mem_plot_folio(mem,
    pathway_column_split=4,
    column_cex=0.4, row_cex=0.4,
-   row_names_max_width = grid::unit(9, "cm"),
-   column_names_max_height = grid::unit(4, "cm"),
+   row_names_max_width=grid::unit(9, "cm"),
+   column_names_max_height=grid::unit(4, "cm"),
    node_factor=2.5,
    label_factor_l=list(nodeType=c(Set=0.7, Gene=1.5)),
    use_shadowText=TRUE,
@@ -272,7 +272,7 @@ jam_igraph(cnet,
 ```
 
 
-## ShinyCat for Custom Cnet Layout
+# ShinyCat for Custom Cnet Layout
 
 The R-shiny Cnet Adjustment Tool **ShinyCat** is intended to help polish
 the Cnet plot layout when making a final figure.
@@ -299,6 +299,7 @@ The output is stored in an `environment` called `output_env`.
 adj_cnet <- output_env$adj_cnet;
 ```
 
+
 Then the new Cnet plot can be plotted, for example:
 
 ```{r shinycat-3, eval=FALSE}
@@ -309,3 +310,10 @@ jam_igraph(adj_cnet,
    label_factor_l=list(nodeType=c(Gene=2, Set=1)))
 ```
 
+## ShinyCat Screenshot
+
+An example of ShinyCat in action is shown below.
+
+```{r shinycat-screen-2, echo=FALSE, out.width="100%", fig.alt="Screenshot of ShinyCat in action, with a Cnet network plot in the center, and several inputs on the left to adjust the layout."}
+knitr::include_graphics("shinycat-2.png")
+```

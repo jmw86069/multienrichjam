@@ -108,6 +108,7 @@ text(x=rep(0, 8), y=seq(from=3, to=-4)+0.2,
 \seealso{
 Other jam igraph internal functions: 
 \code{\link{default_igraph_values}()},
-\code{\link{get_igraph_arrow_mode}()}
+\code{\link{get_igraph_arrow_mode}()},
+\code{\link{jam_plot_igraph}()}
 }
 \concept{jam igraph internal functions}

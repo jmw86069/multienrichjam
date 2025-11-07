@@ -157,7 +157,7 @@
 #' @examples
 #' ## See the Vignette for a full walkthrough example
 #'
-#' @family jam enrichment functions
+#' @family multienrichjam core functions
 #' 
 #' @importFrom lifecycle deprecated
 #' 
@@ -1330,9 +1330,10 @@ enrichList2IM <- function
 }
 
 
-#' Create enrichMap igraph object from enrichResult
+#' Create enrichMap igraph object from enrichResult, deprecated
 #'
-#' Create enrichMap igraph object from enrichResult
+#' Create enrichMap igraph object from enrichResult, deprecated,
+#' use `mem2emap()`.
 #'
 #' This function is a minor customization to `enrichplot::emapplot()`,
 #' which takes a single `enrichResult` and produces an Enrichment map
@@ -1385,8 +1386,7 @@ enrichList2IM <- function
 #' @param ... additional arguments are passed to `enrichDF2enrichResult()`
 #'    when the input `x` is a `data.frame`.
 #'
-#' @family jam conversion functions
-#' @family jam igraph functions
+#' @family jam deprecated functions
 #'
 #' @export
 enrichMapJam <- function

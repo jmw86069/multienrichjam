@@ -1,184 +1,71 @@
+# methods-Mem.R
+#
+# Todo:
+# as.list()
+# dimnames()<-
 
-# Mem object
+# Future expansion:
+# genesPerSet()
+# setsWithGene()
+# geneInCategory(): mimic generic function in `DOSE::geneInCategory()`
+#
+# cbind(Mem1, Mem2): combine Mem by adding new enrichment data
+#    for example adding enrichments into the same Mem
+# rbind(Mem1, Mem2): combine Mem by adding new pathways
+#    for example, same enrichments but new pathway source
 
-
-#' Check Mem object
+#' Extract some elements of potentially long vector for display
 #'
-#' Check whether a Mem object is valid.
-#'
-#' It requires:
-#'
-#' * `slotName(object)`: `"memIM", "enrichIM", "geneIM", "enrichList"`
-#' * `object@memIM` to inherit `"matrix"`
-#' * `object@enrichIM` to inherit `"matrix"`
-#' * `object@geneIM` to inherit `"matrix"`
-#' * `colnames(object@memIM)` to equal `rownames(object@enrichIM)`
-#' * `rownames(object@memIM)` to equal `colnames(object@geneIM)`
-#' * `names(enrichList)` to equal `colnames(object@enrichIM)`
-#'
-#' General guidance for Mem objects:
-#'
-#' * TBD
-#'
-#' @importClassesFrom DOSE enrichResult
+#' Extract some elements of potentially long vector for display,
+#' using ellipses when there are more than 'maxToShow' entries.
 #' 
-#' @param object `Mem` object
-#'
-#' @family Mem
-#'
-#' @export
-check_Mem <- function
-(object)
+#' @keywords internal
+#' @noRd
+some_vector <- function
+(x,
+ maxToShow=5,
+ ellipsis="...",
+ ellipsisPos=c("middle", "start", "end"),
+ quote=FALSE,
+ sep=", ",
+ ...)
 {
-   # check for valid content
-   required_slots <- c(
-      "enrichList",
-      "enrichLabels",
-      "colorV",
-      "geneHitList",
-      "geneHitIM",
-      "memIM",
-      "geneIM",
-      "geneIMcolors",      # optional?
-      "geneIMdirection",   # optional?
-      "enrichIM",
-      "enrichIMcolors",    # optional?
-      "enrichIMdirection", # optional?
-      "enrichIMgeneCount", # optional?
-      "multiEnrichDF",
-      "multiEnrichResult",
-      "thresholds",
-      "headers")
-   test0 <- all(required_slots %in% slotNames(object))
-   if (!test0) {
-      print(paste0("Required slots were not present: ",
-         jamba::cPaste(setdiff(required_slots, slotNames(object)), sep=", ")))
-      return(test0)
+   #
+   ellipsisPos <- match.arg(ellipsisPos)
+   if (length(x) == 0 || !is.atomic(x)) {
+      return(x)
    }
-   # confirm rownames and colnames match across objects
-   criteria_set <- c(
-      `memIM, enrichIM`=all(
-         colnames(object@memIM) %in% rownames(object@enrichIM)),
-      `memIM, geneIM`=all(
-         rownames(object@memIM) %in% rownames(object@geneIM)),
-      `enrichList, enrichIM`=all(
-         names(object@enrichList) %in% colnames(object@enrichIM)),
-      `enrichList, geneIM`=all(
-         names(object@enrichList) %in% colnames(object@geneIM)),
-      `enrichList, colorV names`=all(
-         names(object@enrichList) %in% names(object@colorV)),
-      `enrichList, geneHitList names`=all(
-         names(object@enrichList) %in% names(object@geneHitList)),
-      `enrichList, geneHitIM`=all(
-         names(object@enrichList) %in% colnames(object@geneHitIM))
-   )
-   if (!all(criteria_set)) {
-      jamba::printDebug(
-         "Mem Invalid:\n- ",
-         jamba::cPaste(names(criteria_set)[!criteria_set],
-            sep=",\n- "));
-      return(FALSE);
+   if (is.character(x) && TRUE %in% quote) {
+      x <- sQuote(x)
    }
-   return(TRUE)
-
-   # Todo:
-   # - require colnames be present in all enrichList entries
-   # - require colnames be present in multiEnrichDF
-   # - require colnames be present in multiEnrichResult@result
+   len <- length(x)
+   if (length(maxToShow) == 0 || head(maxToShow, 1) < 3) {
+      maxToShow <- 3
+   }
+   if (len > maxToShow) {
+      maxToShow <- maxToShow - 1;
+      if ("end" %in% ellipsisPos) {
+         y <- c(head(x, maxToShow - 1), ellipsis)
+      } else if ("start" %in% ellipsisPos) {
+         y <- c(ellipsis, head(x, maxToShow - 1))
+      } else {
+         bot <- ceiling(maxToShow / 2)
+         top <- len - (maxToShow - bot - 1)
+         y <- c(as.character(x[seq_len(bot)]),
+            ellipsis,
+            as.character(x[seq(from=top, to=len)]))
+      }
+   } else {
+      y <- x
+   }
+   jamba::cPaste(y, sep=sep)
 }
-
-
-#' Mem class
-#'
-#' Mem class containing results from `multiEnrichMap()`.
-#'
-#' ## Slots
-#'
-#' * **enrichList**: `list` of `enrichResults` named by enrichment test.
-#' * **enrichLabels**: `character` vector with custom enrichment labels,
-#' named by enrichment test.
-#' * **colorV**: `character` vector of R colors, named by enrichment test.
-#' * **geneHitList**: `list` of vectors named by enrichment test.
-#' Vectors are either:<br>
-#' `character` vector of genes tested as hits for enrichment, or<br>
-#' `integer` vector named by genes with values indicating
-#' the directionality, using `1` or `-1`.
-#' * **geneHitIM**: `numeric` matrix with enrichment tests as colnames, and
-#' genes as rownames.<br>
-#' Values are `1` or `0` to indicate gene hits tested,<br>
-#' optionally `1` or `-1` to indicate directionality.
-#' * **memIM**: `numeric` matrix with gene sets / pathways as colnames, and
-#' genes as rownames.<br>
-#' Values are `1` or `0` indicating genes present in each pathway.
-#' * **geneIM**: `numeric` matrix with enrichment test as colnames, and genes
-#' as rownames.<br>
-#' This matrix differs from 'geneHitIM' in that it only includes
-#' genes also in 'memIM', and in that order.
-#' * **enrichIM**: `numeric` matrix with enrichment test as colnames, and
-#' gene sets / pathways as rownames.<br>
-#' Matrix values are enrichment P-values,
-#' using the appropriate adjusted P-value or FDR to represent significance.
-#' * **multiEnrichDF**: `data.frame` with single combined enrichment table.<br>
-#' Data include union of genes involved in each pathway, and
-#' lowest P-value observed across all enrichment tests.
-#' * **multiEnrichResult**: `enrichResult` equivalent of 'multiEnrichDF'.<br>
-#' It is intended to facilitate use in `enrichplot` functions.
-#' * **thresholds**: `list` of thresholds used when calling `multiEnrichMap()`.
-#' * **headers**: `list` to associate actual colnames (headers) in 'enrichList'
-#' with the conceptual names used in multienrichjam.
-#'
-#' * **geneIMcolors**: `character` matrix with enrichment test colnames, and
-#' gene rownames.<br>
-#' Values are colors assigned using 'colorV'.
-#' * **geneIMdirection**: `numeric` matrix equivalent to 'geneIM' with values
-#' `1` and `-1` indicating directionality.<br>
-#' When no directionality is provided, all values will be `1` or `0`.
-#'
-#' * **enrichIMcolors**: `character` matrix with enrichment test colnames, and
-#' gene set / pathway rownames.<br>
-#' Values are color gradients using the
-#' appropriate P-value threshold used with `multiEnrichMap()`.
-#' * **enrichIMdirection**: `numeric` matrix equivalent to 'enrichIM' with values
-#' indicating directional score.<br>
-#' Directional scores may include a IPA z-score or other directional
-#' score where available.<br>
-#' When not available, all values are `1`.
-#' * **enrichIMgeneCount**: `integer` matrix equivalent to 'enrichIM'.<br>
-#' Values are the number of genes involved in the enrichment of each pathway.
-#'
-#' @family Mem
-#' @rdname Mem-class
-#' @aliases Mem
-#' @examples
-#' # See vignettes for a full walk-through
-#'
-setClass("Mem",
-   slots=c(
-      enrichList="list",
-      enrichLabels="character",
-      colorV="character",
-      geneHitList="list",
-      geneHitIM="matrix",
-      memIM="matrix",
-      geneIM="matrix",
-      enrichIM="matrix",
-      multiEnrichDF="data.frame",
-      multiEnrichResult="enrichResult",
-      thresholds="list",
-      headers="list",
-      enrichIMcolors="matrix",
-      enrichIMdirection="matrix",
-      enrichIMgeneCount="matrix",
-      geneIMcolors="matrix",
-      geneIMdirection="matrix"
-   )
-);
-setValidity("Mem", method=check_Mem)
-
-# setGeneric("[", function(x, i, j, ..., drop = TRUE) standardGeneric("["))
 
 #' Subset a Mem object
 #'
+#' @importFrom methods new setClass setGeneric setMethod
+#' @importFrom methods setReplaceMethod setValidity prototype
+#' 
 #' @param x `Mem` object
 #' @param i `character` or `integer` with gene names
 #' @param j `character` or `integer` with pathway names
@@ -217,7 +104,7 @@ setMethod("[",
          # with any change in values
          i_update <- length(i) > 0 && (
             !all(ivals %in% i) ||
-            (length(i) == length(ivals) && !all(ivals == i)) );
+               (length(i) == length(ivals) && !all(ivals == i)) );
          if (i_update) {
             islot_cols <- NULL
             islot_rows <- c("memIM",
@@ -360,138 +247,9 @@ setMethod("[",
    }
 )
 
-
-#' @describeIn Mem-class Convert legacy `list` mem format to S4 `Mem`
-#'
-#' @returns `list_to_Mem()` returns a `Mem` S4 object, from 'list' or 'Mem' input.
-#'
-#' @param mem `list` output from `multiEnrichMap()`
-#'
-#' @examples
-#' # list_to_Mem examples
-#' data(Memtest)
-#' mem <- as(Memtest, "list")
-#' Mem <- list_to_Mem(mem)
-#'
-#' @export
-list_to_Mem <- function
-(mem)
-{
-   #
-   use_slots=c(
-      enrichList="list",
-      enrichLabels="character",
-      colorV="character",
-      geneHitList="list",
-      geneHitIM="matrix",
-      memIM="matrix",
-      geneIM="matrix",
-      enrichIM="matrix",
-      multiEnrichDF="data.frame",
-      multiEnrichResult="enrichResult",
-      thresholds="list",
-      headers="list",
-      enrichIMcolors="matrix",
-      enrichIMdirection="matrix",
-      enrichIMgeneCount="matrix",
-      geneIMcolors="matrix",
-      geneIMdirection="matrix"
-   )
-   # return Mem unchanged if it is already 'Mem'
-   if (inherits(mem, "Mem")) return(mem);
-   # rename 'colnames' to 'headers'
-   hmatch <- match("colnames", names(mem));
-   if (length(hmatch) == 1) {
-      names(mem)[hmatch] <- "headers";
-   }
-
-   # Some slots can be added with defaults
-   if (!"geneIMdirection" %in% names(mem)) {
-      mem$geneIMdirection <- (abs(mem$geneIM) > 0) * 1;
-   }
-
-   if (!all(names(use_slots) %in% names(mem))) {
-      missing_slots <- setdiff(names(use_slots), names(mem));
-      stop(paste0(
-         "Not all required slot names were provided:\n",
-         jamba::cPaste(missing_slots, sep=", ")))
-   }
-   # print(jamba::sdim(x[names(use_slots)]));# debug
-   Mem <- new("Mem",
-      enrichList=mem$enrichList,
-      enrichLabels=mem$enrichLabels,
-      colorV=mem$colorV,
-      geneHitList=mem$geneHitList,
-      geneHitIM=mem$geneHitIM,
-      memIM=mem$memIM,
-      geneIM=mem$geneIM,
-      enrichIM=mem$enrichIM,
-      multiEnrichDF=mem$multiEnrichDF,
-      multiEnrichResult=mem$multiEnrichResult,
-      thresholds=mem$thresholds,
-      headers=mem$headers,
-      enrichIMcolors=mem$enrichIMcolors,
-      enrichIMdirection=mem$enrichIMdirection,
-      enrichIMgeneCount=mem$enrichIMgeneCount,
-      geneIMcolors=mem$geneIMcolors,
-      geneIMdirection=mem$geneIMdirection
-   )
-   return(Mem);
-}
-
-
-if (!isGeneric("summary")) {
-   setGeneric("summary",
-      function(object, ...) standardGeneric("summary"))
-}
-
-#' Extract some elements of potentially long vector for display
-#'
-#' Extract some elements of potentially long vector for display,
-#' using ellipses when there are more than 'maxToShow' entries.
-#' 
-#' @keywords internal
-#' @noRd
-some_vector <- function
-(x,
- maxToShow=5,
- ellipsis="...",
- ellipsisPos=c("middle", "start", "end"),
- quote=FALSE,
- sep=", ",
- ...)
-{
-   #
-   ellipsisPos <- match.arg(ellipsisPos)
-   if (length(x) == 0 || !is.atomic(x)) {
-      return(x)
-   }
-   if (is.character(x) && TRUE %in% quote) {
-      x <- sQuote(x)
-   }
-   len <- length(x)
-   if (length(maxToShow) == 0 || head(maxToShow, 1) < 3) {
-      maxToShow <- 3
-   }
-   if (len > maxToShow) {
-      maxToShow <- maxToShow - 1;
-      if ("end" %in% ellipsisPos) {
-         y <- c(head(x, maxToShow - 1), ellipsis)
-      } else if ("start" %in% ellipsisPos) {
-         y <- c(ellipsis, head(x, maxToShow - 1))
-      } else {
-         bot <- ceiling(maxToShow / 2)
-         top <- len - (maxToShow - bot - 1)
-         y <- c(as.character(x[seq_len(bot)]),
-            ellipsis,
-            as.character(x[seq(from=top, to=len)]))
-      }
-   } else {
-      y <- x
-   }
-   jamba::cPaste(y, sep=sep)
-}
-
+#' @describeIn Mem-class Show summary of a Mem object, dimensions defined by
+#'    genes, sets, enrichments, showing up to 5 entries of each.
+#'    Also includes a list of analysis parameters: topN, and thresholds.
 setMethod("show", "Mem",
    function(object) {
       nenrich <- jamba::formatInt(length(object@enrichList))
@@ -515,7 +273,7 @@ setMethod("show", "Mem",
          paste0("class: Mem"),
          paste0("dim: ", nsets, " ", nenrich)
       )
-
+      
       summary_v <- c(
          paste0("class: Mem"),
          paste0("dim: ",
@@ -547,88 +305,70 @@ setMethod("show", "Mem",
    }
 )
 
-# setAs() to convert Mem back to mem using list format
-# as(Mem, "list")
 
-#' @name as
-#' @rdname Mem-class
-#' @aliases coerce
-setAs("Mem", "list",
-   function(from) {
-      use_slots=c(
-         enrichList="list",
-         enrichLabels="character",
-         colorV="character",
-         geneHitList="list",
-         geneHitIM="matrix",
-         memIM="matrix",
-         geneIM="matrix",
-         enrichIM="matrix",
-         multiEnrichDF="data.frame",
-         multiEnrichResult="enrichResult",
-         thresholds="list",
-         headers="list",
-         enrichIMcolors="matrix",
-         enrichIMdirection="matrix",
-         enrichIMgeneCount="matrix",
-         geneIMcolors="matrix",
-         geneIMdirection="matrix"
-      )
-      use_slotnames <- names(use_slots);
-      names(use_slotnames) <- use_slotnames;
-      new_list <- lapply(use_slotnames, function(slotname){
-         slot(from, slotname)
-      })
-      # rename 'headers' to 'colnames'
-      hmatch <- match("headers", names(new_list));
-      if (length(hmatch) == 1) {
-         names(new_list)[hmatch] <- "colnames";
-      }
-      # et voila
-      new_list
-   })
 
 #' @describeIn Mem-class Coerce S4 `Mem` to legacy `list` mem format
-#' @aliases coerce
-#'
 #' @param x `Mem` object
 #' @param ... additional arguments are ignored
 #'
-#' @returns `Mem_to_list()` returns a `list` suitable for ther mem functions.
+#' @returns `Mem_to_list()` returns a `list` suitable for other mem functions.
 #'
 #' @examples
 #' # examples for Mem_to_list and as(Mem, "list")
 #' data(Memtest)
 #' mem1 <- Mem_to_list(Memtest)
-#' mem2 <- as(Memtest, "list")
-#' identical(mem1, mem2)
+#' jamba::sdim(mem1)
 #'
 #' @export
 Mem_to_list <- function
 (x,
-   ...)
+ ...)
 {
    #
    if (!inherits(x, "Mem")) {
       stop("Input must be 'Mem'")
    }
-   as(x, "list")
+   
+   use_slots=c(
+      enrichList="list",
+      enrichLabels="character",
+      colorV="character",
+      geneHitList="list",
+      geneHitIM="matrix",
+      memIM="matrix",
+      geneIM="matrix",
+      enrichIM="matrix",
+      multiEnrichDF="data.frame",
+      multiEnrichResult="enrichResult",
+      thresholds="list",
+      headers="list",
+      enrichIMcolors="matrix",
+      enrichIMdirection="matrix",
+      enrichIMgeneCount="matrix",
+      geneIMcolors="matrix",
+      geneIMdirection="matrix"
+   )
+   use_slotnames <- names(use_slots);
+   names(use_slotnames) <- use_slotnames;
+   new_list <- lapply(use_slotnames, function(slotname){
+      slot(x, slotname)
+   })
+   # rename 'headers' to 'colnames'
+   hmatch <- match("headers", names(new_list));
+   if (length(hmatch) == 1) {
+      names(new_list)[hmatch] <- "colnames";
+   }
+   # et voila
+   new_list
 }
 
-
-
-setGeneric("enrichments", signature="x",
-   function(x, ...) standardGeneric("enrichments")
-)
-
-#' The enrichment names from a Mem object
-#'
+#' @importFrom S4Vectors as.list
 #' @param x `Mem` object
-#' @param ... additional arguments are ignored
 #' @docType methods
-#' @describeIn Mem-class Names for the enrichment tests in a Mem object
+#' @describeIn Mem-class Coerce S4 `Mem` to legacy `list` mem format
+#' @returns `as.list(Mem)` returns a `list` suitable for other mem functions.
 #' @export
-setMethod("enrichments", "Mem", function(x) names(x@enrichList))
+setMethod("as.list", "Mem", function(x) Mem_to_list(x))
 
 #' The enrichment names from a Mem object
 #'
@@ -636,12 +376,19 @@ setMethod("enrichments", "Mem", function(x) names(x@enrichList))
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class Names for the enrichment tests in a Mem object
+#' @returns `names()` returns the `character` vector of enrichment names
 #' @export
 setMethod("names", "Mem", function(x) names(x@enrichList))
 
-setGeneric("enrichments<-", signature="x",
-   function(x, value) standardGeneric("enrichments<-")
-)
+#' The enrichment names from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Names for the enrichment tests in a Mem object
+#' @returns `enrichments()` returns the `character` vector of enrichment names
+#' @export
+setMethod("enrichments", "Mem", function(x) names(x@enrichList))
 
 #' Assign enrichment names from a Mem object
 #'
@@ -683,23 +430,16 @@ setMethod("enrichments<-", "Mem", function(x, value) {
    x
 })
 
-setGeneric("sets", signature="x",
-   function(x, ...) standardGeneric("sets")
-)
-
 #' List pathway gene set names represented in a Mem object
 #'
 #' @param x `Mem` object
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class List pathway gene set names in a Mem object
+#' @returns `sets()` returns the `character` vector of pathway gene sets
 #' @export
 setMethod("sets", "Mem",
    function(x, ...) rownames(x@enrichIM)
-)
-
-setGeneric("sets<-", signature="x",
-   function(x, value) standardGeneric("sets<-")
 )
 
 #' Assign pathway gene set names represented in a Mem object
@@ -736,10 +476,6 @@ setMethod("sets<-", "Mem",
    }
 )
 
-setGeneric("genes", signature="x",
-   function(x, ...) standardGeneric("genes")
-)
-
 #' List genes represented in a Mem object
 #'
 #' @param x `Mem` object
@@ -749,10 +485,6 @@ setGeneric("genes", signature="x",
 #' @export
 setMethod("genes", "Mem",
    function(x, ...) rownames(x@geneIM)
-)
-
-setGeneric("genes<-", signature="x",
-   function(x, value) standardGeneric("genes<-")
 )
 
 #' Assign gene names in a Mem object
@@ -768,6 +500,24 @@ setMethod("genes<-", "Mem",
          "geneIM",
          "geneIMdirection",
          "geneIMcolors")
+      
+      # attempt to update geneHitIM for rows that match genes(x)
+      genes_input <- genes(x);
+      match_genehitim <- match(genes_input, rownames(x@geneHitIM))
+      match_genehitim_nonna <- !is.na(match_genehitim);
+      if (any(match_genehitim_nonna)) {
+         # as long as some values match, do the updates
+         k <- match_genehitim[match_genehitim_nonna]
+         rownames(x@geneHitIM)[k] <- value[match_genehitim_nonna];
+      }
+      if (!all(match_genehitim_nonna)) {
+         # consider warning that geneHitIM is not aligned with geneIM
+         warn_msg <- paste0("genes<- is not properly aligned with ",
+            "geneHitIM, ", 
+            "because genes(x) are not represented in rownames(geneHitIM).")
+         warning(warn_msg);
+      }
+      
       for (use_i in islot_rows) {
          xobj <- slot(x, use_i);
          if (length(value) != nrow(xobj)) {
@@ -778,10 +528,6 @@ setMethod("genes<-", "Mem",
       }
       x
    }
-)
-
-setGeneric("geneIM", signature="x",
-   function(x, ...) standardGeneric("geneIM")
 )
 
 #' The matrix of genes tested versus enrichment tests from a Mem object
@@ -796,10 +542,6 @@ setMethod("geneIM", "Mem",
    function(x, ...) x@geneIM
 )
 
-setGeneric("geneIMdirection", signature="x",
-   function(x, ...) standardGeneric("geneIMdirection")
-)
-
 #' The matrix of genes tested versus enrichment tests from a Mem object
 #'
 #' @param x `Mem` object
@@ -811,8 +553,32 @@ setMethod("geneIMdirection", "Mem",
    function(x, ...) x@geneIMdirection
 )
 
-setGeneric("geneIMcolors", signature="x",
-   function(x, ...) standardGeneric("geneIMcolors")
+#' Assign directional matrix of genes tested for enrichment in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Assign directional matrix to the gene-enrichment matrix
+#' @export
+setMethod("geneIMdirection<-", "Mem",
+   function(x, value) {
+      # enforce genes(x) must be present in rownames(value)
+      if (!all(genes(x) %in% rownames(value))) {
+         stop_msg <- paste0("genes(x) must all be represented in ",
+            "rownames(value).")
+         stop(stop_msg);
+      }
+      # enrichments(x) must be present in colnames(value)
+      if (!all(enrichments(x) %in% colnames(value))) {
+         stop_msg <- paste0("enrichments(x) must all be represented in ",
+            "colnames(value).")
+         stop(stop_msg);
+      }
+      imatch <- match(genes(x), rownames(value));
+      jmatch <- match(enrichments(x), colnames(value));
+      x@geneIMdirection <- value[imatch, jmatch, drop=FALSE];
+      x
+   }
 )
 
 #' The matrix of genes tested versus enrichment tests from a Mem object
@@ -826,8 +592,32 @@ setMethod("geneIMcolors", "Mem",
    function(x, ...) x@geneIMcolors
 )
 
-setGeneric("enrichList", signature="x",
-   function(x, ...) standardGeneric("enrichList")
+#' Assign a color matrix of genes tested for enrichment in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Assign a color matrix to the gene-enrichment matrix
+#' @export
+setMethod("geneIMcolors<-", "Mem",
+   function(x, value) {
+      # enforce genes(x) must be present in rownames(value)
+      if (!all(genes(x) %in% rownames(value))) {
+         stop_msg <- paste0("genes(x) must all be represented in ",
+            "rownames(value).")
+         stop(stop_msg);
+      }
+      # enrichments(x) must be present in colnames(value)
+      if (!all(enrichments(x) %in% colnames(value))) {
+         stop_msg <- paste0("enrichments(x) must all be represented in ",
+            "colnames(value).")
+         stop(stop_msg);
+      }
+      imatch <- match(genes(x), rownames(value));
+      jmatch <- match(enrichments(x), colnames(value));
+      x@geneIMcolors <- value[imatch, jmatch, drop=FALSE];
+      x
+   }
 )
 
 #' The list of enrichResult data in an Mem object
@@ -841,10 +631,6 @@ setMethod("enrichList", "Mem",
    function(x, ...) x@enrichList
 )
 
-setGeneric("enrichIM", signature="x",
-   function(x, ...) standardGeneric("enrichIM")
-)
-
 #' The pathway/P-value matrix from a Mem object
 #'
 #' @param x `Mem` object
@@ -856,23 +642,43 @@ setMethod("enrichIM", "Mem",
    function(x, ...) x@enrichIM
 )
 
-setGeneric("enrichIMcolors", signature="x",
-   function(x, ...) standardGeneric("enrichIMcolors")
-)
-
 #' The pathway-enrichment color matrix from a Mem object
 #'
 #' @param x `Mem` object
 #' @param ... additional arguments are ignored
 #' @docType methods
-#' @describeIn Mem-class The pathway/directional enrichment color matrix
+#' @describeIn Mem-class The pathway-enrichment directional color matrix
 #' @export
 setMethod("enrichIMcolors", "Mem",
    function(x, ...) x@enrichIMcolors
 )
 
-setGeneric("enrichIMdirection", signature="x",
-   function(x, ...) standardGeneric("enrichIMdirection")
+#' Assign the pathway-enrichment directional color matrix from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Assign the pathway-enrichment directional color matrix
+#' @export
+setMethod("enrichIMcolors<-", "Mem",
+   function(x, value) {
+      # enforce genes(x) must be present in rownames(value)
+      if (!all(sets(x) %in% rownames(value))) {
+         stop_msg <- paste0("sets(x) must all be represented in ",
+            "rownames(value).")
+         stop(stop_msg);
+      }
+      # enrichments(x) must be present in colnames(value)
+      if (!all(enrichments(x) %in% colnames(value))) {
+         stop_msg <- paste0("enrichments(x) must all be represented in ",
+            "colnames(value).")
+         stop(stop_msg);
+      }
+      imatch <- match(sets(x), rownames(value));
+      jmatch <- match(enrichments(x), colnames(value));
+      x@enrichIMcolors <- value[imatch, jmatch, drop=FALSE];
+      x
+   }
 )
 
 #' The pathway-enrichment directional score matrix from a Mem object
@@ -886,8 +692,32 @@ setMethod("enrichIMdirection", "Mem",
    function(x, ...) x@enrichIMdirection
 )
 
-setGeneric("enrichIMgeneCount", signature="x",
-   function(x, ...) standardGeneric("enrichIMgeneCount")
+#' Assign the pathway-enrichment directional score matrix from a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Assign the pathway-enrichment directional score matrix
+#' @export
+setMethod("enrichIMdirection<-", "Mem",
+   function(x, value) {
+      # enforce genes(x) must be present in rownames(value)
+      if (!all(sets(x) %in% rownames(value))) {
+         stop_msg <- paste0("sets(x) must all be represented in ",
+            "rownames(value).")
+         stop(stop_msg);
+      }
+      # enrichments(x) must be present in colnames(value)
+      if (!all(enrichments(x) %in% colnames(value))) {
+         stop_msg <- paste0("enrichments(x) must all be represented in ",
+            "colnames(value).")
+         stop(stop_msg);
+      }
+      imatch <- match(sets(x), rownames(value));
+      jmatch <- match(enrichments(x), colnames(value));
+      x@enrichIMdirection <- value[imatch, jmatch, drop=FALSE];
+      x
+   }
 )
 
 #' The pathway-enrichment gene count matrix with gene counts from a Mem object
@@ -902,10 +732,6 @@ setMethod("enrichIMgeneCount", "Mem",
    function(x, ...) x@enrichIMgeneCount
 )
 
-setGeneric("memIM", signature="x",
-   function(x, ...) standardGeneric("memIM")
-)
-
 #' The gene-pathway incidence matrix from a Mem object
 #'
 #' @param x `Mem` object
@@ -915,10 +741,6 @@ setGeneric("memIM", signature="x",
 #' @export
 setMethod("memIM", "Mem",
    function(x, ...) x@memIM
-)
-
-setGeneric("geneHitIM", signature="x",
-   function(x, ...) standardGeneric("geneHitIM")
 )
 
 #' The matrix of genes tested for enrichment in a Mem object
@@ -933,8 +755,64 @@ setMethod("geneHitIM", "Mem",
    function(x, ...) x@geneHitIM
 )
 
-setGeneric("headers", signature="x",
-   function(x, ...) standardGeneric("headers")
+
+#' Assign matrix of genes tested for enrichment in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Assign the matrix of genes tested in a Mem object
+#' @export
+setMethod("geneHitIM<-", "Mem",
+   function(x, value) {
+      # enforce genes(x) must be present in rownames(value)
+      if (!all(genes(x) %in% rownames(value))) {
+         stop_msg <- paste0("genes(x) must all be represented in ",
+            "rownames(value).")
+         stop(stop_msg);
+      }
+      # enrichments(x) must be present in colnames(value)
+      if (!all(enrichments(x) %in% colnames(value))) {
+         stop_msg <- paste0("enrichments(x) must all be represented in ",
+            "colnames(value).")
+         stop(stop_msg);
+      }
+      x@geneHitIM <- value;
+      x
+   }
+)
+
+#' The list of genes tested for enrichment in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class The list of genes tested for enrichment, including
+#'    genes not associated with enrichment results.
+#' @export
+setMethod("geneHitList", "Mem",
+   function(x, ...) x@geneHitList
+)
+
+#' Assign the list of genes tested for enrichment in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class Assign the list of genes tested for enrichment,
+#'    including genes not associated with enrichment results.
+#' @export
+setMethod("geneHitList<-", "Mem",
+   function(x, value) {
+      # enforce genes(x) must be present in rownames(value)
+      if (!all(enrichments(x) %in% names(value))) {
+         stop_msg <- paste0("enrichments(x) must all be represented in ",
+            "names(value).")
+         stop(stop_msg);
+      }
+      x@geneHitList <- value;
+      x
+   }
 )
 
 #' The column headers mapped in a Mem object
@@ -947,11 +825,6 @@ setGeneric("headers", signature="x",
 #' @export
 setMethod("headers", "Mem", function(x) names(x@headers))
 
-
-setGeneric("colorV", signature="x",
-   function(x, ...) standardGeneric("colorV")
-)
-
 #' List colors assigned to enrichment tests in a Mem object
 #'
 #' @param x `Mem` object
@@ -961,10 +834,6 @@ setGeneric("colorV", signature="x",
 #' @export
 setMethod("colorV", "Mem",
    function(x, ...) x@colorV
-)
-
-setGeneric("colorV<-", signature="x",
-   function(x, value) standardGeneric("colorV<-")
 )
 
 #' Assign colors to enrichment tests in a Mem object
@@ -997,11 +866,6 @@ setMethod("colorV<-", "Mem",
    }
 )
 
-
-setGeneric("thresholds", signature="x",
-   function(x, ...) standardGeneric("thresholds")
-)
-
 #' List thresholds defined in a Mem object
 #'
 #' @param x `Mem` object
@@ -1013,6 +877,30 @@ setMethod("thresholds", "Mem",
    function(x, ...) x@thresholds
 )
 
+#' Assign thresholds defined in a Mem object
+#'
+#' @param x `Mem` object
+#' @param ... additional arguments are ignored
+#' @docType methods
+#' @describeIn Mem-class thresholds defined in a Mem object.
+#'    Note that thresholds do not trigger any other updates to the
+#'    Mem object.
+#' @export
+setMethod("thresholds<-", "Mem",
+   function(x, value) {
+      if (!is.list(value)) {
+         if (is.atomic(value)) {
+            if (length(names(value)) == 0) {
+               stop("value must have names.");
+            }
+            value <- as.list(value)
+         }
+      }
+      # Add some checks for required threshold names?
+      x@thresholds <- value;
+      x
+   }
+)
 
 #' Describe dimensions of a Mem object
 #'
@@ -1037,25 +925,155 @@ setMethod("dimnames", "Mem",
          enrichments=colnames(x@enrichIM))
 )
 
+#' @name as
+#' @rdname Mem-class
+#' @aliases coerce
+setAs("list", "Mem",
+   function(from) {
+      list_to_Mem(from)
+   })
 
-# future expansion:
-#
-# - cbind: combine two Mem objects, concatenating the enrichments,
-#      and making new geneIM, enrichIM, memIM
+#' @name as
+#' @rdname Mem-class
+#' @aliases coerce
+setAs("Mem", "list",
+   function(from) {
+      Mem_to_list(from)
+   })
 
-# Consider: cbind() to combine two Mem objects, different enrichments
-# Consider: rbind() to combine two Mem objects, same enrichments, new pathways
-# - probably need to require identical colnames and thresholds
+#' @returns `list_to_Mem()` returns a `Mem` S4 object, from 'list' or
+#'    'Mem' input.
+#'
+#' @describeIn Mem-class Convert legacy `list` mem format to S4 `Mem`
+#' @param mem `list` output from `multiEnrichMap()`
+#' 
+#' @examples
+#' # list_to_Mem examples
+#' data(Memtest)
+#' mem <- as(Memtest, "list")
+#' Mem <- list_to_Mem(mem)
+#'
+#' @export
+list_to_Mem <- function
+(mem)
+{
+   #
+   use_slots=c(
+      enrichList="list",
+      enrichLabels="character",
+      colorV="character",
+      geneHitList="list",
+      geneHitIM="matrix",
+      memIM="matrix",
+      geneIM="matrix",
+      enrichIM="matrix",
+      multiEnrichDF="data.frame",
+      multiEnrichResult="enrichResult",
+      thresholds="list",
+      headers="list",
+      enrichIMcolors="matrix",
+      enrichIMdirection="matrix",
+      enrichIMgeneCount="matrix",
+      geneIMcolors="matrix",
+      geneIMdirection="matrix"
+   )
+   # return Mem unchanged if it is already 'Mem'
+   if (inherits(mem, "Mem")) return(mem);
+   # rename 'colnames' to 'headers'
+   hmatch <- match("colnames", names(mem));
+   if (length(hmatch) == 1) {
+      names(mem)[hmatch] <- "headers";
+   }
+   
+   # Some slots can be added with defaults
+   if (!"geneIMdirection" %in% names(mem)) {
+      mem$geneIMdirection <- (abs(mem$geneIM) > 0) * 1;
+   }
+   
+   if (!all(names(use_slots) %in% names(mem))) {
+      missing_slots <- setdiff(names(use_slots), names(mem));
+      stop(paste0(
+         "Not all required slot names were provided:\n",
+         jamba::cPaste(missing_slots, sep=", ")))
+   }
+   # print(jamba::sdim(x[names(use_slots)]));# debug
+   Mem <- new("Mem",
+      enrichList=mem$enrichList,
+      enrichLabels=mem$enrichLabels,
+      colorV=mem$colorV,
+      geneHitList=mem$geneHitList,
+      geneHitIM=mem$geneHitIM,
+      memIM=mem$memIM,
+      geneIM=mem$geneIM,
+      enrichIM=mem$enrichIM,
+      multiEnrichDF=mem$multiEnrichDF,
+      multiEnrichResult=mem$multiEnrichResult,
+      thresholds=mem$thresholds,
+      headers=mem$headers,
+      enrichIMcolors=mem$enrichIMcolors,
+      enrichIMdirection=mem$enrichIMdirection,
+      enrichIMgeneCount=mem$enrichIMgeneCount,
+      geneIMcolors=mem$geneIMcolors,
+      geneIMdirection=mem$geneIMdirection
+   )
+   return(Mem);
+}
 
-# setMethod("cbind", "Mem",
-#    function(..., deparse.level=1) {
-#       #
-#       args <- unname(list(...))
-#       .cbind.SummarizedExperiment(args)
-#    })
 
-# Accessors to consider:
-# - names
-# - geneIM
-# - enrichIM
-# - memIM
+#' Mem updateObject
+#' 
+#' @returns `updateObject()` returns a `Mem` S4 object with the current
+#'    class version, and current valid class definition. It should be
+#'    able to update any serialized 'Mem' object from previous
+#'    class versions.
+#'
+#' @describeIn Mem-class Confirm Mem object meets current class definition.
+#' @export
+setMethod("updateObject",
+   methods::signature(object="Mem"),
+   definition=function(object, ..., verbose=FALSE) {
+      # be open about what's happening
+      if (verbose) message("updateObject(object = 'Mem')");
+      
+      object <- methods::callNextMethod()
+      
+      # if current, return as-is
+      if (Biobase::isCurrent(object)["Mem"]) return(object)
+      
+      ## Create an updated instance.
+      if (!Biobase::isVersioned(object)) {
+         if (verbose) message("Re-creating Mem to include Versioned.")
+         ## Radical surgery – create a new, up-to-date instance
+         object <- new("Mem",
+            enrichList=object@enrichList,
+            enrichLabels=object@enrichLabels,
+            colorV=object@colorV,
+            geneHitList=object@geneHitList,
+            geneHitIM=object@geneHitIM,
+            memIM=object@memIM,
+            geneIM=object@geneIM,
+            geneIMcolors=object@geneIMcolors,
+            geneIMdirection=object@geneIMdirection,
+            enrichIM=object@enrichIM,
+            enrichIMcolors=object@enrichIMcolors,
+            enrichIMdirection=object@enrichIMdirection,
+            enrichIMgeneCount=object@enrichIMgeneCount,
+            headers=object@headers,
+            thresholds=object@thresholds,
+            multiEnrichDF=object@multiEnrichDF,
+            multiEnrichResult=object@multiEnrichResult
+            # annotation = updateObject(annotation(object), ..., verbose=verbose)
+         )
+         use_version <- Biobase::classVersion(object="Mem")["Mem"];
+         Biobase::classVersion(object) <- use_version;
+      } else if (Biobase::classVersion(object)["Mem"] < "1.0.0") {
+         # Do something for specific versions as necessary
+         # For now, do nothing.
+      } else {
+         ## Make minor changes, and update version by consulting class definition
+         if (verbose) message ("Updating Mem class version to current.")
+         use_version <- Biobase::classVersion(object="Mem")["Mem"];
+         Biobase::classVersion(object)["Mem"] <- use_version;
+      }
+      object
+   })

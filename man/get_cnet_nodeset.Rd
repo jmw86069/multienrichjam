@@ -57,13 +57,21 @@ for example calling \code{nudge_igraph_node()} on the whole set
 of nodes.
 }
 \seealso{
-Other jam cnet igraph functions: 
+Other jam igraph utilities: 
+\code{\link{color_edges_by_nodegroups}()},
+\code{\link{color_edges_by_nodes}()},
+\code{\link{color_nodes_by_nodegroups}()},
+\code{\link{jam_igraph}()},
+\code{\link{launch_shinycat}()},
+\code{\link{subgraph_jam}()}
+
+Other jam cnet utilities: 
 \code{\link{adjust_cnet_nodeset}()},
 \code{\link{adjust_cnet_set_relayout_gene}()},
-\code{\link{apply_cnet_direction}()},
 \code{\link{apply_nodeset_spacing}()},
-\code{\link{make_cnet_test}()},
-\code{\link{nudge_igraph_node}()},
-\code{\link{rotate_igraph_layout}()}
+\code{\link{bulk_cnet_adjustments}()},
+\code{\link{launch_shinycat}()},
+\code{\link{make_cnet_test}()}
 }
-\concept{jam cnet igraph functions}
+\concept{jam cnet utilities}
+\concept{jam igraph utilities}

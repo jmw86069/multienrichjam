@@ -8,6 +8,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/cnet_heatmap_guide.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/index.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/mem_function_notes.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/mem_vignettes.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/multienrichjam_dev_notes.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/news/index.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/add_pathway_direction.html</loc></url>
@@ -91,10 +92,11 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/make_legend_bivariate.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/make_point_hull.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/Mem-class.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/Mem-data.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/Mem-methods.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/Mem-slots.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem2cnet.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem2emap.html</loc></url>
-<url><loc>https://jmw86069.github.io/multienrichjam/reference/memIM2cnet.html</loc></url>
-<url><loc>https://jmw86069.github.io/multienrichjam/reference/Memtest.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_find_overlap.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_gene_path_heatmap.html</loc></url>

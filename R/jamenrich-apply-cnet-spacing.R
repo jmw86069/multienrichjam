@@ -30,7 +30,7 @@
 #' treated as if its nodeset spacing is exactly `percent_spacing`
 #' so that no subsequent adjustments are performed on the nodeset.
 #'
-#' @family jam cnet igraph functions
+#' @family jam cnet utilities
 #'
 #' @return `igraph` Cnet object, whose nodes are adjusted
 #'    according to the arguments given.

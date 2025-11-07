@@ -265,7 +265,9 @@ shinycat_ui <- function
 #'       1. 'nodeset_adj': `data.frame` used to adjust nodesets.
 #'       2. 'node_adj': `data.frame` used to adjust nodes.
 #'
-#'
+#' 
+#' @family jam igraph utilities
+#' @family jam cnet utilities
 #' @family jam shiny functions
 #'
 #' @examples

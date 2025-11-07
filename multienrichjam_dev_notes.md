@@ -42,6 +42,25 @@
 
    * Change `cutoffRowMinP` to `p_cutoff` 
 
+* Check the weight of package dependencies,
+see https://r-pkgs.org/dependencies-mindset-background.html#sec-dependencies-tidyverse
+
+```R
+# number of hard dependencies per package
+n_hard_deps <- function(pkg) {
+  deps <- tools::package_dependencies(pkg, recursive=TRUE)
+  lengths(deps)
+}
+
+n_hard_deps(c("tidyverse", "devtools", "remotes", "DOSE"))
+```
+
+* Check specific package dependencies as a tree:
+
+```R
+tools::package_dependencies("DOSE", recursive=TRUE)
+pak::pkg_deps_tree("DOSE")
+```
 
 # Documentation paradigm
 

@@ -227,12 +227,13 @@ Mem Plot Folio then provides a series of visualizations:
 ```{r, mem-folio, fig.height=12, fig.width=8, fig.alt="Mem plot folio showing the first four plots"}
 mem_canonical_plots <- mem_plot_folio(mem_canonical,
    pathway_column_split=4,
-   column_cex=0.7,
-   node_factor=1,
+   column_cex=0.4, row_cex=0.4,
+   row_names_max_width=grid::unit(9, "cm"),
+   column_names_max_height=grid::unit(4, "cm"),
+   node_factor=2.5,
+   label_factor_l=list(nodeType=c(Set=0.7, Gene=1.5)),
    use_shadowText=TRUE,
-   label_factor=1.2,
-   do_which=c(1:4),
-   verbose=TRUE,
+   do_which=c(1, 2, 3, 4),
    main="Canonical Pathways");
 ```
 
@@ -261,43 +262,6 @@ jam_igraph(cnet,
    use_shadowText=TRUE,
    label_factor_l=list(nodeType=c(Gene=2, Set=1)))
 
-```
-
-### ShinyCat for Custom Cnet Layout
-
-The R-shiny Cnet Adjustment Tool **ShinyCat** is intended to help polish
-the Cnet plot layout when making a final figure.
-
-The R-shiny app uses several functions:
-
-* `nudge_igraph_node()`: mode individual nodes
-* `adjust_cnet_nodeset()`: adjust spacing, position, rotation of a nodeset
-* `reorder_igraph_nodes()`: sort nodes in a group by color
-* `spread_igraph_labels()`: arrage labels radially away from incoming edges
-* `bulk_cnet_adjustments()`: several operations applied in bulk
-
-> Make sure to assign the output to a variable, or to click "Save RData"
-from within the R-shiny app. For example:
-
-```{r shinycat_1, eval=FALSE}
-output_env <- launch_shinycat(g=cnet)
-```
-
-The output is stored in an `environment` called `output_env`.
-
-```{r shinycat_2, eval=FALSE}
-# obtain the output data
-adj_cnet <- output_env$adj_cnet;
-```
-
-Then the new Cnet plot can be plotted, for example:
-
-```{r shinycat_3, eval=FALSE}
-# jam_graph
-jam_igraph(adj_cnet,
-   node_factor=2,
-   use_shadowText=TRUE,
-   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
 ```
 
 
@@ -607,4 +571,48 @@ jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
 ```
 
 
+# ShinyCat for Custom Cnet Layout
+
+The R-shiny Cnet Adjustment Tool **ShinyCat** is intended to help polish
+the Cnet plot layout when making a final figure.
+
+The R-shiny app uses several functions:
+
+* `nudge_igraph_node()`: mode individual nodes
+* `adjust_cnet_nodeset()`: adjust spacing, position, rotation of a nodeset
+* `reorder_igraph_nodes()`: sort nodes in a group by color
+* `spread_igraph_labels()`: arrage labels radially away from incoming edges
+* `bulk_cnet_adjustments()`: several operations applied in bulk
+
+> Make sure to assign the output to a variable, or to click "Save RData"
+from within the R-shiny app. For example:
+
+```{r shinycat_1, eval=FALSE}
+output_env <- launch_shinycat(g=cnet)
+```
+
+The output is stored in an `environment` called `output_env`.
+
+```{r shinycat_2, eval=FALSE}
+# obtain the output data
+adj_cnet <- output_env$adj_cnet;
+```
+
+Then the new Cnet plot can be plotted, for example:
+
+```{r shinycat_3, eval=FALSE}
+# jam_graph
+jam_igraph(adj_cnet,
+   node_factor=2,
+   use_shadowText=TRUE,
+   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+```
+
+## ShinyCat Screenshot
+
+An example of ShinyCat in action is shown below.
+
+```{r shinycat-screen-2, echo=FALSE, out.width="100%", fig.alt="Screenshot of ShinyCat in action, with a Cnet network plot in the center, and several inputs on the left to adjust the layout."}
+knitr::include_graphics("shinycat-2.png")
+```
 

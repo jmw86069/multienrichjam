@@ -102,7 +102,7 @@ find_enrich_colnames <- function
 {
    #
    if (inherits(x, "Mem")) {
-      x <- Mem@enrichList;
+      x <- enrichList(Mem);
    }
    if (!inherits(x, c("data.frame", "list", "enrichResult"))) {
       stop("Input must be one of: 'Mem', 'data.frame', 'enrichResult', 'list'")

@@ -480,14 +480,8 @@ primary goal of the \code{multienrichjam} R package.
 }
 
 \seealso{
-Other jam plot functions: 
-\code{\link{adjust_polygon_border}()},
-\code{\link{grid_with_title}()},
+Other multienrichjam core functions: 
 \code{\link{jam_igraph}()},
-\code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{plot_layout_scale}()}
+\code{\link{multiEnrichMap}()}
 }
-\concept{jam plot functions}
+\concept{multienrichjam core functions}

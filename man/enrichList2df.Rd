@@ -68,7 +68,6 @@ Other jam conversion functions:
 \code{\link{cnet2df}()},
 \code{\link{cnet2im}()},
 \code{\link{enrichDF2enrichResult}()},
-\code{\link{enrichList2IM}()},
-\code{\link{enrichMapJam}()}
+\code{\link{enrichList2IM}()}
 }
 \concept{jam conversion functions}

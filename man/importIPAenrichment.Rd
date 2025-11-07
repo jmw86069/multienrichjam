@@ -218,6 +218,6 @@ and optionally a column "Symbol" which is edited by multienrichjam.
 }
 \seealso{
 Other jam import functions: 
-\code{\link{curateIPAcolnames}()}
+\code{\link{enrichDF2enrichResult}()}
 }
 \concept{jam import functions}

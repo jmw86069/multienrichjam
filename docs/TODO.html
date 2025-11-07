@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.102.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,7 +16,16 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
+    <li><a class="dropdown-item" href="articles/importClusterProfiler.html">Multienrichment with clusterProfiler</a></li>
+    <li><a class="dropdown-item" href="articles/importIPA.html">How to use Ingenuity IPA enrichment results</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Explanation</h6></li>
+    <li><a class="dropdown-item" href="articles/MemPlotConcepts.html">Mem Plot Concepts</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
@@ -36,12 +45,44 @@
 <div id="todo" class="section level1">
 
 <div class="section level2">
+<h2 id="id_04nov2025">04nov2025<a class="anchor" aria-label="anchor" href="#id_04nov2025"></a></h2>
+<ul><li>
+<p>PARTIAL. Simplify the function reference categories.</p>
+<ul><li>DONE. Move core user-facing functions to top categories.</li>
+<li>Move almost everything into “Details”.</li>
+</ul></li>
+<li><p>Split vignettes into concise subtopics.</p></li>
+<li><p>COMPLETE. Consider <code><a href="https://rdrr.io/pkg/Biobase/man/class.Versioned.html" class="external-link">Biobase::Versioned</a></code> to version <code>Mem</code> class structure.</p></li>
+<li><p>COMPLETE. Write <code>updateObject()</code>.</p></li>
+<li>
+<p>Make some Mem slots optional, consider gradual reduction of slots?</p>
+<ul><li>Use slot type “matrix_OR_NULL” with <code>setClassUnion("matrix_OR_NULL", c("matrix", "NULL"))</code>.</li>
+<li>The <code>geneIMcolors()</code> accessor would return geneIMcolors when defined, or generate the color matrix dynamically using thresholds and colorV.</li>
+<li>Candidates: geneIMcolors, enrichIMcolors, geneIMdirection multiEnrichDF, multiEnrichList</li>
+</ul></li>
+<li><p>Add <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code> and <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> to combine multiple Mem objects.</p></li>
+<li><p>Consider providing some data dynamically, using current thresholds: <code>enrichIMcolors</code>, <code>geneIMcolors</code></p></li>
+<li><p>Add <code>plot_cnet_heatmaps()</code>. It needs pathway and expression data to test.</p></li>
+<li>
+<p>Add <code>MemPlotFolio</code> S4 object</p>
+<ul><li>Store data in <code>plotdata</code> as a <code>list</code> or <code>SimpleList</code>
+</li>
+<li>Store parameters in a slot <code>parameters</code> as <code>list</code> as well.</li>
+<li>Accessors: GPHeatmap, EHeatmap, Cnet</li>
+<li>In theory, all data could be generated via accessors, and just store the parameters.</li>
+</ul></li>
+<li>
+<p>Consider serialization functions</p>
+<ul><li>save series of incident matrices, data.frame objects</li>
+<li>confirm it can be re-loaded directly to <code>Mem</code> object</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
 <h2 id="id_29oct2025">29oct2025<a class="anchor" aria-label="anchor" href="#id_29oct2025"></a></h2>
 <ul><li>
 <p>Mem S4 object updates:</p>
-<ul><li><p>Consider S4Vectors types for ‘thresholds’ which would allow editing an entry in place with ‘thresholds(Mem)$p_cutoff &lt;- 0.1’ syntax.</p></li>
-<li><p>Consider better mechanism to rename pathway gene sets with <code>sets()&lt;-</code>, specifically so that the <code>enrichList</code> results are also kept consistent. Perhaps an alias to change from original name to custom name?</p></li>
-<li><p>Consider adding <code>BiocGenerics</code> for generic S4 functions, also to use class versioning with slot <code>.__classVersion</code>.</p></li>
+<ul><li><p>Consider better mechanism to rename pathway gene sets with <code>sets()&lt;-</code>, specifically so that the <code>enrichList</code> results are also kept consistent. Perhaps an alias to change from original name to custom name?</p></li>
+<li><p>Consider auto-updating <code>Mem</code> when parameters/thresholds change.</p></li>
 <li>
 <p>Consider removing some slots and replacing the accessor with function:</p>
 <ul><li>
@@ -390,7 +431,7 @@
 <li>
 <p><strong>methods</strong>:</p>
 <ul><li>
-<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/mem2cnet.html">mem2cnet()</a></code>
 </li>
 <li>
 <code>enrichList()</code> - accessor for <code>mem@enrichList</code>
@@ -525,7 +566,7 @@
 <li><p>enrichList: <code>list</code> of <code>enrichResult</code> objects</p></li>
 <li><p>colorV: <code>character</code> vector of colors per enrichment</p></li>
 <li><p>colnames: <code>character</code> column assignment (consider omitting to enforce standardized colnames)</p></li>
-<li><p>omit: <code>multiEnrichMap</code> - in favor of <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, <code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code></p></li>
+<li><p>omit: <code>multiEnrichMap</code> - in favor of <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, <code><a href="reference/mem2cnet.html">memIM2cnet()</a></code></p></li>
 <li><p>omit: <code>multiCnetPlot</code> - in favor of <code><a href="reference/mem_multienrichplot.html">mem_multienrichplot()</a></code></p></li>
 <li><p>optional: store output from <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> to keep a series of plots coordinated, using the same options: <code>pathway_column_split</code>, <code>gene_row_split</code>, <code>enrich_im_weight</code>, <code>gene_im_weight</code>, <code>column_method</code>, <code>row_method</code> (rename <code>column_method</code> to <code>pathway_method</code>?)</p></li>
 <li><p>optional <code>enrichment_hm</code>: <code>Heatmap</code> output from <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>?</p></li>
@@ -533,7 +574,7 @@
 <li>
 <p>methods:</p>
 <ul><li>
-<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code>
+<code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/mem2cnet.html">mem2cnet()</a></code>
 </li>
 <li>
 <code>enrichList()</code> - accessor for <code>mem@enrichList</code>
@@ -1278,16 +1319,16 @@ gsub_vertex(g,
 <p>DONE: Add <code>geneIMdirection</code> to mem object.</p>
 <ul><li>Requires <code>geneHitIM</code> input to <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code>.</li>
 <li>Alternate backwards compatibility is function to add <code>geneIMdirection</code> to <code>mem</code> object, and/or <code>cnet</code> <code>igraph</code> object.</li>
-<li>DONE: <code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code> should optionally use <code>enrichIMdirection</code> to apply border color.</li>
+<li>DONE: <code><a href="reference/mem2cnet.html">memIM2cnet()</a></code> should optionally use <code>enrichIMdirection</code> to apply border color.</li>
 </ul></li>
-<li><p>DONE: <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code> as its own function, minor variation and extension to <code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code> which only uses the <code>memIM</code> portion of the data.</p></li>
+<li><p>DONE: <code><a href="reference/mem2cnet.html">mem2cnet()</a></code> as its own function, minor variation and extension to <code><a href="reference/mem2cnet.html">memIM2cnet()</a></code> which only uses the <code>memIM</code> portion of the data.</p></li>
 <li><p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code> should recognize <code>lwd</code> when plotting nodes. This change diverges from default behavior in <code>igraph</code> which only uses <code>par("lwd")</code> as a global adjustment for all lines while plotting nodes, therefore does not allow any nodes to have different line widths.</p></li>
 <li><p>DONE: Outline of Cnet gene nodes by direction.</p></li>
 <li><p>Gene-Path heatmap rows should optionally indicate direction, possibly another stripe using geneIMdirection.</p></li>
 </ul></li>
 <li>
 <p><code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
-<ul><li>should call <code><a href="reference/memIM2cnet.html">mem2cnet()</a></code> - or just avoid this step altogether since the <code>cnet</code> process is better done with <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>
+<ul><li>should call <code><a href="reference/mem2cnet.html">mem2cnet()</a></code> - or just avoid this step altogether since the <code>cnet</code> process is better done with <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>
 </li>
 <li>consider removing the <code>enrichMap</code> and <code>cnet</code> steps altogether.</li>
 </ul></li>
@@ -1393,7 +1434,7 @@ gsub_vertex(g,
 <h2 id="id_04feb2022">04feb2022<a class="anchor" aria-label="anchor" href="#id_04feb2022"></a></h2>
 <p>Workflow that starts with pathway-gene incidence matrix upfront, bypassing the <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> workflow altogether.</p>
 <ul><li>
-<p><code><a href="reference/memIM2cnet.html">memIM2cnet()</a></code> to convert pathway-to-gene incidence matrix to Cnet <code>igraph</code>.</p>
+<p><code><a href="reference/mem2cnet.html">memIM2cnet()</a></code> to convert pathway-to-gene incidence matrix to Cnet <code>igraph</code>.</p>
 <ul><li>Requires <code>geneIM</code> which is the enrichment-to-gene incidence matrix. In the driving example, each enrichment would represent a disease subgroup, with the full set of differential genes associated to each subgroup.</li>
 <li>Requires <code>enrichIM</code> which contains enrichment-to-pathway whose values are P-values. When this data is not supplied, it should use 0.001 by default. I think these values are only used as an optional gradient color for the pathway nodes.</li>
 <li>Optional <code>geneIMcolors</code> which is the same as <code>geneIM</code> except the cells contain colors to use for each gene. Currently the function does not fill these colors, the best method is to use <code><a href="https://jmw86069.github.io/colorjam/reference/matrix2heatColors.html" class="external-link">colorjam::matrix2heatColors()</a></code>

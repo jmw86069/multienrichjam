@@ -1,26 +1,50 @@
 
 
-#' Fix Set labels for legibility
+#' Fix Set or pathway labels for legibility
 #'
-#' Fix Set labels for legibility
+#' Fix Set or pathway labels for legibility
 #'
 #' This function is a convenient wrapper for several steps that edit
-#' gene set and pathways labels to be slightly more legible. It
-#' operates on either a character vector, or an igraph object.
+#' gene set and pathways labels to be slightly more legible.
+#' It operates on either a `character` vector, an `igraph` object,
+#' or `Mem` object.
+#' 
+#' The arguments have extensive default values encoded, which may
+#' eventually be moved to structured variables. For now, they are
+#' visible to make sure the changes are open for review.
+#' The vast majority of steps are custom biological terms which
+#' are expected to have certain capitalization.
+#' Some terms are commonly observed artifacts in public pathway data,
+#' for example `"PI3kakt"` is a common artifact which refers to
+#' `"PI3K/AKT"`.
 #'
 #' * To use custom from,to replacements, along with the default replacements,
 #' supply the custom replacements with arguments `add_from`,`add_to`.
 #' * To use custom from,to replacements, without applying the defaults,
 #' supply the custom replacements with arguments `words_from`,`words_to`.
+#' 
+#' For `igraph` input, the vertex 'name' is used as the starting point.
+#' To revert changes, use `igraph::V(x)$label <- igraph::V(x)$name`.
+#' 
+#' For `Mem` input, the `sets(x)` are updated, with no immediate way
+#' to revert changes. It may become useful to do so in future, however.
+#' 
+#' @return object with class to match input 'x', one of:
+#'    * `character` vector,
+#'    * `igraph` object, or
+#'    * `Mem` object.
 #'
-#' @return vector or igraph object, to match the input `x`.
-#'
+#' @family jam Mem utilities
 #' @family jam igraph functions
 #'
 #' @param x any of the following objects:
 #'    * `character` vector
-#'    * `igraph` object. The `V(g)$name` attribute is used as the input,
+#'    * `igraph` object. The `igraph::V(g)$name` attribute is used as input,
 #'    and the resulting label is then stored as `V(g)$label`.
+#'    When `nodeType` is also defined, and nodes have attribute 'nodeType',
+#'    only nodes with that attribute value will be edited.
+#'    The default is `nodeType="Set"`.
+#'    * `Mem` object. The `sets()` are adjusted by this function.
 #' @param wrap `logical` indicating whether to apply word wrap, based upon
 #'    the supplied `width` argument.
 #' @param width integer value used when `wrap=TRUE`, it is sent to
@@ -223,7 +247,19 @@ fixSetLabels <- function
        "Please remedy."));
    }
 
-   if (inherits(x, "igraph")) {
+   xMem <- NULL;
+   if (inherits(x, "Mem")) {
+      xMem <- x;
+      x <- sets(xMem);
+      which_nodes <- seq_along(x);
+      for (i in seq_along(removeGrep)) {
+         xPrep <- gsub("[_ ]+", " ",
+            gsub(removeGrep[[i]],
+               "",
+               ignore.case=TRUE,
+               x));
+      }
+   } else if (inherits(x, "igraph")) {
       if ("any" %in% nodeType) {
          which_nodes <- seq_len(igraph::vcount(x));
       } else {
@@ -236,7 +272,7 @@ fixSetLabels <- function
                ignore.case=TRUE,
                igraph::V(x)$name[which_nodes]));
       }
-   } else {
+   } else if (is.atomic(x)) {
       which_nodes <- seq_along(x);
       for (i in seq_along(removeGrep)) {
          xPrep <- gsub("[_ ]+", " ",
@@ -245,6 +281,8 @@ fixSetLabels <- function
                ignore.case=TRUE,
                x));
       }
+   } else {
+      stop("Input must be atomic vector, or 'igraph', or 'Mem'.")
    }
    if (TRUE %in% adjustCase) {
       xPrep <- jamba::ucfirst(xPrep,
@@ -306,7 +344,10 @@ fixSetLabels <- function
       xNew <- xPrep;
    }
    ## Update the proper data to return
-   if (jamba::igrepHas("igraph", class(x))) {
+   if (inherits(xMem, "Mem")) {
+      sets(xMem) <- xNew;
+      return(xMem);
+   } else if (inherits(x, "igraph")) {
       if (!"label" %in% igraph::vertex_attr_names(x)) {
          igraph::V(x)$label <- igraph::V(x)$name;
       }

@@ -393,13 +393,6 @@ polygon(stars_xy_inner2,
 }
 \seealso{
 Other jam plot functions: 
-\code{\link{grid_with_title}()},
-\code{\link{jam_igraph}()},
-\code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{mem_plot_folio}()},
 \code{\link{plot_layout_scale}()}
 }
 \concept{jam plot functions}

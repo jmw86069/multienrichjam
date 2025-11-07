@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-plot.R
 \name{grid_with_title}
 \alias{grid_with_title}
-\title{Draw Heatmap with title and subtitle using grid viewports}
+\title{Draw Heatmap with title and subtitle using grid viewports, deprecated}
 \usage{
 grid_with_title(
   object,
@@ -49,12 +49,13 @@ The byproduct of this function is to draw a grid visualization
 that includes a title and subtitle, then the \code{object} in the center.
 }
 \description{
-Draw Heatmap with title and subtitle using grid viewports
+Draw Heatmap with title and subtitle using grid viewports, deprecated
 }
 \details{
 This function is likely to work only with \code{grid} or \code{ComplexHeatmap}
 input. Other objects that have \code{draw()} defined may not work
-properly.
+properly. This function is deprecated, as the equivalent is
+performed by using \code{column_title} in \code{ComplexHeatmap::draw()}.
 
 Note: This function may be superceded by the ability to include
 an overall title when using \code{ComplexHeatmap::draw()}, which was not
@@ -80,14 +81,10 @@ The \code{ComplexHeatmap::draw()} function has extended capability
 for arranging one or more heatmaps and associated annotations.
 }
 \seealso{
-Other jam plot functions: 
-\code{\link{adjust_polygon_border}()},
-\code{\link{jam_igraph}()},
-\code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()},
+Other jam deprecated functions: 
+\code{\link{cnetplotJam}()},
+\code{\link{enrichMapJam}()},
 \code{\link{mem_multienrichplot}()},
-\code{\link{mem_plot_folio}()},
-\code{\link{plot_layout_scale}()}
+\code{\link{with_qfr}()}
 }
-\concept{jam plot functions}
+\concept{jam deprecated functions}

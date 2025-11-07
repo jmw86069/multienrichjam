@@ -2,7 +2,7 @@
 % Please edit documentation in R/jam-igraph-plot.R
 \name{jam_igraph}
 \alias{jam_igraph}
-\title{Jam wrapper to plot igraph}
+\title{Jam custom function to plot an igraph network}
 \usage{
 jam_igraph(
   x,
@@ -226,7 +226,7 @@ as \code{label.x.nudge}, \code{label.y.nudge}, respectively.}
 which debug output will be plotted onscreen.}
 }
 \description{
-Jam wrapper to plot igraph
+Jam custom function to plot an igraph network
 }
 \details{
 This function is a drop-in replacement of \code{igraph::plot.igraph()},
@@ -497,54 +497,17 @@ title(main="edge_bundling='connections'")
 
 }
 \seealso{
-Other jam igraph functions: 
-\code{\link{cnet2df}()},
-\code{\link{cnet2im}()},
-\code{\link{cnetplotJam}()},
-\code{\link{cnetplot_internalJam}()},
+Other multienrichjam core functions: 
+\code{\link{mem_plot_folio}()},
+\code{\link{multiEnrichMap}()}
+
+Other jam igraph utilities: 
 \code{\link{color_edges_by_nodegroups}()},
 \code{\link{color_edges_by_nodes}()},
 \code{\link{color_nodes_by_nodegroups}()},
-\code{\link{communities2nodegroups}()},
-\code{\link{drawEllipse}()},
-\code{\link{edge_bundle_bipartite}()},
-\code{\link{edge_bundle_nodegroups}()},
-\code{\link{enrichMapJam}()},
-\code{\link{fixSetLabels}()},
-\code{\link{flip_edges}()},
-\code{\link{get_bipartite_nodeset}()},
-\code{\link{highlight_edges_by_node}()},
-\code{\link{igraph2pieGraph}()},
-\code{\link{jam_plot_igraph}()},
-\code{\link{label_communities}()},
-\code{\link{layout_with_qfr}()},
-\code{\link{layout_with_qfrf}()},
-\code{\link{mem2emap}()},
-\code{\link{memIM2cnet}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{nodegroups2communities}()},
-\code{\link{rectifyPiegraph}()},
-\code{\link{relayout_with_qfr}()},
-\code{\link{removeIgraphBlanks}()},
-\code{\link{removeIgraphSinglets}()},
-\code{\link{reorderIgraphNodes}()},
-\code{\link{rotate_igraph_layout}()},
-\code{\link{spread_igraph_labels}()},
-\code{\link{subgraph_jam}()},
-\code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()},
-\code{\link{sync_igraph_communities}()},
-\code{\link{with_qfr}()}
-
-Other jam plot functions: 
-\code{\link{adjust_polygon_border}()},
-\code{\link{grid_with_title}()},
-\code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{mem_plot_folio}()},
-\code{\link{plot_layout_scale}()}
+\code{\link{get_cnet_nodeset}()},
+\code{\link{launch_shinycat}()},
+\code{\link{subgraph_jam}()}
 }
-\concept{jam igraph functions}
-\concept{jam plot functions}
+\concept{jam igraph utilities}
+\concept{multienrichjam core functions}

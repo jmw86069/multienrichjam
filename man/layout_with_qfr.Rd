@@ -94,43 +94,12 @@ plot(g, main="layout_with_qfr, repulse=6\n(qgraph custom)",
 \seealso{
 \code{qgraph::qgraph.layout.fruchtermanreingold()}
 
-Other jam igraph functions: 
-\code{\link{cnet2df}()},
-\code{\link{cnet2im}()},
-\code{\link{cnetplotJam}()},
-\code{\link{cnetplot_internalJam}()},
-\code{\link{color_edges_by_nodegroups}()},
-\code{\link{color_edges_by_nodes}()},
-\code{\link{color_nodes_by_nodegroups}()},
-\code{\link{communities2nodegroups}()},
-\code{\link{drawEllipse}()},
-\code{\link{edge_bundle_bipartite}()},
-\code{\link{edge_bundle_nodegroups}()},
-\code{\link{enrichMapJam}()},
-\code{\link{fixSetLabels}()},
-\code{\link{flip_edges}()},
-\code{\link{get_bipartite_nodeset}()},
-\code{\link{highlight_edges_by_node}()},
-\code{\link{igraph2pieGraph}()},
-\code{\link{jam_igraph}()},
-\code{\link{jam_plot_igraph}()},
-\code{\link{label_communities}()},
+Other jam igraph layouts: 
 \code{\link{layout_with_qfrf}()},
-\code{\link{mem2emap}()},
-\code{\link{memIM2cnet}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{nodegroups2communities}()},
-\code{\link{rectifyPiegraph}()},
 \code{\link{relayout_with_qfr}()},
-\code{\link{removeIgraphBlanks}()},
 \code{\link{removeIgraphSinglets}()},
 \code{\link{reorderIgraphNodes}()},
 \code{\link{rotate_igraph_layout}()},
-\code{\link{spread_igraph_labels}()},
-\code{\link{subgraph_jam}()},
-\code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()},
-\code{\link{sync_igraph_communities}()},
-\code{\link{with_qfr}()}
+\code{\link{spread_igraph_labels}()}
 }
-\concept{jam igraph functions}
+\concept{jam igraph layouts}

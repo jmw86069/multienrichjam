@@ -5,8 +5,7 @@
 #'
 #' Nudge igraph layout by node
 #'
-#' @family jam cnet igraph functions
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' This function takes an `igraph` object that contains a layout
 #' stored in graph attributes, `graph_attr(g, "layout")`, and adjusts
@@ -190,8 +189,9 @@ nudge_igraph_node <- function
 #' order to manipulate all nodes in a subcluster as a group,
 #' for example calling `nudge_igraph_node()` on the whole set
 #' of nodes.
-#'
-#' @family jam cnet igraph functions
+#' 
+#' @family jam igraph utilities
+#' @family jam cnet utilities
 #'
 #' @param g `igraph` object specifically containing Cnet plot data,
 #'    with node attribute `"nodeType"` that has values `c("Gene", "Set")`.
@@ -285,7 +285,7 @@ get_cnet_nodeset <- function
 #' visual clarity of the plot, and to reduce node label
 #' overlaps.
 #'
-#' @family jam cnet igraph functions
+#' @family jam cnet utilities
 #'
 #' @examples
 #' # the examples below are for internal data
@@ -308,7 +308,7 @@ get_cnet_nodeset <- function
 #' }
 #'
 #' @param g `igraph` Cnet plot, with vertex attribute `nodeType` that
-#'    contains values `"Gene"` and `"Set"`, as produced by `memIM2cnet()`.
+#'    contains values `"Gene"` and `"Set"`, as produced by `mem2cnet()`.
 #' @param set_nodes `character` vector of one or more set names, which are
 #'    defined here as the names of the nodes with `nodeType="Set"`
 #'    to which each node with `nodeType="Gene"` is connected.
@@ -565,7 +565,7 @@ adjust_cnet_nodeset <- function
 #' coordinates are allowed to change, even if Gene nodes
 #' were included in `nodes`.
 #'
-#' @family jam cnet igraph functions
+#' @family jam cnet utilities
 #'
 #' @param g `igraph` Cnet object
 #' @param nodes `character` vector of one or more Set nodes.

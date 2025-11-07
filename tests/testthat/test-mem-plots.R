@@ -118,8 +118,8 @@ testthat::test_that("mem_plots", {
       jam_igraph(cnet,
          label_dist_factor=5,
          use_shadowText=TRUE,
-         node_factor_l=list(nodeType=c(Gene=2.5, Set=3)),
-         label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+         node_factor_l=list(nodeType=c(Gene=1.5, Set=2)),
+         label_factor_l=list(nodeType=c(Gene=1.5, Set=0.9)))
    }
    if (jamba::check_pkg_installed("vdiffr")) {
       vdiffr::expect_doppelganger("mpf Cnet cluster plot",
@@ -127,13 +127,13 @@ testthat::test_that("mem_plots", {
    }
    
    # Cnet manipulations
-   cnet2 <- relayout_with_qfr(cnet, repulse=3.3)
+   cnet2 <- relayout_with_qfr(cnet, repulse=3)
    cnet2_fn <- function() {
       jam_igraph(cnet2,
          label_dist_factor=5,
          use_shadowText=TRUE,
-         node_factor_l=list(nodeType=c(Gene=2.5, Set=3)),
-         label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+         node_factor_l=list(nodeType=c(Gene=1.5, Set=2)),
+         label_factor_l=list(nodeType=c(Gene=1.5, Set=0.9)))
    }
    if (jamba::check_pkg_installed("vdiffr")) {
       vdiffr::expect_doppelganger("mpf Cnet2 cluster plot",
@@ -145,15 +145,15 @@ testthat::test_that("mem_plots", {
       "A,B,C,D", "D"), ]
    testthat::expect_equal(
       round(digits=2, summary(as.vector(cnet_spacing))),
-      c("Min."=6.77, "1st Qu."=9.34, Median=11.52,
-         Mean=11.02, "3rd Qu."=13.82, "Max."=14.77))
+      c("Min."=6.91, "1st Qu."=9.63, Median=11.53,
+         Mean=11.23, "3rd Qu."=13.89, "Max."=14.85))
    
    cnet2_spacing <- summarize_node_spacing(cnet2)$nearest_within[c("A", "A,B",
       "A,B,C,D", "D"), ]
    testthat::expect_equal(
       round(digits=1, summary(as.vector(cnet2_spacing))),
-      c("Min."=13.9, "1st Qu."=14.8, Median=18.5,
-         Mean=18.8, "3rd Qu."=19.7, "Max."=46.9))
+      c("Min."=16.4, "1st Qu."=17.2, Median=18.2,
+         Mean=19.8, "3rd Qu."=18.6, "Max."=48.9))
 
    # Todo: Cnet manipulations
    # adjust_cnet_nodeset(), nudge_igraph_node()

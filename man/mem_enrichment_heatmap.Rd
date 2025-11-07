@@ -231,14 +231,8 @@ representing biologically-driven pathway clusters.
 }
 }
 \seealso{
-Other jam plot functions: 
-\code{\link{adjust_polygon_border}()},
-\code{\link{grid_with_title}()},
-\code{\link{jam_igraph}()},
+Other custom plot functions: 
 \code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{mem_plot_folio}()},
-\code{\link{plot_layout_scale}()}
+\code{\link{mem_legend}()}
 }
-\concept{jam plot functions}
+\concept{custom plot functions}

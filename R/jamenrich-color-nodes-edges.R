@@ -17,7 +17,7 @@
 #' `V(g)$coloredrect.color`
 #' * everything else uses `V(g)$color`
 #'
-#' @family jam igraph functions
+#' @family jam igraph utilities
 #'
 #' @return `igraph` object with edge color attribute updated to
 #'    represent the result of blending node colors, seen by
@@ -118,7 +118,7 @@ color_edges_by_nodes <- function
 #'
 #' Color edges by nodegroups
 #'
-#' @family jam igraph functions
+#' @family jam igraph utilities
 #'
 #' @return `igraph` object with edge color attribute updated to
 #'    represent the result of blending node colors, seen by
@@ -235,7 +235,7 @@ color_edges_by_nodegroups <- function
 #'
 #' Color edges by nodegroups
 #'
-#' @family jam igraph functions
+#' @family jam igraph utilities
 #'
 #' @return `igraph` object with edge color attribute updated to
 #'    represent the result of blending node colors, seen by

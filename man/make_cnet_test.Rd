@@ -128,13 +128,12 @@ withr::with_par(list("mar"=c(0, 0, 0, 0) + 0.5),{
 
 }
 \seealso{
-Other jam cnet igraph functions: 
+Other jam cnet utilities: 
 \code{\link{adjust_cnet_nodeset}()},
 \code{\link{adjust_cnet_set_relayout_gene}()},
-\code{\link{apply_cnet_direction}()},
 \code{\link{apply_nodeset_spacing}()},
+\code{\link{bulk_cnet_adjustments}()},
 \code{\link{get_cnet_nodeset}()},
-\code{\link{nudge_igraph_node}()},
-\code{\link{rotate_igraph_layout}()}
+\code{\link{launch_shinycat}()}
 }
-\concept{jam cnet igraph functions}
+\concept{jam cnet utilities}

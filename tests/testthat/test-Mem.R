@@ -56,20 +56,20 @@ test_that("Mem constraints", {
    geneset <- c("ACTB", "CALM1", "COL4A1", "ESR1", "FKBP5", "GAPDH",
       "MAPK3", "MAPK8", "PPIA", "PTEN", "SGK", "TTN", "ZBTB16");
    testthat::expect_setequal(
-      rownames(Mem@memIM),
+      rownames(memIM(Mem)),
       geneset)
    testthat::expect_equal(
-      rownames(Mem@geneIM),
+      rownames(geneIM(Mem)),
       geneset)
    testthat::expect_setequal(
-      rownames(Mem@geneHitIM),
+      rownames(geneHitIM(Mem)),
       c(geneset, "TTP"))
    testthat::expect_equal(
-      rownames(Mem@geneIM),
-      rownames(Mem@geneIMcolors))
+      rownames(geneIM(Mem)),
+      rownames(geneIMcolors(Mem)))
    testthat::expect_equal(
-      rownames(Mem@geneIM),
-      rownames(Mem@memIM))
+      rownames(geneIM(Mem)),
+      rownames(memIM(Mem)))
    testthat::expect_equal(
       rownames(mem$enrichIM),
       colnames(mem$memIM))
@@ -87,7 +87,7 @@ test_that("Mem subset", {
 
    testthat::expect_equal(
       Mem_dimnames$genes,
-      sort(Mem_dimnames$genes))
+      jamba::mixedSort(Mem_dimnames$genes))
    testthat::expect_equal(
       Mem_dimnames$sets[c(1, 9, 15)],
       c("Huntington's Disease Signaling",
@@ -95,11 +95,11 @@ test_that("Mem subset", {
          "Growth Hormone Signaling"))
    testthat::expect_equal(
       Mem_dimnames$enrichments,
-      c("NewBorns",
-         "Older Kids"))
+      c("Newborns",
+         "OlderChildren"))
 
    testthat::expect_equal(
-      enrichments(Memtest[, , c("Older Kids")]),
-      c("Older Kids"))
+      enrichments(Memtest[, , c("OlderChildren")]),
+      c("OlderChildren"))
    
 })

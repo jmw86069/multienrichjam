@@ -86,6 +86,7 @@
 #'    * when `remove_blanks=TRUE` it is passed to `removeIgraphBlanks()`
 #'    * when `spread_labels=TRUE` it is passed to `spread_igraph_labels()`
 #'
+#' @family jam Mem utilities
 #' @family jam igraph functions
 #' 
 #' @examples
@@ -96,7 +97,7 @@
 #'    use_shadowText=TRUE)
 #' 
 #' @export
-memIM2cnet <- function
+mem2cnet <- function
 (memIM,
  categoryShape=c("pie",
     "coloredrectangle",
@@ -278,14 +279,14 @@ memIM2cnet <- function
 
    ## Convert to igraph
    if (verbose) {
-      jamba::printDebug("memIM2cnet(): ",
+      jamba::printDebug("mem2cnet(): ",
          "igraph::graph_from_biadjacency_matrix()");
    }
    g <- igraph::graph_from_biadjacency_matrix(memIM != 0);
 
    ## Adjust aesthetics
    if (verbose) {
-      jamba::printDebug("memIM2cnet(): ",
+      jamba::printDebug("mem2cnet(): ",
          "basic aesthetics");
    }
    # nodeType
@@ -309,7 +310,7 @@ memIM2cnet <- function
 
    ## Optionally apply gene node coloring
    if (verbose) {
-      jamba::printDebug("memIM2cnet(): ",
+      jamba::printDebug("mem2cnet(): ",
          "applying node colors");
    }
    if (length(geneIM) > 0) {
@@ -426,7 +427,7 @@ memIM2cnet <- function
 
    # Optionally apply category/set node coloring
    if (verbose) {
-      jamba::printDebug("memIM2cnet(): ",
+      jamba::printDebug("mem2cnet(): ",
          "applying category/set node colors");
    }
    if (length(enrichIM) > 0 && length(enrichIMcolors) > 0) {
@@ -497,7 +498,7 @@ memIM2cnet <- function
    # optionally remove igraph blanks
    if (remove_blanks) {
       if (verbose) {
-         jamba::printDebug("memIM2cnet(): ",
+         jamba::printDebug("mem2cnet(): ",
             "applying removeIgraphBlanks()");
       }
       g <- removeIgraphBlanks(g, ...);
@@ -506,7 +507,7 @@ memIM2cnet <- function
    # Freshen pie.color,coloredrect.color by using colorV by name
    if (length(colorV) > 0) {
       if (verbose) {
-         jamba::printDebug("memIM2cnet(): ",
+         jamba::printDebug("mem2cnet(): ",
             "applying colorV");
       }
       for (attr_name in c("pie.color", "coloredrect.color")) {
@@ -527,7 +528,7 @@ memIM2cnet <- function
    # optionally apply direction as a border color
    if (length(geneIMdirection) > 0 && !all(geneIMdirection %in% c(0, NA))) {
       if (verbose) {
-         jamba::printDebug("memIM2cnet(): ",
+         jamba::printDebug("mem2cnet(): ",
             "applying geneIMdirection");
       }
       g <- apply_cnet_direction(cnet=g,
@@ -538,7 +539,7 @@ memIM2cnet <- function
    }
    if (length(enrichIMdirection) > 0 && !all(enrichIMdirection %in% c(0, NA))) {
       if (verbose) {
-         jamba::printDebug("memIM2cnet(): ",
+         jamba::printDebug("mem2cnet(): ",
             "applying enrichIMdirection");
       }
       g <- apply_cnet_direction(cnet=g,
@@ -551,7 +552,7 @@ memIM2cnet <- function
    # optionally orient labels radially away from incoming edges
    if (spread_labels) {
       if (verbose) {
-         jamba::printDebug("memIM2cnet(): ",
+         jamba::printDebug("mem2cnet(): ",
             "applying spread_igraph_labels()");
       }
       g <- spread_igraph_labels(g,
@@ -562,13 +563,13 @@ memIM2cnet <- function
    }
 
    if (verbose) {
-      jamba::printDebug("memIM2cnet(): ",
+      jamba::printDebug("mem2cnet(): ",
          "complete");
    }
 
    return(g);
 }
 
-#' @rdname memIM2cnet
+#' @rdname mem2cnet
 #' @export
-mem2cnet <- memIM2cnet
+memIM2cnet <- mem2cnet

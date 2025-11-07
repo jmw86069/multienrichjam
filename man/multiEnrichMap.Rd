@@ -241,8 +241,8 @@ argument \code{colorV}, otherwise colors are assigned using
 
 }
 \seealso{
-Other jam enrichment functions: 
-\code{\link{add_pathway_direction}()},
-\code{\link{topEnrichBySource}()}
+Other multienrichjam core functions: 
+\code{\link{jam_igraph}()},
+\code{\link{mem_plot_folio}()}
 }
-\concept{jam enrichment functions}
+\concept{multienrichjam core functions}

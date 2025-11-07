@@ -164,7 +164,7 @@
 #' appropriately.
 #' 
 #'
-#' @family jam plot functions
+#' @family custom plot functions
 #'
 #' @param mem `Mem` or `list` object created by `multiEnrichMap()`.
 #' @param genes `character` vector of genes to include in the heatmap,
@@ -1140,7 +1140,7 @@ mem_gene_path_heatmap <- function
 #' using the gene-pathway incidence matrix is more effective at
 #' representing biologically-driven pathway clusters.
 #'
-#' @family jam plot functions
+#' @family custom plot functions
 #'
 #' @param mem `Mem` or legacy `list` mem created by `multiEnrichMap()`.
 #' @param style `character` string indicating the style of heatmap:
@@ -1475,7 +1475,7 @@ mem_enrichment_heatmap <- function
          ...);
    } else {
       if (length(gene_count_max) == 0) {
-         ctmax <- ceiling(max(Mem@enrichIMgeneCount, na.rm=TRUE));
+         ctmax <- ceiling(max(enrichIMgeneCount(Mem), na.rm=TRUE));
       } else {
          ctmax <- gene_count_max;
       }
@@ -1595,7 +1595,7 @@ mem_enrichment_heatmap <- function
             list(
                use_direction,
                use_matrix,
-               Mem@enrichIMgeneCount),
+               enrichIMgeneCount(Mem)),
             invert=grepl("invert", style),
             pch=pch,
             size_fun=ct_approxfun,
@@ -1624,7 +1624,7 @@ mem_enrichment_heatmap <- function
             list(
                use_matrix,
                use_direction,
-               Mem@enrichIMgeneCount),
+               enrichIMgeneCount(Mem)),
             invert=grepl("invert", style),
             pch=pch,
             size_fun=ct_approxfun,
@@ -1764,7 +1764,7 @@ mem_enrichment_heatmap <- function
 
 #' MultiEnrichMap plot
 #'
-#' MultiEnrichMap plot, deprecated
+#' MultiEnrichMap plot, deprecated, use `mem2emap()`.
 #'
 #' This function is replaced by `mem2emap()` and is deprecated.
 #'
@@ -1786,8 +1786,7 @@ mem_enrichment_heatmap <- function
 #'    are updated in the `igraph` object, so in principle a
 #'    simple call to `plot(...)` should suffice.
 #'
-#' @family jam igraph functions
-#' @family jam plot functions
+#' @family jam deprecated functions
 #'
 #' @param mem legacy `list` mem from `multiEnrichMap()`, specifically
 #'    containing elements `"multiEnrichMap","multiEnrichMap2"` which
@@ -1961,7 +1960,7 @@ mem_multienrichplot <- function
 #' This function is a simple wrapper around `legend()` to add
 #' a color key to a plot, typically for `igraph` plots.
 #'
-#' @family jam plot functions
+#' @family custom plot functions
 #'
 #' @param mem `list` object output from `multiEnrichMap()`, specifically
 #'    expected to contain element `"colorV"`.
@@ -2110,13 +2109,14 @@ mem_legend <- function
 }
 
 
-#' Draw Heatmap with title and subtitle using grid viewports
+#' Draw Heatmap with title and subtitle using grid viewports, deprecated
 #'
-#' Draw Heatmap with title and subtitle using grid viewports
+#' Draw Heatmap with title and subtitle using grid viewports, deprecated
 #'
 #' This function is likely to work only with `grid` or `ComplexHeatmap`
 #' input. Other objects that have `draw()` defined may not work
-#' properly.
+#' properly. This function is deprecated, as the equivalent is
+#' performed by using `column_title` in `ComplexHeatmap::draw()`.
 #'
 #' Note: This function may be superceded by the ability to include
 #' an overall title when using `ComplexHeatmap::draw()`, which was not
@@ -2141,7 +2141,7 @@ mem_legend <- function
 #' The `ComplexHeatmap::draw()` function has extended capability
 #' for arranging one or more heatmaps and associated annotations.
 #'
-#' @family jam plot functions
+#' @family jam deprecated functions
 #'
 #' @return The byproduct of this function is to draw a grid visualization
 #'    that includes a title and subtitle, then the `object` in the center.

@@ -7,72 +7,105 @@ figures:
   dev: ragg::agg_png
   fig.width: 10
   fig.height: 10
+  fig.retina: 2
+  dpi: 96
 template:
   bootstrap: 5
   bootswatch: cosmo
 url: https://jmw86069.github.io/multienrichjam/
 reference:
-- title: Enrichment functions
+- title: User-Facing Functions
+- subtitle: Core functions
+  desc: Functions central to multienrichjam
+  contents:
+  - has_concept("multienrichjam core functions")
+- subtitle: Import functions
+  desc: Functions to use external data in multienrichjam
+  contents:
+  - has_concept("jam import functions")
+- title: Other Useful Functions
+- subtitle: Custom plot functions
+  desc: Customized plotting for 'Mem' results
+  contents:
+  - has_concept("custom plot functions")
+- subtitle: igraph utilities
+  desc: Utilities for igraph objects
+  contents:
+  - has_concept("jam igraph utilities")
+- subtitle: igraph layout functions
+  desc: Layout functions for igraph objects
+  contents:
+  - has_concept("jam igraph layouts")
+- subtitle: Cnet utilities
+  desc: Utilities for Cnet igraph objects
+  contents:
+  - has_concept("jam cnet utilities")
+- subtitle: Mem utilities
+  desc: Functions useful for 'Mem' results
+  contents:
+  - has_concept("jam Mem utilities")
+
+- title: Functions Deep in the Details
+- subtitle: Enrichment-supporting functions
   desc: Functions that manipulate enrichment or multiple enrichment results.
   contents:
   - has_concept("jam enrichment functions")
-- title: Plot functions
+- subtitle: Plot support functions
   desc: Functions to plot MultiEnrichment results
   contents:
   - has_concept("jam plot functions")
-- title: Conversion functions
+- subtitle: Conversion functions
   desc: Functions to convert data types
   contents:
   - has_concept("jam conversion functions")
-- title: igraph-related functions
+- subtitle: Detailed igraph-related functions
   desc: Functions that extend or customize igraph-related features
   contents:
   - has_concept("jam igraph functions")
-- title: Cnet igraph-related functions
+- subtitle: Cnet igraph-related functions
   desc: Functions specific to Cnet igraph objects
   contents:
   - has_concept("jam cnet igraph functions")
-- title: R-shiny functions
+- subtitle: R-shiny functions
   desc: Functions supporting ShinyCat
   contents:
   - has_concept("jam shiny functions")
-- title: Mem functions
+- subtitle: Mem functions
   desc: Functions supporting Mem S4 object use
   contents:
   - has_concept("Mem")
-- title: igraph vertex shapes
+- subtitle: igraph vertex shapes
   desc: Functions that provide custom igraph vertex shapes
   contents:
   - has_concept("jam igraph shapes")
-- title: list functions
+- subtitle: list functions
   desc: Functions that operate on list objects
   contents:
   - has_concept("jam list functions")
-- title: Utility functions
+- subtitle: Utility functions
   desc: Functions used by other multienrichjam functions
   contents:
   - has_concept("jam utility functions")
-- title: Import functions
+- subtitle: Import functions
   desc: Functions to import enrichment data
   contents:
   - has_concept("jam import functions")
-- title: Internal igraph functions
+- subtitle: Internal igraph functions
   desc: Functions typically for internal use by other Jam functions, or
      which were internal igraph functions.
   contents:
   - has_concept("jam igraph internal functions")
-- title: Internal igraph functions
-  desc: Functions typically for internal use by other Jam functions, or
-     which were internal igraph functions.
-  contents:
-  - has_concept("jam igraph internal functions")
-- title: Deprecated functions
-  desc: Functions moved to the jamba package
+- subtitle: Deprecated functions
+  desc: Functions moved or removed
   contents:
   - has_concept("jam deprecated functions")
 articles:
-- title: "Tutorials"
+- title: Tutorials
+  navbar: Tutorials
   contents:
   - importClusterProfiler
   - importIPA
+- title: Explanation
+  navbar: Explanation
+  contents:
   - MemPlotConcepts

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.102.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,7 +16,16 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
+    <li><a class="dropdown-item" href="../articles/importClusterProfiler.html">Multienrichment with clusterProfiler</a></li>
+    <li><a class="dropdown-item" href="../articles/importIPA.html">How to use Ingenuity IPA enrichment results</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Explanation</h6></li>
+    <li><a class="dropdown-item" href="../articles/MemPlotConcepts.html">Mem Plot Concepts</a></li>
+  </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -33,6 +42,40 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.102.900" id="multienrichjam-00102900">multienrichjam 0.0.102.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00102900"></a></h2>
+<ul><li>Added “Versioned” to ‘Mem’ class, to handle changes over time.</li>
+<li>Added more S4 “setter” methods, to keep rownames geneHitIM consistent with geneIM since they may not be identical.</li>
+<li>Updated <code>Reese_genes</code> and <code>Memtest</code> with Entrez ID and updated symbols.</li>
+<li>Re-organized the pkgdown function families, trying to make it simpler.</li>
+</ul><div class="section level3">
+<h3 id="general-changes-0-0-102-900">General changes<a class="anchor" aria-label="anchor" href="#general-changes-0-0-102-900"></a></h3>
+<ul><li>Added ‘Biobase’ to Imports, to use class ‘Versioned’.</li>
+<li>Added ‘methods’ to Imports, imported several functions.</li>
+<li>S4-related code was moved to prepare for Bioconductor: ‘AllClasses.R’, ‘AllGenerics.R’, ‘methods-Mem.R’.</li>
+<li>Added ‘S4Vectors’ dependency, then imported <code><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list()</a></code> to avoid weird C stack error by recursive loop, when unloading multienrichjam. Reproducible by unload, but seemed to occur in other rare cases, e.g. unit testing, creating vignettes, pkgdown, perhaps others. This approach seems to load S4 method appropriately upfront.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="mem-s4-changes-0-0-102-900">Mem S4 changes<a class="anchor" aria-label="anchor" href="#mem-s4-changes-0-0-102-900"></a></h3>
+<ul><li>
+<code>Mem-class</code> now contains <code>'Versioned'</code> Biobase class, which assigns a class version to help with future compatibility. It should help convert old versions of <code>Mem</code> objects to the current format, allowing me to change the format over time as needed.</li>
+<li>Added <code>updateObject</code> generic method for <code>Mem</code> S4 objects. It currently adds a version to any un-versioned S4 Mem object.</li>
+<li>Updated <code>genes&lt;-</code> so it also updates <code>geneHitIM(x)</code>, and gives a warning if for some reason not all <code>genes(x)</code> are present in <code>rownames(geneHitIM(x))</code>.</li>
+<li>Added <code>geneHitIM&lt;-</code> which also confirms all <code>genes(x)</code> and <code>enrichments(x)</code> are correctly represented.</li>
+<li>Similarly added: <code>geneIMcolors&lt;-</code>, <code>geneIMdirection&lt;-</code>, <code>enrichIMdirection&lt;-</code>, <code>enrichIMcolors&lt;-</code>
+</li>
+<li>Added ‘Mem-slots’ help topic, to describe the <code>Mem</code> slots even though it is not intended for end users. The move was motivated to keep the <code>Mem-class</code> page clean.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-package-data-0-0-102-900">Changes to package data<a class="anchor" aria-label="anchor" href="#changes-to-package-data-0-0-102-900"></a></h3>
+<ul><li><p><code>Reese_genes</code> was updated to assign Entrez gene ID values as <code><a href="https://rdrr.io/r/base/names.html" class="external-link">names()</a></code>. The Entrez ID is useful for other pathway enrichment methods, such as clusterProfiler and ReactomePA functions. Three genes were updated to use more current Entrez gene symbols, as of November 2025: BC034424 -&gt; HEXA; INADL -&gt; PATJ; SLC24A6 -&gt; SLC8B1.</p></li>
+<li>
+<p><code>Memtest</code> was updated:</p>
+<ul><li>to use the full <code>Reese_genes</code> incidence matrix for <code>geneHitIM(Memtest)</code>.</li>
+<li>to apply updated <code>Reese_genes</code> to <code>genes(Memtest)</code>, and <code>enrichList</code> ‘geneID’ columns.</li>
+</ul></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.101.900" id="multienrichjam-00101900">multienrichjam 0.0.101.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00101900"></a></h2>
 <div class="section level3">
@@ -81,7 +124,7 @@
 <li>New default <code>do_plot=FALSE</code> for broader compliance.</li>
 </ul></li>
 <li>
-<p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code></p>
+<p><code><a href="../reference/mem2cnet.html">mem2cnet()</a></code></p>
 <ul><li>New argument <code>remove_singlet_genes=TRUE</code> will hide singlet genes, useful when plotting a subset Cnet with specific pathways.</li>
 </ul></li>
 <li>
@@ -673,7 +716,7 @@
 <ul><li>
 <p><code>subset_mem()</code></p>
 <ul><li>convenience function to subset an entire <code>mem</code> object by sets (pathways) or genes. It will subset all internal incidence matrix objects for consistency.</li>
-<li>This approach will become the preferred approach to display a specific set of pathways in a Cnet plot, by calling <code>subset_mem()</code> then <code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code>.</li>
+<li>This approach will become the preferred approach to display a specific set of pathways in a Cnet plot, by calling <code>subset_mem()</code> then <code><a href="../reference/mem2cnet.html">mem2cnet()</a></code>.</li>
 <li>
 <code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> currently subsets <code>mem</code> data internally, but for consistency may call <code>subset_mem()</code> instead. The arguments are designed to be very similar.</li>
 </ul></li>
@@ -709,7 +752,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-0-72-900">bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-72-900"></a></h3>
-<ul><li><p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code> threw an error for certain custom input that did not meet expected constraints. The function was updated to prevent these errors and to be more robust to this type of issue.</p></li>
+<ul><li><p><code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> threw an error for certain custom input that did not meet expected constraints. The function was updated to prevent these errors and to be more robust to this type of issue.</p></li>
 <li>
 <p><code><a href="../reference/jam_mypie.html">jam_mypie()</a></code> is called when rendering <code>shape="jampie"</code> nodes.</p>
 <ul><li>Previously when <code>frame.lwd=0</code> and <code>frame.color="black"</code> a small black border was drawn around the node. The new behavior when <code>frame.lwd=0</code> is to replace the color with <code>NA</code> so no outer border is drawn.</li>
@@ -781,7 +824,7 @@
 <ul><li>new argument <code>bundle_self=FALSE</code> passed to <code><a href="../reference/jam_plot_igraph.html">jam_plot_igraph()</a></code> and ultimately to <code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>. When TRUE any edges that connect from and to the same nodegroup will be bundled through the nodegroup center. The default FALSE does not bundle within nodegroup, so edges are only bundled when connecting two different nodegroups.</li>
 </ul></li>
 <li><p><code><a href="../reference/shape.jampie.plot.html">shape.jampie.plot()</a></code> now handles various combinations of missing <code>pie.lwd</code> and <code>frame.lwd</code> more gracefully.</p></li>
-<li><p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code> uses smaller node size by default.</p></li>
+<li><p><code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> uses smaller node size by default.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -828,12 +871,12 @@
 </ul></li>
 </ul></li>
 <li>
-<p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code> and <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> changed some default sizes. The new defaults should work well without adjustment.</p>
+<p><code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> and <code><a href="../reference/mem2cnet.html">memIM2cnet()</a></code> changed some default sizes. The new defaults should work well without adjustment.</p>
 <ul><li>
 <p>Node sizes are 4x larger than before, because when calling downstream functions we found ourselves always scaling nodes 4x larger.</p>
 <ul><li>The defaults: <code>categorySize=20</code>, <code>geneSize=10</code> are exactly 4x larger.</li>
 <li>
-<strong>Changes required</strong>: Change previous <code>node_factor=4</code> to <code>node_factor=1</code> for reproducibility; or when calling <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> use arguments <code>memIM2cnet(..., categorySize=5, geneSize=2.5)</code>.</li>
+<strong>Changes required</strong>: Change previous <code>node_factor=4</code> to <code>node_factor=1</code> for reproducibility; or when calling <code><a href="../reference/mem2cnet.html">memIM2cnet()</a></code> use arguments <code>memIM2cnet(..., categorySize=5, geneSize=2.5)</code>.</li>
 </ul></li>
 <li>
 <p>node label sizes also have new defaults, similarly because we most often applied <code>label_factor=1.3</code> by default.</p>
@@ -1107,10 +1150,10 @@
 </ul></li>
 <li><p><code><a href="../reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> now uses <code>sortAttributes=NULL</code> default, when it is NULL it uses defaults from <code><a href="../reference/reorderIgraphNodes.html">reorderIgraphNodes()</a></code>. Previously there was inconsistent defaults between the two functions.</p></li>
 <li>
-<p><code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> and <code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code></p>
+<p><code><a href="../reference/mem2cnet.html">memIM2cnet()</a></code> and <code><a href="../reference/mem2cnet.html">mem2cnet()</a></code></p>
 <ul><li>new arguments <code>geneIMdirection</code>, <code>enrichIMdirection</code> are used to call new function <code><a href="../reference/apply_cnet_direction.html">apply_cnet_direction()</a></code> to colorize node borders by default when data is available.</li>
 </ul></li>
-<li><p><code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> now calls <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> and no longer edits colors itself, those steps are performed by <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code>; no longer calls <code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>.</p></li>
+<li><p><code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> now calls <code><a href="../reference/mem2cnet.html">memIM2cnet()</a></code> and no longer edits colors itself, those steps are performed by <code><a href="../reference/mem2cnet.html">memIM2cnet()</a></code>; no longer calls <code><a href="../reference/removeIgraphBlanks.html">removeIgraphBlanks()</a></code>.</p></li>
 <li>
 <p><code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
 <ul><li>now applies exact <code>colorV</code> colors to <code>geneIMcolors</code> without calling <code><a href="https://jmw86069.github.io/colorjam/reference/matrix2heatColors.html" class="external-link">colorjam::matrix2heatColors()</a></code> since that process returned slightly darker colors by default, and for little benefit.</li>
@@ -1124,7 +1167,7 @@
 <ul><li>colorizes node border, pie.border, coloredrect.border based upon directionality, using <code>geneIMdirection</code> and <code>enrichIMdirection</code> when available.</li>
 </ul></li>
 <li><p><code><a href="../reference/reorderIgraphNodes.html">reorder_igraph_nodes()</a></code> is step one in migrating function names away from camelCase, toward snake_case. Not really a new function, but a new function name.</p></li>
-<li><p><code><a href="../reference/memIM2cnet.html">mem2cnet()</a></code> is a similar rename of <code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> which mostly takes <code>mem</code> as input instead of <code>memIM</code> anyway.</p></li>
+<li><p><code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> is a similar rename of <code><a href="../reference/mem2cnet.html">memIM2cnet()</a></code> which mostly takes <code>mem</code> as input instead of <code>memIM</code> anyway.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -1600,7 +1643,7 @@
 <div class="section level3">
 <h3 id="changes-to-existing-functions-0-0-39-900">changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-39-900"></a></h3>
 <ul><li>
-<code><a href="../reference/cnetplot_internalJam.html">cnetplot_internalJam()</a></code> was updated to include <code>"nodeType"</code> as a node attribute, which helps distinguish <code>"Gene"</code> and <code>"Set"</code> nodes in downstream operations. This change helps address <a href="http://github.com/jmw86069/multienrichjam/issues/5" class="external-link">#5</a> to hide the gene labels on Cnet plots.</li>
+<code>cnetplot_internalJam()</code> was updated to include <code>"nodeType"</code> as a node attribute, which helps distinguish <code>"Gene"</code> and <code>"Set"</code> nodes in downstream operations. This change helps address <a href="http://github.com/jmw86069/multienrichjam/issues/5" class="external-link">#5</a> to hide the gene labels on Cnet plots.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -1959,7 +2002,7 @@
 <ul><li>
 <code><a href="../reference/subset_igraph_components.html">subset_igraph_components()</a></code> subsets an igraph based upon connected components – i.e. distinct subclusters.</li>
 <li>
-<code><a href="../reference/memIM2cnet.html">memIM2cnet()</a></code> takes the pathway-gene incidence matrix and produces a Cnet plot <code>igraph</code> object. If given the output from <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> it will also color nodes using the gene and enrichment incidence matrix colors.</li>
+<code><a href="../reference/mem2cnet.html">memIM2cnet()</a></code> takes the pathway-gene incidence matrix and produces a Cnet plot <code>igraph</code> object. If given the output from <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code> it will also color nodes using the gene and enrichment incidence matrix colors.</li>
 <li>
 <code><a href="../reference/avg_colors_by_list.html">avg_colors_by_list()</a></code> and <code><a href="../reference/avg_angles.html">avg_angles()</a></code> are intended for very rapid color blending.</li>
 </ul></div>

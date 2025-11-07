@@ -1,16 +1,50 @@
 # TODO
 
+## 04nov2025
+
+* PARTIAL. Simplify the function reference categories.
+
+   * DONE. Move core user-facing functions to top categories.
+   * Move almost everything into "Details".
+
+* Split vignettes into concise subtopics.
+* COMPLETE. Consider `Biobase::Versioned` to version `Mem` class structure.
+* COMPLETE. Write `updateObject()`.
+* Make some Mem slots optional, consider gradual reduction of slots?
+
+   * Use slot type "matrix_OR_NULL" with
+   `setClassUnion("matrix_OR_NULL", c("matrix", "NULL"))`.
+   * The `geneIMcolors()` accessor would return geneIMcolors when defined,
+   or generate the color matrix dynamically using thresholds and colorV.
+   * Candidates:
+   geneIMcolors, enrichIMcolors, geneIMdirection
+   multiEnrichDF, multiEnrichList
+
+* Add `cbind()` and `rbind()` to combine multiple Mem objects.
+* Consider providing some data dynamically, using current thresholds:
+`enrichIMcolors`, `geneIMcolors`
+* Add `plot_cnet_heatmaps()`. It needs pathway and expression data to test.
+* Add `MemPlotFolio` S4 object
+
+   * Store data in `plotdata` as a `list` or `SimpleList`
+   * Store parameters in a slot `parameters` as `list` as well.
+   * Accessors: GPHeatmap, EHeatmap, Cnet
+   * In theory, all data could be generated via accessors,
+   and just store the parameters.
+
+* Consider serialization functions
+
+   * save series of incident matrices, data.frame objects
+   * confirm it can be re-loaded directly to `Mem` object
+
 ## 29oct2025
 
 * Mem S4 object updates:
 
-   * Consider S4Vectors types for 'thresholds' which would allow editing 
-   an entry in place with 'thresholds(Mem)$p_cutoff <- 0.1' syntax.
    * Consider better mechanism to rename pathway gene sets with `sets()<-`,
    specifically so that the `enrichList` results are also kept consistent.
    Perhaps an alias to change from original name to custom name?
-   * Consider adding `BiocGenerics` for generic S4 functions,
-   also to use class versioning with slot `.__classVersion`.
+   * Consider auto-updating `Mem` when parameters/thresholds change.
    * Consider removing some slots and replacing the accessor with function:
    
       * `geneIMcolors` and `enrichIMcolors` could be done using

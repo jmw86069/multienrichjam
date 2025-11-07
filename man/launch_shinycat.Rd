@@ -78,8 +78,26 @@ cnetenv <- new.env();
 
 }
 \seealso{
+Other jam igraph utilities: 
+\code{\link{color_edges_by_nodegroups}()},
+\code{\link{color_edges_by_nodes}()},
+\code{\link{color_nodes_by_nodegroups}()},
+\code{\link{get_cnet_nodeset}()},
+\code{\link{jam_igraph}()},
+\code{\link{subgraph_jam}()}
+
+Other jam cnet utilities: 
+\code{\link{adjust_cnet_nodeset}()},
+\code{\link{adjust_cnet_set_relayout_gene}()},
+\code{\link{apply_nodeset_spacing}()},
+\code{\link{bulk_cnet_adjustments}()},
+\code{\link{get_cnet_nodeset}()},
+\code{\link{make_cnet_test}()}
+
 Other jam shiny functions: 
 \code{\link{shinycat_server}()},
 \code{\link{shinycat_ui}()}
 }
+\concept{jam cnet utilities}
+\concept{jam igraph utilities}
 \concept{jam shiny functions}

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.102.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,18 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
+    <li><a class="dropdown-item" href="../articles/importClusterProfiler.html">Multienrichment with clusterProfiler</a></li>
+    <li><a class="dropdown-item" href="../articles/importIPA.html">How to use Ingenuity IPA enrichment results</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Explanation</h6></li>
+    <li><a class="dropdown-item" href="../articles/MemPlotConcepts.html">Mem Plot Concepts</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -699,8 +710,8 @@ detail in <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a><
 <code class="sourceCode R"><span><span class="va">mpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_plot_folio.html">mem_plot_folio</a></span><span class="op">(</span><span class="va">mem</span>,</span>
 <span>   pathway_column_split<span class="op">=</span><span class="fl">4</span>,</span>
 <span>   column_cex<span class="op">=</span><span class="fl">0.4</span>, row_cex<span class="op">=</span><span class="fl">0.4</span>,</span>
-<span>   row_names_max_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">9</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
-<span>   column_names_max_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">4</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
+<span>   row_names_max_width<span class="op">=</span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">9</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
+<span>   column_names_max_height<span class="op">=</span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">4</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
 <span>   node_factor<span class="op">=</span><span class="fl">2.5</span>,</span>
 <span>   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Set<span class="op">=</span><span class="fl">0.7</span>, Gene<span class="op">=</span><span class="fl">1.5</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
@@ -757,9 +768,10 @@ for Gene and Set.</li>
 <span>   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">2</span>, Set<span class="op">=</span><span class="fl">0.8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="importClusterProfiler_files/figure-html/cnet-cluster-1.png" alt="Cnet cluster plot suitable for customization." width="100%" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level3">
-<h3 id="shinycat-for-custom-cnet-layout">ShinyCat for Custom Cnet Layout<a class="anchor" aria-label="anchor" href="#shinycat-for-custom-cnet-layout"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="shinycat-for-custom-cnet-layout">ShinyCat for Custom Cnet Layout<a class="anchor" aria-label="anchor" href="#shinycat-for-custom-cnet-layout"></a>
+</h2>
 <p>The R-shiny Cnet Adjustment Tool <strong>ShinyCat</strong> is
 intended to help polish the Cnet plot layout when making a final
 figure.</p>
@@ -798,6 +810,11 @@ RData” from within the R-shiny app. For example:</p>
 <span>   node_factor<span class="op">=</span><span class="fl">2</span>,</span>
 <span>   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">2</span>, Set<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="shinycat-screenshot">ShinyCat Screenshot<a class="anchor" aria-label="anchor" href="#shinycat-screenshot"></a>
+</h3>
+<p>An example of ShinyCat in action is shown below.</p>
+<p><img src="shinycat-2.png" alt="Screenshot of ShinyCat in action, with a Cnet network plot in the center, and several inputs on the left to adjust the layout." width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

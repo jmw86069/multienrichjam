@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.101.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.102.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,7 +16,16 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
+    <li><a class="dropdown-item" href="../articles/importClusterProfiler.html">Multienrichment with clusterProfiler</a></li>
+    <li><a class="dropdown-item" href="../articles/importIPA.html">How to use Ingenuity IPA enrichment results</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Explanation</h6></li>
+    <li><a class="dropdown-item" href="../articles/MemPlotConcepts.html">Mem Plot Concepts</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -48,10 +57,10 @@
     <div class="dont-index"><p>Other jam utility functions:
 <code><a href="ashape.html">ashape</a>()</code>,
 <code><a href="avg_colors_by_list.html">avg_colors_by_list</a>()</code>,
-<code><a href="bulk_cnet_adjustments.html">bulk_cnet_adjustments</a>()</code>,
 <code><a href="cell_fun_bivariate.html">cell_fun_bivariate</a>()</code>,
 <code><a href="collapse_mem_clusters.html">collapse_mem_clusters</a>()</code>,
 <code><a href="colorRamp2D.html">colorRamp2D</a>()</code>,
+<code><a href="curateIPAcolnames.html">curateIPAcolnames</a>()</code>,
 <code><a href="deconcat_df2.html">deconcat_df2</a>()</code>,
 <code><a href="display_colorRamp2D.html">display_colorRamp2D</a>()</code>,
 <code><a href="enrichList2geneHitList.html">enrichList2geneHitList</a>()</code>,
@@ -68,7 +77,6 @@
 <code><a href="order_colors.html">order_colors</a>()</code>,
 <code><a href="rank_mem_clusters.html">rank_mem_clusters</a>()</code>,
 <code><a href="rotate_coordinates.html">rotate_coordinates</a>()</code>,
-<code><a href="subgraph_jam.html">subgraph_jam</a>()</code>,
 <code><a href="summarize_node_spacing.html">summarize_node_spacing</a>()</code>,
 <code><a href="xyAngle.html">xyAngle</a>()</code></p></div>
     </div>

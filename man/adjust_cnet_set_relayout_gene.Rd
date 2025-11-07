@@ -66,13 +66,12 @@ coordinates are allowed to change, even if Gene nodes
 were included in \code{nodes}.
 }
 \seealso{
-Other jam cnet igraph functions: 
+Other jam cnet utilities: 
 \code{\link{adjust_cnet_nodeset}()},
-\code{\link{apply_cnet_direction}()},
 \code{\link{apply_nodeset_spacing}()},
+\code{\link{bulk_cnet_adjustments}()},
 \code{\link{get_cnet_nodeset}()},
-\code{\link{make_cnet_test}()},
-\code{\link{nudge_igraph_node}()},
-\code{\link{rotate_igraph_layout}()}
+\code{\link{launch_shinycat}()},
+\code{\link{make_cnet_test}()}
 }
-\concept{jam cnet igraph functions}
+\concept{jam cnet utilities}

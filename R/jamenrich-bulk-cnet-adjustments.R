@@ -50,7 +50,7 @@
 #'
 #' @returns `igraph` object after applying adjustments.
 #'
-#' @family jam utility functions
+#' @family jam cnet utilities
 #'
 #' @param g `igraph` object expected to be a Cnet object with vertex attribute
 #'    'nodeType' containing values 'Gene' and 'Set'.

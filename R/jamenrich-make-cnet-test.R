@@ -11,7 +11,7 @@
 #' and calls `apply_cnet_direction()` so node borders are updated
 #' appropriately.
 #'
-#' @family jam cnet igraph functions
+#' @family jam cnet utilities
 #' 
 #' @returns `igraph` object containing Cnet concept network data, specifically
 #'    with vertex attribute 'nodeType' with values 'Gene' or 'Set'.

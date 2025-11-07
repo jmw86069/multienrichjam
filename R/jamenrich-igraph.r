@@ -39,7 +39,7 @@
 #'
 #' @seealso `qgraph::qgraph.layout.fruchtermanreingold()`
 #'
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' @examples
 #' if (suppressPackageStartupMessages(require(igraph))) {
@@ -171,7 +171,7 @@ layout_with_qfr <- function
 #' @return function used to calculate layout coordinates of
 #'    an `igraph` object.
 #'
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' @param repulse numeric value typically between 3 and 5, passed
 #'    to `layout_with_qfr()`, which in turn is passed to
@@ -216,7 +216,7 @@ layout_with_qfrf <- function
 #'    `V(g)$label.degree` and `V(g)$label.dist` are updated
 #'    by calling `spread_igraph_labels()`.
 #'
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' @param g `igraph` object
 #' @param repulse exponent power used to scale the radius effect around
@@ -279,9 +279,9 @@ relayout_with_qfr <- function
    return(g);
 }
 
-#' Create a cnetplot igraph object
+#' Create a cnetplot igraph object, deprecated
 #'
-#' Create a cnetplot igraph object
+#' Create a cnetplot igraph object, deprecated, use `mem2cnet()`.
 #'
 #' The purpose of this function is to mimic the steps in `DOSE:::cnetplot()`
 #' except not plot the output, and provide some customizations.
@@ -320,7 +320,7 @@ relayout_with_qfr <- function
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
-#' @family jam igraph functions
+#' @family jam deprecated functions
 #'
 #' @export
 cnetplotJam <- function
@@ -485,9 +485,9 @@ cnetplotJam <- function
 #' not plotting the output, and including additional custom igraph
 #' attributes.
 #'
-#' @family jam igraph functions
-#'
-#' @export
+#' @family jam deprecated functions
+#' @keywords internal
+#' @noRd
 cnetplot_internalJam <- function
 (inputList,
  categorySize="geneNum",
@@ -1021,7 +1021,6 @@ drawEllipse <- function
 #'    if `getNeighbors=TRUE` it includes comma-delimited names
 #'    of neighboring nodes.
 #'
-#' @family jam igraph functions
 #' @family jam conversion functions
 #'
 #' @param g igraph object containing Cnet data, specifically vertex
@@ -1085,7 +1084,6 @@ cnet2df <- function
 #' @return numeric matrix with colnames defined by `"Set"` node
 #'    names, and rownames defined by `"Gene"` node names.
 #'
-#' @family jam igraph functions
 #' @family jam conversion functions
 #'
 #' @param g igraph object containing Cnet data, specifically vertex
@@ -1726,7 +1724,7 @@ rectifyPiegraph <- function
 #' the same neighbors, the original igraph object is
 #' returned, with the addition of layout coordinates.
 #'
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' @param g `igraph` object, typically expected to have a fixed
 #'    graph layout stored as `igraph::graph_attr(g, "layout")`,
@@ -2397,7 +2395,7 @@ reorder_igraph_nodes <- reorderIgraphNodes
 #' a minimum number of connections, but the intended use is to remove
 #' the singlet nodes that have no connections.
 #'
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' @param g igraph object
 #' @param min_degree numeric threshold with the minimum number of
@@ -2440,7 +2438,7 @@ removeIgraphSinglets <- function
 #' of each node. There is no other logic to position small or
 #' large labels to avoid overlapping labels.
 #'
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' @param g igraph object
 #' @param layout numeric matrix representing the x and y
@@ -2646,9 +2644,9 @@ subset_igraph_components <- function
    return(g);
 }
 
-#' Layout specification for Qgraph Fruchterman-Reingold
+#' Layout specification for Qgraph Fruchterman-Reingold, deprecated
 #'
-#' @family jam igraph functions
+#' @family jam deprecated functions
 #'
 #' @export
 with_qfr <- function (...,repulse=4) {
@@ -2665,8 +2663,7 @@ with_qfr <- function (...,repulse=4) {
 #' which for some unknown reason does not subset the layout
 #' matrix consistent with the subset of `igraph` nodes.
 #'
-#' @family jam utility functions
-#' @family jam igraph functions
+#' @family jam igraph utilities
 #'
 #' @param graph `igraph` object
 #' @param v `integer` or `logical` vector indicating the nodes to

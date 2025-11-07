@@ -1,9 +1,9 @@
 #
 # jam_igraph() specific plot functions for igraph objects
 
-#' Jam wrapper to plot igraph
+#' Jam custom function to plot an igraph network
 #'
-#' Jam wrapper to plot igraph
+#' Jam custom function to plot an igraph network
 #'
 #' This function is a drop-in replacement of `igraph::plot.igraph()`,
 #' intended to provide substantially faster vectorized plotting,
@@ -174,8 +174,8 @@
 #' * `render_groups=FALSE`
 #' * `render_nodelabels=FALSE`
 #'
-#' @family jam igraph functions
-#' @family jam plot functions
+#' @family multienrichjam core functions
+#' @family jam igraph utilities
 #'
 #' @inheritParams jam_plot_igraph
 #' @param x `igraph` object to be plotted

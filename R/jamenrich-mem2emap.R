@@ -17,6 +17,7 @@
 #' define suitable subgroups of nodes. When defined, the clusters
 #' are used to define nodegroups for edge bundling.
 #'
+#' @family jam Mem utilities
 #' @family jam igraph functions
 #'
 #' @param mem `Mem` or legacy `list` mem output from `multiEnrichMap()`
@@ -150,7 +151,7 @@ mem2emap <- function
       # optionally apply min_count when defined, and when present in the mem data
       if (min_count > 1) {
          enrich_use <- (enrich_use > 0 &
-               mem@enrichIMgeneCount >= min_count) * 1;
+               enrichIMgeneCount(mem) >= min_count) * 1;
       }
       rownames(enrich_use) <- rownames(enrichIM(mem));
       enrich_rows_use <- rownames(enrich_use)[rowSums(enrich_use) > 0]

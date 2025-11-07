@@ -692,9 +692,9 @@ collapse_mem_clusters <- function
    ## Make Cnet plot
    if (verbose) {
       jamba::printDebug("collapse_mem_clusters(): ",
-         "Calling memIM2cnet()");
+         "Calling mem2cnet()");
    }
-   cnet <- memIM2cnet(cluster_mem,
+   cnet <- mem2cnet(cluster_mem,
       verbose=verbose,
       ...);
    

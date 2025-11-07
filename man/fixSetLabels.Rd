@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-fix-set-labels.R
 \name{fixSetLabels}
 \alias{fixSetLabels}
-\title{Fix Set labels for legibility}
+\title{Fix Set or pathway labels for legibility}
 \usage{
 fixSetLabels(
   x,
@@ -65,8 +65,12 @@ fixSetLabels(
 \item{x}{any of the following objects:
 \itemize{
 \item \code{character} vector
-\item \code{igraph} object. The \code{V(g)$name} attribute is used as the input,
+\item \code{igraph} object. The \code{igraph::V(g)$name} attribute is used as input,
 and the resulting label is then stored as \code{V(g)$label}.
+When \code{nodeType} is also defined, and nodes have attribute 'nodeType',
+only nodes with that attribute value will be edited.
+The default is \code{nodeType="Set"}.
+\item \code{Mem} object. The \code{sets()} are adjusted by this function.
 }}
 
 \item{wrap}{\code{logical} indicating whether to apply word wrap, based upon
@@ -148,21 +152,42 @@ it also is not typically necessary to understand the label.
 for example \code{firstWordOnly=TRUE} will capitalize only the first word.}
 }
 \value{
-vector or igraph object, to match the input \code{x}.
+object with class to match input 'x', one of:
+\itemize{
+\item \code{character} vector,
+\item \code{igraph} object, or
+\item \code{Mem} object.
+}
 }
 \description{
-Fix Set labels for legibility
+Fix Set or pathway labels for legibility
 }
 \details{
 This function is a convenient wrapper for several steps that edit
-gene set and pathways labels to be slightly more legible. It
-operates on either a character vector, or an igraph object.
+gene set and pathways labels to be slightly more legible.
+It operates on either a \code{character} vector, an \code{igraph} object,
+or \code{Mem} object.
+
+The arguments have extensive default values encoded, which may
+eventually be moved to structured variables. For now, they are
+visible to make sure the changes are open for review.
+The vast majority of steps are custom biological terms which
+are expected to have certain capitalization.
+Some terms are commonly observed artifacts in public pathway data,
+for example \code{"PI3kakt"} is a common artifact which refers to
+\code{"PI3K/AKT"}.
 \itemize{
 \item To use custom from,to replacements, along with the default replacements,
 supply the custom replacements with arguments \code{add_from},\code{add_to}.
 \item To use custom from,to replacements, without applying the defaults,
 supply the custom replacements with arguments \code{words_from},\code{words_to}.
 }
+
+For \code{igraph} input, the vertex 'name' is used as the starting point.
+To revert changes, use \code{igraph::V(x)$label <- igraph::V(x)$name}.
+
+For \code{Mem} input, the \code{sets(x)} are updated, with no immediate way
+to revert changes. It may become useful to do so in future, however.
 }
 \examples{
 x <- c("KEGG_INSULIN_SIGNALING_PATHWAY",
@@ -177,43 +202,29 @@ jamba::drawLabels(txt=x,
 
 }
 \seealso{
+Other jam Mem utilities: 
+\code{\link{Mem-class}},
+\code{\link{mem2cnet}()},
+\code{\link{mem2emap}()}
+
 Other jam igraph functions: 
-\code{\link{cnet2df}()},
-\code{\link{cnet2im}()},
-\code{\link{cnetplotJam}()},
-\code{\link{cnetplot_internalJam}()},
-\code{\link{color_edges_by_nodegroups}()},
-\code{\link{color_edges_by_nodes}()},
-\code{\link{color_nodes_by_nodegroups}()},
 \code{\link{communities2nodegroups}()},
 \code{\link{drawEllipse}()},
 \code{\link{edge_bundle_bipartite}()},
 \code{\link{edge_bundle_nodegroups}()},
-\code{\link{enrichMapJam}()},
 \code{\link{flip_edges}()},
 \code{\link{get_bipartite_nodeset}()},
 \code{\link{highlight_edges_by_node}()},
 \code{\link{igraph2pieGraph}()},
-\code{\link{jam_igraph}()},
-\code{\link{jam_plot_igraph}()},
 \code{\link{label_communities}()},
-\code{\link{layout_with_qfr}()},
-\code{\link{layout_with_qfrf}()},
+\code{\link{mem2cnet}()},
 \code{\link{mem2emap}()},
-\code{\link{memIM2cnet}()},
-\code{\link{mem_multienrichplot}()},
 \code{\link{nodegroups2communities}()},
 \code{\link{rectifyPiegraph}()},
-\code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphBlanks}()},
-\code{\link{removeIgraphSinglets}()},
-\code{\link{reorderIgraphNodes}()},
-\code{\link{rotate_igraph_layout}()},
-\code{\link{spread_igraph_labels}()},
-\code{\link{subgraph_jam}()},
 \code{\link{subsetCnetIgraph}()},
 \code{\link{subset_igraph_components}()},
-\code{\link{sync_igraph_communities}()},
-\code{\link{with_qfr}()}
+\code{\link{sync_igraph_communities}()}
 }
+\concept{jam Mem utilities}
 \concept{jam igraph functions}

@@ -120,13 +120,12 @@ treated as if its nodeset spacing is exactly \code{percent_spacing}
 so that no subsequent adjustments are performed on the nodeset.
 }
 \seealso{
-Other jam cnet igraph functions: 
+Other jam cnet utilities: 
 \code{\link{adjust_cnet_nodeset}()},
 \code{\link{adjust_cnet_set_relayout_gene}()},
-\code{\link{apply_cnet_direction}()},
+\code{\link{bulk_cnet_adjustments}()},
 \code{\link{get_cnet_nodeset}()},
-\code{\link{make_cnet_test}()},
-\code{\link{nudge_igraph_node}()},
-\code{\link{rotate_igraph_layout}()}
+\code{\link{launch_shinycat}()},
+\code{\link{make_cnet_test}()}
 }
-\concept{jam cnet igraph functions}
+\concept{jam cnet utilities}

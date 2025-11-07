@@ -95,7 +95,7 @@
 #'
 #' All other arguments are documented in `igraph::plot.igraph()`.
 #'
-#' @family jam igraph functions
+#' @family jam igraph internal functions
 #'
 #' @inheritParams igraph::plot.igraph
 #' @param xlim,ylim default x and y axis limits. When either value is `NULL`

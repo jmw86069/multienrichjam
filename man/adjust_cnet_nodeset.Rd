@@ -19,7 +19,7 @@ adjust_cnet_nodeset(
 }
 \arguments{
 \item{g}{\code{igraph} Cnet plot, with vertex attribute \code{nodeType} that
-contains values \code{"Gene"} and \code{"Set"}, as produced by \code{memIM2cnet()}.}
+contains values \code{"Gene"} and \code{"Set"}, as produced by \code{mem2cnet()}.}
 
 \item{set_nodes}{\code{character} vector of one or more set names, which are
 defined here as the names of the nodes with \code{nodeType="Set"}
@@ -98,13 +98,12 @@ jam_igraph(g2)
 
 }
 \seealso{
-Other jam cnet igraph functions: 
+Other jam cnet utilities: 
 \code{\link{adjust_cnet_set_relayout_gene}()},
-\code{\link{apply_cnet_direction}()},
 \code{\link{apply_nodeset_spacing}()},
+\code{\link{bulk_cnet_adjustments}()},
 \code{\link{get_cnet_nodeset}()},
-\code{\link{make_cnet_test}()},
-\code{\link{nudge_igraph_node}()},
-\code{\link{rotate_igraph_layout}()}
+\code{\link{launch_shinycat}()},
+\code{\link{make_cnet_test}()}
 }
-\concept{jam cnet igraph functions}
+\concept{jam cnet utilities}

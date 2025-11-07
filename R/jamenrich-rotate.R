@@ -39,7 +39,7 @@
 #' in the layout.
 #'
 #' @family jam cnet igraph functions
-#' @family jam igraph functions
+#' @family jam igraph layouts
 #'
 #' @return `igraph` when input `g` is supplied, otherwise `numeric matrix`.
 #'

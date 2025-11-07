@@ -227,7 +227,7 @@
 #' at clustering pathways based upon similar content, which is the
 #' primary goal of the `multienrichjam` R package.
 #'
-#' @family jam plot functions
+#' @family multienrichjam core functions
 #'
 #' @returns `list` returned using `invisible()`, containing each
 #'    plot object enabled by the argument `do_which`:
@@ -908,10 +908,10 @@ mem_plot_folio <- function
    if (any(c(plot_num + cnet_range) %in% do_which)) {
       if (verbose) {
          jamba::printDebug("mem_plot_folio(): ",
-            "Preparing cnet for subsetting with memIM2cnet().");
+            "Preparing cnet for subsetting with mem2cnet().");
       }
       # spread_labels=FALSE because no layout is required yet
-      cnet <- memIM2cnet(mem,
+      cnet <- mem2cnet(mem,
          remove_blanks=TRUE,
          spread_labels=FALSE,
          ...);

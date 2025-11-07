@@ -85,11 +85,14 @@ This object is supported by other functions in the \code{clusterProfiler}
 suite of tools.
 }
 \seealso{
+Other jam import functions: 
+\code{\link{importIPAenrichment}()}
+
 Other jam conversion functions: 
 \code{\link{cnet2df}()},
 \code{\link{cnet2im}()},
 \code{\link{enrichList2IM}()},
-\code{\link{enrichList2df}()},
-\code{\link{enrichMapJam}()}
+\code{\link{enrichList2df}()}
 }
 \concept{jam conversion functions}
+\concept{jam import functions}
