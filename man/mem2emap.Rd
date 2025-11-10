@@ -138,6 +138,7 @@ are used to define nodegroups for edge bundling.
 \seealso{
 Other jam Mem utilities: 
 \code{\link{Mem-class}},
+\code{\link{MemPlotFolio-class}},
 \code{\link{fixSetLabels}()},
 \code{\link{mem2cnet}()}
 

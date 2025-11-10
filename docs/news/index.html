@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.102.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,29 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.103.900" id="multienrichjam-00103900">multienrichjam 0.0.103.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00103900"></a></h2>
+<div class="section level3">
+<h3 id="majorbreaking-changes-0-0-103-900">Major/Breaking changes<a class="anchor" aria-label="anchor" href="#majorbreaking-changes-0-0-103-900"></a></h3>
+<ul><li><p>Added <code>MemPlotFolio</code> S4 class as default output from <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>. Nobody in theory should have been using <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> output directly. However, you can use <code>returnType="list"</code> for legacy output.</p></li>
+<li>
+<p>There are several accessors, a few of which can plot the data, and return the corresponding graphical objects to be customized.</p>
+<ul><li><code>EnrichmentHeatmap()</code></li>
+<li><code>GenePathHeatmap()</code></li>
+<li><code>CnetCollapsed()</code></li>
+<li><code>CnetExemplar()</code></li>
+<li><code>CnetCluster()</code></li>
+</ul></li>
+<li><p>Vignettes and tests have been updated to use the new MemPlotFolio S4 functions, a much cleaner approach overall.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-mem-methods-0-0-103-900">New Mem methods<a class="anchor" aria-label="anchor" href="#new-mem-methods-0-0-103-900"></a></h3>
+<ul><li>
+<code>geneInCategory()</code> mimics <code><a href="https://rdrr.io/pkg/DOSE/man/geneInCategory.html" class="external-link">DOSE::geneInCategory()</a></code> by listing genes in each pathway.</li>
+<li>
+<code>genesBySet()</code> lists pathways associated to each gene.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.102.900" id="multienrichjam-00102900">multienrichjam 0.0.102.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00102900"></a></h2>
 <ul><li>Added “Versioned” to ‘Mem’ class, to handle changes over time.</li>

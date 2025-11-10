@@ -82,11 +82,11 @@ test_that("multiEnrichMap", {
    # gene-path heatmap
    mpf2 <- mem_plot_folio(Mem, do_plot=FALSE,
       do_which=2, gene_column_split=1, gene_column_title="A")
+   testthat::expect_true(
+      inherits(mpf2@gp_hm, "Heatmap"),
+      TRUE)
    testthat::expect_contains(
-      names(mpf2),
-      "gp_hm")
-   testthat::expect_contains(
-      strsplit(mpf2$gp_hm_caption, "\n")[[1]],
+      strsplit(Caption(mpf2), "\n")[[1]],
       c("13 genes (rows)",
          "4 sets (columns)",
          "enrichment P <= 0.05"))
@@ -96,24 +96,25 @@ test_that("multiEnrichMap", {
       min_set_ct_each=4,
       do_which=2, gene_column_split=1, gene_column_title="A")
    testthat::expect_contains(
-      strsplit(mpf2b$gp_hm_caption, "\n")[[1]],
+      strsplit(Caption(mpf2b), "\n")[[1]],
       c("11 genes (rows)",
          "3 sets (columns)",
          "enrichment P <= 0.05"))
 
    # enrichment heatmap
    mpf1 <- mem_plot_folio(Mem, do_plot=FALSE, do_which=1)
-   testthat::expect_contains(
-      names(mpf1),
-      "enrichment_hm")
+   testthat::expect_true(
+      inherits(mpf1@enrichment_hm, "Heatmap"),
+      TRUE)
+   
    # Cnet plot 1
    mpf3 <- mem_plot_folio(Mem, do_plot=FALSE,
       pathway_column_split=3, do_which=3)
-   testthat::expect_contains(
-      names(mpf3),
-      "cnet_collapsed")
+   testthat::expect_true(
+      inherits(CnetCollapsed(mpf3, do_plot=FALSE), "igraph"),
+      TRUE)
    # verify nodes in the Cnet igraph
-   cnet1 <- mpf3$cnet_collapsed;
+   cnet1 <- CnetCollapsed(mpf3, do_plot=FALSE);
    testthat::expect_setequal(
       igraph::V(cnet1)$name,
       c(geneset, LETTERS[1:3]))
@@ -123,15 +124,15 @@ test_that("multiEnrichMap", {
       min_set_ct_each=4,
       pathway_column_split=3, do_which=3)
    # verify nodes in the Cnet igraph
-   cnet1b <- mpf3b$cnet_collapsed;
+   cnet1b <- CnetCollapsed(mpf3b, do_plot=FALSE);
    testthat::expect_setequal(
       igraph::V(cnet1b)$name,
       c(setdiff(geneset, c("ESR1", "ZBTB16")), LETTERS[1:3]))
    
    # Cnet plot 2
    mpf4 <- mem_plot_folio(Mem, do_plot=FALSE, do_which=4)
-   testthat::expect_contains(
-      names(mpf4),
-      "cnet_collapsed_set")
+   testthat::expect_true(
+      inherits(CnetCollapsed(mpf3, do_plot=FALSE, type="set"), "igraph"),
+      TRUE)
 
 })

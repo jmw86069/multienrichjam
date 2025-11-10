@@ -120,3 +120,51 @@ setGeneric("thresholds", signature="x",
 setGeneric("thresholds<-", signature="x",
    function(x, ...) standardGeneric("thresholds<-")
 )
+
+setGeneric("geneInCategory", signature="x",
+   function(x) standardGeneric("geneInCategory")
+)
+
+setGeneric("setsByGene", signature="x",
+   function(x) standardGeneric("setsByGene")
+)
+
+setGeneric("Clusters", signature="x",
+   function(x) standardGeneric("Clusters")
+)
+
+setGeneric("GeneClusters", signature="x",
+   function(x) standardGeneric("GeneClusters")
+)
+
+setGeneric("metadata", signature="x",
+   function(x) standardGeneric("metadata")
+)
+
+setGeneric("EnrichmentHeatmap", signature=c("x", "do_plot"),
+   function(x, do_plot, ...) standardGeneric("EnrichmentHeatmap")
+)
+
+setGeneric("GenePathHeatmap", signature=c("x", "do_plot"),
+   function(x, do_plot, ...) standardGeneric("GenePathHeatmap")
+)
+
+setGeneric("CnetCollapsed", signature=c("x", "do_plot", "type"),
+   function(x, do_plot, type, ...) standardGeneric("CnetCollapsed")
+)
+
+setGeneric("CnetExemplar", signature=c("x", "do_plot", "num"),
+   function(x, do_plot, num, ...) standardGeneric("CnetExemplar")
+)
+
+setGeneric("CnetCluster", signature=c("x", "do_plot", "cluster"),
+   function(x, do_plot, cluster, ...) standardGeneric("CnetCluster")
+)
+
+setGeneric("Caption", signature=c("x"),
+   function(x, ...) standardGeneric("Caption")
+)
+
+setGeneric("CaptionLegendList", signature=c("x"),
+   function(x, ...) standardGeneric("CaptionLegendList")
+)

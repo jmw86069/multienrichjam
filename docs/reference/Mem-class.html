@@ -9,7 +9,7 @@ current class version "1.0.0".'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.102.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -159,7 +159,13 @@ current class version "1.0.0".</p>
 <span><span class="fu">list_to_Mem</span><span class="op">(</span><span class="va">mem</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'Mem'</span></span>
-<span><span class="fu">updateObject</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">updateObject</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'Mem'</span></span>
+<span><span class="fu">geneInCategory</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'Mem'</span></span>
+<span><span class="fu">setsByGene</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -207,6 +213,10 @@ current class version "1.0.0".</p>
 class version, and current valid class definition. It should be
 able to update any serialized 'Mem' object from previous
 class versions.</p>
+<p><code>geneInCategory()</code> returns a <code>list</code> named by pathway, containing
+<code>character</code> vectors with genes in each pathway.</p>
+<p><code>geneInCategory()</code> returns a <code>list</code> named by gene,
+containing <code>character</code> vectors with associated gene sets.</p>
     </div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
@@ -263,6 +273,8 @@ Mem object.</p></li>
 <li><p><code>dimnames(Mem)</code>: dimension names for each genes, sets, and enrichments</p></li>
 <li><p><code>list_to_Mem()</code>: Convert legacy <code>list</code> mem format to S4 <code>Mem</code></p></li>
 <li><p><code>updateObject(Mem)</code>: Confirm Mem object meets current class definition.</p></li>
+<li><p><code>geneInCategory(Mem)</code>: Genes in each pathway set (category)</p></li>
+<li><p><code>setsByGene(Mem)</code>: Pathways gene sets associated with each gene</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -271,6 +283,7 @@ Mem object.</p></li>
 <code><a href="Mem-slots.html">Mem-slots</a></code>,
 <code><a href="check_Mem.html">check_Mem</a>()</code></p>
 <p>Other jam Mem utilities:
+<code><a href="MemPlotFolio-class.html">MemPlotFolio-class</a></code>,
 <code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
 <code><a href="mem2cnet.html">mem2cnet</a>()</code>,
 <code><a href="mem2emap.html">mem2emap</a>()</code></p></div>

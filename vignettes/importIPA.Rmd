@@ -225,7 +225,7 @@ Mem Plot Folio then provides a series of visualizations:
 **Only the first four plots are shown** by using `do_which=c(1:4)`.
 
 ```{r, mem-folio, fig.height=12, fig.width=8, fig.alt="Mem plot folio showing the first four plots"}
-mem_canonical_plots <- mem_plot_folio(mem_canonical,
+Mpf <- mem_plot_folio(mem_canonical,
    pathway_column_split=4,
    column_cex=0.4, row_cex=0.4,
    row_names_max_width=grid::unit(9, "cm"),
@@ -237,24 +237,33 @@ mem_canonical_plots <- mem_plot_folio(mem_canonical,
    main="Canonical Pathways");
 ```
 
-The object returned `mem_canonical_plots` is a `list`
-of the graphical objects.
+The object returned `Mpf` is a `MemPlotFolio` object containing the
+graphical objects. By default all plots in `do_which` are plotted,
+however they can be plotted individually:
 
-# Customing Mem Plots
+* `EnrichmentHeatmap(Mpf)`
+* `GenePathHeatmap(Mpf)`
+* `CnetCollapsed(Mpf, type="set")`
+* `CnetExemplar(Mpf, num=1)`
+* `CnetCluster(Mpf, cluster="B")`
 
-## Cnet Cluster Plot
 
-The Cnet Cluster Plot is often the focus of manuscript figures.
-The typical workflow is demonstrated below.
+# Customizing Mem Plots
 
-```{r, cnet-cluster, fig.height=12, fig.width=10, fig.alt="Cnet cluster network extracted from mem_plot_folio() to use for custom figures."}
+## Cnet Collapsed Plot
+
+The Cnet Collapsed Plot is often the focus of manuscript figures.
+The typical workflow is demonstrated below, using `CnetCollapsed()` on
+the `mem_plot_folio()` output.
+
+```{r, cnet-collapsed, fig.height=12, fig.width=10, fig.alt="Cnet collapsed network extracted from mem_plot_folio() to use for custom figures."}
 # generate the data
-mpf4 <- mem_plot_folio(mem_canonical,
+Mpf4 <- mem_plot_folio(mem_canonical,
    do_which=c(4),
    do_plot=FALSE)
 
 # extract the cnet
-cnet <- mpf4$cnet_collapsed_set;
+cnet <- CnetCollapsed(Mpf4, do_plot=FALSE, type="set");
 
 # jam_graph
 jam_igraph(cnet,
@@ -267,19 +276,19 @@ jam_igraph(cnet,
 
 ## Enrichment P-value Heatmap
 
-`mem_enrichment_heatmap()` produces a heatmap with Enrichment
-versus pathway, with -log10(P-value) in the heatmap.
+The recommended way to create an enrichment heatmap is to use
+`EnrichmentHeatmap(Mpf)` with the 'MemPlotFolio' object as input.
+Customization should be done via `mem_plot_folio()`
+to ensure that all other plots use the same parameters.
 
-It is also provided by:  
-`mem_plot_folio(mem, do_which=1)`
+The specific options for a enrichment heatmap are described in
+`mem_enrichment_heatmap()`.
 
-Argument `p_cutoff` is used to set the Pvalue, by default
-it inherits the same threshold from the data provided.
-Cells are only shaded with the P-value is below the threshold,
-making it clear which entries are significant.
-below which cells are colorized -- every P-value above
-this threshold is not colored, and displayed as white,
-even when the P-value is less than 1.
+```{r, enrich-hm-mpf, fig.alt="Enrichment heatmap shown using the MemPlotFolio object as input."}
+EnrichmentHeatmap(Mpf);
+```
+
+Note that the Mem object can be plotted directly as follows:
 
 ```{r, enrich-hm, fig.alt="Enrichment heatmap shown as a dotplot to indicate the number of genes involved."}
 mem_enrichment_heatmap(mem_canonical,
@@ -294,7 +303,6 @@ mem_enrichment_heatmap(mem_canonical,
    p_cutoff=0.05);
 ```
 
-
 Argument `color_by_column=TRUE` applies the
 color gradient to each column, using `colorV` colors defined
 in from `multiEnrichMap()`.
@@ -305,30 +313,32 @@ memhm <- mem_enrichment_heatmap(mem_canonical,
    color_by_column=TRUE);
 ```
 
+Any of these custom options can be passed to `mem_plot_folio()`,
+so that the enrichment heatmap will follow that custom style.
+
 
 ## Gene-Pathway Heatmap
 
-We can view the pathway-gene matrix using the function
+The recommended way to create an enrichment heatmap is to use
+`GenePathHeatmap(Mpf)` with the 'MemPlotFolio' object as input.
+Customization should be done via `mem_plot_folio()`
+to ensure that all other plots use the same parameters.
 
-`mem_gene_path_heatmap()` produces a heatmap of the pathway-gene
-incidence matrix. This heatmap is the core of multienrichjam.
+The specific options for a enrichment heatmap are described in
+`mem_gene_path_heatmap()`.
 
-It is also provided by:  
-`mem_plot_folio(mem, do_which=2)`
-
-The function will estimate the number of pathway clusters,
-but can be customized:
-
-* `column_split=3` will produce 3 pathway clusters.
-* `row_split=10` will produce 10 gene clusters.
-
-Colors across the top of the heatmap indicate
+* Colors across the top of the heatmap indicate
 enrichment P-values.
-
-Colors on the left of the heatmap indicate which genes were
+* Colors on the left of the heatmap indicate which genes were
 present in each enrichment test.
-When directional gene hits are provided, the left of the heatmap
+* When directional gene hits are provided, the left of the heatmap
 will also indicate directionality.
+
+```{r, mem-hm-mpf, fig.height=14, fig.width=10, fig.alt="Gene-pathway heatmap drawn specifically with mem_gene_path_heatmap()."}
+hm_drawn <- GenePathHeatmap(Mpf);
+```
+
+The corresponding custom function is shown below:
 
 ```{r, mem-hm, fig.height=14, fig.width=10, fig.alt="Gene-pathway heatmap drawn specifically with mem_gene_path_heatmap()."}
 hm <- mem_gene_path_heatmap(mem_canonical,
@@ -348,24 +358,13 @@ hm_sets;
 
 ## Full Cnet plot
 
-The Concept network (Cnet) plot shows every pathway-gene relationship.
+The complete Concept network (Cnet) plot shows every pathway-gene
+relationship, and is performed using `mem2cnet()`.
 
-The helper function `memIM2cnet()` creates a Cnet plot
-from the `mem_canonical` output.
-Here, we also pipe the result through other helper functions:
-
-* `fixSetLabels()` applies pathway label word wrap
-* `relayout_with_qfr()` applies network layout and adjusts node labels
-* `removeIgraphBlanks()` removes blank colors from the `igraph` nodes
+Note that the pathways can be subset using `[` bracket notation if relevant.
 
 ```{r, cnet-plot-1, fig.height=10, fig.width=8, fig.alt="Full Cnet plot, for all pathways and genes."}
-#cnet <- mem_canonical$multiCnetPlot1b;
-cnet <- mem_canonical %>% 
-   mem2cnet()
-   # memIM2cnet() %>%
-   # fixSetLabels() %>%
-   # removeIgraphBlanks() %>%
-   # relayout_with_qfr();
+cnet <- mem2cnet(mem_canonical)
 
 withr::with_par(list(mar=c(1, 1, 1, 1)+0.1), {
    jam_igraph(cnet,

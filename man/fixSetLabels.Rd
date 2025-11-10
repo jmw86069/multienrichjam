@@ -204,6 +204,7 @@ jamba::drawLabels(txt=x,
 \seealso{
 Other jam Mem utilities: 
 \code{\link{Mem-class}},
+\code{\link{MemPlotFolio-class}},
 \code{\link{mem2cnet}()},
 \code{\link{mem2emap}()}
 

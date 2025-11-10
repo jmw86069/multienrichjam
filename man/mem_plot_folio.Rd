@@ -43,6 +43,7 @@ mem_plot_folio(
   rotate_heatmap = FALSE,
   row_anno_padding = grid::unit(3, "mm"),
   column_anno_padding = grid::unit(3, "mm"),
+  returnType = c("MemPlotFolio", "list"),
   do_plot = TRUE,
   verbose = FALSE,
   ...
@@ -191,8 +192,25 @@ dendrogram.
 }}
 }
 \value{
-\code{list} returned using \code{invisible()}, containing each
-plot object enabled by the argument \code{do_which}:
+\code{MemPlotFolio} object using \code{invisible()}, containing each
+plot object enabled by the argument \code{do_which}.
+The \code{MemPlotFolio-class} data are accessible using common functions:
+\itemize{
+\item \code{EnrichmentHeatmap()}
+\item \code{GenePathHeatmap()}
+\item \code{CnetCollapsed()}
+\item \code{CnetExemplar()}
+\item \code{CnetCluster()}
+\item \code{Clusters()}
+\item \code{GeneClusters()}
+\item \code{thresholds()}
+\item \code{metadata()}
+\item \code{Caption()}
+\item \code{CaptionLegendList()}
+}
+
+When \code{returnType="list"} it returns a legacy \code{list} format:
+The acces
 \itemize{
 \item \code{enrichment_hm} is a Heatmap object from \code{ComplexHeatmap}
 that contains the enrichment P-value heatmap. Note that this

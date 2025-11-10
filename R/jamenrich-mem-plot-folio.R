@@ -229,8 +229,23 @@
 #'
 #' @family multienrichjam core functions
 #'
-#' @returns `list` returned using `invisible()`, containing each
-#'    plot object enabled by the argument `do_which`:
+#' @returns `MemPlotFolio` object using `invisible()`, containing each
+#'    plot object enabled by the argument `do_which`.
+#'    The `MemPlotFolio-class` data are accessible using common functions:
+#'    * `EnrichmentHeatmap()`
+#'    * `GenePathHeatmap()`
+#'    * `CnetCollapsed()`
+#'    * `CnetExemplar()`
+#'    * `CnetCluster()`
+#'    * `Clusters()`
+#'    * `GeneClusters()`
+#'    * `thresholds()`
+#'    * `metadata()`
+#'    * `Caption()`
+#'    * `CaptionLegendList()`
+#'    
+#'    When `returnType="list"` it returns a legacy `list` format:
+#'    The acces
 #'    * `enrichment_hm` is a Heatmap object from `ComplexHeatmap`
 #'    that contains the enrichment P-value heatmap. Note that this
 #'    data is not used directly in subsequent plots, the pathway
@@ -436,10 +451,15 @@ mem_plot_folio <- function
  rotate_heatmap=FALSE,
  row_anno_padding=grid::unit(3, "mm"),
  column_anno_padding=grid::unit(3, "mm"),
+ returnType=c("MemPlotFolio",
+    "list"),
  do_plot=TRUE,
  verbose=FALSE,
  ...)
 {
+   # validate arguments
+   returnType <- match.arg(returnType);
+   
    # accept Mem input, convert to list for now
    Mem <- NULL;
    if (inherits(mem, "Mem")) {
@@ -467,7 +487,44 @@ mem_plot_folio <- function
       }
    }
    
+   # prepare thresholds
+   thresholds <- list(
+      min_gene_ct=min_gene_ct,
+      min_set_ct=min_set_ct,
+      min_set_ct_each=min_set_ct_each,
+      enrich_im_weight=enrich_im_weight,
+      gene_im_weight=gene_im_weight,
+      column_method=column_method,
+      column_split=pathway_column_split,
+      column_title=pathway_column_title,
+      row_method=row_method,
+      row_split=gene_row_split,
+      row_title=gene_row_title,
+      p_cutoff=p_cutoff,
+      p_floor=p_floor,
+      byCols=byCols,
+      do_which=do_which,
+      do_plot=do_plot,
+      rotate_heatmap=rotate_heatmap,
+      cluster_color_min_fraction=cluster_color_min_fraction
+   )
+   
+   # metadata
+   metadata <- list(
+      colorV=Mem@colorV
+   );
+   
+   return_mpf <- function(ret_vals, returnType="MemPlotFolio") {
+      if ("MemPlotFolio" %in% returnType) {
+         return(list_to_MemPlotFolio(ret_vals))
+      }
+      return(ret_vals)
+   }
    ret_vals <- list();
+   # add thresholds and parameters used
+   ret_vals$thresholds <- thresholds;
+   ret_vals$metadata <- metadata;
+   
    plot_num <- 0;
    if (length(do_which) == 0) {
       do_which <- seq_len(50);
@@ -535,6 +592,7 @@ mem_plot_folio <- function
    # Extract hclust object for re-use in the enrichment heatmap
    use_sets <- colnames(gp_hm@matrix);
    gphm_pw_order <- NULL;
+   gphm_gn_order <- NULL;
 
    if (rotate_heatmap) {
       gp_hm_hclust <- gp_hm@row_dend_param$obj;
@@ -543,14 +601,18 @@ mem_plot_folio <- function
       }
       use_sets <- rownames(gp_hm@matrix);
       suppressWarnings(gphm_pw_order <- jamba::heatmap_row_order(gp_hm))
+      suppressWarnings(gphm_gn_order <- jamba::heatmap_column_order(gp_hm))
    } else {
       gp_hm_hclust <- gp_hm@column_dend_param$obj;
       if (length(gp_hm_hclust) == 0) {
          gp_hm_hclust <- gp_hm@column_dend_param$fun(t(gp_hm@matrix));
       }
       suppressWarnings(gphm_pw_order <- jamba::heatmap_column_order(gp_hm))
+      suppressWarnings(gphm_gn_order <- jamba::heatmap_row_order(gp_hm))
    }
-
+   ret_vals$clusters_mem <- gphm_pw_order;
+   ret_vals$gene_clusters_mem <- gphm_gn_order;
+   
 
    #############################################################
    ## Enrichment P-value heatmap
@@ -618,10 +680,6 @@ mem_plot_folio <- function
 
    #############################################################
    ## Gene-Pathway Heatmap
-   if (length(do_which) > 0 && !any(do_which > plot_num)) {
-      revert_hm_padding();
-      return(invisible(ret_vals));
-   }
    ## All subsequent plots depend upon mem_gene_path_heatmap()
    if (verbose) {
       jamba::printDebug("mem_plot_folio(): ",
@@ -644,6 +702,11 @@ mem_plot_folio <- function
    if ("draw_caption" %in% names(attributes(gp_hm))) {
       draw_caption <- attr(gp_hm, "draw_caption");
    }
+   # add title to attributes
+   attr(gp_hm, "title_list") <- list(
+      column_title=main,
+      column_title_gp=grid::gpar(fontsize=18))
+   
    ret_vals$gp_hm <- gp_hm;
    ret_vals$gp_hm_caption_legendlist <- caption_legendlist;
    ret_vals$gp_hm_caption <- caption;
@@ -683,12 +746,14 @@ mem_plot_folio <- function
       }
    }
    ## Obtain heatmap pathway clusters
-   if (rotate_heatmap) {
-      suppressWarnings(clusters_mem <- jamba::heatmap_row_order(gp_hm))
-   } else {
-      suppressWarnings(clusters_mem <- jamba::heatmap_column_order(gp_hm))
-   }
-   ret_vals$clusters_mem <- clusters_mem;
+   # if (rotate_heatmap) {
+   #    suppressWarnings(clusters_mem <- jamba::heatmap_row_order(gp_hm))
+   # } else {
+   #    suppressWarnings(clusters_mem <- jamba::heatmap_column_order(gp_hm))
+   # }
+   # ret_vals$clusters_mem <- clusters_mem;
+   clusters_mem <- ret_vals$clusters_mem;
+   
    ## Get number of pathway clusters
    pathway_clusters_n <- length(clusters_mem);
    if (verbose) {
@@ -696,7 +761,13 @@ mem_plot_folio <- function
          c("Defined ", pathway_clusters_n, " pathway clusters."),
          sep="");
    }
-
+   
+   ## If no other plots are necessary, exit here
+   if (length(do_which) > 0 && !any(do_which > plot_num)) {
+      revert_hm_padding();
+      return(invisible(return_mpf(ret_vals, returnType)));
+   }
+   
 
    #############################################################
    ## Cnet collapsed
@@ -1045,5 +1116,5 @@ mem_plot_folio <- function
 
    revert_hm_padding();
 
-   invisible(ret_vals);
+   invisible(return_mpf(ret_vals, returnType));
 }

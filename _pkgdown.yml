@@ -74,6 +74,10 @@ reference:
   desc: Functions supporting Mem S4 object use
   contents:
   - has_concept("Mem")
+- subtitle: MemPlotFolio functions
+  desc: Functions supporting MemPlotFolio S4 object use
+  contents:
+  - has_concept("MemPlotFolio")
 - subtitle: igraph vertex shapes
   desc: Functions that provide custom igraph vertex shapes
   contents:

@@ -81,8 +81,8 @@ testthat::test_that("mem_plots", {
       row_method="euclidean",
       gene_row_split=3, column_cex=0.5)
    withr::with_options(list(warn=-1), {
-      hro <- jamba::heatmap_row_order(mpf$gp_hm);
-      hco <- jamba::heatmap_column_order(mpf$gp_hm);
+      hro <- jamba::heatmap_row_order(mpf@gp_hm);
+      hco <- jamba::heatmap_column_order(mpf@gp_hm);
    })
    testthat::expect_equal(
       lengths(hro),
@@ -91,8 +91,8 @@ testthat::test_that("mem_plots", {
       lengths(hco),
       c(A=6, B=4, C=2, D=4))
    gp_hm_fn <- function() {
-      ComplexHeatmap::draw(mpf$gp_hm,
-         annotation_legend_list=attributes(mpf$gp_hm)$caption_legendlist,
+      ComplexHeatmap::draw(mpf@gp_hm,
+         annotation_legend_list=attributes(mpf@gp_hm)$caption_legendlist,
          merge_legends=TRUE)
    }
    if (jamba::check_pkg_installed("vdiffr")) {
@@ -101,7 +101,7 @@ testthat::test_that("mem_plots", {
    }
    
    # cnet_cluster
-   cnet <- mpf$cnet_collapsed_set;
+   cnet <- CnetCollapsed(mpf, type="set", do_plot=FALSE);
    igraph::V(cnet)$label.dist <- ifelse(igraph::V(cnet)$nodeType %in% "Gene",
       igraph::V(cnet)$label.dist,
       0)

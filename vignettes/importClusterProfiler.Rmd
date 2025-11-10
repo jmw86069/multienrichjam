@@ -219,7 +219,7 @@ in detail in `mem_plot_folio()`.
 **Only the first four plots are shown below** using `do_which=c(1, 2, 3, 4)`.
 
 ```{r, mem-folio, fig.height=12, fig.width=10, out.width="100%", fig.alt=c("mem_plot_folio, plot 1, enrichment heatmap", "mem_plot_folio, plot 2, Gene-Pathway heatmap", "mem_plot_folio, plot 3, Cnet plot with Cluster Letters", "mem_plot_folio, plot 4, Cnet plot with Cluster Summary Labels")}
-mpf <- mem_plot_folio(mem,
+Mpf <- mem_plot_folio(mem,
    pathway_column_split=4,
    column_cex=0.4, row_cex=0.4,
    row_names_max_width=grid::unit(9, "cm"),
@@ -233,23 +233,16 @@ mpf <- mem_plot_folio(mem,
 
 
 
-## Cnet Cluster Plot
+## Cnet Collapsed Cluster Plot
 
-The Cnet Cluster Plot is often the basis for manuscript figures.
+The Cnet Collapsed Cluster Plot is often the basis for manuscript figures.
 The typical workflow is demonstrated below.
 
-* `mpf4 <- mem_plot_folio(mem, do_which=4)` is used to generate the Cnet data.
-* `cnet <- mpf4$cnet_collapsed_set` retrieves the Cnet `igraph` object.
+* `cnet <- CnetCollapsed(mpf, type="set")` retrieves the Cnet `igraph` object.
 
-```{r, cnet-cluster-data}
-# generate the data
-mpf4 <- mem_plot_folio(mem,
-   pathway_column_split=4,
-   do_which=c(4),
-   do_plot=FALSE)
-
+```{r, cnet-collapsed-data}
 # extract the cnet
-cnet <- mpf4$cnet_collapsed_set;
+cnet <- CnetCollapsed(Mpf, do_plot=FALSE, type="set");
 ```
 
 `jam_igraph()` is a custom plotting function with enhancements:
@@ -261,7 +254,7 @@ cnet <- mpf4$cnet_collapsed_set;
 * It applies edge bundling, which helps with large networks.
 * It plots using vectorized optimization.
 
-```{r, cnet-cluster, fig.height=12, fig.width=10, out.width="100%", fig.alt="Cnet cluster plot suitable for customization."}
+```{r, cnet-collapsed, fig.height=12, fig.width=10, out.width="100%", fig.alt="Cnet collapsed plot suitable for customization."}
 # jam_graph instead of plot()
 jam_igraph(cnet,
    node_factor=2,

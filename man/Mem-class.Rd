@@ -43,6 +43,8 @@
 \alias{coerce}
 \alias{list_to_Mem}
 \alias{updateObject,Mem-method}
+\alias{geneInCategory,Mem-method}
+\alias{setsByGene,Mem-method}
 \title{Mem S4 class, accessors, getters, and setters}
 \usage{
 \S4method{[}{Mem,ANY,ANY,ANY}(x, i, j, k, drop = FALSE)
@@ -118,6 +120,10 @@ Mem_to_list(x, ...)
 list_to_Mem(mem)
 
 \S4method{updateObject}{Mem}(object, ..., verbose = FALSE)
+
+\S4method{geneInCategory}{Mem}(x)
+
+\S4method{setsByGene}{Mem}(x)
 }
 \arguments{
 \item{x}{\code{Mem} object}
@@ -152,6 +158,12 @@ list_to_Mem(mem)
 class version, and current valid class definition. It should be
 able to update any serialized 'Mem' object from previous
 class versions.
+
+\code{geneInCategory()} returns a \code{list} named by pathway, containing
+\code{character} vectors with genes in each pathway.
+
+\code{geneInCategory()} returns a \code{list} named by gene,
+containing \code{character} vectors with associated gene sets.
 }
 \description{
 Mem class containing results from \code{multiEnrichMap()},
@@ -248,6 +260,10 @@ Mem object.
 
 \item \code{updateObject(Mem)}: Confirm Mem object meets current class definition.
 
+\item \code{geneInCategory(Mem)}: Genes in each pathway set (category)
+
+\item \code{setsByGene(Mem)}: Pathways gene sets associated with each gene
+
 }}
 \examples{
 # examples for Mem_to_list and as(Mem, "list")
@@ -268,6 +284,7 @@ Other Mem:
 \code{\link{check_Mem}()}
 
 Other jam Mem utilities: 
+\code{\link{MemPlotFolio-class}},
 \code{\link{fixSetLabels}()},
 \code{\link{mem2cnet}()},
 \code{\link{mem2emap}()}

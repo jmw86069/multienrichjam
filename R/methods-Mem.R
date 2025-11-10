@@ -1077,3 +1077,25 @@ setMethod("updateObject",
       }
       object
    })
+
+
+#' Genes in each gene set (category)
+#'
+#' @param x `Mem` object
+#' @docType methods
+#' @describeIn Mem-class Genes in each pathway set (category)
+#' @returns `geneInCategory()` returns a `list` named by pathway, containing
+#'    `character` vectors with genes in each pathway.
+#' @export
+setMethod("geneInCategory", "Mem", function(x) im2list(memIM(x)))
+
+
+#' Pathway gene sets associated with each gene
+#'
+#' @param x `Mem` object
+#' @docType methods
+#' @describeIn Mem-class Pathways gene sets associated with each gene
+#' @returns `geneInCategory()` returns a `list` named by gene,
+#'    containing `character` vectors with associated gene sets.
+#' @export
+setMethod("setsByGene", "Mem", function(x) im2list(t(memIM(x))))

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.102.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,6 +88,7 @@
 <span>  rotate_heatmap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  row_anno_padding <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>  column_anno_padding <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>  returnType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MemPlotFolio"</span>, <span class="st">"list"</span><span class="op">)</span>,</span>
 <span>  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -287,8 +288,21 @@ dendrogram.</p></li>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>list</code> returned using <code><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible()</a></code>, containing each
-plot object enabled by the argument <code>do_which</code>:</p><ul><li><p><code>enrichment_hm</code> is a Heatmap object from <code>ComplexHeatmap</code>
+    <p><code>MemPlotFolio</code> object using <code><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible()</a></code>, containing each
+plot object enabled by the argument <code>do_which</code>.
+The <code>MemPlotFolio-class</code> data are accessible using common functions:</p><ul><li><p><code>EnrichmentHeatmap()</code></p></li>
+<li><p><code>GenePathHeatmap()</code></p></li>
+<li><p><code>CnetCollapsed()</code></p></li>
+<li><p><code>CnetExemplar()</code></p></li>
+<li><p><code>CnetCluster()</code></p></li>
+<li><p><code>Clusters()</code></p></li>
+<li><p><code>GeneClusters()</code></p></li>
+<li><p><code>thresholds()</code></p></li>
+<li><p><code>metadata()</code></p></li>
+<li><p><code>Caption()</code></p></li>
+<li><p><code>CaptionLegendList()</code></p></li>
+</ul><p>When <code>returnType="list"</code> it returns a legacy <code>list</code> format:
+The acces</p><ul><li><p><code>enrichment_hm</code> is a Heatmap object from <code>ComplexHeatmap</code>
 that contains the enrichment P-value heatmap. Note that this
 data is not used directly in subsequent plots, the pathway
 clusters shown here are based upon <code>-log10(Pvalue)</code> and not

@@ -227,3 +227,145 @@ setValidity("Mem", method=check_Mem)
 #' @name Mem-slots
 NULL
 
+
+## Define some "OR_NULL" classes for optional content
+setClassUnion("Heatmap_OR_NULL", c("Heatmap", "NULL"))
+setClassUnion("list_OR_NULL", c("list", "NULL"))
+
+#' Check MemPlotFolio object
+#'
+#' Check whether a MemPlotFolio object is valid.
+#'
+#' It requires:
+#' 
+#' * slots: 'enrichment_hm', 'gp_hm', 'clusters_mem',
+#'    'cnet_clusters', 'cnet_exemplars', 'cnet_clusters'
+#' 
+#' General guidance for MemPlotFolio objects:
+#'
+#' * The aim is to collect all parameters and associated data
+#' together so that the various types of plots are all using
+#' consistent underlying data and settings.
+#'
+#' @importClassesFrom ComplexHeatmap Heatmap
+#' 
+#' @param object `MemPlotFolio` object
+#'
+#' @family MemPlotFolio
+#'
+#' @export
+check_MemPlotFolio <- function
+(object)
+{
+   # check for valid content
+   required_slots <- c(
+      "enrichment_hm", # Heatmap
+      "gp_hm",         # Heatmap
+      "caption",      # list with text, Legends
+      "clusters",      # list with pathway clusters
+      "gene_clusters",      # list with pathway clusters
+      "cnet_collapsed",# list with igraph objects
+      "cnet_exemplars",# list with igraph objects
+      "cnet_clusters", # list with igraph objects
+      "thresholds",    # list with thresholds, filters
+      "metadata")      # miscellaneous
+   
+   test0 <- all(required_slots %in% slotNames(object))
+   if (!test0) {
+      print(paste0("Required slots were not present: ",
+         jamba::cPaste(setdiff(required_slots, slotNames(object)), sep=", ")))
+      return(test0)
+   }
+   ## confirm rownames and colnames match across objects
+   # colnames(mpf$enrichment_hm@matrix)
+   # jamba::heatmap_column_order(mpf$enrichment_hm)
+   # jamba::heatmap_row_order(mpf$enrichment_hm)
+   # jamba::heatmap_column_order(mpf$gp_hm)
+   # names(mpf$clusters_mem)
+   ero <- NULL;
+   eco <- NULL;
+   gro <- NULL;
+   gco <- NULL;
+   memclusters <- NULL;
+   geneclusters <- NULL;
+   ccnames <- NULL;
+   if (is.list(object@clusters) && length(object@clusters) > 0) {
+      memclusters <- object@clusters
+   }
+   if (is.list(object@gene_clusters) && length(object@gene_clusters) > 0) {
+      geneclusters <- object@gene_clusters
+   }
+   withr::with_options(list("warn"=-1), {
+      if (inherits(object@enrichment_hm, "Heatmap")) {
+         ero <- jamba::heatmap_row_order(object@enrichment_hm);
+         eco <- jamba::heatmap_column_order(object@enrichment_hm);
+      }
+      if (inherits(object@gp_hm, "Heatmap")) {
+         gro <- jamba::heatmap_row_order(object@gp_hm);
+         gco <- jamba::heatmap_column_order(object@gp_hm);
+      }
+   })
+   if (is.list(object@cnet_clusters) && length(object@cnet_clusters) > 0) {
+      ccnames <- names(object@cnet_clusters);
+   }
+   # check criteria
+   criteria_set <- c(
+      `clusters_mem, enrich_row_clusters`=(
+         length(memclusters) == 0 || length(ero) == 0 ||
+            all(names(memclusters) == names(ero))
+      ),
+      `clusters_mem, gp_column_clusters`=(
+         length(memclusters) == 0 || length(gco) == 0 ||
+            all(names(memclusters) == names(gco))
+      ),
+      # all cnet_clusters are present in names(clusters)
+      `clusters_mem, cnet_clusters names`=(
+         length(memclusters) == 0 || length(ccnames) == 0 ||
+            all(ccnames %in% names(memclusters))
+      )
+   )
+   if (!all(criteria_set)) {
+      jamba::printDebug(
+         "MemPlotFolio Invalid:\n- ",
+         jamba::cPaste(names(criteria_set)[!criteria_set],
+            sep=",\n- "));
+      return(FALSE);
+   }
+   return(TRUE)
+   #
+   # Todo:
+   # - validate cnet_collapsed contain pathway cluster nodes
+   # - validate cnet_exemplars contain pathway clusters
+   # - DONE. validate cnet_clusters contain pathway clusters
+}
+
+
+#' Mem S4 class, accessors, getters, and setters
+#'
+#' Mem class containing results from `multiEnrichMap()`,
+#' current class version "1.0.0".
+#'
+#' @family jam Mem utilities
+#' @family MemPlotFolio
+#' @rdname MemPlotFolio-class
+#' @aliases MemPlotFolio
+#'
+setClass("MemPlotFolio",
+   slots=c(
+      enrichment_hm="Heatmap_OR_NULL",
+      gp_hm="Heatmap_OR_NULL",
+      clusters="list_OR_NULL",
+      gene_clusters="list_OR_NULL",
+      caption="list_OR_NULL",
+      cnet_collapsed="list_OR_NULL",
+      cnet_exemplars="list_OR_NULL",
+      cnet_clusters="list_OR_NULL",
+      thresholds="list",
+      metadata="list_OR_NULL"
+   ),
+   contains="Versioned",
+   prototype=prototype(
+      new("Versioned",
+         versions=c(MemPlotFolio="1.0.0")))
+);
+setValidity("MemPlotFolio", method=check_MemPlotFolio)

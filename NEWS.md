@@ -1,3 +1,29 @@
+# multienrichjam 0.0.103.900
+
+## Major/Breaking changes
+
+* Added `MemPlotFolio` S4 class as default output from `mem_plot_folio()`.
+Nobody in theory should have been using `mem_plot_folio()` output directly.
+However, you can use `returnType="list"` for legacy output.
+* There are several accessors, a few of which can plot the data, and return
+the corresponding graphical objects to be customized.
+
+   * `EnrichmentHeatmap()`
+   * `GenePathHeatmap()`
+   * `CnetCollapsed()`
+   * `CnetExemplar()`
+   * `CnetCluster()`
+
+* Vignettes and tests have been updated to use the new
+MemPlotFolio S4 functions, a much cleaner approach overall.
+
+## New Mem methods
+
+* `geneInCategory()` mimics `DOSE::geneInCategory()` by listing genes
+in each pathway.
+* `genesBySet()` lists pathways associated to each gene.
+
+
 # multienrichjam 0.0.102.900
 
 * Added "Versioned" to 'Mem' class, to handle changes over time.
