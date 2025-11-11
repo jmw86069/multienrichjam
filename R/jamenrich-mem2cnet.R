@@ -14,7 +14,7 @@
 #'    pathways connected to genes. Each node has attribute `"nodeType"`
 #'    of either `"Set"` or `"Gene"`.
 #'
-#' @param mem one of the following:
+#' @param memIM one of the following:
 #'    * `Mem` S4 object, preferred. In this case, the arguments regarding
 #'    'geneIM' and 'enrichIM' data are taken directly from 'mem'.
 #'    * legacy `list` mem object, for backward compatibility,
@@ -24,12 +24,18 @@
 #'    When `mem` format is supplied, relevant arguments which are empty will
 #'    use corresponding data from `mem`, for example `geneIM`, `geneIMcolors`,
 #'    `enrichIM`, `enrichIMcolors`.
-#' @param categoryShape,geneShape `character` string indicating the
-#'    preferred default node shape. In general, `pie` shapes with one segment
-#'    are converted to `circle` for simplicity during plot functions,
-#'    although when using `jam_igraph()` to plot, it will treat single-segment
+#' @param categoryShape,geneShape `character` string with node shape,
+#'    default 'pie' uses pie nodes.
+#'    Note that 'pie' shapes with only one segment are converted to
+#'    'circle' for convenience.
+#'    When using `jam_igraph()` to plot, it already treats single-segment
 #'    pie nodes as circle anyway, and vectorizes pie node plotting to
 #'    make the overall rendering time substantially faster.
+#' @param forceColors `logical` default FALSE, whether to force node colors
+#'    to use `categoryColor` and `geneColor` arguments, otherwise colors
+#'    are defined using `enrichIMcolors()` and `geneIMcolors()`,
+#'    respectively.
+#'    Enabling this option will skip all pie and directional styling.
 #' @param categoryColor,geneColor `character` R color for default node colors,
 #'    used when `geneIMcolors`,`enrichIMcolors` is not supplied, respectively.
 #' @param categoryLabelColor,geneLabelColor `character` R color used as
@@ -49,7 +55,7 @@
 #'    * `geneIMdirection`,`enrichIMdirection` is used to define optional
 #'    border colors defined by the direction, where -1 is down,
 #'    0 is no change, and +1 is up.
-#'    Use `direction_col` to define a custom color function, however the
+#'    Use `direction_col_fn` to define a custom color function, however the
 #'    default uses the reversed "RdBu" Brewer color ramp with blue (down),
 #'    white (no change) and red (up).
 #' @param coloredrect_nrow,coloredrect_ncol,coloredrect_byrow arguments
@@ -61,10 +67,30 @@
 #'    When supplied, it should be a vector named to match
 #'    `colnames(enrichIM)`.
 #'    When defined, these colors override `enrichIMcolors`.
-#' @param direction_col `function` used to colorize node borders based
-#'    upon directionality. The default uses `colorjam::col_div_xf()`
+#' @param direction_col_fn `function` used to colorize 'Set' node borders
+#'    via enrichIMdirection. The default uses `colorjam::col_div_xf()`
 #'    which applies reverse Brewer "RdBu" for blue (down), white (no change),
-#'    and red (up) with threshold `1.2`.
+#'    and red (up) with maximum color at `2.0`.
+#'    When not supplied, `direction_cutoff` and `direction_max` are used
+#'    with `colorjam::col_div_xf().`
+#' @param direction_cutoff `numeric` default is taken from `memIM` when
+#'    provided as `Mem`, typical default is `1.0` to require directional
+#'    z-score at least `1.0` in order to apply any directional border
+#'    color.
+#' @param direction_max `numeric` default 2, the numeric value to apply
+#'    maximum color from the color gradient function.
+#' @param gene_direction_col_fn `function` used to colorize 'Gene' node borders
+#'    via enrichIMdirection. The default uses `colorjam::col_div_xf()`
+#'    which applies reverse Brewer "RdBu" for blue (down), white (no change),
+#'    and red (up) with maximum color at `1.2`.
+#'    *When not supplied, `gene_direction_cutoff` and `gene_direction_max`
+#'    are used with `colorjam::col_div_xf().`
+#' @param gene_direction_cutoff `numeric` default 0, the minimum value
+#'    in geneIMdirection to apply up/down color. Using 0 will colorize
+#'    any non-zero color.
+#' @param gene_direction_max `numeric` default 1.2, the numeric value to apply
+#'    maximum color from the color gradient function. Typical values
+#'    are `-1` and `1`, so using `1.2` will apply nearly the maximum color.
 #' @param hide_solo_pie `logical` default TRUE, passed to
 #'    `apply_cnet_direction()` to determine whether to display border
 #'    only as one outer frame color when all colors are identical.
@@ -76,11 +102,27 @@
 #' @param remove_singlet_genes `logical` default TRUE, whether to remove
 #'    singlet genes, which are genes (rows) not represented in any pathway
 #'    gene sets (columns).
+#' @param do_reorder `logical` default TRUE used to re-order nodes
+#'    in "equivalent positions" by border color, color, etc. by calling
+#'    `reorder_igraph_nodes()`. Equivalent nodes are common in Cnet
+#'    (bipartite) networks, for example numerous 'Gene' nodes may
+#'    be connected to the same 2 pathway 'Set' nodes, and therefore
+#'    the node positions are interchangeable. Sorting by node attributes
+#'    (notably color, then alphabetically by label) helps visual
+#'    review.
 #' @param spread_labels `logical` default FALSE, whether to spread node
 #'    labels away from incoming edges, also adding label distance via
 #'    vertex attribute 'label.dist'.
 #'    This step calls `spread_igraph_labels()`, and can be customized
 #'    further by passing arguments through '...' ellipses.
+#' @param repulse `numeric` value passed to `layout_with_qfr()`
+#'    when either `do_reorder` or `spread_labels` is TRUE. Otherwise
+#'    there is no layout applied.
+#'    The 'repulse' value effectively defines node spacing, usually
+#'    with values between 3 and 4, which 3 giving broad spacing,
+#'    and 4 giving very close spacing of nodes in equivalent network
+#'    positions, and broad spacing otherwise. Higher values tend
+#'    to "clump" nodes closer together.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions:
 #'    * when `remove_blanks=TRUE` it is passed to `removeIgraphBlanks()`
@@ -107,6 +149,7 @@ mem2cnet <- function
     "coloredrectangle",
     "circle",
     "ellipse"),
+ forceColors=FALSE,
  categoryColor="#E5C494",
  geneColor="#B3B3B3",
  categoryLabelColor="darkblue",
@@ -127,10 +170,16 @@ mem2cnet <- function
  coloredrect_ncol=NULL,
  coloredrect_byrow=TRUE,
  colorV=NULL,
- direction_col=colorjam::col_div_xf(1.2),
+ direction_col_fn=NULL,
+ direction_cutoff=NULL,
+ direction_max=2,
+ gene_direction_cutoff=0,
+ gene_direction_max=1.2,
+ gene_direction_col_fn=NULL,
  hide_solo_pie=TRUE,
  remove_blanks=TRUE,
  remove_singlet_genes=TRUE,
+ do_reorder=TRUE,
  spread_labels=FALSE,
  repulse=3.5,
  verbose=FALSE,
@@ -143,6 +192,7 @@ mem2cnet <- function
 
    if (is.list(memIM) &&
          "memIM" %in% names(memIM)) {
+      # convert legacy mem to Mem
       memIM <- tryCatch({
          list_to_Mem(memIM)
       }, error=function(e) {
@@ -159,6 +209,9 @@ mem2cnet <- function
       enrichIMcolors <- enrichIMcolors(Mem);
       enrichIMdirection <- enrichIMdirection(Mem);
       colorV <- colorV(Mem);
+      if (length(direction_cutoff) == 0) {
+         direction_cutoff <- thresholds(Mem)$direction_cutoff;
+      }
    } else if (is.list(memIM) &&
          "memIM" %in% names(memIM)) {
       ## Accept memIM as list mem output from multiEnrichMap()
@@ -313,7 +366,7 @@ mem2cnet <- function
       jamba::printDebug("mem2cnet(): ",
          "applying node colors");
    }
-   if (length(geneIM) > 0) {
+   if (!isTRUE(forceColors) && length(geneIM) > 0) {
       if (length(geneIMcolors) == 0) {
          if (length(colorV) < ncol(geneIM)) {
             colorV <- colorjam::rainbowJam(ncol(geneIM),
@@ -392,34 +445,41 @@ mem2cnet <- function
       igraph::V(g)$pie[gene_which] <- lapply(gene_which, function(i){
          rep(1, ncol(geneIM));
       });
-      igraph::V(g)$pie.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      geneIMrn <- jamba::nameVector(rownames(geneIM));
+      igraph::V(g)$pie.value[gene_which] <- lapply(geneIMrn, function(i){
          geneIM[match(i, rownames(geneIM)),,drop=FALSE];
       });
-      igraph::V(g)$pie.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$pie.color[gene_which] <- lapply(geneIMrn, function(i){
          jamba::nameVector(geneIMcolors[match(i, rownames(geneIMcolors)),],
             colnames(geneIMcolors));
       });
-      igraph::V(g)$pie.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$pie.names[gene_which] <- lapply(geneIMrn, function(i){
          colnames(geneIM);
       });
       ## Now do the same for coloredrectangle node shapes
-      igraph::V(g)$coloredrect.color[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$coloredrect.color[gene_which] <- lapply(geneIMrn,
+         function(i){
          jamba::nameVector(geneIMcolors[match(i, rownames(geneIMcolors)),],
             colnames(geneIMcolors));
       });
-      igraph::V(g)$coloredrect.value[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$coloredrect.value[gene_which] <- lapply(geneIMrn,
+         function(i){
          geneIM[match(i, rownames(geneIM)),,drop=FALSE];
       });
       if (length(coloredrect_byrow) > 0) {
-         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_byrow, length.out=length(gene_which));
+         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_byrow,
+            length.out=length(gene_which));
       }
       if (length(coloredrect_nrow) > 0) {
-         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_nrow, length.out=length(gene_which));
+         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_nrow,
+            length.out=length(gene_which));
       }
       if (length(coloredrect_ncol) > 0) {
-         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_ncol, length.out=length(gene_which));
+         igraph::V(g)$coloredrect.byrow[gene_which] <- rep(coloredrect_ncol,
+            length.out=length(gene_which));
       }
-      igraph::V(g)$coloredrect.names[gene_which] <- lapply(jamba::nameVector(rownames(geneIM)), function(i){
+      igraph::V(g)$coloredrect.names[gene_which] <- lapply(geneIMrn,
+         function(i){
          colnames(geneIM);
       });
       igraph::V(g)$shape <- ifelse(isset, categoryShape, geneShape);
@@ -430,8 +490,11 @@ mem2cnet <- function
       jamba::printDebug("mem2cnet(): ",
          "applying category/set node colors");
    }
-   if (length(enrichIM) > 0 && length(enrichIMcolors) > 0) {
-      enrichIM <- subset(enrichIM, rownames(enrichIM) %in% igraph::V(g)$name[isset]);
+   if (!isTRUE(forceColors) &&
+         length(enrichIM) > 0 &&
+         length(enrichIMcolors) > 0) {
+      enrichIM <- subset(enrichIM,
+         rownames(enrichIM) %in% igraph::V(g)$name[isset]);
       enrich_match <- match(rownames(enrichIM),
          igraph::V(g)$name[isset]);
       enrich_which <- which(isset)[enrich_match];
@@ -452,10 +515,12 @@ mem2cnet <- function
             } else if (jamba::igrepHas("byrow", j)) {
                igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_byrow,
                   length.out=igraph::vcount(g)));
-            } else if (jamba::igrepHas("ncol", j) && length(coloredrect_ncol) > 0) {
+            } else if (jamba::igrepHas("ncol", j) &&
+                  length(coloredrect_ncol) > 0) {
                igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_ncol,
                   length.out=igraph::vcount(g)));
-            } else if (jamba::igrepHas("nrow", j) && length(coloredrect_nrow) > 0) {
+            } else if (jamba::igrepHas("nrow", j) &&
+                  length(coloredrect_nrow) > 0) {
                igraph::vertex_attr(g, j) <- as.list(rep(coloredrect_nrow,
                   length.out=igraph::vcount(g)));
             } else {
@@ -466,19 +531,22 @@ mem2cnet <- function
       igraph::V(g)$pie[enrich_which] <- lapply(enrich_which, function(i){
          rep(1, ncol(enrichIM));
       });
-      igraph::V(g)$pie.value[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      enrichIMrn <- jamba::nameVector(rownames(enrichIM));
+      igraph::V(g)$pie.value[enrich_which] <- lapply(enrichIMrn, function(i){
          enrichIM[i,,drop=FALSE];
       });
-      igraph::V(g)$pie.color[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      igraph::V(g)$pie.color[enrich_which] <- lapply(enrichIMrn, function(i){
          jamba::nameVector(enrichIMcolors[i,],
             colnames(enrichIMcolors));
       });
       ## Now do the same for coloredrectangle node shapes
-      igraph::V(g)$coloredrect.color[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      igraph::V(g)$coloredrect.color[enrich_which] <- lapply(enrichIMrn,
+         function(i){
          jamba::nameVector(enrichIMcolors[i,],
             colnames(enrichIMcolors));
       });
-      igraph::V(g)$coloredrect.value[enrich_which] <- lapply(jamba::nameVector(rownames(enrichIM)), function(i){
+      igraph::V(g)$coloredrect.value[enrich_which] <- lapply(enrichIMrn,
+         function(i){
          enrichIM[i,,drop=FALSE];
       });
       if (length(coloredrect_byrow) > 0) {
@@ -505,7 +573,7 @@ mem2cnet <- function
    }
 
    # Freshen pie.color,coloredrect.color by using colorV by name
-   if (length(colorV) > 0) {
+   if (!isTRUE(forceColors) && length(colorV) > 0) {
       if (verbose) {
          jamba::printDebug("mem2cnet(): ",
             "applying colorV");
@@ -526,25 +594,56 @@ mem2cnet <- function
    }
 
    # optionally apply direction as a border color
-   if (length(geneIMdirection) > 0 && !all(geneIMdirection %in% c(0, NA))) {
+   if (!isTRUE(forceColors) &&
+         length(geneIMdirection) > 0 &&
+         !all(geneIMdirection %in% c(0, NA))) {
       if (verbose) {
          jamba::printDebug("mem2cnet(): ",
             "applying geneIMdirection");
       }
+      if (length(gene_direction_col_fn) == 0) {
+         if (length(gene_direction_max) == 0 ||
+               any(gene_direction_max <= 0)) {
+            gene_direction_max <- 1.2;
+         }
+         if (length(gene_direction_cutoff) > 0 &&
+               any(gene_direction_cutoff >= gene_direction_max)) {
+            gene_direction_max <- max(gene_direction_cutoff, na.rm=TRUE);
+            gene_direction_cutoff <- gene_direction_max - 
+               (gene_direction_max / 1e5);
+         }
+         gene_direction_col_fn <- colorjam::col_div_xf(gene_direction_max,
+            floor=gene_direction_cutoff)
+      }
       g <- apply_cnet_direction(cnet=g,
          hitim=geneIMdirection,
-         col=direction_col,
+         col=gene_direction_col_fn,
          hide_solo_pie=hide_solo_pie,
          ...);
    }
-   if (length(enrichIMdirection) > 0 && !all(enrichIMdirection %in% c(0, NA))) {
+   if (!isTRUE(forceColors) &&
+         length(enrichIMdirection) > 0 &&
+         !all(enrichIMdirection %in% c(0, NA))) {
       if (verbose) {
          jamba::printDebug("mem2cnet(): ",
             "applying enrichIMdirection");
       }
+      if (length(direction_col_fn) == 0) {
+         if (length(direction_max) == 0 ||
+               any(direction_max <= 0)) {
+            direction_max <- 2;
+         }
+         if (length(direction_cutoff) > 0 &&
+               any(direction_cutoff >= direction_max)) {
+            direction_max <- max(direction_cutoff, na.rm=TRUE);
+            direction_cutoff <- direction_max - (direction_max / 1e5);
+         }
+         direction_col_fn <- colorjam::col_div_xf(direction_max,
+            floor=direction_cutoff)
+      }
       g <- apply_cnet_direction(cnet=g,
          hitim=enrichIMdirection,
-         col=direction_col,
+         col=direction_col_fn,
          hide_solo_pie=hide_solo_pie,
          ...);
    }
@@ -556,9 +655,19 @@ mem2cnet <- function
             "applying spread_igraph_labels()");
       }
       g <- spread_igraph_labels(g,
-         do_reorder=TRUE,
+         do_reorder=do_reorder,
          # y_bias=y_bias,
          repulse=repulse,
+         ...);
+   } else if (isTRUE(do_reorder)) {
+      if (!"layout" %in% igraph::graph_attr_names(g)) {
+         g <- relayout_with_qfr(g,
+            spread_labels=FALSE,
+            repulse=repulse,
+            ...);
+      }
+      g <- reorder_igraph_nodes(g,
+         colorV=colorV,
          ...);
    }
 

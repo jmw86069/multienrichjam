@@ -10,7 +10,7 @@ collapse_mem_clusters(
   choose = NULL,
   per_cluster = Inf,
   byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
-  return_type = c("cnet", "mem"),
+  return_type = c("cnet", "Mem", "mem"),
   max_labels = 4,
   max_nchar_labels = 25,
   include_cluster_title = TRUE,
@@ -20,23 +20,59 @@ collapse_mem_clusters(
 )
 }
 \arguments{
-\item{cluster_color_min_fraction}{\code{numeric} value between 0 and 1
-used to define the cnet colors for each cluster. The number of
-significant pathways is calculated per cluster for each enrichment
-using \code{mem$enrichIMcolors}, and the fraction of significant
-pathways versus the max number per enrichment is used to filter.
-For example a cluster with 10 pathways, might have 8 significant
-pathways in one enrichment result, and 3 significant pathways in
-another enrichment result. The fraction for each enrichment is
-\code{8/8 == 1} for the first enrichment, and \code{3/8 = 0.375} for the
-second enrichment. When \code{cluster_color_min_fraction=0.5} (default)
-the first enrichment color would be included, but not the second
-enrichment color. The intent is to represent enrichment colors
-that have at least half (\code{0.5}) the pathways of the most
-representative (max) enrichment color. Therefore, a cluster with
-only one significant pathway from a given enrichment would
-typically not be representive of that enrichment, and its
-enrichment color would not be included.}
+\item{mem}{\code{Mem} or legacy \code{list} mem object}
+
+\item{clusters}{\code{list} named by cluster name, containing \code{character}
+vectors all of whose values should be present in \code{sets(mem)}.}
+
+\item{choose}{\code{character} default NULL, passed to \code{rank_mem_clusters()}
+to choose a subset of clusters to return. Values must be found in
+\code{names(clusters)}.}
+
+\item{per_cluster}{\code{integer} default 'Inf' with the maximum sets
+to include in each cluster. Use an integer like \code{per_cluster=1}
+to choose one "exemplar" per cluster, ranked according
+to \code{byCols} which is described in \code{rank_mem_clusters()}.}
+
+\item{byCols}{\code{character} vector of summary values to use when
+sorting sets within each cluster, passed to and described
+in \code{rank_mem_clusters()}.}
+
+\item{return_type}{\code{character} default "cnet" with the output format:
+\itemize{
+\item "cnet" returns an \code{igraph} Cnet plot.
+\item "Mem" returns a \code{Mem} object after collapsing by cluster.
+\item "mem" returns legacy \code{list} mem output.
+}}
+
+\item{max_labels}{\code{integer} default 4, the number of pathway labels
+to include in each cluster, ordered according to 'byCols'.}
+
+\item{max_nchar_labels}{\code{integer} default 25, max character length
+for each pathway label.}
+
+\item{include_cluster_title}{\code{logical} default TRUE, whether to include
+the cluster title as a prefix.
+For example if the cluster name is 'A' the new title would be:
+'A: pathway 1; pathway 2; pathway 3; pathway 4'.}
+
+\item{cluster_color_min_fraction}{\code{numeric} value default 0.5,
+the fraction of pathways in a cluster which has "non blank"
+assigned color in \code{enrichIMcolors()} in order for the color
+to be assigned to the resulting node, in the case of Cnet
+output with \code{return_type="cnet"}.}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
+
+\item{...}{additional arguments are passed to \code{cnet2mem()} which
+includes thresholds used by \code{apply_cnet_direction()} such as
+\code{direction_col_fn} (color function applied to enrichIMdirection),
+\code{gene_direction_col_fn} (color function applied to geneIMdirection),
+and others.
+To avoid applying directional color to Set nodes (nodeType='Set')
+use \code{direction_cutoff=100} and \code{direction_max=101}, which will
+consider any enrichIMdirection value at or below 100 to be
+non-directional.}
 }
 \value{
 By default \code{return_type="cnet"} and this function returns

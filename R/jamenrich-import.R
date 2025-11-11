@@ -9,15 +9,26 @@
 #' objects for downstream analysis.
 #' Each `data.frame` represents the results of one Ingenuity IPA test,
 #' however not all sections contain gene set enrichment results.
-#'
+#' 
+#' ## Batch processing
+#' 
+#' When importing multiple files, argument `ipaFile` can be a vector
+#' of '.xlsx' or '.txt' files. This workflow also calls
+#' `IPAlist_to_hits()` to generate a gene hit matrix, stored
+#' as `attr(ipalist, "geneHitIM")` to use in `multiEnrichMap()`.
+#' 
+#' ## IPA Gene Xref Data
+#' 
 #' By default, the argument `revert_ipa_xref=TRUE` will convert the
 #' IPA gene symbol values back to the original identifier.
 #' In most cases* this behavior is desirable, with caveats:
 #'
-#' * When using platform data (for example microarray data) which
-#' use a non-gene identifier, it is recommended to use
-#' `revert_ipa_xref=FALSE`. In these cases, the IPA gene symbol
-#' may be more user-friendly in multienrichjam.
+#' * When using platform data which
+#' use a non-gene identifier, including microarray probesets, or
+#' RefSeq transcript ID, or protein "UniProt" accession numbers,
+#' it is recommended to use `revert_ipa_xref=FALSE`.
+#' In these cases, the IPA gene symbol is expected to be
+#' more user-friendly, and therefore more useful.
 #'
 #'    * This option would be helpful to view the IPA gene symbols
 #'    as they appear in the IPA report - even if the symbols
@@ -42,22 +53,27 @@
 #' "Analysis Ready Molecules" with the full IPA data table used
 #' for the analysis. This `data.frame` will also contain any
 #' statistical columns, if provided to IPA upfront.
+#' 
+#' See `IPAlist_to_hits()` for an automated way to create a gene hit
+#' matrix from the 'Analysis Ready Molecules' returned by IPA.
 #'
 #' ## Motivation
 #'
 #' 1. Separate multiple IPA enrichment tables.
-#' 2. Rename colnames to be consistent.
-#' 3. Revert IPA gene aliases to original user input (default but optional).
+#' 2. Rename colnames to be consistent, compatible with
+#' `enrichDF2enrichResult()`.
+#' 3. Revert IPA gene aliases to original user input, default but optional.
+#' 4. Generate `geneHitIM` hit matrix when processing multiple files.
 #'
 #' ## Input format
 #'
-#' 1. `ipaFile` can be a text `.txt` file,
+#' 1. `ipaFile` can be one or more text `.txt` files,
 #' where the text file contains all IPA enrichment data in
 #' tall format. This format is most common.
-#' 2. `ipaFile` can be an Excel `.xlsx` file,
+#' 2. `ipaFile` can be one or more Excel `.xlsx` files,
 #' which contains all IPA enrichment data in
 #' one tall worksheet tab.
-#' 3. `ipaFile` can be an Excel `.xlsx` file,
+#' 3. `ipaFile` can be one or more Excel `.xlsx` files,
 #' where each type of IPA enrichment appears on a separate
 #' Excel worksheet tab.
 #' 4. `ipaFile` can be a list of `data.frame` objects.
@@ -164,7 +180,12 @@
 #'    contains a section `"Analysis Ready Molecules"`.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
-#'
+#' 
+#' @examples
+#' ipaFile <- system.file(package="multienrichjam", "extdata",
+#'    c("Newborns-IPA.txt", "OlderChildren-IPA.txt"));
+#' ipalist <- importIPAenrichment(ipaFile)
+#' 
 #' @export
 importIPAenrichment <- function
 (ipaFile,
@@ -189,6 +210,10 @@ importIPAenrichment <- function
     "^[, ]+|[, ]+$"),
  geneCurateTo=c("",
      ""),
+ signColname=c("Expr Fold Change", "fold.*change",
+    "log.*ratio", "log.*fold", "log.*fc",
+    "lfc", "ratio", "fold", "fc"),
+ signThreshold=0,
  method=1,
  sheet=1,
  sep="\t",
@@ -217,16 +242,15 @@ importIPAenrichment <- function
    ## xlsxMultiSheet=FALSE is intended for Excel import of IPA data where
    ## the Excel table contains all summary tables appended one after another.
    if (jamba::igrepHas("[.]xlsx$", ipaFile)) {
-      if (suppressPackageStartupMessages(!require(openxlsx))) {
-         stop("importIPAenrichment() requires the openxlsx package for Excel import.");
+      if (!requireNamespace("openxlsx", quietly=TRUE)) {
+         stop_msg <- paste0("importIPAenrichment() requires the openxlsx ",
+            "package for Excel import.");
+         stop(stop_msg);
       }
-   }
-   if (suppressPackageStartupMessages(!require(jamba))) {
-      stop("importIPAenrichment() requires the jamba package, devtools::install_github('jmw86069/jamba')");
    }
 
    if (jamba::igrepHas("list", class(ipaFile)) &&
-         jamba::igrepHas("data.frame|tibbletbl|matrix|dataframe", class(ipaFile[[1]]))) {
+         inherits(ipaFile[[1]], c("data.frame", "matrix"))) {
       ## Process list of data.frames as input
       ipaDFL <- lapply(jamba::nameVectorN(ipaFile), function(iSheet){
          if (verbose) {
@@ -244,7 +268,7 @@ importIPAenrichment <- function
             verbose=verbose);
          jDF;
       });
-   } else if (jamba::igrepHas("[.]xlsx$", ipaFile) && length(ipaFile) > 1) {
+   } else if (jamba::igrepHas("[.](txt|xlsx)$", ipaFile) && length(ipaFile) > 1) {
       ## Process multiple files by calling this function on each file
       ipaDFLL <- lapply(ipaFile, function(ipaFile_i){
          jDF <- importIPAenrichment(ipaFile=ipaFile_i,
@@ -260,13 +284,25 @@ importIPAenrichment <- function
             convert_ipa_slash=convert_ipa_slash,
             ipa_slash_sep=ipa_slash_sep,
             verbose=verbose,
+            revert_ipa_xref=revert_ipa_xref,
             ...);
+      });
+      # extract IPA gene hit matrix?
+      tryCatch({
+         ipahitim <- IPAlist_to_hits(ipaDFLL,
+            signColname=signColname,
+            signThreshold=signThreshold,
+            returnType="matrix",
+            ...);
+         attr(ipaDFLL, "geneHitIM") <- ipahitim;
+      }, error=function(e){
+         # do nothing for now
       });
       return(ipaDFLL);
    } else if (jamba::igrepHas("[.]xlsx$", ipaFile) && xlsxMultiSheet) {
       ## Import IPA data from Excel xlsx file, multiple worksheets
       ## Process Excel import instead of CSV
-      sheetNames <- openxlsx::getSheetNames(ipaFile);
+      sheetNames <- openxlsx::getSheetNames(ipFile);
       sheetNamesUse <- jamba::nameVector(sheet, sheetNames[sheet]);
       if (verbose) {
          jamba::printDebug("importIPAenrichment(): ",
@@ -981,3 +1017,132 @@ find_colname <- function
    return(head(x_vals, max));
 }
 
+
+#' Convert IPA list to a gene hit list or matrix
+#' 
+#' Convert IPA list to a gene hit list or matrix
+#' 
+#' Given a `list` of IPA data produced by `importIPAenrichment()`
+#' produce a single `list` or incidence `matrix` representing
+#' all gene hits tested by IPA.
+#' 
+#' @family jam import functions
+#' 
+#' @returns `list` by default, or `matrix` with `returnType="matrix"`.
+#' 
+#' @param IPAlist `list` of output from `importIPAenrichment()`
+#' @param signColname `character` vector of patterns to match the colname
+#'    in the 'Analysis Ready Molecules' IPA xref table which should
+#'    indicate the direction of change where present.
+#' @param signThreshold `numeric` minimum absolute threshold, default 0,
+#'    for a value in 'signColname' to be considered a non-zero change.
+#' @param geneColname `character` vector of patterns to match the colname
+#'    in the 'Analysis Ready Molecules' IPA xref table which should
+#'    indicate the gene involved. This column is validated by matching
+#'    with the 'Canonical Pathways' geneID or geneNames column to ensure
+#'    all values involved in pathway enrichment are also present in the
+#'    xref column.
+#' @param emptyValue `numeric` default 0, passed to `list2imSigned()` to
+#'    use when `returnType="matrix"` in the matrix for non-hits.
+#' @param returnType `character` string
+#'    * 'list' (default): returns a signed gene list, with `integer` vectors
+#'    named by gene.
+#'    * 'matrix': returns a numeric `matrix` with gene rownames.
+#' @param ... additional arguments are passed to internal functions
+#' 
+#' @export
+IPAlist_to_hits <- function
+(IPAlist,
+ signColname=c("Expr Fold Change", "fold.*change",
+    "log.*ratio", "log.*fold", "log.*fc", "lfc", "ratio", "fold", "fc"),
+ signThreshold=0,
+ geneColname=c("name", "symbol", "ID"),
+ emptyValue=0,
+ returnType=c("list", "matrix"),
+ verbose=FALSE,
+ ...)
+{
+   #
+   returnType <- match.arg(returnType);
+   
+   # expand signThreshold
+   signThreshold <- rep(signThreshold, length.out=length(IPAlist));
+   names(signThreshold) <- names(IPAlist);
+   
+   #
+   ipanames <- jamba::nameVectorN(IPAlist);
+   
+   # iterate each xref
+   ipahitlist <- lapply(ipanames, function(iname){
+      arm <- head(jamba::vigrep("analysis.*ready.*molecules",
+         names(IPAlist[[iname]])), 1);
+      if (length(arm) == 0) {
+         stop_msg <- paste0("No 'Analysis Ready Molecules' found for ",
+            iname, ".");
+         stop(stop_msg);
+      }
+      can <- head(jamba::vigrep("canonical", names(IPAlist[[iname]])), 1);
+      if (length(can) == 0) {
+         stop_msg <- paste0("No 'Canonical Pathways' found for ",
+            iname, ".");
+         stop(stop_msg);
+      }
+      
+      # define genes present in Canonical Pathways
+      # to confirm the gene colname has appropriate values
+      candf <- IPAlist[[iname]][[can]];
+      canGeneColname <- find_colname(c("geneNames", "geneID"), candf);
+      candf_genes <- unique(unlist(strsplit(candf[[canGeneColname]], "[/,]+")));
+      
+      # determine useGeneColname from IPA xref
+      idf <- IPAlist[[iname]][[arm]];
+      geneColnames <- jamba::provigrep(geneColname, colnames(idf));
+      useGeneColname <- NULL;
+      for (igeneColname in geneColnames) {
+         testGenes <- gsub("[ ]*[(]includes others[)].*", "",
+            gsub("/", ":", idf[[igeneColname]]));
+         if (all(candf_genes %in% testGenes)) {
+            useGeneColname <- igeneColname;
+            break;
+         }
+      }
+      if (length(useGeneColname) == 0) {
+         stop("Genes in Canonical Pathways not present in IPA xref.");
+      }
+      
+      # determine useSignColname with fold change column to use
+      useSignColname <- find_colname(signColname, idf);
+      idf_sign <- NULL;
+      if (length(useSignColname) == 0) {
+         warn_msg <- paste0("signColname did not match any IPA xref columns ",
+            "for ", iname, ".");
+         warning(warn_msg);
+         # assume all are '1'
+         idf_gene <- gsub(" [(]includes others.*", "",
+            gsub("/", ":", idf[[useGeneColname]]));
+         idf_sign <- rep(1, nrow(idf));
+      } else {
+         # optionally subset data
+         if (signThreshold[[iname]] > 0) {
+            idf <- subset(idf,
+               abs(idf[[useSignColname]]) >= signThreshold[[iname]])
+            if (nrow(idf) == 0) {
+               return(NULL)
+            }
+         }
+         idf_sign <- sign(idf[[useSignColname]]);
+      }
+
+      # generate signed list
+      idf_gene <- gsub(" [(]includes others.*", "",
+         gsub("/", ":", idf[[useGeneColname]]));
+      jamba::nameVector(idf_sign, idf_gene)
+   })
+   if ("matrix" %in% returnType) {
+      ipahitim <- list2imSigned(ipahitlist,
+         emptyValue=emptyValue,
+         ...)
+      return(ipahitim)
+   }
+   return(ipahitlist)
+}

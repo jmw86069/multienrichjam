@@ -1,7 +1,7 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.103.900
+Version: 0.0.104.900
 Authors@R: c(
     person(given="James M.",
        family="Ward",
@@ -28,7 +28,6 @@ Imports: jamba (>= 1.0.4),
     enrichplot,
     clusterProfiler,
     ComplexHeatmap,
-    matrixStats,
     glue,
     farver,
     amap,
@@ -42,6 +41,7 @@ Imports: jamba (>= 1.0.4),
     S4Vectors
 Suggests: 
     knitr,
+    openxlsx,
     rmarkdown,
     testthat (>= 3.0.0)
 Enhances:

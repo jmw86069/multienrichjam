@@ -1420,7 +1420,8 @@ removeIgraphBlanks <- function
                   ## keep track of which columns belong to which node
                   iMcol <- factor(rep(which(iUse), crLengths[iUse]/nrowNcolByrowV[1]));
                   ## Find columns where the colMin is 1, meaning all are blank
-                  iMblank <- (matrixStats::colMins(iM) == 1);
+                  # iMblank <- (matrixStats::colMins(iM) == 1);
+                  iMblank <- (apply(iM, 1, min, na.rm=TRUE) == 1);
                   # Subset for non-blank columns
                   iMvalsM <- iMvals[,!iMblank,drop=FALSE];
                   iMnamesM <- iMnames[,!iMblank,drop=FALSE];

@@ -1137,10 +1137,13 @@ shape.jampie.plot <- function
          length.out=length(vertex.pie))
    }
 
-   vertex.pie.lwd <- getparam("pie.lwd")
-   vertex.pie.width <- getparam("pie.width")
+   vertex.pie.lwd <- getparam("pie.lwd");
+   vertex.pie.width <- getparam("pie.width");
    if (length(vertex.pie.lwd) == 0) {
       vertex.pie.lwd <- default_igraph_values()$vertex$pie.lwd;
+   }
+   if (length(vertex.pie.width) == 0) {
+      vertex.pie.width <- vertex.pie.lwd;
    }
    if (!is.list(vertex.pie.lwd)) {
       if (length(vertex.pie.lwd) == 1) {

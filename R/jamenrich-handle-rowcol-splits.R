@@ -106,10 +106,10 @@ handle_rowcol_splits <- function
       if (x_split > 1) {
          cc_h <- c(sort(decreasing=TRUE,
             cluster_x$height), 0);
-         if (verbose){jamba::printDebug("cc_h:");print(cc_h);}# debug
+         # if (verbose){jamba::printDebug("cc_h:");print(cc_h);}# debug
          cc_height <- mean(c(cc_h[x_split - 1], cc_h[x_split]));
          
-         if (verbose){jamba::printDebug("cc_height:");print(cc_height);}# debug
+         # if (verbose){jamba::printDebug("cc_height:");print(cc_height);}# debug
          if (cc_height == 0 && any(cc_h > 0)) {
             cc_height <- mean(c(0, min(cc_h[cc_h > 0])))
          }
@@ -310,6 +310,7 @@ handle_rowcol_splits <- function
       im_weight <- im_weight / min_weight;
       use_gene_im <- geneIM(Mem) * jamba::rmNA(naValue=1,
          geneIMdirection(Mem))
+      
       # generate the combined matrix to use during clustering
       if (im_weight == 0) {
          row_matrix <- (use_gene_im[use_genes, , drop=FALSE]) * gene_weight;

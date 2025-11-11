@@ -424,43 +424,48 @@ multiEnrichMap <- function
       } else {
          geneHitIM <- geneHitIM[, keep_hitim_colnames, drop=FALSE];
       }
-   }
-   if (length(geneHitList) == 0 && length(geneHitIM) > 0) {
-      # generate geneHitList using geneHitIM
+      # now populate geneHitList if needed
+      if (length(geneHitList) == 0) {
+         if (verbose) {
+            jamba::printDebug("multiEnrichMap(): ",
+               "Creating geneHitList from geneHitIM.");
+         }
+         # # Note: it saves character values not the direction here
+         # geneHitList <- lapply(imSigned2list(geneHitIM), names);
+         ## 0.0.104.900: keep the directionality
+         geneHitList <- imSigned2list(geneHitIM)
+      }
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
-            "Creating geneHitList from geneHitIM.");
+            "sdim(geneHitList): ");
+         print(jamba::sdim(geneHitList));
       }
-      # Note: it saves character values not the direction here
-      geneHitList <- lapply(imSigned2list(geneHitIM), names);
-   }
-   if (length(geneHitList) > 0) {
+   } else if (length(geneHitList) > 0) {
+      # no geneHitIM but geneHitList is supplied
       if (!all(names(enrichList) %in% names(geneHitList))) {
          stop("names(enrichList) must all be present in names(geneHitList)");
       }
       keep_hitlist_names <- intersect(names(enrichList),
          names(geneHitList));
-      if (length(keep_hitlist_names) == 0) {
-         if (verbose) {
-            jamba::printDebug("multiEnrichMap(): ",
-               "geneHitList had no matching names, setting", " NULL");
-         }
-         geneHitList <- NULL;
-      } else {
-         geneHitList <- geneHitList[keep_hitlist_names];
-      }
+      geneHitList <- geneHitList[keep_hitlist_names];
 
       # populate geneHitIM if empty
       if (length(geneHitList) > 0 && length(geneHitIM) == 0) {
          if (is.numeric(geneHitList[[1]])) {
             # 0.0.92.900
-            geneHitIM <- jamba::rmNA(naValue=0, list2imSigned(geneHitList))
+            geneHitIM <- jamba::rmNA(naValue=0,
+               list2imSigned(geneHitList, emptyValue=0))
          } else {
             geneHitIM <- list2im(geneHitList);
          }
       }
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "sdim(geneHitList): ");
+         print(jamba::sdim(geneHitList));
+      }
    }
-   # Finally if no geneHitList is available, use enrichment results
+   # Finally if no geneHitList is available, derive from enrichment results
    if (length(geneHitList) == 0) {
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
@@ -520,7 +525,7 @@ multiEnrichMap <- function
    thresholds <- list(
       min_count=min_count,
       p_cutoff=p_cutoff,
-      # cutoffRowMinP=cutoffRowMinP,
+      direction_cutoff=direction_cutoff,
       topEnrichN=topEnrichN,
       topEnrichSources=topEnrichSources,
       topEnrichNameGrep=topEnrichNameGrep)
@@ -561,7 +566,7 @@ multiEnrichMap <- function
          print(jamba::sdim(enrichList));
       }
       ## Now we subset geneIM to the filtered genes
-      origGenes <- jamba::mixedSort(unique(unlist(geneHitList)));
+      origGenes <- jamba::mixedSort(unique(rownames(geneHitIM)));
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "lengths(geneHitList) before:",
@@ -599,9 +604,14 @@ multiEnrichMap <- function
             "lengths(geneHitListNew):",
             lengths(geneHitListNew));
       }
-      geneHitList <- lapply(geneHitList, function(i){
-         intersect(i, newGenes)
-      });
+      # 0.0.104.900: no need to subset geneHitList
+      # geneHitList <- lapply(geneHitList, function(i){
+      #    if (is.numeric(geneHit)) {
+      #       i[names(i) %in% newGenes]
+      #    } else {
+      #       intersect(i, newGenes)
+      #    }
+      # });
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
             "lengths(geneHitList) after:",
@@ -611,64 +621,64 @@ multiEnrichMap <- function
    
    #####################################################################
    ## geneIMdirection (if geneHitIM is supplied)
-   geneIMdirection <- NULL;
-   if (length(geneHitIM) > 0 &&
-         (any(geneHitIM < 0) || !all(geneHitIM %in% c(0, 1)))) {
-      geneIMdirection <- (abs(geneIM) > 0) * 1;
-      shared_rows <- intersect(rownames(geneHitIM),
-         rownames(geneIMdirection));
-      shared_columns <- intersect(colnames(geneHitIM),
-         colnames(geneIMdirection));
-      geneIMdirection[shared_rows, shared_columns] <- geneHitIM[shared_rows, shared_columns];
-      if (!all(rownames(geneIMdirection) %in% shared_rows)) {
-         missing_rows <- setdiff(rownames(geneIMdirection), shared_rows);
-         jamba::printDebug("multiEnrichMap(): ",
-            "geneHitIM does not contain ",
-            jamba::formatInt(length(missing_rows)),
-            " rows present in geneIM, default values will use 1.");
-         print(missing_rows);
-      }
-      if (!all(colnames(geneIMdirection) %in% shared_columns)) {
-         missing_columns <- setdiff(colnames(geneIMdirection), shared_columns);
-         jamba::printDebug("multiEnrichMap(): ",
-            "geneHitIM does not contain ",
-            jamba::formatInt(length(missing_columns)),
-            " columns present in geneIM, default values will use 1.");
-      }
+   
+   # 0.0.104.900: always prepare
+   geneIMdirection <- (abs(geneIM) > 0) * 1;
+   shared_rows <- intersect(rownames(geneHitIM),
+      rownames(geneIMdirection));
+   shared_columns <- intersect(colnames(geneHitIM),
+      colnames(geneIMdirection));
+   geneIMdirection[shared_rows, shared_columns] <- geneHitIM[shared_rows,
+      shared_columns, drop=FALSE];
+   #
+   # check for missing values
+   if (!all(rownames(geneIMdirection) %in% shared_rows)) {
+      missing_rows <- setdiff(rownames(geneIMdirection), shared_rows);
+      jamba::printDebug("multiEnrichMap(): ",
+         "geneHitIM does not contain ",
+         jamba::formatInt(length(missing_rows)),
+         " rows present in geneIM, default values will use 1.");
+      print(missing_rows);
    }
-   # if geneIMdirection exists, confirm geneIM only contains c(0,1)
+   if (!all(colnames(geneIMdirection) %in% shared_columns)) {
+      missing_columns <- setdiff(colnames(geneIMdirection), shared_columns);
+      jamba::printDebug("multiEnrichMap(): ",
+         "geneHitIM does not contain ",
+         jamba::formatInt(length(missing_columns)),
+         " columns present in geneIM, default values will use 1.");
+   }
+   #
+   # confirm geneIM only contains c(0,1)
    if (length(geneIMdirection) > 0) {
       geneIM <- (abs(geneIM) > 0) * 1;
    }
 
    #####################################################################
    ## geneIM colors
+   ## Todo: Move this logic into geneIMcolors() Mem accessor
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "creating geneIMcolors");
    }
    # change this code to use actual colorV colors, no gradient necessary
-   geneIMcolors <- do.call(cbind, lapply(jamba::nameVector(colnames(geneIM)), function(icolname){
-      ifelse(geneIM[,icolname] == 0,
-         "#FFFFFF",
-         rep(colorV[icolname], nrow(geneIM)))
-   }))
+   geneIMcolors <- do.call(cbind,
+      lapply(jamba::nameVector(colnames(geneIM)), function(icolname){
+         ifelse(geneIM[,icolname] == 0,
+            "#FFFFFF",
+            rep(colorV[icolname], nrow(geneIM)))
+      }))
    # just to be sure, set rownames and colnames to match geneIM
    rownames(geneIMcolors) <- rownames(geneIM);
    colnames(geneIMcolors) <- colnames(geneIM);
-   # geneIMcolors <- colorjam::matrix2heatColors(x=geneIM,
-   #    transformFunc=c,
-   #    colorV=colorV,
-   #    shareNumLimit=FALSE,
-   #    numLimit=1,
-   #    trimRamp=c(4,3));
 
    # assign to mem
    mem$geneHitList <- geneHitList;
-   mem$geneHitIM <- geneHitIM;
-   mem$geneIM <- geneIM;
-   mem$geneIMcolors <- geneIMcolors;
-   mem$geneIMdirection <- geneIMdirection;
+   geneHitIMsorted <- jamba::mixedSort(rownames(geneHitIM));
+   mem$geneHitIM <- geneHitIM[geneHitIMsorted, , drop=FALSE];
+   geneIMsorted <- jamba::mixedSort(rownames(geneIM));
+   mem$geneIM <- geneIM[geneIMsorted, , drop=FALSE];
+   mem$geneIMcolors <- geneIMcolors[geneIMsorted, , drop=FALSE];
+   mem$geneIMdirection <- geneIMdirection[geneIMsorted, , drop=FALSE];
 
    #####################################################################
    ## make nameColname values unique even when duplicated
@@ -682,18 +692,12 @@ multiEnrichMap <- function
    ##
    check_suffix <- " jam";
    namechecks <- lapply(enrichList, function(ier){
-      # if (all(ier@result[[nameColname]] == ier@result[[keyColname]])) {
-      #    return(FALSE)
-      # }
       dfcheck <- data.frame(
          key=ier@result[[keyColname]],
          name=ier@result[[nameColname]])
       dfcheck$keyname <- paste0(dfcheck$key,
          rep(":", length.out=nrow(dfcheck)),
          dfcheck$name)
-      # dfcheck$keyname <- ifelse(dfcheck$key == dfcheck$name,
-      #    dfcheck$name,
-      #    paste0(dfcheck$key, ":", dfcheck$name))
       dupe_keynames <- unique(dfcheck$keyname[duplicated(dfcheck$keyname)]);
       if (length(dupe_keynames) > 0) {
          k <- dfcheck$keyname %in% dupe_keynames;
@@ -1023,9 +1027,9 @@ multiEnrichMap <- function
          geneDelim),
       sort_rows=jamba::mixedSort);
    # 0.0.93.900 - enforce consistent order
-   memIM <- memIM[, enrichLsetNames, drop=FALSE];
+   memIMsorted <- jamba::mixedSort(rownames(memIM));
+   memIM <- memIM[memIMsorted, enrichLsetNames, drop=FALSE];
    mem$memIM <- memIM;
-
 
    #####################################################################
    ## Convert enrichResult to enrichMap igraph network

@@ -1,5 +1,33 @@
 # TODO
 
+## 10nov2025
+
+* `IPAlist_to_hits()` to extract hit list from IPA xref tables.
+
+   * convert "/" to ":" for genes with two or more symbols
+   * remove `" (includes others)"` suffix for proper gene symbol matching
+
+* `mem_plot_folio()`
+
+   * Replace CnetCollapsed with one `igraph` that updates `V(cnet)$label`
+   as needed. The rest should be constant.
+   
+* Add `PlotCnetHeatmaps()`
+* `colorRamp2D()` enhancements
+
+   * Use `thresholds(Mem)$direction_cutoff`, add labeling
+   * consider continuous color option, also use `direction_cutoff`
+
+* Consider making many functions "internal" to simplify the user experience.
+
+### New ideas
+
+* Consider some way to score gene clusters by how well they "define" the
+cluster? For example, some genes are found in the majority of nodes in
+at least one cluster. Other genes are scattered across clusters with
+no visible aggregation. The metric could be fraction of genes in at
+least half the pathways in one pathway cluster.
+
 ## 04nov2025
 
 * PARTIAL. Simplify the function reference categories.
@@ -24,7 +52,7 @@
 * Consider providing some data dynamically, using current thresholds:
 `enrichIMcolors`, `geneIMcolors`
 * Add `plot_cnet_heatmaps()`. It needs pathway and expression data to test.
-* Add `MemPlotFolio` S4 object
+* COMPLETE. Add `MemPlotFolio` S4 object
 
    * Store data in `plotdata` as a `list` or `SimpleList`
    * Store parameters in a slot `parameters` as `list` as well.

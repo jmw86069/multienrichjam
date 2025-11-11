@@ -14,6 +14,9 @@ importIPAenrichment(
   geneGrep = c("Molecules in Network", "Target molecules", "Molecules", "Symbol"),
   geneCurateFrom = c("[ ]*[(](complex|includes others)[)][ ]*", "^[, ]+|[, ]+$"),
   geneCurateTo = c("", ""),
+  signColname = c("Expr Fold Change", "fold.*change", "log.*ratio", "log.*fold",
+    "log.*fc", "lfc", "ratio", "fold", "fc"),
+  signThreshold = 0,
   method = 1,
   sheet = 1,
   sep = "\\t",
@@ -129,15 +132,26 @@ enrichment data into a \code{list} of \code{data.frame}
 objects for downstream analysis.
 Each \code{data.frame} represents the results of one Ingenuity IPA test,
 however not all sections contain gene set enrichment results.
+\subsection{Batch processing}{
+
+When importing multiple files, argument \code{ipaFile} can be a vector
+of '.xlsx' or '.txt' files. This workflow also calls
+\code{IPAlist_to_hits()} to generate a gene hit matrix, stored
+as \code{attr(ipalist, "geneHitIM")} to use in \code{multiEnrichMap()}.
+}
+
+\subsection{IPA Gene Xref Data}{
 
 By default, the argument \code{revert_ipa_xref=TRUE} will convert the
 IPA gene symbol values back to the original identifier.
 In most cases* this behavior is desirable, with caveats:
 \itemize{
-\item When using platform data (for example microarray data) which
-use a non-gene identifier, it is recommended to use
-\code{revert_ipa_xref=FALSE}. In these cases, the IPA gene symbol
-may be more user-friendly in multienrichjam.
+\item When using platform data which
+use a non-gene identifier, including microarray probesets, or
+RefSeq transcript ID, or protein "UniProt" accession numbers,
+it is recommended to use \code{revert_ipa_xref=FALSE}.
+In these cases, the IPA gene symbol is expected to be
+more user-friendly, and therefore more useful.
 \itemize{
 \item This option would be helpful to view the IPA gene symbols
 as they appear in the IPA report - even if the symbols
@@ -164,23 +178,30 @@ In any case, the output \code{list} should contain an entry
 "Analysis Ready Molecules" with the full IPA data table used
 for the analysis. This \code{data.frame} will also contain any
 statistical columns, if provided to IPA upfront.
+
+See \code{IPAlist_to_hits()} for an automated way to create a gene hit
+matrix from the 'Analysis Ready Molecules' returned by IPA.
+}
+
 \subsection{Motivation}{
 \enumerate{
 \item Separate multiple IPA enrichment tables.
-\item Rename colnames to be consistent.
-\item Revert IPA gene aliases to original user input (default but optional).
+\item Rename colnames to be consistent, compatible with
+\code{enrichDF2enrichResult()}.
+\item Revert IPA gene aliases to original user input, default but optional.
+\item Generate \code{geneHitIM} hit matrix when processing multiple files.
 }
 }
 
 \subsection{Input format}{
 \enumerate{
-\item \code{ipaFile} can be a text \code{.txt} file,
+\item \code{ipaFile} can be one or more text \code{.txt} files,
 where the text file contains all IPA enrichment data in
 tall format. This format is most common.
-\item \code{ipaFile} can be an Excel \code{.xlsx} file,
+\item \code{ipaFile} can be one or more Excel \code{.xlsx} files,
 which contains all IPA enrichment data in
 one tall worksheet tab.
-\item \code{ipaFile} can be an Excel \code{.xlsx} file,
+\item \code{ipaFile} can be one or more Excel \code{.xlsx} files,
 where each type of IPA enrichment appears on a separate
 Excel worksheet tab.
 \item \code{ipaFile} can be a list of \code{data.frame} objects.
@@ -216,8 +237,15 @@ and optionally a column "Symbol" which is edited by multienrichjam.
 }
 }
 }
+\examples{
+ipaFile <- system.file(package="multienrichjam", "extdata",
+   c("Newborns-IPA.txt", "OlderChildren-IPA.txt"));
+ipalist <- importIPAenrichment(ipaFile)
+
+}
 \seealso{
 Other jam import functions: 
+\code{\link{IPAlist_to_hits}()},
 \code{\link{enrichDF2enrichResult}()}
 }
 \concept{jam import functions}

@@ -9,6 +9,7 @@ mem2cnet(
   memIM,
   categoryShape = c("pie", "coloredrectangle", "circle", "ellipse"),
   geneShape = c("pie", "coloredrectangle", "circle", "ellipse"),
+  forceColors = FALSE,
   categoryColor = "#E5C494",
   geneColor = "#B3B3B3",
   categoryLabelColor = "darkblue",
@@ -28,10 +29,16 @@ mem2cnet(
   coloredrect_ncol = NULL,
   coloredrect_byrow = TRUE,
   colorV = NULL,
-  direction_col = colorjam::col_div_xf(1.2),
+  direction_col_fn = NULL,
+  direction_cutoff = NULL,
+  direction_max = 2,
+  gene_direction_cutoff = 0,
+  gene_direction_max = 1.2,
+  gene_direction_col_fn = NULL,
   hide_solo_pie = TRUE,
   remove_blanks = TRUE,
   remove_singlet_genes = TRUE,
+  do_reorder = TRUE,
   spread_labels = FALSE,
   repulse = 3.5,
   verbose = FALSE,
@@ -42,6 +49,7 @@ memIM2cnet(
   memIM,
   categoryShape = c("pie", "coloredrectangle", "circle", "ellipse"),
   geneShape = c("pie", "coloredrectangle", "circle", "ellipse"),
+  forceColors = FALSE,
   categoryColor = "#E5C494",
   geneColor = "#B3B3B3",
   categoryLabelColor = "darkblue",
@@ -61,10 +69,16 @@ memIM2cnet(
   coloredrect_ncol = NULL,
   coloredrect_byrow = TRUE,
   colorV = NULL,
-  direction_col = colorjam::col_div_xf(1.2),
+  direction_col_fn = NULL,
+  direction_cutoff = NULL,
+  direction_max = 2,
+  gene_direction_cutoff = 0,
+  gene_direction_max = 1.2,
+  gene_direction_col_fn = NULL,
   hide_solo_pie = TRUE,
   remove_blanks = TRUE,
   remove_singlet_genes = TRUE,
+  do_reorder = TRUE,
   spread_labels = FALSE,
   repulse = 3.5,
   verbose = FALSE,
@@ -72,12 +86,32 @@ memIM2cnet(
 )
 }
 \arguments{
-\item{categoryShape, geneShape}{\code{character} string indicating the
-preferred default node shape. In general, \code{pie} shapes with one segment
-are converted to \code{circle} for simplicity during plot functions,
-although when using \code{jam_igraph()} to plot, it will treat single-segment
+\item{memIM}{one of the following:
+\itemize{
+\item \code{Mem} S4 object, preferred. In this case, the arguments regarding
+'geneIM' and 'enrichIM' data are taken directly from 'mem'.
+\item legacy \code{list} mem object, for backward compatibility,
+\item \code{numeric} matrix in the form of a \code{memIM} gene-pathway incidence
+matrix. In this case, other arguments involving \code{geneIM} and \code{enrichIM}
+matrices are required for correct behavior of this function.
+When \code{mem} format is supplied, relevant arguments which are empty will
+use corresponding data from \code{mem}, for example \code{geneIM}, \code{geneIMcolors},
+\code{enrichIM}, \code{enrichIMcolors}.
+}}
+
+\item{categoryShape, geneShape}{\code{character} string with node shape,
+default 'pie' uses pie nodes.
+Note that 'pie' shapes with only one segment are converted to
+'circle' for convenience.
+When using \code{jam_igraph()} to plot, it already treats single-segment
 pie nodes as circle anyway, and vectorizes pie node plotting to
 make the overall rendering time substantially faster.}
+
+\item{forceColors}{\code{logical} default FALSE, whether to force node colors
+to use \code{categoryColor} and \code{geneColor} arguments, otherwise colors
+are defined using \code{enrichIMcolors()} and \code{geneIMcolors()},
+respectively.
+Enabling this option will skip all pie and directional styling.}
 
 \item{categoryColor, geneColor}{\code{character} R color for default node colors,
 used when \code{geneIMcolors},\code{enrichIMcolors} is not supplied, respectively.}
@@ -103,7 +137,7 @@ this function to operate on nearly any custom data.
 \item \code{geneIMdirection},\code{enrichIMdirection} is used to define optional
 border colors defined by the direction, where -1 is down,
 0 is no change, and +1 is up.
-Use \code{direction_col} to define a custom color function, however the
+Use \code{direction_col_fn} to define a custom color function, however the
 default uses the reversed "RdBu" Brewer color ramp with blue (down),
 white (no change) and red (up).
 }}
@@ -119,10 +153,35 @@ When supplied, it should be a vector named to match
 \code{colnames(enrichIM)}.
 When defined, these colors override \code{enrichIMcolors}.}
 
-\item{direction_col}{\code{function} used to colorize node borders based
-upon directionality. The default uses \code{colorjam::col_div_xf()}
+\item{direction_col_fn}{\code{function} used to colorize 'Set' node borders
+via enrichIMdirection. The default uses \code{colorjam::col_div_xf()}
 which applies reverse Brewer "RdBu" for blue (down), white (no change),
-and red (up) with threshold \code{1.2}.}
+and red (up) with maximum color at \code{2.0}.
+When not supplied, \code{direction_cutoff} and \code{direction_max} are used
+with \verb{colorjam::col_div_xf().}}
+
+\item{direction_cutoff}{\code{numeric} default is taken from \code{memIM} when
+provided as \code{Mem}, typical default is \code{1.0} to require directional
+z-score at least \code{1.0} in order to apply any directional border
+color.}
+
+\item{direction_max}{\code{numeric} default 2, the numeric value to apply
+maximum color from the color gradient function.}
+
+\item{gene_direction_cutoff}{\code{numeric} default 0, the minimum value
+in geneIMdirection to apply up/down color. Using 0 will colorize
+any non-zero color.}
+
+\item{gene_direction_max}{\code{numeric} default 1.2, the numeric value to apply
+maximum color from the color gradient function. Typical values
+are \code{-1} and \code{1}, so using \code{1.2} will apply nearly the maximum color.}
+
+\item{gene_direction_col_fn}{\code{function} used to colorize 'Gene' node borders
+via enrichIMdirection. The default uses \code{colorjam::col_div_xf()}
+which applies reverse Brewer "RdBu" for blue (down), white (no change),
+and red (up) with maximum color at \code{1.2}.
+*When not supplied, \code{gene_direction_cutoff} and \code{gene_direction_max}
+are used with \verb{colorjam::col_div_xf().}}
 
 \item{hide_solo_pie}{\code{logical} default TRUE, passed to
 \code{apply_cnet_direction()} to determine whether to display border
@@ -138,11 +197,29 @@ node shapes, so they will only indicate the relevant color.}
 singlet genes, which are genes (rows) not represented in any pathway
 gene sets (columns).}
 
+\item{do_reorder}{\code{logical} default TRUE used to re-order nodes
+in "equivalent positions" by border color, color, etc. by calling
+\code{reorder_igraph_nodes()}. Equivalent nodes are common in Cnet
+(bipartite) networks, for example numerous 'Gene' nodes may
+be connected to the same 2 pathway 'Set' nodes, and therefore
+the node positions are interchangeable. Sorting by node attributes
+(notably color, then alphabetically by label) helps visual
+review.}
+
 \item{spread_labels}{\code{logical} default FALSE, whether to spread node
 labels away from incoming edges, also adding label distance via
 vertex attribute 'label.dist'.
 This step calls \code{spread_igraph_labels()}, and can be customized
 further by passing arguments through '...' ellipses.}
+
+\item{repulse}{\code{numeric} value passed to \code{layout_with_qfr()}
+when either \code{do_reorder} or \code{spread_labels} is TRUE. Otherwise
+there is no layout applied.
+The 'repulse' value effectively defines node spacing, usually
+with values between 3 and 4, which 3 giving broad spacing,
+and 4 giving very close spacing of nodes in equivalent network
+positions, and broad spacing otherwise. Higher values tend
+to "clump" nodes closer together.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
@@ -150,19 +227,6 @@ further by passing arguments through '...' ellipses.}
 \itemize{
 \item when \code{remove_blanks=TRUE} it is passed to \code{removeIgraphBlanks()}
 \item when \code{spread_labels=TRUE} it is passed to \code{spread_igraph_labels()}
-}}
-
-\item{mem}{one of the following:
-\itemize{
-\item \code{Mem} S4 object, preferred. In this case, the arguments regarding
-'geneIM' and 'enrichIM' data are taken directly from 'mem'.
-\item legacy \code{list} mem object, for backward compatibility,
-\item \code{numeric} matrix in the form of a \code{memIM} gene-pathway incidence
-matrix. In this case, other arguments involving \code{geneIM} and \code{enrichIM}
-matrices are required for correct behavior of this function.
-When \code{mem} format is supplied, relevant arguments which are empty will
-use corresponding data from \code{mem}, for example \code{geneIM}, \code{geneIMcolors},
-\code{enrichIM}, \code{enrichIMcolors}.
 }}
 }
 \value{

@@ -15,6 +15,7 @@ apply_cnet_direction(
   frame_lwd_blank = 0.2,
   border_lwd = 2,
   do_reorder = FALSE,
+  verbose = FALSE,
   ...
 )
 }
@@ -125,6 +126,14 @@ pie nodes, this process avoids drawing a small line at the top
 of each node.
 Instead the attribute \code{"frame.color"} is populated with the
 one unique border color, so that only the outer border is colorized.
+\subsection{Todo}{
+\itemize{
+\item Consider permitting input to be a simple igraph, then creating
+pie.color, pie.border, pie.border.lwd attributes even if they
+previously did not exist. It would probably optionally also use
+\code{colorV} to colorize each component of multi-component nodes.
+}
+}
 }
 \seealso{
 Other jam cnet igraph functions: 

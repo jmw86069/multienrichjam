@@ -86,6 +86,7 @@ suite of tools.
 }
 \seealso{
 Other jam import functions: 
+\code{\link{IPAlist_to_hits}()},
 \code{\link{importIPAenrichment}()}
 
 Other jam conversion functions: 

@@ -539,7 +539,32 @@ rank_mem_clusters <- function
 #'    to summarizing the composition of each cluster.
 #'
 #' @family jam utility functions
-#'
+#' 
+#' @param mem `Mem` or legacy `list` mem object
+#' @param clusters `list` named by cluster name, containing `character`
+#'    vectors all of whose values should be present in `sets(mem)`.
+#' @param choose `character` default NULL, passed to `rank_mem_clusters()`
+#'    to choose a subset of clusters to return. Values must be found in
+#'    `names(clusters)`.
+#' @param per_cluster `integer` default 'Inf' with the maximum sets
+#'    to include in each cluster. Use an integer like `per_cluster=1`
+#'    to choose one "exemplar" per cluster, ranked according
+#'    to `byCols` which is described in `rank_mem_clusters()`.
+#' @param byCols `character` vector of summary values to use when
+#'    sorting sets within each cluster, passed to and described
+#'    in `rank_mem_clusters()`.
+#' @param return_type `character` default "cnet" with the output format:
+#'    * "cnet" returns an `igraph` Cnet plot.
+#'    * "Mem" returns a `Mem` object after collapsing by cluster.
+#'    * "mem" returns legacy `list` mem output.
+#' @param max_labels `integer` default 4, the number of pathway labels
+#'    to include in each cluster, ordered according to 'byCols'.
+#' @param max_nchar_labels `integer` default 25, max character length
+#'    for each pathway label.
+#' @param include_cluster_title `logical` default TRUE, whether to include
+#'    the cluster title as a prefix.
+#'    For example if the cluster name is 'A' the new title would be:
+#'    'A: pathway 1; pathway 2; pathway 3; pathway 4'.
 #' @param cluster_color_min_fraction `numeric` value between 0 and 1
 #'    used to define the cnet colors for each cluster. The number of
 #'    significant pathways is calculated per cluster for each enrichment
@@ -557,7 +582,22 @@ rank_mem_clusters <- function
 #'    only one significant pathway from a given enrichment would
 #'    typically not be representive of that enrichment, and its
 #'    enrichment color would not be included.
-#'
+#' @param cluster_color_min_fraction `numeric` value default 0.5,
+#'    the fraction of pathways in a cluster which has "non blank"
+#'    assigned color in `enrichIMcolors()` in order for the color
+#'    to be assigned to the resulting node, in the case of Cnet
+#'    output with `return_type="cnet"`.
+#' @param verbose `logical` whether to print verbose output.
+#' @param ... additional arguments are passed to `cnet2mem()` which
+#'    includes thresholds used by `apply_cnet_direction()` such as
+#'    `direction_col_fn` (color function applied to enrichIMdirection),
+#'    `gene_direction_col_fn` (color function applied to geneIMdirection),
+#'    and others.
+#'    To avoid applying directional color to Set nodes (nodeType='Set')
+#'    use `direction_cutoff=100` and `direction_max=101`, which will
+#'    consider any enrichIMdirection value at or below 100 to be
+#'    non-directional.
+#' 
 #' @export
 collapse_mem_clusters <- function
 (mem,
@@ -565,7 +605,7 @@ collapse_mem_clusters <- function
  choose=NULL,
  per_cluster=Inf,
  byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
- return_type=c("cnet", "mem"),
+ return_type=c("cnet", "Mem", "mem"),
  max_labels=4,
  max_nchar_labels=25,
  include_cluster_title=TRUE,
@@ -576,6 +616,10 @@ collapse_mem_clusters <- function
    #
    return_type <- match.arg(return_type);
    ##
+   if (inherits(mem, "Mem")) {
+      Mem <- mem;
+      mem <- Mem_to_list(Mem);
+   }
    clusters_df <- rank_mem_clusters(mem=mem,
       clusters=clusters,
       choose=choose,
@@ -619,29 +663,55 @@ collapse_mem_clusters <- function
 
    clusters_df$cluster <- factor(clusters_df$cluster,
       levels=unique(clusters_df$cluster));
-   cluster_memIM <- do.call(cbind, lapply(split(clusters_df, clusters_df$cluster), function(idf){
-      im1 <- subset(mem$memIM[,idf$set,drop=FALSE]);
-      # iv <- rowMaxs(im1);
-      iv <- apply(im1, 1, max, na.rm=TRUE);
-      names(iv) <- rownames(im1);
-      iv;
-   }));
+   cluster_memIM <- do.call(cbind,
+      lapply(split(clusters_df, clusters_df$cluster), function(idf){
+         # im1 <- subset(mem$memIM[, idf$set, drop=FALSE]);
+         im1 <- mem$memIM[, idf$set, drop=FALSE];
+         # iv <- rowMaxs(im1);
+         iv <- apply(im1, 1, max, na.rm=TRUE);
+         names(iv) <- rownames(im1);
+         iv;
+      }));
 
-   cluster_enrichIMgeneCount <- do.call(cbind, lapply(jamba::nameVector(colnames(mem$geneIM)), function(i){
-      xgenes <- intersect(rownames(mem$geneIM)[mem$geneIM[,i] > 0],
-         rownames(cluster_memIM));
-      if (verbose) {
-         jamba::printDebug("length(xgenes):", length(xgenes));
-         jamba::printDebug("head(xgenes, 30):");
-         print(head(xgenes, 30));
-      }
-      colSums(cluster_memIM[xgenes,,drop=FALSE] > 0);
-   }));
-   cluster_enrichIM <- jamba::rbindList(lapply(split(clusters_df, clusters_df$cluster), function(idf){
-      im1 <- subset(mem$enrichIM[idf$set,,drop=FALSE]);
-      10^colMeans(log10(im1))
-   }));
+   cluster_enrichIMgeneCount <- do.call(cbind,
+      lapply(jamba::nameVector(colnames(mem$geneIM)), function(i){
+         xgenes <- intersect(rownames(mem$geneIM)[mem$geneIM[,i] > 0],
+            rownames(cluster_memIM));
+         if (verbose) {
+            jamba::printDebug("length(xgenes):", length(xgenes));
+            jamba::printDebug("head(xgenes, 30):");
+            print(head(xgenes, 30));
+         }
+         colSums(cluster_memIM[xgenes,,drop=FALSE] > 0);
+      }));
+   
+   ## aggregate enrichment P-values
+   ## - take mean of log10 P-values, then exponentiate
+   cluster_enrichIM <- jamba::rbindList(
+      lapply(split(clusters_df, clusters_df$cluster), function(idf){
+         # im1 <- subset(mem$enrichIM[idf$set,,drop=FALSE]);
+         im1 <- mem$enrichIM[idf$set, , drop=FALSE];
+         10^colMeans(log10(im1))
+      }));
 
+   ## aggregate enrichment directionality
+   ## - take weighted mean?
+   ##   weighted_mean <- sum(z * abs(z)) / sum(abs(z))
+   ## - directional coherence (similar to concordance) but with thresholding
+   ##
+   cluster_enrichIMdirection <- jamba::rbindList(
+      lapply(split(clusters_df, clusters_df$cluster), function(idf){
+         # im1 <- subset(mem$enrichIMdirection[idf$set, , drop=FALSE]);
+         im1 <- mem$enrichIMdirection[idf$set, , drop=FALSE];
+         
+         ## directional coherence with thresholding (above 1)
+         ## - then scale by 4 to make it approximately similar to z-score
+         # abs(colSums(sign(im1 * (abs(im1) >= 1)))) / nrow(im1) * 4
+         
+         ## weighted mean
+         jamba::rmNA(naValue=0, colSums(im1 * abs(im1)) / colSums(abs(im1)))
+      }));
+   
    ## Method to determine grouped colors per cluster
    ## - start with enrichIMcolors
    ## - count non-blank colors per column
@@ -671,8 +741,9 @@ collapse_mem_clusters <- function
    cluster_mem <- mem;
    cluster_mem$memIM <- cluster_memIM;
    cluster_mem$enrichIM <- cluster_enrichIM;
+   
    # Todo: make this directional?
-   cluster_mem$enrichIMdirection <- cluster_enrichIM;
+   cluster_mem$enrichIMdirection <- cluster_enrichIMdirection;
    
    cluster_mem$enrichIMcolors <- cluster_enrichIMcolors;
    cluster_mem$enrichIMgeneCount <- cluster_enrichIMgeneCount;
@@ -682,12 +753,6 @@ collapse_mem_clusters <- function
    ## are required in the Mem object
    # cluster_mem$multiEnrichDF <- data.frame()
    # cluster_mem$multiEnrichResult <- list();
-   # cluster_mem$multiEnrichMap <- NULL;
-   # cluster_mem$multiEnrichMap2 <- NULL;
-   # cluster_mem$multiCnetPlot <- NULL;
-   # cluster_mem$multiCnetPlot1 <- NULL;
-   # cluster_mem$multiCnetPlot1b <- NULL;
-   # cluster_mem$multiCnetPlot2 <- NULL;
 
    ## Make Cnet plot
    if (verbose) {
@@ -708,6 +773,9 @@ collapse_mem_clusters <- function
 
    if ("cnet" %in% return_type) {
       return(cnet);
+   }
+   if ("Mem" %in% return_type) {
+      return(list_to_Mem(cluster_mem));
    }
    return(cluster_mem);
 }

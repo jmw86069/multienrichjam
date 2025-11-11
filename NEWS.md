@@ -1,3 +1,49 @@
+# multienrichjam 0.0.104.900
+
+* Added 'openxlsx' to Suggests.
+* Removed 'matrixStats' dependency.
+
+## New functions
+
+* `IPAlist_to_hits()` - creates a gene hit list from IPA data, for
+`multiEnrichMap()` argument 'geneHitIM'.
+
+## Changes to existing functions
+
+* `importIPAenrichment()`
+
+   * now calls `IPAlist_to_hits()` by default.
+   * fixed regression where batch import would ignore `revert_ipa_xref=TRUE`.
+
+* `mem2cnet()`
+
+   * new argument 'forceColors' to use traditional clusterProfiler colors,
+   only coloring set nodes as palegoldenrod, and gene nodes as grey.
+   It skips all other directional and pie-based styling.
+   * supports enrichIMdirection, geneIMdirection, via new arguments
+   'direction_col_fn', 'direction_cutoff', 'direction_max', and by
+   default uses `colorjam::col_div_xf()` to apply divergent color
+   gradient with optional numeric floor. As a result, directional scores
+   (often a type of z-score) will only be colorized at or above that
+   threshold. Convenient to color only z-scores above 1 or below -1.
+
+* `apply_cnet_direction()`
+
+   * applies border colors with vectorized logic, substantially faster.
+
+* `multiEnrichMap()`
+
+   * includes `direction_cutoff` in `thresholds()` to use by `mem_plot_folio()`
+   which calls `collapse_mem_clusters()`. This threshold determines when
+   to colorize set nodes with up/down directionality.
+
+* `collapse_mem_clusters()`
+
+   * now calculates aggregate directional scores for `enrichIMdirection()`,
+   previously it used the aggregate `enrichIM()` values.
+   * the `enrichIMdirection()` values are now used to colorize Set nodes,
+   using `direction_cutoff` as a minimum to apply up/down color.
+
 # multienrichjam 0.0.103.900
 
 ## Major/Breaking changes
