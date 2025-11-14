@@ -50,7 +50,7 @@ Enhances:
     vdiffr,
     msigdbr,
     ragg
-License: GPL-2
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Remotes: github::jmw86069/colorjam
