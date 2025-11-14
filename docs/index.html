@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,36 +61,160 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="multienrichjam">multienrichjam<a class="anchor" aria-label="anchor" href="#multienrichjam"></a>
 </h1></div>
-<p>The goal of multienrichjam is to implement MultiEnrichMap, an extension to EnrichMap and Enrichment Map, originally envisioned and implemented as a Cytoscape plugin by the lab of Dr. Gary Bader</p>
+<p>The goal of multienrichjam is to enable Multi-Enrichment Analysis of multiple gene set pathway enrichment datasets together.</p>
+<p>This work was inspired by complementary tools based originally upon “Enrichment Map”, a Cytoscape plugin developed by the lab of Dr. Gary Bader.</p>
 <ul>
-<li>Bader lab <a href="https://www.baderlab.org/Software/EnrichmentMap" class="external-link">EnrichmentMap</a>, and</li>
-<li>reference: <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0013984" class="external-link">Merico,et al, PLoS One, 2010</a>),</li>
+<li>Bader lab <a href="https://www.baderlab.org/Software/EnrichmentMap" class="external-link">EnrichmentMap</a> from <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0013984" class="external-link">Merico,et al, PLoS One, 2010</a>
+</li>
 </ul>
-<p>and re-implemented into a larger analysis workflow in R by Dr. Guangchuang Yu in the R packages:</p>
+<p>Similar methods were implemented in R by the group of Dr. Guangchuang Yu, notably within the suite of <code>clusterProfiler</code> tools which include <code><a href="https://rdrr.io/pkg/enrichplot/man/emapplot.html" class="external-link">enrichplot::emapplot()</a></code> and <code><a href="https://rdrr.io/pkg/ggtangle/man/cnetplot.html" class="external-link">ggtangle::cnetplot()</a></code> among numerous other powerful tools.</p>
 <ul>
-<li>
-<a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html" class="external-link">clusterProfiler</a>, and</li>
-<li>
-<a href="https://bioconductor.org/packages/release/bioc/html/enrichplot.html" class="external-link">enrichplot</a>.</li>
+<li><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/index.html" class="external-link">Biomedical Knowledge Mining using clusterProfiler (e-book)</a></li>
+<li><a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html" class="external-link">clusterProfiler</a></li>
+<li><a href="https://bioconductor.org/packages/release/bioc/html/enrichplot.html" class="external-link">enrichplot</a></li>
 </ul>
-<p>The MultiEnrichMap extension is a relatively straightforward set of functions to help enable comparison of enrichment results from multiple gene set enrichment tests.</p>
-<div class="section level2">
-<h2 id="package-reference">Package Reference<a class="anchor" aria-label="anchor" href="#package-reference"></a>
-</h2>
-<p>A full online function reference is available via the pkgdown documentation:</p>
-<p><a href="https://jmw86069.github.io/multienrichjam">Full multienrichjam command reference</a></p>
-</div>
+<p>Multi-enrichment analysis is designed to complement existing tools, while focusing on the details of comparing multiple enrichment results together.</p>
 <div class="section level2">
 <h2 id="how-to-install">How to install<a class="anchor" aria-label="anchor" href="#how-to-install"></a>
 </h2>
-<p>Install using the R package <code>remotes</code> and this command:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"jmw86069/multienrichjam"</span>,</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>   <span class="at">dependencies=</span><span class="cn">TRUE</span>);</span></code></pre></div>
-<p>If you do not have the <code>remotes</code> package, you can install it from CRAN:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>);</span></code></pre></div>
-<p>Note that we changed the recommended installation from using <code>devtools</code> to using <code>remotes</code> because the <code>remotes</code> package is much smaller with fewer dependencies.</p>
+<p>Install using the <code>remotes</code> package:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># if necessary, install 'remotes'</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># install.package("remotes")</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"jmw86069/multienrichjam"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>   <span class="at">upgrade=</span><span class="st">"always"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>   <span class="at">build_vignettes=</span><span class="cn">TRUE</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>   <span class="at">dependencies=</span><span class="cn">TRUE</span>);</span></code></pre></div>
+<p>Alternatively, use the <code>pak</code> package:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># if necessary, install 'pak'</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># install.package("pak")</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"jmw86069/multienrichjam"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>   <span class="at">upgrade=</span><span class="cn">TRUE</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>   <span class="at">dependencies=</span><span class="cn">TRUE</span>);</span></code></pre></div>
+<p>The argument <code>dependencies=TRUE</code> includes suggested packages, most notably the ‘openxlsx’ package which is used to import Ingenuity Pathway Analysis (IPA) results stored in Excel ‘xlsx’ format.</p>
+</div>
+<div class="section level2">
+<h2 id="package-reference">Package Reference<a class="anchor" aria-label="anchor" href="#package-reference"></a>
+</h2>
+<p>Documentation is created using ‘pkgdown’ with all functions, articles, and changelog.</p>
+<p><a href="https://jmw86069.github.io/multienrichjam">Full multienrichjam documentation</a></p>
 </div>
 </div>
+<div class="section level1">
+<h1 id="quick-walkthrough">Quick walkthrough<a class="anchor" aria-label="anchor" href="#quick-walkthrough"></a>
+</h1>
+<p>Start with one or more enrichment results. Each enrichment result is either a <code>data.frame</code> or <code>enrichResult</code> from clusterProfiler, and must have the following columns:</p>
+<ul>
+<li>
+<strong>Pathway name</strong>: some identifier, name, or label</li>
+<li>
+<strong>Enrichment P-value</strong>: Typically adjusted P-value, or FDR</li>
+<li>
+<strong>genes</strong>: one field with genes involved in enrichment of each pathway</li>
+</ul>
+<p>Any <code>enrichResult</code> will have this data already.</p>
+<div class="section level2">
+<h2 id="multienrichmap-to-create-mem-output">
+<code>multiEnrichMap()</code> to create <code>Mem</code> output<a class="anchor" aria-label="anchor" href="#multienrichmap-to-create-mem-output"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Mem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/multiEnrichMap.html">multiEnrichMap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>   Newborns<span class="op">=</span><span class="va">er_Newborns</span>,</span>
+<span>   OlderChildren<span class="op">=</span><span class="va">er_OlderChildren</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The output can be summarized by printing the object.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Mem</span></span>
+<span><span class="co">#&gt; class: Mem</span></span>
+<span><span class="co">#&gt; dim: 2 enrichments, 21 sets, 28 genes</span></span>
+<span><span class="co">#&gt; - enrichments (2): Newborns, OlderChildren</span></span>
+<span><span class="co">#&gt; - sets (21): mTOR Signaling, RAR Activation, ..., Gluconeogenesis I, Glycolysis I</span></span>
+<span><span class="co">#&gt; - genes (28): ADCY3, CASP8, ..., SMARCD3, YWHAQ</span></span>
+<span><span class="co">#&gt; Analysis parameters:</span></span>
+<span><span class="co">#&gt; - top N per enrichment: 20</span></span>
+<span><span class="co">#&gt; - significance threshold: 0.05 (colname: p.adjust)</span></span>
+<span><span class="co">#&gt; - min gene count: 3</span></span>
+<span><span class="co">#&gt; - direction colname:</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="prepare_folio-to-create-memplotfolio-output">
+<code>prepare_folio()</code> to create <code>MemPlotFolio</code> output<a class="anchor" aria-label="anchor" href="#prepare_folio-to-create-memplotfolio-output"></a>
+</h2>
+<p>This step determines pathway clusters, and defines other custom features used to produce a “Mem Plot Folio” - which is a collection of data visualization plots to navigate the results.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Mpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mem_plot_folio.html">prepare_folio</a></span><span class="op">(</span><span class="va">Mem</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="genepathheatmap">
+<code>GenePathHeatmap()</code><a class="anchor" aria-label="anchor" href="#genepathheatmap"></a>
+</h2>
+<p>This step displays the underlying gene-versus-pathway data, and forms the basis for most of the <strong>multienrichjam</strong> analysis.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-gp-heatmap-1.png" alt="Heatmap with gene-versus-pathway incidence matrix."></p>
+<p>Pathways are clustered according to gene content. This step is intended to reduce redundancy, and to organize enrichment results based upon shared subsets of genes.</p>
+<p>Genes are also clustered according to shared pathways, which can provide insights into the core genes involved across multiple pathways.</p>
+</div>
+<div class="section level2">
+<h2 id="enrichmentheatmap">
+<code>EnrichmentHeatmap()</code><a class="anchor" aria-label="anchor" href="#enrichmentheatmap"></a>
+</h2>
+<p>This step displays the enrichment P-values in -log10 scale, using the same pathway clusters as defined in the gene-pathway heatmap.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">EnrichmentHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-enrichment-heatmap-1.png" alt="Heatmap with enrichment P-values."></p>
+</div>
+<div class="section level2">
+<h2 id="cnetcollapsed">
+<code>CnetCollapsed()</code><a class="anchor" aria-label="anchor" href="#cnetcollapsed"></a>
+</h2>
+<p>The “Cnet collapsed” network represents the Concept Network (Cnet) plot using collapsed pathway clusters. The first step <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code> is critical to define or customize the pathway cluster assignment.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-cnet-collapsed-1.png" alt="Concept network (Cnet) with pathways collapsed by cluster."></p>
+<p>By default, the cluster titles (“A”, “B”, “C”, “D”) are displayed, however the pathways can be used to form a label.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf</span>, type<span class="op">=</span><span class="st">"set"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-cnet-collapsed-set-1.png" alt="Concept network (Cnet) showing pathways collapsed by set, using pathway names for each cluster label."></p>
+</div>
+<div class="section level2">
+<h2 id="cnetexemplar">
+<code>CnetExemplar()</code><a class="anchor" aria-label="anchor" href="#cnetexemplar"></a>
+</h2>
+<p>A “Cnet exemplar” plot uses one exemplar pathway per cluster, providing an alternative network summary view.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">CnetExemplar</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-cnet-exemplar-1.png" alt="Concept network (Cnet) showing one exemplar pathway to represent each pathway cluster."></p>
+<p>A Cnet exemplar plot can also be created using user-defined pathways of interest.</p>
+<div class="section level3">
+<h3 id="custom-cnet-exemplar">Custom Cnet Exemplar<a class="anchor" aria-label="anchor" href="#custom-cnet-exemplar"></a>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">custom_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>   <span class="st">"RAR Activation"</span>,</span>
+<span>   <span class="st">"mTOR Signaling"</span>,</span>
+<span>   <span class="st">"Growth Hormone Signaling"</span>,</span>
+<span>   <span class="st">"Tight Junction Signaling"</span><span class="op">)</span></span>
+<span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mem2cnet.html">mem2cnet</a></span><span class="op">(</span><span class="va">Mem</span><span class="op">[</span>, <span class="va">custom_sets</span>, <span class="op">]</span>, spread_labels<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-cnet-exemplar-custom-1.png" alt="Concept network (Cnet) showing a custom subset of exemplar pathways chosen by the scientist."></p>
+<p>Note that this process is two-steps:</p>
+<ol style="list-style-type: decimal">
+<li>Create the <code>cnet</code> network data.</li>
+<li>Plot using <code><a href="reference/jam_igraph.html">jam_igraph()</a></code>.</li>
+</ol>
+</div>
+</div>
+<div class="section level2">
+<h2 id="cnetcluster">
+<code>CnetCluster()</code><a class="anchor" aria-label="anchor" href="#cnetcluster"></a>
+</h2>
+<p>A “Cnet cluster” network displays the pathways only in one pathway cluster. It is not used very often, and typically is helpful when there might be different sub-networks within one cluster.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">CnetCluster</span><span class="op">(</span><span class="va">Mpf</span>, cluster<span class="op">=</span><span class="st">"C"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-cnet-cluster-1.png" alt="Concept network (Cnet) showing all pathways from the pathway cluster 'C'."></p>
+</div>
+</div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">

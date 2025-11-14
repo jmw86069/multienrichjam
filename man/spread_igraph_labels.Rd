@@ -15,6 +15,7 @@ spread_igraph_labels(
   repulse = 3.5,
   force_relayout = FALSE,
   label_min_dist = 0.5,
+  label_dist_l = list(nodeType = c(Gene = 2.5, Set = 0)),
   verbose = FALSE,
   ...
 )
@@ -57,9 +58,15 @@ should be recalculated, in order to override coordinates that
 may be previously stored in the \code{igraph} object itself.
 Note that when \code{layout} is supplied, it is always used.}
 
-\item{label_min_dist}{numeric value used to ensure all labels are
-at least some distance from the center. These units are defined
-by igraph, and are roughly in units of one line height of text.}
+\item{label_min_dist}{\code{numeric} minimum distance, default 0.5,
+used to ensure all labels are at least some distance from the center.
+Note that this argument is not used when \code{label_dist_l} is non-NULL.
+The units are roughly in units of one line height of text.}
+
+\item{label_dist_l}{\code{list} with default to apply distance by 'nodeType'
+node vertex attribute: Gene distance 5, Set distance 0.
+When supplied as NULL, or when there is no node matched by
+this argument, the label distance uses \code{label_min_dist}.}
 
 \item{...}{additional arguments are passed to \code{layout_with_qfr()}
 when needed.}

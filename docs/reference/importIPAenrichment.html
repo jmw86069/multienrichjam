@@ -9,7 +9,7 @@ reverting IPA symbols to input values"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,6 +62,9 @@ reverting IPA symbols to input values</p>
 <span>  geneGrep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Molecules in Network"</span>, <span class="st">"Target molecules"</span>, <span class="st">"Molecules"</span>, <span class="st">"Symbol"</span><span class="op">)</span>,</span>
 <span>  geneCurateFrom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"[ ]*[(](complex|includes others)[)][ ]*"</span>, <span class="st">"^[, ]+|[, ]+$"</span><span class="op">)</span>,</span>
 <span>  geneCurateTo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">""</span><span class="op">)</span>,</span>
+<span>  signColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Expr Fold Change"</span>, <span class="st">"fold.*change"</span>, <span class="st">"log.*ratio"</span>, <span class="st">"log.*fold"</span>,</span>
+<span>    <span class="st">"log.*fc"</span>, <span class="st">"lfc"</span>, <span class="st">"ratio"</span>, <span class="st">"fold"</span>, <span class="st">"fc"</span><span class="op">)</span>,</span>
+<span>  signThreshold <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  method <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  sheet <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  sep <span class="op">=</span> <span class="st">"\t"</span>,</span>
@@ -210,13 +213,28 @@ enrichment tests.</p>
 enrichment data into a <code>list</code> of <code>data.frame</code>
 objects for downstream analysis.
 Each <code>data.frame</code> represents the results of one Ingenuity IPA test,
-however not all sections contain gene set enrichment results.</p>
+however not all sections contain gene set enrichment results.</p><div class="section">
+<h3 id="batch-processing">Batch processing<a class="anchor" aria-label="anchor" href="#batch-processing"></a></h3>
+
+
+<p>When importing multiple files, argument <code>ipaFile</code> can be a vector
+of '.xlsx' or '.txt' files. This workflow also calls
+<code><a href="IPAlist_to_hits.html">IPAlist_to_hits()</a></code> to generate a gene hit matrix, stored
+as <code>attr(ipalist, "geneHitIM")</code> to use in <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>.</p>
+</div>
+
+<div class="section">
+<h3 id="ipa-gene-xref-data">IPA Gene Xref Data<a class="anchor" aria-label="anchor" href="#ipa-gene-xref-data"></a></h3>
+
+
 <p>By default, the argument <code>revert_ipa_xref=TRUE</code> will convert the
 IPA gene symbol values back to the original identifier.
-In most cases* this behavior is desirable, with caveats:</p><ul><li><p>When using platform data (for example microarray data) which
-use a non-gene identifier, it is recommended to use
-<code>revert_ipa_xref=FALSE</code>. In these cases, the IPA gene symbol
-may be more user-friendly in multienrichjam.</p><ul><li><p>This option would be helpful to view the IPA gene symbols
+In most cases* this behavior is desirable, with caveats:</p><ul><li><p>When using platform data which
+use a non-gene identifier, including microarray probesets, or
+RefSeq transcript ID, or protein "UniProt" accession numbers,
+it is recommended to use <code>revert_ipa_xref=FALSE</code>.
+In these cases, the IPA gene symbol is expected to be
+more user-friendly, and therefore more useful.</p><ul><li><p>This option would be helpful to view the IPA gene symbols
 as they appear in the IPA report - even if the symbols
 sometimes do not match the input row identifiers.</p></li>
 </ul></li>
@@ -236,24 +254,31 @@ to match with the gene symbols provided to IPA.</p></li>
 </ul><p>In any case, the output <code>list</code> should contain an entry
 "Analysis Ready Molecules" with the full IPA data table used
 for the analysis. This <code>data.frame</code> will also contain any
-statistical columns, if provided to IPA upfront.</p><div class="section">
+statistical columns, if provided to IPA upfront.</p>
+<p>See <code><a href="IPAlist_to_hits.html">IPAlist_to_hits()</a></code> for an automated way to create a gene hit
+matrix from the 'Analysis Ready Molecules' returned by IPA.</p>
+</div>
+
+<div class="section">
 <h3 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a></h3>
 
 <ol><li><p>Separate multiple IPA enrichment tables.</p></li>
-<li><p>Rename colnames to be consistent.</p></li>
-<li><p>Revert IPA gene aliases to original user input (default but optional).</p></li>
+<li><p>Rename colnames to be consistent, compatible with
+<code><a href="enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code>.</p></li>
+<li><p>Revert IPA gene aliases to original user input, default but optional.</p></li>
+<li><p>Generate <code>geneHitIM</code> hit matrix when processing multiple files.</p></li>
 </ol></div>
 
 <div class="section">
 <h3 id="input-format">Input format<a class="anchor" aria-label="anchor" href="#input-format"></a></h3>
 
-<ol><li><p><code>ipaFile</code> can be a text <code>.txt</code> file,
+<ol><li><p><code>ipaFile</code> can be one or more text <code>.txt</code> files,
 where the text file contains all IPA enrichment data in
 tall format. This format is most common.</p></li>
-<li><p><code>ipaFile</code> can be an Excel <code>.xlsx</code> file,
+<li><p><code>ipaFile</code> can be one or more Excel <code>.xlsx</code> files,
 which contains all IPA enrichment data in
 one tall worksheet tab.</p></li>
-<li><p><code>ipaFile</code> can be an Excel <code>.xlsx</code> file,
+<li><p><code>ipaFile</code> can be one or more Excel <code>.xlsx</code> files,
 where each type of IPA enrichment appears on a separate
 Excel worksheet tab.</p></li>
 <li><p><code>ipaFile</code> can be a list of <code>data.frame</code> objects.
@@ -294,9 +319,18 @@ and optionally a column "Symbol" which is edited by multienrichjam.</p></li>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam import functions:
+<code><a href="IPAlist_to_hits.html">IPAlist_to_hits</a>()</code>,
 <code><a href="enrichDF2enrichResult.html">enrichDF2enrichResult</a>()</code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ipaFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"multienrichjam"</span>, <span class="st">"extdata"</span>,</span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Newborns-IPA.txt"</span>, <span class="st">"OlderChildren-IPA.txt"</span><span class="op">)</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="va">ipalist</span> <span class="op">&lt;-</span> <span class="fu">importIPAenrichment</span><span class="op">(</span><span class="va">ipaFile</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -2,6 +2,7 @@
 % Please edit documentation in R/jamenrich-mem-plot-folio.R
 \name{mem_plot_folio}
 \alias{mem_plot_folio}
+\alias{prepare_folio}
 \title{Multienrichment folio of summary plots}
 \usage{
 mem_plot_folio(
@@ -48,6 +49,8 @@ mem_plot_folio(
   verbose = FALSE,
   ...
 )
+
+prepare_folio(..., do_plot = FALSE)
 }
 \arguments{
 \item{mem}{\code{Mem} or \code{list} object from \code{multiEnrichMap()}.}
@@ -170,10 +173,10 @@ defined in the \code{Heatmap} object itself, which is why it is
 included here and not \code{mem_gene_path_heatmap()()}.}
 
 \item{do_plot}{\code{logical} indicating whether to render each plot.
-When \code{do_plot=FALSE} the plot objects will be created and returned,
-but the plot itself will not be rendered. This option may be
-useful to generate the full set of figures in one set, then
-review each figure one by one in an interactive session.}
+Default \code{TRUE} for \code{mem_plot_folio()}, and \code{FALSE} for \code{prepare_folio()}.
+In either case, plot data are created and returned, but \code{do_plot=TRUE}
+will draw each plot on a unique page, suitable for use with
+PDF output and \code{onefile=TRUE} for example.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
@@ -269,14 +272,24 @@ or by calling a specific cluster \code{jam_igraph(cnet_clusters[["A"]])}.
 Multienrichment folio of summary plots
 }
 \details{
-This function is intended to create multiple summary plots
-using the output data from \code{multiEnrichMap()}. By default
-it creates all plots one by one, sufficient for including
-in a multi-page PDF document with \code{cairo_pdf(..., onefile=TRUE)}
-or \code{pdf(..., onefile=TRUE)}.
+\code{mem_plot_folio()} and \code{prepare_folio()} are intended to create visual plots
+from \code{Mem} output from \code{multiEnrichMap()}.
+\itemize{
+\item \code{prepare_folio()} prepares plot data via clustering using thresholds
+\item \code{mem_plot_folio()} prepares and draws plots in multi-page form,
+suitable for use with \code{pdf(..., onefile=TRUE)} or
+\code{cairo_pdf(..., onefile=TRUE)}.
+}
 
-The data for each plot object can be created and visualized later
-with argument \code{do_plot=FALSE}.
+The data are returned as \code{MemPlotFolio-class} which can be used to
+create figures.
+
+Pathways are clustered using the gene-pathway incidence matrix,
+to define pathway clusters. This step can be customized by supplying
+\code{pathway_column_split} as a \code{list} of \code{character} vectors containing
+pathway (set) names.
+
+The Enrichment Heatmap uses the same pathway clustering for consistency.
 
 Note: Since version \verb{0.0.76.900} the first step in the workflow is
 to cluster the underlying gene-pathway incidence matrix.

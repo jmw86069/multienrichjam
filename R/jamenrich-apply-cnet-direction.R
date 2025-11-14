@@ -165,10 +165,10 @@ apply_cnet_direction <- function
       
       if ("vectorized" %in% use_approach) {
          # node names
-         inames <- igraph::vertex_attr(cnet, "name")[whichv]
+         inames <- igraph::vertex_attr(cnet, "name", index=whichv)
          
          # node pie.color or coloredrect.color (list of color vectors)
-         icolor <- igraph::vertex_attr(cnet, attr_name2)[whichv]
+         icolor <- igraph::vertex_attr(cnet, attr_name2, index=whichv)
          if (is.atomic(icolor)) {
             # it can only have one color per node, convert to list
             icolorl <- rep(1, length(icolor))
@@ -198,7 +198,7 @@ apply_cnet_direction <- function
          
          # node pie.border or coloredrect.border (list of color vectors)
          # (Is this section necessary?)
-         iborder <- igraph::vertex_attr(cnet, attr_name1)[whichv]
+         iborder <- igraph::vertex_attr(cnet, attr_name1, index=whichv)
          if (is.atomic(iborder)) {
             iborderl <- rep(1, length(iborder))
          } else {
@@ -266,6 +266,10 @@ apply_cnet_direction <- function
                border_lwd,
                frame_lwd_blank) #
          } else {
+            ipietc <- jamba::tcount(icolordf$inames);
+            # apply to the data.frame summary
+            icolordf$ipieborderct <- ipietc[icolordf$inames];
+            
             section_color <- ifelse(
                icolordf$ipieborder %in% c(0, NA),
                NA,
@@ -291,8 +295,6 @@ apply_cnet_direction <- function
                list(), length.out=igraph::vcount(cnet));
          }
          use_dir_values <- split(
-            # icolordf$ipieborder,
-            ## consider assigning names
             jamba::nameVector(icolordf$ipieborder,
                icolordf$icolornames,
                makeNamesFunc=c),
@@ -316,14 +318,17 @@ apply_cnet_direction <- function
             index=as.integer(names(use_border_lwd)),
             name=attr_name1_border) <- use_border_lwd;
          
+         # frame.color
          icolordf_frame <- subset(icolordf, !duplicated(inames));
          igraph::vertex_attr(cnet,
-            index=icolordf_frame$whichv,
+            index=as.integer(as.character(icolordf_frame$whichv)),
             name="frame.color") <- icolordf_frame$use_frame;
          # igraph::vertex_attr(cnet, "frame.color",
          #    index=icolordf_frame$whichv) <- icolordf_frame$use_frame;
+         
+         # frame.lwd
          igraph::vertex_attr(cnet,
-            index=icolordf_frame$whichv,
+            index=as.integer(as.character(icolordf_frame$whichv)),
             name="frame.lwd") <- icolordf_frame$use_frame_lwd;
          # jamba::printDebug("frame.lwd:");print(igraph::vertex_attr(cnet,
          #    index=icolordf_frame$whichv,

@@ -4,3 +4,4 @@
 ^\.Rproj\.user$
 ^.*notes\.md$
 ^.*vignettes.md$
+^data-raw$

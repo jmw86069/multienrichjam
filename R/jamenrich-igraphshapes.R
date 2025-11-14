@@ -1159,14 +1159,17 @@ shape.jampie.plot <- function
       vertex.pie.lwd <- rep(vertex.pie.lwd,
          length.out=length(vertex.pie))
    }
-   vertex.pie.lwd.max <- sapply(vertex.pie.lwd, max, na.rm=TRUE);
+   # 0.0.104.900: why are some entries NULL?
+   vertex.pie.lwd.max <- sapply(jamba::rmNULL(nullValue=0, vertex.pie.lwd),
+      max, na.rm=TRUE);
+   # converting NULL vertex.pie.lwd to 0 for max calcs is acceptable
 
    # calculate one lwd to rule them all
    # because polygon() does not accept multiple lwd values in one call
    overall_lwd <- rep(
       pmax(
          vertex.frame.lwd,
-         sapply(vertex.pie.lwd, max, na.rm=TRUE),
+         vertex.pie.lwd.max,
          na.rm=TRUE),
       length.out=nrow(coords))
 
@@ -1326,7 +1329,8 @@ shape.jampie.clip <- function
          rep(seq_len(vmax),
             lengths(vertex.pie)))
    }
-   vertex.pie.lwd.max <- sapply(vertex.pie.lwd, max)
+   vertex.pie.lwd.max <- sapply(jamba::rmNULL(nullValue=0, vertex.pie.lwd),
+      max, na.rm=TRUE)
 
    if (length(vertex.frame.lwd) == 0) {
       vertex.frame.lwd <- 1
@@ -1344,7 +1348,8 @@ shape.jampie.clip <- function
       vertex.frame.lwd);
    # frame.lwd cannot be larger than the pie.lwd.max
    if (TRUE) {
-      new.frame.lwd <- ifelse(vertex.frame.lwd > vertex.pie.lwd.max & vertex.pie.lwd.max > 0,
+      new.frame.lwd <- ifelse(
+         vertex.frame.lwd > vertex.pie.lwd.max & vertex.pie.lwd.max > 0,
          vertex.pie.lwd.max,
          vertex.frame.lwd)
       vertex.frame.lwd <- new.frame.lwd;
@@ -1353,7 +1358,7 @@ shape.jampie.clip <- function
    overall_lwd <- rep(
       pmax(
          vertex.frame.lwd,
-         sapply(vertex.pie.lwd, max, na.rm=TRUE),
+         vertex.pie.lwd.max,
          na.rm=TRUE),
       length.out=length(vertex.size))
 

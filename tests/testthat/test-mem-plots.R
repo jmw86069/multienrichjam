@@ -3,6 +3,14 @@
 
 testthat::test_that("mem_plots", {
    #
+   # make sure shadowText options are default
+   withr::local_options(list(
+      "jam.outline"=TRUE,
+      "jam.alphaOutline"=0.4,
+      "jam.shadow"=FALSE,
+      "jam.shadow.n"=8,
+      "jam.shadow.r"=0.15
+   ))
    # test first gp heatmap
    set.seed(123)
    hco <- NULL;
@@ -116,7 +124,6 @@ testthat::test_that("mem_plots", {
    # visual Cnet plot
    cnet_fn <- function() {
       jam_igraph(cnet,
-         label_dist_factor=5,
          use_shadowText=TRUE,
          node_factor_l=list(nodeType=c(Gene=1.5, Set=2)),
          label_factor_l=list(nodeType=c(Gene=1.5, Set=0.9)))
@@ -130,7 +137,6 @@ testthat::test_that("mem_plots", {
    cnet2 <- relayout_with_qfr(cnet, repulse=3)
    cnet2_fn <- function() {
       jam_igraph(cnet2,
-         label_dist_factor=5,
          use_shadowText=TRUE,
          node_factor_l=list(nodeType=c(Gene=1.5, Set=2)),
          label_factor_l=list(nodeType=c(Gene=1.5, Set=0.9)))
@@ -158,3 +164,25 @@ testthat::test_that("mem_plots", {
    # Todo: Cnet manipulations
    # adjust_cnet_nodeset(), nudge_igraph_node()
 })
+
+testthat::test_that("MPF gene-path clustering", {
+   Mpf <- prepare_folio(Memtest,
+      column_names_max_height=grid::unit(4, "cm"),
+      pathway_column_split=3,
+      gene_row_split=4)
+
+   gpscores <- score_gene_path_clusters(Mpf)
+   testthat::expect_equal(
+      colnames(gpscores),
+      head(LETTERS, 3))
+   testthat::expect_equal(
+      rownames(gpscores),
+      head(letters, 4))
+   testthat::expect_equal(
+      round(as.vector(gpscores), digits=3),
+      c(0, 0, 1, 1, 0, 0.077, 1, 0, 0,
+         0.154, 1, 0))
+   
+   gpscores
+})
+

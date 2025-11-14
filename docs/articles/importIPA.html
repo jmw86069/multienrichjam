@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -519,7 +519,7 @@ Signaling by Rho Family GTPases
 </div>
 </div>
 <div class="section level2">
-<h2 id="run-multienrichmap">Run multiEnrichMap()<a class="anchor" aria-label="anchor" href="#run-multienrichmap"></a>
+<h2 id="multienrichmap-to-create-mem">multiEnrichMap() to create ‘Mem’<a class="anchor" aria-label="anchor" href="#multienrichmap-to-create-mem"></a>
 </h2>
 <p>Now given a list of <code>data.frame</code> results, we can run
 <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code>:</p>
@@ -728,7 +728,7 @@ NA
 thresholds
 </td>
 <td style="text-align:right;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
-5
+6
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;border-left:1px solid #DDDDDD;white-space: nowrap;">
 </td>
@@ -859,50 +859,38 @@ NA
 </tbody>
 </table>
 <div class="section level3">
-<h3 id="mem-plot-folio">Mem Plot Folio<a class="anchor" aria-label="anchor" href="#mem-plot-folio"></a>
+<h3 id="prepare_folio-to-create-memplotfolio">prepare_folio() to create ‘MemPlotFolio’<a class="anchor" aria-label="anchor" href="#prepare_folio-to-create-memplotfolio"></a>
 </h3>
-<p>The <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> represents a key step in the
-analysis workflow. Several downstream results are directly dependent
-upon the options chosen here:</p>
-<p>Pathway clusters are defined by analyst parameters:</p>
+<p>The next step is to prepare the “Mem Plot Folio”, which performs key
+pathway clustering to inform downstream visualizations.</p>
 <ul>
-<li>The number of pathways clusters</li>
-<li>The relative weight of the gene-pathway incidence matrix.</li>
-<li>The method used for clustering.</li>
+<li>
+<code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code> prepares a ‘MemPlotFolio’ object</li>
+<li>
+<code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> prepares <em>and plots</em>
+‘MemPlotFolio’ as multi-page output.</li>
 </ul>
-<p>Mem Plot Folio then provides a series of visualizations:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Enrichment P-value heatmap</strong> often as a dot
-plot</p></li>
-<li><p><strong>Gene-pathway heatmap</strong>, clustered by column and by
-row</p></li>
-<li>
-<p><strong>Cnet cluster plots</strong></p>
-<ol style="list-style-type: lower-alpha">
-<li>Pathway clusters are labeled by <code>LETTERS</code> (“A”, “B”, “C”,
-“D”, etc.)</li>
-<li>The second plot labels clusters by the top <code>n</code> pathway
-names</li>
-<li>The third plot is (b) and hides the gene labels.</li>
-</ol>
-</li>
-<li>
-<p><strong>Cnet exemplar plots</strong></p>
+<p>The plot data is created and stored in the ‘MemPlotFolio’ object, and
+can be plotted directly using:</p>
 <ul>
-<li>Includes 1 exemplar pathway per cluster.</li>
-<li>Includes 2 exemplars per cluster.</li>
-<li>Includes 3 exemplars per cluster.</li>
-</ul>
-</li>
 <li>
-<p><strong>Cnet per cluster</strong></p>
-<ul>
-<li>One plot for each pathway cluster</li>
+<code>EnrichmentHeatmap()</code>: pathway by enrichment, showing
+enrichment P-values</li>
+<li>
+<code>GenePathHeatmap()</code>: genes by pathway, to define pathway
+clusters</li>
+<li>
+<code>CnetCollapsed()</code>: Concept network (Cnet) collapsed by
+pathway cluster</li>
+<li>
+<code>CnetExemplar()</code>: Cnet with one exemplar pathway per
+cluster</li>
+<li>
+<code>CnetCollapsed()</code>: Cnet showing all pathways in one
+cluster</li>
 </ul>
-</li>
-</ol>
-<p><strong>Only the first four plots are shown</strong> by using
-<code>do_which=c(1:4)</code>.</p>
+<p>The example below shows the first four plots from
+<code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Mpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_plot_folio.html">mem_plot_folio</a></span><span class="op">(</span><span class="va">mem_canonical</span>,</span>
 <span>   pathway_column_split<span class="op">=</span><span class="fl">4</span>,</span>
@@ -915,17 +903,10 @@ names</li>
 <span>   do_which<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>,</span>
 <span>   main<span class="op">=</span><span class="st">"Canonical Pathways"</span><span class="op">)</span>;</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem-folio-1.png" alt="Mem plot folio showing the first four plots" width="768" style="display: block; margin: auto;"><img src="importIPA_files/figure-html/mem-folio-2.png" alt="Mem plot folio showing the first four plots" width="768" style="display: block; margin: auto;"><img src="importIPA_files/figure-html/mem-folio-3.png" alt="Mem plot folio showing the first four plots" width="768" style="display: block; margin: auto;"><img src="importIPA_files/figure-html/mem-folio-4.png" alt="Mem plot folio showing the first four plots" width="768" style="display: block; margin: auto;"></p>
-<p>The object returned <code>Mpf</code> is a <code>MemPlotFolio</code>
-object containing the graphical objects. By default all plots in
+<p>The object <code>Mpf</code> is a <code>'MemPlotFolio'</code> object
+containing graphical objects. By default all plots in
 <code>do_which</code> are plotted, however they can be plotted
 individually:</p>
-<ul>
-<li><code>EnrichmentHeatmap(Mpf)</code></li>
-<li><code>GenePathHeatmap(Mpf)</code></li>
-<li><code>CnetCollapsed(Mpf, type="set")</code></li>
-<li><code>CnetExemplar(Mpf, num=1)</code></li>
-<li><code>CnetCluster(Mpf, cluster="B")</code></li>
-</ul>
 </div>
 </div>
 <div class="section level2">
@@ -936,43 +917,47 @@ individually:</p>
 </h3>
 <p>The Cnet Collapsed Plot is often the focus of manuscript figures. The
 typical workflow is demonstrated below, using
-<code>CnetCollapsed()</code> on the <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>
-output.</p>
+<code>CnetCollapsed()</code> on the <code>MemPlotFolio</code>
+object.</p>
+<p>Note that ‘…’ extra arguments are passed to <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code>
+for custom plotting options.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># generate the data</span></span>
-<span><span class="va">Mpf4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_plot_folio.html">mem_plot_folio</a></span><span class="op">(</span><span class="va">mem_canonical</span>,</span>
-<span>   do_which<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>   do_plot<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">Mpf4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_plot_folio.html">prepare_folio</a></span><span class="op">(</span><span class="va">mem_canonical</span>,</span>
+<span>   do_which<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># extract the cnet</span></span>
-<span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf4</span>, do_plot<span class="op">=</span><span class="cn">FALSE</span>, type<span class="op">=</span><span class="st">"set"</span><span class="op">)</span>;</span>
-<span></span>
-<span><span class="co"># jam_graph</span></span>
-<span><span class="fu"><a href="../reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet</span>,</span>
+<span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf4</span>,</span>
+<span>   type<span class="op">=</span><span class="st">"set"</span>,</span>
 <span>   node_factor<span class="op">=</span><span class="fl">2</span>,</span>
 <span>   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">2</span>, Set<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="importIPA_files/figure-html/cnet-collapsed-1.png" alt="Cnet collapsed network extracted from mem_plot_folio() to use for custom figures." width="960" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>   </span>
+<span><span class="co">## jam_graph()</span></span>
+<span><span class="co"># jam_igraph(cnet)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="enrichment-p-value-heatmap">Enrichment P-value Heatmap<a class="anchor" aria-label="anchor" href="#enrichment-p-value-heatmap"></a>
 </h3>
 <p>The recommended way to create an enrichment heatmap is to use
-<code>EnrichmentHeatmap(Mpf)</code> with the ‘MemPlotFolio’ object as
-input. Customization should be done via <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> to
-ensure that all other plots use the same parameters.</p>
-<p>The specific options for a enrichment heatmap are described in
-<code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code>EnrichmentHeatmap(Mpf)</code> with the <code>'MemPlotFolio'</code>
+object. Customization should be done via <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>,
+for example changes to pathway clustering, and even custom font
+sizes.</p>
+<p>Additional options for a enrichment heatmap are described in the
+internal function <code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">EnrichmentHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span>;</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/enrich-hm-mpf-1.png" alt="Enrichment heatmap shown using the MemPlotFolio object as input." width="960" style="display: block; margin: auto;"></p>
 <p>Note that the Mem object can be plotted directly as follows:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,</span>
 <span>   p_cutoff<span class="op">=</span><span class="fl">0.05</span><span class="op">)</span>;</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/enrich-hm-1.png" alt="Enrichment heatmap shown as a dotplot to indicate the number of genes involved." width="960" style="display: block; margin: auto;"></p>
 <p>The same data can be plotted as a heatmap.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,</span>
 <span>   style<span class="op">=</span><span class="st">"heatmap"</span>,</span>
 <span>   p_cutoff<span class="op">=</span><span class="fl">0.05</span><span class="op">)</span>;</span></code></pre></div>
@@ -980,7 +965,7 @@ ensure that all other plots use the same parameters.</p>
 <p>Argument <code>color_by_column=TRUE</code> applies the color gradient
 to each column, using <code>colorV</code> colors defined in from
 <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">memhm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,</span>
 <span>   style<span class="op">=</span><span class="st">"heatmap"</span>,</span>
 <span>   color_by_column<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>;</span></code></pre></div>
@@ -992,12 +977,11 @@ follow that custom style.</p>
 <div class="section level3">
 <h3 id="gene-pathway-heatmap">Gene-Pathway Heatmap<a class="anchor" aria-label="anchor" href="#gene-pathway-heatmap"></a>
 </h3>
-<p>The recommended way to create an enrichment heatmap is to use
-<code>GenePathHeatmap(Mpf)</code> with the ‘MemPlotFolio’ object as
-input. Customization should be done via <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> to
-ensure that all other plots use the same parameters.</p>
-<p>The specific options for a enrichment heatmap are described in
-<code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>.</p>
+<p>The gene-pathway heatmap is the critical step in downstream analysis,
+and is visualized with <code>GenePathHeatmap(Mpf)</code> using the
+‘MemPlotFolio’ object.</p>
+<p>Additional options for the gene-pathway heatmap are described in the
+internal function <code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>.</p>
 <ul>
 <li>Colors across the top of the heatmap indicate enrichment
 P-values.</li>
@@ -1006,33 +990,34 @@ in each enrichment test.</li>
 <li>When directional gene hits are provided, the left of the heatmap
 will also indicate directionality.</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hm_drawn</span> <span class="op">&lt;-</span> <span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span>;</span></code></pre></div>
 <p><img src="importIPA_files/figure-html/mem-hm-mpf-1.png" alt="Gene-pathway heatmap drawn specifically with mem_gene_path_heatmap()." width="960" style="display: block; margin: auto;"></p>
-<p>The corresponding custom function is shown below:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap</a></span><span class="op">(</span><span class="va">mem_canonical</span>,</span>
-<span>   column_cex<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span>   row_cex<span class="op">=</span><span class="fl">0.6</span><span class="op">)</span>;</span>
-<span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">hm</span>,</span>
-<span>   merge_legends<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="importIPA_files/figure-html/mem-hm-1.png" alt="Gene-pathway heatmap drawn specifically with mem_gene_path_heatmap()." width="960" style="display: block; margin: auto;"></p>
-<p>As a follow-up analysis, you can pull out each pathway cluster from
-the heatmap itself, using <code><a href="https://jmw86069.github.io/jamba/reference/heatmap_column_order.html" class="external-link">heatmap_column_order()</a></code>:</p>
+<p>You can pull out pathway clusters using <code>Clusters(Mpf)</code>,
+and gene clusters using <code>GeneClusters(Mpf)</code>.</p>
+<p>Alternatively, since <code>hm_drawn</code> is also a ComplexHeatmap
+object, the row and column order can be interrogated using
+<code><a href="https://jmw86069.github.io/jamba/reference/heatmap_column_order.html" class="external-link">jamba::heatmap_column_order()</a></code> for example.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hm_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://jmw86069.github.io/jamba/reference/heatmap_column_order.html" class="external-link">heatmap_column_order</a></span><span class="op">(</span><span class="va">hm</span><span class="op">)</span>;</span>
+<code class="sourceCode R"><span><span class="va">hm_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://jmw86069.github.io/jamba/reference/heatmap_column_order.html" class="external-link">heatmap_column_order</a></span><span class="op">(</span><span class="va">hm_drawn</span><span class="op">)</span>;</span>
 <span><span class="va">hm_sets</span>;</span>
 <span><span class="co">#&gt; $A</span></span>
-<span><span class="co">#&gt;           Glioma Signaling   Growth Hormone Signaling </span></span>
-<span><span class="co">#&gt;         "Glioma Signaling" "Growth Hormone Signaling" </span></span>
+<span><span class="co">#&gt;   Gluconeogenesis I        Glycolysis I </span></span>
+<span><span class="co">#&gt; "Gluconeogenesis I"      "Glycolysis I" </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $B</span></span>
-<span><span class="co">#&gt;       Hepatic Cholestasis   Fc Epsilon RI Signaling          p70S6K Signaling </span></span>
-<span><span class="co">#&gt;     "Hepatic Cholestasis" "Fc Epsilon RI Signaling"        "p70S6K Signaling" </span></span>
+<span><span class="co">#&gt;   Protein Kinase A Signaling </span></span>
+<span><span class="co">#&gt; "Protein Kinase A Signaling" </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $C</span></span>
-<span><span class="co">#&gt;    mTOR Signaling   HIPPO signaling </span></span>
-<span><span class="co">#&gt;  "mTOR Signaling" "HIPPO signaling"</span></span></code></pre></div>
+<span><span class="co">#&gt;           Glioma Signaling   Growth Hormone Signaling </span></span>
+<span><span class="co">#&gt;         "Glioma Signaling" "Growth Hormone Signaling" </span></span>
+<span><span class="co">#&gt;        Hepatic Cholestasis    Fc Epsilon RI Signaling </span></span>
+<span><span class="co">#&gt;      "Hepatic Cholestasis"  "Fc Epsilon RI Signaling" </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $D</span></span>
+<span><span class="co">#&gt;     mTOR Signaling     ERK5 Signaling    HIPPO signaling   p70S6K Signaling </span></span>
+<span><span class="co">#&gt;   "mTOR Signaling"   "ERK5 Signaling"  "HIPPO signaling" "p70S6K Signaling"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="full-cnet-plot">Full Cnet plot<a class="anchor" aria-label="anchor" href="#full-cnet-plot"></a>

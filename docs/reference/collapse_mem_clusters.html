@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,7 @@
 <span>  choose <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  per_cluster <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  byCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"composite_rank"</span>, <span class="st">"minp_rank"</span>, <span class="st">"gene_count_rank"</span><span class="op">)</span>,</span>
-<span>  return_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cnet"</span>, <span class="st">"mem"</span><span class="op">)</span>,</span>
+<span>  return_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cnet"</span>, <span class="st">"Mem"</span>, <span class="st">"mem"</span><span class="op">)</span>,</span>
 <span>  max_labels <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  max_nchar_labels <span class="op">=</span> <span class="fl">25</span>,</span>
 <span>  include_cluster_title <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -69,24 +69,80 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-cluster-color-min-fraction">cluster_color_min_fraction<a class="anchor" aria-label="anchor" href="#arg-cluster-color-min-fraction"></a></dt>
-<dd><p><code>numeric</code> value between 0 and 1
-used to define the cnet colors for each cluster. The number of
-significant pathways is calculated per cluster for each enrichment
-using <code>mem$enrichIMcolors</code>, and the fraction of significant
-pathways versus the max number per enrichment is used to filter.
-For example a cluster with 10 pathways, might have 8 significant
-pathways in one enrichment result, and 3 significant pathways in
-another enrichment result. The fraction for each enrichment is
-<code>8/8 == 1</code> for the first enrichment, and <code>3/8 = 0.375</code> for the
-second enrichment. When <code>cluster_color_min_fraction=0.5</code> (default)
-the first enrichment color would be included, but not the second
-enrichment color. The intent is to represent enrichment colors
-that have at least half (<code>0.5</code>) the pathways of the most
-representative (max) enrichment color. Therefore, a cluster with
-only one significant pathway from a given enrichment would
-typically not be representive of that enrichment, and its
-enrichment color would not be included.</p></dd>
+<dl><dt id="arg-mem">mem<a class="anchor" aria-label="anchor" href="#arg-mem"></a></dt>
+<dd><p><code>Mem</code> or legacy <code>list</code> mem object</p></dd>
+
+
+<dt id="arg-clusters">clusters<a class="anchor" aria-label="anchor" href="#arg-clusters"></a></dt>
+<dd><p><code>list</code> named by cluster name, containing <code>character</code>
+vectors all of whose values should be present in <code>sets(mem)</code>.</p></dd>
+
+
+<dt id="arg-choose">choose<a class="anchor" aria-label="anchor" href="#arg-choose"></a></dt>
+<dd><p><code>character</code> default NULL, passed to <code><a href="rank_mem_clusters.html">rank_mem_clusters()</a></code>
+to choose a subset of clusters to return. Values must be found in
+<code>names(clusters)</code>.</p></dd>
+
+
+<dt id="arg-per-cluster">per_cluster<a class="anchor" aria-label="anchor" href="#arg-per-cluster"></a></dt>
+<dd><p><code>integer</code> default 'Inf' with the maximum sets
+to include in each cluster. Use an integer like <code>per_cluster=1</code>
+to choose one "exemplar" per cluster, ranked according
+to <code>byCols</code> which is described in <code><a href="rank_mem_clusters.html">rank_mem_clusters()</a></code>.</p></dd>
+
+
+<dt id="arg-bycols">byCols<a class="anchor" aria-label="anchor" href="#arg-bycols"></a></dt>
+<dd><p><code>character</code> vector of summary values to use when
+sorting sets within each cluster, passed to and described
+in <code><a href="rank_mem_clusters.html">rank_mem_clusters()</a></code>.</p></dd>
+
+
+<dt id="arg-return-type">return_type<a class="anchor" aria-label="anchor" href="#arg-return-type"></a></dt>
+<dd><p><code>character</code> default "cnet" with the output format:</p><ul><li><p>"cnet" returns an <code>igraph</code> Cnet plot.</p></li>
+<li><p>"Mem" returns a <code>Mem</code> object after collapsing by cluster.</p></li>
+<li><p>"mem" returns legacy <code>list</code> mem output.</p></li>
+</ul></dd>
+
+
+<dt id="arg-max-labels">max_labels<a class="anchor" aria-label="anchor" href="#arg-max-labels"></a></dt>
+<dd><p><code>integer</code> default 4, the number of pathway labels
+to include in each cluster, ordered according to 'byCols'.</p></dd>
+
+
+<dt id="arg-max-nchar-labels">max_nchar_labels<a class="anchor" aria-label="anchor" href="#arg-max-nchar-labels"></a></dt>
+<dd><p><code>integer</code> default 25, max character length
+for each pathway label.</p></dd>
+
+
+<dt id="arg-include-cluster-title">include_cluster_title<a class="anchor" aria-label="anchor" href="#arg-include-cluster-title"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to include
+the cluster title as a prefix.
+For example if the cluster name is 'A' the new title would be:
+'A: pathway 1; pathway 2; pathway 3; pathway 4'.</p></dd>
+
+
+<dt id="arg-cluster-color-min-fraction">cluster_color_min_fraction<a class="anchor" aria-label="anchor" href="#arg-cluster-color-min-fraction"></a></dt>
+<dd><p><code>numeric</code> value default 0.5,
+the fraction of pathways in a cluster which has "non blank"
+assigned color in <code>enrichIMcolors()</code> in order for the color
+to be assigned to the resulting node, in the case of Cnet
+output with <code>return_type="cnet"</code>.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p><code>logical</code> whether to print verbose output.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>additional arguments are passed to <code>cnet2mem()</code> which
+includes thresholds used by <code><a href="apply_cnet_direction.html">apply_cnet_direction()</a></code> such as
+<code>direction_col_fn</code> (color function applied to enrichIMdirection),
+<code>gene_direction_col_fn</code> (color function applied to geneIMdirection),
+and others.
+To avoid applying directional color to Set nodes (nodeType='Set')
+use <code>direction_cutoff=100</code> and <code>direction_max=101</code>, which will
+consider any enrichIMdirection value at or below 100 to be
+non-directional.</p></dd>
 
 </dl></div>
     <div class="section level2">

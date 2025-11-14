@@ -10,6 +10,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/mem_function_notes.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/mem_vignettes.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/multienrichjam_dev_notes.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/multienrichjam_workflow_notes.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/news/index.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/add_pathway_direction.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/adjust_cnet_nodeset.html</loc></url>
@@ -77,6 +78,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/imSigned2list.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/imSigned2list_dep.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/index.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/IPAlist_to_hits.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/isColorBlank.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_igraph.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_igraph_arrows.html</loc></url>
@@ -121,6 +123,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/reorderIgraphNodes.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/rotate_coordinates.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/rotate_igraph_layout.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/score_gene_path_clusters.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/shape.coloredrectangle.plot.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.clip.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.plot.html</loc></url>

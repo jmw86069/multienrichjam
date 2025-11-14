@@ -1,5 +1,31 @@
 # TODO
 
+## 12nov2025
+
+* Continue polishing the workflow:
+
+   * `mem_plot_folio()`
+   
+      * Accept optional `MemPlotFolio` input, to re-use identical settings.
+      * consider new `PrepareFolio()` with `do_plot=FALSE`?  
+      Workflow:
+      `multiEnrichMap()`
+      `PrepareFolio()`
+      individual plots: `EnrichmentHeatmap()`, `GenePathHeatmap()`, etc.
+      `PlotFolio()`
+      * new arg `do_whichbyname` accept `character` string?
+      * consider replacing plots 3,4,5 with one Cnet, then move the custom
+      label into `CnetCollapsed()`
+      
+   * `CnetHeatmap()`, `GenePathHeatmap()` could use `Mem` input?
+   Secretly call `mem_plot_folio()` behind the scenes.
+
+* More `fixSetLabels()` logic to config file which is prepared upon
+loading the package.
+
+   * words_from, words_to; add_from, add_to; abbrev_from, abbrev_to:
+   Should they be `data.frame` objects?
+
 ## 10nov2025
 
 * `IPAlist_to_hits()` to extract hit list from IPA xref tables.

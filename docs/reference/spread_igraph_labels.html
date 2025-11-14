@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,7 @@
 <span>  repulse <span class="op">=</span> <span class="fl">3.5</span>,</span>
 <span>  force_relayout <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  label_min_dist <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  label_dist_l <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene <span class="op">=</span> <span class="fl">2.5</span>, Set <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -123,9 +124,17 @@ Note that when <code>layout</code> is supplied, it is always used.</p></dd>
 
 
 <dt id="arg-label-min-dist">label_min_dist<a class="anchor" aria-label="anchor" href="#arg-label-min-dist"></a></dt>
-<dd><p>numeric value used to ensure all labels are
-at least some distance from the center. These units are defined
-by igraph, and are roughly in units of one line height of text.</p></dd>
+<dd><p><code>numeric</code> minimum distance, default 0.5,
+used to ensure all labels are at least some distance from the center.
+Note that this argument is not used when <code>label_dist_l</code> is non-NULL.
+The units are roughly in units of one line height of text.</p></dd>
+
+
+<dt id="arg-label-dist-l">label_dist_l<a class="anchor" aria-label="anchor" href="#arg-label-dist-l"></a></dt>
+<dd><p><code>list</code> with default to apply distance by 'nodeType'
+node vertex attribute: Gene distance 5, Set distance 0.
+When supplied as NULL, or when there is no node matched by
+this argument, the label distance uses <code>label_min_dist</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

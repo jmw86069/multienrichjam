@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,7 @@
 <span>  frame_lwd_blank <span class="op">=</span> <span class="fl">0.2</span>,</span>
 <span>  border_lwd <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  do_reorder <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -183,7 +184,15 @@ so the pie wedges do not each show a color. Also for single-wedge
 pie nodes, this process avoids drawing a small line at the top
 of each node.
 Instead the attribute <code>"frame.color"</code> is populated with the
-one unique border color, so that only the outer border is colorized.</p>
+one unique border color, so that only the outer border is colorized.</p><div class="section">
+<h3 id="todo">Todo<a class="anchor" aria-label="anchor" href="#todo"></a></h3>
+
+<ul><li><p>Consider permitting input to be a simple igraph, then creating
+pie.color, pie.border, pie.border.lwd attributes even if they
+previously did not exist. It would probably optionally also use
+<code>colorV</code> to colorize each component of multi-component nodes.</p></li>
+</ul></div>
+
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

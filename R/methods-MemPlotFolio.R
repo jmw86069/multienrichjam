@@ -336,35 +336,55 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
 #' @describeIn MemPlotFolio-class Draws the Cnet collapsed
 #'    network from `MemPlotFolio` results. Note that '...' arguments are
 #'    passed to `jam_igraph()` and `mem_legend()` when `do_plot=TRUE`.
-#' @returns `CnetCollapsed(MemPlotFolio)` returns an `igraph` object
-#'    with Gene and Set nodes representing the collapsed pathway set
-#'    clusters.
+#'    Argument `type` can be:
+#'    * `type=''` (default) to use cluster title
+#'    * `type='set'` to use abbreviated pathway names
+#'    * `type='set2'` to use abbreviated pathway names, with hidden gene labels
+#' @returns `CnetCollapsed(MemPlotFolio)` returns an `igraph` object invisibly,
+#'    with Gene and Set nodes representing the collapsed pathway clusters.
 #' @export
-setMethod("CnetCollapsed", "MemPlotFolio", function(x, do_plot, type, ...) {
+setMethod("CnetCollapsed", "MemPlotFolio", function(x, type, do_plot, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
    # type indicates which cnet data to use
+   cnet <- x@cnet_collapsed$collapsed;
+   if (!inherits(cnet, "igraph")) {
+      stop_msg <- paste0("No Cnet data were prepared by collapsed sets, ",
+         "use:\nmem_plot_folio(Mem, do_which=3)");
+      stop(stop_msg);
+   }
    if (missing(type)) {
-      cnet <- x@cnet_collapsed$collapsed;
-      if (!inherits(cnet, "igraph")) {
-         cnet <- x@cnet_collapsed[[1]];
-         if (!inherits(cnet, "igraph")) {
-            stop("No Cnet data were prepared for collapsed sets.")
-         }
-         warning("Cnet 'collapsed' was not prepared, using first alternate.")
+      type <- "";
+   }
+   type <- head(type, 1);
+   if (type %in% c(NA, "")) {
+      # no changes required
+   } else if (type %in% c("set", "set2")) {
+      # add set_names to labels
+      if ("set_labels" %in% igraph::vertex_attr_names(cnet)) {
+         use_labels <- ifelse(
+            nchar(jamba::rmNA(naValue="", igraph::V(cnet)$set_labels)) > 0,
+            igraph::V(cnet)$set_labels,
+            igraph::V(cnet)$name);
+         igraph::V(cnet)$label <- use_labels;
       }
-   } else if ("set" %in% type && 
-         inherits(x@cnet_collapsed$collapsed_set, "igraph")) {
-      cnet <- x@cnet_collapsed$collapsed_set;
-   } else if ("set2" %in% type && 
-         inherits(x@cnet_collapsed$collapsed_set2, "igraph")) {
-      cnet <- x@cnet_collapsed$collapsed_set2;
+      if ("set2" %in% type) {
+         # remove gene labels
+         isgene <- which(tolower(igraph::vertex_attr(cnet, "nodeType")) %in%
+               "gene");
+         igraph::vertex_attr(cnet, index=isgene, name="label") <- "";
+      }
+   } else if (type %in% igraph::vertex_attr_names(cnet)) {
+      use_labels <- ifelse(
+         nchar(jamba::rmNA(naValue="",
+            igraph::vertex_attr(cnet, name=type))) > 0,
+         igraph::vertex_attr(cnet, name=type),
+         igraph::V(cnet)$name);
    } else {
-      cnet <- x@cnet_collapsed[[1]];
-      if (!inherits(cnet, "igraph")) {
-         stop("No Cnet data were prepared for collapsed sets.")
-      }
+      stop_msg <- paste0("The 'type' did not match '', 'set', 'set2', nor ",
+         "any vertex attribute names.")
+      stop(stop_msg);
    }
    
    if (isTRUE(do_plot)) {
@@ -372,9 +392,8 @@ setMethod("CnetCollapsed", "MemPlotFolio", function(x, do_plot, type, ...) {
          ...)
       mem_legend(metadata(x),
          ...)
-   } else {
-      cnet;
    }
+   invisible(cnet);
 })
 
 
@@ -387,7 +406,7 @@ setMethod("CnetCollapsed", "MemPlotFolio", function(x, do_plot, type, ...) {
 #' @returns `CnetExemplar(MemPlotFolio)` returns an `igraph` object
 #'    with Gene and Set nodes for the 'num' number of exemplars per cluster.
 #' @export
-setMethod("CnetExemplar", "MemPlotFolio", function(x, do_plot, num, ...) {
+setMethod("CnetExemplar", "MemPlotFolio", function(x, num, do_plot, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
@@ -413,9 +432,8 @@ setMethod("CnetExemplar", "MemPlotFolio", function(x, do_plot, num, ...) {
          ...)
       mem_legend(metadata(x),
          ...)
-   } else {
-      cnet;
    }
+   invisible(cnet);
 })
 
 
@@ -425,36 +443,56 @@ setMethod("CnetExemplar", "MemPlotFolio", function(x, do_plot, num, ...) {
 #'    from `MemPlotFolio` results for a specific cluster.
 #'    Note that '...' arguments are
 #'    passed to `jam_igraph()` and `mem_legend()` when `do_plot=TRUE`.
-#' @returns `CnetCluster(MemPlotFolio)` returns an `igraph` object
-#'    with Gene and Set nodes for the 'num' number of exemplars per cluster.
+#' @returns `CnetCluster(MemPlotFolio)` returns an `igraph` object invisibly,
+#'    using all pathways in the cluster defined with argument `cluster`.
 #' @export
-setMethod("CnetCluster", "MemPlotFolio", function(x, do_plot, cluster, ...) {
+setMethod("CnetCluster", "MemPlotFolio", function(x, cluster, do_plot, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
+
    # type indicates which cnet data to use
-   if (missing(cluster)) {
-      cnet <- x@cnet_clusters[[1]];
-      if (!inherits(cnet, "igraph")) {
-         # Todo: prepare dynamically
-         stop("No Cnet cluster networks were prepared.")
+   if (missing(cluster) || length(cluster) == 0) {
+      cluster <- head(Clusters(x), 1);
+      if (length(cluster) == 0) {
+         stop("No clusters are defined in the MemPlotFolio provided.")
       }
-   } else {
-      cluster <- as.character(head(cluster, 1));
-      if (!cluster %in% names(x@cnet_clusters)) {
-         stop_msg <- paste0("No Cnet cluster network prepared for ",
-            cluster, ".");
-         stop(stop_msg);
-      }
-      cnet <- x@cnet_clusters[[cluster]];
    }
    
+   # Todo: Consider calling mem_plot_folio() to prepare when not present
+   # - mem_plot_folio(Mpf) would require the MemPlotFolio to store Mem also
+   #   therefore it seems inappropriate.
+   if (is.numeric(cluster)) {
+      cluster <- head(names(Clusters(x))[as.integer(cluster)], 1);
+      if (length(cluster) == 0) {
+         stop("Argument 'cluster' as integer did not match Clusters(x).");
+      }
+   }
+   if (!cluster %in% names(x@cnet_clusters)) {
+      # cluster Cnet does not exist, describe steps to create
+      stop_msg <- paste0("Cluster '", cluster, "' is not present. ",
+         "Create:\n",
+         "Mpf <- mem_plot_folio(Mem, do_which=7:(7 + n))\n",
+         "where 'n' is total number of clusters. Then plot:\n",
+         "CnetCluster(Mpf, cluster=cluster)");
+      stop(stop_msg);
+   }
+   
+   # obtain the Cnet data
+   cluster <- as.character(head(cluster, 1));
+   if (!cluster %in% names(x@cnet_clusters)) {
+      stop_msg <- paste0("No Cnet cluster network prepared for ",
+         cluster, ".");
+      stop(stop_msg);
+   }
+   cnet <- x@cnet_clusters[[cluster]];
+
    if (isTRUE(do_plot)) {
       jam_igraph(cnet,
          ...)
       mem_legend(metadata(x),
          ...)
-   } else {
-      cnet;
+      
    }
+   invisible(cnet)
 })

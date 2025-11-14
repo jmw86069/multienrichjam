@@ -149,16 +149,16 @@ setGeneric("GenePathHeatmap", signature=c("x", "do_plot"),
    function(x, do_plot, ...) standardGeneric("GenePathHeatmap")
 )
 
-setGeneric("CnetCollapsed", signature=c("x", "do_plot", "type"),
-   function(x, do_plot, type, ...) standardGeneric("CnetCollapsed")
+setGeneric("CnetCollapsed", signature=c("x", "type", "do_plot"),
+   function(x, type, do_plot, ...) standardGeneric("CnetCollapsed")
 )
 
-setGeneric("CnetExemplar", signature=c("x", "do_plot", "num"),
-   function(x, do_plot, num, ...) standardGeneric("CnetExemplar")
+setGeneric("CnetExemplar", signature=c("x", "num", "do_plot"),
+   function(x, num, do_plot, ...) standardGeneric("CnetExemplar")
 )
 
-setGeneric("CnetCluster", signature=c("x", "do_plot", "cluster"),
-   function(x, do_plot, cluster, ...) standardGeneric("CnetCluster")
+setGeneric("CnetCluster", signature=c("x", "cluster", "do_plot"),
+   function(x, cluster, do_plot, ...) standardGeneric("CnetCluster")
 )
 
 setGeneric("Caption", signature=c("x"),

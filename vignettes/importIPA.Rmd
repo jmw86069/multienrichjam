@@ -167,7 +167,7 @@ kable_coloring(
 
 ```
 
-# Run multiEnrichMap()
+# multiEnrichMap() to create 'Mem'
 
 Now given a list of `data.frame` results, we can
 run `multiEnrichMap()`:
@@ -190,39 +190,26 @@ kable_coloring(
       extra_css="white-space: nowrap;")
 ```
 
-## Mem Plot Folio
 
-The `mem_plot_folio()` represents a key step in the analysis workflow.
-Several downstream results are directly dependent upon the options
-chosen here:
+## prepare_folio() to create 'MemPlotFolio'
 
-Pathway clusters are defined by analyst parameters:
+The next step is to prepare the "Mem Plot Folio", which performs
+key pathway clustering to inform downstream visualizations.
 
-* The number of pathways clusters
-* The relative weight of the gene-pathway incidence matrix.
-* The method used for clustering.
+* `prepare_folio()` prepares a 'MemPlotFolio' object
+* `mem_plot_folio()` prepares *and plots* 'MemPlotFolio' as multi-page
+output.
 
-Mem Plot Folio then provides a series of visualizations:
+The plot data is created and stored in the 'MemPlotFolio' object,
+and can be plotted directly using:
 
-1. **Enrichment P-value heatmap** often as a dot plot
-2. **Gene-pathway heatmap**, clustered by column and by row
-3. **Cnet cluster plots**
+* `EnrichmentHeatmap()`: pathway by enrichment, showing enrichment P-values
+* `GenePathHeatmap()`: genes by pathway, to define pathway clusters
+* `CnetCollapsed()`: Concept network (Cnet) collapsed by pathway cluster
+* `CnetExemplar()`: Cnet with one exemplar pathway per cluster
+* `CnetCollapsed()`: Cnet showing all pathways in one cluster
 
-   a. Pathway clusters are labeled by `LETTERS` ("A", "B", "C", "D", etc.)
-   b. The second plot labels clusters by the top `n` pathway names
-   c. The third plot is (b) and hides the gene labels.
-
-4. **Cnet exemplar plots**
-
-   * Includes 1 exemplar pathway per cluster.
-   * Includes 2 exemplars per cluster.
-   * Includes 3 exemplars per cluster.
-
-5. **Cnet per cluster**
-
-   * One plot for each pathway cluster
-
-**Only the first four plots are shown** by using `do_which=c(1:4)`.
+The example below shows the first four plots from `mem_plot_folio()`:
 
 ```{r, mem-folio, fig.height=12, fig.width=8, fig.alt="Mem plot folio showing the first four plots"}
 Mpf <- mem_plot_folio(mem_canonical,
@@ -237,16 +224,9 @@ Mpf <- mem_plot_folio(mem_canonical,
    main="Canonical Pathways");
 ```
 
-The object returned `Mpf` is a `MemPlotFolio` object containing the
+The object `Mpf` is a `'MemPlotFolio'` object containing
 graphical objects. By default all plots in `do_which` are plotted,
 however they can be plotted individually:
-
-* `EnrichmentHeatmap(Mpf)`
-* `GenePathHeatmap(Mpf)`
-* `CnetCollapsed(Mpf, type="set")`
-* `CnetExemplar(Mpf, num=1)`
-* `CnetCluster(Mpf, cluster="B")`
-
 
 # Customizing Mem Plots
 
@@ -254,35 +234,37 @@ however they can be plotted individually:
 
 The Cnet Collapsed Plot is often the focus of manuscript figures.
 The typical workflow is demonstrated below, using `CnetCollapsed()` on
-the `mem_plot_folio()` output.
+the `MemPlotFolio` object.
+
+Note that '...' extra arguments are passed to `jam_igraph()` for
+custom plotting options.
 
 ```{r, cnet-collapsed, fig.height=12, fig.width=10, fig.alt="Cnet collapsed network extracted from mem_plot_folio() to use for custom figures."}
 # generate the data
-Mpf4 <- mem_plot_folio(mem_canonical,
-   do_which=c(4),
-   do_plot=FALSE)
+Mpf4 <- prepare_folio(mem_canonical,
+   do_which=c(4))
 
 # extract the cnet
-cnet <- CnetCollapsed(Mpf4, do_plot=FALSE, type="set");
-
-# jam_graph
-jam_igraph(cnet,
+cnet <- CnetCollapsed(Mpf4,
+   type="set",
    node_factor=2,
    use_shadowText=TRUE,
    label_factor_l=list(nodeType=c(Gene=2, Set=1)))
-
+   
+## jam_graph()
+# jam_igraph(cnet)
 ```
 
 
 ## Enrichment P-value Heatmap
 
 The recommended way to create an enrichment heatmap is to use
-`EnrichmentHeatmap(Mpf)` with the 'MemPlotFolio' object as input.
-Customization should be done via `mem_plot_folio()`
-to ensure that all other plots use the same parameters.
+`EnrichmentHeatmap(Mpf)` with the `'MemPlotFolio'` object.
+Customization should be done via `mem_plot_folio()`,
+for example changes to pathway clustering, and even custom font sizes.
 
-The specific options for a enrichment heatmap are described in
-`mem_enrichment_heatmap()`.
+Additional options for a enrichment heatmap are described in
+the internal function `mem_enrichment_heatmap()`.
 
 ```{r, enrich-hm-mpf, fig.alt="Enrichment heatmap shown using the MemPlotFolio object as input."}
 EnrichmentHeatmap(Mpf);
@@ -319,13 +301,11 @@ so that the enrichment heatmap will follow that custom style.
 
 ## Gene-Pathway Heatmap
 
-The recommended way to create an enrichment heatmap is to use
-`GenePathHeatmap(Mpf)` with the 'MemPlotFolio' object as input.
-Customization should be done via `mem_plot_folio()`
-to ensure that all other plots use the same parameters.
+The gene-pathway heatmap is the critical step in downstream analysis,
+and is visualized with `GenePathHeatmap(Mpf)` using the 'MemPlotFolio' object.
 
-The specific options for a enrichment heatmap are described in
-`mem_gene_path_heatmap()`.
+Additional options for the gene-pathway heatmap are described in
+the internal function `mem_gene_path_heatmap()`.
 
 * Colors across the top of the heatmap indicate
 enrichment P-values.
@@ -338,21 +318,15 @@ will also indicate directionality.
 hm_drawn <- GenePathHeatmap(Mpf);
 ```
 
-The corresponding custom function is shown below:
+You can pull out pathway clusters using `Clusters(Mpf)`, and
+gene clusters using `GeneClusters(Mpf)`.
 
-```{r, mem-hm, fig.height=14, fig.width=10, fig.alt="Gene-pathway heatmap drawn specifically with mem_gene_path_heatmap()."}
-hm <- mem_gene_path_heatmap(mem_canonical,
-   column_cex=0.5,
-   row_cex=0.6);
-ComplexHeatmap::draw(hm,
-   merge_legends=TRUE)
-```
-
-As a follow-up analysis, you can pull out each pathway
-cluster from the heatmap itself, using `heatmap_column_order()`:
+Alternatively, since `hm_drawn` is also a ComplexHeatmap object,
+the row and column order can be interrogated using
+`jamba::heatmap_column_order()` for example.
 
 ```{r, mem_hm_sets}
-hm_sets <- heatmap_column_order(hm);
+hm_sets <- heatmap_column_order(hm_drawn);
 hm_sets;
 ```
 

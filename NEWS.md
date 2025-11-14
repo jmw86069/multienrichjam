@@ -2,11 +2,16 @@
 
 * Added 'openxlsx' to Suggests.
 * Removed 'matrixStats' dependency.
+* Added quick walkthrough to README.Rmd as visual intro of the package.
 
 ## New functions
 
-* `IPAlist_to_hits()` - creates a gene hit list from IPA data, for
+* `IPAlist_to_hits()`: creates a gene hit list from IPA data, for
 `multiEnrichMap()` argument 'geneHitIM'.
+* `prepare_folio()`: for cleaner workflow to create `MemPlotFolio` without
+directly plotting all results.
+* `score_gene_path_clusters()`: Experimental, intriguing effort to find
+"hot spots" in the Gene-Path Heatmap clustering.
 
 ## Changes to existing functions
 
@@ -43,6 +48,12 @@
    previously it used the aggregate `enrichIM()` values.
    * the `enrichIMdirection()` values are now used to colorize Set nodes,
    using `direction_cutoff` as a minimum to apply up/down color.
+
+* `fixSetLabels()`
+
+   * Now uses package data `words` and `abbrev` as `data.frame` for default
+   replacements, to make it easier to edit over time. Data are prepared
+   from files stored in 'extdata/words.txt' and 'extdata/abbrev.txt'.
 
 # multienrichjam 0.0.103.900
 

@@ -2470,9 +2470,14 @@ removeIgraphSinglets <- function
 #'    should be recalculated, in order to override coordinates that
 #'    may be previously stored in the `igraph` object itself.
 #'    Note that when `layout` is supplied, it is always used.
-#' @param label_min_dist numeric value used to ensure all labels are
-#'    at least some distance from the center. These units are defined
-#'    by igraph, and are roughly in units of one line height of text.
+#' @param label_min_dist `numeric` minimum distance, default 0.5,
+#'    used to ensure all labels are at least some distance from the center.
+#'    Note that this argument is not used when `label_dist_l` is non-NULL.
+#'    The units are roughly in units of one line height of text.
+#' @param label_dist_l `list` with default to apply distance by 'nodeType'
+#'    node vertex attribute: Gene distance 5, Set distance 0.
+#'    When supplied as NULL, or when there is no node matched by
+#'    this argument, the label distance uses `label_min_dist`.
 #' @param ... additional arguments are passed to `layout_with_qfr()`
 #'    when needed.
 #'
@@ -2488,6 +2493,7 @@ spread_igraph_labels <- function
  repulse=3.5,
  force_relayout=FALSE,
  label_min_dist=0.5,
+ label_dist_l=list(nodeType=c(Gene=2.5, Set=0)),
  verbose=FALSE,
  ...)
 {
@@ -2575,10 +2581,25 @@ spread_igraph_labels <- function
       g <- igraph::set_graph_attr(g, "layout", layout);
    }
    igraph::V(g)$label.degree <- jamba::deg2rad(g_angle);
-   if (!"label.dist" %in% igraph::vertex_attr_names(g)) {
-      igraph::V(g)$label.dist <- label_min_dist;
-   } else {
-      igraph::V(g)$label.dist <- pmax(igraph::V(g)$label.dist, label_min_dist);
+   # establish minimum label distance
+   igraph::V(g)$label.dist <- label_min_dist;
+   if (length(label_dist_l) > 0 &&
+         is.list(label_dist_l) &&
+         length(unlist(label_dist_l)) > 0) {
+      #
+      vattrnames <- igraph::vertex_attr_names(g);
+      for (iname in names(label_dist_l)) {
+         if (iname %in% vattrnames) {
+            vattrvalues <- igraph::vertex_attr(g, name=iname);
+            lnames <- names(label_dist_l[[iname]]);
+            k <- which(vattrvalues %in% lnames);
+            # assign attributes to nodes with matching value
+            if (length(k) > 0) {
+               igraph::vertex_attr(g, name="label.dist", index=k) <- (
+                  label_dist_l[[iname]][vattrvalues[k]]);
+            }
+         }
+      }
    }
    g;
 }

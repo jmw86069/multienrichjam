@@ -70,3 +70,14 @@
 #' @rdname Mem-data
 "Reese_genes"
 
+#' @format `words` is a `data.frame` with colnames 'from' and 'to',
+#'    for pathway word Perl-compatible regular expression pattern and
+#'    replacement. It is used as default in `fixSetLabels(..., words_from)`.
+#' @rdname fixSetLabels
+"words"
+
+#' @format `abbrev` is a `data.frame` with colnames 'from' and 'to',
+#'    for pathway word Perl-compatible regular expression pattern and
+#'    replacement. It is used as default in `fixSetLabels(..., abbrev_from)`.
+#' @rdname fixSetLabels
+"abbrev"

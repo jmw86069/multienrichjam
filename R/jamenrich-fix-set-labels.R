@@ -6,22 +6,27 @@
 #'
 #' This function is a convenient wrapper for several steps that edit
 #' gene set and pathways labels to be slightly more legible.
-#' It operates on either a `character` vector, an `igraph` object,
-#' or `Mem` object.
+#' It operates on:
+#' * `character` vector, returning `character` vector
+#' * `igraph` object, where is uses 'name' to update 'label'
+#' * `Mem` object, where it updates `sets(Mem)`
 #' 
-#' The arguments have extensive default values encoded, which may
-#' eventually be moved to structured variables. For now, they are
-#' visible to make sure the changes are open for review.
-#' The vast majority of steps are custom biological terms which
-#' are expected to have certain capitalization.
-#' Some terms are commonly observed artifacts in public pathway data,
-#' for example `"PI3kakt"` is a common artifact which refers to
-#' `"PI3K/AKT"`.
-#'
-#' * To use custom from,to replacements, along with the default replacements,
-#' supply the custom replacements with arguments `add_from`,`add_to`.
-#' * To use custom from,to replacements, without applying the defaults,
-#' supply the custom replacements with arguments `words_from`,`words_to`.
+#' The arguments have extensive default values encoded, which are
+#' represented in data `multienrichjam::words` for basic word replacement,
+#' and `multienrichjam::abbrev` for abbreviations used only
+#' when `do_abbreviations=TRUE`.
+#' 
+#' Summary of typical changes:
+#' 
+#' * The vast majority of changes are custom biological terms which
+#' are expected to have certain capitalization, for example
+#' 'Mapk' is usually written 'MAPK'.
+#' * Some changes are motivated to fix common artifacts in public data,
+#' for example `'PI3kakt'` refers to `'PI3K/AKT'`.
+#' * To use your own replacements, supply `words_from` as a two-column
+#' `data.frame`, or two vectors `words_from` and `words_to`.
+#' * To add custom effects to default, supply `abbrev_from` as a two-column
+#' `data.frame`, or use two vectors `abbrev_from` and `abbrev_to`.
 #' 
 #' For `igraph` input, the vertex 'name' is used as the starting point.
 #' To revert changes, use `igraph::V(x)$label <- igraph::V(x)$name`.
@@ -29,10 +34,10 @@
 #' For `Mem` input, the `sets(x)` are updated, with no immediate way
 #' to revert changes. It may become useful to do so in future, however.
 #' 
-#' @return object with class to match input 'x', one of:
-#'    * `character` vector,
-#'    * `igraph` object, or
-#'    * `Mem` object.
+#' @returns object whose class matches input 'x':
+#'    * `character` vector
+#'    * `igraph` object with vertex 'label' updated from 'name'
+#'    * `Mem` object with updated `sets()`
 #'
 #' @family jam Mem utilities
 #' @family jam igraph functions
@@ -76,25 +81,30 @@
 #'    use in MSigDB data, for example KEGG, BIOCARTA, PID, etc.
 #'    Use `""` or `NULL` to skip this step.
 #'    * Multiple values can be defined, they are applied in order.
-#' @param words_from,words_to `character` vectors of pattern, replacement,
-#'    respectively. The pattern is matched in case-insensitive manner,
-#'    with case-sensitive replacements where applicable.
-#'    It uses perl-based regular expression matching with
-#'    `base::gsub()`, so that the expression `\\b` can be used
-#'    to enforce a word boundary, either via delimiter, whitespace, or
-#'    the end of the string.
+#' @param words_from,words_to `character` default NULL uses internal data
+#'    `words` with pattern and replacement.
+#'    * Input `words_from` can be a two-column `data.frame` expected to have
+#'    'from' and 'to' in order.
+#'    * Supplied as vectors, the 'words_from' are regular expression patterns,
+#'    replaced with 'words_to' in order, applied case-sensitive.
+#'    It does use Perl regular expression in `base::gsub()`, which is useful
+#'    to use with 'backslash-b' to enforce a word boundary for example.
 #' @param add_from,add_to `character` vectors used in addition to
 #'    `words_from`,`words_to`.
+#'    * 'add_from' can be supplied as a two-column `data.frame` as described
+#'    for 'words_from'.
 #'    * These values are applied after `words_from`,`words_to`, so that
 #'    user-defined replacements have priority.
-#' @param abbrev_from,abbrev_to `character` vectors used when
-#'    `do_abbreviations=TRUE`. These defaults are "opinionated",
-#'    they are intended to shorten common phrases which do not
-#'    seem critical to understanding the meaning of most biological
-#'    pathways.
-#'    Some abbreviations are used for relatively common phrases
-#'    and terms, for which the abbreviation seems to be unambiguous
-#'    and fairly widely recognized.
+#' @param abbrev_from,abbrev_to `character` default NULL uses internal data
+#'    `abbrev` with pattern and replacement.
+#'    Intended to apply a specific abbreviation, and only applied when
+#'    `do_abbreviations=TRUE`.
+#'    * 'abbrev_from' can be supplied as a `data.frame` as described for
+#'    'words_from'.
+#'    * The abbreviations are "opinionated" in that they may remove words
+#'    or shorten common phrases which do not seem critical to
+#'    understanding the meaning of most biological pathways.
+#'    
 #'    Examples:
 #'    * "Extracellular Matrix" becomes "ECM"
 #'    * "Mitochondrial" becomes "Mito"
@@ -130,106 +140,67 @@ fixSetLabels <- function
  adjustCase=TRUE,
  lowercaseAll=TRUE,
  removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
- words_from=c("als",
-    "ii", "iii", "iv", "v",  "vi", "Vii", "Viii", "ix", "x",
-    "trna", "rrna", "rna", "dna", "mirna", "mrna", "snrna", "snorna",
-    "scrna", "lincrna",
-    "Il", "Ecm", "Nk",
-    "Pi3k.Akt", "Akt", "Pi3k", "tgf", "nfkb", "NK.Kappa.B",
-    "Pi3kaktmtorsignaling", "Pi3kaktmtor",
-    "PI3kakt", "aktmtor", "mtorsignaling",
-    "Pi3kci", "Pi3kgamma", "Pi 3k",
-    "Ppar(alpha|a)", "Ppar(gamma|g)", "Ppar",
-    "Udp N Acetyl Glucosamine",
-    "Mtor", "Gpcr", "Gpcrs",
-    "Tnfa|Tnfalpha", "Tnfr1", "Tnfr2", "Tnfs", "Tnf", "Tnfsf", "Tnfrelated",
-    "Tgf(beta|b)", "Tgfbr", "TGF Beta",
-    "Akt1", "Igf1akt",
-    "Foxo", "Hdacs", "Hdac", "Hat", "Hats",
-    "Nicotinic Acetylcholine Receptors|Acetylcholine Nicotinic Receptors",
-    "G CSF", "Gm Csf", "M Csf",
-    "IL([0-9]+)[-. _]([0-9]+)pathway",
-    "Jak Stat([1-9]*)", "Mkk3 6pathway",
-    "MAP([23]*)K([0-9]*)", "P38[ ]*MAPK", "MAPK1 3", "Erk MAPK", "Erk", "Erks",
-    "Interferon([a-z]*)",
-    "([A-Za-z0-9]+[a-qs-z])mediated",
-    "Lncrna|Lincrna", "Microrna([s]*)",
-    "125 DIHYDROXYVITAMIN D3",
-    "Tweak", "Er",
-    "Vegfavegfr2", "Vegfr1 2", "Vegf", "Vegfr([1-9]*)", "Egfr", "Egfrviii",
-    "Egfegfr",
-    "Smad2 3(pathway|nuclear)", "Smad2 3",
-    "Nf Kb", "Nfkappab",
-    "C Jun", "C Fos", "Ap 1", "Apoe",
-    "([AG])tpase", "Kras", "Uv",
-    "Sarscov2", "Sars Cov ([12])", "Sars Cov", "Covid19",
-    "Cellspecific", "([a-zA-Z0-9]+)like",
-    "([TB]|NK) Cell"),
- words_to=c("ALS",
-    "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
-    "tRNA", "rRNA", "RNA", "DNA", "miRNA", "mRNA", "snRNA", "snoRNA",
-    "scRNA", "lincRNA",
-    "IL", "ECM", "NK",
-    "PI3K/AKT", "AKT", "PI3K", "TGF", "NFKB", "NFKB",
-    "PI3K/AKT/mTOR Signaling", "PI3K/AKT/mTOR",
-    "PI3K/AKT", "AKT/mTOR", "mTOR Signaling",
-    "PI3KCI", "PI3Kgamma", "PI3K",
-    "PPARalpha", "PPARgamma", "PPAR",
-    "UDP-GlcNAc",
-    "mTOR", "GPCR", "GPCRs",
-    "TNFa", "TNFR1", "TNFR2", "TNFs", "TNF", "TNFSF", "TNF-related",
-    "TGFbeta", "TGFbeta-Receptor", "TGFbeta",
-    "AKT1", "IGF1/AKT",
-    "FOXO", "HDACs", "HDAC", "HAT", "HATs",
-    "Nicotinic Acetylcholine Receptors", #"nAChRs",
-    "G-CSF", "GM-CSF", "M-CSF",
-    "IL-\\1/IL-\\2 Pathway",
-    "JAK/STAT\\1", "MKK3/MKK6 Pathway",
-    "MAP\\1K\\2", "p38-MAPK", "MAPK1/MAPK3", "ERK-MAPK", "ERK", "ERKs",
-    "IFN\\1",
-    "\\1-Mediated",
-    "lncRNA", "microRNA\\1",
-    "1,25-dihydroxyvitamin D3",
-    "TWEAK", "ER",
-    "VEGFA/VEGFR2", "VEGFR1/VEGFR2", "VEGF", "VEGFR\\1", "EGFR", "EGFRvIII",
-    "EGF/EGFR",
-    "Smad2/3 \\1", "Smad2/3",
-    "NFKB", "NFKB",
-    "C-jun", "C-fos", "AP-1", "APOE",
-    "\\1TPase", "KRAS", "UV",
-    "SARS-CoV-2", "SARS-CoV-\\1", "SARS-CoV", "COVID19",
-    "Cell-Specific", "\\1-Like",
-    "\\1-cell"),
+ words_from=NULL,
+ words_to=NULL,
  add_from=NULL,
  add_to=NULL,
- abbrev_from=c(
-    "Extracellular.Matrix",
-    "Mitochondri(um|a|al|on)",
-    "Interferon",
-    "(IL|Interleukin[ ]*)([0-9]+)",
-    "Subsequent",
-    "Signaling (pathway|system)",
-    "Of The",
-    "^Signaling by ", # remove leading "Signaling by" as unnecessary
-    " Pathway[s]*$", # remove trailing " pathway" as unnecessary
-    "Expression",
-    "The Role "),
- abbrev_to=c(
-    "ECM",
-    "Mito",
-    "IFN",
-    "IL-\\2",
-    "",
-    "Signaling",
-    "Of",
-    "",
-    "",
-    "Expr.",
-    "Role "),
+ abbrev_from=NULL,
+ abbrev_to=NULL,
  ...)
 {
    # validate nodeType
    nodeType <- match.arg(nodeType);
+   
+   # use default words
+   if (length(words_from) == 0) {
+      words_from <- words$from;
+      words_to <- words$to;
+   }
+   # use default abbrev
+   if (length(abbrev_from) == 0) {
+      abbrev_from <- abbrev$from;
+      abbrev_to <- abbrev$to;
+   }
+   # accept data.frame
+   if (inherits(words_from, "data.frame")) {
+      if (ncol(words_from) != 2) {
+         stop("words_from as data.frame must have two columns.")
+      }
+      if (all(c("from", "to") %in% colnames(words_from))) {
+         words_to <- words_from[["to"]];
+         words_from <- words_from[["from"]];
+      } else {
+         words_to <- words_from[[2]];
+         words_from <- words_from[[1]];
+      }
+   }
+   # accept data.frame
+   if (inherits(add_from, "data.frame")) {
+      if (ncol(add_from) != 2) {
+         stop("add_from as data.frame must have two columns.")
+      }
+      if (all(c("from", "to") %in% colnames(add_from))) {
+         add_to <- add_from[["to"]];
+         add_from <- add_from[["from"]];
+      } else {
+         add_to <- add_from[[2]];
+         add_from <- add_from[[1]];
+      }
+   }
+   # accept data.frame
+   if (inherits(abbrev_from, "data.frame")) {
+      if (ncol(abbrev_from) != 2) {
+         stop("abbrev_from as data.frame must have two columns.")
+      }
+      if (all(c("from", "to") %in% colnames(abbrev_from))) {
+         abbrev_to <- abbrev_from[["to"]];
+         abbrev_from <- abbrev_from[["from"]];
+      } else {
+         abbrev_to <- abbrev_from[[2]];
+         abbrev_from <- abbrev_from[[1]];
+      }
+   }
+   
    # validate length for from,to pairs
    if (length(words_from) != length(words_to)) {
      stop(paste0(

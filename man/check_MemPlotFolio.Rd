@@ -28,6 +28,7 @@ consistent underlying data and settings.
 }
 \seealso{
 Other MemPlotFolio: 
-\code{\link{MemPlotFolio-class}}
+\code{\link{MemPlotFolio-class}},
+\code{\link{score_gene_path_clusters}()}
 }
 \concept{MemPlotFolio}

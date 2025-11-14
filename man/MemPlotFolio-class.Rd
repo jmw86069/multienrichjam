@@ -42,11 +42,11 @@ MemPlotFolio_to_list(x, ...)
 
 \S4method{GenePathHeatmap}{MemPlotFolio}(x, do_plot, ...)
 
-\S4method{CnetCollapsed}{MemPlotFolio}(x, do_plot, type, ...)
+\S4method{CnetCollapsed}{MemPlotFolio}(x, type, do_plot, ...)
 
-\S4method{CnetExemplar}{MemPlotFolio}(x, do_plot, num, ...)
+\S4method{CnetExemplar}{MemPlotFolio}(x, num, do_plot, ...)
 
-\S4method{CnetCluster}{MemPlotFolio}(x, do_plot, cluster, ...)
+\S4method{CnetCluster}{MemPlotFolio}(x, cluster, do_plot, ...)
 }
 \arguments{
 \item{mpf}{\code{list} output from \code{mem_plot_folio()}}
@@ -91,15 +91,14 @@ enrichment P-values by enrichment, and pathway rows in clusters.
 \code{ComplexHeatmap::Heatmap} when do_plot is FALSE, containing
 the genes-pathways incidence matrix and associated caption.
 
-\code{CnetCollapsed(MemPlotFolio)} returns an \code{igraph} object
-with Gene and Set nodes representing the collapsed pathway set
-clusters.
+\code{CnetCollapsed(MemPlotFolio)} returns an \code{igraph} object invisibly,
+with Gene and Set nodes representing the collapsed pathway clusters.
 
 \code{CnetExemplar(MemPlotFolio)} returns an \code{igraph} object
 with Gene and Set nodes for the 'num' number of exemplars per cluster.
 
-\code{CnetCluster(MemPlotFolio)} returns an \code{igraph} object
-with Gene and Set nodes for the 'num' number of exemplars per cluster.
+\code{CnetCluster(MemPlotFolio)} returns an \code{igraph} object invisibly,
+using all pathways in the cluster defined with argument \code{cluster}.
 }
 \description{
 Mem class containing results from \code{multiEnrichMap()},
@@ -143,6 +142,12 @@ from \code{MemPlotFolio} results.
 \item \code{CnetCollapsed(MemPlotFolio)}: Draws the Cnet collapsed
 network from \code{MemPlotFolio} results. Note that '...' arguments are
 passed to \code{jam_igraph()} and \code{mem_legend()} when \code{do_plot=TRUE}.
+Argument \code{type} can be:
+\itemize{
+\item \code{type=''} (default) to use cluster title
+\item \code{type='set'} to use abbreviated pathway names
+\item \code{type='set2'} to use abbreviated pathway names, with hidden gene labels
+}
 
 \item \code{CnetExemplar(MemPlotFolio)}: Draws the Cnet exemplar network
 from \code{MemPlotFolio} results for 'num' exemplar per cluster.
@@ -190,7 +195,8 @@ Other jam Mem utilities:
 \code{\link{mem2emap}()}
 
 Other MemPlotFolio: 
-\code{\link{check_MemPlotFolio}()}
+\code{\link{check_MemPlotFolio}()},
+\code{\link{score_gene_path_clusters}()}
 }
 \concept{MemPlotFolio}
 \concept{jam Mem utilities}

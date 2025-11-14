@@ -1,0 +1,107 @@
+als	ALS
+ii	II
+iii	III
+iv	IV
+v	V
+vi	VI
+Vii	VII
+Viii	VIII
+ix	IX
+x	X
+trna	tRNA
+rrna	rRNA
+rna	RNA
+dna	DNA
+mirna	miRNA
+mrna	mRNA
+snrna	snRNA
+snorna	snoRNA
+scrna	scRNA
+lincrna	lincRNA
+Il	IL
+Ecm	ECM
+Nk	NK
+Pi3k.Akt	PI3K/AKT
+Akt	AKT
+Pi3k	PI3K
+tgf	TGF
+nfkb	NFKB
+NK.Kappa.B	NFKB
+Pi3kaktmtorsignaling	PI3K/AKT/mTOR Signaling
+Pi3kaktmtor	PI3K/AKT/mTOR
+PI3kakt	PI3K/AKT
+aktmtor	AKT/mTOR
+mtorsignaling	mTOR Signaling
+Pi3kci	PI3KCI
+Pi3kgamma	PI3Kgamma
+Pi 3k	PI3K
+Ppar(alpha|a)	PPARalpha
+Ppar(gamma|g)	PPARgamma
+Ppar	PPAR
+Udp N Acetyl Glucosamine	UDP-GlcNAc
+Mtor	mTOR
+Gpcr	GPCR
+Gpcrs	GPCRs
+Tnfa|Tnfalpha	TNFa
+Tnfr1	TNFR1
+Tnfr2	TNFR2
+Tnfs	TNFs
+Tnf	TNF
+Tnfsf	TNFSF
+Tnfrelated	TNF-related
+Tgf(beta|b)	TGFbeta
+Tgfbr	TGFbeta-Receptor
+TGF Beta	TGFbeta
+Akt1	AKT1
+Igf1akt	IGF1/AKT
+Foxo	FOXO
+Hdacs	HDACs
+Hdac	HDAC
+Hat	HAT
+Hats	HATs
+Nicotinic Acetylcholine Receptors|Acetylcholine Nicotinic Receptors	Nicotinic Acetylcholine Receptors
+G CSF	G-CSF
+Gm Csf	GM-CSF
+M Csf	M-CSF
+IL([0-9]+)[-. _]([0-9]+)pathway	IL-\1/IL-\2 Pathway
+Jak Stat([1-9]*)	JAK/STAT\1
+Mkk3 6pathway	MKK3/MKK6 Pathway
+MAP([23]*)K([0-9]*)	MAP\1K\2
+P38[ ]*MAPK	p38-MAPK
+MAPK1 3	MAPK1/MAPK3
+Erk MAPK	ERK-MAPK
+Erk	ERK
+Erks	ERKs
+Interferon([a-z]*)	IFN\1
+([A-Za-z0-9]+[a-qs-z])mediated	\1-Mediated
+Lncrna|Lincrna	lncRNA
+Microrna([s]*)	microRNA\1
+125 DIHYDROXYVITAMIN D3	1,25-dihydroxyvitamin D3
+Tweak	TWEAK
+Er	ER
+Vegfavegfr2	VEGFA/VEGFR2
+Vegfr1 2	VEGFR1/VEGFR2
+Vegf	VEGF
+Vegfr([1-9]*)	VEGFR\1
+Egfr	EGFR
+Egfrviii	EGFRvIII
+Egfegfr	EGF/EGFR
+Smad2 3(pathway|nuclear)	Smad2/3 \1
+Smad2 3	Smad2/3
+Nf Kb	NFKB
+Nfkappab	NFKB
+C Jun	C-jun
+C Fos	C-fos
+Ap 1	AP-1
+Apoe	APOE
+([AG])tpase	\1TPase
+Kras	KRAS
+Uv	UV
+Sarscov2	SARS-CoV-2
+Sars Cov ([12])	SARS-CoV-\1
+Sars Cov	SARS-CoV
+Covid19	COVID19
+Cellspecific	Cell-Specific
+([a-zA-Z0-9]+)like	\1-Like
+([TB]|NK) Cell	\1-cell
+Enos	eNOS

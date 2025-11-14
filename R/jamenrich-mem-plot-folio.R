@@ -4,15 +4,24 @@
 #'
 #' Multienrichment folio of summary plots
 #'
-#' This function is intended to create multiple summary plots
-#' using the output data from `multiEnrichMap()`. By default
-#' it creates all plots one by one, sufficient for including
-#' in a multi-page PDF document with `cairo_pdf(..., onefile=TRUE)`
-#' or `pdf(..., onefile=TRUE)`.
-#'
-#' The data for each plot object can be created and visualized later
-#' with argument `do_plot=FALSE`.
-#'
+#' `mem_plot_folio()` and `prepare_folio()` are intended to create visual plots
+#' from `Mem` output from `multiEnrichMap()`.
+#' 
+#' * `prepare_folio()` prepares plot data via clustering using thresholds
+#' * `mem_plot_folio()` prepares and draws plots in multi-page form,
+#' suitable for use with `pdf(..., onefile=TRUE)` or
+#' `cairo_pdf(..., onefile=TRUE)`.
+#' 
+#' The data are returned as `MemPlotFolio-class` which can be used to
+#' create figures.
+#' 
+#' Pathways are clustered using the gene-pathway incidence matrix,
+#' to define pathway clusters. This step can be customized by supplying
+#' `pathway_column_split` as a `list` of `character` vectors containing
+#' pathway (set) names.
+#' 
+#' The Enrichment Heatmap uses the same pathway clustering for consistency.
+#' 
 #' Note: Since version `0.0.76.900` the first step in the workflow is
 #' to cluster the underlying gene-pathway incidence matrix.
 #' This step defines a consistent dendrogram driven by underlying
@@ -392,10 +401,10 @@
 #'    defined in the `Heatmap` object itself, which is why it is
 #'    included here and not `mem_gene_path_heatmap()()`.
 #' @param do_plot `logical` indicating whether to render each plot.
-#'    When `do_plot=FALSE` the plot objects will be created and returned,
-#'    but the plot itself will not be rendered. This option may be
-#'    useful to generate the full set of figures in one set, then
-#'    review each figure one by one in an interactive session.
+#'    Default `TRUE` for `mem_plot_folio()`, and `FALSE` for `prepare_folio()`.
+#'    In either case, plot data are created and returned, but `do_plot=TRUE`
+#'    will draw each plot on a unique page, suitable for use with
+#'    PDF output and `onefile=TRUE` for example.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
 #'    Some useful examples:
@@ -487,6 +496,16 @@ mem_plot_folio <- function
       }
    }
    
+   # do_which
+   if (length(do_which) == 0) {
+      if (isTRUE(do_plot)) {
+         do_which <- seq_len(50)
+      } else {
+         # if not plotting, skip the two variant Cnet plots
+         do_which <- setdiff(seq_len(50), c(4, 5));
+      }
+   }
+   
    # prepare thresholds
    thresholds <- list(
       min_gene_ct=min_gene_ct,
@@ -526,9 +545,6 @@ mem_plot_folio <- function
    ret_vals$metadata <- metadata;
    
    plot_num <- 0;
-   if (length(do_which) == 0) {
-      do_which <- seq_len(50);
-   }
 
    #############################################################
    # Apply optional heatmap padding parameters
@@ -794,6 +810,8 @@ mem_plot_folio <- function
             verbose=verbose>1,
             max_labels=max_labels,
             byCols=byCols,
+            repulse=repulse,
+            spread_labels=TRUE,
             cluster_color_min_fraction=cluster_color_min_fraction,
             max_nchar_labels=max_nchar_labels,
             include_cluster_title=include_cluster_title,
@@ -828,45 +846,48 @@ mem_plot_folio <- function
          jamba::printDebug("mem_plot_folio(): ",
             "subsetCnetIgraph()");
       }
-      cnet_collapsed <- tryCatch({
-         cnet_collapsed <- subsetCnetIgraph(
-            cnet_collapsed,
-            remove_blanks=TRUE,
-            repulse=repulse,
-            verbose=verbose > 1);
-         # cnet_collapsed %>%
-         #    subsetCnetIgraph(remove_blanks=TRUE,
-         #       repulse=repulse,
-         #       verbose=verbose>1);
-      }, error=function(e){
-         if (verbose) {
-            jamba::printDebug("mem_plot_folio(): ",
-               "subsetCnetIgraph() error during ",
-               "subsetCnetIgraph(..., remove_blanks=TRUE):");
-            print(e);
-         }
+      # 0.0.104.900: this step may not be necessary
+      # - if the collapse_mem_clusters() already created layout,
+      #   and calling mem2cnet() should already remove blanks
+      if (FALSE) {
          cnet_collapsed <- tryCatch({
             cnet_collapsed <- subsetCnetIgraph(
                cnet_collapsed,
-               remove_blanks=FALSE,
+               remove_blanks=TRUE,
                repulse=repulse,
-               verbose=verbose>1);
-            # cnet_collapsed %>%
-            #    subsetCnetIgraph(remove_blanks=FALSE,
-            #       repulse=repulse,
-            #       verbose=verbose>1);
-         }, error=function(e2){
-            jamba::printDebug("mem_plot_folio(): ",
-               "subsetCnetIgraph() error during ",
-               "subsetCnetIgraph(), skipping this operation.");
-            print(e2);
-            cnet_collapsed;
+               verbose=verbose > 1);
+         }, error=function(e){
+            if (verbose) {
+               jamba::printDebug("mem_plot_folio(): ",
+                  "subsetCnetIgraph() error during ",
+                  "subsetCnetIgraph(..., remove_blanks=TRUE):");
+               print(e);
+            }
+            # try again without removing blanks
+            cnet_collapsed <- tryCatch({
+               cnet_collapsed <- subsetCnetIgraph(
+                  cnet_collapsed,
+                  remove_blanks=FALSE,
+                  repulse=repulse,
+                  verbose=verbose > 1);
+            }, error=function(e2){
+               jamba::printDebug("mem_plot_folio(): ",
+                  "subsetCnetIgraph() error during ",
+                  "subsetCnetIgraph(), skipping this step.");
+               print(e2);
+               cnet_collapsed;
+            })
          })
-      })
+         }
       if (length(edge_color) > 0) {
          igraph::E(cnet_collapsed)$color <- edge_color;
       }
       plot_num <- plot_num + 1;
+      cnet_title <- "Cnet plot using collapsed clusters";
+      cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
+         name="title",
+         value=cnet_title);
+      ret_vals$cnet_collapsed <- cnet_collapsed;
       if (length(do_which) == 0 || plot_num %in% do_which) {
          if (verbose) {
             jamba::printDebug("mem_plot_folio(): ",
@@ -874,11 +895,6 @@ mem_plot_folio <- function
                c("Cnet collapsed ", "with gene and cluster labels"),
                sep="");
          }
-         cnet_title <- "Cnet plot using collapsed clusters";
-         cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
-            name="title",
-            value=cnet_title);
-         ret_vals$cnet_collapsed <- cnet_collapsed;
          ## Draw Cnet collapsed
          if (do_plot) {
             jam_igraph(cnet_collapsed,
@@ -886,7 +902,7 @@ mem_plot_folio <- function
                edge_bundling=edge_bundling,
                ...);
             mem_legend(mem);
-            title(sub="Cnet plot using collapsed clusters",
+            title(sub=cnet_title,
                main=main,
                cex.main=cex.main,
                cex.sub=cex.sub);
@@ -912,7 +928,10 @@ mem_plot_folio <- function
          cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
             name="title",
             value=cnet_title);
-         ret_vals$cnet_collapsed_set <- cnet_collapsed;
+         if ("list" %in% returnType) {
+            # 0.0.104.900: only return when using 'list' format
+            ret_vals$cnet_collapsed_set <- cnet_collapsed;
+         }
          if (do_plot) {
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
@@ -956,7 +975,10 @@ mem_plot_folio <- function
          cnet_collapsed <- igraph::set_graph_attr(cnet_collapsed,
             name="title",
             value=cnet_title);
-         ret_vals$cnet_collapsed_set2 <- cnet_collapsed;
+         if ("list" %in% returnType) {
+            # 0.0.104.900: only return when using 'list' format
+            ret_vals$cnet_collapsed_set2 <- cnet_collapsed;
+         }
          if (do_plot) {
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
@@ -1117,4 +1139,15 @@ mem_plot_folio <- function
    revert_hm_padding();
 
    invisible(return_mpf(ret_vals, returnType));
+}
+
+#' @inheritParams mem_plot_folio
+#' @rdname mem_plot_folio
+#' @export
+prepare_folio <- function
+(...,
+ do_plot=FALSE)
+{
+   mem_plot_folio(...,
+      do_plot=do_plot)
 }

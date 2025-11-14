@@ -9,7 +9,7 @@ current class version "1.0.0".'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.103.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,13 +84,13 @@ current class version "1.0.0".</p>
 <span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">x</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
-<span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">x</span>, <span class="va">do_plot</span>, <span class="va">type</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">x</span>, <span class="va">type</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
-<span><span class="fu">CnetExemplar</span><span class="op">(</span><span class="va">x</span>, <span class="va">do_plot</span>, <span class="va">num</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">CnetExemplar</span><span class="op">(</span><span class="va">x</span>, <span class="va">num</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
-<span><span class="fu">CnetCluster</span><span class="op">(</span><span class="va">x</span>, <span class="va">do_plot</span>, <span class="va">cluster</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">CnetCluster</span><span class="op">(</span><span class="va">x</span>, <span class="va">cluster</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -136,13 +136,12 @@ enrichment P-values by enrichment, and pathway rows in clusters.</p>
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapList.html" class="external-link">ComplexHeatmap::HeatmapList</a></code> when do_plot is TRUE (default),
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code> when do_plot is FALSE, containing
 the genes-pathways incidence matrix and associated caption.</p>
-<p><code>CnetCollapsed(MemPlotFolio)</code> returns an <code>igraph</code> object
-with Gene and Set nodes representing the collapsed pathway set
-clusters.</p>
+<p><code>CnetCollapsed(MemPlotFolio)</code> returns an <code>igraph</code> object invisibly,
+with Gene and Set nodes representing the collapsed pathway clusters.</p>
 <p><code>CnetExemplar(MemPlotFolio)</code> returns an <code>igraph</code> object
 with Gene and Set nodes for the 'num' number of exemplars per cluster.</p>
-<p><code>CnetCluster(MemPlotFolio)</code> returns an <code>igraph</code> object
-with Gene and Set nodes for the 'num' number of exemplars per cluster.</p>
+<p><code>CnetCluster(MemPlotFolio)</code> returns an <code>igraph</code> object invisibly,
+using all pathways in the cluster defined with argument <code>cluster</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
@@ -171,7 +170,11 @@ from <code>MemPlotFolio</code> results.</p></li>
 from <code>MemPlotFolio</code> results.</p></li>
 <li><p><code>CnetCollapsed(MemPlotFolio)</code>: Draws the Cnet collapsed
 network from <code>MemPlotFolio</code> results. Note that '...' arguments are
-passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and <code><a href="mem_legend.html">mem_legend()</a></code> when <code>do_plot=TRUE</code>.</p></li>
+passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and <code><a href="mem_legend.html">mem_legend()</a></code> when <code>do_plot=TRUE</code>.
+Argument <code>type</code> can be:</p><ul><li><p><code>type=''</code> (default) to use cluster title</p></li>
+<li><p><code>type='set'</code> to use abbreviated pathway names</p></li>
+<li><p><code>type='set2'</code> to use abbreviated pathway names, with hidden gene labels</p></li>
+</ul></li>
 <li><p><code>CnetExemplar(MemPlotFolio)</code>: Draws the Cnet exemplar network
 from <code>MemPlotFolio</code> results for 'num' exemplar per cluster.
 Note that '...' arguments are
@@ -189,7 +192,8 @@ passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and <code><a h
 <code><a href="mem2cnet.html">mem2cnet</a>()</code>,
 <code><a href="mem2emap.html">mem2emap</a>()</code></p>
 <p>Other MemPlotFolio:
-<code><a href="check_MemPlotFolio.html">check_MemPlotFolio</a>()</code></p></div>
+<code><a href="check_MemPlotFolio.html">check_MemPlotFolio</a>()</code>,
+<code><a href="score_gene_path_clusters.html">score_gene_path_clusters</a>()</code></p></div>
     </div>
 
     <div class="section level2">
