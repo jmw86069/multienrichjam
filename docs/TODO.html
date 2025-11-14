@@ -61,19 +61,19 @@ Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></co
 <li><p><code>CnetHeatmap()</code>, <code>GenePathHeatmap()</code> could use <code>Mem</code> input? Secretly call <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> behind the scenes.</p></li>
 </ul></li>
 <li>
-<p>More <code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code> logic to config file which is prepared upon loading the package.</p>
-<ul><li>words_from, words_to; add_from, add_to; abbrev_from, abbrev_to: Should they be <code>data.frame</code> objects?</li>
+<p>COMPLETE. Move <code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code> logic to config file which is prepared upon loading the package.</p>
+<ul><li>COMPLETE. words_from, words_to; add_from, add_to; abbrev_from, abbrev_to: Should they be <code>data.frame</code> objects?</li>
 </ul></li>
 </ul></div>
 <div class="section level2">
 <h2 id="id_10nov2025">10nov2025<a class="anchor" aria-label="anchor" href="#id_10nov2025"></a></h2>
 <ul><li>
-<p><code><a href="reference/IPAlist_to_hits.html">IPAlist_to_hits()</a></code> to extract hit list from IPA xref tables.</p>
+<p>COMPLETE. <code><a href="reference/IPAlist_to_hits.html">IPAlist_to_hits()</a></code> to extract hit list from IPA xref tables.</p>
 <ul><li>convert “/” to “:” for genes with two or more symbols</li>
 <li>remove <code>" (includes others)"</code> suffix for proper gene symbol matching</li>
 </ul></li>
 <li>
-<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<p>COMPLETE. <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
 <ul><li>Replace CnetCollapsed with one <code>igraph</code> that updates <code>V(cnet)$label</code> as needed. The rest should be constant.</li>
 </ul></li>
 <li><p>Add <code>PlotCnetHeatmaps()</code></p></li>
@@ -86,7 +86,7 @@ Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></co
 <li><p>Consider making many functions “internal” to simplify the user experience.</p></li>
 </ul><div class="section level3">
 <h3 id="new-ideas">New ideas<a class="anchor" aria-label="anchor" href="#new-ideas"></a></h3>
-<ul><li>Consider some way to score gene clusters by how well they “define” the cluster? For example, some genes are found in the majority of nodes in at least one cluster. Other genes are scattered across clusters with no visible aggregation. The metric could be fraction of genes in at least half the pathways in one pathway cluster.</li>
+<ul><li>COMPLETE. Consider some way to score gene clusters by how well they “define” the cluster? For example, some genes are found in the majority of nodes in at least one cluster. Other genes are scattered across clusters with no visible aggregation. The metric could be fraction of genes in at least half the pathways in one pathway cluster.</li>
 </ul></div>
 </div>
 <div class="section level2">

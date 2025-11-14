@@ -12,8 +12,17 @@
 directly plotting all results.
 * `score_gene_path_clusters()`: Experimental, intriguing effort to find
 "hot spots" in the Gene-Path Heatmap clustering.
+* `with_ht_opts()`, `local_ht_opts()`: applies withr style options
+using `ComplexHeatmap::ht_opt()`, and added to `GenePathHeatmap()`
 
 ## Changes to existing functions
+
+* `jam_igraph()`
+
+   * argument 'mark.groups' now accepts `function` and applies dynamically,
+   or `TRUE` which marks Cnet nodesets when applicable.
+   * Fixed regression that improperly sized `mark.expand` causing it to
+   be 200 times smaller than intended.
 
 * `importIPAenrichment()`
 

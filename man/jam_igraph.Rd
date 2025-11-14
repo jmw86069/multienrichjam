@@ -173,16 +173,26 @@ be changed except for very customized uses. By default
 \code{plot_function=jam_plot_igraph()} which calls a modified variant of
 \code{igraph:::plot.igraph()}.}
 
-\item{mark.groups}{\code{list} or \code{igraph::components} object from one of
-the many igraph cluster functions.
+\item{mark.groups}{one of the following:
 \itemize{
-\item When not explicitly supplied, it will use graph attributes
-"mark.groups" as a way of re-using stored sub-clusters.
+\item \code{list} with vertex (node) names
+\item \code{list} output from \code{igraph::components} which contains 'membership',
+'csize', and 'no' elements.
+\item \code{TRUE} will attempt \code{get_cnet_nodeset()} when the graph is bipartite
+and contains vertex attribute name 'nodeType' as with Cnet data.
+\item \code{FALSE} will not apply any 'mark.groups' even when provided
+in graph attributes.
+\item \code{communities} object from one of the igraph cluster functions
+such as \code{igraph::cluster_walktrap()}.
+\item \code{function} that takes \code{igraph} input and returns either \code{list}
+or \code{communities} output.
+For example, using \code{mark.groups=igraph::cluster_walktrap} will apply
+the function on the data dynamically.
+\item When not defined, if graph attributes include 'mark.groups'
+it will be used.
 Graph attributes are defined by \code{mem2emap()} for example,
 \code{igraph::graph_attr(x, "mark.groups")}. Note 'mark.colors' is also
 used when defined together with 'mark.groups'.
-\item When 'mark.groups' is \code{FALSE}, it will not apply any 'mark.groups'
-even when graph attributes contain 'mark.groups'.
 }}
 
 \item{mark.shape}{A numeric scalar or vector. Controls the smoothness of the

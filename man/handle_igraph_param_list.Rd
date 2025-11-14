@@ -98,6 +98,7 @@ Other jam utility functions:
 \code{\link{rank_mem_clusters}()},
 \code{\link{rotate_coordinates}()},
 \code{\link{summarize_node_spacing}()},
+\code{\link{with_ht_opts}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

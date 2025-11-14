@@ -185,15 +185,25 @@
 #' @param rescale `logical` indicating whether to rescale the layout
 #'    coordinates to `c(-1, 1)`. When `rescale=FALSE` the original
 #'    layout coordinates are used as-is without change.
-#' @param mark.groups `list` or `igraph::components` object from one of
-#'    the many igraph cluster functions.
-#'    * When not explicitly supplied, it will use graph attributes
-#'    "mark.groups" as a way of re-using stored sub-clusters.
+#' @param mark.groups one of the following:
+#'    * `list` with vertex (node) names
+#'    * `list` output from `igraph::components` which contains 'membership',
+#'    'csize', and 'no' elements.
+#'    * `TRUE` will attempt `get_cnet_nodeset()` when the graph is bipartite
+#'    and contains vertex attribute name 'nodeType' as with Cnet data.
+#'    * `FALSE` will not apply any 'mark.groups' even when provided
+#'    in graph attributes.
+#'    * `communities` object from one of the igraph cluster functions
+#'    such as `igraph::cluster_walktrap()`.
+#'    * `function` that takes `igraph` input and returns either `list`
+#'    or `communities` output.
+#'    For example, using `mark.groups=igraph::cluster_walktrap` will apply
+#'    the function on the data dynamically.
+#'    * When not defined, if graph attributes include 'mark.groups'
+#'    it will be used.
 #'    Graph attributes are defined by `mem2emap()` for example,
 #'    `igraph::graph_attr(x, "mark.groups")`. Note 'mark.colors' is also
 #'    used when defined together with 'mark.groups'.
-#'    * When 'mark.groups' is `FALSE`, it will not apply any 'mark.groups'
-#'    even when graph attributes contain 'mark.groups'.
 #' @param node_factor `numeric` value multiplied by `igraph::V(x)$size` to adjust
 #'    the relative size of all nodes by a common numeric scalar value.
 #' @param edge_factor `numeric` value multiplied by `igraph::E(x)$width` to adjust
@@ -563,6 +573,38 @@ jam_igraph <- function
       jamba::printDebug("jam_igraph(): ",
          "head(vertex.size, 20) after:",
          head(vertex.size, 20));
+   }
+   
+   # mark.groups as TRUE
+   if (isTRUE(mark.groups)) {
+      # only for bipartite graphs with nodeType
+      # we will enable
+      if (igraph::is_bipartite(x) &&
+            "nodeType" %in% igraph::vertex_attr_names(x)) {
+         mark.groups <- tryCatch({
+            get_cnet_nodeset(x)
+         }, error=function(e){
+            NULL
+         })
+      } else {
+         mark.groups <- NULL;
+      }
+   }
+   
+   # mark.groups as function
+   if (inherits(mark.groups, "function")) {
+      mark.groups <- mark.groups(x);
+
+      if (!inherits(mark.groups, c("list", "communities"))) {
+         mark.groups <- NULL;
+      }
+   }
+   
+   # list output from igraph::components()
+   if (is.list(mark.groups) &&
+         all(c("membership", "csize", "no") %in% names(mark.groups))) {
+      mark.groups <- split(names(mark.groups$membership),
+         mark.groups$membership)
    }
    
    # determine whether mark.groups is encoded in graph_attr

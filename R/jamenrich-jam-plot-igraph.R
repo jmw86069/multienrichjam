@@ -463,11 +463,11 @@ jam_plot_igraph <- function
             ##    fewer nodes should slightly increase the mark.expand,
             ##    Some type of exponent factor perhaps?
             ## 2. Consider calculating mark.expand per group?
-            med_adj_size <- medv * 200 * (1.9 / max_xy_range);
+            med_adj_size <- medv * 200 * (1.9 / max_xy_range) * 200;
             mark.expand <- (med_adj_size + 0) / 2 + 0.0;
             if (verbose) {
                jamba::printDebug("Auto mark.expand: ", mark.expand);
-               jamba::printDebug("medv (postadjusted): ", medv);
+               jamba::printDebug("medv (postadjusted): ", c("'", medv, "'"), sep="");
                jamba::printDebug("median vertex.size:  ", med_adj_size);
             }
          }

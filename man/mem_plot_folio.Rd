@@ -8,6 +8,7 @@
 mem_plot_folio(
   mem,
   do_which = NULL,
+  mpf = NULL,
   p_cutoff = NULL,
   p_floor = 1e-10,
   main = "",
@@ -16,7 +17,9 @@ mem_plot_folio(
   min_set_ct = 1,
   min_set_ct_each = NULL,
   column_method = "euclidean",
+  cluster_columns = NULL,
   row_method = "euclidean",
+  cluster_rows = NULL,
   exemplar_range = c(1, 2, 3),
   pathway_column_split = NULL,
   pathway_column_title = LETTERS,
@@ -55,10 +58,14 @@ prepare_folio(..., do_plot = FALSE)
 \arguments{
 \item{mem}{\code{Mem} or \code{list} object from \code{multiEnrichMap()}.}
 
-\item{do_which}{\code{integer} vector of plots to produce. When \code{do_which}
-is \code{NULL}, then all plots are produced. This argument is intended
-to help produce one plot from a folio, therefore each plot is referred
-by the number of the plot, in order.}
+\item{do_which}{\code{integer} vector of plots to produce.
+When \code{do_which} is \code{NULL}, then all plots are produced.
+This argument is intended to produce only a subset of plots.}
+
+\item{mpf}{\code{MemPlotFolio}, default NULL, used only to re-apply the same
+settings as another \code{MemPlotFolio}.
+Note: When supplied, all values in this object \code{thresholds(mpf)}
+are used, and no corresponding function arguments are used.}
 
 \item{p_cutoff}{\code{numeric} value, default NULL is taken from \code{mem},
 indicating the enrichment P-value threshold.}
@@ -98,6 +105,11 @@ combined multi-enrichment data.
 \item{column_method, row_method}{\code{character} arguments passed to
 \code{ComplexHeatmap::Heatmap()} which indicate the distance method used
 to cluster columns and rows, respectively.}
+
+\item{cluster_columns, cluster_rows}{\code{logical}, default NULL, whether to
+cluster columns (Sets) and rows (Genes), respectively.
+When NULL it uses default clustering with \code{amap::hcluster()} and
+applies \code{column_method} or \code{row_method}, respectively.}
 
 \item{exemplar_range}{\code{integer} vector (or \code{NULL}) used to create Cnet
 exemplar plots, using this many exemplars per cluster.}
@@ -211,305 +223,236 @@ The \code{MemPlotFolio-class} data are accessible using common functions:
 \item \code{Caption()}
 \item \code{CaptionLegendList()}
 }
-
-When \code{returnType="list"} it returns a legacy \code{list} format:
-The acces
-\itemize{
-\item \code{enrichment_hm} is a Heatmap object from \code{ComplexHeatmap}
-that contains the enrichment P-value heatmap. Note that this
-data is not used directly in subsequent plots, the pathway
-clusters shown here are based upon \code{-log10(Pvalue)} and not
-the underlying gene content of each pathway. This plot is
-a useful overview that answers the question "How many
-pathways are significantly enriched across the different
-enrichment tests?"
-\item \code{gp_hm} is a Heatmap object from \code{ComplexHeatmap} with
-the gene-pathway incidence matrix heatmap. This heatmap and
-the column/pathway clusters are the subject of subsequent
-Cnet plots.
-\item \code{gp_hm_caption} is a text caption that describes the gene
-and set filter criteria, and the row and column distance methods
-used for clustering. Because the filtering and clustering
-options have substantial impact on clustering, and the
-pathway clusters are the key for all subsequent plots,
-these values are important to keep associated with the
-output of this function.
-\item \code{clusters_mem} is a \code{list} with the pathways contained
-in each pathway cluster shown by the gene-pathway heatmap,
-obtained by \code{heatmap_column_order(gp_hm)}. The pathway names
-should also be present in \code{colnames(mem$memIM)} and
-\code{rownames(mem$enrichIM)}, for follow-up inspection.
-\item \code{cnet_collapsed} is an \code{igraph} object with Cnet plot data,
-where the pathways have been collapsed by cluster, using the
-gene-pathway heatmap clusters defined in \code{clusters_mem}. Each
-pathway cluster is labeled by cluster name, and the first few
-pathway names.
-This data can be plotted using \code{jam_igraph(cnet_collapsed)}.
-\item \code{cnet_collapsed_set} is the same as \code{cnet_collapsed} except the
-pathways are labeled by the cluster name only, for example
-\code{c("A", "B", "C", "D")}.
-This data can be plotted using \code{jam_igraph(cnet_collapsed_set)}.
-\item \code{cnet_collapsed_set2} is the same as \code{cnet_collapsed_set} except the
-gene labels are hidden, useful when there are too many genes to label
-clearly. The gene symbols are still stored in \code{V(g)$name} but the labels
-in \code{V(g)$label} are updated to hide the genes.
-This data can be plotted using \code{jam_igraph(cnet_collapsed_set2)}.
-\item \code{cnet_exemplars} is a \code{list} of \code{igraph} Cnet objects, each
-one contains only the number of exemplar pathways from each cluster
-defined by argument \code{exemplar_range}. By default it uses \code{1} exemplar
-per cluster, then \code{2} exemplars per cluster, then \code{3} exemplars
-per cluster. A number of published figures use \code{1} exemplar per
-pathway cluster.
-This data can be plotted using \code{jam_igraph(cnet_exemplars[[1]])},
-which will plot only the first \code{igraph} object from the list.
-\item \code{cnet_clusters} is a \code{list} of \code{igraph} Cnet objects, each one
-contains all the pathways in one pathway cluster.
-This data can be plotted using \code{jam_igraph(cnet_clusters[[1]])},
-or by calling a specific cluster \code{jam_igraph(cnet_clusters[["A"]])}.
-}
 }
 \description{
 Multienrichment folio of summary plots
 }
 \details{
-\code{mem_plot_folio()} and \code{prepare_folio()} are intended to create visual plots
-from \code{Mem} output from \code{multiEnrichMap()}.
-\itemize{
-\item \code{prepare_folio()} prepares plot data via clustering using thresholds
-\item \code{mem_plot_folio()} prepares and draws plots in multi-page form,
-suitable for use with \code{pdf(..., onefile=TRUE)} or
-\code{cairo_pdf(..., onefile=TRUE)}.
-}
+\code{prepare_folio()} and \code{mem_plot_folio()} both prepare data
+visualizations from \code{Mem} data input.
+However, \code{prepare_folio()} does not render figures,
+while \code{mem_plot_folio()} does render each resulting figure.
+
+Multiple figures can be added to a single PDF file
+using \code{pdf(file, onefile=TRUE)} or \code{cairo_pdf(filename, onefile=TRUE)}.
 
 The data are returned as \code{MemPlotFolio-class} which can be used to
 create figures.
 
 Pathways are clustered using the gene-pathway incidence matrix,
-to define pathway clusters. This step can be customized by supplying
-\code{pathway_column_split} as a \code{list} of \code{character} vectors containing
+then used to define pathway clusters.
+This step can be customized by supplying \code{pathway_column_split}
+as a \code{list} of \code{character} vectors containing
 pathway (set) names.
+\subsection{Pathway Clustering}{
 
-The Enrichment Heatmap uses the same pathway clustering for consistency.
+Pathways are hierarchical clustered by default using \code{amap::hcluster()},
+with \code{column_method="euclidean"}.
+The resulting hclust/dendrogram is split using \code{pathway_column_split}
+with an \code{integer} number of sub-clusters. The default (NULL) will
+determine a default based upon the total Sets in the analysis, and
+is intended to be customized by the analyst.
 
-Note: Since version \verb{0.0.76.900} the first step in the workflow is
-to cluster the underlying gene-pathway incidence matrix.
-This step defines a consistent dendrogram driven by underlying
-gene content in each pathway.
-The dendrogram is used by each subsequent plot
-including the enrichment heatmap.
+The data to be clustered include the \code{memIM()} matrix of Genes (rows)
+and Sets (columns), itself an incidence matrix. It could therefore
+be clustered using \code{column_method="binary"}. However, the default
+behavior is to append \code{-log10()} values from the \code{enrichIM} matrix,
+in order to cluster both the incidence matrix, and the enrichment
+P-values together. The matrix data are weighted relative to one another
+using \code{enrich_im_weight=0.3}. Note that the enrichment P-value matrix
+applies the \code{p_cutoff} such that values that do not meet the threshold
+are considered '1' and become '0' with \code{-log10()} transformation.
 
-There are two recommended strategies for visualizing multienrichment
-results:
+In order to cluster the gene-pathway incidence matrix with no
+influence of the enrichment P-value matrix, use \code{enrich_im_weight=0}.
+In this case it often works well to use \code{column_method="binary"}.
+
+Caveat:
+Clustering is itself "imperfect": The results are not definitive,
+and there is generally no one "true" answer.
+However, the output is mainly intended to help organize
+information already present in the data, and not to declare
+ground truth.
+As such, the results are considered stable for the methods and
+parameters used, and the interpretation is performed in that context.
+
+The clustering methods and parameters are included in the legend
+alongside the \code{GenePathHeatmap()} and the \code{EnrichmentHeatmap()}
+for clarity.
+
+Our experience is that clusters do not need to be perfect to be
+useful, informative, and valid.
+\subsection{Custom Cluster Function}{
+
+It is also possible to supply a custom function to perform clustering,
+by using argument \code{cluster_columns} which is passed via '...'
+to the underlying function \code{mem_gene_path_heatmap()}. This function
+should take a \code{matrix} of \code{numeric} values as input, and return
+either hclust or dendrogram output, suitable for use with \code{cutree()}.
+
+An interesting custom function is \code{cluster::daisy(x, method='gower')}
+whose output can be converted to \code{hclust}. The 'gower' method accepts
+mixed input types such as ordinal, numeric, signed, or other values.
+
+When supplying a custom function via \code{cluster_columns}, we recommend
+defining a label using argument \code{column_method}, for example
+\code{custom_method='gower'}. This label will appear in the legend of
+the resulting visualizations.
+
+The default \code{amap::hcluster()} was chosen because it is fast, includes
+both the \code{dist()} and \code{hclust()} steps in one function, and
+includes novel distance metrics such as \code{method='correlation'}
+which have proven useful in other contexts.
+}
+
+\subsection{Pathway Grouping}{
+
+Pathways can be grouped manually by defining \code{pathway_column_split}
+as a \code{list} of \code{character} vectors, where those vectors match
+pathway names returned by \code{sets(Mem)} - which are also colnames
+of the \code{memIM()} incidence matrix.
+This step may also use a subset of sets, for example including only
+pathways of relevance to the downstream analysis.
+}
+
+}
+
+\subsection{Gene Clustering}{
+
+Genes in the Gene-Pathway Heatmap are clustered using similar logic
+as described for Pathways. Note that gene clusters are not used
+directly in other analysis steps (yet).
+
+However, \code{score_gene_path_clusters()} offers some metric to identify
+"hot spots" where a majority of genes in a gene cluster are
+represented in the majority of pathways in a pathway cluster.
+These "hot spots" are subject to further study, as potential
+hubs for interpreting core components across similar biological
+pathways.
+
+Custom gene groups can be supplied with \code{gene_row_split} as
+a \code{list} of \code{character} vectors whose values match \code{genes(Mem)}.
+}
+
+\subsection{Enrichment Heatmap}{
+
+The Gene-Pathway Heatmap is used to define the pathway clusters
+(or pathway groups), and therefore the order of pathways shown
+in the Gene-Pathway Heatmap.
+
+The same pathway order is used with the Enrichment Heatmap,
+for consistency.
+
+An important point is that the Enrichment Heatmap does not
+cluster nor order pathways using enrichment P-values,
+and instead re-uses the dendrogram (if relevant) from the
+Gene-Pathway Heatmap.
+
+Enrichment P-values are not specific to the genes
+contained in each pathway, and therefore clustering by enrichment
+P-value can be misleading by grouping pathways together which
+are not related by the underlying biological data.
+}
+
+\subsection{Cnet Collapsed Plot}{
+
+The pathways in each pathway cluster (or pathway group) are collapsed
+into one virtual pathway, then used to create a Concept network (Cnet)
+plot. This Cnet plot is intended to balance the motivation to
+show complete pathway enrichment data, with the motivation to
+reduce redundant information.
+
+The pathway clusters (or pathway groups) are the key components
+of the Cnet Collapsed output. Therefore adjusting the clustering
+options \code{enrich_im_weight} or \code{column_method} are the most common
+ways to influence and optimize the outcome.
+}
+
+\subsection{Cnet Exemplar Plot}{
+
+There are two general paradigms for Concept networks (Cnets).
 \enumerate{
-\item Pathway clusters viewed as a concept network (Cnet) plot.
-\itemize{
-\item Given numerous statistically enriched pathways,
-this process defines pathway clusters using the underlying gene-pathway
-incidence matrix.
-\item Within each pathway cluster, the pathways typically share a
-high proportion of the same genes, and therefore are expected
-to represent very similar functions. Ideally, each cluster represents
-some distinct biological function, or a functional theme.
-\item Benefit: Reducing a large number of pathways to a small number
-of clusters greatly improves the options for visualization,
-while retaining a comprehensive view of all genes and pathways
-involved.
-\item Benefit: This option is recommended when there are numerous pathways,
-and when including more pathways is beneficial to understanding
-the overall functional effects of the experimental study.
-\item Limitation: The downside with this approach is that sometimes this
-comprehensive content can be too much detail to interpret in one
-figure, overshadowing individual pathways in each cluster.
-\item Limitation: It may be difficult to recognize a functional theme for
-each pathway cluster, unfortunately that process is not (yet) automated
-and requires some domain expertise of the pathways and
-functions involved.
-\item Limitation: It may not be possible for one Cnet plot to represent all
-functional effects of an experimental study.
-}
-\item Exemplar pathways are viewed as a Cnet plot.
-\itemize{
-\item As described above, given numerous statistically enriched pathways,
-pathways are clustered using the gene-pathway incidence matrix. One
-"exemplar" pathway is selected from each cluster to represent the typical
-pathway content in each cluster, usually the most significant pathway in
-the cluster, but optionally the pathway containing the most total genes.
-\item Benefit: This process can produce a cleaner figure than Option 1
-PathwayClusters, because fewer pathways and their associated genes are
-included in the figure.
-\item Limitation: This cleaner figure is understandably somewhat
-less comprehensive, and may be subject to bias when selecting
-exemplar pathways. However the selection of relevant pathways may
-be very effective within the context of the experimental study.
-\item Benefit: The resulting Cnet plot can often improve focus on specific
-genes and pathways, which can be advantageous when including numerous
-"synonyms" for the same or similar pathways is not beneficial.
-\item Benefit: This strategy also works particularly well when there are
-relatively few enriched pathways, or when argument \code{topEnrichN} used
-with \code{multiEnrichMap()} was relatively small.
-}
+\item Pathways in clusters: \code{CnetCollapsed()}
+\item Exemplar Pathways per cluster: \code{CnetExemplar()}
 }
 
-The folio of plots includes:
+The Cnet Exemplar plot includes one pathway for each pathway cluster
+\code{num=1} but may include two \code{num=2} or three \code{num=3} pathways
+per cluster if relevant. The exemplar pathway is intended as a
+representative of the cluster, which can help simplify the number
+of genes displayed, while also focusing the meaning of those genes
+to the pathway shown.
+
+This option may be preferred when pathway clusters are not visibly
+distinctive, for example when one pathway cluster does not appear
+to have a common set of genes shared with other pathways in the same
+cluster.
+
+The alternative occurs when pathways in each cluster do share
+many of the same genes, and in this case the \code{CnetCollapsed()}
+plot may be more effective.
+
+Finally, a custom Cnet exemplar plot may be warranted when
+displaying a few pathways with particular relevance to a
+research study or experiment. The steps are described in the
+README.Rmd and README html page for the multienrichjam package:
+\url{https://jmw86069.github.io/multienrichjam}
+}
+
+\subsection{Cnet Cluster Plot}{
+
+The last set of Concept network (Cnet) plots include all pathways
+in each individual pathway cluster. These plots are useful for
+pathway clusters which may have different functional sub-components,
+or when pathways in a cluster do not appear to be very cohesive.
+
+The Cnet Cluster plot helps display the relationship of pathways within
+one pathway cluster, which may help provide the basis for interpreting
+the results.
+}
+
+\subsection{Order of Plots}{
+
+When using \code{mem_plot_folio()} plots are produced in a specific order.
+The argument \code{do_which} may also be useful to focus the output
+only on a particular plot, thereby skipping the preparatory
+steps used for other plot types.
 \enumerate{
-\item \strong{Enrichment Heatmap} (Plot #1), enrichment P-values created using
-\code{mem_enrichment_heatmap()}. Note that by default, the Gene-Pathway
-incidence matrix is also created (invisibly) in order to define
-consistent pathway clusters.
-Output list name: \code{"enrichment_hm"}
-\item \strong{Gene-Pathway Incidence Matrix Heatmap} (Plot #2) is created
-using \code{mem_gene_path_heatmap()}.
-This step defines and visualizes the pathway clustering used by all
-plots in the folio.
-Output list name: \code{"gp_hm"}
-\item \strong{Cnet Cluster Plot} (Plots #3,#4,#5) creates a collapsed
-Concept network (Cnet) of Genes with Pathway clusters,
-using \code{collapse_mem_clusters()}, then plotted with \code{jam_igraph()}.
+\item \strong{Enrichment Heatmap} (Plot #1), \code{EnrichmentHeatmap()}.
+Detailed arguments are described in \code{mem_enrichment_heatmap()}.
+\item \strong{Gene-Pathway Heatmap} (Plot #2) \code{GenePathHeatmap()}.
+Detailed arguments are described in \code{mem_gene_path_heatmap()}.
+\item \strong{Cnet Cluster Plot} (Plots #3,#4,#5) \code{CnetCollapsed()}.
+Detailed arguments are described in \code{collapse_mem_clusters()} and
+\code{mem2cnet()}.
 \itemize{
-\item Plot #3 labels the pathway clusters with the first N pathways.
-Output list name: \code{"cnet_collapsed"}
-\item Plot #4 labels the pathway clusters with LETTERS.
-\strong{This file is typically used for other plots.}
-Output list name: \code{"cnet_collapsed_set"}
-\item Plot #5 hides all gene labels.
-Output list name: \code{"cnet_collapsed_set2"}
+\item For \code{mem_plot_folio()} three styles are produced,
+with different node labeling strategies.
+\item Plot #3 uses pathway cluster titles.
+\item Plot #4 uses pathway names.
+\item Plot #5 uses pathway names, and hides gene labels.
 }
-\item \strong{Cnet Exemplar Plots} (Plots #6,#7,#8) creates smaller pathway
-Cnet plots, as opposed to pathway-cluster Cnets in #3,#4,#5 above,
-using exemplar pathways from each gene-pathway cluster.
-Output list name: \code{"cnet_exemplars"} with a \code{list} of \code{igraph} objects:
-\itemize{
-\item Plots #6 includes one exemplar pathway per pathway cluster.
-\item Plots #7 includes two exemplar pathways per pathway cluster.
-\item Plots #8 includes three exemplar pathways per pathway cluster.
+\item \strong{Cnet Exemplar Plots} (Plots #6,#7,#8) \code{CnetExemplar()}.
+The number of exemplars uses \code{exemplar_range=c(1, 2, 3)}.
+\item \strong{Cnet Cluster Plots} (Plots #9,#10,#11,etc.) \code{CnetCluster()}.
+Detailed arguments are described in \code{mem2cnet()}.
 }
-\item \strong{Cnet Individual Cluster Plots} (Plots #9,#10,#11,etc.) create one
-pathway Cnet plot per individual pathway cluster, showing only
-the pathways in that cluster. The number of plots are defined by
-the number of pathway cluters, usually \code{pathway_column_split}.
-These plots may be useful to explore pathways in detail within each
-pathway cluster, for example when there are many pathways which are
-not well-defined for a particular pathway cluster in the Gene-Pathway
-heatmap.
-Output list name \code{"cnet_clusters"}
 }
 
-The specific plots to be created are controlled with \code{do_which}:
-\itemize{
-\item \code{do_which=1} will create the enrichment heatmap.
-\item \code{do_which=2} will create the gene-pathway heatmap.
-\item \code{do_which=3} will create the Cnet Cluster Plot using
-pathway cluster labels for each pathway node, by default it uses \code{LETTERS}:
-\verb{"A", "B", "C", "D"}, etc.
-\item \code{do_which=4} will create the Cnet Cluster Plot using abbreviated
-pathway labels for each pathway cluster node.
-\item \code{do_which=5} will create the Cnet Cluster Plot with no node labels.
-\item \code{do_which=6} begins the series of Cnet Exemplar Plots for each value
-in argument \code{exemplar_range}, whose default is \code{c(1, 2, 3)}.
-\item \code{do_which=9} (by default) begins the series of Cnet individual
-cluster plots, which includes all pathways from each cluster.
-}
-
-The most frequently used plots are \code{do_which=2} for the
-gene-pathway heatmap, and \code{do_which=4} for the collapsed Cnet
-plot, where Cnet clusters are based upon the gene-pathway heatmap.
-
-Arguments \code{p_cutoff} and \code{min_set_ct_each} can be used to
-apply more stringent thresholds than the original \code{mem} data.
-For example, applying \code{p_cutoff=0.05} during \code{multiEnrichMap()}
-will colorize pathways in \code{mem$enrichIMcolors}, however when
-calling \code{mem_plot_folio()} with \code{p_cutoff=0.001} will use blank
-color in the color gradient for pathways that do not
-have \code{mem$enrichIM} value at or below \code{0.001}.
-
-Our experience is that the pathway clustering does not need to
-be perfect to be useful and valid. The pathway clusters
-are valid based upon the parameters used for clustering,
-and provide insight into the genes that help define each
-cluster distinct from other clusters.
-Sometimes the clustering results are more or less effective
-based upon the type of pattern observed in the data, so it
-can be helpful to adjust parameters to drill down to
-the most effective patterns.
-}
-\section{Gene-Pathway clustering}{
-The clustering is performed by combining the gene-pathway incidence
-matrix \code{mem$memIM} with the \code{-log10(mem$enrichIM)} enrichment P-values.
-The relative weight of each matrix is controlled by
-\code{enrich_im_weight}, where \code{enrich_im_weight=0} assigns weight=0
-to the enrichment P-values, and thus clusters only using the
-gene-pathway matrix. Similarly, \code{enrich_im_weight=1} will assign
-full weight to the enrichment P-value matrix, and will ignore
-the gene-pathway matrix data.
-
-The corresponding weight for gene (rows) is controlled by
-\code{gene_im_weight}, which balances row clustering with the
-\code{mem$geneIM} matrix, and the gene-pathway matrix \code{mem$memIM}.
-
-The argument \code{column_method} defines the distance method,
-for example \code{"euclidean"} and \code{"binary"} are two immediate choices.
-The method also adds \code{"correlation"} from \code{amap::hcluster()} which
-can be very useful especially with large datasets.
-
-The number of pathway clusters is controlled by
-\code{pathway_column_split}, by default when \code{pathway_column_split=NULL}
-and \code{auto_cluster=TRUE} the number of clusters is defined based
-upon the total number of pathways. In practice, \code{pathway_column_split=4}
-or \code{pathway_column_split=3} is recommended, as this number of
-clusters is most convenient to visualize as a Cnet plot.
+\subsection{Final Points}{
 
 To define your own pathway cluster labels, define \code{pathway_column_title}
 as a vector with length equal to \code{pathway_column_split}. These labels
 become network node labels in subsequent plots, and in the
 resulting \code{igraph} object.
-
-The pathway clusters are dependent upon the genes and pathways
-used during clustering, which are also controlled by
-\code{min_set_ct} and \code{min_gene_ct}.
-\itemize{
-\item \code{min_set_ct} filters the matrix by the number of times a Set is
-represented in the matrix,
-which can be helpful when there are pathways with large number of
-genes, with some pathways with very low number of genes.
-\item \code{min_gene_ct} filters the matrix by the number of times a gene is
-represented in the matrix. It can be helpful for requiring a gene
-be represented in more than one enriched pathway.
-\item \code{min_set_ct_each} filters the matrix to require each Set to
-contain at least this many entries from one enrichment result,
-rather than using the combined incidence matrix. It is mostly
-helpful to increase the value used in \code{multiEnrichMap()} argument
-\code{min_count}, which already filters pathways for minimum number
-of genes involved.
-\item Note: These filters are only recommended when the gene-pathway
-matrix is very large, perhaps 100 pathways, or 500 genes.
 }
 }
+\examples{
+data(Memtest)
+Mpf <- prepare_folio(Memtest)
+GenePathHeatmap(Mpf, column_anno_padding=grid::unit(3, "mm"))
 
-\section{Cnet pathway clusters}{
-The resulting Cnet pathway clusters are single nodes in the
-network, and these nodes are colorized based upon the enrichment
-tests involved. The threshold for including the color for
-each enrichment test is defined by \code{cluster_color_min_fraction},
-which requires at least this fraction of pathways in a
-pathway cluster meets the significance criteria for that
-enrichment test.
-
-To adjust the coloration filter to include any enrichment
-test with at least one significant result, use
-\code{cluster_color_min_fraction=0.01}.
-In the gene-pathway heatmap,
-these colors are shown across the top of the heatmap.
-The default \code{cluster_color_min_fraction=0.4} requires 40\%
-of pathways in a cluster for each enrichment test.
-
-Note: Prior to version \verb{0.0.76.900}
-the enrichment heatmap was clustered only using enrichment
-P-values, transformed with \code{log10(Pvalue)}. The clustering was
-inconsistent with other plots in the folio, and was not effective
-at clustering pathways based upon similar content, which is the
-primary goal of the \code{multienrichjam} R package.
 }
-
 \seealso{
 Other multienrichjam core functions: 
 \code{\link{jam_igraph}()},

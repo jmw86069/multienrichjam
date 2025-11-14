@@ -8,6 +8,7 @@
 #' as a `function` it is used to define a specific layout matrix.
 #'
 #' @family jam utility functions
+#' 
 #'
 #' @return `numeric` matrix of x,y coordinates with nrow equal
 #'    to the number of nodes in the input, from `igraph::vcount(g)`.

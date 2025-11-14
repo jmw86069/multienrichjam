@@ -3,12 +3,51 @@
 #'
 #' Convert MultiEnrichment incidence matrix to Cnet plot
 #'
-#' This function takes `list` output from `multiEnrichMap()`
-#' and uses three elements to create a Cnet plot:
+#' This function takes `Mem` S4 object, or legacy `list` mem data,
+#' or even bare `matrix` data, and produces a Concept network (Cnet)
+#' in the form of an `igraph` object.
+#' 
+#' Cnet network data are a form of bipartite graph,
+#' where every node is either 'Gene' or 'Set', and where nodes
+#' are only connected across `'Gene' <--> 'Set'`.
+#' See `igraph::graph_from_biadjacency_matrix()`.
+#' A Cnet plot has particularly useful characteristic that
+#' Set (pathway) nodes tend to be connected to very many Gene nodes,
+#' creating an imbalance which is useful when defining a visual layout.
+#' 
+#' A vertex attribute `'nodeType'` stores the type of node: 'Gene' or 'Set'.
+#' 
+#' The `memIM` defines the network, and non-zero value constitutes
+#' an edge (connection) between row (Gene) and column (Set).
+#' 
+#' Other data are associated with nodes when available.
 #'
-#' 1. `"memIM"` gene-pathway incidence matrix
-#' 2. `"geneIM"` the gene incidence matrix
-#' 3. `"enrichIM"` the pathway enrichment matrix
+#' 1. `geneIM`, `geneIMcolors`, `geneIMdirection`:
+#' define 'Gene' node fill and border colors.
+#' 2. `enrichIM`, `enrichIMcolors`, `enrichIMdirection`:
+#' define 'Set' node fill and border colors.
+#' 
+#' Everything else helps customize the output, and can be used as-is.
+#' 
+#' ## Generic Cnet
+#' 
+#' The `memIM` can be supplied as an `matrix` of `integer` values, with
+#' no other data supplied, and this is sufficient to create a Cnet plot.
+#' Therefore, any incidence matrix can be used to create a network.
+#' 
+#' If no other data are provided, nodes are colored by
+#' `categoryColor` (Set) and `geneColor` (Gene), and shapes defined
+#' by `categoryShape` and `geneShape`.
+#' 
+#' Be aware that `remove_singlet_genes=TRUE` default will hide
+#' rows (Genes) which have no connection to any columns (Sets).
+#' This default ensures that an incidence matrix can be subset
+#' for columns (Sets) of interest without also filtering rows.
+#' 
+#' However, columns (Sets) are not removed, because they typically are
+#' not empty in the most common workflows.
+#' Singlet columns, Set nodes with no connected Gene nodes, can be
+#' filtered by calling `removeIgraphSinglets()`.
 #'
 #' @returns `igraph` object with Concept network data, containing
 #'    pathways connected to genes. Each node has attribute `"nodeType"`

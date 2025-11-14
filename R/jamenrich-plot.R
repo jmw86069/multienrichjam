@@ -391,7 +391,7 @@ mem_gene_path_heatmap <- function
  na_col="white",
  rotate_heatmap=FALSE,
  colramp="Reds",
- column_names_max_height=grid::unit(180, "mm"),
+ column_names_max_height=grid::unit(8, "cm"),
  column_names_rot=90,
  show_gene_legend=FALSE,
  show_pathway_legend=TRUE,

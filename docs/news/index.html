@@ -55,10 +55,18 @@
 <code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code>: for cleaner workflow to create <code>MemPlotFolio</code> without directly plotting all results.</li>
 <li>
 <code><a href="../reference/score_gene_path_clusters.html">score_gene_path_clusters()</a></code>: Experimental, intriguing effort to find “hot spots” in the Gene-Path Heatmap clustering.</li>
+<li>
+<code><a href="../reference/with_ht_opts.html">with_ht_opts()</a></code>, <code><a href="../reference/with_ht_opts.html">local_ht_opts()</a></code>: applies withr style options using <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/ht_opt.html" class="external-link">ComplexHeatmap::ht_opt()</a></code>, and added to <code>GenePathHeatmap()</code>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="changes-to-existing-functions-0-0-104-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-104-900"></a></h3>
 <ul><li>
+<p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>argument ‘mark.groups’ now accepts <code>function</code> and applies dynamically, or <code>TRUE</code> which marks Cnet nodesets when applicable.</li>
+<li>Fixed regression that improperly sized <code>mark.expand</code> causing it to be 200 times smaller than intended.</li>
+</ul></li>
+<li>
 <p><code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code></p>
 <ul><li>now calls <code><a href="../reference/IPAlist_to_hits.html">IPAlist_to_hits()</a></code> by default.</li>
 <li>fixed regression where batch import would ignore <code>revert_ipa_xref=TRUE</code>.</li>

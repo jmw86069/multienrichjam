@@ -12,7 +12,6 @@
 #' be accepted by most `igraph` related functions that require
 #' that object type as an input value.
 #'
-#'
 #' @family jam igraph functions
 #'
 #' @return `list` of `character` vectors, where each vector contains

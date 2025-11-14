@@ -16,6 +16,7 @@
 #' @returns `data.frame` with combined results across all `enrichList`.
 #'
 #' @family jam conversion functions
+#' 
 #'
 #' @param enrichList `list` of `enrichResult` or `data.frame` objects.
 #' @param keyColname,geneColname,geneCountColname,pvalueColname

@@ -329,11 +329,44 @@ of either <code>"Set"</code> or <code>"Gene"</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function takes <code>list</code> output from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>
-and uses three elements to create a Cnet plot:</p><ol><li><p><code>"memIM"</code> gene-pathway incidence matrix</p></li>
-<li><p><code>"geneIM"</code> the gene incidence matrix</p></li>
-<li><p><code>"enrichIM"</code> the pathway enrichment matrix</p></li>
-</ol></div>
+    <p>This function takes <code>Mem</code> S4 object, or legacy <code>list</code> mem data,
+or even bare <code>matrix</code> data, and produces a Concept network (Cnet)
+in the form of an <code>igraph</code> object.</p>
+<p>Cnet network data are a form of bipartite graph,
+where every node is either 'Gene' or 'Set', and where nodes
+are only connected across <code>'Gene' &lt;--&gt; 'Set'</code>.
+See <code><a href="https://r.igraph.org/reference/graph_from_biadjacency_matrix.html" class="external-link">igraph::graph_from_biadjacency_matrix()</a></code>.
+A Cnet plot has particularly useful characteristic that
+Set (pathway) nodes tend to be connected to very many Gene nodes,
+creating an imbalance which is useful when defining a visual layout.</p>
+<p>A vertex attribute <code>'nodeType'</code> stores the type of node: 'Gene' or 'Set'.</p>
+<p>The <code>memIM</code> defines the network, and non-zero value constitutes
+an edge (connection) between row (Gene) and column (Set).</p>
+<p>Other data are associated with nodes when available.</p><ol><li><p><code>geneIM</code>, <code>geneIMcolors</code>, <code>geneIMdirection</code>:
+define 'Gene' node fill and border colors.</p></li>
+<li><p><code>enrichIM</code>, <code>enrichIMcolors</code>, <code>enrichIMdirection</code>:
+define 'Set' node fill and border colors.</p></li>
+</ol><p>Everything else helps customize the output, and can be used as-is.</p><div class="section">
+<h3 id="generic-cnet">Generic Cnet<a class="anchor" aria-label="anchor" href="#generic-cnet"></a></h3>
+
+
+<p>The <code>memIM</code> can be supplied as an <code>matrix</code> of <code>integer</code> values, with
+no other data supplied, and this is sufficient to create a Cnet plot.
+Therefore, any incidence matrix can be used to create a network.</p>
+<p>If no other data are provided, nodes are colored by
+<code>categoryColor</code> (Set) and <code>geneColor</code> (Gene), and shapes defined
+by <code>categoryShape</code> and <code>geneShape</code>.</p>
+<p>Be aware that <code>remove_singlet_genes=TRUE</code> default will hide
+rows (Genes) which have no connection to any columns (Sets).
+This default ensures that an incidence matrix can be subset
+for columns (Sets) of interest without also filtering rows.</p>
+<p>However, columns (Sets) are not removed, because they typically are
+not empty in the most common workflows.
+Singlet columns, Set nodes with no connected Gene nodes, can be
+filtered by calling <code><a href="removeIgraphSinglets.html">removeIgraphSinglets()</a></code>.</p>
+</div>
+
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam Mem utilities:

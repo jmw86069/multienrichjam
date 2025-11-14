@@ -94,6 +94,7 @@ Other jam utility functions:
 \code{\link{order_colors}()},
 \code{\link{rotate_coordinates}()},
 \code{\link{summarize_node_spacing}()},
+\code{\link{with_ht_opts}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

@@ -88,7 +88,7 @@ Egfrviii	EGFRvIII
 Egfegfr	EGF/EGFR
 Smad2 3(pathway|nuclear)	Smad2/3 \1
 Smad2 3	Smad2/3
-Nf Kb	NFKB
+Nf[- .]Kb	NFKB
 Nfkappab	NFKB
 C Jun	C-jun
 C Fos	C-fos
@@ -105,3 +105,5 @@ Cellspecific	Cell-Specific
 ([a-zA-Z0-9]+)like	\1-Like
 ([TB]|NK) Cell	\1-cell
 Enos	eNOS
+Camp	cAMP
+Creb	CREB

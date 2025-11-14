@@ -20,20 +20,20 @@
    * `CnetHeatmap()`, `GenePathHeatmap()` could use `Mem` input?
    Secretly call `mem_plot_folio()` behind the scenes.
 
-* More `fixSetLabels()` logic to config file which is prepared upon
+* COMPLETE. Move `fixSetLabels()` logic to config file which is prepared upon
 loading the package.
 
-   * words_from, words_to; add_from, add_to; abbrev_from, abbrev_to:
+   * COMPLETE. words_from, words_to; add_from, add_to; abbrev_from, abbrev_to:
    Should they be `data.frame` objects?
 
 ## 10nov2025
 
-* `IPAlist_to_hits()` to extract hit list from IPA xref tables.
+* COMPLETE. `IPAlist_to_hits()` to extract hit list from IPA xref tables.
 
    * convert "/" to ":" for genes with two or more symbols
    * remove `" (includes others)"` suffix for proper gene symbol matching
 
-* `mem_plot_folio()`
+* COMPLETE. `mem_plot_folio()`
 
    * Replace CnetCollapsed with one `igraph` that updates `V(cnet)$label`
    as needed. The rest should be constant.
@@ -48,7 +48,7 @@ loading the package.
 
 ### New ideas
 
-* Consider some way to score gene clusters by how well they "define" the
+* COMPLETE. Consider some way to score gene clusters by how well they "define" the
 cluster? For example, some genes are found in the majority of nodes in
 at least one cluster. Other genes are scattered across clusters with
 no visible aggregation. The metric could be fraction of genes in at

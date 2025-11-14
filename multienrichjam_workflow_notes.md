@@ -30,3 +30,9 @@ Create Cnet with Specific Pathways
 Customize Cnet Layout
 
    * `launch_shinycat()`
+
+Todo:
+
+   * Custom `mem2cnet()`
+   * `mem2emap()`
+   * Custom `mem2emap()`

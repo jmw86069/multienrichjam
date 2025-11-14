@@ -168,6 +168,7 @@ Other jam utility functions:
 \code{\link{order_colors}()},
 \code{\link{rank_mem_clusters}()},
 \code{\link{rotate_coordinates}()},
+\code{\link{with_ht_opts}()},
 \code{\link{xyAngle}()}
 }
 \concept{jam utility functions}

@@ -304,10 +304,27 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
    }
    if (isTRUE(do_plot)) {
       # check for off-book arguments in '...'
+      arglist <- list(...);
+      use_thresholds <- thresholds(x);
+      use_ht_opts <- list();
+      if ("column_anno_padding" %in% names(arglist)) {
+         use_ht_opts$COLUMN_ANNO_PADDING <- arglist$column_anno_padding;
+      } else if ("column_anno_padding" %in% names(use_thresholds)) {
+         use_ht_opts$COLUMN_ANNO_PADDING <- use_thresholds$column_anno_padding;
+      }
+      if ("row_anno_padding" %in% names(arglist)) {
+         use_ht_opts$ROW_ANNO_PADDING <- arglist$row_anno_padding;
+      } else if ("row_anno_padding" %in% names(use_thresholds)) {
+         use_ht_opts$ROW_ANNO_PADDING <- use_thresholds$row_anno_padding;
+      }
+      if (length(use_ht_opts) > 0) {
+         local_ht_opts(use_ht_opts)
+      }
+      # check for known attributes
       title_list <- attr(x@gp_hm, "title_list");
+      
       column_title <- title_list$column_title;
       column_title_gp <- title_list$column_title_gp;
-      arglist <- list(...);
       if ("main" %in% names(arglist)) {
          column_title <- arglist$main;
       } else if ("column_title" %in% names(arglist)) {
