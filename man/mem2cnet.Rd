@@ -40,6 +40,8 @@ mem2cnet(
   remove_singlet_genes = TRUE,
   do_reorder = TRUE,
   spread_labels = FALSE,
+  vertex.label.font = 2,
+  use_shadowText = TRUE,
   repulse = 3.5,
   verbose = FALSE,
   ...
@@ -80,6 +82,8 @@ memIM2cnet(
   remove_singlet_genes = TRUE,
   do_reorder = TRUE,
   spread_labels = FALSE,
+  vertex.label.font = 2,
+  use_shadowText = TRUE,
   repulse = 3.5,
   verbose = FALSE,
   ...
@@ -211,6 +215,13 @@ labels away from incoming edges, also adding label distance via
 vertex attribute 'label.dist'.
 This step calls \code{spread_igraph_labels()}, and can be customized
 further by passing arguments through '...' ellipses.}
+
+\item{vertex.label.font}{\code{integer} default 2, used to set default font
+to use bold face (font=2) for labels. Use 1 for normal font.}
+
+\item{use_shadowText}{\code{logical} default TRUE, applied to graph
+attributes to apply shadowText by default when plotting with
+\code{jam_igraph()}.}
 
 \item{repulse}{\code{numeric} value passed to \code{layout_with_qfr()}
 when either \code{do_reorder} or \code{spread_labels} is TRUE. Otherwise

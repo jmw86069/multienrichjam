@@ -373,7 +373,7 @@ mem_gene_path_heatmap <- function
     "default"),
  annotation_suffix=c(im="hit",
     direction="dir"),
- simple_anno_size=grid::unit(6, "mm"),
+ simple_anno_size=grid::unit(5, "mm"),
  cluster_columns=NULL,
  cluster_rows=NULL,
  cluster_row_slices=FALSE,
@@ -846,6 +846,7 @@ mem_gene_path_heatmap <- function
       top_annotation <- ComplexHeatmap::HeatmapAnnotation(
          which="column",
          border=TRUE,
+         simple_anno_size=simple_anno_size,
          show_legend=show_pathway_legend,
          annotation_legend_param=path_annotation_legend_param,
          col=col_iml4,
@@ -1015,6 +1016,7 @@ mem_gene_path_heatmap <- function
          border=TRUE,
          annotation_legend_param=path_annotation_legend_param,
          annotation_name_rot=column_names_rot,
+         simple_anno_size=simple_anno_size,
          col=col_iml4,
          df=-log10(mem$enrichIM[sets,,drop=FALSE]),
          gap=grid::unit(0, "mm")
@@ -1023,6 +1025,7 @@ mem_gene_path_heatmap <- function
          col=col_iml1,
          border=TRUE,
          annotation_legend_param=gene_annotation_legend_param,
+         simple_anno_size=simple_anno_size,
          #gp=grid::gpar(col="#00000011"), # per-cell border
          df=mem$geneIM[genes,,drop=FALSE],
          gap=grid::unit(0, "mm")

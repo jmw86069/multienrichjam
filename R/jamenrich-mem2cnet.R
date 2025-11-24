@@ -154,6 +154,11 @@
 #'    vertex attribute 'label.dist'.
 #'    This step calls `spread_igraph_labels()`, and can be customized
 #'    further by passing arguments through '...' ellipses.
+#' @param vertex.label.font `integer` default 2, used to set default font
+#'    to use bold face (font=2) for labels. Use 1 for normal font.
+#' @param use_shadowText `logical` default TRUE, applied to graph
+#'    attributes to apply shadowText by default when plotting with
+#'    `jam_igraph()`.
 #' @param repulse `numeric` value passed to `layout_with_qfr()`
 #'    when either `do_reorder` or `spread_labels` is TRUE. Otherwise
 #'    there is no layout applied.
@@ -220,6 +225,8 @@ mem2cnet <- function
  remove_singlet_genes=TRUE,
  do_reorder=TRUE,
  spread_labels=FALSE,
+ vertex.label.font=2,
+ use_shadowText=TRUE,
  repulse=3.5,
  verbose=FALSE,
  ...)
@@ -386,6 +393,12 @@ mem2cnet <- function
    igraph::V(g)$nodeType <- ifelse(isset, "Set", "Gene");
    igraph::V(g)$size <- ifelse(isset, categorySize, geneSize);
    igraph::V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
+   if (length(vertex.label.font) == 1) {
+      igraph::V(g)$label.font <- vertex.label.font;
+   }
+   if (isTRUE(use_shadowText)) {
+      igraph::graph_attr(g, "use_shadowText") <- use_shadowText;
+   }
    igraph::V(g)$label.color <- ifelse(isset,
       categoryLabelColor,
       geneLabelColor);

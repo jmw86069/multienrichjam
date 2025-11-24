@@ -21,7 +21,7 @@ mem_gene_path_heatmap(
   gene_im_weight = 0.5,
   gene_annotations = c("im", "direction", "default"),
   annotation_suffix = c(im = "hit", direction = "dir"),
-  simple_anno_size = grid::unit(6, "mm"),
+  simple_anno_size = grid::unit(5, "mm"),
   cluster_columns = NULL,
   cluster_rows = NULL,
   cluster_row_slices = FALSE,

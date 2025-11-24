@@ -116,11 +116,15 @@
 #' @param pie_to_jampie `logical` indicating whether to convert
 #'    vertex shape `"pie"` to `"jampie"` in order to use vectorized
 #'    plotting.
-#' @param use_shadowText `logical` indicating whether to use
-#'    `jamba::shadowText()` instead of `graphics::text()`, in order
-#'    to render text labels with a subtle shadow-like outline around
-#'    each label. This change improves legibility of labels at
-#'    the expense of slightly longer plot rendering time.
+#' @param use_shadowText `logical` to enable `jamba::shadowText()` outlines.
+#'    * Default NULL uses graph attribute 'use_shadowText' if it exists,
+#'    otherwise FALSE.
+#'    * When TRUE it uses `jamba::shadowText()` instead of `graphics::text()`
+#'    to render labels, applying an outline to contrast with the text
+#'    color, either white or black. Some global options are recognized
+#'    by `jamba::shadowText()` to customize the visual details.
+#'    Consider using `withr::with_options()` to set these options
+#'    without persistence.
 #' @param vectorized_node_shapes `logical` indicating whether to plot
 #'    vertex node shapes using vectorized operations. It is substantially
 #'    faster, however the one drawback is that nodes are plotted in
@@ -208,7 +212,7 @@ jam_plot_igraph <- function
  mark.x.nudge=0,
  mark.y.nudge=0,
  pie_to_jampie=TRUE,
- use_shadowText=FALSE,
+ use_shadowText=NULL,
  vectorized_node_shapes=TRUE,
  edge_bundling=c(
     "default",
@@ -232,6 +236,16 @@ jam_plot_igraph <- function
       stop("Not an igraph object")
    }
 
+   # 0.0.105.900: use_shadowText
+   if (length(use_shadowText) == 0) {
+      # check graph attributes
+      if ("use_shadowText" %in% igraph::graph_attr_names(graph)) {
+         use_shadowText <- any(igraph::graph_attr(graph, "use_shadowText"));
+      } else {
+         use_shadowText <- FALSE;
+      }
+   }
+   
    # use mark.groups==FALSE as hard sign not to include mark.groups
    if (isFALSE(mark.groups)) {
       mark.groups <- NULL;

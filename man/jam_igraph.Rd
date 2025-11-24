@@ -20,7 +20,7 @@ jam_igraph(
   label_fontsize_l = NULL,
   label_dist_factor = 1,
   label_dist_factor_l = 1,
-  use_shadowText = FALSE,
+  use_shadowText = NULL,
   edge_bundling = c("default", "connections", "none", "mark.groups", "nodegroups"),
   bundle_self = FALSE,
   nodegroups = NULL,
@@ -90,11 +90,17 @@ nodes and edges by a common numeric scalar value.}
 to adjust the relative distance of all nodes labels from the node center
 by a common numeric scalar value.}
 
-\item{use_shadowText}{\code{logical} indicating whether to use
-\code{jamba::shadowText()} instead of \code{graphics::text()}, in order
-to render text labels with a subtle shadow-like outline around
-each label. This change improves legibility of labels at
-the expense of slightly longer plot rendering time.}
+\item{use_shadowText}{\code{logical} to enable \code{jamba::shadowText()} outlines.
+\itemize{
+\item Default NULL uses graph attribute 'use_shadowText' if it exists,
+otherwise FALSE.
+\item When TRUE it uses \code{jamba::shadowText()} instead of \code{graphics::text()}
+to render labels, applying an outline to contrast with the text
+color, either white or black. Some global options are recognized
+by \code{jamba::shadowText()} to customize the visual details.
+Consider using \code{withr::with_options()} to set these options
+without persistence.
+}}
 
 \item{edge_bundling}{\code{character} string or \code{function}, where:
 \itemize{

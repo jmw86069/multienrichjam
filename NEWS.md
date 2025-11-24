@@ -1,3 +1,22 @@
+# multienrichjam 0.0.105.900
+
+## Changes to existing functions
+
+* `pathway_column_split` and `column_split` accept `list` for convenience.
+* Added default `vertex.label.font=2` (bold labels) for `mem2cnet()`.
+* `jam_igraph()` recognizes graph attribute 'use_shadowText' as global option.
+* `mem_plot_folio()`, `prepare_folio()`
+
+   * Passing `pathway_column_split` as `list` is now supported.
+   * Default annotation width is 5mm instead of 6mm.
+   * Anno size is now correctly used for column annotations.
+   * When providing 'mpf' it will re-use Clusters() for consistency.
+
+* `mem2cnet()` now applies two new defaults:
+
+   * 'vertex.label.font=2' for bold node labels by default
+   * 'use_shadowText=TRUE' added to graph attributes, for outlined labels
+
 # multienrichjam 0.0.104.900
 
 * Added 'openxlsx' to Suggests.

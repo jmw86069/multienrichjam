@@ -339,7 +339,7 @@ jam_igraph <- function
  label_fontsize_l=NULL,
  label_dist_factor=1,
  label_dist_factor_l=1,
- use_shadowText=FALSE,
+ use_shadowText=NULL,
  edge_bundling=c(
     "default",
     "connections",

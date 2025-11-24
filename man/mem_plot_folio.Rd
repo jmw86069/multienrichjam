@@ -64,8 +64,12 @@ This argument is intended to produce only a subset of plots.}
 
 \item{mpf}{\code{MemPlotFolio}, default NULL, used only to re-apply the same
 settings as another \code{MemPlotFolio}.
-Note: When supplied, all values in this object \code{thresholds(mpf)}
-are used, and no corresponding function arguments are used.}
+\itemize{
+\item Note: \code{pathway_column_split} and \code{gene_row_split} are also
+taken from \code{thresholds(mpf)}, unless defined in function arguments.
+\item Note: All other values in \code{thresholds(mpf)} are used,
+and not taken from corresponding function arguments.
+}}
 
 \item{p_cutoff}{\code{numeric} value, default NULL is taken from \code{mem},
 indicating the enrichment P-value threshold.}
@@ -118,7 +122,15 @@ exemplar plots, using this many exemplars per cluster.}
 as \code{column_split} and \code{row_split}, respectively, to
 \code{mem_gene_path_heatmap()}, indicating the number of pathway
 clusters, and gene clusters, to create in the gene-pathway heatmap.
-When either value is \code{NULL} then auto-split logic is used.}
+When either value is \code{NULL} then auto-split logic is used.
+\itemize{
+\item \code{integer} input will define this number of clusters
+\item \code{list} input should be named by pathway cluster, in order the
+clusters will be split; and have \code{character} vectors that
+match pathways (sets) in the 'mem' input data.
+\item \code{character} input should be named by pathway (set) and have
+values with the name of the pathway cluster. It can be \code{factor}.
+}}
 
 \item{pathway_column_title, gene_row_title}{\code{character} vectors
 passed to \code{mem_gene_path_heatmap()} as \code{column_title} and
@@ -450,7 +462,24 @@ resulting \code{igraph} object.
 \examples{
 data(Memtest)
 Mpf <- prepare_folio(Memtest)
-GenePathHeatmap(Mpf, column_anno_padding=grid::unit(3, "mm"))
+GenePathHeatmap(Mpf)
+
+# take a subset of clusters and re-Mpf
+MpfSub <- prepare_folio(Memtest,
+   pathway_column_split=Clusters(Mpf)[c("A", "C")])
+GenePathHeatmap(MpfSub)
+
+# adjust set names
+Memtest2 <- fixSetLabels(Memtest)
+Mpf2 <- prepare_folio(Memtest2,
+   row_names_rot=0,
+   column_names_rot=60)
+GenePathHeatmap(Mpf2)
+
+# Now do the same but add a buffer for the dimnames
+with_ht_opts(list(DIMNAME_PADDING=grid::unit(c(3), "mm")), {
+   GenePathHeatmap(Mpf2)
+})
 
 }
 \seealso{

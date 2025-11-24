@@ -164,10 +164,24 @@ handle_rowcol_splits <- function
             x_split <- 1;
          }
       }
-      # x_split is numeric
+      # 0.0.105.900: convert x_split as list into a named vector
+      if (inherits(x_split, "list")) {
+         # expand into factor vector
+         # using levels that match the order of list names
+         x_split <- jamba::nameVector(
+            factor(
+               rep(names(x_split), lengths(x_split)),
+               levels=names(x_split)),
+            unlist(x_split));
+      }
+      
       retvals <- list();
       retvals$trimmed <- FALSE;
+      #
+      # method by type of split
       if (is.numeric(x_split) && length(x_split) == 1) {
+         #
+         # x_split is numeric
          if (verbose) jamba::printDebug("numeric x_split:", x_split);# verbose
          if (x_split > length(x_values)) {
             x_split <- x_split_fn(n=0,
@@ -185,6 +199,7 @@ handle_rowcol_splits <- function
             x_title <- NULL;
          }
       } else {
+         #
          # x_split is a vector or data.frame
          cluster_x_slices <- FALSE;
          #
@@ -276,7 +291,7 @@ handle_rowcol_splits <- function
       x_split_fn=column_split_fn,
       trim_values=trim_columns,
       auto_split=auto_split,
-      verbose=FALSE)
+      verbose=isTRUE(debug))
    column_split <- column_split_list$x_split;
    column_title <- column_split_list$x_title;
    

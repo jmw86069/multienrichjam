@@ -243,8 +243,10 @@
 #'    This argument is intended to produce only a subset of plots.
 #' @param mpf `MemPlotFolio`, default NULL, used only to re-apply the same
 #'    settings as another `MemPlotFolio`.
-#'    Note: When supplied, all values in this object `thresholds(mpf)`
-#'    are used, and no corresponding function arguments are used.
+#'    * Note: `pathway_column_split` and `gene_row_split` are also
+#'    taken from `thresholds(mpf)`, unless defined in function arguments.
+#'    * Note: All other values in `thresholds(mpf)` are used,
+#'    and not taken from corresponding function arguments.
 #' @param p_cutoff `numeric` value, default NULL is taken from `mem`,
 #'    indicating the enrichment P-value threshold.
 #' @param p_floor `numeric` with the lowest enrichment P-value
@@ -284,6 +286,12 @@
 #'    `mem_gene_path_heatmap()`, indicating the number of pathway
 #'    clusters, and gene clusters, to create in the gene-pathway heatmap.
 #'    When either value is `NULL` then auto-split logic is used.
+#'    * `integer` input will define this number of clusters
+#'    * `list` input should be named by pathway cluster, in order the
+#'    clusters will be split; and have `character` vectors that
+#'    match pathways (sets) in the 'mem' input data.
+#'    * `character` input should be named by pathway (set) and have
+#'    values with the name of the pathway cluster. It can be `factor`.
 #' @param pathway_column_title,gene_row_title `character` vectors
 #'    passed to `mem_gene_path_heatmap()` as `column_title` and
 #'    `row_title`, respectively. When one value is supplied, it is
@@ -357,7 +365,24 @@
 #' @examples
 #' data(Memtest)
 #' Mpf <- prepare_folio(Memtest)
-#' GenePathHeatmap(Mpf, column_anno_padding=grid::unit(3, "mm"))
+#' GenePathHeatmap(Mpf)
+#' 
+#' # take a subset of clusters and re-Mpf
+#' MpfSub <- prepare_folio(Memtest,
+#'    pathway_column_split=Clusters(Mpf)[c("A", "C")])
+#' GenePathHeatmap(MpfSub)
+#' 
+#' # adjust set names
+#' Memtest2 <- fixSetLabels(Memtest)
+#' Mpf2 <- prepare_folio(Memtest2,
+#'    row_names_rot=0,
+#'    column_names_rot=60)
+#' GenePathHeatmap(Mpf2)
+#' 
+#' # Now do the same but add a buffer for the dimnames
+#' with_ht_opts(list(DIMNAME_PADDING=grid::unit(c(3), "mm")), {
+#'    GenePathHeatmap(Mpf2)
+#' })
 #' 
 #' @export
 mem_plot_folio <- function
@@ -484,6 +509,15 @@ mem_plot_folio <- function
             names(mpf_thresholds));
       }
       thresholds[names(mpf_thresholds)] <- mpf_thresholds;
+      # 0.0.105.900: inherit Clusters(mpf)
+      if (length(pathway_column_split) == 0) {
+         pathway_column_split <- Clusters(mpf);
+         thresholds$column_split <- pathway_column_split;
+      }
+      if (length(gene_row_split) == 0) {
+         gene_row_split <- GeneClusters(mpf);
+         thresholds$row_split <- gene_row_split;
+      }
    }
    
    # metadata

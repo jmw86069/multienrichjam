@@ -24,7 +24,7 @@ jam_plot_igraph(
   mark.x.nudge = 0,
   mark.y.nudge = 0,
   pie_to_jampie = TRUE,
-  use_shadowText = FALSE,
+  use_shadowText = NULL,
   vectorized_node_shapes = TRUE,
   edge_bundling = c("default", "connections", "none", "mark.groups", "nodegroups"),
   bundle_self = FALSE,
@@ -98,11 +98,17 @@ as \code{label.x.nudge}, \code{label.y.nudge}, respectively.}
 vertex shape \code{"pie"} to \code{"jampie"} in order to use vectorized
 plotting.}
 
-\item{use_shadowText}{\code{logical} indicating whether to use
-\code{jamba::shadowText()} instead of \code{graphics::text()}, in order
-to render text labels with a subtle shadow-like outline around
-each label. This change improves legibility of labels at
-the expense of slightly longer plot rendering time.}
+\item{use_shadowText}{\code{logical} to enable \code{jamba::shadowText()} outlines.
+\itemize{
+\item Default NULL uses graph attribute 'use_shadowText' if it exists,
+otherwise FALSE.
+\item When TRUE it uses \code{jamba::shadowText()} instead of \code{graphics::text()}
+to render labels, applying an outline to contrast with the text
+color, either white or black. Some global options are recognized
+by \code{jamba::shadowText()} to customize the visual details.
+Consider using \code{withr::with_options()} to set these options
+without persistence.
+}}
 
 \item{vectorized_node_shapes}{\code{logical} indicating whether to plot
 vertex node shapes using vectorized operations. It is substantially

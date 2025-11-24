@@ -1,5 +1,85 @@
 # TODO
 
+## 24nov2025
+
+* `MemPlotFolio` enhancements
+
+   * Make it so `GenePathHeatmap()` and `EnrichmentHeatmap()` can dynamically
+   re-create the heatmap, so customizations can be made without re-running
+   `prepare_folio()`?
+
+## 18nov2025
+
+* Usability / bugs
+
+   * `mem_plot_folio()`
+   
+      * FIXED. Bug: `list` for `pathway_column_split` with subset pathways;
+      it seems to have clusters as `character` with this approach.
+      * FIXED. applies `simple_anno_size` to row and not column in
+      gene-path heatmap.
+      * DONE. Make 'mpf' argument also use `Clusters()` and `GeneClusters()`.
+      May need to review whether this behavior is optimal for genes especially.
+
+   * FIXED. `fixSetLabels()` add option for max width, truncating anything longer
+   instead of applying word-wrap. (Already available, haha `maxNchar`.)
+   * DONE. `mem2cnet()` consider aesthetic defaults:
+   `vertex.label.font=2`, `use_shadowText=TRUE` (store in attributes?)
+   * DONE. Change default `mem_gene_path_heatmap()` simple_anno_size to 5mm.
+   * UNSURE. Consider new default cluster_column_slices=TRUE, and for rows.
+   It extends the dendrograms with connections across slices.
+
+* Consider new function `merge_Mem_sets()`
+
+   * intended to combine "equivalent" pathways
+   (TLR signaling v1, TLR signaling v2) together.
+   * Bonus points: Pathways with identical names (v1, v2, etc)
+   with greater than threshold (75%?) identical genes,
+   automatically merge them.
+
+* `CnetCollapsed()` need some way to adjust layout, and apply reorder,
+spread labels, etc.
+* `CnetExemplar()` consider adding pathway title as prefix,
+for example "A: Pleural Mesothelioma", to indicate the cluster for each
+exemplar.
+* `removeIgraphSinglets()` should subset graph_attr("mark.groups").
+* `jam_igraph()`
+
+   * with `mark.groups=TRUE` and non-Cnet, it should try `components()`,
+   however using `mark.groups=igraph::components` works currently.
+
+* `make_alpha_hull()`
+
+   * try to split extremely disparate node groups,
+   e.g. two sides of the plot, should ideally split into two subcomponents.
+   * draw hull labels slightly farther from the edges? It might need
+   something helpful from `jamba::drawLabels()`.
+
+* Usability / Workflows
+
+   * Consider workflow to re-Mem a subset of pathway clusters.
+   Situation: Pathway clusters often have one "miscellaneous" cluster
+   with few genes, no coherence.
+   Target: Re-create Mem without this cluster.
+   `prepare_folio(Mem, pathway_column_split=Clusters(Mpf)[c(1, 3, 4)])`
+
+* Ideal world: `GenePathHeatmap(Mpf[, clusters])` would use the subset.
+* Debug `rank_mem_clusters()` for follow-up with using Mem/Mpf input.
+
+## 14nov2025
+
+* Add vignette for `launch_shinycat()`
+* Add `cbind()` and `rbind()` to combine multiple Mem objects.
+
+   * Use case: enrichment with IPA; enrichment with clusterProfiler;
+   then `rbind()` them.
+   * Use case: enrichment of A,B in IPA; enrichment of C,D in IPA;
+   then `cbind()` them.
+
+* `plot_cnet_heatmaps()`, `CnetHeatmaps()`
+
+   * requires expression data, column groups
+
 ## 12nov2025
 
 * Continue polishing the workflow:
