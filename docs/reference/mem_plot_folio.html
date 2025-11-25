@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.105.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,9 +116,11 @@ This argument is intended to produce only a subset of plots.</p></dd>
 
 <dt id="arg-mpf">mpf<a class="anchor" aria-label="anchor" href="#arg-mpf"></a></dt>
 <dd><p><code>MemPlotFolio</code>, default NULL, used only to re-apply the same
-settings as another <code>MemPlotFolio</code>.
-Note: When supplied, all values in this object <code>thresholds(mpf)</code>
-are used, and no corresponding function arguments are used.</p></dd>
+settings as another <code>MemPlotFolio</code>.</p><ul><li><p>Note: <code>pathway_column_split</code> and <code>gene_row_split</code> are also
+taken from <code>thresholds(mpf)</code>, unless defined in function arguments.</p></li>
+<li><p>Note: All other values in <code>thresholds(mpf)</code> are used,
+and not taken from corresponding function arguments.</p></li>
+</ul></dd>
 
 
 <dt id="arg-p-cutoff">p_cutoff<a class="anchor" aria-label="anchor" href="#arg-p-cutoff"></a></dt>
@@ -187,7 +189,13 @@ exemplar plots, using this many exemplars per cluster.</p></dd>
 as <code>column_split</code> and <code>row_split</code>, respectively, to
 <code><a href="mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, indicating the number of pathway
 clusters, and gene clusters, to create in the gene-pathway heatmap.
-When either value is <code>NULL</code> then auto-split logic is used.</p></dd>
+When either value is <code>NULL</code> then auto-split logic is used.</p><ul><li><p><code>integer</code> input will define this number of clusters</p></li>
+<li><p><code>list</code> input should be named by pathway cluster, in order the
+clusters will be split; and have <code>character</code> vectors that
+match pathways (sets) in the 'mem' input data.</p></li>
+<li><p><code>character</code> input should be named by pathway (set) and have
+values with the name of the pathway cluster. It can be <code>factor</code>.</p></li>
+</ul></dd>
 
 
 <dt id="arg-pathway-column-title-gene-row-title">pathway_column_title, gene_row_title<a class="anchor" aria-label="anchor" href="#arg-pathway-column-title-gene-row-title"></a></dt>
@@ -542,8 +550,28 @@ resulting <code>igraph</code> object.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">Mpf</span> <span class="op">&lt;-</span> <span class="fu">prepare_folio</span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf</span>, column_anno_padding<span class="op">=</span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mem_plot_folio-1.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># take a subset of clusters and re-Mpf</span></span></span>
+<span class="r-in"><span><span class="va">MpfSub</span> <span class="op">&lt;-</span> <span class="fu">prepare_folio</span><span class="op">(</span><span class="va">Memtest</span>,</span></span>
+<span class="r-in"><span>   pathway_column_split<span class="op">=</span><span class="fu">Clusters</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">MpfSub</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mem_plot_folio-2.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># adjust set names</span></span></span>
+<span class="r-in"><span><span class="va">Memtest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="fixSetLabels.html">fixSetLabels</a></span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Mpf2</span> <span class="op">&lt;-</span> <span class="fu">prepare_folio</span><span class="op">(</span><span class="va">Memtest2</span>,</span></span>
+<span class="r-in"><span>   row_names_rot<span class="op">=</span><span class="fl">0</span>,</span></span>
+<span class="r-in"><span>   column_names_rot<span class="op">=</span><span class="fl">60</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf2</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mem_plot_folio-3.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Now add a temporary buffer for the heatmap dimnames</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="with_ht_opts.html">with_ht_opts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>DIMNAME_PADDING<span class="op">=</span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span>, <span class="op">{</span></span></span>
+<span class="r-in"><span>   <span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mem_plot_folio-4.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

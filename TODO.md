@@ -8,6 +8,12 @@
    re-create the heatmap, so customizations can be made without re-running
    `prepare_folio()`?
 
+* `plot_cnet_heatmaps()`, `CnetHeatmaps()`
+
+   * Consider "dev" mode that prints some unit grid onto the plot, to help
+   align labels and adjust margins.
+   * requires expression data, column groups
+
 ## 18nov2025
 
 * Usability / bugs
@@ -75,10 +81,6 @@ exemplar.
    then `rbind()` them.
    * Use case: enrichment of A,B in IPA; enrichment of C,D in IPA;
    then `cbind()` them.
-
-* `plot_cnet_heatmaps()`, `CnetHeatmaps()`
-
-   * requires expression data, column groups
 
 ## 12nov2025
 

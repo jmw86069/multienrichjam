@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.105.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,6 +84,8 @@
 <span>  remove_singlet_genes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  do_reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  spread_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  vertex.label.font <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  use_shadowText <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  repulse <span class="op">=</span> <span class="fl">3.5</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -124,6 +126,8 @@
 <span>  remove_singlet_genes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  do_reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  spread_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  vertex.label.font <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  use_shadowText <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  repulse <span class="op">=</span> <span class="fl">3.5</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -298,6 +302,17 @@ labels away from incoming edges, also adding label distance via
 vertex attribute 'label.dist'.
 This step calls <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>, and can be customized
 further by passing arguments through '...' ellipses.</p></dd>
+
+
+<dt id="arg-vertex-label-font">vertex.label.font<a class="anchor" aria-label="anchor" href="#arg-vertex-label-font"></a></dt>
+<dd><p><code>integer</code> default 2, used to set default font
+to use bold face (font=2) for labels. Use 1 for normal font.</p></dd>
+
+
+<dt id="arg-use-shadowtext">use_shadowText<a class="anchor" aria-label="anchor" href="#arg-use-shadowtext"></a></dt>
+<dd><p><code>logical</code> default TRUE, applied to graph
+attributes to apply shadowText by default when plotting with
+<code><a href="jam_igraph.html">jam_igraph()</a></code>.</p></dd>
 
 
 <dt id="arg-repulse">repulse<a class="anchor" aria-label="anchor" href="#arg-repulse"></a></dt>

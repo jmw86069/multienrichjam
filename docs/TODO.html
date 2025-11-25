@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.105.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,67 @@
 
 <div id="todo" class="section level1">
 
+<div class="section level2">
+<h2 id="id_24nov2025">24nov2025<a class="anchor" aria-label="anchor" href="#id_24nov2025"></a></h2>
+<ul><li>
+<p><code>MemPlotFolio</code> enhancements</p>
+<ul><li>Make it so <code>GenePathHeatmap()</code> and <code>EnrichmentHeatmap()</code> can dynamically re-create the heatmap, so customizations can be made without re-running <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code>?</li>
+</ul></li>
+<li>
+<p><code>plot_cnet_heatmaps()</code>, <code>CnetHeatmaps()</code></p>
+<ul><li>Consider “dev” mode that prints some unit grid onto the plot, to help align labels and adjust margins.</li>
+<li>requires expression data, column groups</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_18nov2025">18nov2025<a class="anchor" aria-label="anchor" href="#id_18nov2025"></a></h2>
+<ul><li>
+<p>Usability / bugs</p>
+<ul><li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li>FIXED. Bug: <code>list</code> for <code>pathway_column_split</code> with subset pathways; it seems to have clusters as <code>character</code> with this approach.</li>
+<li>FIXED. applies <code>simple_anno_size</code> to row and not column in gene-path heatmap.</li>
+<li>DONE. Make ‘mpf’ argument also use <code>Clusters()</code> and <code>GeneClusters()</code>. May need to review whether this behavior is optimal for genes especially.</li>
+</ul></li>
+<li><p>FIXED. <code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code> add option for max width, truncating anything longer instead of applying word-wrap. (Already available, haha <code>maxNchar</code>.)</p></li>
+<li><p>DONE. <code><a href="reference/mem2cnet.html">mem2cnet()</a></code> consider aesthetic defaults: <code>vertex.label.font=2</code>, <code>use_shadowText=TRUE</code> (store in attributes?)</p></li>
+<li><p>DONE. Change default <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> simple_anno_size to 5mm.</p></li>
+<li><p>UNSURE. Consider new default cluster_column_slices=TRUE, and for rows. It extends the dendrograms with connections across slices.</p></li>
+</ul></li>
+<li>
+<p>Consider new function <code>merge_Mem_sets()</code></p>
+<ul><li>intended to combine “equivalent” pathways (TLR signaling v1, TLR signaling v2) together.</li>
+<li>Bonus points: Pathways with identical names (v1, v2, etc) with greater than threshold (75%?) identical genes, automatically merge them.</li>
+</ul></li>
+<li><p><code>CnetCollapsed()</code> need some way to adjust layout, and apply reorder, spread labels, etc.</p></li>
+<li><p><code>CnetExemplar()</code> consider adding pathway title as prefix, for example “A: Pleural Mesothelioma”, to indicate the cluster for each exemplar.</p></li>
+<li><p><code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code> should subset graph_attr(“mark.groups”).</p></li>
+<li>
+<p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>with <code>mark.groups=TRUE</code> and non-Cnet, it should try <code>components()</code>, however using <code>mark.groups=igraph::components</code> works currently.</li>
+</ul></li>
+<li>
+<p><code>make_alpha_hull()</code></p>
+<ul><li>try to split extremely disparate node groups, e.g. two sides of the plot, should ideally split into two subcomponents.</li>
+<li>draw hull labels slightly farther from the edges? It might need something helpful from <code><a href="https://jmw86069.github.io/jamba/reference/drawLabels.html" class="external-link">jamba::drawLabels()</a></code>.</li>
+</ul></li>
+<li>
+<p>Usability / Workflows</p>
+<ul><li>Consider workflow to re-Mem a subset of pathway clusters. Situation: Pathway clusters often have one “miscellaneous” cluster with few genes, no coherence. Target: Re-create Mem without this cluster. <code>prepare_folio(Mem, pathway_column_split=Clusters(Mpf)[c(1, 3, 4)])</code>
+</li>
+</ul></li>
+<li><p>Ideal world: <code>GenePathHeatmap(Mpf[, clusters])</code> would use the subset.</p></li>
+<li><p>Debug <code><a href="reference/rank_mem_clusters.html">rank_mem_clusters()</a></code> for follow-up with using Mem/Mpf input.</p></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_14nov2025">14nov2025<a class="anchor" aria-label="anchor" href="#id_14nov2025"></a></h2>
+<ul><li><p>Add vignette for <code><a href="reference/launch_shinycat.html">launch_shinycat()</a></code></p></li>
+<li>
+<p>Add <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code> and <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> to combine multiple Mem objects.</p>
+<ul><li>Use case: enrichment with IPA; enrichment with clusterProfiler; then <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> them.</li>
+<li>Use case: enrichment of A,B in IPA; enrichment of C,D in IPA; then <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code> them.</li>
+</ul></li>
+</ul></div>
 <div class="section level2">
 <h2 id="id_12nov2025">12nov2025<a class="anchor" aria-label="anchor" href="#id_12nov2025"></a></h2>
 <ul><li>

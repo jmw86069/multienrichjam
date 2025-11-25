@@ -379,8 +379,8 @@
 #'    column_names_rot=60)
 #' GenePathHeatmap(Mpf2)
 #' 
-#' # Now do the same but add a buffer for the dimnames
-#' with_ht_opts(list(DIMNAME_PADDING=grid::unit(c(3), "mm")), {
+#' # Now add a temporary buffer for the heatmap dimnames
+#' with_ht_opts(list(DIMNAME_PADDING=grid::unit(c(2), "mm")), {
 #'    GenePathHeatmap(Mpf2)
 #' })
 #' 

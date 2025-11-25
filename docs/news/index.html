@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.104.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.105.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,27 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.105.900" id="multienrichjam-00105900">multienrichjam 0.0.105.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00105900"></a></h2>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-105-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-105-900"></a></h3>
+<ul><li><p><code>pathway_column_split</code> and <code>column_split</code> accept <code>list</code> for convenience.</p></li>
+<li><p>Added default <code>vertex.label.font=2</code> (bold labels) for <code><a href="../reference/mem2cnet.html">mem2cnet()</a></code>.</p></li>
+<li><p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> recognizes graph attribute ‘use_shadowText’ as global option.</p></li>
+<li>
+<p><code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>, <code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code></p>
+<ul><li>Passing <code>pathway_column_split</code> as <code>list</code> is now supported.</li>
+<li>Default annotation width is 5mm instead of 6mm.</li>
+<li>Anno size is now correctly used for column annotations.</li>
+<li>When providing ‘mpf’ it will re-use Clusters() for consistency.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> now applies two new defaults:</p>
+<ul><li>‘vertex.label.font=2’ for bold node labels by default</li>
+<li>‘use_shadowText=TRUE’ added to graph attributes, for outlined labels</li>
+</ul></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.104.900" id="multienrichjam-00104900">multienrichjam 0.0.104.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00104900"></a></h2>
 <ul><li>Added ‘openxlsx’ to Suggests.</li>

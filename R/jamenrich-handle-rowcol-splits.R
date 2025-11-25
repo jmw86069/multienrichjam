@@ -213,7 +213,8 @@ handle_rowcol_splits <- function
                stop("names(x_split) do not match any x_values");
             }
             if (TRUE %in% trim_values) {
-               if (!all(x_values == names(x_split))) {
+               if (!length(x_values) == length(x_split) ||
+                  !all(x_values == names(x_split))) {
                   retvals$trimmed <- TRUE;
                }
                x_values <- intersect(x_values, names(x_split));
