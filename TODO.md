@@ -2,17 +2,22 @@
 
 ## 24nov2025
 
+* `plot_cnet_heatmaps()`, `CnetHeatmaps()`
+
+   * Consider "dev" mode that prints some unit grid onto the plot, to help
+   align labels and adjust margins.
+   * requires expression data, column groups
+
 * `MemPlotFolio` enhancements
 
    * Make it so `GenePathHeatmap()` and `EnrichmentHeatmap()` can dynamically
    re-create the heatmap, so customizations can be made without re-running
    `prepare_folio()`?
 
-* `plot_cnet_heatmaps()`, `CnetHeatmaps()`
-
-   * Consider "dev" mode that prints some unit grid onto the plot, to help
-   align labels and adjust margins.
-   * requires expression data, column groups
+* Revisit exporters like `Mem_to_dataframe()`, for supplemental tables.
+* `rbind()`, `cbind()`, `merge()` to combine multiple Mem objects.
+* Evaluate gene clusters, consider pathway/gene cluster Cnet plot,
+with some way to label the group of genes in each cluster, e.g. grid table box.
 
 ## 18nov2025
 
@@ -84,7 +89,7 @@ exemplar.
 
 ## 12nov2025
 
-* Continue polishing the workflow:
+* COMPLETE for now. Continue polishing the workflow:
 
    * `mem_plot_folio()`
    
@@ -120,7 +125,6 @@ loading the package.
    * Replace CnetCollapsed with one `igraph` that updates `V(cnet)$label`
    as needed. The rest should be constant.
    
-* Add `PlotCnetHeatmaps()`
 * `colorRamp2D()` enhancements
 
    * Use `thresholds(Mem)$direction_cutoff`, add labeling
