@@ -107,3 +107,6 @@ Cellspecific	Cell-Specific
 Enos	eNOS
 Camp	cAMP
 Creb	CREB
+([IVNB])cam	\1CAM
+Mtorc	mTORC
+Mtor	mTOR

@@ -2,47 +2,179 @@
 % Please edit documentation in R/jamenrich-get-igraph-layout.R
 \name{get_igraph_layout}
 \alias{get_igraph_layout}
+\alias{set_igraph_layout}
 \title{Obtain or create layout for igraph object}
 \usage{
-get_igraph_layout(g, layout = NULL, make_circular = TRUE, verbose = FALSE, ...)
+get_igraph_layout(
+  g,
+  layout = NULL,
+  default_layout = igraph::layout_nicely,
+  verbose = FALSE,
+  ...
+)
+
+set_igraph_layout(
+  g,
+  layout = NULL,
+  default_layout = igraph::layout_nicely,
+  verbose = FALSE,
+  prefer = c("graph_attr"),
+  spread_labels = FALSE,
+  ...
+)
 }
 \arguments{
 \item{g}{\code{igraph} object}
 
-\item{layout}{one of:
+\item{layout}{is always applied when not NULL, even when layout
+exists in \code{g}.
+Input should be one of:
 \itemize{
 \item \code{numeric} matrix of layout coordinates, with \code{nrow(layout)}
 equal to the number of nodes \code{igraph::vcount(g)}.
 \item \code{function} that takes \code{igraph} input, and returns \code{numeric} matrix
 of layout coordinates.
-\item \code{NULL}: to use the layout embedded in \code{g} using
-\code{igraph::graph_attr(g, "layout")} if it exists. If it does not exist,
-then \code{make_circular=TRUE} causes a new layout to be created with
-arbitrary circular coordinates; or \code{make_circular=FALSE} will return
-\code{NULL}.
+\item \code{NULL}: default, uses the graph attribute 'layout' if it exists,
+\code{igraph::graph_attr(g, "layout")} if it exists.
+If it does not exist, it follows \code{default_layout}.
 }}
 
-\item{make_circular}{\code{logical} indicating whether to create a makeshift
-layout when the input data does not already contain layout coordinates,
-and when \code{layout} is not supplied.}
+\item{default_layout}{is only applied when \code{layout} is NULL, and no
+layout is defined in graph \code{g}.
+Input should be \code{function} or NULL:
+\itemize{
+\item Default \code{igraph::layout_nicely()} is used
+for consistency with igraph conventions.
+This algorithm should be safe for very large graphs,
+which may be extremely inefficient with \code{layout_with_qfr()} for example.
+\item When NULL, it will return NULL unless layout is defined
+in the input \code{g} graph.
+}}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
-\item{...}{additional arguments are ignored.}
+\item{...}{additional arguments are passed to any layout function called.}
+
+\item{prefer}{\code{character} vector with preferred method of storage:
+\itemize{
+\item 'graph_attr': store the \code{matrix} in graph attribute 'layout'.
+\item 'vertex_attr': store coordinates in vertex attributes 'x', 'y',
+and optionally 'z' when defined.
+}}
+
+\item{spread_labels}{\code{logical} default FALSE, whether to call
+\code{spread_igraph_labels()} to re-position node labels radially
+away from incoming edges.
+\itemize{
+\item Note that \code{spread_igraph_labels()} also by default \code{do_reorder=TRUE}
+which will re-order nodes by color, border, label, and name.
+\item It is used to use TRUE when node labels were previously spread,
+so that the angle of offset is updated per the new layout coordinates.
+}}
 }
 \value{
-\code{numeric} matrix of x,y coordinates with nrow equal
-to the number of nodes in the input, from \code{igraph::vcount(g)}.
-Note that \code{rownames()} are defined to match node names
-\code{igraph::V(g)$name}, unlike default \code{igraph} layouts.
+\code{get_igraph_layout()} returns a \code{numeric} matrix when:
+the input graph \code{g} contains
+layout as a graph attribute as either numeric matrix or function,
+or coordinates as x,y,z vertex attributes.
+\itemize{
+\item However, when  there is no layout defined in \code{g} and
+\code{default_layout} is NULL, it returns NULL. This logic is used
+to avoid defining a layout if it does not already exist.
+\item When \code{matrix} is returned, the number of rows
+matches the input graph \code{g} using \code{igraph::vcount(g)}.
+All \code{rownames()} are defined to match vertex name when it exists,
+using \code{igraph::V(g)$name}.
+}
+
+\code{set_igraph_layout()} returns \code{igraph} object with
+layout defined per function arguments.
 }
 \description{
 Obtain or create layout for igraph object
+
+Set the node layout for an igraph object
 }
 \details{
 This function is a simple helper function intended to retrieve
-the node layout for an \code{igraph} object. When \code{layout} is supplied
-as a \code{function} it is used to define a specific layout matrix.
+the node layout for an \code{igraph} object.
+
+The layout is defined with the following priority:
+\enumerate{
+\item When \code{layout} is supplied as an argument, it is used.
+When it is a \code{function} it is applied to \code{g} to produce
+numeric \code{matrix}; otherwise it should be a numeric \code{matrix}
+and is used as-is.
+\item When graph attribute 'layout' is defined, it is used
+as described for argument \code{layout} above, accepting either
+\code{function} or \code{matrix} values.
+\item When vertex attributes 'x' and 'y' are defined, optionally 'z',
+their values are used to produce a numeric \code{matrix}.
+\item When \code{default_layout} is supplied as a \code{function} it is applied
+to graph \code{g} to produce a numeric \code{matrix}.
+\item Finally, when \code{default_layout} is NULL, this function returns NULL.
+This fallback is intended only when it is desirable not to apply
+a new layout function, useful for large graphs.
+}
+\subsection{Additional rules}{
+\itemize{
+\item When \code{layout} is defined as a matrix with rownames, the rownames
+are matched to vertex attribute 'name' if it exists,
+using \code{igraph::V(g)$name}. This step is intended to help ensure nodes
+the layout can be supplied in any order without regard to the
+order defined in graph \code{g}.
+\itemize{
+\item When the \code{layout} rownames do not match vertex names, this function
+will \code{stop()}.
+}
+\item When \code{layout} is defined as a \code{function}, or when any layout function
+is applied as relevant, it is expected to return a \code{numeric} \code{matrix},
+or data which can be coerced to a \code{matrix} with \code{as.matrix()} or
+\code{as(x, "matrix")}.
+\itemize{
+\item The matrix rownames are matched to vertex names as described above.
+\item Note that \code{data.frame} rownames are only retained at this step when
+they were already explicitly defined before coersion to \code{matrix}.
+}
+}
+}
+
+\subsection{Suggested Usage}{
+\itemize{
+\item Define \code{layout} as a function in order to force the use
+of that function to produce layout coordinates.
+This step would always ignore pre-existing layout coordinates in
+graph \code{g}.
+\item Define \code{layout} as NULL, and \code{default_layout} as a function,
+to use an existing layout stored in graph \code{g}, then to apply the
+default layout function only if no layout already existed in graph \code{g}.
+\item Define \code{layout} as NULL, and \code{default_layout} as NULL, to
+return an existing layout stored in graph \code{g}, otherwise to return NULL
+without applying any layout. This option would avoid computationally
+expensive layout for large graphs, for example.
+}
+}
+
+This function is a simple wrapper to \code{get_igraph_layout()} which
+also defines the resulting layout in the graph \code{g}.
+}
+\examples{
+g <- make_cnet_test(2, c(12, 5))
+gl <- get_igraph_layout(g, verbose=TRUE)
+jam_igraph(g)
+
+# apply repulse=4
+gl2 <- get_igraph_layout(g, layout=layout_with_qfrf(repulse=4), verbose=TRUE)
+jam_igraph(g, layout=gl2)
+
+igraph::graph_attr(g, "layout") <- layout_with_qfrf(repulse=4)
+gl3 <- get_igraph_layout(g, verbose=TRUE)
+identical(gl2, gl3)
+#> TRUE
+
+g2 <- set_igraph_layout(g, spread_labels=TRUE)
+jam_igraph(g2)
+
 }
 \seealso{
 Other jam utility functions: 

@@ -1,3 +1,31 @@
+# multienrichjam 0.0.106.900
+
+## Changes
+
+* Updated 'words' and 'abbrev' to remove verbose phrases from gene sets.
+"Genes encoding proteins involved in" can be entirely removed.
+
+## Changes to existing functions
+
+* `get_igraph_layout()`
+
+	* Now uses vertex attributes x,y,z when `layout` is not provided,
+	and when graph attribute 'layout' is not defined, and when x,y,z
+	attributes are defined with `numeric` values. The igraph team has
+	debated removing support for graph attributes, using only vertex
+	attributes, in order to improve subgraph support for layouts.
+	* New argument `default_layout` applied only when layout does not exist.
+	* Argument `make_circular` removed, as it was not used.
+
+## New functions
+
+* `set_igraph_layout()`
+
+	* complements `get_igraph_layout()` by also storing layout in the `igraph`.
+	Intended to future-proof the layout, since the igraph team is debating
+	whether to recommend only using vertex attributes, or graph attributes.
+	* It can optionally call `spread_igraph_labels()` to update label positions.
+
 # multienrichjam 0.0.105.900
 
 ## Changes to existing functions

@@ -3,12 +3,14 @@
 # Whenever words.txt or abbrev.txt is updated, run the code below.
 
 update_word_data <- function() {
+   message("Loading words.txt")
    words <- read.table(
       # "inst/extdata/words.txt",
       file=system.file(package="multienrichjam", "extdata", "words.txt"),
       sep="\t",
       col.names=c("from", "to"),
       quote="")
+   message("Loading abbrev.txt")
    abbrev <- read.table(
       # "inst/extdata/abbrev.txt",
       file=system.file(package="multienrichjam", "extdata", "abbrev.txt"),

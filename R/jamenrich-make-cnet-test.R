@@ -184,7 +184,8 @@ make_cnet_test <- function
    igraph::V(cnet)$coloredrect.color[isset] <- as.list(set_colors[igraph::V(cnet)$name[isset]]);
 
    igraph::V(cnet)$size <- igraph::V(cnet)$size * 1;
-   igraph::V(cnet)$label.dist <- ifelse(isset, 0, 1)
-   # jam_igraph(cnet, node_factor=4, label_dist_factor=0, use_shadowText=TRUE)
+   igraph::V(cnet)$size2 <- igraph::V(cnet)$size;
+   igraph::V(cnet)$label.dist <- ifelse(isset, 0,
+   	igraph::V(cnet)$label.dist);
    return(cnet);
 }

@@ -6,7 +6,20 @@ Subsequent
 Signaling (pathway|system)	Signaling
 (pathway|system) Signaling	Signaling
 Of The	Of
-^Signaling by 	
+^Signaling by	
 ([^ ]+[ ]+[^ ]+) Pathway[s]*$	\1
 Expression	Expr.
 The Role 	Role 
+Genes defining 	
+Genes encoding proteins involved in 	
+Genes encoding 	
+Genes Important For 	
+Genes Involved In 	
+Genes Up-regulated 	Up-regulation
+Genes Down-regulated	Down-regulation
+Genes Down-regulated	Down-regulation
+Genes Regulated 	Regulation
+In Response To 	by
+Components of the 	
+Which is 	
+\[[^]]+]	

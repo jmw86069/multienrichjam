@@ -1,6 +1,40 @@
 # TODO
 
+## 01dec2025
+
+* Consider adding `subsetIgraph()` to handle layout and graph attributes
+* Consider storing previous graph layouts.
+* Consider `set_igraph_layout()` to use current (evolving) igraph layout
+storage recommendations.
+
 ## 24nov2025
+
+* Bug: Using `mark.groups` seems to break edge bundling? Some not bundled,
+and some are bundled with odd spline control points.
+* DONE. Add some 'words.txt'
+
+   * "Genes defining", "Genes encoding", "Genes involved in",
+   "Genes encoding proteins involved in", "Genes Important For ",
+   "Genes Regulated By ",
+   * "In response to", "[Geneid=3458]."
+   * "Components of ", "Which is ",
+* Rename conversions, 'enrichResult_from_*' similar to igraph style.
+
+   * `enrichResult_from_dataframe()`
+   * `cnet_to_dataframe()`
+   * `im_from_cnet()`
+   * `enrichList_to_im()`, `enrichList_to_dataframe()`
+
+* `enrichDF2enrichResult()` - consider keeping pvalueColname intact then
+adding 'p.value'.
+* Decide where to share im-to-list, list-to-im conversion functions.
+* Enhance `list2concordance()`
+
+   * Add argument with 'method', then add methods.
+   * Add IPA z-score: `(N_agree - N_disagree) / sqrt(N)`
+   * Review previous, and find its source:  
+   `dscore <- (N_agree - N_disagree) / N`  
+   `log2(1.2 + abs(dscore)) * sign(dscore)`
 
 * `plot_cnet_heatmaps()`, `CnetHeatmaps()`
 
