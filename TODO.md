@@ -9,7 +9,7 @@ storage recommendations.
 
 ## 24nov2025
 
-* Bug: Using `mark.groups` seems to break edge bundling? Some not bundled,
+* FIXED. Bug: Using `mark.groups` seems to break edge bundling? Some not bundled,
 and some are bundled with odd spline control points.
 * DONE. Add some 'words.txt'
 

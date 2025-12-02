@@ -71,7 +71,9 @@ Other jam cnet utilities:
 \code{\link{apply_nodeset_spacing}()},
 \code{\link{bulk_cnet_adjustments}()},
 \code{\link{get_cnet_nodeset}()},
+\code{\link{get_cnet_nodeset_vector}()},
 \code{\link{launch_shinycat}()},
-\code{\link{make_cnet_test}()}
+\code{\link{make_cnet_test}()},
+\code{\link{relayout_nodegroups}()}
 }
 \concept{jam cnet utilities}

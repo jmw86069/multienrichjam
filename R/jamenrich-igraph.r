@@ -242,10 +242,9 @@ relayout_with_qfr <- function
  ...)
 {
    # if layout exists, use that for init
-   if (length(init) == 0 && "layout" %in% igraph::graph_attr_names(g)) {
-      init <- igraph::graph_attr(g, "layout");
-      rownames(init) <- igraph::V(g)$name;
-      if (verbose) {
+   if (length(init) == 0) {
+   	init <- get_igraph_layout(g, default_layout=NULL); 
+      if (verbose && length(init) > 0) {
          jamba::printDebug("relayout_with_qfr(): ",
             "head(init):");
          print(head(init));

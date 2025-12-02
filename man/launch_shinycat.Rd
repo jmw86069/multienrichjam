@@ -92,7 +92,9 @@ Other jam cnet utilities:
 \code{\link{apply_nodeset_spacing}()},
 \code{\link{bulk_cnet_adjustments}()},
 \code{\link{get_cnet_nodeset}()},
-\code{\link{make_cnet_test}()}
+\code{\link{get_cnet_nodeset_vector}()},
+\code{\link{make_cnet_test}()},
+\code{\link{relayout_nodegroups}()}
 
 Other jam shiny functions: 
 \code{\link{shinycat_server}()},

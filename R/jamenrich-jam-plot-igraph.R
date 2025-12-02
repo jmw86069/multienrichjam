@@ -300,7 +300,7 @@ jam_plot_igraph <- function
    }
 
    vertex.size <- 1/200 * params("vertex", "size");
-   # jamba::printDebug("jam_plot_igraph(): ", "vertex.size: ", vertex.size);# debug
+   
    label.family <- params("vertex", "label.family")
    label.font <- params("vertex", "label.font")
    label.fontsize <- params("vertex", "label.fontsize")
@@ -950,7 +950,9 @@ jam_plot_igraph <- function
       } else if ("connections" %in% edge_bundling) {
          if (verbose) {
             jamba::printDebug("jam_plot_igraph(): ",
-               "Edge bundling with edge_bundle_bipartite()");
+               "Edge bundling '",
+            	edge_bundling,
+            	"' with edge_bundle_bipartite()");
          }
          # bipartite nodegroups
          igraph::graph_attr(graph, "layout") <- layout;
@@ -958,8 +960,10 @@ jam_plot_igraph <- function
             verbose=FALSE,
             ...);
          if (verbose) {
-            jamba::printDebug("jam_plot_igraph(): ",
-               "Rendering edge bundling with edge_bundle_nodegroups()");
+         	jamba::printDebug("jam_plot_igraph(): ",
+         		"Rendering edge bundling '",
+         		edge_bundling,
+         		"' with edge_bundle_nodegroups()");
          }
          igraph::E(graph)$color <- edge.color;
          igraph::E(graph)$width <- edge.width;
@@ -973,7 +977,9 @@ jam_plot_igraph <- function
       } else if (any(c("mark.groups", "nodegroups") %in% edge_bundling)) {
          if (verbose) {
             jamba::printDebug("jam_plot_igraph(): ",
-               "Rendering edge bundling with edge_bundle_nodegroups()");
+               "Rendering edge bundling '",
+            	edge_bundling,
+            	"' with edge_bundle_nodegroups()");
          }
          igraph::graph_attr(graph, "layout") <- layout;
          igraph::E(graph)$color <- edge.color;

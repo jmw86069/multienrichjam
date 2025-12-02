@@ -661,6 +661,7 @@ jam_igraph <- function
       vectorized_node_shapes=vectorized_node_shapes,
       plot_grid=plot_grid,
       params=params,
+   	verbose=(any(verbose > 1)),
       debug=debug);
    return(invisible(params));
 }

@@ -452,10 +452,14 @@ edge_bundle_nodegroups <- function
 
    # nodegroup_df
    # complete: require that every node is contained in a nodegroup
-   if (length(names(nodegroups)) == 0) {
-      names(nodegroups) <- paste0("nodegroup_",
-         jamba::colNum2excelName(seq_along(nodegroups)))
-   }
+   
+   ## 0.0.107.900: always rename nodegroups
+   ## - apparently the names are not used here anyway
+   ##   and the names have potential to clash with node names
+   ##   causing chaos.
+   names(nodegroups) <- paste0("nodegroup_",
+      jamba::colNum2excelName(seq_along(nodegroups)))
+   
    if (!all(igraph::V(g)$name %in% unlist(nodegroups))) {
       add_nodes <- setdiff(igraph::V(g)$name,
          unlist(nodegroups));

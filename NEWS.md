@@ -1,3 +1,28 @@
+# multienrichjam 0.0.107.900
+
+## Bug fixes
+
+* Visual glitch fixed when using `mark.groups` or `nodegroups` with
+named entries, causing the edge bundling to go awry.
+Group names often clashed with singular node names, causing the group centers
+to be mis-matched. It was usually "nearby" so it was not terrible.
+
+## New functions
+
+* `relayout_nodegroups()`
+
+	* Experimental layout algorithm for Cnet plots, intended to help
+	each nodegroup show visual grouping. Still being improved.
+	* It helps when two nodegroups are intertwined, with no other
+	force helpful in separating the groups. Since nodegroups do not
+	have connections among themselves, typical layout algorithms are
+	less effective.
+
+* `get_cnet_nodeset_vector()`
+
+	* Returns a vector of nodegroups for all nodes in a Cnet `igraph`,
+	a simple wrapper around `get_cnet_nodeset()` which returns a `list`.
+
 # multienrichjam 0.0.106.900
 
 ## Changes
