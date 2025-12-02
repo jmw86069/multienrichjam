@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.105.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.106.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,35 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.106.900" id="multienrichjam-00106900">multienrichjam 0.0.106.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00106900"></a></h2>
+<div class="section level3">
+<h3 id="changes-0-0-106-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-106-900"></a></h3>
+<ul><li>Updated ‘words’ and ‘abbrev’ to remove verbose phrases from gene sets. “Genes encoding proteins involved in” can be entirely removed.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-106-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-106-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code></p>
+<ul><li>New argument ‘perl=TRUE’ to allow disabling the word boundary condition.</li>
+<li>Added testthat conditions to verify behavior.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/get_igraph_layout.html">get_igraph_layout()</a></code></p>
+<ul><li>Now uses vertex attributes x,y,z when <code>layout</code> is not provided, and when graph attribute ‘layout’ is not defined, and when x,y,z attributes are defined with <code>numeric</code> values. The igraph team has debated removing support for graph attributes, using only vertex attributes, in order to improve subgraph support for layouts.</li>
+<li>New argument <code>default_layout</code> applied only when layout does not exist.</li>
+<li>Argument <code>make_circular</code> removed, as it was not used.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-functions-0-0-106-900">New functions<a class="anchor" aria-label="anchor" href="#new-functions-0-0-106-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/get_igraph_layout.html">set_igraph_layout()</a></code></p>
+<ul><li>complements <code><a href="../reference/get_igraph_layout.html">get_igraph_layout()</a></code> by also storing layout in the <code>igraph</code>. Intended to future-proof the layout, since the igraph team is debating whether to recommend only using vertex attributes, or graph attributes.</li>
+<li>It can optionally call <code><a href="../reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> to update label positions.</li>
+</ul></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.105.900" id="multienrichjam-00105900">multienrichjam 0.0.105.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00105900"></a></h2>
 <div class="section level3">

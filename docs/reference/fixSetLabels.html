@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.105.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.106.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,6 +66,7 @@
 <span>  add_to <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  abbrev_from <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  abbrev_to <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  perl <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -192,6 +193,13 @@ required to understand the rest of the label.</p></li>
 <li><p>"Signaling by " at the start of a phrase is removed, as
 it also is not typically necessary to understand the label.</p></li>
 </ul></dd>
+
+
+<dt id="arg-perl">perl<a class="anchor" aria-label="anchor" href="#arg-perl"></a></dt>
+<dd><p><code>logical</code> default TRUE, passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub()</a></code> for pattern matching.
+When Perl-mode is enabled, it also enforces word boundaries before and
+after each pattern. When Perl-mode is not enabled, there are no word
+boundary conditions applied.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
