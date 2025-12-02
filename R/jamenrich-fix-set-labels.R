@@ -112,6 +112,10 @@
 #'    required to understand the rest of the label.
 #'    * "Signaling by " at the start of a phrase is removed, as
 #'    it also is not typically necessary to understand the label.
+#' @param perl `logical` default TRUE, passed to `gsub()` for pattern matching.
+#'    When Perl-mode is enabled, it also enforces word boundaries before and
+#'    after each pattern. When Perl-mode is not enabled, there are no word
+#'    boundary conditions applied.
 #' @param ... additional arguments are passed to `jamba::ucfirst(x, ...)`,
 #'    for example `firstWordOnly=TRUE` will capitalize only the first word.
 #'
@@ -146,6 +150,7 @@ fixSetLabels <- function
  add_to=NULL,
  abbrev_from=NULL,
  abbrev_to=NULL,
+ perl=TRUE,
  ...)
 {
    # validate nodeType
@@ -158,8 +163,9 @@ fixSetLabels <- function
    }
    # use default abbrev
    if (length(abbrev_from) == 0) {
-      abbrev_from <- abbrev$from;
-      abbrev_to <- abbrev$to;
+      abbrev_from <- multienrichjam::abbrev$from;
+      abbrev_to <- multienrichjam::abbrev$to;
+      # jamba::printDebug("abbrev:");print(data.frame(abbrev_from, abbrev_to));# debug
    }
    # accept data.frame
    if (inherits(words_from, "data.frame")) {
@@ -273,21 +279,33 @@ fixSetLabels <- function
       words_to <- c(words_to, add_to)
    }
    ## When abbrev_from,abbrev_to are defined
-   if (TRUE %in% do_abbreviations && length(abbrev_from) > 0) {
+   if (isTRUE(do_abbreviations) && length(abbrev_from) > 0) {
       abbrev_to <- rep(abbrev_to, length.out=length(abbrev_from))
+      # trim trailing space in pattern match
+      abbrev_from <- gsub("[ ]*$", "", abbrev_from);
       # append to words_from
       words_from <- c(words_from, abbrev_from)
       words_to <- c(words_to, abbrev_to)
    }
-
-   ## Optionally replace certain words with fixed capitalization
+   
+   # jamba::printDebug("words:");print(data.frame(words_from, words_to));# debug
+   
+   # Apply replacements, case-insensitive match, case-sensitive replacement
    if (length(words_from) > 0 && length(words_to) == length(words_from)) {
       for (i in seq_along(words_from)) {
-         xPrep <- gsub(paste0("\\b", words_from[i], "\\b"),
-            words_to[i],
-            ignore.case=TRUE,
-            perl=TRUE,
-            xPrep);
+      	if (isTRUE(perl)) {
+      		xPrep <- gsub(paste0("\\b", words_from[i], "\\b"),
+	            words_to[i],
+	            ignore.case=TRUE,
+	            perl=TRUE,
+	            xPrep);
+      	} else {
+      		xPrep <- gsub(paste0("", words_from[i], ""),
+      			words_to[i],
+      			ignore.case=TRUE,
+      			perl=FALSE,
+      			xPrep);
+      	}
       }
    }
    ## Optionally limit the character length
@@ -304,6 +322,10 @@ fixSetLabels <- function
             suffix);
       }
    }
+   
+   ## Apply base::trimws() to trim leading/trailing whitespace
+   xPrep <- base::trimws(xPrep, which="both")
+   
    ## Optionally apply word wrap
    if (wrap) {
       xNew <- jamba::cPaste(sep="\n",

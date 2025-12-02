@@ -4,7 +4,7 @@
 
 * Consider adding `subsetIgraph()` to handle layout and graph attributes
 * Consider storing previous graph layouts.
-* Consider `set_igraph_layout()` to use current (evolving) igraph layout
+* DONE. Consider `set_igraph_layout()` to use current (evolving) igraph layout
 storage recommendations.
 
 ## 24nov2025

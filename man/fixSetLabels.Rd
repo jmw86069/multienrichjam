@@ -34,6 +34,7 @@ fixSetLabels(
   add_to = NULL,
   abbrev_from = NULL,
   abbrev_to = NULL,
+  perl = TRUE,
   ...
 )
 
@@ -136,6 +137,11 @@ required to understand the rest of the label.
 \item "Signaling by " at the start of a phrase is removed, as
 it also is not typically necessary to understand the label.
 }}
+
+\item{perl}{\code{logical} default TRUE, passed to \code{gsub()} for pattern matching.
+When Perl-mode is enabled, it also enforces word boundaries before and
+after each pattern. When Perl-mode is not enabled, there are no word
+boundary conditions applied.}
 
 \item{...}{additional arguments are passed to \code{jamba::ucfirst(x, ...)},
 for example \code{firstWordOnly=TRUE} will capitalize only the first word.}

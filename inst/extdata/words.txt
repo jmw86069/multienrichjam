@@ -34,15 +34,17 @@ aktmtor	AKT/mTOR
 mtorsignaling	mTOR Signaling
 Pi3kci	PI3KCI
 Pi3kgamma	PI3Kgamma
-Pi 3k	PI3K
-Ppar(alpha|a)	PPARalpha
-Ppar(gamma|g)	PPARgamma
+Pi[. ]*3k	PI3K
+Ppar[-. ]*(alpha|a)	PPARalpha
+Ppar[-. ]*(delta|d)	PPARdelta
+Ppar[-. ]*(gamma|g)	PPARgamma
 Ppar	PPAR
 Udp N Acetyl Glucosamine	UDP-GlcNAc
 Mtor	mTOR
 Gpcr	GPCR
 Gpcrs	GPCRs
-Tnfa|Tnfalpha	TNFa
+Tnfa	TNFa
+Tnf[-. ]*alpha	TNFa
 Tnfr1	TNFR1
 Tnfr2	TNFR2
 Tnfs	TNFs
@@ -51,9 +53,9 @@ Tnfsf	TNFSF
 Tnfrelated	TNF-related
 Tgf(beta|b)	TGFbeta
 Tgfbr	TGFbeta-Receptor
-TGF Beta	TGFbeta
+TGF[-_ ]*Beta	TGFbeta
 Akt1	AKT1
-Igf1akt	IGF1/AKT
+Igf1[.-/ ]*akt	IGF1/AKT
 Foxo	FOXO
 Hdacs	HDACs
 Hdac	HDAC
@@ -78,6 +80,7 @@ Lncrna|Lincrna	lncRNA
 Microrna([s]*)	microRNA\1
 125 DIHYDROXYVITAMIN D3	1,25-dihydroxyvitamin D3
 Tweak	TWEAK
+Clear	CLEAR
 Er	ER
 Vegfavegfr2	VEGFA/VEGFR2
 Vegfr1 2	VEGFR1/VEGFR2
@@ -90,16 +93,16 @@ Smad2 3(pathway|nuclear)	Smad2/3 \1
 Smad2 3	Smad2/3
 Nf[- .]Kb	NFKB
 Nfkappab	NFKB
-C Jun	C-jun
-C Fos	C-fos
-Ap 1	AP-1
+C[-. ]*Jun	C-jun
+C[-. ]*Fos	C-fos
+Ap[-. ]*1	AP-1
 Apoe	APOE
 ([AG])tpase	\1TPase
 Kras	KRAS
 Uv	UV
 Sarscov2	SARS-CoV-2
-Sars Cov ([12])	SARS-CoV-\1
-Sars Cov	SARS-CoV
+Sars[-. ]*Cov[-. ]*([12])	SARS-CoV-\1
+Sars[-. ]*Cov	SARS-CoV
 Covid19	COVID19
 Cellspecific	Cell-Specific
 ([a-zA-Z0-9]+)like	\1-Like
@@ -108,5 +111,5 @@ Enos	eNOS
 Camp	cAMP
 Creb	CREB
 ([IVNB])cam	\1CAM
-Mtorc	mTORC
+Mtor([a-d0-9]*)	mTOR\1
 Mtor	mTOR

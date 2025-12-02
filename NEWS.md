@@ -7,6 +7,11 @@
 
 ## Changes to existing functions
 
+* `fixSetLabels()`
+
+	* New argument 'perl=TRUE' to allow disabling the word boundary condition.
+	* Added testthat conditions to verify behavior.
+
 * `get_igraph_layout()`
 
 	* Now uses vertex attributes x,y,z when `layout` is not provided,
