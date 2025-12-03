@@ -1,5 +1,15 @@
 # TODO
 
+## 02dec2025
+
+* FIXED. Fix bug with `CnetCluster()`, `CnetCollapsed()` when drawing
+`mem_legend()`, it should include `do_directional=TRUE` when relevant,
+and proper fill colors.
+* DONE. Consider storing "hasDirection" in MemPlotFolio
+* `mem2cnet()` non-directional Cnet plot would not apply a red border.
+
+* Continue adding more abbreviations.
+
 ## 01dec2025
 
 * Consider adding `subsetIgraph()` to handle layout and graph attributes

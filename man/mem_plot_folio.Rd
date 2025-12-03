@@ -457,6 +457,15 @@ To define your own pathway cluster labels, define \code{pathway_column_title}
 as a vector with length equal to \code{pathway_column_split}. These labels
 become network node labels in subsequent plots, and in the
 resulting \code{igraph} object.
+
+Metadata are stored in \code{metadata(Mpf)} for MemPlotFolio output, and
+includes:
+\itemize{
+\item 'colorV': the color vector used
+\item 'hasDirection': whether the input data contained directionality,
+defined by any negative value in 'geneIMdirection', 'enrichIMdirection',
+or any non-blank column for headers(Mem) 'directionColname'.
+}
 }
 }
 \examples{

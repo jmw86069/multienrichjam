@@ -294,7 +294,8 @@ setMethod("show", "Mem",
             ")"),
          paste0("- min gene count: ", min_count)
       )
-      if ("directionColname" %in% names(object@headers)) {
+      if ("directionColname" %in% names(object@headers) &&
+      		length(object@headers[["directionColname"]]) > 0) {
          summary_v <- c(summary_v,
             paste0("- direction colname: ",
                object@headers$directionColname))
@@ -823,7 +824,7 @@ setMethod("geneHitList<-", "Mem",
 #' @describeIn Mem-class Enrichment data column headers associated to
 #'    enrichResult data in a Mem object
 #' @export
-setMethod("headers", "Mem", function(x) names(x@headers))
+setMethod("headers", "Mem", function(x) x@headers)
 
 #' List colors assigned to enrichment tests in a Mem object
 #'

@@ -6,6 +6,16 @@
 named entries, causing the edge bundling to go awry.
 Group names often clashed with singular node names, causing the group centers
 to be mis-matched. It was usually "nearby" so it was not terrible.
+* `headers()` now returns the `list` and not just names of the list.
+
+## Changes
+
+* 'MemPlotFolio' metadata now includes `logical` 'hasDirection'
+as convenient way to tell if data include directionality.
+* `CnetCollapsed()`, `CnetExemplar()`, `CnetCluster()` show direction
+in the color legend if defined in the 'MemPlotFolio' object.
+It can be overridden with `do_directional=FALSE`.
+* Added more words.txt.
 
 ## New functions
 

@@ -17,7 +17,7 @@ mem_legend(
   pt.cex = 2,
   pt.lwd = 2,
   inset = 0,
-  do_directional = FALSE,
+  do_directional = NULL,
   directional_column = c("same", "added-bottom", "added-top"),
   directional_colors = c(`up-regulated` = "firebrick3", `no change` = "grey80",
     `down-regulated` = "blue"),

@@ -218,7 +218,14 @@
 #' as a vector with length equal to `pathway_column_split`. These labels
 #' become network node labels in subsequent plots, and in the
 #' resulting `igraph` object.
-#'
+#' 
+#' Metadata are stored in `metadata(Mpf)` for MemPlotFolio output, and
+#' includes:
+#' 
+#' * 'colorV': the color vector used
+#' * 'hasDirection': whether the input data contained directionality,
+#' defined by any negative value in 'geneIMdirection', 'enrichIMdirection',
+#' or any non-blank column for headers(Mem) 'directionColname'.
 #'
 #' @family multienrichjam core functions
 #'
@@ -520,9 +527,21 @@ mem_plot_folio <- function
       }
    }
    
+   # hasDirection is TRUE when any criteria are met:
+   # 1. enrichIMdirection has any negative value, OR
+   # 2. geneIMdirection has any negative value, OR
+   # 3. directionColname is defined
+   hasDirection <- FALSE;
+   if (any(enrichIMdirection(Mem) < 0) ||
+   		any(geneIMdirection(Mem) < 0) ||
+   		!is.null(headers(Mem)[["directionColname"]])) {
+   	hasDirection <- TRUE;
+   }
+
    # metadata
    metadata <- list(
-      colorV=Mem@colorV
+      colorV=Mem@colorV,
+   	hasDirection=hasDirection
    );
    
    return_mpf <- function(ret_vals, returnType="MemPlotFolio") {

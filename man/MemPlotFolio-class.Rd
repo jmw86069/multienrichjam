@@ -149,15 +149,24 @@ Argument \code{type} can be:
 \item \code{type='set2'} to use abbreviated pathway names, with hidden gene labels
 }
 
+The legend includes direction if encoded in the 'MemPlotFolio', but
+can be forced with \code{do_directional=TRUE} or FALSE.
+
 \item \code{CnetExemplar(MemPlotFolio)}: Draws the Cnet exemplar network
 from \code{MemPlotFolio} results for 'num' exemplar per cluster.
 Note that '...' arguments are
 passed to \code{jam_igraph()} and \code{mem_legend()} when \code{do_plot=TRUE}.
 
+The legend includes direction if encoded in the 'MemPlotFolio', but
+can be forced with \code{do_directional=TRUE} or FALSE.
+
 \item \code{CnetCluster(MemPlotFolio)}: Draws the Cnet network
 from \code{MemPlotFolio} results for a specific cluster.
 Note that '...' arguments are
 passed to \code{jam_igraph()} and \code{mem_legend()} when \code{do_plot=TRUE}.
+
+The legend includes direction if encoded in the 'MemPlotFolio', but
+can be forced with \code{do_directional=TRUE} or FALSE.
 
 }}
 \examples{

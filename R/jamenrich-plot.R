@@ -2010,7 +2010,7 @@ mem_legend <- function
  pt.cex=2,
  pt.lwd=2,
  inset=0,
- do_directional=FALSE,
+ do_directional=NULL,
  directional_column=c("same",
     "added-bottom",
     "added-top"),
@@ -2022,10 +2022,30 @@ mem_legend <- function
 {
    ##
    Mem <- NULL;
+   hasDirection <- FALSE;
    if (inherits(mem, "Mem")) {
       Mem <- mem;
       mem <- Mem_to_list(Mem);
+      # hasDirection is TRUE when any criteria are met:
+      # 1. enrichIMdirection has any negative value, OR
+      # 2. geneIMdirection has any negative value, OR
+      # 3. directionColname is defined
+      if (any(enrichIMdirection(Mem) < 0) ||
+      		any(geneIMdirection(Mem) < 0) ||
+      		!is.null(headers(Mem)[["directionColname"]])) {
+      	hasDirection <- TRUE;
+      }
+   } else if (inherits(mem, "MemPlotFolio")) {
+   	# extract only the metadata as a list
+   	mem <- metadata(mem);
+   	hasDirection <- ifelse(isTRUE(mem$hasDirection),
+   		TRUE, FALSE);
    }
+   if (length(do_directional) == 0) {
+   	do_directional <- hasDirection;
+   }
+   
+   # directional_column is the legend column with directionality
    directional_column <- match.arg(directional_column);
    if (!is.list(mem) || !"colorV" %in% names(mem)) {
       stop("Input mem must be a list with element 'colorV'");

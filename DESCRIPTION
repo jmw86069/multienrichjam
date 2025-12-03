@@ -38,7 +38,8 @@ Imports: jamba (>= 1.0.4),
     tidyr,
     lifecycle,
     methods,
-    S4Vectors
+    S4Vectors,
+    interp
 Suggests: 
     knitr,
     openxlsx,

@@ -357,6 +357,9 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
 #'    * `type=''` (default) to use cluster title
 #'    * `type='set'` to use abbreviated pathway names
 #'    * `type='set2'` to use abbreviated pathway names, with hidden gene labels
+#'    
+#'    The legend includes direction if encoded in the 'MemPlotFolio', but
+#'    can be forced with `do_directional=TRUE` or FALSE.
 #' @returns `CnetCollapsed(MemPlotFolio)` returns an `igraph` object invisibly,
 #'    with Gene and Set nodes representing the collapsed pathway clusters.
 #' @export
@@ -407,8 +410,22 @@ setMethod("CnetCollapsed", "MemPlotFolio", function(x, type, do_plot, ...) {
    if (isTRUE(do_plot)) {
       jam_igraph(cnet,
          ...)
-      mem_legend(metadata(x),
-         ...)
+   	
+   	# determine whether to include direction in the legend
+   	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
+   		TRUE, FALSE)
+   	arglist <- list(...);
+   	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
+   		do_directional <- arglist[["do_directional"]];
+   		# arglist <- arglist[-match("do_directional", names(arglsit))];
+   	} else {
+   		arglist[["do_directional"]] <- hasDirection;
+   	}
+   	# draw the legend
+   	do.call(mem_legend,
+   		c(
+   			alist(mem=metadata(x)),
+   			arglist))
    }
    invisible(cnet);
 })
@@ -420,6 +437,9 @@ setMethod("CnetCollapsed", "MemPlotFolio", function(x, type, do_plot, ...) {
 #'    from `MemPlotFolio` results for 'num' exemplar per cluster.
 #'    Note that '...' arguments are
 #'    passed to `jam_igraph()` and `mem_legend()` when `do_plot=TRUE`.
+#'    
+#'    The legend includes direction if encoded in the 'MemPlotFolio', but
+#'    can be forced with `do_directional=TRUE` or FALSE.
 #' @returns `CnetExemplar(MemPlotFolio)` returns an `igraph` object
 #'    with Gene and Set nodes for the 'num' number of exemplars per cluster.
 #' @export
@@ -447,8 +467,22 @@ setMethod("CnetExemplar", "MemPlotFolio", function(x, num, do_plot, ...) {
    if (isTRUE(do_plot)) {
       jam_igraph(cnet,
          ...)
-      mem_legend(metadata(x),
-         ...)
+   	
+   	# determine whether to include direction in the legend
+   	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
+   		TRUE, FALSE)
+   	arglist <- list(...);
+   	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
+   		do_directional <- arglist[["do_directional"]];
+   		# arglist <- arglist[-match("do_directional", names(arglsit))];
+   	} else {
+   		arglist[["do_directional"]] <- hasDirection;
+   	}
+   	# draw the legend
+   	do.call(mem_legend,
+   		c(
+   			alist(mem=metadata(x)),
+   			arglist))
    }
    invisible(cnet);
 })
@@ -460,6 +494,9 @@ setMethod("CnetExemplar", "MemPlotFolio", function(x, num, do_plot, ...) {
 #'    from `MemPlotFolio` results for a specific cluster.
 #'    Note that '...' arguments are
 #'    passed to `jam_igraph()` and `mem_legend()` when `do_plot=TRUE`.
+#'    
+#'    The legend includes direction if encoded in the 'MemPlotFolio', but
+#'    can be forced with `do_directional=TRUE` or FALSE.
 #' @returns `CnetCluster(MemPlotFolio)` returns an `igraph` object invisibly,
 #'    using all pathways in the cluster defined with argument `cluster`.
 #' @export
@@ -505,11 +542,25 @@ setMethod("CnetCluster", "MemPlotFolio", function(x, cluster, do_plot, ...) {
    cnet <- x@cnet_clusters[[cluster]];
 
    if (isTRUE(do_plot)) {
+   	# draw the igraph
       jam_igraph(cnet,
          ...)
-      mem_legend(metadata(x),
-         ...)
-      
+   	
+   	# determine whether to include direction in the legend
+   	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
+   		TRUE, FALSE)
+   	arglist <- list(...);
+   	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
+   		do_directional <- arglist[["do_directional"]];
+   		# arglist <- arglist[-match("do_directional", names(arglsit))];
+   	} else {
+   		arglist[["do_directional"]] <- hasDirection;
+   	}
+   	# draw the legend
+   	do.call(mem_legend,
+   		c(
+   			alist(mem=metadata(x)),
+	      	arglist))
    }
    invisible(cnet)
 })

@@ -112,4 +112,19 @@ Camp	cAMP
 Creb	CREB
 ([IVNB])cam	\1CAM
 Mtor([a-d0-9]*)	mTOR\1
-Mtor	mTOR
+Tcell	T-cell
+Tcr	TCR
+Therapyinduced	Therapy-induced
+Brainderived	Brain-derived
+Pd1	PD1
+Nsp9nsp10	Nsp9/Nsp10
+Bdnf	BDNF
+Iga	IgA
+Igg	IgG
+Igm	IgM
+Igd	IgD
+Iga	IgA
+Nod[-. ]*like	NOD-like
+Cytokine[-. ]*cytokine	Cytokine-Cytokine
+Macrophagestimulating	Macrophage-stimulating
+Ilc[-. ]family	ILC family

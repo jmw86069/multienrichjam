@@ -156,8 +156,6 @@ ashape <- function
 
 #' alphahull delvor port Delauney triangulation and Voronoi diagram
 #' 
-#' importFrom interp "circum","in.convex.hull","tri.mesh","triangles"
-#' 
 #' @keywords internal
 #' @noRd
 delvor <- function
