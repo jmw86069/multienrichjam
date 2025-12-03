@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.106.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.107.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -536,7 +536,12 @@ Detailed arguments are described in <code><a href="mem2cnet.html">mem2cnet()</a>
 as a vector with length equal to <code>pathway_column_split</code>. These labels
 become network node labels in subsequent plots, and in the
 resulting <code>igraph</code> object.</p>
-</div>
+<p>Metadata are stored in <code>metadata(Mpf)</code> for MemPlotFolio output, and
+includes:</p><ul><li><p>'colorV': the color vector used</p></li>
+<li><p>'hasDirection': whether the input data contained directionality,
+defined by any negative value in 'geneIMdirection', 'enrichIMdirection',
+or any non-blank column for headers(Mem) 'directionColname'.</p></li>
+</ul></div>
 
     </div>
     <div class="section level2">

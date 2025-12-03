@@ -60,6 +60,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/flip_edges.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_bipartite_nodeset.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_cnet_nodeset.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/get_cnet_nodeset_vector.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_hull_data.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_igraph_arrow_mode.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_igraph_layout.html</loc></url>
@@ -119,6 +120,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/plot_layout_scale.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/rank_mem_clusters.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/rectifyPiegraph.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/relayout_nodegroups.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/relayout_with_qfr.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/removeIgraphBlanks.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/removeIgraphSinglets.html</loc></url>

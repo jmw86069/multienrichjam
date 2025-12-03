@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.106.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.107.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,13 @@
 <div id="todo" class="section level1">
 
 <div class="section level2">
+<h2 id="id_02dec2025">02dec2025<a class="anchor" aria-label="anchor" href="#id_02dec2025"></a></h2>
+<ul><li><p>FIXED. Fix bug with <code>CnetCluster()</code>, <code>CnetCollapsed()</code> when drawing <code><a href="reference/mem_legend.html">mem_legend()</a></code>, it should include <code>do_directional=TRUE</code> when relevant, and proper fill colors.</p></li>
+<li><p>DONE. Consider storing “hasDirection” in MemPlotFolio</p></li>
+<li><p><code><a href="reference/mem2cnet.html">mem2cnet()</a></code> non-directional Cnet plot would not apply a red border.</p></li>
+<li><p>Continue adding more abbreviations.</p></li>
+</ul></div>
+<div class="section level2">
 <h2 id="id_01dec2025">01dec2025<a class="anchor" aria-label="anchor" href="#id_01dec2025"></a></h2>
 <ul><li>Consider adding <code>subsetIgraph()</code> to handle layout and graph attributes</li>
 <li>Consider storing previous graph layouts.</li>
@@ -52,7 +59,7 @@
 </ul></div>
 <div class="section level2">
 <h2 id="id_24nov2025">24nov2025<a class="anchor" aria-label="anchor" href="#id_24nov2025"></a></h2>
-<ul><li><p>Bug: Using <code>mark.groups</code> seems to break edge bundling? Some not bundled, and some are bundled with odd spline control points.</p></li>
+<ul><li><p>FIXED. Bug: Using <code>mark.groups</code> seems to break edge bundling? Some not bundled, and some are bundled with odd spline control points.</p></li>
 <li>
 <p>DONE. Add some ‘words.txt’</p>
 <ul><li>“Genes defining”, “Genes encoding”, “Genes involved in”, “Genes encoding proteins involved in”, “Genes Important For”, “Genes Regulated By”,</li>
