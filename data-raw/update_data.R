@@ -24,3 +24,5 @@ update_word_data <- function() {
          overwrite=TRUE))
 }
 update_word_data()
+## For development work, refresh the package
+# devtools::load_all()

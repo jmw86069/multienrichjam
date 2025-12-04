@@ -17,10 +17,18 @@ mem2emap(
   repulse = 3.3,
   remove_singlets = FALSE,
   color_by_nodes = FALSE,
+  size_by_genes = TRUE,
+  median_size = 5,
   apply_direction = TRUE,
   direction_max = 2,
   direction_floor = 0.5,
   seed = 123,
+  spread_labels = TRUE,
+  label_min_dist = 2.5,
+  y_bias = 10,
+  vertex.label.font = 2,
+  use_shadowText = TRUE,
+  do_express = FALSE,
   do_plot = FALSE,
   verbose = FALSE,
   ...
@@ -109,6 +117,11 @@ at or below 0.5 may be considered "not directional."}
 \item{seed}{\code{numeric} passed to \code{set.seed()} via the \code{layout_with_qfr()}
 layout algorithm, default 123.}
 
+\item{do_express}{\code{logical} default FALSE, when TRUE it skips a number
+of aesthetic steps. This option is intended mainly for
+\code{mem_find_overlap()} to perform more rapid iterative evaluation
+of overlap thresholds.}
+
 \item{do_plot}{\code{logical}, default FALSE, whether to render the resulting
 plot using \code{jam_igraph()}.}
 
@@ -134,6 +147,17 @@ or using a custom value.
 A node clustering function is applied by default, which may help
 define suitable subgroups of nodes. When defined, the clusters
 are used to define nodegroups for edge bundling.
+}
+\examples{
+emap <- mem2emap(Memtest, min_count=2,)
+jam_igraph(emap)
+
+emap2 <- relayout_nodegroups(emap, final_repulse=4, y_bias=10, label_min_dist=2.5)
+jam_igraph(emap2)
+
+emapB <- mem2emap(fixSetLabels(Memtest), min_count=2, overlap=0.35)
+jam_igraph(emapB)
+
 }
 \seealso{
 Other jam Mem utilities: 

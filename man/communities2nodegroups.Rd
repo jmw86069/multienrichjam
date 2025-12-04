@@ -4,14 +4,24 @@
 \alias{communities2nodegroups}
 \title{Convert communities object to nodegroups list format}
 \usage{
-communities2nodegroups(wc, ...)
+communities2nodegroups(wc, sep = ",", ...)
 }
 \arguments{
 \item{wc}{\code{communities} object as returned by \code{igraph} functions
 such as \code{cluster_optimal()}, \code{cluster_walktrap()}, or
-\code{cluster_leading_eigen()}.}
+\code{cluster_leading_eigen()}.
+\itemize{
+\item Alternatively, a \code{list} object with 'membership' and 'names'.
+\item Alternatively, a \code{list} object which mimics the output of this
+function, in which case the input \code{wc} is returned as-is.
+}}
 
-\item{...}{additional arguments are ignored.}
+\item{sep}{\code{character} string, default ',' (comma), used when
+cluster_names are defined as a \code{list} with vector of names
+for each cluster. Passed to \code{jamba::cPaste()}.}
+
+\item{...}{additional arguments are passed to \code{jamba::cPaste()} when
+relevant.}
 }
 \value{
 \code{list} of \code{character} vectors, where each vector contains
@@ -32,6 +42,10 @@ the input \code{communities} object in detail. However, the output
 \code{list} can be converted to a \code{communities} object that will
 be accepted by most \code{igraph} related functions that require
 that object type as an input value.
+
+Alternatively, this function can be used to confirm the input
+is already appropriate nodegroups \code{list} format, by supplying
+\code{list} format upfront.
 }
 \seealso{
 Other jam igraph functions: 

@@ -78,12 +78,26 @@
 #'    at or below 0.5 may be considered "not directional."
 #' @param seed `numeric` passed to `set.seed()` via the `layout_with_qfr()`
 #'    layout algorithm, default 123.
+#' @param do_express `logical` default FALSE, when TRUE it skips a number
+#'    of aesthetic steps. This option is intended mainly for
+#'    `mem_find_overlap()` to perform more rapid iterative evaluation
+#'    of overlap thresholds.
 #' @param do_plot `logical`, default FALSE, whether to render the resulting
 #'    plot using `jam_igraph()`.
 #' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are passed to `jam_igraph()` to customize
 #'    the network plot, used when `do_plot=TRUE`.
-#'
+#' 
+#' @examples
+#' emap <- mem2emap(Memtest, min_count=2,)
+#' jam_igraph(emap)
+#' 
+#' emap2 <- relayout_nodegroups(emap, final_repulse=4, y_bias=10, label_min_dist=2.5)
+#' jam_igraph(emap2)
+#' 
+#' emapB <- mem2emap(fixSetLabels(Memtest), min_count=2, overlap=0.35)
+#' jam_igraph(emapB)
+#' 
 #' @export
 mem2emap <- function
 (mem,
@@ -98,10 +112,18 @@ mem2emap <- function
  repulse=3.3,
  remove_singlets=FALSE,
  color_by_nodes=FALSE,
+ size_by_genes=TRUE,
+ median_size=5,
  apply_direction=TRUE,
  direction_max=2,
  direction_floor=0.5,
  seed=123,
+ spread_labels=TRUE,
+ label_min_dist=2.5,
+ y_bias=10,
+ vertex.label.font=2,
+ use_shadowText=TRUE,
+ do_express=FALSE,
  do_plot=FALSE,
  verbose=FALSE,
  ...)
@@ -143,17 +165,19 @@ mem2emap <- function
       colorV <- colorV(mem)
    }
    
+	# define enrich_use while applying filtering
+   enrich_use <- (enrichIM(mem) <= p_cutoff) * 1;
+   # optionally apply min_count when defined, and when present in the mem data
+   if (min_count > 1) {
+      enrich_use <- (enrich_use > 0 &
+            enrichIMgeneCount(mem) >= min_count) * 1;
+   }
+   rownames(enrich_use) <- rownames(enrichIM(mem));
+   
+   # determine which rows to use
    if (length(cluster_list) > 0) {
       enrich_rows_use <- unname(unlist(cluster_list));
    } else {
-      enrich_use <- (enrichIM(mem) <= p_cutoff) * 1;
-
-      # optionally apply min_count when defined, and when present in the mem data
-      if (min_count > 1) {
-         enrich_use <- (enrich_use > 0 &
-               enrichIMgeneCount(mem) >= min_count) * 1;
-      }
-      rownames(enrich_use) <- rownames(enrichIM(mem));
       enrich_rows_use <- rownames(enrich_use)[rowSums(enrich_use) > 0]
    }
    
@@ -176,12 +200,14 @@ mem2emap <- function
    col_match <- match(enrich_rows_use,
       colnames(memIM(mem)));
    if (any(is.na(col_match))) {
-      stop("There is a mismatch in rownames(enrichIM(mem)) and colnames(memIM(mem)).")
+      stop_msg <- paste0("There is a mismatch in ",
+      	"rownames(enrichIM(mem)) and colnames(memIM(mem)).");
+      stop(stop_msg);
    }
    jacc_overlap <- 1 - as.matrix(
       dist(t(memIM(mem)[, col_match, drop=FALSE]),
          method="binary"));
-
+   
    # convert to graph using Jaccard overlap threshold
    jacc_overlap_filtered <- jacc_overlap * (jacc_overlap >= overlap)
    jacc_g <- igraph::graph_from_adjacency_matrix(
@@ -190,141 +216,218 @@ mem2emap <- function
       diag=FALSE,
       weighted=TRUE,
       add.colnames=NULL)
-   # Todo: define size by vcount
-   igraph::V(jacc_g)$size <- 5;
+   
+   if (isTRUE(do_express)) {
+   	size_by_genes <- FALSE;
+   }
+   if (!isTRUE(do_express)) {
+	   # calculate gene count per overlap
+	   # - note convert non-zero, non-NA to 1, all else 0
+	   genecount_matrix <- crossprod((!memIM(mem) == 0 & !is.na(memIM(mem))) * 1);
+	   # - multiply by non-zero Jaccard overlap so that it uses identical edges
+	   genecount_matrix <- genecount_matrix * (jacc_overlap_filtered > 0);
+	   # Create the igraph using genecount weights
+	   jacc_g_ct <- igraph::graph_from_adjacency_matrix(
+	   	genecount_matrix,
+	   	mode="undirected",
+	   	diag=FALSE,
+	   	weighted=TRUE,
+	   	add.colnames=NULL)
+	   igraph::E(jacc_g)$gene_count <- igraph::E(jacc_g_ct)$weight;
+	
+	   # add gene count to vertex attributes
+	   genecount_set <- colSums((!memIM(mem) == 0 & !is.na(memIM(mem))) * 1);
+	   names(genecount_set) <- colnames(memIM(mem));
+	   igraph::V(jacc_g)$gene_count <- genecount_set[igraph::V(jacc_g)$name];
+   }
 
+   # Define size by vcount
+   if (isTRUE(size_by_genes)) {
+   	gc_sizes <- sqrt(igraph::V(jacc_g)$gene_count / 
+   			median(igraph::V(jacc_g)$gene_count)) * median_size;
+   	igraph::V(jacc_g)$size <- gc_sizes;
+   } else {
+	   igraph::V(jacc_g)$size <- median_size;
+   }
+
+   # define some default aesthetics
+   if (length(vertex.label.font) == 1) {
+   	igraph::V(jacc_g)$label.font <- vertex.label.font;
+   }
+   if (isTRUE(use_shadowText)) {
+   	igraph::graph_attr(jacc_g, "use_shadowText") <- use_shadowText;
+   }
+   
    # optionally remove singlets
-   if (TRUE %in% remove_singlets && length(cluster_list) == 0) {
+   if (isTRUE(remove_singlets) && length(cluster_list) == 0) {
       if (verbose) {
          jamba::printDebug("mem2emap(): ",
             "Removing singlet nodes.");
       }
       jacc_g <- removeIgraphSinglets(jacc_g)
    }
+   # 0.0.108.900: check for empty graph
+   if (igraph::vcount(jacc_g) == 0) {
+   	return(NULL)
+   }
 
    # define layout
    # Todo: consider using igraph::layout_components()
    new_layout <- NULL;
-   jacc_g_comp <- igraph::components(jacc_g);
-   if (jacc_g_comp$no > 1) {
-      if (verbose) {
-         jamba::printDebug("mem2emap(): ",
-            "Applying layout_components() with layout_with_qfrf().");
-      }
-      if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
-         new_layout <- NULL;
-      } else {
-         new_layout <- igraph::layout_components(jacc_g,
-            layout=layout_with_qfrf(repulse=repulse,
-               seed=seed,
-               ...));
-         if (!all(rownames(new_layout) %in% igraph::V(jacc_g)$name)) {
-            rownames(new_layout) <- igraph::V(jacc_g)$name;
-         }
-      }
-   } else {
-      if (verbose) {
-         jamba::printDebug("mem2emap(): ",
-            "Applying layout_with_qfr().");
-      }
-      if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
-         new_layout <- NULL;
-      } else {
-         new_layout <- layout_with_qfr(
-            jacc_g,
-            seed=seed,
-            repulse=repulse,
-            ...)
-      }
+   if (!isTRUE(do_express)) {
+	   jacc_g_comp <- igraph::components(jacc_g);
+	   if (jacc_g_comp$no > 1) {
+	      if (verbose) {
+	         jamba::printDebug("mem2emap(): ",
+	            "Applying layout_components() with layout_with_qfrf().");
+	      }
+	   	# skip layout when repulse == 0, used by mem_find_overlap()
+	      if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
+	         new_layout <- NULL;
+	      } else {
+	         new_layout <- igraph::layout_components(jacc_g,
+	            layout=layout_with_qfrf(repulse=repulse,
+	               seed=seed,
+	               ...));
+	         if (!all(rownames(new_layout) %in% igraph::V(jacc_g)$name)) {
+	            rownames(new_layout) <- igraph::V(jacc_g)$name;
+	         }
+	      }
+	   } else {
+	      if (verbose) {
+	         jamba::printDebug("mem2emap(): ",
+	            "Applying layout_with_qfr().");
+	      }
+	      if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
+	         new_layout <- NULL;
+	      } else {
+	         new_layout <- layout_with_qfr(
+	            jacc_g,
+	            seed=seed,
+	            repulse=repulse,
+	            ...)
+	      }
+	   }
    }
-   igraph::graph_attr(jacc_g, "layout") <- new_layout;
+   if (!is.null(new_layout)) {
+	   igraph::graph_attr(jacc_g, "layout") <- new_layout;
+   }
 
    # assign node colors
-   imatch <- match(igraph::V(jacc_g)$name, rownames(enrich_use))
-   igraph::V(jacc_g)$pie.color <- lapply(imatch, function(i){
-      colorV[colnames(enrich_use)[enrich_use[i, ] != 0]]
-   })
-   igraph::V(jacc_g)$pie <- lapply(igraph::V(jacc_g)$pie.color, function(i){
-      rep(1, length(i))
-   })
-   igraph::V(jacc_g)$shape <- "jampie";
-
-   # optionally apply direction to pie frame color
-   has_negative <- any(
-      jamba::rmNA(naValue=0, enrichIMdirection(mem)) < 0);
-   # Todo: decide if these criteria are flexible enough
-   if (TRUE %in% apply_direction && has_negative) {
-      # define color gradient for border color
-      dir_col_fn <- colorjam::col_div_xf(
-         direction_max,
-         floor=direction_floor,
-         colramp=jamba::getColorRamp(
-            "RdBu_r",
-            divergent=TRUE,
-            trimRamp=c(1, 1)))
-      # apply color to borders
-      pie_borders <- lapply(seq_len(igraph::vcount(jacc_g)), function(i){
-         j <- match(igraph::V(jacc_g)$name[i],
-            rownames(enrichIMdirection(mem)));
-         k <- igraph::V(jacc_g)$pie.color[[i]];
-         knames <- names(k);
-         dir_col_fn(enrichIMdirection(mem)[j, knames])
-      })
-      igraph::V(jacc_g)$pie.border <- pie_borders;
-      igraph::V(jacc_g)$pie.lwd <- 3;
-      igraph::V(jacc_g)$frame.lwd <- 0.5;
-   } else {
-      apply_direction <- FALSE
-   }
-
-   # cluster nodes
    wc <- NULL;
    mark.colors <- NULL;
    nodegroups_wc <- NULL;
-   if (length(cluster_list) > 0) {
-      wc <- cluster_list;
-      nodegroups_wc <- cluster_list;
-      mark.colors <- jamba::alpha2col(alpha=0.3,
-         colorjam::rainbowJam(n=length(nodegroups_wc),
-            Crange=c(60, 90),
-            Lrange=c(50, 85)))
-
-   } else if (is.function(cluster_function)) {
-      wc <- cluster_function(jacc_g)
-      # define list
-      nodegroups_wc <- split(igraph::V(jacc_g)$name, wc$membership)
-      nodegroups_wc <- communities2nodegroups(wc);
-      # assign most common terms as a cluster label
-      wc <- label_communities(wc,
-         keep_terms_sep=keep_terms_sep,
-         num_keep_terms=num_keep_terms);
-      nodegroups_wc_labels <- wc$cluster_names;
-      names(nodegroups_wc) <- jamba::cPaste(nodegroups_wc_labels,
-         keep_terms_sep)
-
-      # bonus points: define mark.group colors by node colors
-      if (TRUE %in% color_by_nodes) {
-         mark.colors <- sapply(nodegroups_wc, function(i){
-            ic1 <- igraph::V(jacc_g)[i]$pie.color;
-            ic2 <- jamba::alpha2col(alpha=0.3,
-               colorjam::blend_colors(unname(unlist(ic1))))
-            ic2
-         })
-      } else {
-         mark.colors <- jamba::alpha2col(alpha=0.3,
-            colorjam::rainbowJam(n=length(nodegroups_wc),
-               Crange=c(60, 90),
-               Lrange=c(50, 85)))
-      }
-
-      # bonus points: color edges by mark.group colors
-   } else {
-      wc <- NULL;
-      mark.colors <- NULL;
-      nodegroups_wc <- NULL;
+   if (!isTRUE(do_express)) {
+	   imatch <- match(igraph::V(jacc_g)$name, rownames(enrich_use))
+	   igraph::V(jacc_g)$pie.color <- lapply(imatch, function(i){
+	      colorV[colnames(enrich_use)[enrich_use[i, ] != 0]]
+	   })
+	   igraph::V(jacc_g)$pie <- lapply(igraph::V(jacc_g)$pie.color, function(i){
+	      rep(1, length(i))
+	   })
+	   igraph::V(jacc_g)$shape <- "jampie";
+	
+	   # optionally apply direction to pie frame color
+	   has_negative <- any(
+	      jamba::rmNA(naValue=0, enrichIMdirection(mem)) < 0);
+	   # Todo: decide if these criteria are flexible enough
+	   if (TRUE %in% apply_direction && has_negative) {
+	      # define color gradient for border color
+	      dir_col_fn <- colorjam::col_div_xf(
+	         direction_max,
+	         floor=direction_floor,
+	         colramp=jamba::getColorRamp(
+	            "RdBu_r",
+	            divergent=TRUE,
+	            trimRamp=c(1, 1)))
+	      # apply color to borders
+	      pie_borders <- lapply(seq_len(igraph::vcount(jacc_g)), function(i){
+	         j <- match(igraph::V(jacc_g)$name[i],
+	            rownames(enrichIMdirection(mem)));
+	         k <- igraph::V(jacc_g)$pie.color[[i]];
+	         knames <- names(k);
+	         dir_col_fn(enrichIMdirection(mem)[j, knames])
+	      })
+	      igraph::V(jacc_g)$pie.border <- pie_borders;
+	      igraph::V(jacc_g)$pie.lwd <- 3;
+	      igraph::V(jacc_g)$frame.lwd <- 0.5;
+	   } else {
+	      apply_direction <- FALSE
+	   }
+	
+	   # cluster nodes
+	   wc <- NULL;
+	   mark.colors <- NULL;
+	   nodegroups_wc <- NULL;
+	   if (length(cluster_list) > 0) {
+	      wc <- cluster_list;
+	      nodegroups_wc <- cluster_list;
+	      mark.colors <- jamba::alpha2col(alpha=0.3,
+	         colorjam::rainbowJam(n=length(nodegroups_wc),
+	            Crange=c(60, 90),
+	            Lrange=c(50, 85)))
+	
+	   } else if (is.function(cluster_function)) {
+	      wc <- cluster_function(jacc_g)
+	      # define list
+	      # nodegroups_wc <- split(igraph::V(jacc_g)$name, wc$membership)
+	      nodegroups_wc <- communities2nodegroups(wc);
+	      
+	      # assign most common terms as a cluster label
+	      nodegroups_wc <- tryCatch({
+	      	wc <- label_communities(wc,
+		         keep_terms_sep=keep_terms_sep,
+		         num_keep_terms=num_keep_terms);
+		      nodegroups_wc_labels <- wc$cluster_names;
+		      names(nodegroups_wc) <- jamba::cPaste(nodegroups_wc_labels,
+		         keep_terms_sep)
+		      nodegroups_wc
+	      }, error=function(e){
+	      	# jamba::printDebug("vcount:", igraph::vcount(jacc_g));# debug
+	      	# jamba::printDebug("Using nodegroups_wc fallback:");print(nodegroups_wc);# debug
+	      	nodegroups_wc;
+	      })
+	
+	      # bonus points: define mark.group colors by node colors
+	      if (TRUE %in% color_by_nodes) {
+	         mark.colors <- sapply(nodegroups_wc, function(i){
+	            ic1 <- igraph::V(jacc_g)[i]$pie.color;
+	            ic2 <- jamba::alpha2col(alpha=0.3,
+	               colorjam::blend_colors(unname(unlist(ic1))))
+	            ic2
+	         })
+	      } else {
+	         mark.colors <- jamba::alpha2col(alpha=0.3,
+	            colorjam::rainbowJam(n=length(nodegroups_wc),
+	               Crange=c(60, 90),
+	               Lrange=c(50, 85)))
+	      }
+	
+	      # bonus points: color edges by mark.group colors
+	   } else {
+	      wc <- NULL;
+	      mark.colors <- NULL;
+	      nodegroups_wc <- NULL;
+	   }
+   }
+   
+   # Check for NULL layout
+   if ("layout" %in% igraph::graph_attr_names(jacc_g)) {
+   	use_layout <- igraph::graph_attr(jacc_g, "layout");
+   	if (is.null(use_layout) || length(use_layout) == 0) {
+   		jacc_g <- igraph::delete_graph_attr(jacc_g, "layout")
+   	}
+   }
+   # optionally spread labels
+   if ("layout" %in% igraph::graph_attr_names(jacc_g) &&
+   		isTRUE(spread_labels)) {
+   	jacc_g <- spread_igraph_labels(jacc_g,
+   		label_min_dist=label_min_dist,
+   		y_bias=y_bias,
+   		...)
    }
 
-   if (TRUE %in% do_plot) {
+   if (!isTRUE(do_express) && isTRUE(do_plot)) {
       jam_igraph(jacc_g,
          mark.groups=wc,
          mark.col=mark.colors,

@@ -23,3 +23,17 @@ In Response To	by
 Components of the	
 Which is	
 \[[^]]+]	
+Acetylcholine[-. ]*receptor([s]*)	AChR\1
+Acetylcholine	ACh
+Acetyl[-._ ]*coenzyme[-._ ]*A	Acetyl-CoA
+Tumor[-. ]*Necrosis[-. ]*Factor[-. ]*(a)(|lpha)	TNF\L\1
+Tumor[-. ]*Necrosis[-. ]*Factor	TNF
+Toll[-. ]*Like[-. ]*Receptor	TLR
+Interferon([s]*)	IFN\1
+Ifn[-. ]*(a)(|lpha)[-. ]*([0-9]+[a-z]*)	IFN-alpha-\3
+Ifn[-. ]*(b)(|eta)[-. ]*([0-9]+[a-z]*)	IFN-beta-\3
+Ifn[-. ]*(g)(|amma)[-. ]*([0-9]+[a-z]*)	IFN-gamma-\3
+Ifn[-. ]*(a)(|lpha)	IFN-alpha
+Ifn[-. ]*(b)(|eta)	IFN-beta
+Ifn[-. ]*(g)(|amma)	IFN-gamma
+G[-. ]*Protein[-. ]*Coupled[-. ]*Receptor	GCPR

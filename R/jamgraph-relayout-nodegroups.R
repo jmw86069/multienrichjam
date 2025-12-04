@@ -66,15 +66,53 @@
 #' @returns `igraph` object with updated layout.
 #' 
 #' @param cnet `igraph` object with node layout already defined
+#' @param nodegroups `list` of node names, or `communities` object,
+#'    passed to `communities2nodegroups()`.
+#'    When NULL, it checks for supporting data in this order:
+#'    1. If graph attribute 'mark.groups' is defined, it is used.
+#'    2. If vertex attribute 'nodeType' exists, it calls
+#'    `get_cnet_nodeset()`.
+#'    3. Finally, it calls `igraph::cluster_optimal()`, hoping this
+#'    method will be appropriate for the graph size.
 #' @param repulse `numeric` default 3.5, passed to `relayout_with_qfr()`
 #' @param fix_set_nodes `logical` default TRUE, whether to fix all
 #'    nodes with nodeType=='Set' to prevent them from moving.
 #' @param spread_labels `logical` default TRUE, whether to apply
 #'    `spread_igraph_labels()` after the relayout iterations are complete.
-#' @param nodegroups `list` default NULL, intended to pass a custom
-#'    set of nodegroups. When NULL it uses `get_cnet_nodeset()`.
+#' @param add_edges `logical` default TRUE, whether to add edges within
+#'    nodes of each nodegroup. The same is accomplished by setting
+#'    `edge_factor=0`.
+#' @param edge_factor `numeric` default 2, used as the numerator in
+#'    new edge weights with equation `edge_factor/sqrt(n)` where 'n'
+#'    is the number of nodes in the nodegroup.
+#'    * Set `edge_factor=0` or `add_edges=FALSE` to skip this step.
+#' @param do_final_relayout `logical` default NULL, whether to apply
+#'    one more `relayout_with_qfr()` after each nodegroup is adjusted.
+#'    It uses `final_repulse`.
+#' @param final_repulse `numeric` used when `do_final_relayout` is TRUE,
+#'    used as the 'repulse' argument in `relayout_with_qfr()`.
+#' @param apply_by_size `logical` default TRUE, whether to apply the
+#'    relayout to nodegroups ordered by size, using `byCols` to sort.
+#'    * The default applies layout such that nodegroups with the most terms
+#'    in `names(nodegroups)` are applied first, then largest to smallest
+#'    nodegroups.
+#'    * For Cnet plots, Gene nodes in nodegroups connected
+#'    to the most Set nodes are adjusted first, then largest nodegroups,
+#'    then sorted by nodegroup name.
+#'    * It is unclear if the order is useful, future iterations of
+#'    this approach may "move" other nodegroups aside first, then
+#'    re-introduce each nodegroup into the layout one by one.
+#'    Otherwise nodes could become "tangled" in the center, with
+#'    no ideal method to optimize separation by nodegroup.
+#' @param byCols `character` vector used when `apply_by_size` is TRUE.
+#'    * '-num_terms': reverse-order by the number of terms in each
+#'    nodegroup name, assuming comma-delimited terms.
+#'    * '-num_nodes': reverse-order by the number of nodes in each nodegroup.
+#'    * 'nodegroup': alphnumeric sort of the `names(nodegroups)`.
+#' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are passed to
-#'    `spread_igraph_labels()`
+#'    `communities2nodegroups()` for argument 'sep', or to
+#'    `spread_igraph_labels()` for arguments regarding node ordering, etc.
 #' 
 #' @examples
 #' cnet <- make_cnet_test();
@@ -84,41 +122,89 @@
 #' jam_igraph(cnet, mark.groups=ns["SetA,SetB"], nodegroups=ns,
 #'    main="One nodegroup is split")
 #' 
-#' cnet2 <- relayout_nodegroups(cnet, nodegroups=ns["SetA,SetB"])
+#' cnet2 <- relayout_nodegroups(cnet, nodegroups=ns["SetA,SetB"], do_final_layout=TRUE, verbose=TRUE)
 #' jam_igraph(cnet2, mark.groups=ns["SetA,SetB"], nodegroups=ns,
 #'    main="This nodegroup is 'encouraged' to re-group")
 #' 
-#' cnet2 <- relayout_nodegroups(cnet, nodegroups=ns)
-#' jam_igraph(cnet2, mark.groups=ns["SetA,SetB"], nodegroups=ns,
+#' # by default, it is applied to all nodes
+#' cnet3 <- relayout_nodegroups(cnet)
+#' jam_igraph(cnet3, mark.groups=ns, nodegroups=ns,
 #'    main="Re-layout across all nodegroups")
 #' 
 #' @export
 relayout_nodegroups <- function
 (cnet,
+ nodegroups=NULL,
  repulse=3.5,
  fix_set_nodes=TRUE,
  spread_labels=TRUE,
- nodegroups=NULL,
  add_edges=TRUE,
  edge_factor=2,
  do_final_relayout=NULL,
  final_repulse=3.5,
+ apply_by_size=TRUE,
+ byCols=c("-num_terms",
+ 	"-num_nodes",
+ 	"nodegroup"),
+ verbose=FALSE,
  ...)
 {
 	#
 	cnet2 <- cnet;
 	if (length(nodegroups) == 0) {
-		nodegroups <- get_cnet_nodeset(cnet)
-		# sort by size
-		ngnum <- lengths(strsplit(names(nodegroups), ","))
-		ngdf <- data.frame(ng=names(nodegroups),
-			ngnum=ngnum,
-			ngsize=lengths(nodegroups))
-		ngdf <- jamba::mixedSortDF(ngdf, byCols=c("-ngnum", "-ngsize", "ng"))
-		nodegroups <- nodegroups[ngdf$ng];
-		print(ngdf);# debug
+		# obtain from graph attributes if present
+		if ("mark.groups" %in% igraph::graph_attr_names(cnet)) {
+			if (verbose) {
+				jamba::printDebug("relayout_nodegroups(): ",
+					"Using graph attribute 'mark.groups'.");
+			}
+			nodegroups <- igraph::graph_attr(cnet, "mark.groups")
+			nodegroups <- communities2nodegroups(nodegroups,
+				...)
+		} else if ("nodeType" %in% igraph::vertex_attr_names(cnet)) {
+			# determine Cnet nodegroups
+			if (verbose) {
+				jamba::printDebug("relayout_nodegroups(): ",
+					"Calling get_cnet_nodeset().");
+			}
+			nodegroups <- get_cnet_nodeset(cnet)
+		} else {
+			# Todo: Community-detection?
+			if (verbose) {
+				jamba::printDebug("relayout_nodegroups(): ",
+					"Calling igraph::cluster_optimal().");
+			}
+			nodegroups <- igraph::cluster_optimal(cnet)
+		}
+	} else {
+		# convert to list, accepting list or communities input
+		if (verbose) {
+			jamba::printDebug("relayout_nodegroups(): ",
+				"Using nodegroups as supplied.");
+		}
+		nodegroups <- communities2nodegroups(nodegroups,
+			...)
 	}
 	
+	# sort by terms, nodegroup size, nodegroup name	
+	if (isTRUE(apply_by_size) && length(nodegroups) > 1) {
+		# sort by size
+		ngnum <- lengths(strsplit(names(nodegroups), ","))
+		ngdf <- data.frame(
+			nodegroup=names(nodegroups),
+			num_terms=ngnum,
+			num_nodes=lengths(nodegroups))
+		ngdf <- jamba::mixedSortDF(ngdf, byCols=byCols)
+		nodegroups <- nodegroups[ngdf$nodegroup];
+		if (verbose) {
+			jamba::printDebug("relayout_nodegroups(): ",
+				"Sorted nodegroups using by: ",
+				paste0("'", byCols, "'"));
+		}
+	}
+
+	# only apply final relayout if there is more than one nodegroup?
+	# unless forced with do_final_relayout=TRUE
 	if (length(do_final_relayout) == 0) {
 		if (length(nodegroups) > 1) {
 			do_final_relayout <- TRUE;
@@ -126,9 +212,15 @@ relayout_nodegroups <- function
 			do_final_relayout <- FALSE;
 		}
 	}
-	# Fix the set nodes
+	
+	# Fix the set node coordinates
+	# (Un-necessary for Cnet plots, they will always be fixed.)
 	fixed_nodes <- NULL;
 	unfixed_nodes <- NULL;
+	if (!"nodeType" %in% igraph::vertex_attr_names(cnet2)) {
+		fix_set_nodes <- NULL;
+	}
+	
 	if (length(fix_set_nodes) == 0) {
 		# do nothing
 	} else if (isTRUE(fix_set_nodes)) {
@@ -138,6 +230,7 @@ relayout_nodegroups <- function
 		unfixed_nodes <- igraph::V(cnet2)[
 			igraph::V(cnet2)$nodeType %in% "Set"]$name;
 	}
+	
 	# iterate each nodegroup
 	for (i in seq_along(nodegroups)) {
 		move_nodes <- nodegroups[[i]];
@@ -145,14 +238,17 @@ relayout_nodegroups <- function
 			setdiff(igraph::V(cnet2)$name,
 				c(move_nodes, unfixed_nodes)),
 			fixed_nodes))
-		
+		if (verbose) {
+			jamba::printDebug("relayout_nodegroups(): ",
+				"Applying to nodegroup '",
+				names(nodegroups)[i], "' with members: ",
+				nodegroups[[i]]);
+		}
 		# optionally add edges between nodes
-		if (isTRUE(add_edges)) {
+		if (isTRUE(add_edges) && length(edge_factor) == 1 && edge_factor > 0) {
 			inodes <- sort(match(move_nodes, igraph::V(cnet2)$name));
 			if (length(inodes) > 1) {
 				iedges <- (combn(inodes, 2));
-				print(length(inodes));# debug
-				print(ncol(iedges));# debug
 				cnet2e <- cnet2;
 				if (!"weight" %in% igraph::edge_attr_names(cnet2)) {
 					igraph::E(cnet2e)$weight <- 1;
@@ -161,7 +257,7 @@ relayout_nodegroups <- function
 				cnet2e <- igraph::add_edges(cnet2e, iedges,
 					attr=list(weight=edge_factor/sqrt(length(inodes))))
 					# attr=list(weight=edge_factor))
-				# print(tail(igraph::as_data_frame(cnet2e, "edges")), ncol(iedges) + 1);# debug
+				
 				# relayout
 				cnet2e <- relayout_with_qfr(cnet2e,
 					repulse=repulse,
@@ -182,6 +278,7 @@ relayout_nodegroups <- function
 				...)
 		}
 	}
+	
 	# final relayout
 	if (isTRUE(do_final_relayout)) {
 		cnet2 <- relayout_with_qfr(cnet2,
@@ -230,7 +327,7 @@ get_cnet_nodeset_vector <- function
  ...)
 {
 	#
-	nsl <- get_cnet_nodeset(g, ...)
+	nsl <- communities2nodegroups(nodegroups);
 	nsv <- jamba::nameVector(rep(names(nsl), lengths(nsl)), unlist(nsl))
 	if ("name" %in% igraph::vertex_attr_names(g)) {
 		vnames <- igraph::V(g)$name;

@@ -168,38 +168,54 @@ avg_colors_by_list <- function
    return(x_extended);
 }
 
-#' Find recommended overlap threshold for EnrichMap
+#' Find recommended overlap threshold for EnrichMap, experimental
 #'
-#' Find recommended overlap threshold for EnrichMap
+#' Find recommended overlap threshold for EnrichMap, experimental
 #'
 #' It implements a straightforward approach to determine
-#' a reasonable Jaccard overlap threshold for EnrichMap data,
+#' a reasonable Jaccard overlap threshold for Enrichment Map data,
 #' and is still very much open to improvement after more
 #' experience using it on varied datasets.
 #' 
+#' The premise is that two pathways that have Jaccard overlap above
+#' a threshold are connected by a network "edge".
+#' * With extremely low threshold, most pathways would be connected,
+#' even if they have only one gene in common.
+#' * With an extremely high threshold, pathways would only be
+#' connected if nearly all genes were in common.
+#' * A moderate threshold is intended to balance the two extremes.
+#' * The aesthetic and biological interesting threshold appears
+#' to be dependent upon the type and number of pathways returned
+#' from enrichment analysis. For example, immunology pathways
+#' may favor a different threshold than metabolic pathways.
+#' (Purely hypothetical.)
+#' * As a result, this function is intended to find a middle ground
+#' based upon the pathway data used for analysis at the time,
+#' where some but not all pathways are connected.
+#' 
 #' The method finds the overlap threshold at which the first connected
 #' component is no more than `max_cutoff` fraction of the whole
-#' network. This fraction is defined as the number of nodes in the
+#' network. This fraction is defined by the number of nodes in the
 #' largest connected component, divided by the total number of
-#' non-singlet nodes. When all nodes are connected, this fraction == 1.
+#' non-singlet nodes.
 #'
-#' We found empirically that a `max_cutoff=0.4`, the point at which the
+#' We found that `max_cutoff=0.4`, the point at which the
 #' largest connected component contains no more than 40% of all nodes,
-#' seems to be a reasonably good place to start.
+#' seems to be a reasonably good threshold.
 #'
 #' @family jam utility functions
 #' 
 #' @returns `numeric` value with recommended Jaccard overlap coefficient.
 #'
 #' @param mem `list` output from `multiEnrichMap()`
-#' @param overlap_range numeric range of Jaccard overlap values,
+#' @param overlap_range `numeric` range of Jaccard overlap values,
 #'    default `0.1, 0.99` using step `0.01`.
-#' @param max_cutoff numeric value between 0 and 1, to define the
+#' @param max_cutoff `numeric` value between 0 and 1, to define the
 #'    maximum fraction of nodes in the largest connected component,
 #'    compared to the total number of non-singlet nodes.
 #' @param adjust `numeric` used to adjust the final overlap, default
 #'    `-0.01` will use the overlap one step before the max O score.
-#' @param debug logical indicating whether to return full debug
+#' @param debug `logical` indicating whether to return full debug
 #'    data, which is used internally to determine the best overlap
 #'    cutoff to use.
 #' @param ... additional arguments are passed to `mem2emap()`.
@@ -222,16 +238,22 @@ mem_find_overlap <- function
       g <- mem2emap(mem,
          overlap=i,
          repulse=0,
-         remove_singlets=TRUE,
+      	remove_singlets=TRUE,
+      	do_express=TRUE,
          do_plot=FALSE,
+      	spread_labels=FALSE,
          ...)
-      if (igraph::vcount(g) <= 1) {
+      if (!inherits(g, "igraph")) {
+      	return(NULL);
+      }
+      if (igraph::vcount(g) < 1) {
          return(NULL);
       }
       # Todo: consider cluster_walktrap() or something similar
       gc <- igraph::components(g);
       k <- rev(sort(gc$csize));
-      c(k, frac_max=k[1] / sum(k));
+      names(k) <- jamba::colNum2excelName(seq_along(k))
+      c(k, frac_max=unname(k[1] / sum(k)));
    });
 
    ## Remove empty entries
@@ -252,26 +274,35 @@ mem_find_overlap <- function
    # plot(x=as.numeric(names(o_score)), y=o_score,
    #    xlab="overlap", ylab="o_score");# debug
 
+   # old method
+   iseq <- jamba::nameVector(seq(from=max_cutoff, to=1, by=0.01));
+   old_scores <- jamba::rmNULL(lapply(iseq, function(max_cutoff_i) {
+   # for (max_cutoff_i in seq(from=max_cutoff, to=1, by=0.01)) {
+   	omet <- sapply(odata, function(i){
+   		unname(i["frac_max"] <= max_cutoff_i);
+   	});
+   	if (any(omet)) {
+   		use_score <- as.numeric(names(head(omet[omet], 1)));
+   		adjusted_score <- use_score + adjust;
+   		# jamba::printDebug("max_cutoff_i: ", max_cutoff_i, " found adjusted_score: ", adjusted_score);# debug
+   		# return(use_score + adjust);
+   		return(adjusted_score)
+   	}
+   	return(NULL)
+   }))
+   
    if (length(debug) > 0 && debug) {
       return(list(odata=odata,
-         oct=oct,
-         omax=omax,
-         o_fraction=o_fraction,
-         o_score=o_score));
+         remaining_nodes=oct,
+         fraction_max=o_fraction,
+         fraction_in_largest_group=omax,
+         composite_score=o_score,
+      	old_scores=unlist(old_scores)));
    }
    if (length(o_choose) > 0) {
       return(o_choose + adjust);
    } else {
       return(min(igraph::E(g)$overlap, na.rm=TRUE));
-   }
-   for (max_cutoff_i in seq(from=max_cutoff, to=1, by=0.01)) {
-      omet <- sapply(odata, function(i){
-         unname(i["frac_max"] <= max_cutoff_i);
-      });
-      if (any(omet)) {
-         use_score <- as.numeric(names(head(omet[omet], 1)));
-         return(use_score + adjust);
-      }
    }
    return(NULL)
 }

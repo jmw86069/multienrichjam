@@ -6,19 +6,33 @@
 \usage{
 relayout_nodegroups(
   cnet,
+  nodegroups = NULL,
   repulse = 3.5,
   fix_set_nodes = TRUE,
   spread_labels = TRUE,
-  nodegroups = NULL,
   add_edges = TRUE,
   edge_factor = 2,
   do_final_relayout = NULL,
   final_repulse = 3.5,
+  apply_by_size = TRUE,
+  byCols = c("-num_terms", "-num_nodes", "nodegroup"),
+  verbose = FALSE,
   ...
 )
 }
 \arguments{
 \item{cnet}{\code{igraph} object with node layout already defined}
+
+\item{nodegroups}{\code{list} of node names, or \code{communities} object,
+passed to \code{communities2nodegroups()}.
+When NULL, it checks for supporting data in this order:
+\enumerate{
+\item If graph attribute 'mark.groups' is defined, it is used.
+\item If vertex attribute 'nodeType' exists, it calls
+\code{get_cnet_nodeset()}.
+\item Finally, it calls \code{igraph::cluster_optimal()}, hoping this
+method will be appropriate for the graph size.
+}}
 
 \item{repulse}{\code{numeric} default 3.5, passed to \code{relayout_with_qfr()}}
 
@@ -28,11 +42,53 @@ nodes with nodeType=='Set' to prevent them from moving.}
 \item{spread_labels}{\code{logical} default TRUE, whether to apply
 \code{spread_igraph_labels()} after the relayout iterations are complete.}
 
-\item{nodegroups}{\code{list} default NULL, intended to pass a custom
-set of nodegroups. When NULL it uses \code{get_cnet_nodeset()}.}
+\item{add_edges}{\code{logical} default TRUE, whether to add edges within
+nodes of each nodegroup. The same is accomplished by setting
+\code{edge_factor=0}.}
+
+\item{edge_factor}{\code{numeric} default 2, used as the numerator in
+new edge weights with equation \code{edge_factor/sqrt(n)} where 'n'
+is the number of nodes in the nodegroup.
+\itemize{
+\item Set \code{edge_factor=0} or \code{add_edges=FALSE} to skip this step.
+}}
+
+\item{do_final_relayout}{\code{logical} default NULL, whether to apply
+one more \code{relayout_with_qfr()} after each nodegroup is adjusted.
+It uses \code{final_repulse}.}
+
+\item{final_repulse}{\code{numeric} used when \code{do_final_relayout} is TRUE,
+used as the 'repulse' argument in \code{relayout_with_qfr()}.}
+
+\item{apply_by_size}{\code{logical} default TRUE, whether to apply the
+relayout to nodegroups ordered by size, using \code{byCols} to sort.
+\itemize{
+\item The default applies layout such that nodegroups with the most terms
+in \code{names(nodegroups)} are applied first, then largest to smallest
+nodegroups.
+\item For Cnet plots, Gene nodes in nodegroups connected
+to the most Set nodes are adjusted first, then largest nodegroups,
+then sorted by nodegroup name.
+\item It is unclear if the order is useful, future iterations of
+this approach may "move" other nodegroups aside first, then
+re-introduce each nodegroup into the layout one by one.
+Otherwise nodes could become "tangled" in the center, with
+no ideal method to optimize separation by nodegroup.
+}}
+
+\item{byCols}{\code{character} vector used when \code{apply_by_size} is TRUE.
+\itemize{
+\item '-num_terms': reverse-order by the number of terms in each
+nodegroup name, assuming comma-delimited terms.
+\item '-num_nodes': reverse-order by the number of nodes in each nodegroup.
+\item 'nodegroup': alphnumeric sort of the \code{names(nodegroups)}.
+}}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
 
 \item{...}{additional arguments are passed to
-\code{spread_igraph_labels()}}
+\code{communities2nodegroups()} for argument 'sep', or to
+\code{spread_igraph_labels()} for arguments regarding node ordering, etc.}
 }
 \value{
 \code{igraph} object with updated layout.
@@ -103,12 +159,13 @@ ns <- get_cnet_nodeset(cnet)
 jam_igraph(cnet, mark.groups=ns["SetA,SetB"], nodegroups=ns,
    main="One nodegroup is split")
 
-cnet2 <- relayout_nodegroups(cnet, nodegroups=ns["SetA,SetB"])
+cnet2 <- relayout_nodegroups(cnet, nodegroups=ns["SetA,SetB"], do_final_layout=TRUE, verbose=TRUE)
 jam_igraph(cnet2, mark.groups=ns["SetA,SetB"], nodegroups=ns,
    main="This nodegroup is 'encouraged' to re-group")
 
-cnet2 <- relayout_nodegroups(cnet, nodegroups=ns)
-jam_igraph(cnet2, mark.groups=ns["SetA,SetB"], nodegroups=ns,
+# by default, it is applied to all nodes
+cnet3 <- relayout_nodegroups(cnet)
+jam_igraph(cnet3, mark.groups=ns, nodegroups=ns,
    main="Re-layout across all nodegroups")
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/jamenrich-utils.R
 \name{mem_find_overlap}
 \alias{mem_find_overlap}
-\title{Find recommended overlap threshold for EnrichMap}
+\title{Find recommended overlap threshold for EnrichMap, experimental}
 \usage{
 mem_find_overlap(
   mem,
@@ -16,17 +16,17 @@ mem_find_overlap(
 \arguments{
 \item{mem}{\code{list} output from \code{multiEnrichMap()}}
 
-\item{overlap_range}{numeric range of Jaccard overlap values,
+\item{overlap_range}{\code{numeric} range of Jaccard overlap values,
 default \verb{0.1, 0.99} using step \code{0.01}.}
 
-\item{max_cutoff}{numeric value between 0 and 1, to define the
+\item{max_cutoff}{\code{numeric} value between 0 and 1, to define the
 maximum fraction of nodes in the largest connected component,
 compared to the total number of non-singlet nodes.}
 
 \item{adjust}{\code{numeric} used to adjust the final overlap, default
 \code{-0.01} will use the overlap one step before the max O score.}
 
-\item{debug}{logical indicating whether to return full debug
+\item{debug}{\code{logical} indicating whether to return full debug
 data, which is used internally to determine the best overlap
 cutoff to use.}
 
@@ -36,23 +36,41 @@ cutoff to use.}
 \code{numeric} value with recommended Jaccard overlap coefficient.
 }
 \description{
-Find recommended overlap threshold for EnrichMap
+Find recommended overlap threshold for EnrichMap, experimental
 }
 \details{
 It implements a straightforward approach to determine
-a reasonable Jaccard overlap threshold for EnrichMap data,
+a reasonable Jaccard overlap threshold for Enrichment Map data,
 and is still very much open to improvement after more
 experience using it on varied datasets.
 
+The premise is that two pathways that have Jaccard overlap above
+a threshold are connected by a network "edge".
+\itemize{
+\item With extremely low threshold, most pathways would be connected,
+even if they have only one gene in common.
+\item With an extremely high threshold, pathways would only be
+connected if nearly all genes were in common.
+\item A moderate threshold is intended to balance the two extremes.
+\item The aesthetic and biological interesting threshold appears
+to be dependent upon the type and number of pathways returned
+from enrichment analysis. For example, immunology pathways
+may favor a different threshold than metabolic pathways.
+(Purely hypothetical.)
+\item As a result, this function is intended to find a middle ground
+based upon the pathway data used for analysis at the time,
+where some but not all pathways are connected.
+}
+
 The method finds the overlap threshold at which the first connected
 component is no more than \code{max_cutoff} fraction of the whole
-network. This fraction is defined as the number of nodes in the
+network. This fraction is defined by the number of nodes in the
 largest connected component, divided by the total number of
-non-singlet nodes. When all nodes are connected, this fraction == 1.
+non-singlet nodes.
 
-We found empirically that a \code{max_cutoff=0.4}, the point at which the
+We found that \code{max_cutoff=0.4}, the point at which the
 largest connected component contains no more than 40\% of all nodes,
-seems to be a reasonably good place to start.
+seems to be a reasonably good threshold.
 }
 \seealso{
 Other jam utility functions: 

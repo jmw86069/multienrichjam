@@ -2576,10 +2576,13 @@ spread_igraph_labels <- function
       xymean <- colMeans(xy1[rep(1, nrow(xy2)),,drop=FALSE] - xy2);
       -(xyAngle(xymean[1], xymean[2]*y_bias, directed=TRUE) + 0) %% 360
    }), igraph::V(g)$name);
-   if (update_g_coords) {
-      g <- igraph::set_graph_attr(g, "layout", layout);
+   if (isTRUE(update_g_coords)) {
+   	g <- set_igraph_layout(g, layout=layout)
    }
+   
+   # store label angle (in radians)
    igraph::V(g)$label.degree <- jamba::deg2rad(g_angle);
+   
    # establish minimum label distance
    igraph::V(g)$label.dist <- label_min_dist;
    if (length(label_dist_l) > 0 &&

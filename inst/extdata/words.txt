@@ -8,23 +8,24 @@ Vii	VII
 Viii	VIII
 ix	IX
 x	X
-trna	tRNA
-rrna	rRNA
-rna	RNA
+trna([s]*)	tRNA\1
+rrna([s]*)	rRNA\1
+rna([s]*)	RNA\1
 dna	DNA
-mirna	miRNA
-mrna	mRNA
-snrna	snRNA
-snorna	snoRNA
-scrna	scRNA
-lincrna	lincRNA
+mirna([s]*)	miRNA\1
+mrna([s]*)	mRNA\1
+snrna([s]*)	snRNA\1
+snorna([s]*)	snoRNA\1
+scrna([s]*)	scRNA\1
+Lincrna	lincRNA
+Lncrna|Lincrna	lncRNA
+Microrna([s]*)	microRNA\1
 Il	IL
 Ecm	ECM
 Nk	NK
-Pi3k.Akt	PI3K/AKT
+Pi3k[-. ]*Akt	PI3K/AKT
 Akt	AKT
 Pi3k	PI3K
-tgf	TGF
 nfkb	NFKB
 NK.Kappa.B	NFKB
 Pi3kaktmtorsignaling	PI3K/AKT/mTOR Signaling
@@ -51,16 +52,18 @@ Tnfs	TNFs
 Tnf	TNF
 Tnfsf	TNFSF
 Tnfrelated	TNF-related
-Tgf(beta|b)	TGFbeta
-Tgfbr	TGFbeta-Receptor
-TGF[-_ ]*Beta	TGFbeta
+Tgf[-._ ]*(beta|b)	TGF-beta
+Tgfbr	TGF-beta Receptor
+tgf	TGF
 Akt1	AKT1
-Igf1[.-/ ]*akt	IGF1/AKT
+Akt2	AKT2
+Akt3	AKT3
+Igf1[-._/ ]*akt	IGF1/AKT
 Foxo	FOXO
+Foxp3	FoxP3
 Hdacs	HDACs
 Hdac	HDAC
-Hat	HAT
-Hats	HATs
+Hat([s]*)	HAT\1
 Nicotinic Acetylcholine Receptors|Acetylcholine Nicotinic Receptors	Nicotinic Acetylcholine Receptors
 G CSF	G-CSF
 Gm Csf	GM-CSF
@@ -76,8 +79,6 @@ Erk	ERK
 Erks	ERKs
 Interferon([a-z]*)	IFN\1
 ([A-Za-z0-9]+[a-qs-z])mediated	\1-Mediated
-Lncrna|Lincrna	lncRNA
-Microrna([s]*)	microRNA\1
 125 DIHYDROXYVITAMIN D3	1,25-dihydroxyvitamin D3
 Tweak	TWEAK
 Clear	CLEAR
@@ -111,9 +112,10 @@ Enos	eNOS
 Camp	cAMP
 Creb	CREB
 ([IVNB])cam	\1CAM
-Mtor([a-d0-9]*)	mTOR\1
+Mtor([a-d0-9]*)	mTOR\U\1
 Tcell	T-cell
 Tcr	TCR
+Bcell	B-cell
 Therapyinduced	Therapy-induced
 Brainderived	Brain-derived
 Pd1	PD1
@@ -128,3 +130,14 @@ Nod[-. ]*like	NOD-like
 Cytokine[-. ]*cytokine	Cytokine-Cytokine
 Macrophagestimulating	Macrophage-stimulating
 Ilc[-. ]family	ILC family
+Hostpathogen	Host-Pathogen
+Type ([Ii]+)	Type-\1
+Clockcontrolled	Clock-Controlled
+Bcatenin	Beta-Catenin
+Rigi[-. ]*like	RIG-I-like
+Rigi	RIG-I
+Non[-. ]Canonical	Non-Canonical
+C[-. ]flip	c-FLIP
+Tlr	TLR
+Rhodopsin[-. ]*like	Rhodopsin-Like
+Huntington[']*s	Huntington's

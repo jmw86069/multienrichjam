@@ -224,12 +224,19 @@ get_cnet_nodeset <- function
    # alternative approach for speed
    # 1. assemble edgelist data.frame
    gel1 <- igraph::as_edgelist(g);
+   if (length(gel1) == 0) {
+   	# no edges!
+   	return(NULL);
+   }
    gel2 <- gel1[,2:1, drop=FALSE];
    gel <- data.frame(check.names=FALSE,
       unique(rbind(gel1, gel2)));
    colnames(gel) <- c("A", "B")
 
    # optionally limit output to nodes connected to nodeType="Set" nodes
+   if (!"nodeType" %in% igraph::vertex_attr_names(g)) {
+   	filter_set_only <- FALSE;
+   }
    if (TRUE %in% filter_set_only) {
       use_set_nodes <- igraph::V(g)[igraph::V(g)$nodeType %in% "Set"]$name;
       gel <- subset(gel, gel[,2] %in% use_set_nodes)
@@ -249,22 +256,6 @@ get_cnet_nodeset <- function
       cnet_nodesets <- cnet_nodesets[names(cnet_nodesets) %in% set_nodes_v];
    }
    return(cnet_nodesets);
-
-   ## comma-delimited neighboring nodes for each node
-   neighborG <- jamba::cPasteS(sep=sep,
-      lapply(seq_len(igraph::vcount(g)), function(v){
-         names(igraph::neighbors(g, v, mode="all"));
-      }));
-   names(neighborG) <- igraph::V(g)$name;
-   if (length(set_nodes) == 0) {
-      useG <- neighborG[igraph::V(g)$nodeType %in% "Gene"];
-      useG <- split(names(useG), useG);
-   } else {
-      set_nodes_v <- jamba::cPasteS(set_nodes,
-         sep=sep);
-      useG <- names(neighborG)[which(neighborG %in% set_nodes_v)];
-   }
-   return(useG);
 }
 
 

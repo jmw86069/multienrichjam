@@ -10,6 +10,7 @@ label_communities(
   add_catchwords = NULL,
   num_keep_terms = 3,
   keep_terms_sep = ",\\n",
+  do_fixSetLabels = TRUE,
   ...
 )
 }
@@ -33,6 +34,9 @@ each term when multiple terms are concatenated together to form
 the cluster label.}
 
 \item{...}{additional arguments are ignored.}
+
+\item{do_fix_terms}{\code{logical} default TRUE, whether to apply
+\code{fixSetLabels()} on the resulting words.}
 }
 \value{
 \code{communities} or \code{list} format matching the input \code{wc} format.

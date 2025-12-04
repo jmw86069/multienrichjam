@@ -1,3 +1,32 @@
+# multienrichjam 0.0.108.900
+
+## Changes
+
+* Added more to words.txt and abbrev.txt.
+* `mem2emap()`
+
+	* New arguments 'vertex.label.font=2' and 'use_shadowText=TRUE' to match
+	`mem2cnet()` default aesthetics.
+	* Edge and node attributes include 'gene_count' for reference.
+	* New argument 'size_by_genes=TRUE' and 'mean_size=5'.
+
+* `relayout_nodegroups()`
+
+	* Now supports other `igraph` objects, such as `mem2emap()` output.
+	* Supports graph attribute 'mark.groups' as populated by `mem2emap()`.
+	* Argument 'nodegroups' can include a `communities` object, for non-Cnet.
+
+* `communities2nodegroups()` now supports `list` input which would not need
+to be converted, as a convenient way to confirm proper `list` output.
+
+## Bug fixes
+
+* `label_communities()` added missing prefix to `jamba::tcount()`.
+* `get_cnet_nodeset()`: fixed error when there were no edges, now returns NULL.
+* `edge_bundle_nodegroups()`: fixed error when no edges, now returns NULL.
+* `mem_find_overlap()`: fixed error for smaller Cnet graphs, added tolerance
+for disconnected subsets with larger Jaccard values.
+
 # multienrichjam 0.0.107.900
 
 ## Bug fixes

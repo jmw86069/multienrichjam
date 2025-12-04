@@ -11,10 +11,14 @@
 #' `list` can be converted to a `communities` object that will
 #' be accepted by most `igraph` related functions that require
 #' that object type as an input value.
+#' 
+#' Alternatively, this function can be used to confirm the input
+#' is already appropriate nodegroups `list` format, by supplying
+#' `list` format upfront.
 #'
 #' @family jam igraph functions
 #'
-#' @return `list` of `character` vectors, where each vector contains
+#' @returns `list` of `character` vectors, where each vector contains
 #'    names of `igraph` nodes. When `algorithm` is defined in the
 #'    input object, it is included as an attribute of the output `list`,
 #'    accessible with `attr(out, "algorithm")`.
@@ -25,14 +29,40 @@
 #' @param wc `communities` object as returned by `igraph` functions
 #'    such as `cluster_optimal()`, `cluster_walktrap()`, or
 #'    `cluster_leading_eigen()`.
-#' @param ... additional arguments are ignored.
+#'    * Alternatively, a `list` object with 'membership' and 'names'.
+#'    * Alternatively, a `list` object which mimics the output of this
+#'    function, in which case the input `wc` is returned as-is.
+#' @param sep `character` string, default ',' (comma), used when
+#'    cluster_names are defined as a `list` with vector of names
+#'    for each cluster. Passed to `jamba::cPaste()`.
+#' @param ... additional arguments are passed to `jamba::cPaste()` when
+#'    relevant.
 #'
 #' @export
 communities2nodegroups <- function
 (wc,
+ sep=",",
  ...)
 {
    #
+	if (inherits(wc, "list")) {
+		if (all(c("membership", "names") %in% names(wc))) {
+			# looks like communities-like object use as-is
+		} else {
+			# looks like a list that does not need conversion
+			return(wc)
+		}
+	} else if (inherits(wc, "communities")) {
+		# recognized input, use as-is
+	} else if (all(c("membership", "names") %in% names(wc))) {
+		# use as-is
+	} else {
+		stop_msg <- paste0("Input must be 'communities' or a 'list' or ",
+			"equivalent object with ",
+			"elements named: 'membership' and 'names'.")
+		stop(stop_msg);
+	}
+	
    if (length(wc$names) == 0) {
       wc$names <- seq_along(wc$membership);
    }
@@ -40,7 +70,13 @@ communities2nodegroups <- function
       wc$names,
       wc$membership)
    if ("cluster_names" %in% names(wc)) {
-      names(nodegroups) <- wc$cluster_names
+   	if (inherits(wc$cluster_names, "list")) {
+   		names(nodegroups) <- jamba::cPasteU(wc$cluster_names,
+   			sep=sep,
+   			...);
+   	} else {
+	      names(nodegroups) <- wc$cluster_names
+   	}
    }
    if ("algorithm" %in% names(wc)) {
       attr(nodegroups, "algorithm") <- wc$algorithm;
@@ -163,6 +199,8 @@ nodegroups2communities <- function
 #' @param keep_terms_sep `character` string used as a delimited to separate
 #'    each term when multiple terms are concatenated together to form
 #'    the cluster label.
+#' @param do_fix_terms `logical` default TRUE, whether to apply
+#'    `fixSetLabels()` on the resulting words.
 #' @param ... additional arguments are ignored.
 #'
 #' @export
@@ -172,12 +210,14 @@ label_communities <- function
  add_catchwords=NULL,
  num_keep_terms=3,
  keep_terms_sep=",\n",
+ do_fixSetLabels=TRUE,
  ...)
 {
    # define catchwords
    catchwords <- unique(c(
       add_catchwords,
       "the", "an", "a", "of", "in", "between", "to", "and",
+   	"by",
       "peptide", "peptides",
       "protein", "proteins",
       "gene", "genes",
@@ -250,7 +290,14 @@ label_communities <- function
          # if no words remain, name the cluster by number
          return(inum)
       }
-      names(head(tcount(j), num_keep_terms))
+      use_names <- names(head(jamba::tcount(j), num_keep_terms))
+      
+      # optionally apply fixSetLabels
+      if (isTRUE(do_fixSetLabels)) {
+      	use_names <- fixSetLabels(use_names,
+      		...);
+      }
+      use_names
    })
 
    names(nodegroups_wc) <- nodegroup_labels;

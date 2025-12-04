@@ -1,6 +1,11 @@
 # TODO
 
-## 02dec2025
+## 03dec2025
+
+* `mem2emap()`
+
+	* apply shadowText, bold labels
+	* filter words to remove more "stop" words
 
 * FIXED. Fix bug with `CnetCluster()`, `CnetCollapsed()` when drawing
 `mem_legend()`, it should include `do_directional=TRUE` when relevant,

@@ -491,6 +491,9 @@ edge_bundle_nodegroups <- function
    edge_df <- data.frame(check.names=FALSE,
       stringsAsFactors=FALSE,
       igraph::as_edgelist(g));
+   if (nrow(edge_df) == 0) {
+   	return(NULL)
+   }
    edge_df$nodegroup1 <- nodegroup_df$nodegroup[match(edge_df[,1], nodegroup_df$node)];
    edge_df$nodegroup2 <- nodegroup_df$nodegroup[match(edge_df[,2], nodegroup_df$node)];
    edge_df$nodegroup1_2 <- jamba::pasteByRow(
@@ -823,7 +826,6 @@ edge_bundle_nodegroups <- function
    # propagate valid from midpoints_df
    edge_df$valid <- midpoints_df$valid[ematch];
 
-   # print("head(edge_df):");print(head(edge_df));
    # calculate each spline
    edge_splines <- lapply(seq_len(nrow(edge_df)), function(n){
       x1 <- unlist(edge_df[n, use_xcols]);
