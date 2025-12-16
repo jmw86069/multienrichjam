@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.107.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get Cnet nodesets as a named vector</h1>
-      <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamgraph-relayout-nodegroups.R" class="external-link"><code>R/jamgraph-relayout-nodegroups.R</code></a></small>
+      <small class="dont-index">Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/R/jamenrich-get-cnet-nodeset.R" class="external-link"><code>R/jamenrich-get-cnet-nodeset.R</code></a></small>
       <div class="d-none name"><code>get_cnet_nodeset_vector.Rd</code></div>
     </div>
 
@@ -49,7 +49,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_cnet_nodeset_vector</span><span class="op">(</span><span class="va">g</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_cnet_nodeset_vector</span><span class="op">(</span><span class="va">g</span>, nodegroups <span class="op">=</span> <span class="cn">NULL</span>, filter_set_only <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,6 +58,20 @@
 
 <dl><dt id="arg-g">g<a class="anchor" aria-label="anchor" href="#arg-g"></a></dt>
 <dd><p><code>igraph</code> Cnet object</p></dd>
+
+
+<dt id="arg-nodegroups">nodegroups<a class="anchor" aria-label="anchor" href="#arg-nodegroups"></a></dt>
+<dd><p>default is NULL, which calls <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>.
+Also accepts <code>list</code> or <code>communities</code>.</p></dd>
+
+
+<dt id="arg-filter-set-only">filter_set_only<a class="anchor" aria-label="anchor" href="#arg-filter-set-only"></a></dt>
+<dd><p><code>logical</code> default TRUE, passed to
+<code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code> to determine whether 'Set' nodes are
+assigned a nodeset.</p><ul><li><p>When TRUE, 'Set' nodes are filtered out,
+therefore their nodeset becomes NA.</p></li>
+<li><p>When FALSE, 'Set' nodes are also assigned to a nodeset.</p></li>
+</ul></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

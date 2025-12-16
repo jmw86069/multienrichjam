@@ -6,12 +6,15 @@
 \usage{
 color_edges_by_nodegroups(
   g,
-  nodegroups,
+  nodegroups = NULL,
   nodegroup_colors = NULL,
   edge_alpha = NULL,
-  Crange = c(60, 100),
-  Lrange = c(45, 85),
-  verbose = TRUE,
+  Crange = NULL,
+  Lrange = NULL,
+  darkFactor = 1,
+  sFactor = 1,
+  naColor = "grey",
+  verbose = FALSE,
   ...
 )
 }
@@ -20,14 +23,27 @@ color_edges_by_nodegroups(
 as seen with \code{igraph::vertex_attr(g, "color")}.}
 
 \item{nodegroups}{\code{list} or \code{communities} object that references
-nodes in \code{g} and assigns one or more to nodegroups.}
+nodes in \code{g} and assigns one or more to nodegroups.
+Default NULL calls \code{get_cnet_nodeset()}, passing '...'
+for customization.}
 
-\item{edge_alpha}{\code{numeric} or \code{NULL}, where numeric value sets
-the edge alpha transparency, where \code{edge_alpha=0} is completely
-transparent, \code{edge_alpha=0.5} is 50\% transparent, and \code{edge_alpha=1}
-is completely not transparent, and is opaque. When \code{edge_alpha=NULL}
-the alpha values are supplied by \code{colorjam::blend_colors()}
-which blends the two values.}
+\item{nodegroup_colors}{\code{character} or default NULL which assigns
+categorical colors by \code{colorjam::rainbowJam()}.}
+
+\item{edge_alpha}{\code{numeric} of default NULL uses 1, with opacity
+where 0 is transparent, 1 is completely solid.}
+
+\item{Crange, Lrange}{\code{numeric} ranges passed to \code{colorjam::rainbowJam()}
+to restrict the chroma and luminance of categorical colors.
+Default NULL uses the defaults in \code{colorjam::rainbowJam()}.}
+
+\item{darkFactor, sFactor}{\code{numeric} default 1 each, used to
+darken and saturate colors, respectively. When either contain
+values other than 1, it calls \code{jamba::makeColorDarker()}.}
+
+\item{naColor}{\code{character} color, default 'grey', used for edges that
+for any reason were not assigned to a nodegroup, to prevent
+them from becoming NA.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
@@ -40,6 +56,29 @@ represent the result of blending node colors, seen by
 }
 \description{
 Color edges by nodegroups
+}
+\details{
+This function is analogous to \code{color_nodes_by_nodegroups()}, and
+in fact uses the same nodegroup color strategy. However,
+by default 'Set' nodes are not colored, and therefore edges
+are only colored using the nodegroup.
+
+Using \code{filter_set_only=FALSE}, which is passed to \code{get_cnet_nodeset()},
+will assign 'Set' nodes to their own nodegroups, giving them
+colors. At that point, edges will blend colors for the 'Set'
+and 'Gene' nodes.
+}
+\examples{
+cnet1 <- make_cnet_test()
+igraph::vertex_attr(cnet1, "shape") <- "circle";
+cnet2 <- color_nodes_by_nodegroups(cnet1)
+cnet3 <- color_edges_by_nodegroups(cnet2)
+jam_igraph(cnet3)
+
+cnet2b <- color_nodes_by_nodegroups(cnet1, filter_set_only=FALSE)
+cnet3b <- color_edges_by_nodegroups(cnet2b, filter_set_only=FALSE)
+jam_igraph(cnet3b)
+
 }
 \seealso{
 Other jam igraph utilities: 

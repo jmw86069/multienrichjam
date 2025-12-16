@@ -1,5 +1,62 @@
 # TODO
 
+## 15dec2025
+
+* Bug: `get_hull_data()` sometimes returns single-node hull when there
+are two nodes very near each other. Also consider enabling single-node hull
+when preferred.
+* FIXED: `color_nodes_by_nodegroups()` - make nodegroups robust, spot-check
+color assignment, potential mis-alignment.
+* DONE. `get_cnet_nodeset_vector()` missing argument 'nodegroups'.
+Option to change NA to node name for nodes not assigned to a nodeset?
+* For ShinyCat, consider method to re-apply layout overall, potentially
+as a series of re-layout operations/steps to be recorded and played back?
+* DONE. `get_igraph_layout()` should return colnames "x", "y".
+* `color_edges_by_nodegroups()` make it work for pie node colors.
+* Future: Consider storing edge bundling coordinates in graph attributes?
+Could be useful for eventual ggplot2/tidygraph/ggraph testing.
+
+## 05dec2025
+
+* Consider a visual "logic decision tree" documentation for "How to Multi-Enrich"
+
+   * E.g. if lots of genes/pathways, take these paths (CnetCollapsed);
+   if few genes/pathways, take these paths (CnetExemplar or custom exemplars).
+
+## 04dec2025
+
+* `fixSetLabels()`
+
+   * Add argument 'reset=FALSE' to attempt to revert to original labels.
+   Only active for `igraph` and `Mem` objects.
+   * Store original set names in metadata somewhere, so it can be "reset".
+   * When applied to 'Mem' object, store in metadata if not already defined.
+   * When applied to 'igraph' object, store in vertex attributes if not
+   already defined.
+
+* `prepare_folio()`
+
+   * should have more than '...' function args auto-complete.
+   * Consider adding `mem2emap()` to default workflow?
+   Except that `overlap` to be adjusted each time, maybe not?
+
+* `mem2emap()` needs some way to indicate the node size in a legend.
+* `mem2cnet()`
+
+   * Consider using `sign()` for Set node directional border color.
+   Currently the border color is usually un-saturated, not distinctive.
+   Using solid color avoids needing to show the color gradient.
+
+* Pie in the sky:
+
+   * If ollamar is running locally, use it to label pathway clusters.
+   * Could PoC using small token model.
+
+* `jam_igraph()`
+
+	* Consider method to use label.fontsize for exact, non-scaled font sizing,
+	if vertex.label.fontsize, edge.label.fontsize exist and are defined.
+
 ## 03dec2025
 
 * `mem2emap()`

@@ -1,3 +1,43 @@
+# multienrichjam 0.0.110.900
+
+## Bug fixes
+
+* `color_nodes_by_nodegroups()`
+
+	* Fixed error when input `list` did not contain all nodes.
+	* Fixed bug causing mis-alignment of colors across nodegroups.
+	* Made argument 'nodegroups' more robust, calling `get_cnet_nodeset()`
+	as needed.
+	* Added examples.
+
+* `get_cnet_nodeset_vector()` fixed missing argument 'nodegroups'.
+
+## Changes to existing functions
+
+* `color_edges_by_nodegroups()`
+
+   * more robust to argument 'nodegroups'
+   * new adjustments 'darkFactor','sFactor' to distinguish from node colors.
+   * added examples
+
+* `get_igraph_layout()` now always returns colnames 'x','y','z' as many as
+needed.
+* `get_cnet_nodeset()` now tolerates data without 'nodeType', but does not
+filter 'Set' nodes of course.
+* `get_cnet_nodeset_vector()`
+
+   * now tolerates argument nodegroups as NULL, which calls
+	`get_cnet_nodeset()`.
+	Help docs clarify that `filter_set_only=FALSE` will assign a nodeset
+	to 'Set' nodes, otherwise they are NA.
+
+# multienrichjam 0.0.109.900
+
+## Changes
+
+* Added more to words.txt and abbrev.txt.
+
+
 # multienrichjam 0.0.108.900
 
 ## Changes

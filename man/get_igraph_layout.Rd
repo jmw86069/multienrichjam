@@ -74,15 +74,19 @@ so that the angle of offset is updated per the new layout coordinates.
 }
 \value{
 \code{get_igraph_layout()} returns a \code{numeric} matrix when:
-the input graph \code{g} contains
-layout as a graph attribute as either numeric matrix or function,
+the input graph \code{g} contains layout as a graph attribute as either
+numeric matrix or function,
 or coordinates as x,y,z vertex attributes.
+The layout will contain colnames that begin 'x', 'y', 'z',
+for consistency with downstream use.
 \itemize{
-\item However, when  there is no layout defined in \code{g} and
-\code{default_layout} is NULL, it returns NULL. This logic is used
-to avoid defining a layout if it does not already exist.
+\item When  there is no layout defined in \code{g} and
+\code{default_layout} is NULL, it returns NULL.
+This logic is intended when it is preferable to avoid returning
+a layout if it does not already exist.
 \item When \code{matrix} is returned, the number of rows
-matches the input graph \code{g} using \code{igraph::vcount(g)}.
+matches the input graph \code{g} using \code{igraph::vcount(g)},
+and in that order.
 All \code{rownames()} are defined to match vertex name when it exists,
 using \code{igraph::V(g)$name}.
 }

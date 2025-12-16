@@ -6,13 +6,13 @@
 \usage{
 color_nodes_by_nodegroups(
   g,
-  nodegroups,
+  nodegroups = NULL,
   nodegroup_colors = NULL,
   node_alpha = NULL,
-  Crange = c(60, 100),
-  Lrange = c(45, 85),
+  Crange = NULL,
+  Lrange = NULL,
   color_attributes = c("color"),
-  verbose = TRUE,
+  verbose = FALSE,
   ...
 )
 }
@@ -21,18 +21,29 @@ color_nodes_by_nodegroups(
 as seen with \code{igraph::vertex_attr(g, "color")}.}
 
 \item{nodegroups}{\code{list} or \code{communities} object that references
-nodes in \code{g} and assigns one or more to nodegroups.}
+nodes in \code{g} and assigns one or more to nodegroups.
+Default NULL calls \code{get_cnet_nodeset()}, passing '...'
+for customization.}
+
+\item{nodegroup_colors}{\code{character} or default NULL which assigns
+categorical colors by \code{colorjam::rainbowJam()}.}
+
+\item{node_alpha}{\code{numeric} of default NULL uses 1, with opacity
+where 0 is transparent, 1 is completely solid.}
+
+\item{Crange, Lrange}{\code{numeric} ranges passed to \code{colorjam::rainbowJam()}
+to restrict the chroma and luminance of categorical colors.
+Default NULL uses the defaults in \code{colorjam::rainbowJam()}.}
+
+\item{color_attributes}{\code{character} vector of node attributes to
+assign new colors, default 'color' assigns color to the node itself.
+Note that this color is not seen when shape is 'pie' or 'jampie',
+instead use 'pie.color'.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
-\item{...}{additional arguments are passed to \code{colorjam::blend_colors()}.}
-
-\item{edge_alpha}{\code{numeric} or \code{NULL}, where numeric value sets
-the edge alpha transparency, where \code{edge_alpha=0} is completely
-transparent, \code{edge_alpha=0.5} is 50\% transparent, and \code{edge_alpha=1}
-is completely not transparent, and is opaque. When \code{edge_alpha=NULL}
-the alpha values are supplied by \code{colorjam::blend_colors()}
-which blends the two values.}
+\item{...}{additional arguments are passed to\code{colorjam::rainbowJam()},
+notably 'preset' which defines the color wheel used.}
 }
 \value{
 \code{igraph} object with edge color attribute updated to
@@ -41,6 +52,17 @@ represent the result of blending node colors, seen by
 }
 \description{
 Color edges by nodegroups
+}
+\examples{
+cnet1 <- make_cnet_test()
+igraph::vertex_attr(cnet1, "shape") <- "circle";
+cnet2 <- color_nodes_by_nodegroups(cnet1);
+# behold color
+jam_igraph(cnet2)
+
+# you can enable mark.groups which uses the same colorjam::rainbowJam()
+jam_igraph(cnet2, mark.groups=TRUE)
+
 }
 \seealso{
 Other jam igraph utilities: 

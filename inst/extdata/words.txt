@@ -141,3 +141,4 @@ C[-. ]flip	c-FLIP
 Tlr	TLR
 Rhodopsin[-. ]*like	Rhodopsin-Like
 Huntington[']*s	Huntington's
+Affilaited	Affiliated

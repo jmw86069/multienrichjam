@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.107.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,7 @@
 <span>  add_catchwords <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  num_keep_terms <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  keep_terms_sep <span class="op">=</span> <span class="st">",\n"</span>,</span>
+<span>  do_fixSetLabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -93,6 +94,11 @@ the cluster label.</p></dd>
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>additional arguments are ignored.</p></dd>
+
+
+<dt id="arg-do-fix-terms">do_fix_terms<a class="anchor" aria-label="anchor" href="#arg-do-fix-terms"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to apply
+<code><a href="fixSetLabels.html">fixSetLabels()</a></code> on the resulting words.</p></dd>
 
 </dl></div>
     <div class="section level2">

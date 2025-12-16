@@ -117,6 +117,16 @@ color_edges_by_nodes <- function
 #' Color edges by nodegroups
 #'
 #' Color edges by nodegroups
+#' 
+#' This function is analogous to `color_nodes_by_nodegroups()`, and
+#' in fact uses the same nodegroup color strategy. However,
+#' by default 'Set' nodes are not colored, and therefore edges
+#' are only colored using the nodegroup.
+#' 
+#' Using `filter_set_only=FALSE`, which is passed to `get_cnet_nodeset()`,
+#' will assign 'Set' nodes to their own nodegroups, giving them
+#' colors. At that point, edges will blend colors for the 'Set'
+#' and 'Gene' nodes.
 #'
 #' @family jam igraph utilities
 #'
@@ -128,24 +138,49 @@ color_edges_by_nodes <- function
 #'    as seen with `igraph::vertex_attr(g, "color")`.
 #' @param nodegroups `list` or `communities` object that references
 #'    nodes in `g` and assigns one or more to nodegroups.
-#' @param edge_alpha `numeric` or `NULL`, where numeric value sets
-#'    the edge alpha transparency, where `edge_alpha=0` is completely
-#'    transparent, `edge_alpha=0.5` is 50% transparent, and `edge_alpha=1`
-#'    is completely not transparent, and is opaque. When `edge_alpha=NULL`
-#'    the alpha values are supplied by `colorjam::blend_colors()`
-#'    which blends the two values.
+#' @param nodegroups `list` or `communities` object that references
+#'    nodes in `g` and assigns one or more to nodegroups.
+#'    Default NULL calls `get_cnet_nodeset()`, passing '...'
+#'    for customization.
+#' @param nodegroup_colors `character` or default NULL which assigns
+#'    categorical colors by `colorjam::rainbowJam()`.
+#' @param edge_alpha `numeric` of default NULL uses 1, with opacity
+#'    where 0 is transparent, 1 is completely solid.
+#' @param Crange,Lrange `numeric` ranges passed to `colorjam::rainbowJam()`
+#'    to restrict the chroma and luminance of categorical colors.
+#'    Default NULL uses the defaults in `colorjam::rainbowJam()`.
+#' @param darkFactor,sFactor `numeric` default 1 each, used to
+#'    darken and saturate colors, respectively. When either contain
+#'    values other than 1, it calls `jamba::makeColorDarker()`.
+#' @param naColor `character` color, default 'grey', used for edges that
+#'    for any reason were not assigned to a nodegroup, to prevent
+#'    them from becoming NA.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to `colorjam::blend_colors()`.
-#'
+#' 
+#' @examples
+#' cnet1 <- make_cnet_test()
+#' igraph::vertex_attr(cnet1, "shape") <- "circle";
+#' cnet2 <- color_nodes_by_nodegroups(cnet1)
+#' cnet3 <- color_edges_by_nodegroups(cnet2)
+#' jam_igraph(cnet3)
+#' 
+#' cnet2b <- color_nodes_by_nodegroups(cnet1, filter_set_only=FALSE)
+#' cnet3b <- color_edges_by_nodegroups(cnet2b, filter_set_only=FALSE)
+#' jam_igraph(cnet3b)
+#' 
 #' @export
 color_edges_by_nodegroups <- function
 (g,
- nodegroups,
+ nodegroups=NULL,
  nodegroup_colors=NULL,
  edge_alpha=NULL,
- Crange=c(60, 100),
- Lrange=c(45, 85),
- verbose=TRUE,
+ Crange=NULL,#c(60, 100),
+ Lrange=NULL,#c(45, 85),
+ darkFactor=1,
+ sFactor=1,
+ naColor="grey",
+ verbose=FALSE,
  ...)
 {
    #
@@ -163,8 +198,11 @@ color_edges_by_nodegroups <- function
       vname <- igraph::V(g)$name;
    }
 
-   if ("communities" %in% class(nodegroups)) {
-      if (verbose) {
+	if (length(nodegroups) == 0) {
+		nodegroups <- get_cnet_nodeset(g, ...);
+	}
+	if (inherits(nodegroups, "communities")) {
+		if (verbose) {
          jamba::printDebug("color_edges_by_nodegroups(): ",
             "Converted communities to nodegroups format.")
       }
@@ -206,7 +244,8 @@ color_edges_by_nodegroups <- function
 
    edgecolors <- sapply(seq_len(nrow(nodecolor_df)), function(i){
       colorjam::blend_colors(
-         x=unname(unlist(nodecolor_df[i,])),
+         x=jamba::rmNA(naValue="#00000000",
+         	unname(unlist(nodecolor_df[i,]))),
          ...)
    })
 
@@ -214,19 +253,38 @@ color_edges_by_nodegroups <- function
    if (length(edge_alpha) > 0 && is.numeric(edge_alpha)) {
       edgecolors <- jamba::alpha2col(edgecolors,
          alpha=edge_alpha);
+      naColor <- jamba::alpha2col(naColor,
+      	alpha=edge_alpha);
       if (verbose) {
          jamba::printDebug("color_edges_by_nodegroups(): ",
             "Applied edge_alpha:",
             edge_alpha)
       }
    }
+   nodecolor_df$edgecolors <- edgecolors;
 
+   k <- c("nodegroup1_color", "nodegroup2_color");
    nodecolor_match <- match(
       jamba::pasteByRow(
-         edge_df[,c("nodegroup1_color", "nodegroup2_color"), drop=FALSE]),
-      jamba::pasteByRow(nodecolor_df))
+         edge_df[, k, drop=FALSE]),
+      jamba::pasteByRow(nodecolor_df[, k], drop=FALSE))
    edge_df$edgecolor <- edgecolors[nodecolor_match];
-   igraph::edge_attr(g, "color") <- edge_df$edgecolor;
+   if (verbose > 1) {
+   	jamba::printDebug("edge_df:");
+   	print(edge_df);
+   }
+   
+   # optionally adjust darkness
+   if (length(darkFactor) > 0 && length(sFactor) > 0 &&
+   		any(!c(darkFactor, sFactor) %in% 1)) {
+   	edge_df$edgecolor <- jamba::makeColorDarker(edge_df$edgecolor,
+   		darkFactor=darkFactor,
+   		sFactor=sFactor)
+   }
+   
+   # assign edge color
+   igraph::edge_attr(g, "color") <- jamba::rmNA(edge_df$edgecolor,
+   	naValue=naColor)
    return(g);
 }
 
@@ -245,25 +303,45 @@ color_edges_by_nodegroups <- function
 #'    as seen with `igraph::vertex_attr(g, "color")`.
 #' @param nodegroups `list` or `communities` object that references
 #'    nodes in `g` and assigns one or more to nodegroups.
-#' @param edge_alpha `numeric` or `NULL`, where numeric value sets
-#'    the edge alpha transparency, where `edge_alpha=0` is completely
-#'    transparent, `edge_alpha=0.5` is 50% transparent, and `edge_alpha=1`
-#'    is completely not transparent, and is opaque. When `edge_alpha=NULL`
-#'    the alpha values are supplied by `colorjam::blend_colors()`
-#'    which blends the two values.
+#'    Default NULL calls `get_cnet_nodeset()`, passing '...'
+#'    for customization.
+#' @param nodegroup_colors `character` or default NULL which assigns
+#'    categorical colors by `colorjam::rainbowJam()`.
+#' @param node_alpha `numeric` of default NULL uses 1, with opacity
+#'    where 0 is transparent, 1 is completely solid.
+#' @param Crange,Lrange `numeric` ranges passed to `colorjam::rainbowJam()`
+#'    to restrict the chroma and luminance of categorical colors.
+#'    Default NULL uses the defaults in `colorjam::rainbowJam()`.
+#' @param color_attributes `character` vector of node attributes to
+#'    assign new colors, default 'color' assigns color to the node itself.
+#'    Note that this color is not seen when shape is 'pie' or 'jampie',
+#'    instead use 'pie.color'.
 #' @param verbose `logical` indicating whether to print verbose output.
-#' @param ... additional arguments are passed to `colorjam::blend_colors()`.
-#'
+#' @param ... additional arguments are passed to`colorjam::rainbowJam()`,
+#'    notably 'preset' which defines the color wheel used.
+#' 
+#' @examples
+#' cnet1 <- make_cnet_test()
+#' igraph::vertex_attr(cnet1, "shape") <- "circle";
+#' cnet2 <- color_nodes_by_nodegroups(cnet1);
+#' # behold color
+#' jam_igraph(cnet2)
+#' 
+#' # you can enable mark.groups which uses the same colorjam::rainbowJam()
+#' jam_igraph(cnet2, mark.groups=TRUE)
+#' 
 #' @export
 color_nodes_by_nodegroups <- function
 (g,
- nodegroups,
+ nodegroups=NULL,
  nodegroup_colors=NULL,
  node_alpha=NULL,
- Crange=c(60, 100),
- Lrange=c(45, 85),
+ Crange=NULL,
+ Lrange=NULL,
+ # Crange=c(60, 100),
+ # Lrange=c(45, 85),
  color_attributes=c("color"),
- verbose=TRUE,
+ verbose=FALSE,
  ...)
 {
    #
@@ -281,7 +359,10 @@ color_nodes_by_nodegroups <- function
       vname <- igraph::V(g)$name;
    }
 
-   if ("communities" %in% class(nodegroups)) {
+	if (length(nodegroups) == 0) {
+		nodegroups <- get_cnet_nodeset(g, ...);
+	}
+   if (inherits(nodegroups, "communities")) {
       if (verbose) {
          jamba::printDebug("color_edges_by_nodegroups(): ",
             "Converted communities to nodegroups format.")
@@ -312,7 +393,10 @@ color_nodes_by_nodegroups <- function
    nodegroup_df$new_color <- nodegroup_colors[nodegroup_df$nodegroup];
 
    for (color_attribute in color_attributes) {
-      igraph::vertex_attr(g, name=color_attribute) <- nodegroup_df$new_color;
+   	matchrow <- match(nodegroup_df$name, igraph::V(g)$name);
+      igraph::vertex_attr(g,
+      	index=matchrow,
+      	name=color_attribute) <- nodegroup_df$new_color;
    }
 
    return(g);

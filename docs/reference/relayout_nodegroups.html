@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.107.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,14 +51,17 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">relayout_nodegroups</span><span class="op">(</span></span>
 <span>  <span class="va">cnet</span>,</span>
+<span>  nodegroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  repulse <span class="op">=</span> <span class="fl">3.5</span>,</span>
 <span>  fix_set_nodes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  nodegroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  add_edges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  edge_factor <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  do_final_relayout <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  final_repulse <span class="op">=</span> <span class="fl">3.5</span>,</span>
+<span>  apply_by_size <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  byCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-num_terms"</span>, <span class="st">"-num_nodes"</span>, <span class="st">"nodegroup"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -69,6 +72,17 @@
 
 <dl><dt id="arg-cnet">cnet<a class="anchor" aria-label="anchor" href="#arg-cnet"></a></dt>
 <dd><p><code>igraph</code> object with node layout already defined</p></dd>
+
+
+<dt id="arg-nodegroups">nodegroups<a class="anchor" aria-label="anchor" href="#arg-nodegroups"></a></dt>
+<dd><p><code>list</code> of node names, or <code>communities</code> object,
+passed to <code><a href="communities2nodegroups.html">communities2nodegroups()</a></code>.
+When NULL, it checks for supporting data in this order:</p><ol><li><p>If graph attribute 'mark.groups' is defined, it is used.</p></li>
+<li><p>If vertex attribute 'nodeType' exists, it calls
+<code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>.</p></li>
+<li><p>Finally, it calls <code><a href="https://r.igraph.org/reference/cluster_optimal.html" class="external-link">igraph::cluster_optimal()</a></code>, hoping this
+method will be appropriate for the graph size.</p></li>
+</ol></dd>
 
 
 <dt id="arg-repulse">repulse<a class="anchor" aria-label="anchor" href="#arg-repulse"></a></dt>
@@ -85,14 +99,62 @@ nodes with nodeType=='Set' to prevent them from moving.</p></dd>
 <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code> after the relayout iterations are complete.</p></dd>
 
 
-<dt id="arg-nodegroups">nodegroups<a class="anchor" aria-label="anchor" href="#arg-nodegroups"></a></dt>
-<dd><p><code>list</code> default NULL, intended to pass a custom
-set of nodegroups. When NULL it uses <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>.</p></dd>
+<dt id="arg-add-edges">add_edges<a class="anchor" aria-label="anchor" href="#arg-add-edges"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to add edges within
+nodes of each nodegroup. The same is accomplished by setting
+<code>edge_factor=0</code>.</p></dd>
+
+
+<dt id="arg-edge-factor">edge_factor<a class="anchor" aria-label="anchor" href="#arg-edge-factor"></a></dt>
+<dd><p><code>numeric</code> default 2, used as the numerator in
+new edge weights with equation <code>edge_factor/sqrt(n)</code> where 'n'
+is the number of nodes in the nodegroup.</p><ul><li><p>Set <code>edge_factor=0</code> or <code>add_edges=FALSE</code> to skip this step.</p></li>
+</ul></dd>
+
+
+<dt id="arg-do-final-relayout">do_final_relayout<a class="anchor" aria-label="anchor" href="#arg-do-final-relayout"></a></dt>
+<dd><p><code>logical</code> default NULL, whether to apply
+one more <code><a href="relayout_with_qfr.html">relayout_with_qfr()</a></code> after each nodegroup is adjusted.
+It uses <code>final_repulse</code>.</p></dd>
+
+
+<dt id="arg-final-repulse">final_repulse<a class="anchor" aria-label="anchor" href="#arg-final-repulse"></a></dt>
+<dd><p><code>numeric</code> used when <code>do_final_relayout</code> is TRUE,
+used as the 'repulse' argument in <code><a href="relayout_with_qfr.html">relayout_with_qfr()</a></code>.</p></dd>
+
+
+<dt id="arg-apply-by-size">apply_by_size<a class="anchor" aria-label="anchor" href="#arg-apply-by-size"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to apply the
+relayout to nodegroups ordered by size, using <code>byCols</code> to sort.</p><ul><li><p>The default applies layout such that nodegroups with the most terms
+in <code>names(nodegroups)</code> are applied first, then largest to smallest
+nodegroups.</p></li>
+<li><p>For Cnet plots, Gene nodes in nodegroups connected
+to the most Set nodes are adjusted first, then largest nodegroups,
+then sorted by nodegroup name.</p></li>
+<li><p>It is unclear if the order is useful, future iterations of
+this approach may "move" other nodegroups aside first, then
+re-introduce each nodegroup into the layout one by one.
+Otherwise nodes could become "tangled" in the center, with
+no ideal method to optimize separation by nodegroup.</p></li>
+</ul></dd>
+
+
+<dt id="arg-bycols">byCols<a class="anchor" aria-label="anchor" href="#arg-bycols"></a></dt>
+<dd><p><code>character</code> vector used when <code>apply_by_size</code> is TRUE.</p><ul><li><p>'-num_terms': reverse-order by the number of terms in each
+nodegroup name, assuming comma-delimited terms.</p></li>
+<li><p>'-num_nodes': reverse-order by the number of nodes in each nodegroup.</p></li>
+<li><p>'nodegroup': alphnumeric sort of the <code>names(nodegroups)</code>.</p></li>
+</ul></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p><code>logical</code> whether to print verbose output.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>additional arguments are passed to
-<code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code></p></dd>
+<code><a href="communities2nodegroups.html">communities2nodegroups()</a></code> for argument 'sep', or to
+<code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code> for arguments regarding node ordering, etc.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -169,41 +231,16 @@ strategies to attempt to minimize the issue.</p></li>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"One nodegroup is split"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="relayout_nodegroups-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">cnet2</span> <span class="op">&lt;-</span> <span class="fu">relayout_nodegroups</span><span class="op">(</span><span class="va">cnet</span>, nodegroups<span class="op">=</span><span class="va">ns</span><span class="op">[</span><span class="st">"SetA,SetB"</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
+<span class="r-in"><span><span class="va">cnet2</span> <span class="op">&lt;-</span> <span class="fu">relayout_nodegroups</span><span class="op">(</span><span class="va">cnet</span>, nodegroups<span class="op">=</span><span class="va">ns</span><span class="op">[</span><span class="st">"SetA,SetB"</span><span class="op">]</span>, do_final_layout<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:30:14</span>) 16Dec2025:   <span style="color: #FF8700;">relayout_nodegroups(): </span><span style="color: #00AFFF;">Using nodegroups as supplied.</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:30:14</span>) 16Dec2025:   <span style="color: #FF8700;">relayout_nodegroups(): </span><span style="color: #00AFFF;">Applying to nodegroup '</span><span style="color: #FF8700;">SetA,SetB</span><span style="color: #00AFFF;">' with members: </span><span style="color: #FF8700;">BH</span>,<span style="color: #FFAF5F;">BT</span>,<span style="color: #FF8700;">BU</span> </span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet2</span>, mark.groups<span class="op">=</span><span class="va">ns</span><span class="op">[</span><span class="st">"SetA,SetB"</span><span class="op">]</span>, nodegroups<span class="op">=</span><span class="va">ns</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"This nodegroup is 'encouraged' to re-group"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="relayout_nodegroups-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">cnet2</span> <span class="op">&lt;-</span> <span class="fu">relayout_nodegroups</span><span class="op">(</span><span class="va">cnet</span>, nodegroups<span class="op">=</span><span class="va">ns</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 91</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 153</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 36</span>
-<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet2</span>, mark.groups<span class="op">=</span><span class="va">ns</span><span class="op">[</span><span class="st">"SetA,SetB"</span><span class="op">]</span>, nodegroups<span class="op">=</span><span class="va">ns</span>,</span></span>
+<span class="r-in"><span><span class="co"># by default, it is applied to all nodes</span></span></span>
+<span class="r-in"><span><span class="va">cnet3</span> <span class="op">&lt;-</span> <span class="fu">relayout_nodegroups</span><span class="op">(</span><span class="va">cnet</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3</span>, mark.groups<span class="op">=</span><span class="va">ns</span>, nodegroups<span class="op">=</span><span class="va">ns</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"Re-layout across all nodegroups"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="relayout_nodegroups-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>

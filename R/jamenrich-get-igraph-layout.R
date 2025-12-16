@@ -60,14 +60,18 @@
 #' @family jam utility functions
 #'
 #' @returns `get_igraph_layout()` returns a `numeric` matrix when:
-#'    the input graph `g` contains
-#'    layout as a graph attribute as either numeric matrix or function,
+#'    the input graph `g` contains layout as a graph attribute as either
+#'    numeric matrix or function,
 #'    or coordinates as x,y,z vertex attributes.
-#'    * However, when  there is no layout defined in `g` and
-#'    `default_layout` is NULL, it returns NULL. This logic is used
-#'    to avoid defining a layout if it does not already exist.
+#'    The layout will contain colnames that begin 'x', 'y', 'z',
+#'    for consistency with downstream use.
+#'    * When  there is no layout defined in `g` and
+#'    `default_layout` is NULL, it returns NULL.  
+#'    This logic is intended when it is preferable to avoid returning
+#'    a layout if it does not already exist.
 #'    * When `matrix` is returned, the number of rows
-#'    matches the input graph `g` using `igraph::vcount(g)`.
+#'    matches the input graph `g` using `igraph::vcount(g)`,
+#'    and in that order.
 #'    All `rownames()` are defined to match vertex name when it exists,
 #'    using `igraph::V(g)$name`.
 #'
@@ -242,6 +246,13 @@ get_igraph_layout <- function
    } else {
       rownames(xy) <- igraph::V(g)$name;
    }
+
+   # confirm colnames begin with: 'x', 'y', 'z', then cycle the alphabet
+   # - bit overkill, but what can you do
+   use_colnames <- head(unique(c("x", "y", "z",
+   	tolower(jamba::colNum2excelName(seq_len(ncol(xy)))))),
+   	ncol(xy))
+   colnames(xy) <- use_colnames;
 
    if (verbose > 1) {
       jamba::printDebug("get_igraph_layout(): ",

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.107.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,12 +51,15 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">color_edges_by_nodegroups</span><span class="op">(</span></span>
 <span>  <span class="va">g</span>,</span>
-<span>  <span class="va">nodegroups</span>,</span>
+<span>  nodegroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nodegroup_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  edge_alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  Crange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">100</span><span class="op">)</span>,</span>
-<span>  Lrange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">85</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  Crange <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  Lrange <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  darkFactor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  sFactor <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  naColor <span class="op">=</span> <span class="st">"grey"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -72,16 +75,37 @@ as seen with <code>igraph::vertex_attr(g, "color")</code>.</p></dd>
 
 <dt id="arg-nodegroups">nodegroups<a class="anchor" aria-label="anchor" href="#arg-nodegroups"></a></dt>
 <dd><p><code>list</code> or <code>communities</code> object that references
-nodes in <code>g</code> and assigns one or more to nodegroups.</p></dd>
+nodes in <code>g</code> and assigns one or more to nodegroups.
+Default NULL calls <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>, passing '...'
+for customization.</p></dd>
+
+
+<dt id="arg-nodegroup-colors">nodegroup_colors<a class="anchor" aria-label="anchor" href="#arg-nodegroup-colors"></a></dt>
+<dd><p><code>character</code> or default NULL which assigns
+categorical colors by <code><a href="https://jmw86069.github.io/colorjam/reference/rainbowJam.html" class="external-link">colorjam::rainbowJam()</a></code>.</p></dd>
 
 
 <dt id="arg-edge-alpha">edge_alpha<a class="anchor" aria-label="anchor" href="#arg-edge-alpha"></a></dt>
-<dd><p><code>numeric</code> or <code>NULL</code>, where numeric value sets
-the edge alpha transparency, where <code>edge_alpha=0</code> is completely
-transparent, <code>edge_alpha=0.5</code> is 50% transparent, and <code>edge_alpha=1</code>
-is completely not transparent, and is opaque. When <code>edge_alpha=NULL</code>
-the alpha values are supplied by <code><a href="https://jmw86069.github.io/colorjam/reference/blend_colors.html" class="external-link">colorjam::blend_colors()</a></code>
-which blends the two values.</p></dd>
+<dd><p><code>numeric</code> of default NULL uses 1, with opacity
+where 0 is transparent, 1 is completely solid.</p></dd>
+
+
+<dt id="arg-crange-lrange">Crange, Lrange<a class="anchor" aria-label="anchor" href="#arg-crange-lrange"></a></dt>
+<dd><p><code>numeric</code> ranges passed to <code><a href="https://jmw86069.github.io/colorjam/reference/rainbowJam.html" class="external-link">colorjam::rainbowJam()</a></code>
+to restrict the chroma and luminance of categorical colors.
+Default NULL uses the defaults in <code><a href="https://jmw86069.github.io/colorjam/reference/rainbowJam.html" class="external-link">colorjam::rainbowJam()</a></code>.</p></dd>
+
+
+<dt id="arg-darkfactor-sfactor">darkFactor, sFactor<a class="anchor" aria-label="anchor" href="#arg-darkfactor-sfactor"></a></dt>
+<dd><p><code>numeric</code> default 1 each, used to
+darken and saturate colors, respectively. When either contain
+values other than 1, it calls <code><a href="https://jmw86069.github.io/jamba/reference/makeColorDarker.html" class="external-link">jamba::makeColorDarker()</a></code>.</p></dd>
+
+
+<dt id="arg-nacolor">naColor<a class="anchor" aria-label="anchor" href="#arg-nacolor"></a></dt>
+<dd><p><code>character</code> color, default 'grey', used for edges that
+for any reason were not assigned to a nodegroup, to prevent
+them from becoming NA.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -99,6 +123,17 @@ represent the result of blending node colors, seen by
 <code>igraph::edge_attr(g)$color</code>.</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This function is analogous to <code><a href="color_nodes_by_nodegroups.html">color_nodes_by_nodegroups()</a></code>, and
+in fact uses the same nodegroup color strategy. However,
+by default 'Set' nodes are not colored, and therefore edges
+are only colored using the nodegroup.</p>
+<p>Using <code>filter_set_only=FALSE</code>, which is passed to <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>,
+will assign 'Set' nodes to their own nodegroups, giving them
+colors. At that point, edges will blend colors for the 'Set'
+and 'Gene' nodes.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam igraph utilities:
 <code><a href="color_edges_by_nodes.html">color_edges_by_nodes</a>()</code>,
@@ -109,6 +144,22 @@ represent the result of blending node colors, seen by
 <code><a href="subgraph_jam.html">subgraph_jam</a>()</code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cnet1</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_cnet_test.html">make_cnet_test</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/vertex_attr.html" class="external-link">vertex_attr</a></span><span class="op">(</span><span class="va">cnet1</span>, <span class="st">"shape"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"circle"</span>;</span></span>
+<span class="r-in"><span><span class="va">cnet2</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_nodes_by_nodegroups.html">color_nodes_by_nodegroups</a></span><span class="op">(</span><span class="va">cnet1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cnet3</span> <span class="op">&lt;-</span> <span class="fu">color_edges_by_nodegroups</span><span class="op">(</span><span class="va">cnet2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="color_edges_by_nodegroups-1.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cnet2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="color_nodes_by_nodegroups.html">color_nodes_by_nodegroups</a></span><span class="op">(</span><span class="va">cnet1</span>, filter_set_only<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cnet3b</span> <span class="op">&lt;-</span> <span class="fu">color_edges_by_nodegroups</span><span class="op">(</span><span class="va">cnet2b</span>, filter_set_only<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet3b</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="color_edges_by_nodegroups-2.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

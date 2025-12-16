@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.107.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,73 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.110.900" id="multienrichjam-00110900">multienrichjam 0.0.110.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00110900"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-110-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-110-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/color_nodes_by_nodegroups.html">color_nodes_by_nodegroups()</a></code></p>
+<ul><li>Fixed error when input <code>list</code> did not contain all nodes.</li>
+<li>Fixed bug causing mis-alignment of colors across nodegroups.</li>
+<li>Made argument ‘nodegroups’ more robust, calling <code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code> as needed.</li>
+<li>Added examples.</li>
+</ul></li>
+<li><p><code><a href="../reference/get_cnet_nodeset_vector.html">get_cnet_nodeset_vector()</a></code> fixed missing argument ‘nodegroups’.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-110-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-110-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/color_edges_by_nodegroups.html">color_edges_by_nodegroups()</a></code></p>
+<ul><li>more robust to argument ‘nodegroups’</li>
+<li>new adjustments ‘darkFactor’,‘sFactor’ to distinguish from node colors.</li>
+<li>added examples</li>
+</ul></li>
+<li><p><code><a href="../reference/get_igraph_layout.html">get_igraph_layout()</a></code> now always returns colnames ‘x’,‘y’,‘z’ as many as needed.</p></li>
+<li><p><code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code> now tolerates data without ‘nodeType’, but does not filter ‘Set’ nodes of course.</p></li>
+<li>
+<p><code><a href="../reference/get_cnet_nodeset_vector.html">get_cnet_nodeset_vector()</a></code></p>
+<ul><li>now tolerates argument nodegroups as NULL, which calls <code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code>. Help docs clarify that <code>filter_set_only=FALSE</code> will assign a nodeset to ‘Set’ nodes, otherwise they are NA.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.109.900" id="multienrichjam-00109900">multienrichjam 0.0.109.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00109900"></a></h2>
+<div class="section level3">
+<h3 id="changes-0-0-109-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-109-900"></a></h3>
+<ul><li>Added more to words.txt and abbrev.txt.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.108.900" id="multienrichjam-00108900">multienrichjam 0.0.108.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00108900"></a></h2>
+<div class="section level3">
+<h3 id="changes-0-0-108-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-108-900"></a></h3>
+<ul><li><p>Added more to words.txt and abbrev.txt.</p></li>
+<li>
+<p><code><a href="../reference/mem2emap.html">mem2emap()</a></code></p>
+<ul><li>New arguments ‘vertex.label.font=2’ and ‘use_shadowText=TRUE’ to match <code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> default aesthetics.</li>
+<li>Edge and node attributes include ‘gene_count’ for reference.</li>
+<li>New argument ‘size_by_genes=TRUE’ and ‘mean_size=5’.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/relayout_nodegroups.html">relayout_nodegroups()</a></code></p>
+<ul><li>Now supports other <code>igraph</code> objects, such as <code><a href="../reference/mem2emap.html">mem2emap()</a></code> output.</li>
+<li>Supports graph attribute ‘mark.groups’ as populated by <code><a href="../reference/mem2emap.html">mem2emap()</a></code>.</li>
+<li>Argument ‘nodegroups’ can include a <code>communities</code> object, for non-Cnet.</li>
+</ul></li>
+<li><p><code><a href="../reference/communities2nodegroups.html">communities2nodegroups()</a></code> now supports <code>list</code> input which would not need to be converted, as a convenient way to confirm proper <code>list</code> output.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-108-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-108-900"></a></h3>
+<ul><li>
+<code><a href="../reference/label_communities.html">label_communities()</a></code> added missing prefix to <code><a href="https://jmw86069.github.io/jamba/reference/tcount.html" class="external-link">jamba::tcount()</a></code>.</li>
+<li>
+<code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code>: fixed error when there were no edges, now returns NULL.</li>
+<li>
+<code><a href="../reference/edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>: fixed error when no edges, now returns NULL.</li>
+<li>
+<code><a href="../reference/mem_find_overlap.html">mem_find_overlap()</a></code>: fixed error for smaller Cnet graphs, added tolerance for disconnected subsets with larger Jaccard values.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.107.900" id="multienrichjam-00107900">multienrichjam 0.0.107.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00107900"></a></h2>
 <div class="section level3">
