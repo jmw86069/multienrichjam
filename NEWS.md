@@ -11,9 +11,13 @@
 	* Added examples.
 
 * `get_cnet_nodeset_vector()` fixed missing argument 'nodegroups'.
+* `get_hull_data()` updated to support one-point hulls.
 
 ## Changes to existing functions
 
+* `jam_igraph()` passes '...' to `get_cnet_nodeset()` when used with
+`mark.groups=TRUE` to make it easy to pass `min_size` to filter nodesets
+to at least this many nodes.
 * `color_edges_by_nodegroups()`
 
    * more robust to argument 'nodegroups'
@@ -22,8 +26,19 @@
 
 * `get_igraph_layout()` now always returns colnames 'x','y','z' as many as
 needed.
-* `get_cnet_nodeset()` now tolerates data without 'nodeType', but does not
-filter 'Set' nodes of course.
+* `make_point_hull()`
+
+   * Now produces a point hull for 1 and 2 point data, as originally intended.
+   * Adds argument 'min_points' to allow filtering for 3+ points, for
+   legacy behavior.
+
+* `get_cnet_nodeset()`
+
+   * now tolerates data without 'nodeType', but does not filter
+   'Set' nodes of course.
+   * new argument 'min_size' to require nodesets to have at least this
+   many nodes. Intended mainly for use with `make_point_hull()`.
+
 * `get_cnet_nodeset_vector()`
 
    * now tolerates argument nodegroups as NULL, which calls

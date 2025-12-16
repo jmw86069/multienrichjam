@@ -6,10 +6,10 @@
 \usage{
 make_point_hull(
   x,
-  expand = 0.1,
+  expand = 0.05,
   buffer = NULL,
   alpha = NULL,
-  seed = 123,
+  seed = 124,
   col = "#FF000033",
   border = "#FF0000FF",
   lwd = 2,
@@ -26,6 +26,8 @@ make_point_hull(
   label.y.nudge = 0,
   label_preset = NULL,
   label_adj_preset = label_preset,
+  min_points = 1,
+  xy_range = NULL,
   verbose = FALSE,
   ...
 )
@@ -34,7 +36,7 @@ make_point_hull(
 \item{x}{\code{numeric} matrix with 2 columns that contains the
 coordinate of each point.}
 
-\item{expand}{\code{numeric} value indicating the buffer width around
+\item{expand}{\code{numeric} value, default 0.05, the buffer width around
 each point, scaled based upon the total range of coordinates,
 used only when \code{buffer} is not supplied.}
 
@@ -90,6 +92,14 @@ When \code{NULL} it detects the offset from the plot center.}
 the label adjustment relative to the position of the label. In
 most cases it should equal \code{label_preset}.}
 
+\item{min_points}{\code{integer} minimum points to use, default 1 will
+create a point hull even around only 1 point. To require at least
+3 points, use \code{min_points=3}.}
+
+\item{xy_range}{\code{numeric} range, default NULL, to define the plot range,
+when coordinates in \code{x} are not sufficient to describe the span
+of the plot. It assumes 1:1 aspect ratio.}
+
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
@@ -121,9 +131,37 @@ x4 <- sf::st_multipoint(xy)
 
 plot(x4, col="red", pch=20, cex=3,
    main="hull_method='ahull'")
-phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-   hull_method="ahull",
+phxy <- make_point_hull(x=xy,
+   do_plot=TRUE,
    label="ahull",
+   min_points=24,
+   add=TRUE, xpd=TRUE)
+   
+# test single-point hull
+phxy1 <- make_point_hull(x=head(xy, 1),
+   do_plot=TRUE,
+   xy_range=par("usr"),
+   label="ahull,\nsinglet",
+   col="#4169E144",
+   border="royalblue",
+   add=TRUE, xpd=TRUE)
+
+# test doublet hull
+phxy2 <- make_point_hull(x=xy[c(5, 22), ],
+   do_plot=TRUE,
+   xy_range=par("usr"),
+   label="ahull,\nsinglet",
+   col="#A020F055",
+   border="#A020F0",
+   add=TRUE, xpd=TRUE)
+
+# test triplet hull
+phxy3 <- make_point_hull(x=xy[c(11, 18), ],
+   do_plot=TRUE,
+   xy_range=par("usr"),
+   label="ahull,\nsinglet",
+   col="#A020F055",
+   border="#A020F0",
    add=TRUE, xpd=TRUE)
 
 plot(x4, col="red", pch=20, cex=3,

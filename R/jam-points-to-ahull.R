@@ -15,7 +15,7 @@
 #'
 #' @param x `numeric` matrix with 2 columns that contains the
 #'    coordinate of each point.
-#' @param expand `numeric` value indicating the buffer width around
+#' @param expand `numeric` value, default 0.05, the buffer width around
 #'    each point, scaled based upon the total range of coordinates,
 #'    used only when `buffer` is not supplied.
 #' @param buffer `numeric` value indicating the absolute buffer width
@@ -59,6 +59,12 @@
 #' @param label_adj_preset `character` (default label_preset) indicating
 #'    the label adjustment relative to the position of the label. In
 #'    most cases it should equal `label_preset`.
+#' @param min_points `integer` minimum points to use, default 1 will
+#'    create a point hull even around only 1 point. To require at least
+#'    3 points, use `min_points=3`.
+#' @param xy_range `numeric` range, default NULL, to define the plot range,
+#'    when coordinates in `x` are not sufficient to describe the span
+#'    of the plot. It assumes 1:1 aspect ratio.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -72,11 +78,39 @@
 #'
 #' plot(x4, col="red", pch=20, cex=3,
 #'    main="hull_method='ahull'")
-#' phxy <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
-#'    hull_method="ahull",
+#' phxy <- make_point_hull(x=xy,
+#'    do_plot=TRUE,
 #'    label="ahull",
+#'    min_points=24,
+#'    add=TRUE, xpd=TRUE)
+#'    
+#' # test single-point hull
+#' phxy1 <- make_point_hull(x=head(xy, 1),
+#'    do_plot=TRUE,
+#'    xy_range=par("usr"),
+#'    label="ahull,\nsinglet",
+#'    col="#4169E144",
+#'    border="royalblue",
 #'    add=TRUE, xpd=TRUE)
 #'
+#' # test doublet hull
+#' phxy2 <- make_point_hull(x=xy[c(5, 22), ],
+#'    do_plot=TRUE,
+#'    xy_range=par("usr"),
+#'    label="ahull,\nsinglet",
+#'    col="#A020F055",
+#'    border="#A020F0",
+#'    add=TRUE, xpd=TRUE)
+#' 
+#' # test triplet hull
+#' phxy3 <- make_point_hull(x=xy[c(11, 18), ],
+#'    do_plot=TRUE,
+#'    xy_range=par("usr"),
+#'    label="ahull,\nsinglet",
+#'    col="#A020F055",
+#'    border="#A020F0",
+#'    add=TRUE, xpd=TRUE)
+#' 
 #' plot(x4, col="red", pch=20, cex=3,
 #'    main="hull_method='chull'")
 #' phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
@@ -85,10 +119,10 @@
 #' @export
 make_point_hull <- function
 (x,
- expand=0.1,
+ expand=0.05,
  buffer=NULL,
  alpha=NULL,
- seed=123,
+ seed=124,
  col="#FF000033",
  border="#FF0000FF",
  lwd=2,
@@ -110,6 +144,8 @@ make_point_hull <- function
  label.y.nudge=0,
  label_preset=NULL,
  label_adj_preset=label_preset,
+ min_points=1,
+ xy_range=NULL,
  verbose=FALSE,
  ...)
 {
@@ -146,31 +182,51 @@ make_point_hull <- function
       set.seed(head(seed, 1));
    }
    x <- unique(x);
+   
+   # helper function to define max x-,y-axis range
+   # get_xy_max()
+   
+   # define xy_max: max range on x- or y-axis,
+   # assumes aspect ratio 1:1.
+   xy_max <- get_xy_max(x, xy_range=xy_range, minimum=1)
 
    npoints <- nrow(x);
+   # strict minimum points filter
+   if (length(min_points) == 1 && is.numeric(min_points) &&
+   		npoints < min_points) {
+   	return(NULL)
+   }
    if (npoints < 3) {
-      xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
-      x <- jamba::rbindList(list(
-         x,
-         x + rnorm(prod(dim(x))) * xy_max / 100,
-         x + rnorm(prod(dim(x))) * xy_max / 100
-      ));
+   	expand <- expand * 0.7;
+   	# use 10 randomly jittered rows
+   	x1 <- x[rep(seq_len(nrow(x)), each=8), , drop=FALSE];
+   	
+   	k <- prod(dim(x1));
+   	x1 <- x1 + c(
+   		rep(c(-1, -0.71, 0, 0.71, 1,  0.71,  0, -0.71), nrow(x)),
+   		rep(c(0,  0.71, 1, 0.71, 0, -0.71, -1, -0.71), nrow(x))) / 4;
+   	
+   	x <- rbind(x, x1);
+
       ## Ensure polygon is "closed"?
       # x <- rbind(x, x[1, , drop=FALSE])
       ## Take only the first N rows?
       # x <- head(x, 4);
       if (verbose) {
+      	jamba::printDebug("make_point_hull(): ", "xy_max:", xy_max);# debug
          jamba::printDebug("make_point_hull(): ",
             "Expanding input points to ", nrow(x), " rows.");
          print(x);
+      	verbose <- FALSE;
       }
    }
 
    if (length(seed) > 0) {
       set.seed(head(seed, 1));
    }
+   
    # default size
-   xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
+   xy_max <- get_xy_max(x, xy_range, minimum=1);
    if (length(alpha) == 0 || any(is.na(alpha))) {
       alpha <- xy_max * 0.5;
       if (verbose) {
@@ -194,7 +250,8 @@ make_point_hull <- function
             alpha=alpha,
             expand=expand,
             npoints=npoints,
-            hull_method=hull_method)
+            hull_method=hull_method,
+         	xy_range=xy_range)
       }, error=function(e){
          if (verbose) {
             jamba::printDebug("Error:");print(e);
@@ -360,6 +417,7 @@ get_hull_data <- function
  buffer=NULL,
  alpha=NULL,
  expand=0.1,
+ xy_range=NULL,
  ...)
 {
    hiA <- list(alpha=NULL);
@@ -560,7 +618,8 @@ get_hull_data <- function
    }
 
    # expand polygon using sp buffer
-   xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
+   # xy_max <- max(apply(apply(x, 2, range, na.rm=TRUE), 2, diff, na.rm=TRUE));
+   xy_max <- get_xy_max(x, xy_range=xy_range, minimum=1)
    if (length(buffer) == 0) {
       buffer <- xy_max * expand;
    }
@@ -619,3 +678,50 @@ get_hull_data <- function
    }
    return(mxys);
 }
+
+#' Get xy maximum axis range (internal)
+#' 
+#' @keywords internal
+#' @returns `numeric` value with the maximum numeric range for any axis.
+#' 
+#' @param x `numeric` matrix with two columns
+#' @param xy_range `numeric` default NULL, with optional plot range,
+#'    used when the points in `x` are part of a larger scene.
+#' @param minimum `numeric` with minimum range, used when range is zero,
+#'    default is 1.
+#' 
+#' @noRd
+get_xy_max <- function
+(x,
+ xy_range=NULL,
+ minimum=1)
+{
+	if (length(xy_range) > 0 && is.numeric(xy_range)) {
+		if (is.vector(xy_range)) {
+			if (length(xy_range) == 1) {
+				xy_range <- c(0, xy_range);
+			}
+			if (length(xy_range) %in% c(2, 4)) {
+				xy_range <- matrix(xy_range, ncol=2);
+			} else if (length(xy_range) == 1) {
+				xy_range <- c(0, xy_range);
+			} else {
+				stop_msg <- paste0("xy_range must be numeric vector length ",
+					"1, 2, or 4; or matrix with two rows.")
+				stop(stop_msg)
+			}
+			xy_max <- max(apply(xy_range, 2, function(i){
+				jamba::noiseFloor(diff(range(i, na.rm=TRUE)),
+					minimum=minimum)
+			}), na.rm=TRUE);
+		}
+	} else {
+		xy_max <- max(
+			apply(x, 2, function(i){
+				jamba::noiseFloor(diff(range(i, na.rm=TRUE)),
+					minimum=minimum)
+			}), na.rm=TRUE);
+	}
+	xy_max
+}
+

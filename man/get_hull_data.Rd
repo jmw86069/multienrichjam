@@ -11,6 +11,7 @@ get_hull_data(
   buffer = NULL,
   alpha = NULL,
   expand = 0.1,
+  xy_range = NULL,
   ...
 )
 }

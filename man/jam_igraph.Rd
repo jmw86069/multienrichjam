@@ -186,6 +186,7 @@ be changed except for very customized uses. By default
 'csize', and 'no' elements.
 \item \code{TRUE} will attempt \code{get_cnet_nodeset()} when the graph is bipartite
 and contains vertex attribute name 'nodeType' as with Cnet data.
+\strong{To turn off labels, set \code{mark.cex=0}.}
 \item \code{FALSE} will not apply any 'mark.groups' even when provided
 in graph attributes.
 \item \code{communities} object from one of the igraph cluster functions
@@ -201,34 +202,36 @@ Graph attributes are defined by \code{mem2emap()} for example,
 used when defined together with 'mark.groups'.
 }}
 
-\item{mark.shape}{A numeric scalar or vector. Controls the smoothness of the
-vertex group marking polygons. This is basically the \sQuote{shape}
-parameter of the \code{\link[graphics:xspline]{graphics::xspline()}} function, its possible
-values are between -1 and 1. If it is a vector, then a different value is
-used for the different vertex groups.}
+\item{mark.shape}{\code{numeric} default 1/2 ultimately passed to
+\code{graphics::xspline()} when smoothing the alpha hull produced
+by \code{make_point_hull()}.}
 
-\item{mark.col}{A scalar or vector giving the colors of marking the
-polygons, in any format accepted by \code{\link[graphics:xspline]{graphics::xspline()}}; e.g.
-numeric color ids, symbolic color names, or colors in RGB.}
+\item{mark.col}{\code{character} color assigned to each group in \code{mark.groups}.
+When NULL, default, it calls \code{colorjam::rainbowJam()} for categorical
+colors, which is applied together with \code{mark.alpha} for transparency.}
 
 \item{mark.alpha}{\code{numeric} value between 0 (transparent) and 1 (opaque)
 indicating the transparency of \code{mark.col} color fill values,
 used only when \code{mark.groups} is defined, and \code{mark.col} is not defined.}
 
-\item{mark.border}{A scalar or vector giving the colors of the borders of
-the vertex group marking polygons. If it is \code{NA}, then no border is
-drawn.}
+\item{mark.border}{\code{character} color assigned to each group in \code{mark.groups}.
+When NULL, default, it calls \code{colorjam::rainbowJam()} for categorical
+colors.}
 
-\item{mark.expand}{A numeric scalar or vector, the size of the border around
-the marked vertex groups. It is in the same units as the vertex sizes. If a
-vector is given, then different values are used for the different vertex
-groups.}
+\item{mark.expand}{\code{numeric} default NULL will choose a sensible default.
+The expand is a fraction of point range, typically \code{0.05} is 5\% which
+is reasonable. The expansion is used by \code{make_point_hull()} in a
+non-exact process by which the region is adjusted until a suitable
+alpha hull solution is found for the points provided.}
 
 \item{mark.lwd, mark.lty}{line with and line type parameters for each
 \code{mark.groups} polygon.}
 
-\item{mark.cex}{\code{numeric} adjustment for mark label font size, used
-when \code{mark.groups} is supplied and has \code{names(mark.groups)}.}
+\item{mark.smooth}{\code{logical} default TRUE, whether to smooth the point
+hull boundary.}
+
+\item{mark.cex}{\code{numeric} default 1, used to resize the mark.group labels.
+\strong{To turn off labels, set \code{mark.cex=0}.}}
 
 \item{mark.x.nudge, mark.y.nudge}{\code{numeric} values in units of the
 maximum x-axis or y-axis range for the layout coordinates,
@@ -397,12 +400,21 @@ vector with specific colors for \code{mark.col} and \code{mark.border}. Note
 that the border should match the colors, or it can be set to \code{"grey45"}
 for a generally visible border.
 
+When \code{mark.groups} is \code{NULL} and graph attribute 'mark.groups' is
+defined, it will be used.
+
 When \code{names(mark.groups)} is defined, the values are used as
 labels, positioned at the outer edge of each polygon. The label
 text size is adjusted with \code{label.cex}, and the position can
 be adjusted with \code{mark.x.nudge}, \code{mark.y.nudge}, in units of
 fraction of the maximum x- or y-axis range (effectively fraction
 of the layout size).
+
+When \code{mark.groups=TRUE} it will attempt to call \code{get_cnet_nodeset()}
+to define nodegroups, and use them as the \code{mark.groups}. Note that
+'...' are passed to this function, meaning \code{min_size} can be used
+to filter nodesets to minimum size, and \code{min_points} can be used
+to filter the alpha hull to require this many points.
 
 Optional argument \code{nodegroups} can be supplied, which is a \code{list}
 of vectors, where each vector represents a group of nodes. The

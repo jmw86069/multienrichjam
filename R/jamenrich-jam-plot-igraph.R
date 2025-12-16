@@ -531,7 +531,8 @@ jam_plot_igraph <- function
                label.cex=mark.cex[g],
                label.x.nudge=mark.x.nudge[g],
                label.y.nudge=mark.y.nudge[g],
-               label=hull_label);
+               label=hull_label,
+            	...);
          }
       }
    }

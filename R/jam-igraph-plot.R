@@ -152,13 +152,22 @@
 #' vector with specific colors for `mark.col` and `mark.border`. Note
 #' that the border should match the colors, or it can be set to `"grey45"`
 #' for a generally visible border.
-#'
+#' 
+#' When `mark.groups` is `NULL` and graph attribute 'mark.groups' is
+#' defined, it will be used.
+#' 
 #' When `names(mark.groups)` is defined, the values are used as
 #' labels, positioned at the outer edge of each polygon. The label
 #' text size is adjusted with `label.cex`, and the position can
 #' be adjusted with `mark.x.nudge`, `mark.y.nudge`, in units of
 #' fraction of the maximum x- or y-axis range (effectively fraction
 #' of the layout size).
+#' 
+#' When `mark.groups=TRUE` it will attempt to call `get_cnet_nodeset()`
+#' to define nodegroups, and use them as the `mark.groups`. Note that
+#' '...' are passed to this function, meaning `min_size` can be used
+#' to filter nodesets to minimum size, and `min_points` can be used
+#' to filter the alpha hull to require this many points.
 #'
 #' Optional argument `nodegroups` can be supplied, which is a `list`
 #' of vectors, where each vector represents a group of nodes. The
@@ -191,6 +200,7 @@
 #'    'csize', and 'no' elements.
 #'    * `TRUE` will attempt `get_cnet_nodeset()` when the graph is bipartite
 #'    and contains vertex attribute name 'nodeType' as with Cnet data.
+#'    **To turn off labels, set `mark.cex=0`.**
 #'    * `FALSE` will not apply any 'mark.groups' even when provided
 #'    in graph attributes.
 #'    * `communities` object from one of the igraph cluster functions
@@ -204,6 +214,24 @@
 #'    Graph attributes are defined by `mem2emap()` for example,
 #'    `igraph::graph_attr(x, "mark.groups")`. Note 'mark.colors' is also
 #'    used when defined together with 'mark.groups'.
+#' @param mark.col `character` color assigned to each group in `mark.groups`.
+#'    When NULL, default, it calls `colorjam::rainbowJam()` for categorical
+#'    colors, which is applied together with `mark.alpha` for transparency.
+#' @param mark.border  `character` color assigned to each group in `mark.groups`.
+#'    When NULL, default, it calls `colorjam::rainbowJam()` for categorical
+#'    colors.
+#' @param mark.expand `numeric` default NULL will choose a sensible default.
+#'    The expand is a fraction of point range, typically `0.05` is 5% which
+#'    is reasonable. The expansion is used by `make_point_hull()` in a
+#'    non-exact process by which the region is adjusted until a suitable
+#'    alpha hull solution is found for the points provided.
+#' @param mark.smooth `logical` default TRUE, whether to smooth the point
+#'    hull boundary.
+#' @param mark.cex `numeric` default 1, used to resize the mark.group labels.
+#'    **To turn off labels, set `mark.cex=0`.**
+#' @param mark.shape `numeric` default 1/2 ultimately passed to
+#'    `graphics::xspline()` when smoothing the alpha hull produced
+#'    by `make_point_hull()`.
 #' @param node_factor `numeric` value multiplied by `igraph::V(x)$size` to adjust
 #'    the relative size of all nodes by a common numeric scalar value.
 #' @param edge_factor `numeric` value multiplied by `igraph::E(x)$width` to adjust
@@ -575,17 +603,25 @@ jam_igraph <- function
          head(vertex.size, 20));
    }
    
+   #######################################
+   # mark.groups logic follows below
+   #
    # mark.groups as TRUE
    if (isTRUE(mark.groups)) {
       # only for bipartite graphs with nodeType
       # we will enable
-      if (igraph::is_bipartite(x) &&
+      if (igraph::is_bipartite(x) ||
             "nodeType" %in% igraph::vertex_attr_names(x)) {
          mark.groups <- tryCatch({
-            get_cnet_nodeset(x)
+            get_cnet_nodeset(x,
+            	...)
          }, error=function(e){
             NULL
          })
+         if (any(mark.cex) == 0) {
+         	names(mark.groups) <- NULL;
+         	mark.cex <- 1;
+         }
       } else {
          mark.groups <- NULL;
       }
@@ -624,6 +660,12 @@ jam_igraph <- function
             mark.col <- igraph::graph_attr(x, "mark.colors");
          }
       }
+   }
+   if (any(mark.cex) == 0) {
+   	if (length(mark.groups) > 0) {
+	   	names(mark.groups) <- NULL;
+   	}
+   	mark.cex <- 1;
    }
 
    plot_function(x=x,

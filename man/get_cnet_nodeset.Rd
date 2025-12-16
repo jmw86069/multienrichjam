@@ -4,7 +4,14 @@
 \alias{get_cnet_nodeset}
 \title{Get Cnet node set by connected Sets}
 \usage{
-get_cnet_nodeset(g, set_nodes = NULL, sep = ",", filter_set_only = TRUE, ...)
+get_cnet_nodeset(
+  g,
+  set_nodes = NULL,
+  sep = ",",
+  filter_set_only = TRUE,
+  min_size = 1,
+  ...
+)
 }
 \arguments{
 \item{g}{\code{igraph} object specifically containing Cnet plot data,

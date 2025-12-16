@@ -79,6 +79,7 @@ get_cnet_nodeset <- function
  set_nodes=NULL,
  sep=",",
  filter_set_only=TRUE,
+ min_size=1,
  ...)
 {
 	# alternative approach for speed
@@ -110,6 +111,9 @@ get_cnet_nodeset <- function
 		sep=sep)
 	cnet_nodesets <- split(names(neighborG1), neighborG1)
 	
+	if (length(min_size) == 1 && is.numeric(min_size) && min_size > 1) {
+		cnet_nodesets <- cnet_nodesets[lengths(cnet_nodesets) >= min_size];
+	}
 	if (length(set_nodes) > 0) {
 		set_nodes_v <- jamba::cPasteS(set_nodes,
 			sep=sep)
