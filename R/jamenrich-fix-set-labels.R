@@ -143,7 +143,7 @@ fixSetLabels <- function
  do_abbreviations=TRUE,
  adjustCase=TRUE,
  lowercaseAll=TRUE,
- removeGrep="^(KEGG|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
+ removeGrep="^(KEGG(_MEDICUS|)(_REFERENCE|_VARIANT|)|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
  words_from=NULL,
  words_to=NULL,
  add_from=NULL,

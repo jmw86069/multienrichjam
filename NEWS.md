@@ -1,3 +1,16 @@
+# multienrichjam 0.0.111.950
+
+## Updates (Quick Fix, still in progress)
+
+* `fixSetLabels()`
+
+	* Argument 'removeGrep' now removes the longer KEGG Medicus prefixes:
+	"KEGG_MEDICUS_", "KEGG_MEDICUS_REFERENCE_", "KEGG_MEDICUS_VARIANT_",
+	"KEGG_MEDICUS_PATHOGEN_".
+	It does not (yet) remove "KEGG_MEDICUS_ENV_FACTOR" because what is that?
+	Environmental factor pathways? We will revisit in future.
+
+
 # multienrichjam 0.0.111.900
 
 ## Updates
