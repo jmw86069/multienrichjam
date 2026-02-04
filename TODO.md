@@ -1,5 +1,32 @@
 # TODO
 
+## 03feb2026
+
+* DONE. Fix bug type `ipFile` in `importIPAenrichment()`.
+* Confirm `pvalue` column and `headers(mem)$pvalueColname` are working
+properly, possible that sometimes 'pvalue' is assumed to be the colname.
+* DONE. Update words.txt with newer pathway examples.
+
+## 18dec2025
+
+* Write basic exporter for 'Mem' objects, bonus points for 'MemPlotFolio'
+to include set `Clusters()`.
+
+   * Option to split `geneID` into up/down per enrichList entry.
+   * Option to write enrichIM, enrichIMgeneCount, enrichIMdirection.
+
+* Option to make "tidy" (tall), annotated memIM? New function?
+* `CnetExemplar()` does not seem to use 'repulse' from `prepare_folio()`.
+* When supplying `pathway_column_split` as `list`, `GenePathHeatmap()`
+uses the groupings, but `EnrichmentHeatmap()` apparently does not.
+* When colorizing 'Set' nodes, very dark colors (red,blue) are hard to
+distinguish as node borders. Consider `trimRampc(2,2)` to make the max
+color more colorful, less dark.
+* `mem_gene_path_heatmap()` consider argument `mark_rows` to add gene labels.
+* `relayout_nodegroups()` consider number of passes, repeat layout cycle.
+* Consider removing dependency on gridtext, use marquee or just grid.
+* Polish the IPA import, prevent creating 'p.adjust' which does not exist.
+
 ## 15dec2025
 
 * Bug: `get_hull_data()` sometimes returns single-node hull when there

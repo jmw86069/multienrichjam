@@ -13,6 +13,7 @@ rrna([s]*)	rRNA\1
 rna([s]*)	RNA\1
 dna	DNA
 mirna([s]*)	miRNA\1
+pirna([s]*)	piRNA\1
 mrna([s]*)	mRNA\1
 snrna([s]*)	snRNA\1
 snorna([s]*)	snoRNA\1
@@ -21,6 +22,7 @@ Lincrna	lincRNA
 Lncrna|Lincrna	lncRNA
 Microrna([s]*)	microRNA\1
 Il	IL
+IL ([0-9]+[0-9a-z]*)	IL-\1
 Ecm	ECM
 Nk	NK
 Pi3k[-. ]*Akt	PI3K/AKT
@@ -78,6 +80,7 @@ Erk MAPK	ERK-MAPK
 Erk	ERK
 Erks	ERKs
 Interferon([a-z]*)	IFN\1
+Ifn	IFN
 ([A-Za-z0-9]+[a-qs-z])mediated	\1-Mediated
 125 DIHYDROXYVITAMIN D3	1,25-dihydroxyvitamin D3
 Tweak	TWEAK
@@ -142,3 +145,35 @@ Tlr	TLR
 Rhodopsin[-. ]*like	Rhodopsin-Like
 Huntington[']*s	Huntington's
 Affilaited	Affiliated
+Pdgf	PDGF
+Pdgfrb	PDGFRB
+Pdgfr	PDGFR
+Cgrp	CGRP
+Bbsome	BBSome
+Gabaergic	GABAergic
+Id1	ID1
+Robo	ROBO
+Nmd	NMD
+Hes Hey	HES/HEY
+Pml	PML
+Slits	SLITs
+Robos	ROBOs
+Cmyb	c-Myb
+Ctcf	CTCF
+Sars	SARS
+Rhoa	RhoA
+Gna12 13	GNA12/GNA13
+Gnaq 11	GNAQ/GNA11
+Hcmv	HCMV
+Non Genomic	Non-Genomic
+1 25 Dihydroxyvitamin	1,25-dihydroxyvitamin
+Hiv	HIV
+Hcv	HCV
+Hbv	HBV
+Ar	AR
+Tf	TF
+Classi	ClassI
+Classii	ClassII
+Classiii	ClassIII
+Trail	TRAIL
+Ndkdynamin	NDK/Dynamin

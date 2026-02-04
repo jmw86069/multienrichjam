@@ -1,3 +1,22 @@
+# multienrichjam 0.0.111.900
+
+## Updates
+
+* words.txt,abbrev.txt
+
+   * "Signaling by X Y" is only abbreviated to "X Y" with two or more words.
+   * Added some capitalizations from recent IPA data:
+   BBSome, ID1, GABAergic, PDGF, PDGFR, PDGFRB.
+   * IL 24 is edited to IL-24; Ifn to IFN; Robo and Robos to ROBO and ROBOs;
+   Nmd to NMD; Pml to PML; Hes Hey to HES/HEY; Slits to SLITs;
+   Cmyb to c-Myb; Ctcf to CTCF; Gna12 13 to GNA12/GNA13; Rhoa to RhoA;
+   Hcmv to HCMV; Pirna to piRNA; Classiii to ClassIII;
+   Ndkdynamin to NDK/Dynamin
+   * Fixed "Signaling By" so it is only removed when one word follows it,
+   e.g. "Signaling By VEGF" is kept as-is, but "Signaling By Erbb2 in Cancer"
+   is converted to "Erbb2 in Cancer".
+
+
 # multienrichjam 0.0.110.900
 
 ## Bug fixes

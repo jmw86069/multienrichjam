@@ -3,10 +3,10 @@ Mitochondri(um|a|al|on)	Mito
 Interferon	IFN
 (IL|Interleukin[- .]*)([0-9]+)	IL-\2
 Subsequent	
-Signaling (pathway|system)	Signaling
+Signaling (Pathway|System)	Signaling
 (pathway|system) Signaling	Signaling
 Of The	Of
-^Signaling by	
+^Signaling By ([^ ]+ [^ ]+)	\1
 ([^ ]+[ ]+[^ ]+) Pathway[s]*$	\1
 Expression	Expr.
 The Role	Role 

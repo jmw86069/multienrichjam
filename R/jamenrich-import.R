@@ -302,7 +302,7 @@ importIPAenrichment <- function
    } else if (jamba::igrepHas("[.]xlsx$", ipaFile) && xlsxMultiSheet) {
       ## Import IPA data from Excel xlsx file, multiple worksheets
       ## Process Excel import instead of CSV
-      sheetNames <- openxlsx::getSheetNames(ipFile);
+      sheetNames <- openxlsx::getSheetNames(ipaFile);
       sheetNamesUse <- jamba::nameVector(sheet, sheetNames[sheet]);
       if (verbose) {
          jamba::printDebug("importIPAenrichment(): ",
