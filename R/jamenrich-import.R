@@ -277,14 +277,18 @@ importIPAenrichment <- function
             geneGrep=geneGrep,
             geneCurateFrom=geneCurateFrom,
             geneCurateTo=geneCurateTo,
+         	signColname=signColname,
+         	signThreshold=signThreshold,
             method=method,
             sheet=sheet,
             sep=sep,
             xlsxMultiSheet=xlsxMultiSheet,
+         	useXlsxSheetNames=useXlsxSheetNames,
+         	remove_blank_colnames=remove_blank_colnames,
             convert_ipa_slash=convert_ipa_slash,
             ipa_slash_sep=ipa_slash_sep,
-            verbose=verbose,
             revert_ipa_xref=revert_ipa_xref,
+            verbose=verbose,
             ...);
       });
       # extract IPA gene hit matrix?
@@ -336,12 +340,17 @@ importIPAenrichment <- function
                geneGrep=geneGrep,
                geneCurateFrom=geneCurateFrom,
                geneCurateTo=geneCurateTo,
+            	signColname=signColname,
+            	signThreshold=signThreshold,
                method=method,
                sheet=sheet,
                sep=sep,
                xlsxMultiSheet=FALSE,
+            	useXlsxSheetNames=useXlsxSheetNames,
+            	remove_blank_colnames=remove_blank_colnames,
                convert_ipa_slash=convert_ipa_slash,
                ipa_slash_sep=ipa_slash_sep,
+            	revert_ipa_xref=revert_ipa_xref,
                verbose=verbose,
                ...);
          }
@@ -514,11 +523,13 @@ importIPAenrichment <- function
             to_updates <- jamba::nameVector(setdiff(names(ipaDFL), arm));
             ipaDFL2 <- lapply(to_updates, function(to_update){
                ipadf <- ipaDFL[[to_update]]
-               use_genecol <- provigrep(
+               use_genecol <- jamba::provigrep(
                   unique(c(
                      "geneNames",
                      "participating regulators")),
                   colnames(ipadf))
+               # remove colnames with ".ipa" suffix
+               use_genecol <- jamba::unvigrep("[.]ipa$", use_genecol);
                if (verbose) {
                   jamba::printDebug("Updating gene xrefs for to_update:",
                      to_update);

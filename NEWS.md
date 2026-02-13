@@ -10,6 +10,8 @@
 	It does not (yet) remove "KEGG_MEDICUS_ENV_FACTOR" because what is that?
 	Environmental factor pathways? We will revisit in future.
 
+* `importIPAenrichment()` fixed bug where `revert_ipa_xref` was not propagated
+to multi-sheet xlsx import consistently.
 
 # multienrichjam 0.0.111.900
 

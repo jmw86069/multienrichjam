@@ -1,7 +1,36 @@
 # TODO
 
+## 12feb2026
+
+* `fixSetLabels()` should not assign duplicate labels, `jamba::makeNames()`.
+* Consider adding pathway direction to gene-pathway heatmap.
+* Prototype InteractiveComplexHeatmap for gene-pathway heatmap.
+* DONE. Debug `importIPAenrichment()` returning multiple
+'geneNames.ipa.ipa' columns.
+* Reduce dependencies. `pak::pkg_deps_tree("jmw86069/multienrichjam")`
+It seems much bigger than it could be. Some notable outliers:
+
+   * `qgraph` has a lot of dependencies not needed by multienrichjam,
+   all we need is layout Fruchterman-Reingold with custom repulse.
+   * Consider removing dependency on `clusterProfiler` due to its
+   heavy dependencies. For example it requires ggtree, which is
+   difficult to install on R-4.4.* and older.
+   That said, it has a large number of dependencies, and make this
+   package also heavy to install.
+   Can it be moved to "Enhances"? Nice to have, but not critical?
+   * `enrichplot`, `DOSE` are heavy, required by clusterProfiler;
+   ggtree, scatterpie.
+   * Eventually remove `sf` and replace with `polyclip` methods,
+   used for inner/outer border of pie nodes.
+   * `shiny`,`shinydashboard` could be "Suggests"
+   * `S4Vectors` is common for anything in Bioconductor.
+
+
 ## 03feb2026
 
+* Consider making cnet functions work with `MemPlotFolio` input,
+to adjust the internal cnet `igraph` object:
+`relayout_qith_qfr()`, `adjust_cnet_nodeset()`, etc.
 * DONE. Fix bug type `ipFile` in `importIPAenrichment()`.
 * Confirm `pvalue` column and `headers(mem)$pvalueColname` are working
 properly, possible that sometimes 'pvalue' is assumed to be the colname.
