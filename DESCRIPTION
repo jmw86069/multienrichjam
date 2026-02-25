@@ -1,7 +1,7 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.111.950
+Version: 0.0.112.900
 Authors@R: c(
     person(given="James M.",
        family="Ward",
@@ -50,7 +50,8 @@ Enhances:
     shadowtext,
     vdiffr,
     msigdbr,
-    ragg
+    ragg,
+    readr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

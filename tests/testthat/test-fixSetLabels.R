@@ -53,5 +53,25 @@ test_that("fixSetLabels examples", {
 			"Class A 1 Rhodopsin-Like Receptors",
 			"IFN-beta-1a", "IFN-alpha-2", "IFN-beta",
 			"IFN-beta-2", "IFN-gamma", "IFN-gamma-2a"))
+
+	z <- c(
+		"R-HSA-6783589:Interleukin 6 family signaling",
+		"WP75:Tolllike receptor signaling",
+		"hsa04620:Toll like receptor signaling pathway",
+		"M5913:Interferon gamma response"
+	)
+	testthat::expect_equal(
+		fixSetLabels(z, makeUnique=TRUE),
+		c("IL-6 Family Signaling",
+			"TLR Signaling_v1",
+			"TLR Signaling_v2",
+			"IFN-gamma Response"))
+
+	testthat::expect_equal(
+		sets(fixSetLabels(Memtest[, c(10, 11, 14, 14), 2], width=40)),
+		c("Production Of Nitric Oxide And Reactive\nOxygen Species In Macrophages",
+			"Synaptic Long Term Depression",
+			"Hippo Signaling_v1",
+			"Hippo Signaling_v2"))
 	
 })

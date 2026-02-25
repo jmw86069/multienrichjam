@@ -350,8 +350,8 @@ cnetplotJam <- function
    ## V(g)$name. Matching nodes will have their node colors adjusted
    ## based upon colorSub.
    ##
-   if (suppressPackageStartupMessages(!require(enrichplot))) {
-      stop("cnetplotJam() requires the enrichplot package.");
+   if (!requireNamespace("DOSE", quietly=TRUE)) {
+      stop("cnetplotJam() requires the DOSE package.");
    }
 
    y <- as.data.frame(x);
@@ -364,12 +364,12 @@ cnetplotJam <- function
    }
    keepColnames <- intersect(c(nodeLabel, "pvalue"),
       names(y));
-   if (is(x, "enrichResult") || is(x, "gseaResult")) {
+   if (inherits(x, "enrichResult") || inherits(x, "gseaResult")) {
       gc <- DOSE::geneInCategory(x);
       names(gc) <- y[[dColname]];
       if (verbose) {
          jamba::printDebug("cnetplotJam(): ",
-            "assigned gc <- DOSE::geneInCategory(x), length(gc):",
+            "assigned gc <- geneInCategory(x), length(gc):",
             length(gc),
             ", head(gc, 2):");
          print(head(gc, 2));

@@ -61,9 +61,6 @@ enrichList2df <- function
  ...)
 {
    ## Purpose is to combine a list of enrichment data.frames into one data.frame
-   if (!suppressPackageStartupMessages(require(matrixStats))) {
-      stop("enrichList2df() requires the matrixStats package.");
-   }
    iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
    # version 0.0.56.900: changed to use enrichList which tests all results not
    # just the first in the list
@@ -131,7 +128,7 @@ enrichList2df <- function
    enrichValuesM <- do.call(cbind, lapply(jamba::nameVector(names(enrichCols)), function(iCol){
       useType <- enrichCols[iCol];
       enrichIMP <- list2imSigned(lapply(enrichList, function(iDF){
-         if (!jamba::igrepHas("data.frame", class(iDF))) {
+         if (!inherits(iDF, "data.frame")) {
             iDF <- as.data.frame(iDF);
          }
          if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
@@ -158,11 +155,13 @@ enrichList2df <- function
       }));
       if (useType %in% "lo") {
          enrichIMP[enrichIMP == 0] <- 1;
-         # jamba::nameVector(matrixStats::rowMins(enrichIMP), rownames(enrichIMP));
-         jamba::nameVector(apply(enrichIMP, 1, min, na.rm=TRUE), rownames(enrichIMP));
+         jamba::nameVector(
+         	apply(enrichIMP, 1, min, na.rm=TRUE),
+         	rownames(enrichIMP));
       } else if (useType %in% "hi") {
-         # jamba::nameVector(matrixStats::rowMaxs(enrichIMP), rownames(enrichIMP));
-         jamba::nameVector(apply(enrichIMP, 1, max, na.rm=TRUE), rownames(enrichIMP));
+         jamba::nameVector(
+         	apply(enrichIMP, 1, max, na.rm=TRUE),
+         	rownames(enrichIMP));
       }
    }));
    if (verbose) {

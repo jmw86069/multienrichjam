@@ -76,7 +76,8 @@
 #' @param lowercaseAll `logical` used only when `adjustCase=TRUE`,
 #'    passed to `jamba::ucfirst()`
 #' @param removeGrep `character` regular expression pattern used to remove
-#'    patterns from the resulting label.
+#'    patterns from the resulting label. If given a vector, it will iterate
+#'    each value individually.
 #'    * The default removes common canonical pathway source prefix terms
 #'    use in MSigDB data, for example KEGG, BIOCARTA, PID, etc.
 #'    Use `""` or `NULL` to skip this step.
@@ -116,6 +117,14 @@
 #'    When Perl-mode is enabled, it also enforces word boundaries before and
 #'    after each pattern. When Perl-mode is not enabled, there are no word
 #'    boundary conditions applied.
+#' @param makeUnique `logical` default FALSE, whether to make resulting
+#'    labels unique, using `jamba::makeNames()`.
+#'    This option is necessary when the resulting names will be applied
+#'    back to the object `x`, and therefore cannot permit duplicated values.
+#'    * When input 'x' is `Mem` it forces `makeUnique=TRUE`.
+#'    * For `igraph` input, it does not force `makeUnique=TRUE` because the
+#'    result is to populate vertex 'labels' which permits duplicated values.
+#'    * For all other 'x' types, `makeUnique` is used as provided.
 #' @param ... additional arguments are passed to `jamba::ucfirst(x, ...)`,
 #'    for example `firstWordOnly=TRUE` will capitalize only the first word.
 #'
@@ -143,7 +152,11 @@ fixSetLabels <- function
  do_abbreviations=TRUE,
  adjustCase=TRUE,
  lowercaseAll=TRUE,
- removeGrep="^(KEGG(_MEDICUS|)(_REFERENCE|_VARIANT|)|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
+ removeGrep=c(
+ 	"^(KEGG(_MEDICUS|)(_REFERENCE|_VARIANT|))[_. ]",
+ 	"^(PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
+ 	"^((Mmu|Hsa|Rno|Dme)[0-9]+|Wp[0-9]+|^M[0-9]+)[:]",
+ 	"^(R-(Hsa|Mmu|Rno|Dme)-[0-9]+)[:]"),
  words_from=NULL,
  words_to=NULL,
  add_from=NULL,
@@ -151,6 +164,7 @@ fixSetLabels <- function
  abbrev_from=NULL,
  abbrev_to=NULL,
  perl=TRUE,
+ makeUnique=FALSE,
  ...)
 {
    # validate nodeType
@@ -165,7 +179,6 @@ fixSetLabels <- function
    if (length(abbrev_from) == 0) {
       abbrev_from <- multienrichjam::abbrev$from;
       abbrev_to <- multienrichjam::abbrev$to;
-      # jamba::printDebug("abbrev:");print(data.frame(abbrev_from, abbrev_to));# debug
    }
    # accept data.frame
    if (inherits(words_from, "data.frame")) {
@@ -224,17 +237,21 @@ fixSetLabels <- function
        "Please remedy."));
    }
 
+   ## define xPrep for processing, based upon the input class of 'x'
    xMem <- NULL;
    if (inherits(x, "Mem")) {
+   	# Force makeUnique=TRUE to protect the Mem object integrity
+   	makeUnique <- TRUE;
       xMem <- x;
       x <- sets(xMem);
+      xPrep <- x;
       which_nodes <- seq_along(x);
       for (i in seq_along(removeGrep)) {
          xPrep <- gsub("[_ ]+", " ",
             gsub(removeGrep[[i]],
                "",
                ignore.case=TRUE,
-               x));
+               xPrep));
       }
    } else if (inherits(x, "igraph")) {
       if ("any" %in% nodeType) {
@@ -242,21 +259,23 @@ fixSetLabels <- function
       } else {
          which_nodes <- which(igraph::V(x)$nodeType %in% nodeType);
       }
+   	xPrep <- igraph::V(x)$name[which_nodes];
       for (i in seq_along(removeGrep)) {
          xPrep <- gsub("[_ ]+", " ",
             gsub(removeGrep[[i]],
                "",
                ignore.case=TRUE,
-               igraph::V(x)$name[which_nodes]));
+            	xPrep));
       }
    } else if (is.atomic(x)) {
       which_nodes <- seq_along(x);
+      xPrep <- x;
       for (i in seq_along(removeGrep)) {
          xPrep <- gsub("[_ ]+", " ",
             gsub(removeGrep[[i]],
                "",
                ignore.case=TRUE,
-               x));
+               xPrep));
       }
    } else {
       stop("Input must be atomic vector, or 'igraph', or 'Mem'.")
@@ -287,8 +306,6 @@ fixSetLabels <- function
       words_from <- c(words_from, abbrev_from)
       words_to <- c(words_to, abbrev_to)
    }
-   
-   # jamba::printDebug("words:");print(data.frame(words_from, words_to));# debug
    
    # Apply replacements, case-insensitive match, case-sensitive replacement
    if (length(words_from) > 0 && length(words_to) == length(words_from)) {
@@ -325,6 +342,13 @@ fixSetLabels <- function
    
    ## Apply base::trimws() to trim leading/trailing whitespace
    xPrep <- base::trimws(xPrep, which="both")
+
+   ## Optionally makeUnique
+   if (isTRUE(makeUnique)) {
+   	xPrep <- jamba::makeNames(xPrep,
+   		...);
+   	## Todo: save relationship from input value to new value
+   }
    
    ## Optionally apply word wrap
    if (wrap) {
@@ -336,6 +360,7 @@ fixSetLabels <- function
    } else {
       xNew <- xPrep;
    }
+
    ## Update the proper data to return
    if (inherits(xMem, "Mem")) {
       sets(xMem) <- xNew;

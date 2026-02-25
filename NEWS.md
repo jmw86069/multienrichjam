@@ -1,3 +1,32 @@
+# multienrichjam 0.0.112.900
+
+* Added 'readr' to Enhances, it can be used as a backup import option for now.
+* Removed some dependencies internally. More to be done.
+
+## Updates to existing functions
+
+* `prepare_folio()`
+
+   * Added formal arguments to the definition, instead of passing '...'
+   to `mem_plot_folio()`, so they appear with `args()`,
+   `jamba::jargs()`, and R argument auto-fill.
+
+* `fixSetLabels()`
+
+	* Argument 'removeGrep' accepts a vector, and will insert delimiter '|'.
+	* Argument 'removeGrep' includes more common pathway prefixes, formats
+	including:
+	Wp:Pathway, Wp12345:Pathway, Hsa:Pathway, R-Hsa-152:Pathway,
+	M12345:Pathway.
+	Also recognizes some common species codes: Hsa|Mmu|Rno|Dme.
+	* New argument 'makeUnique' optionally calls `jamba::makeNames()` to
+	enforce unique names after adjustments are made. It is fairly common
+	that several pathway sources provide the same pathway,
+	for example "T-cell signaling".
+	* All `Mem` input automatically uses
+	`makeUnique=TRUE` to protect the integrity of the output `Mem` object.
+	* Added tests to cover new removeGrep, and makeUnique=TRUE.
+
 # multienrichjam 0.0.111.950
 
 ## Updates (Quick Fix, still in progress)

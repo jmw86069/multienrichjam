@@ -53,7 +53,53 @@ mem_plot_folio(
   ...
 )
 
-prepare_folio(..., do_plot = FALSE)
+prepare_folio(
+  mem,
+  do_which = NULL,
+  mpf = NULL,
+  p_cutoff = NULL,
+  p_floor = 1e-10,
+  main = "",
+  use_raster = FALSE,
+  min_gene_ct = 1,
+  min_set_ct = 1,
+  min_set_ct_each = NULL,
+  column_method = "euclidean",
+  cluster_columns = NULL,
+  row_method = "euclidean",
+  cluster_rows = NULL,
+  exemplar_range = c(1, 2, 3),
+  pathway_column_split = NULL,
+  pathway_column_title = LETTERS,
+  gene_row_split = NULL,
+  gene_row_title = letters,
+  edge_color = NULL,
+  cex.main = 2,
+  cex.sub = 1.5,
+  row_cex = 1,
+  column_cex = 1,
+  max_labels = 4,
+  max_nchar_labels = 25,
+  include_cluster_title = TRUE,
+  repulse = 4,
+  use_shadowText = FALSE,
+  color_by_column = FALSE,
+  style = "dotplot_inverted",
+  enrich_im_weight = 0.3,
+  gene_im_weight = 0.5,
+  colorize_by_gene = TRUE,
+  cluster_color_min_fraction = 0.4,
+  byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
+  edge_bundling = "connections",
+  apply_direction = NULL,
+  rotate_heatmap = FALSE,
+  row_anno_padding = grid::unit(3, "mm"),
+  column_anno_padding = grid::unit(3, "mm"),
+  returnType = c("MemPlotFolio", "list"),
+  do_plot = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{mem}{\code{Mem} or \code{list} object from \code{multiEnrichMap()}.}

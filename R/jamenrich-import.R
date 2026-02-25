@@ -464,7 +464,7 @@ importIPAenrichment <- function
                comment.char="",
                fill=TRUE);
          } else {
-            if (suppressPackageStartupMessages(!require(readr))) {
+            if (!requireNamespace("readr", quietly=TRUE)) {
                stop("importIPAenrichment() requires the readr package.");
             }
             if (verbose) {
@@ -684,9 +684,6 @@ curateIPAcolnames <- function
 {
    ## Purpose is to curate some colnames in IPA enrichment data
    ## Determine a column to become the "Name"
-   if (suppressPackageStartupMessages(!require(jamba))) {
-      stop("curateIPAcolnames() requires the jamba package.");
-   }
    nameCol <- head(jamba::provigrep(ipaNameGrep, colnames(jDF)), 1);
    if (length(nameCol) == 1) {
       jDF[["Name"]] <- jDF[[nameCol]];

@@ -46,7 +46,8 @@
 #'
 #' @family jam import functions
 #' @family jam conversion functions
-#'
+#' 
+#' @importClassesFrom DOSE enrichResult
 #'
 #' @export
 enrichDF2enrichResult <- function
@@ -70,8 +71,8 @@ enrichDF2enrichResult <- function
    ## Purpose is to convert an enrichment data.frame
    ## into enrichResult class format usable by clusterProfiler
    ## methods, like enrichMap()
-   if (suppressPackageStartupMessages(!require(clusterProfiler))) {
-      stop("enrichDF2enrichResult() requires the clusterProfiler package.");
+   if (!requireNamespace("DOSE", quietly=TRUE)) {
+      stop("enrichDF2enrichResult() requires the DOSE package.");
    }
    ## Find each colname in the input data.frame
    keyColname <- find_colname(keyColname, enrichDF);

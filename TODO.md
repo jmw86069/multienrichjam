@@ -2,24 +2,38 @@
 
 ## 12feb2026
 
-* `fixSetLabels()` should not assign duplicate labels, `jamba::makeNames()`.
-* Consider adding pathway direction to gene-pathway heatmap.
-* Prototype InteractiveComplexHeatmap for gene-pathway heatmap.
+* DONE. `prep_folio()` - add arguments for proper autofill.
 * DONE. Debug `importIPAenrichment()` returning multiple
+* DONE. `fixSetLabels()` should not assign duplicate labels,
+use `jamba::makeNames()` especially for `Mem` input objects.
+* Consider adding pathway direction to gene-pathway heatmap at the top.
+
+* DEFER. Consider adding `EmapPlot()` method for 'Mem' object,
+providing `mem2emap()` in a more consistent way.
+For now, just use `mem2emap()` and improve documentation and examples/vignette.
+
+* Prototype InteractiveComplexHeatmap for gene-pathway heatmap.
 'geneNames.ipa.ipa' columns.
 * Reduce dependencies. `pak::pkg_deps_tree("jmw86069/multienrichjam")`
 It seems much bigger than it could be. Some notable outliers:
 
    * `qgraph` has a lot of dependencies not needed by multienrichjam,
    all we need is layout Fruchterman-Reingold with custom repulse.
-   * Consider removing dependency on `clusterProfiler` due to its
-   heavy dependencies. For example it requires ggtree, which is
-   difficult to install on R-4.4.* and older.
-   That said, it has a large number of dependencies, and make this
-   package also heavy to install.
-   Can it be moved to "Enhances"? Nice to have, but not critical?
-   * `enrichplot`, `DOSE` are heavy, required by clusterProfiler;
-   ggtree, scatterpie.
+   * **Dependencies clusterProfiler,DOSE,enrichplot could become optional.**
+   
+	   * Consider removing dependency on `clusterProfiler` due to its
+	   heavy dependencies. For example it requires ggtree, which is
+	   difficult to install on R-4.4.* and older.
+	   That said, it has a large number of dependencies, and make this
+	   package also heavy to install.
+	   Can it be moved to "Enhances"? Nice to have, but not critical?
+	   * `enrichplot`, `DOSE` are heavy, required by clusterProfiler;
+	   ggtree, scatterpie.
+	   DOSE is only used for the `enrichResult` object, which is not specifically
+	   required for multienrichjam workflows, and could become optional.
+	   Other methods are used via enrichplot, e.g. `genesInCategory()` which
+	   could be performed with a simple wrapper function.
+
    * Eventually remove `sf` and replace with `polyclip` methods,
    used for inner/outer border of pie nodes.
    * `shiny`,`shinydashboard` could be "Suggests"

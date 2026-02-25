@@ -27,8 +27,10 @@ fixSetLabels(
   do_abbreviations = TRUE,
   adjustCase = TRUE,
   lowercaseAll = TRUE,
-  removeGrep =
-    "^(KEGG(_MEDICUS|)(_REFERENCE|_VARIANT|)|PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
+  removeGrep = c("^(KEGG(_MEDICUS|)(_REFERENCE|_VARIANT|))[_. ]",
+    "^(PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
+    "^((Mmu|Hsa|Rno|Dme)[0-9]+|Wp[0-9]+|^M[0-9]+)[:]",
+    "^(R-(Hsa|Mmu|Rno|Dme)-[0-9]+)[:]"),
   words_from = NULL,
   words_to = NULL,
   add_from = NULL,
@@ -36,6 +38,7 @@ fixSetLabels(
   abbrev_from = NULL,
   abbrev_to = NULL,
   perl = TRUE,
+  makeUnique = FALSE,
   ...
 )
 
@@ -89,7 +92,8 @@ then applies uppercase to the first letter of each word.}
 passed to \code{jamba::ucfirst()}}
 
 \item{removeGrep}{\code{character} regular expression pattern used to remove
-patterns from the resulting label.
+patterns from the resulting label. If given a vector, it will iterate
+each value individually.
 \itemize{
 \item The default removes common canonical pathway source prefix terms
 use in MSigDB data, for example KEGG, BIOCARTA, PID, etc.
@@ -143,6 +147,17 @@ it also is not typically necessary to understand the label.
 When Perl-mode is enabled, it also enforces word boundaries before and
 after each pattern. When Perl-mode is not enabled, there are no word
 boundary conditions applied.}
+
+\item{makeUnique}{\code{logical} default FALSE, whether to make resulting
+labels unique, using \code{jamba::makeNames()}.
+This option is necessary when the resulting names will be applied
+back to the object \code{x}, and therefore cannot permit duplicated values.
+\itemize{
+\item When input 'x' is \code{Mem} it forces \code{makeUnique=TRUE}.
+\item For \code{igraph} input, it does not force \code{makeUnique=TRUE} because the
+result is to populate vertex 'labels' which permits duplicated values.
+\item For all other 'x' types, \code{makeUnique} is used as provided.
+}}
 
 \item{...}{additional arguments are passed to \code{jamba::ucfirst(x, ...)},
 for example \code{firstWordOnly=TRUE} will capitalize only the first word.}

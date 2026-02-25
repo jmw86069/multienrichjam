@@ -1265,7 +1265,7 @@ enrichList2IM <- function
    }
 
    enrichIMP1 <- lapply(enrichList, function(iDF){
-      if (jamba::igrepHas("enrichResult", class(iDF))) {
+      if (inherits(iDF, "enrichResult")) {
          iDF <- iDF@result;
       }
       keyColname <- find_colname(keyColname,
@@ -1430,9 +1430,9 @@ enrichMapJam <- function
          verbose=verbose,
          ...);
    }
-   if (is(x, "gseaResult")) {
+   if (inherits(x, "gseaResult")) {
       geneSets <- x@geneSets;
-   } else if (is(x, "enrichResult")) {
+   } else if (inherits(x, "enrichResult")) {
       geneSets <- x@geneSets;
       #geneSets <- geneInCategory(x);
    }
@@ -1594,7 +1594,7 @@ enrichMapJam <- function
 
       if (is(x, "gseaResult")) {
          cnt <- jamba::nameVector(y$setSize, y[[nodeLabel]]);
-      } else if (is(x, "enrichResult")) {
+      } else if (inherits(x, "enrichResult")) {
          if ("allGeneHits" %in% colnames(y)) {
             cnt <- jamba::nameVector(y$allGeneHits, y[[nodeLabel]]);
          } else {
