@@ -1,3 +1,14 @@
+# multienrichjam 0.0.113.900
+
+## Changes to existing functions
+
+* `multiEnrichMap()`
+
+	* When 'enrichList' is supplied with `data.frame`, the call
+	to `enrichDF2enrichResult()` now passes proper arguments
+	in addition to '...', which permits columns 'pvalueColname'
+	to be respected.
+
 # multienrichjam 0.0.112.900
 
 * Added 'readr' to Enhances, it can be used as a backup import option for now.

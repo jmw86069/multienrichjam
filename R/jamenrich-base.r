@@ -322,6 +322,10 @@ multiEnrichMap <- function
                "Converting '", iname, "' from data.frame")
          }
          ier <- enrichDF2enrichResult(ier,
+         	keyColname=keyColname,
+         	geneColname=geneColname,
+         	pvalueColname=pvalueColname,
+         	descriptionColname=descriptionColname,
             ...)
       }
    })

@@ -1,5 +1,41 @@
 # TODO
 
+## 06apr2026
+
+* Fix `mem_legend()` in CnetCollapsed() with directional colors,
+it currently recycles the color fill from `colorV` with directional
+border colors.
+* Make it easier to adjust the `type='set'` title derived per cluster.
+* `mem_plot_folio()`
+
+   * Make `plot()` function to plot the object as stored.
+   * Consider option to create Rmarkdown-friendly tabbed output,
+   which assumes '{.tabset}' in the .Rmd document.
+
+* Consider method to "consolidate" pathways whose names are identical.
+
+   * Might be convenient and apparent when using `fixSetLabels()`.
+   * The approach might focus on gene sets before pathway analysis,
+   in the realm of "preparing gene sets for use".
+   * This strategy might push multienrichjam beyond just "consumer"
+   of enrichment results.
+
+## 24mar2026
+
+* `importIPAenrichment()` consider importing the IPA parameters
+stored in the header, before the first header line, for example:
+
+```
+Reference set   User Dataset
+Relationship to include Direct and Indirect
+Includes Endogenous Chemicals   Yes
+Optional Analyses       My Pathways My List
+Filter Summary
+Consider only molecules and/or relationships where
+(species = Human) AND
+(confidence = Experimentally Observed)
+```
+
 ## 12feb2026
 
 * DONE. `prep_folio()` - add arguments for proper autofill.
