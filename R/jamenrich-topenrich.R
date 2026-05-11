@@ -209,7 +209,7 @@ topEnrichBySource <- function
 
    ## First convert enrichResult class to data.frame if needed
    enrichR <- NULL;
-   if (jamba::igrepHas("enrichResult", class(enrichDF))) {
+   if (inherits(enrichDF, c("enrichResult", "gseaResult"))) {
       if (length(rownames(enrichDF@result)) == 0) {
          rownames(enrichDF@result) <- paste0("row",
             jamba::padInteger(seq_len(nrow(enrichDF@result))));
@@ -535,35 +535,37 @@ topEnrichBySource <- function
 #' @export
 topEnrichListBySource <- function
 (enrichList,
-   n=15,
-   min_count=1,
-   p_cutoff=1,
-   sourceColnames=c("gs_cat", "gs_subcat"),
-   sortColname=c(pvalueColname,
-      "P-value",
-      "pvalue",
-      "qvalue",
-      "padjust",
-      "-GeneRatio",
-      "-Count",
-      "-geneHits"),
-   countColname=c("gene_count", "count", "geneHits"),
-   pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
-   directionColname=c("activation.z.{0,1}score",
-      "z.{0,1}score"),
-   direction_cutoff=1,
-   newColname="EnrichGroup",
-   curateFrom=NULL,
-   curateTo=NULL,
-   sourceSubset=NULL,
-   sourceSep="_",
-   subsetSets=NULL,
-   descriptionColname=c("Description", "Name", "Pathway"),
-   nameColname=c("ID", "Name"),
-   descriptionGrep=NULL,
-   nameGrep=NULL,
-   verbose=FALSE,
-   ...)
+ n=15,
+ min_count=1,
+ p_cutoff=1,
+ sourceColnames=c("gs_cat", "gs_subcat"),
+ sortColname=c(pvalueColname,
+    "P-value",
+    "pvalue",
+    "qvalue",
+    "padjust",
+    "-GeneRatio",
+    "-Count",
+    "-geneHits"),
+ countColname=c("gene_count", "count", "geneHits"),
+ pvalueColname=c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
+ directionColname=c("activation.z.{0,1}score",
+ 	 "NES",
+ 	 "direction",
+ 	 "z.{0,1}score"),
+ direction_cutoff=1,
+ newColname="EnrichGroup",
+ curateFrom=NULL,
+ curateTo=NULL,
+ sourceSubset=NULL,
+ sourceSep="_",
+ subsetSets=NULL,
+ descriptionColname=c("Description", "Name", "Pathway"),
+ nameColname=c("ID", "Name"),
+ descriptionGrep=NULL,
+ nameGrep=NULL,
+ verbose=FALSE,
+ ...)
 {
    ## Purpose is to extend topEnrichBySource() in an important way when
    ## dealing with a list of enrichment results, that it does one full
@@ -601,7 +603,7 @@ topEnrichListBySource <- function
          nameGrep=nameGrep,
          verbose=(verbose - 1) > 0,
          ...);
-      if ("enrichResult" %in% class(iDFsub)) {
+      if (inherits(iDFsub, c("enrichResult", "gseaResult"))) {
          nameColname <- attr(iDFsub@result, "nameColname");
          eName <- iDFsub@result[[nameColname]];
       } else {
@@ -634,7 +636,7 @@ topEnrichListBySource <- function
             iName);
       }
       iDF <- enrichList[[iName]];
-      if (jamba::igrepHas("enrichResult", class(iDF))) {
+      if (inherits(iDF, c("enrichResult", "gseaResult"))) {
          nameColnameUse <- find_colname(nameColname, iDF@result);
          keepRows <- (iDF@result[[nameColnameUse]] %in% enrichNames);
          iDF@result <- subset(iDF@result, keepRows);

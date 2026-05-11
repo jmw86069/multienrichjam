@@ -1933,12 +1933,14 @@ reorderIgraphNodes <- function
    }
 
    ## comma-delimited neighboring nodes for each node
-   g_nodesets <- get_cnet_nodeset(g, filter_set_only=FALSE);
-   # names(g_nodesets) <- jamba::makeNames(substr(names(g_nodesets), 1, 25));
-   g_nodesets_v <- jamba::nameVector(
-      rep(names(g_nodesets), lengths(g_nodesets)),
-      unlist(g_nodesets));
-   neighborG <- g_nodesets_v[match(igraph::V(g)$name, names(g_nodesets_v))]
+   # g_nodesets <- get_cnet_nodeset(g, filter_set_only=FALSE);
+   # # names(g_nodesets) <- jamba::makeNames(substr(names(g_nodesets), 1, 25));
+   # g_nodesets_v <- jamba::nameVector(
+   # 	rep(names(g_nodesets), lengths(g_nodesets)),
+   # 	unlist(g_nodesets));
+   # neighborG <- g_nodesets_v[match(igraph::V(g)$name, names(g_nodesets_v))]
+   # names(neighborG) <- igraph::V(g)$name;
+   neighborG <- get_cnet_nodeset_vector(g, filter_set_only=FALSE, ...)
    # names(neighborG) <- seq_len(igraph::vcount(g));
 
    ## Determine which edge groups are present multiple times

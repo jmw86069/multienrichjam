@@ -127,19 +127,29 @@ enrichList2df <- function
    }
    enrichValuesM <- do.call(cbind, lapply(jamba::nameVector(names(enrichCols)), function(iCol){
       useType <- enrichCols[iCol];
+      if (verbose) {
+      	jamba::printDebug("enrichList2df(): ",
+      		"iCol: ", iCol, ", useType: ", useType);
+      }
       enrichIMP <- list2imSigned(lapply(enrichList, function(iDF){
          if (!inherits(iDF, "data.frame")) {
             iDF <- as.data.frame(iDF);
          }
-         if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
+      	if (verbose) {
+      		jamba::printDebug("enrichList2df(): ",
+      			"c(iCol,keyColname):", c(iCol, keyColname));
+      		print(c(iCol, keyColname) %in% colnames(iDF));
+      	}
+      	if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
+         	lo_floor <- (iDF[,iCol] <= pvalueFloor);
             if (verbose) {
                jamba::printDebug("enrichList2df(): ",
                   "Some ", iCol, " values are less than ",
                   "pvalueFloor:",
                   pvalueFloor);
-               print(table(iDF[,iCol] <= pvalueFloor));
+               print(table(lo_floor));
             }
-            iDF[iDF[,iCol] <= pvalueFloor, iCol] <- pvalueFloor;
+            iDF[lo_floor, iCol] <- pvalueFloor;
          } else if (jamba::igrepHas("[/]", iDF[,iCol])) {
             iDF[,iCol] <- as.numeric(gsub("[/].*$", "", iDF[,iCol]));
          }
@@ -148,10 +158,10 @@ enrichList2df <- function
          }
          if (verbose) {
             jamba::printDebug("enrichList2df(): ",
-               "head(iDF):");
-            print(head(iDF));
+               "head(iDF, 10):");
+            print(head(iDF[, c(iCol, keyColname), drop=FALSE], 10));
          }
-         jamba::nameVector(iDF[,c(iCol,keyColname)]);
+         jamba::nameVector(iDF[, c(iCol, keyColname), drop=FALSE]);
       }));
       if (useType %in% "lo") {
          enrichIMP[enrichIMP == 0] <- 1;

@@ -1,10 +1,37 @@
 # TODO
 
-## 06apr2026
+## 09may2026
+
+* Update `mem2emap()`
+
+	* Add to `prepare_folio()`.
+	* Option for weights (Jaccard overlap) to define edge width, color, alpha.
+	* Consider lower `overlap` then show connection width more clearly.
+	Edges can be filtered at visualization time, keeping layout.
+	* Explore integrating path-gene clustering with Emap communities.
+	Some missing opportunity for synergy.
+	Try gene-path clusters as communities.
 
 * Fix `mem_legend()` in CnetCollapsed() with directional colors,
 it currently recycles the color fill from `colorV` with directional
 border colors.
+* Consider Rmarkdown tabbed output using '{.tabset}' instead of PDF pages.
+* Consider using S7 in place of S4. Long-term benefit, short-term unclear.
+* Consider collaborating with YuLab for `enrichResult` re-use.
+
+### Future integration
+
+* Review `BiocSet` Bioconductor class for gene set formatting,
+see 'sparrow', 'sparrow.shiny' packages.
+
+## 13apr2026
+
+* Debug using `pvalueColname` to make sure it populates the correct
+column in 'headers(Mem)$pvalueColname'.
+Long-term may want to associate `pvalueColname` with each `enrichList` entry.
+
+## 06apr2026
+
 * Make it easier to adjust the `type='set'` title derived per cluster.
 * `mem_plot_folio()`
 

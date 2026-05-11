@@ -90,6 +90,8 @@ find_enrich_colnames <- function
     "pval",
     "FDR"),
  directionColname=c("activation.z.{0,1}score",
+ 	 "NES",
+ 	 "direction",
     "z.{0,1}score"),
  pathGenes=c("setSize",
     "pathGenes",

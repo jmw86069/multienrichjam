@@ -146,6 +146,26 @@ get_igraph_layout <- function
          	# apply the layout function to produce numeric coordinates
          	xy <- xy(g, ...);
          }
+         if (length(colnames(xy)) == 0) {
+         	colnames(xy) <- jamba::makeNames(renameFirst=FALSE,
+         		rep(c("x", "y", "z"), length.out=ncol(xy)));
+         }
+         if (length(rownames(xy)) == 0 &&
+         		length(igraph::V(g)$name) > 0) {
+         	if (nrow(xy) != igraph::vcount(g)) {
+         		stop("Existing nrow(layout) does not equal vcount(g).");
+         	}
+         	rownames(xy) <- igraph::V(g)$name;
+         }
+         # check that rownames(xy) is aligned with V(g)$name
+         if (!all(rownames(xy) == igraph::V(g)$name)) {
+         	# ensure the rownames(xy) matches properly to V(g)$name
+         	if (!all(rownames(xy) %in% igraph::V(g)$name)) {
+         		stop("Not all V(g)$name node names are in rownames(layout).")
+         	}
+         	rowmatch <- match(igraph::V(g)$name, rownames(xy));
+         	xy <- xy[rowmatch, , drop=FALSE];
+         }
       } else if (all(c("x", "y") %in% igraph::vertex_attr_names(g)) &&
       		is.numeric(igraph::vertex_attr(g, "x")) &&
       		is.numeric(igraph::vertex_attr(g, "y"))) {
@@ -164,7 +184,13 @@ get_igraph_layout <- function
       		xy <- cbind(xy,
       			igraph::vertex_attr(g, "z"));
       	}
-   		if (verbose) {
+      	if (length(colnames(xy)) == 0) {
+      		colnames(xy) <- vattrs;
+      	}
+      	if (length(rownames(xy)) == 0 && length(igraph::V(g)$name) > 0) {
+      		rownames(xy) <- igraph::V(g)$name;
+      	}
+      	if (verbose) {
    			jamba::printDebug("get_igraph_layout(): ",
    				"using vertex_attr: ", vattrs);
    		}
@@ -185,6 +211,13 @@ get_igraph_layout <- function
       			"applying default_layout()");
       	}
       	xy <- default_layout(g, ...);
+      	if (length(colnames(xy)) == 0) {
+      		colnames(xy) <- jamba::makeNames(renameFirst=FALSE,
+      			rep(c("x", "y", "z"), length.out=ncol(xy)));
+      	}
+      	if (length(rownames(xy)) == 0 && length(igraph::V(g)$name) > 0) {
+      		rownames(xy) <- igraph::V(g)$name;
+      	}
       }
    } else if (is.function(layout)) {
       #
@@ -194,12 +227,39 @@ get_igraph_layout <- function
             "layout()");
       }
       xy <- layout(g, ...)
+      if (length(colnames(xy)) == 0) {
+      	colnames(xy) <- jamba::makeNames(renameFirst=FALSE,
+      		rep(c("x", "y", "z"), length.out=ncol(xy)));
+      }
+      if (length(rownames(xy)) == 0 && length(igraph::V(g)$name) > 0) {
+      	rownames(xy) <- igraph::V(g)$name;
+      }
    } else {
    	if (verbose) {
    		jamba::printDebug("get_igraph_layout(): ",
    			"using layout as supplied.");
    	}
    	xy <- layout;
+   	if (length(colnames(xy)) == 0) {
+   		colnames(xy) <- jamba::makeNames(renameFirst=FALSE,
+   			rep(c("x", "y", "z"), length.out=ncol(xy)));
+   	}
+   	if (length(rownames(xy)) == 0 &&
+   			length(igraph::V(g)$name) > 0) {
+   		if (nrow(xy) != igraph::vcount(g)) {
+   			stop("Existing nrow(layout) does not equal vcount(g).");
+   		}
+   		rownames(xy) <- igraph::V(g)$name;
+   	}
+   	# check that rownames(xy) is aligned with V(g)$name
+   	if (!all(rownames(xy) == igraph::V(g)$name)) {
+   		# ensure the rownames(xy) matches properly to V(g)$name
+   		if (!all(rownames(xy) %in% igraph::V(g)$name)) {
+   			stop("Not all V(g)$name node names are in rownames(layout).")
+   		}
+   		rowmatch <- match(igraph::V(g)$name, rownames(xy));
+   		xy <- xy[rowmatch, , drop=FALSE];
+   	}
    }
    
    # coerce to matrix if possible

@@ -14,7 +14,7 @@ find_enrich_colnames(
   geneRatioColname = c("GeneRatio", "^Ratio"),
   pvalueColname = c("padjust", "p.adjust", "adjp", "padj", "qvalue", "qval", "q.value",
     "pvalue", "p.value", "pval", "FDR"),
-  directionColname = c("activation.z.{0,1}score", "z.{0,1}score"),
+  directionColname = c("activation.z.{0,1}score", "NES", "direction", "z.{0,1}score"),
   pathGenes = c("setSize", "pathGenes", "Count"),
   geneHits = c("Count", "geneHits", "gene_count"),
   verbose = FALSE,

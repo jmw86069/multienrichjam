@@ -38,7 +38,7 @@ multiEnrichMap(
   descriptionColname = c("Description", "Name", "Pathway", "ID"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
   descriptionCurateTo = c(""),
-  directionColname = c("activation.z.{0,1}score", "z.{0,1}score"),
+  directionColname = c("activation.z.{0,1}score", "NES", "direction", "z.{0,1}score"),
   direction_cutoff = 0,
   pathGenes = c("setSize", "pathGenes", "Count"),
   geneHits = c("Count", "geneHits", "gene_count"),

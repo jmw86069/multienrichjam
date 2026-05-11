@@ -92,7 +92,7 @@ spread_igraph_labels <- function
 					jamba::printDebug("spread_igraph_labels(): ",
 						"Using ","layout"," from graph attributes.");
 				}
-				layout <- g$layout;
+				layout <- igraph::graph_attr(g, "layout");
 			} else if (all(c("x", "y") %in% igraph::vertex_attr_names(g))) {
 				if (verbose) {
 					jamba::printDebug("spread_igraph_labels(): ",
@@ -124,7 +124,15 @@ spread_igraph_labels <- function
 	
 	if (length(rownames(layout)) == 0) {
 		rownames(layout) <- igraph::V(g)$name;
+	} else if (!all(rownames(layout) == igraph::V(g)$name)) {
+		# ensure the rownames(layout) matches properly to V(g)$name
+		if (!all(rownames(layout) %in% igraph::V(g)$name)) {
+			stop("Not all V(g)$name node names are in rownames(layout).")
+		}
+		rowmatch <- match(igraph::V(g)$name, rownames(layout));
+		layout <- layout[rowmatch, , drop=FALSE];
 	}
+	
 	if (do_reorder) {
 		if (verbose) {
 			jamba::printDebug("spread_igraph_labels(): ",

@@ -221,6 +221,8 @@ multiEnrichMap <- function
  descriptionCurateFrom=c("^Genes annotated by the GO term "),
  descriptionCurateTo=c(""),
  directionColname=c("activation.z.{0,1}score",
+ 	 "NES",
+ 	 "direction",
     "z.{0,1}score"),
  direction_cutoff=0,
  pathGenes=c("setSize",
@@ -315,6 +317,8 @@ multiEnrichMap <- function
       ier <- enrichList[[iname]];
       if (inherits(ier, "enrichResult")) {
          return(ier)
+      } else if (inherits(ier, "gseaResult")) {
+      	return(gr2er(ier))
       }
       if (inherits(ier, "data.frame")) {
          if (verbose) {
@@ -336,14 +340,53 @@ multiEnrichMap <- function
    iDF1 <- head(enrichList[[1]]@result, 30);
    # version 0.0.56.900: change to use enrichList for any one
    # result to be non-NA, not just testing the first result
-   keyColname <- find_colname(keyColname, enrichList);
-   geneColname <- find_colname(geneColname, enrichList);
-   pvalueColname <- find_colname(pvalueColname, enrichList);
-   descriptionColname <- find_colname(descriptionColname, enrichList);
-   nameColname <- find_colname(nameColname, enrichList);
-   countColname <- find_colname(countColname, enrichList);
-   directionColname <- find_colname(directionColname, enrichList);
-   geneHits <- find_colname(geneHits, enrichList);
+   use_keyColname <- find_colname(keyColname, enrichList);
+   use_geneColname <- find_colname(geneColname, enrichList);
+   use_pvalueColname <- find_colname(pvalueColname, enrichList);
+   use_descriptionColname <- find_colname(descriptionColname, enrichList);
+   use_nameColname <- find_colname(nameColname, enrichList);
+   use_countColname <- find_colname(countColname, enrichList);
+   use_directionColname <- find_colname(directionColname, enrichList);
+   use_geneHits <- find_colname(geneHits, enrichList);
+   
+	docols <- c("keyColname", "geneColname",
+		"pvalueColname", "descriptionColname",
+		"nameColname", "countColname", "directionColname",
+		"geneHits")
+   if (length(enrichList) > 1) {
+   	# iterate each enrichList and confirm colnames are consistent
+   	for (j in seq_along(enrichList)) {
+   		ier <- enrichList[[j]];
+   		for (docol in docols) {
+   			main_col <- get(paste0("use_", docol));
+   			if (length(main_col) == 0) {
+   				stop(paste0("There is no column for ", docol, "."));
+   			}
+   			if (main_col %in% colnames(ier@result)) {
+   				next;
+   			}
+   			use_colpattern <- get(docol);
+   			has_col <- find_colname(use_colpattern, ier@result);
+   			if (length(has_col) == 0) {
+   				jamba::printDebug("There is no ", docol, " in element ", j,
+   					" using pattern ", use_colpattern, ", with colnames: ",
+   					colnames(ier@result));
+   				stop(paste0("There is no ", docol, " in element ", j, "."));
+   			}
+   			# rename to match main_col
+   			jamba::printDebug("Renaming ", j, " enrichment column from '",
+   				has_col, "' to '", main_col, "'.");# debug
+   			ier@result <- jamba::renameColumn(
+   				ier@result,
+   				from=has_col,
+   				to=main_col);
+   		}
+   		enrichList[[j]] <- ier;
+   	}
+   }
+   for (docol in docols) {
+   	assign(docol, value=get(paste0("use_", docol)))
+   }
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
          "keyColname:", keyColname);

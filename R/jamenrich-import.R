@@ -954,7 +954,7 @@ find_colname <- function
       return(x_vals);
    }
    #
-   if ("enrichResult" %in% class(x)) {
+   if (inherits(x, c("enrichResult", "gseaResult"))) {
       x <- x@result;
    }
    x_colnames <- colnames(x);

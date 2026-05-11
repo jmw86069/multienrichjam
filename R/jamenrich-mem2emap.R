@@ -277,20 +277,29 @@ mem2emap <- function
    if (!isTRUE(do_express)) {
 	   jacc_g_comp <- igraph::components(jacc_g);
 	   if (jacc_g_comp$no > 1) {
-	      if (verbose) {
-	         jamba::printDebug("mem2emap(): ",
-	            "Applying layout_components() with layout_with_qfrf().");
-	      }
 	   	# skip layout when repulse == 0, used by mem_find_overlap()
 	      if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
 	         new_layout <- NULL;
 	      } else {
+		      if (verbose) {
+		         jamba::printDebug("mem2emap(): ",
+		            "Applying layout_components() with layout_with_qfrf().");
+		      }
 	         new_layout <- igraph::layout_components(jacc_g,
 	            layout=layout_with_qfrf(repulse=repulse,
 	               seed=seed,
 	               ...));
+	         colnames(new_layout) <- c("x", "y");
+	         if (length(rownames(new_layout)) == 0) {
+	         	rownames(new_layout) <- igraph::V(jacc_g)$name;
+	         }
 	         if (!all(rownames(new_layout) %in% igraph::V(jacc_g)$name)) {
 	            rownames(new_layout) <- igraph::V(jacc_g)$name;
+	         }
+	         if (verbose) {
+	         	jamba::printDebug("mem2emap(): ",
+	         		"head(new_layout):");
+	         	print(head(new_layout, 100));
 	         }
 	      }
 	   } else {
@@ -418,6 +427,11 @@ mem2emap <- function
    		jacc_g <- igraph::delete_graph_attr(jacc_g, "layout")
    	}
    }
+   if (verbose) {
+   	jamba::printDebug("mem2emap(): ",
+   		"pre-spread head(graph_attr(g, 'layout')):");
+   	print(head(igraph::graph_attr(jacc_g, "layout"), 100));
+   }
    # optionally spread labels
    if ("layout" %in% igraph::graph_attr_names(jacc_g) &&
    		isTRUE(spread_labels)) {
@@ -426,7 +440,12 @@ mem2emap <- function
    		y_bias=y_bias,
    		...)
    }
-
+   if (verbose) {
+   	jamba::printDebug("mem2emap(): ",
+   		"post-spread head(graph_attr(g, 'layout')):");
+   	print(head(igraph::graph_attr(jacc_g, "layout"), 100));
+   }
+   
    if (!isTRUE(do_express) && isTRUE(do_plot)) {
       jam_igraph(jacc_g,
          mark.groups=wc,

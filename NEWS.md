@@ -1,3 +1,42 @@
+# multienrichjam 0.0.114.900
+
+* Changes to support `gseaResult` input to `multiEnrichMap()`,
+and to support it alongside `enrichResult` when relevant.
+
+## Bug fixes
+
+* Fixed bug in `mem2emap()` caused by its use of `spread_igraph_labels()`
+calling `reorder_igraph_nodes()`. When it could not define Cnet nodesets,
+singlets could be NA in the updated layout.
+
+## Changes to existing functions
+
+* `enrichList2df()` fixed when input list had different colnames.
+* `get_igraph_layout()`
+
+	* Much more robust in checking layout rownames, and the order of rownames
+	in the event the igraph was subset and the layout was not. It only works
+	when there are rownames(layout), which is not the typical igraph default.
+
+* `multiEnrichMap()`
+
+	* With `gseaResult` input, it calls internal `gr2er()` which populates the
+	common colnames into the `gseaResult` object for convenient use alongside
+	`enrichResult` objects.
+	* Arg 'directionColname' defaults now include `'NES'` to use GSEA
+	normalized enrichment score (NES) for enrichment directionality.
+	* Internally, the various '*Colnames' args are applied to each
+	entry in `enrichList`, to tolerate different colnames.
+	This change embraces situations like having both `enrichResult` and
+	`gseaResult` together, and any non-clusterProfiler enrichment table.
+	Previously, colnames must be consistent across inputs.
+	* When the `enrichList` tables contain different colnames, it now goes
+	through each entry and updates colnames to match the first matching
+	colname of each type.  
+	The updated enrichments can be reviewed with `enrichList(Mem)`.
+	* Work is active and ongoing to handle multiple types of enrichment data.
+
+
 # multienrichjam 0.0.113.900
 
 ## Changes to existing functions
