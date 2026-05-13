@@ -19,6 +19,10 @@ mem2emap(
   color_by_nodes = FALSE,
   size_by_genes = TRUE,
   median_size = 5,
+  max_size = 25,
+  apply_edge_width = TRUE,
+  max_edge_width = 20,
+  apply_edge_color = apply_edge_width,
   apply_direction = TRUE,
   direction_max = 2,
   direction_floor = 0.5,
@@ -88,8 +92,8 @@ is used by \code{mem_find_overlap()} to iterate numerous overlaps
 without spending time on layout each iteration.
 }}
 
-\item{remove_singlets}{\code{logical}, default TRUE, whether to remove pathway
-singlets which have no connections to any other pathways.
+\item{remove_singlets}{\code{logical}, default FALSE, whether to remove
+pathway singlets which have no connections to other pathways.
 \itemize{
 \item Using TRUE will help simplify busy figures, at the expense of
 being less complete.
@@ -99,6 +103,25 @@ being less complete.
 clusters using node colors in each cluster.
 Note that a mix of colors often turns brown, so this feature has
 unpredictable benefit.}
+
+\item{size_by_genes}{\code{logical} default TRUE, whether to size nodes
+proportional to the number of genes involved in enrichment.}
+
+\item{median_size}{\code{numeric} used when \code{size_by_genes=TRUE} to define
+the median size, default is 5.}
+
+\item{apply_edge_width}{\code{logical} default TRUE, whether to apply edge
+width based upon the edge weight, which represents the Jaccard
+overlap.}
+
+\item{max_edge_width}{\code{numeric} maximum edge width, used when
+\code{apply_edge_width=TRUE}. Default 25 is intended to represent
+roughly the full size of a node.}
+
+\item{apply_edge_color}{\code{logical} whether to apply edge
+color based upon the edge weight, which represents the Jaccard
+overlap. The default matches \code{apply_edge_width} so that they are
+applied together.}
 
 \item{apply_direction}{\code{logical} default TRUE, whether to apply direction
 to the node border color, when supplied. Used with \code{direction_max}
@@ -130,6 +153,22 @@ plot using \code{jam_igraph()}.}
 \item{...}{additional arguments are passed to \code{jam_igraph()} to customize
 the network plot, used when \code{do_plot=TRUE}.}
 }
+\value{
+\code{igraph} object with an Enrichment Map, nodes are pathways,
+and edges are defined by the Jaccard overlap of genes involved
+in enrichment of each pair of pathways.
+\itemize{
+\item Edges are defined only when the Jaccard overlap is at least
+\code{overlap}.
+\item Node sizes are proportional to the number of genes involved
+in enrichment, with median node size defined by \code{median_size}.
+\item By default, edge width and color is defined by the overlap,
+ranging from 0 to 1. Graph attributes store the \code{max_edge_width}
+with edge width at Jaccard overlap 1; and \code{edge_colramp} as
+a function to convert weight to color, and can be used to
+create a color legend.
+}
+}
 \description{
 Convert multiEnrichMap mem output to EnrichmentMap emap
 }
@@ -144,18 +183,19 @@ pathway enrichment.
 This function can apply P-value thresholds using the input \code{mem},
 or using a custom value.
 
-A node clustering function is applied by default, which may help
-define suitable subgroups of nodes. When defined, the clusters
-are used to define nodegroups for edge bundling.
+A node community detection function is applied by default
+which may help visualize subgroups of nodes.
+When defined, the communities are used to define nodegroups
+for edge bundling.
 }
 \examples{
-emap <- mem2emap(Memtest, min_count=2,)
+emap <- mem2emap(Memtest, min_count=2, max_edge_width=5, overlap=0.33)
 jam_igraph(emap)
 
 emap2 <- relayout_nodegroups(emap, final_repulse=4, y_bias=10, label_min_dist=2.5)
 jam_igraph(emap2)
 
-emapB <- mem2emap(fixSetLabels(Memtest), min_count=2, overlap=0.35)
+emapB <- mem2emap(fixSetLabels(Memtest), min_count=3, overlap=0.35, median_size=10, apply_edge_width=TRUE, max_edge_width=15)
 jam_igraph(emapB)
 
 }

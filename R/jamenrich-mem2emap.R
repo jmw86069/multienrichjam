@@ -13,12 +13,26 @@
 #' This function can apply P-value thresholds using the input `mem`,
 #' or using a custom value.
 #'
-#' A node clustering function is applied by default, which may help
-#' define suitable subgroups of nodes. When defined, the clusters
-#' are used to define nodegroups for edge bundling.
+#' A node community detection function is applied by default
+#' which may help visualize subgroups of nodes.
+#' When defined, the communities are used to define nodegroups
+#' for edge bundling.
 #'
 #' @family jam Mem utilities
 #' @family jam igraph functions
+#' 
+#' @returns `igraph` object with an Enrichment Map, nodes are pathways,
+#'    and edges are defined by the Jaccard overlap of genes involved
+#'    in enrichment of each pair of pathways.
+#'    * Edges are defined only when the Jaccard overlap is at least
+#'    `overlap`.
+#'    * Node sizes are proportional to the number of genes involved
+#'    in enrichment, with median node size defined by `median_size`.
+#'    * By default, edge width and color is defined by the overlap,
+#'    ranging from 0 to 1. Graph attributes store the `max_edge_width`
+#'    with edge width at Jaccard overlap 1; and `edge_colramp` as
+#'    a function to convert weight to color, and can be used to
+#'    create a color legend.
 #'
 #' @param mem `Mem` or legacy `list` mem output from `multiEnrichMap()`
 #' @param overlap `numeric`, default 0.2, value between 0 and 1 with Jaccard
@@ -57,14 +71,28 @@
 #'    * Use repulse 'FALSE', 'NULL', or '0' will skip the layout, which
 #'    is used by `mem_find_overlap()` to iterate numerous overlaps
 #'    without spending time on layout each iteration.
-#' @param remove_singlets `logical`, default TRUE, whether to remove pathway
-#'    singlets which have no connections to any other pathways.
+#' @param remove_singlets `logical`, default FALSE, whether to remove
+#'    pathway singlets which have no connections to other pathways.
 #'    * Using TRUE will help simplify busy figures, at the expense of
 #'    being less complete.
 #' @param color_by_nodes `logical`, default TRUE, whether to colorize pathway
 #'    clusters using node colors in each cluster.
 #'    Note that a mix of colors often turns brown, so this feature has
 #'    unpredictable benefit.
+#' @param size_by_genes `logical` default TRUE, whether to size nodes
+#'    proportional to the number of genes involved in enrichment.
+#' @param median_size `numeric` used when `size_by_genes=TRUE` to define
+#'    the median size, default is 5.
+#' @param apply_edge_width `logical` default TRUE, whether to apply edge
+#'    width based upon the edge weight, which represents the Jaccard
+#'    overlap.
+#' @param max_edge_width `numeric` maximum edge width, used when
+#'    `apply_edge_width=TRUE`. Default 25 is intended to represent
+#'    roughly the full size of a node.
+#' @param apply_edge_color `logical` whether to apply edge
+#'    color based upon the edge weight, which represents the Jaccard
+#'    overlap. The default matches `apply_edge_width` so that they are
+#'    applied together.
 #' @param apply_direction `logical` default TRUE, whether to apply direction
 #'    to the node border color, when supplied. Used with `direction_max`
 #'    and `direction_floor`.
@@ -89,13 +117,13 @@
 #'    the network plot, used when `do_plot=TRUE`.
 #' 
 #' @examples
-#' emap <- mem2emap(Memtest, min_count=2,)
+#' emap <- mem2emap(Memtest, min_count=2, max_edge_width=5, overlap=0.33)
 #' jam_igraph(emap)
 #' 
 #' emap2 <- relayout_nodegroups(emap, final_repulse=4, y_bias=10, label_min_dist=2.5)
 #' jam_igraph(emap2)
 #' 
-#' emapB <- mem2emap(fixSetLabels(Memtest), min_count=2, overlap=0.35)
+#' emapB <- mem2emap(fixSetLabels(Memtest), min_count=3, overlap=0.35, median_size=10, apply_edge_width=TRUE, max_edge_width=15)
 #' jam_igraph(emapB)
 #' 
 #' @export
@@ -114,6 +142,10 @@ mem2emap <- function
  color_by_nodes=FALSE,
  size_by_genes=TRUE,
  median_size=5,
+ max_size=25,
+ apply_edge_width=TRUE,
+ max_edge_width=20,
+ apply_edge_color=apply_edge_width,
  apply_direction=TRUE,
  direction_max=2,
  direction_floor=0.5,
@@ -207,6 +239,9 @@ mem2emap <- function
    jacc_overlap <- 1 - as.matrix(
       dist(t(memIM(mem)[, col_match, drop=FALSE]),
          method="binary"));
+   jacc_summary <- summary(as.vector(jacc_overlap), na.rm=TRUE);
+   jacc_cutoff <- mean(c(jacc_summary[c("Median", "Mean")]))
+   print(summary(jacc_cutoff));# debug
    
    # convert to graph using Jaccard overlap threshold
    jacc_overlap_filtered <- jacc_overlap * (jacc_overlap >= overlap)
@@ -244,10 +279,41 @@ mem2emap <- function
    # Define size by vcount
    if (isTRUE(size_by_genes)) {
    	gc_sizes <- sqrt(igraph::V(jacc_g)$gene_count / 
+			median(igraph::V(jacc_g)$gene_count));
+   	if (any(gc_sizes * median_size > max_size)) {
+   		gc_sizes2 <- jamba::normScale(gc_sizes,
+   			from=median_size, to=max_size,
+   			low=1, high=max(gc_sizes));
+   		gc_sizes <- ifelse(gc_sizes <= 1, gc_sizes * median_size, gc_sizes2)
+   	} else {
+   		gc_sizes <- gc_sizes * median_size;
+   	}
+   	if (max(gc_sizes) > max_size)
+   	gc_sizes <- sqrt(igraph::V(jacc_g)$gene_count / 
    			median(igraph::V(jacc_g)$gene_count)) * median_size;
    	igraph::V(jacc_g)$size <- gc_sizes;
    } else {
 	   igraph::V(jacc_g)$size <- median_size;
+   }
+   
+   # Define edge width
+   if (isTRUE(apply_edge_width)) {
+   	igraph::E(jacc_g)$width <- (igraph::E(jacc_g)$weight^2) * max_edge_width;
+   	igraph::graph_attr(jacc_g, "max_edge_width") <- max_edge_width;
+   }
+   if (isTRUE(apply_edge_color)) {
+   	greys <- jamba::getColorRamp("Greys", 6, trimRamp=c(2, 0))[c(1, 3, 4, 6)];
+   	k <- jamba::nameVector(seq(from=0, to=1, by=0.01))
+   	if (abs(jacc_cutoff - 0.5) < 0.15) {
+   		jacc_cuts <- sort(c(0, jacc_cutoff, jacc_cutoff + 0.15, 1));
+   	} else {
+	   	jacc_cuts <- sort(c(0, jacc_cutoff, 0.5, 1));
+   	}
+   	edge_colramp <- circlize::colorRamp2(
+   		colors=greys,
+   		breaks=jacc_cuts)
+   	igraph::E(jacc_g)$color <- edge_colramp(igraph::E(jacc_g)$weight);
+   	igraph::graph_attr(jacc_g, "edge_color_fn") <- edge_colramp;
    }
 
    # define some default aesthetics

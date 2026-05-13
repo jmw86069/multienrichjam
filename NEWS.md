@@ -1,3 +1,16 @@
+# multienrichjam 0.0.114.950
+
+* Minor update to improve defaults for `mem2emap()`.
+
+## Updates to existing functions
+
+* `mem2emap()`
+
+	* New arguments: 'apply_edge_width=TRUE', 'apply_edge_color=TRUE',
+	'max_edge_width=25' apply edge color and width by default.
+	* Node size calculation improved to set `median_size` and `max_size`.
+
+
 # multienrichjam 0.0.114.900
 
 * Changes to support `gseaResult` input to `multiEnrichMap()`,

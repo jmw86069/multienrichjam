@@ -1,16 +1,61 @@
 # TODO
 
-## 09may2026
+## 13may2026
+
+* Consider adding lollipop style plot to supplement `EnrichmentHeatmap()`.
+
+	* x-axis: significance, or fold enrichment, or # of genes, etc.
+	* y-axis: pathways; optionally sub-grouped; optionally sorted
+	* Needs ability to display multiple enrichments, with or without y-offset.
+
+* multiEnrichMap updates
+
+	* Fix termsim for multiEnrichResult and each enrichList
+	* `fixSetLabels(Mem)` should adjust sets(Mem), termsim, er@result$Description.
+
+* Mpf updates
+
+	* Add `plot()` generic for `MemPlotFolio` object.
+	
+		* Option to adjust layout and/or repulse.
+		* Add option to print Rmd tab `{.tabset}` output.
+
+	* Allow defer layouts `CnetCollapsed()`, `CnetExemplar()`, `CnetCluster()`.
+	Option in `prepare_folio()` prepare or skip layouts as needed.
+	New optional function `ApplyLayouts()`?
+	* Consider Mpf subset?
+	* Allow `CnetCollapsed()` to subset by cluster. (Somehow.)
+	* Add way to show Cnet plot using specific Mpf clusters.
+	* Consider pushing exemplar logic and layout into `CnetExemplar()`,
+	to happen dynamically. Allow user-provided sets, adjust ranking, etc.
+	Subset Mem by Mpf cluster, then re-create a new Mpf?
+	* Consider re-layout inside `Cnet*` functions, so it orders nodes, and
+	arranges labels.
+	* Add method to `plot()` an Mpf, which effectively calls each plot function.
 
 * Update `mem2emap()`
 
 	* Add to `prepare_folio()`.
-	* Option for weights (Jaccard overlap) to define edge width, color, alpha.
+	* DONE. Option for weights (Jaccard overlap) to define edge width, color, alpha.
 	* Consider lower `overlap` then show connection width more clearly.
 	Edges can be filtered at visualization time, keeping layout.
+	Some case could be made to use median(weight) based upon observations.
 	* Explore integrating path-gene clustering with Emap communities.
-	Some missing opportunity for synergy.
-	Try gene-path clusters as communities.
+	Some missing opportunity for synergy with Mpf.
+	Already possible with:
+	`graph_attr(g, 'mark.groups') <- nodegroups2communities(Clusters(Mpf))`
+
+* `mem_enrichment_heatmap()`
+
+	* Add option to display numeric label to each cell, e.g. gene count.
+
+
+* Improve rendering of piejam igraph node shapes.
+
+	* Consider JamPolygon, to avoid sf dependency.
+	* Review visual glitches seen in Positron, result of its use of
+	separate device with custom dpi.
+	* Consider ggraph
 
 * Fix `mem_legend()` in CnetCollapsed() with directional colors,
 it currently recycles the color fill from `colorV` with directional
@@ -18,6 +63,7 @@ border colors.
 * Consider Rmarkdown tabbed output using '{.tabset}' instead of PDF pages.
 * Consider using S7 in place of S4. Long-term benefit, short-term unclear.
 * Consider collaborating with YuLab for `enrichResult` re-use.
+
 
 ### Future integration
 
