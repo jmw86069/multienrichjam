@@ -437,26 +437,44 @@ order_colors <- function
 #' The argument `choose` is intended to make it easy to retrieve
 #' pathways from specific clusters.
 #'
-#' @return `data.frame` sorted by the criteria defined by `byCols`,
+#' @returns `data.frame` sorted by the criteria defined by `byCols`,
 #'    with colname `"set"` to indicate the pathway/set name.
+#'    It includes additional columns which may be useful in
+#'    filtering or sorting.
+#'    * 'gene_count': the total number of genes involved in enrichment
+#'    * 'minp': the lowest enrichment P-value
+#'    * 'gene_count_rank': the rank by descending gene count per cluster.
+#'    * 'minp_rank': the rank by ascending minimum P-value.
+#'    * 'composite_rank': the rank of the composite score, ascending.
+#'    The composite rank uses the order of magnitude of minimum P-value,
+#'    then descending number of genes.
 #'
 #' @family jam utility functions
 #'
 #' @param mem `Mem` or legacy `list` mem output from `multiEnrichMap()`
 #' @param clusters `list` containing set names, that must match
 #'    `colnames(mem$memIM)` and `rownames(mem$enrichIM)`.
-#' @param choose optional vector indicating which clusters to
-#'    return. If an integer vector, it refers to the elements
-#'    in the input `clusters`. If a character vector, it must
-#'    contain values in `names(clusters)`. When `choose` is `NULL`,
-#'    all clusters are returned.
-#' @param per_cluster integer vector with the number of entries
+#' @param choose `character` vector with optional subset of clusters
+#'    to return, matching `names(clusters)`;
+#'    or `integer` vector referring to `clusters` by index position.
+#'    When `choose` is `NULL`, all clusters are returned.
+#' @param per_cluster `integer` vector with the number of entries
 #'    to return for each cluster. Values will be recycled to the
 #'    length of the clusters to be returned, defined by `choose`
 #'    or by `length(clusters)` when `choose` is `NULL`.
-#' @param byCols character vector used to sort the resulting
+#' @param byCols `character` vector used to sort the resulting
 #'    `data.frame` within each cluster. This argument is passed
-#'    directly to `jamba::mixedSortDF()`.
+#'    directly to `jamba::mixedSortDF()`. Default 'minp_rank'.
+#'    Recognized columns:
+#'    * '**minp_rank**': the lowest P-value for all enrichments.
+#'    * '**composite_rank**': a composite score which sorts by the
+#'    order of magnitude of the lowest P-value, then by number
+#'    of genes.
+#'    * '**gene_count_rank**': the set with the most genes.
+#'    
+#'    Note that any column order can be reversed using "-" prefix,
+#'    for example '-gene_count_rank' would return the set with the
+#'    lowest gene count.
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
@@ -474,7 +492,10 @@ rank_mem_clusters <- function
  clusters,
  choose=NULL,
  per_cluster=Inf,
- byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
+ byCols=c(
+    "minp_rank",
+    "composite_rank",
+    "gene_count_rank"),
  verbose=FALSE,
  ...)
 {
@@ -483,12 +504,12 @@ rank_mem_clusters <- function
       Mem <- mem;
       mem <- Mem_to_list(Mem);
    } else {
+      if (!all(c("memIM") %in% names(mem))) {
+         stop("mem must be a list with components: 'memIM'");
+      }
       Mem <- list_to_Mem(mem);
    }
    
-   if (!all(c("memIM") %in% names(mem))) {
-      stop("mem must be a list with components: 'memIM'");
-   }
    if (length(names(clusters)) == 0) {
       if (verbose) {
          jamba::printDebug("rank_mem_clusters(): ",
@@ -511,11 +532,11 @@ rank_mem_clusters <- function
    names(per_cluster) <- names(clusters);
    clusters_dfs <- lapply(names(clusters), function(iname){
       i <- clusters[[iname]];
-      j <- mem$memIM[,i,drop=FALSE];
-      pval_m <- mem$enrichIM[i,,drop=FALSE];
+      j <- memIM(Mem)[, i, drop=FALSE];
+      pval_m <- enrichIM(Mem)[i, , drop=FALSE];
       colnames(pval_m) <- paste0("P_", colnames(pval_m));
       minp <- jamba::rmNA(naValue=1,
-         apply(mem$enrichIM[i,,drop=FALSE], 1, min, na.rm=TRUE));
+         apply(enrichIM(Mem)[i, , drop=FALSE], 1, min, na.rm=TRUE));
       names(minp) <- i;
       gene_count <- colSums(j);
       minp_rank <- order(do.call(order, list(minp, -gene_count)));

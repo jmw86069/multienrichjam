@@ -9,7 +9,7 @@ rank_mem_clusters(
   clusters,
   choose = NULL,
   per_cluster = Inf,
-  byCols = c("composite_rank", "minp_rank", "gene_count_rank"),
+  byCols = c("minp_rank", "composite_rank", "gene_count_rank"),
   verbose = FALSE,
   ...
 )
@@ -20,20 +20,31 @@ rank_mem_clusters(
 \item{clusters}{\code{list} containing set names, that must match
 \code{colnames(mem$memIM)} and \code{rownames(mem$enrichIM)}.}
 
-\item{choose}{optional vector indicating which clusters to
-return. If an integer vector, it refers to the elements
-in the input \code{clusters}. If a character vector, it must
-contain values in \code{names(clusters)}. When \code{choose} is \code{NULL},
-all clusters are returned.}
+\item{choose}{\code{character} vector with optional subset of clusters
+to return, matching \code{names(clusters)};
+or \code{integer} vector referring to \code{clusters} by index position.
+When \code{choose} is \code{NULL}, all clusters are returned.}
 
-\item{per_cluster}{integer vector with the number of entries
+\item{per_cluster}{\code{integer} vector with the number of entries
 to return for each cluster. Values will be recycled to the
 length of the clusters to be returned, defined by \code{choose}
 or by \code{length(clusters)} when \code{choose} is \code{NULL}.}
 
-\item{byCols}{character vector used to sort the resulting
+\item{byCols}{\code{character} vector used to sort the resulting
 \code{data.frame} within each cluster. This argument is passed
-directly to \code{jamba::mixedSortDF()}.}
+directly to \code{jamba::mixedSortDF()}. Default 'minp_rank'.
+Recognized columns:
+\itemize{
+\item '\strong{minp_rank}': the lowest P-value for all enrichments.
+\item '\strong{composite_rank}': a composite score which sorts by the
+order of magnitude of the lowest P-value, then by number
+of genes.
+\item '\strong{gene_count_rank}': the set with the most genes.
+}
+
+Note that any column order can be reversed using "-" prefix,
+for example '-gene_count_rank' would return the set with the
+lowest gene count.}
 
 \item{verbose}{logical indicating whether to print verbose output.}
 
@@ -42,6 +53,17 @@ directly to \code{jamba::mixedSortDF()}.}
 \value{
 \code{data.frame} sorted by the criteria defined by \code{byCols},
 with colname \code{"set"} to indicate the pathway/set name.
+It includes additional columns which may be useful in
+filtering or sorting.
+\itemize{
+\item 'gene_count': the total number of genes involved in enrichment
+\item 'minp': the lowest enrichment P-value
+\item 'gene_count_rank': the rank by descending gene count per cluster.
+\item 'minp_rank': the rank by ascending minimum P-value.
+\item 'composite_rank': the rank of the composite score, ascending.
+The composite rank uses the order of magnitude of minimum P-value,
+then descending number of genes.
+}
 }
 \description{
 Rank Multienrichment clusters

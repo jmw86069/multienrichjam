@@ -12,7 +12,18 @@ multi-column output.
 * `CnetCollapsed()`, `CnetExemplar()`, `CnetCluster()` have new
 arguments 'legend_x', 'legend_y' which are passed to `mem_legend()`
 to control the position of the legend.
+* `mem_plot_folio()`
 
+   * Sped Cnet exemplar and cluster generation in large networks
+   by skipping the global Cnet step, which is not necessary.
+
+* `rank_mem_clusters()`
+
+   * Changed default 'byCols' to favor 'minp_rank' instead of
+   'composite_rank'.
+
+* `jam_igraph()` new argument `edge_factor` to adjust frame and border
+line width.
 
 # multienrichjam 0.0.114.950
 

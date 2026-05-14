@@ -17,6 +17,7 @@ jam_igraph(
   edge_factor_l = NULL,
   label_factor = 1,
   label_factor_l = NULL,
+  border_factor = 1,
   label_fontsize_l = NULL,
   label_dist_factor = 1,
   label_dist_factor_l = 1,
@@ -85,6 +86,9 @@ the relative width of all edges by a common numeric scalar value.}
 \item{label_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$label.cex}
 and \code{igraph::E(x)$label.cex} to adjust the relative size of all labels on
 nodes and edges by a common numeric scalar value.}
+
+\item{border_factor}{\code{numeric} value multiplied by frame.lwd and pie.lwd
+to adjust the relative width of node borders.}
 
 \item{label_dist_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$label.dist}
 to adjust the relative distance of all nodes labels from the node center

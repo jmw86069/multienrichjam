@@ -1002,29 +1002,18 @@ mem_plot_folio <- function
    ## Prepare for Cnet plots
    cnet_range <- seq_len(length(exemplar_range) + pathway_clusters_n);
    if (any(c(plot_num + cnet_range) %in% do_which)) {
-      if (verbose) {
-         jamba::printDebug("mem_plot_folio(): ",
-            "Preparing cnet for subsetting with mem2cnet().");
-      }
       # spread_labels=FALSE because no layout is required yet
-      cnet <- mem2cnet(mem,
-         remove_blanks=TRUE,
-         spread_labels=FALSE,
-         ...);
-      # ## Freshen pie.color by using the original colorV value by name
-      # igraph::V(cnet)$pie.color <- lapply(igraph::V(cnet)$pie.color, function(i){
-      #    j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-      #       mem$colorV[names(i)],
-      #       i);
-      # });
-      # ## Freshen coloredrect.color by using the original colorV value by name
-      # igraph::V(cnet)$coloredrect.color <- lapply(igraph::V(cnet)$coloredrect.color, function(i){
-      #    j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
-      #       mem$colorV[names(i)],
-      #       i);
-      # });
-      # cnet <- cnet %>%
-      #    removeIgraphBlanks();
+      # 0.0.116.900 - skip this step,, process after subsetting later
+      if (FALSE) {
+         if (verbose) {
+            jamba::printDebug("mem_plot_folio(): ",
+               "Preparing cnet for subsetting with mem2cnet().");
+         }
+         cnet <- mem2cnet(mem,
+            remove_blanks=TRUE,
+            spread_labels=FALSE,
+            ...);
+      }
    }
 
    #############################################################
@@ -1036,16 +1025,17 @@ mem_plot_folio <- function
          if (exemplar_n > 1) {
             pluralized <- "s";
          }
-         clusters_mem_n <- rank_mem_clusters(mem,
-            clusters_mem,
-            per_cluster=exemplar_n,
-            byCols=byCols,
-            ...);
-         cnet_exemplar <- subsetCnetIgraph(cnet,
-            includeSets=clusters_mem_n$set,
-            ...);
          plot_num <- plot_num + 1;
          if (length(do_which) == 0 || plot_num %in% do_which) {
+            clusters_mem_n <- rank_mem_clusters(mem,
+               clusters_mem,
+               per_cluster=exemplar_n,
+               byCols=byCols,
+               ...);
+            cnet_exemplar <- mem2cnet(Mem[, clusters_mem_n$set, ],
+               remove_blanks=TRUE,
+               spread_labels=TRUE,
+               ...);
             if (verbose) {
                jamba::printDebug("mem_plot_folio(): ",
                   c("plot_num ", plot_num, ": "),
@@ -1101,15 +1091,15 @@ mem_plot_folio <- function
                   sep="");
             }
             cluster_sets <- unique(unlist(clusters_mem[[cluster_name]]));
-            cnet_cluster <- subsetCnetIgraph(
-               cnet,
-               includeSets=cluster_sets,
-               repulse=repulse,
+            cnet_cluster <- mem2cnet(Mem[, cluster_sets, ],
+               remove_blanks=TRUE,
+               spread_labels=TRUE,
                ...);
-            # cnet_cluster <- cnet %>%
-            #    subsetCnetIgraph(includeSets=cluster_sets,
-            #       repulse=repulse,
-            #       ...);
+            # cnet_cluster <- subsetCnetIgraph(
+            #    cnet,
+            #    includeSets=cluster_sets,
+            #    repulse=repulse,
+            #    ...);
             cnet_title <- paste0("Cnet plot for cluster ",
                cluster_name);
             cnet_cluster <- igraph::set_graph_attr(cnet_cluster,

@@ -374,13 +374,15 @@ multiEnrichMap <- function
    				stop(paste0("There is no ", docol, " in element ", j, "."));
    			}
    			# rename to match main_col
-   			jamba::printDebug("Renaming ", j, " enrichment column from '",
-   				has_col, "' to '", main_col, "'.");# debug
+            if (verbose > 1) {
+      			jamba::printDebug("Renaming ", j, " enrichment column from '",
+      				has_col, "' to '", main_col, "'.");# debug
+            }
    			ier@result <- jamba::renameColumn(
    				ier@result,
    				from=has_col,
    				to=main_col);
-   		}
+            }
    		enrichList[[j]] <- ier;
    	}
    }

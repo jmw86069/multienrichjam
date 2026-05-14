@@ -239,6 +239,8 @@
 #' @param label_factor `numeric` value multiplied by `igraph::V(x)$label.cex`
 #'    and `igraph::E(x)$label.cex` to adjust the relative size of all labels on
 #'    nodes and edges by a common numeric scalar value.
+#' @param border_factor `numeric` value multiplied by frame.lwd and pie.lwd
+#'    to adjust the relative width of node borders.
 #' @param label_dist_factor `numeric` value multiplied by `igraph::V(x)$label.dist`
 #'    to adjust the relative distance of all nodes labels from the node center
 #'    by a common numeric scalar value.
@@ -364,6 +366,7 @@ jam_igraph <- function
  edge_factor_l=NULL,
  label_factor=1,
  label_factor_l=NULL,
+ border_factor=1,
  label_fontsize_l=NULL,
  label_dist_factor=1,
  label_dist_factor_l=1,
@@ -454,6 +457,25 @@ jam_igraph <- function
       vertex.size <- vertex.size * node_factor;
       vertex.size2 <- vertex.size2 * node_factor;
    }
+
+   # Todo: do not adjust frame.lwd for jampie single-color nodes
+   vertex.frame.width <- params("vertex", "frame.width");
+   # vertex.frame.lwd <- params("vertex", "frame.lwd");
+   vertex.pie.lwd <- params("vertex", "pie.lwd");
+   if (is.function(border_factor)) {
+      vertex.frame.width <- border_factor(vertex.frame.width);
+      vertex.pie.lwd <- border_factor(vertex.pie.lwd);
+      vertex.pie.lwd <- lapply(vertex.pie.lwd, function(i){
+         border_factor(i);
+      })
+   } else {
+      vertex.frame.width <- vertex.frame.width * border_factor;
+      vertex.pie.lwd <- lapply(vertex.pie.lwd, function(i){
+         i * border_factor;
+      })
+   }
+   environment(params)$p$vertex$frame.width <- vertex.frame.width;
+   environment(params)$p$vertex$pie.lwd <- vertex.pie.lwd;
 
    vertex.label.dist <- params("vertex", "label.dist");
    if (is.function(label_dist_factor)) {
