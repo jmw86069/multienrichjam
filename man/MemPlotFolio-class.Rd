@@ -42,11 +42,11 @@ MemPlotFolio_to_list(x, ...)
 
 \S4method{GenePathHeatmap}{MemPlotFolio}(x, do_plot, ...)
 
-\S4method{CnetCollapsed}{MemPlotFolio}(x, type, do_plot, ...)
+\S4method{CnetCollapsed}{MemPlotFolio}(x, type, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
 
-\S4method{CnetExemplar}{MemPlotFolio}(x, num, do_plot, ...)
+\S4method{CnetExemplar}{MemPlotFolio}(x, num, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
 
-\S4method{CnetCluster}{MemPlotFolio}(x, cluster, do_plot, ...)
+\S4method{CnetCluster}{MemPlotFolio}(x, cluster, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
 }
 \arguments{
 \item{mpf}{\code{list} output from \code{mem_plot_folio()}}
@@ -93,6 +93,8 @@ the genes-pathways incidence matrix and associated caption.
 
 \code{CnetCollapsed(MemPlotFolio)} returns an \code{igraph} object invisibly,
 with Gene and Set nodes representing the collapsed pathway clusters.
+The legend position can be adjusted using 'legend_x', 'legend_y' which
+are passed to \code{mem_legend()} as 'x' and 'y'.
 
 \code{CnetExemplar(MemPlotFolio)} returns an \code{igraph} object
 with Gene and Set nodes for the 'num' number of exemplars per cluster.

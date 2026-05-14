@@ -362,8 +362,11 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
 #'    can be forced with `do_directional=TRUE` or FALSE.
 #' @returns `CnetCollapsed(MemPlotFolio)` returns an `igraph` object invisibly,
 #'    with Gene and Set nodes representing the collapsed pathway clusters.
+#'    The legend position can be adjusted using 'legend_x', 'legend_y' which
+#'    are passed to `mem_legend()` as 'x' and 'y'.
 #' @export
-setMethod("CnetCollapsed", "MemPlotFolio", function(x, type, do_plot, ...) {
+setMethod("CnetCollapsed", "MemPlotFolio",
+   function(x, type, do_plot, legend_x="bottomleft", legend_y=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
@@ -412,19 +415,21 @@ setMethod("CnetCollapsed", "MemPlotFolio", function(x, type, do_plot, ...) {
          ...)
    	
    	# determine whether to include direction in the legend
-   	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
-   		TRUE, FALSE)
    	arglist <- list(...);
+      arglist$x <- legend_x;
+      arglist$y <- legend_y;
    	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
-   		do_directional <- arglist[["do_directional"]];
+         do_directional <- arglist[["do_directional"]];
    		# arglist <- arglist[-match("do_directional", names(arglsit))];
-   	} else {
+      } else {
+         hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
+            TRUE, FALSE)
    		arglist[["do_directional"]] <- hasDirection;
    	}
    	# draw the legend
    	do.call(mem_legend,
    		c(
-   			alist(mem=metadata(x)),
+   			alist(mem=x),
    			arglist))
    }
    invisible(cnet);
@@ -443,7 +448,8 @@ setMethod("CnetCollapsed", "MemPlotFolio", function(x, type, do_plot, ...) {
 #' @returns `CnetExemplar(MemPlotFolio)` returns an `igraph` object
 #'    with Gene and Set nodes for the 'num' number of exemplars per cluster.
 #' @export
-setMethod("CnetExemplar", "MemPlotFolio", function(x, num, do_plot, ...) {
+setMethod("CnetExemplar", "MemPlotFolio",
+   function(x, num, do_plot, legend_x="bottomleft", legend_y=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
@@ -472,6 +478,8 @@ setMethod("CnetExemplar", "MemPlotFolio", function(x, num, do_plot, ...) {
    	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
    		TRUE, FALSE)
    	arglist <- list(...);
+      arglist$x <- legend_x;
+      arglist$y <- legend_y;
    	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
    		do_directional <- arglist[["do_directional"]];
    		# arglist <- arglist[-match("do_directional", names(arglsit))];
@@ -500,7 +508,8 @@ setMethod("CnetExemplar", "MemPlotFolio", function(x, num, do_plot, ...) {
 #' @returns `CnetCluster(MemPlotFolio)` returns an `igraph` object invisibly,
 #'    using all pathways in the cluster defined with argument `cluster`.
 #' @export
-setMethod("CnetCluster", "MemPlotFolio", function(x, cluster, do_plot, ...) {
+setMethod("CnetCluster", "MemPlotFolio",
+   function(x, cluster, do_plot, legend_x="bottomleft", legend_y=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
@@ -550,6 +559,8 @@ setMethod("CnetCluster", "MemPlotFolio", function(x, cluster, do_plot, ...) {
    	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
    		TRUE, FALSE)
    	arglist <- list(...);
+      arglist$x <- legend_x;
+      arglist$y <- legend_y;
    	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
    		do_directional <- arglist[["do_directional"]];
    		# arglist <- arglist[-match("do_directional", names(arglsit))];

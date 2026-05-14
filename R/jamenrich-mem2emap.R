@@ -89,6 +89,10 @@
 #' @param max_edge_width `numeric` maximum edge width, used when
 #'    `apply_edge_width=TRUE`. Default 25 is intended to represent
 #'    roughly the full size of a node.
+#' @param min_edge_width `numeric` minimum edge width, used after
+#'    `max_edge_width` has been applied. The minimum is applied as a
+#'    noise floor, so that any edge at or below the `min_edge_width`
+#'    is set to this width. All edges above this width are left as-is.
 #' @param apply_edge_color `logical` whether to apply edge
 #'    color based upon the edge weight, which represents the Jaccard
 #'    overlap. The default matches `apply_edge_width` so that they are
@@ -104,8 +108,23 @@
 #'    for any color to be applied, below which values are considered
 #'    "non-directional". Typically when using some form of z-score, a value
 #'    at or below 0.5 may be considered "not directional."
+#' @param border_lwd `numeric` line width of node borders, used to convey
+#'    any direction associated with enrichment.
 #' @param seed `numeric` passed to `set.seed()` via the `layout_with_qfr()`
 #'    layout algorithm, default 123.
+#' @param spread_labels `logical` default TRUE, whether to call
+#'    `spread_igraph_labels()`.
+#' @param label_min_dist `numeric` default 2.5 defines the label distance
+#'    used in `spread_igraph_labels()`.
+#' @param y_bias `numeric` default 10, passed to `spread_igraph_labels()`.
+#' @param vertex.label.font `integer` to define the font style, default 2
+#'    sets bold font; alternatively use 1 for normal font.
+#' @param use_layout_components `logical` default FALSE, whether to call
+#'    `igraph::layout_components()` to combine multiple network components,
+#'    rather than calling `layout_with_qfr()` on the overall graph object.
+#' @param use_shadowText `logical` default TRUE, whether to render node
+#'    labels using `jamba::shadowText()`. This setting is also stored in
+#'    the graph attributes and is used by `jam_igraph()`.
 #' @param do_express `logical` default FALSE, when TRUE it skips a number
 #'    of aesthetic steps. This option is intended mainly for
 #'    `mem_find_overlap()` to perform more rapid iterative evaluation
@@ -123,7 +142,9 @@
 #' emap2 <- relayout_nodegroups(emap, final_repulse=4, y_bias=10, label_min_dist=2.5)
 #' jam_igraph(emap2)
 #' 
-#' emapB <- mem2emap(fixSetLabels(Memtest), min_count=3, overlap=0.35, median_size=10, apply_edge_width=TRUE, max_edge_width=15)
+#' emapB <- mem2emap(fixSetLabels(Memtest), min_count=3,
+#'    overlap=0.35, median_size=10,
+#'    apply_edge_width=TRUE, max_edge_width=15)
 #' jam_igraph(emapB)
 #' 
 #' @export
@@ -145,15 +166,18 @@ mem2emap <- function
  max_size=25,
  apply_edge_width=TRUE,
  max_edge_width=20,
+ min_edge_width=0.5,
  apply_edge_color=apply_edge_width,
  apply_direction=TRUE,
  direction_max=2,
  direction_floor=0.5,
+ border_lwd=3,
  seed=123,
  spread_labels=TRUE,
  label_min_dist=2.5,
  y_bias=10,
  vertex.label.font=2,
+ use_layout_components=FALSE,
  use_shadowText=TRUE,
  do_express=FALSE,
  do_plot=FALSE,
@@ -241,7 +265,7 @@ mem2emap <- function
          method="binary"));
    jacc_summary <- summary(as.vector(jacc_overlap), na.rm=TRUE);
    jacc_cutoff <- mean(c(jacc_summary[c("Median", "Mean")]))
-   print(summary(jacc_cutoff));# debug
+   # print(summary(jacc_cutoff));# debug
    
    # convert to graph using Jaccard overlap threshold
    jacc_overlap_filtered <- jacc_overlap * (jacc_overlap >= overlap)
@@ -298,11 +322,13 @@ mem2emap <- function
    
    # Define edge width
    if (isTRUE(apply_edge_width)) {
-   	igraph::E(jacc_g)$width <- (igraph::E(jacc_g)$weight^2) * max_edge_width;
+   	igraph::E(jacc_g)$width <- jamba::noiseFloor(
+         (igraph::E(jacc_g)$weight^2) * max_edge_width,
+         minimum=min_edge_width);
    	igraph::graph_attr(jacc_g, "max_edge_width") <- max_edge_width;
    }
    if (isTRUE(apply_edge_color)) {
-   	greys <- jamba::getColorRamp("Greys", 6, trimRamp=c(2, 0))[c(1, 3, 4, 6)];
+   	greys <- jamba::getColorRamp("Greys", 6, trimRamp=c(3, 0))[c(1, 3, 4, 6)];
    	k <- jamba::nameVector(seq(from=0, to=1, by=0.01))
    	if (abs(jacc_cutoff - 0.5) < 0.15) {
    		jacc_cuts <- sort(c(0, jacc_cutoff, jacc_cutoff + 0.15, 1));
@@ -351,10 +377,17 @@ mem2emap <- function
 		         jamba::printDebug("mem2emap(): ",
 		            "Applying layout_components() with layout_with_qfrf().");
 		      }
-	         new_layout <- igraph::layout_components(jacc_g,
-	            layout=layout_with_qfrf(repulse=repulse,
-	               seed=seed,
-	               ...));
+            if (use_layout_components) {
+               new_layout <- igraph::layout_components(jacc_g,
+                  layout=layout_with_qfrf(repulse=repulse,
+                     seed=seed,
+                     ...));
+            } else {
+               new_layout <- layout_with_qfr(jacc_g,
+                  repulse=repulse,
+                  seed=seed,
+                  ...);
+            }
 	         colnames(new_layout) <- c("x", "y");
 	         if (length(rownames(new_layout)) == 0) {
 	         	rownames(new_layout) <- igraph::V(jacc_g)$name;
@@ -367,7 +400,7 @@ mem2emap <- function
 	         		"head(new_layout):");
 	         	print(head(new_layout, 100));
 	         }
-	      }
+            }
 	   } else {
 	      if (verbose) {
 	         jamba::printDebug("mem2emap(): ",
@@ -424,8 +457,8 @@ mem2emap <- function
 	         dir_col_fn(enrichIMdirection(mem)[j, knames])
 	      })
 	      igraph::V(jacc_g)$pie.border <- pie_borders;
-	      igraph::V(jacc_g)$pie.lwd <- 3;
-	      igraph::V(jacc_g)$frame.lwd <- 0.5;
+	      igraph::V(jacc_g)$pie.lwd <- border_lwd;
+	      igraph::V(jacc_g)$frame.lwd <- border_lwd / 10;
 	   } else {
 	      apply_direction <- FALSE
 	   }
@@ -437,7 +470,7 @@ mem2emap <- function
 	   if (length(cluster_list) > 0) {
 	      wc <- cluster_list;
 	      nodegroups_wc <- cluster_list;
-	      mark.colors <- jamba::alpha2col(alpha=0.3,
+	      mark.colors <- jamba::alpha2col(alpha=0.15,
 	         colorjam::rainbowJam(n=length(nodegroups_wc),
 	            Crange=c(60, 90),
 	            Lrange=c(50, 85)))
@@ -467,12 +500,12 @@ mem2emap <- function
 	      if (TRUE %in% color_by_nodes) {
 	         mark.colors <- sapply(nodegroups_wc, function(i){
 	            ic1 <- igraph::V(jacc_g)[i]$pie.color;
-	            ic2 <- jamba::alpha2col(alpha=0.3,
+	            ic2 <- jamba::alpha2col(alpha=0.15,
 	               colorjam::blend_colors(unname(unlist(ic1))))
 	            ic2
 	         })
 	      } else {
-	         mark.colors <- jamba::alpha2col(alpha=0.3,
+	         mark.colors <- jamba::alpha2col(alpha=0.15,
 	            colorjam::rainbowJam(n=length(nodegroups_wc),
 	               Crange=c(60, 90),
 	               Lrange=c(50, 85)))

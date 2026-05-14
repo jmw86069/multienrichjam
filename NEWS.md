@@ -1,3 +1,19 @@
+# multienrichjam 0.0.115.900
+
+## Bug Fixes
+
+* `mem_legend()` fixed visual glitch in the color legend causing
+node fill color to appear as fill color for directional borders.
+Also fixed alignment using 'added-top' and 'added-bottom' for
+multi-column output.
+
+## Changes to existing functions
+
+* `CnetCollapsed()`, `CnetExemplar()`, `CnetCluster()` have new
+arguments 'legend_x', 'legend_y' which are passed to `mem_legend()`
+to control the position of the legend.
+
+
 # multienrichjam 0.0.114.950
 
 * Minor update to improve defaults for `mem2emap()`.

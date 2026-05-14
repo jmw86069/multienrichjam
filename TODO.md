@@ -2,6 +2,12 @@
 
 ## 13may2026
 
+* Consider `jam_igraph` border_factor which adjusts border line width.
+* Wrapper functions to create summary labels: Emap mark.groups;
+Mpf Clusters; Mpf GenePathHeatmap column_title.
+* Consider adding genes to Emap `igraph` edges, along with the number
+of genes in the overlap. It might be convenient to grab genes by edges,
+or do tricks with nodes in communities.
 * Consider adding lollipop style plot to supplement `EnrichmentHeatmap()`.
 
 	* x-axis: significance, or fold enrichment, or # of genes, etc.
@@ -35,6 +41,7 @@
 
 * Update `mem2emap()`
 
+   * Consider border_lwd which scales consistent with node size. Currently fixed.
 	* Add to `prepare_folio()`.
 	* DONE. Option for weights (Jaccard overlap) to define edge width, color, alpha.
 	* Consider lower `overlap` then show connection width more clearly.

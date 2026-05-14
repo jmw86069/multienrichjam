@@ -22,15 +22,18 @@ mem2emap(
   max_size = 25,
   apply_edge_width = TRUE,
   max_edge_width = 20,
+  min_edge_width = 0.5,
   apply_edge_color = apply_edge_width,
   apply_direction = TRUE,
   direction_max = 2,
   direction_floor = 0.5,
+  border_lwd = 3,
   seed = 123,
   spread_labels = TRUE,
   label_min_dist = 2.5,
   y_bias = 10,
   vertex.label.font = 2,
+  use_layout_components = FALSE,
   use_shadowText = TRUE,
   do_express = FALSE,
   do_plot = FALSE,
@@ -118,6 +121,11 @@ overlap.}
 \code{apply_edge_width=TRUE}. Default 25 is intended to represent
 roughly the full size of a node.}
 
+\item{min_edge_width}{\code{numeric} minimum edge width, used after
+\code{max_edge_width} has been applied. The minimum is applied as a
+noise floor, so that any edge at or below the \code{min_edge_width}
+is set to this width. All edges above this width are left as-is.}
+
 \item{apply_edge_color}{\code{logical} whether to apply edge
 color based upon the edge weight, which represents the Jaccard
 overlap. The default matches \code{apply_edge_width} so that they are
@@ -137,8 +145,30 @@ for any color to be applied, below which values are considered
 "non-directional". Typically when using some form of z-score, a value
 at or below 0.5 may be considered "not directional."}
 
+\item{border_lwd}{\code{numeric} line width of node borders, used to convey
+any direction associated with enrichment.}
+
 \item{seed}{\code{numeric} passed to \code{set.seed()} via the \code{layout_with_qfr()}
 layout algorithm, default 123.}
+
+\item{spread_labels}{\code{logical} default TRUE, whether to call
+\code{spread_igraph_labels()}.}
+
+\item{label_min_dist}{\code{numeric} default 2.5 defines the label distance
+used in \code{spread_igraph_labels()}.}
+
+\item{y_bias}{\code{numeric} default 10, passed to \code{spread_igraph_labels()}.}
+
+\item{vertex.label.font}{\code{integer} to define the font style, default 2
+sets bold font; alternatively use 1 for normal font.}
+
+\item{use_layout_components}{\code{logical} default FALSE, whether to call
+\code{igraph::layout_components()} to combine multiple network components,
+rather than calling \code{layout_with_qfr()} on the overall graph object.}
+
+\item{use_shadowText}{\code{logical} default TRUE, whether to render node
+labels using \code{jamba::shadowText()}. This setting is also stored in
+the graph attributes and is used by \code{jam_igraph()}.}
 
 \item{do_express}{\code{logical} default FALSE, when TRUE it skips a number
 of aesthetic steps. This option is intended mainly for
@@ -195,7 +225,9 @@ jam_igraph(emap)
 emap2 <- relayout_nodegroups(emap, final_repulse=4, y_bias=10, label_min_dist=2.5)
 jam_igraph(emap2)
 
-emapB <- mem2emap(fixSetLabels(Memtest), min_count=3, overlap=0.35, median_size=10, apply_edge_width=TRUE, max_edge_width=15)
+emapB <- mem2emap(fixSetLabels(Memtest), min_count=3,
+   overlap=0.35, median_size=10,
+   apply_edge_width=TRUE, max_edge_width=15)
 jam_igraph(emapB)
 
 }

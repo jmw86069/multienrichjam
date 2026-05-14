@@ -2051,45 +2051,48 @@ mem_legend <- function
       stop("Input mem must be a list with element 'colorV'");
    }
    colorV <- mem[["colorV"]];
-   colorVb <- jamba::makeColorDarker(colorV, darkFactor=1.5);
+   colorVb <- jamba::makeColorDarker(colorV, darkFactor=1.2);
 
    # directional circles for some plots
    if (do_directional) {
       # exemplar legend()
       if ("same" %in% directional_column) {
          # simply include direction at the end with same ncol
-         legend_n <- length(legend) + length(directional_colors);
+         legend_n <- length(colorV) + length(directional_colors);
          legend_nrow <- ceiling(legend_n / ncol);
          pt.bg <- c(colorV,
             rep(NA, length(directional_colors)))
-         col <- c(rep(NA, length(colorV)),
+         col <- c(colorVb,
             directional_colors);
-         pch <- c(rep(pch, length.out=length(legend)),
-            rep(21, length(directional_colors)));
+         pch <- c(rep(pch, length.out=length(colorV)),
+            rep(1, length(directional_colors)));
          legend_names <- c(names(colorV),
             names(directional_colors));
       } else {
          # add direction in its own column
          legend_nrow <- max(c(
             length(directional_colors),
-            ceiling(length(legend) / ncol)));
-         legend_n_diff <- (ncol * legend_nrow) - length(legend);
-         legend_n_buff <- 0;
+            ceiling(length(colorV) / ncol)));
+         # added-top
+         legend_n_buff <- (ncol * legend_nrow) - length(colorV);
+         legend_n_buff1 <- legend_n_buff;
          if ("added-bottom" %in% directional_column) {
-            legend_n_buff <- legend_nrow - length(legend);
+            # additional buffer
+            legend_n_buff <- legend_n_buff + (legend_nrow - length(directional_colors));
          }
          pt.bg <- c(colorV,
-            rep(NA, legend_n_diff + legend_n_buff),
+            rep(NA, legend_n_buff),
             rep(NA, length(directional_colors)));
-         col <- c(rep(NA, length(colorV)),
-            rep(NA, legend_n_diff + legend_n_buff),
+         col <- c(colorVb,
+            rep(NA, legend_n_buff),
             directional_colors);
-         pch <- c(rep(pch, length.out=length(legend)),
-            rep(NA, legend_n_diff + legend_n_buff),
-            rep(21, length(directional_colors)));
+         pch <- c(rep(pch, length.out=length(colorV)),
+            rep(NA, legend_n_buff),
+            rep(1, length(directional_colors)));
          legend_names <- c(names(colorV),
-            rep("", legend_n_diff + legend_n_buff),
+            rep("", legend_n_buff),
             names(directional_colors));
+         ncol <- ncol + 1;
       }
    } else {
       legend_names <- names(colorV);

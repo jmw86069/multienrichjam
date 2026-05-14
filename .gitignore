@@ -4,3 +4,5 @@
 .Ruserdata
 inst/doc
 mem_vignettes.md
+.vscode
+air.toml

@@ -6,3 +6,5 @@
 ^.*vignettes.md$
 ^data-raw$
 ^LICENSE\.md$
+^[.]?air[.]toml$
+^\.vscode$
