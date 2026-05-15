@@ -392,6 +392,8 @@ mem2cnet <- function
    isset <- igraph::V(g)$name %in% colnames(memIM);
    igraph::V(g)$nodeType <- ifelse(isset, "Set", "Gene");
    igraph::V(g)$size <- ifelse(isset, categorySize, geneSize);
+   # size2 is used for coloredrectangle node shape
+   igraph::V(g)$size2 <- ifelse(isset, categorySize, geneSize) / 5;
    igraph::V(g)$label.cex <- ifelse(isset, categoryCex, geneCex);
    if (length(vertex.label.font) == 1) {
       igraph::V(g)$label.font <- vertex.label.font;

@@ -8,6 +8,11 @@ Also fixed alignment using 'added-top' and 'added-bottom' for
 multi-column output.
 * `jam_mypie()` used to render pie nodes, updated to use proper
 `frame.lwd` line widths for each node.
+* `mem2emap()` and `mem2cnet()` now define 'vertex.size2' used
+for igraph node shape='coloredrectangle'. Rarely used, but an OG
+that may be preferred when analyzing a lot of enrichments.
+* `shape.coloredrectangle.plot()` fixed bug causing blank cells
+to re-use recycled border colors.
 
 ## Changes to existing functions
 
@@ -31,7 +36,7 @@ the border color.
    'pie.border.lwd' by default. Previously, nodes would be smaller
    but the border maintained absolute width and could fill the
    node completely.
-   To reverse, apply the inverse via `edge_factor`.
+   To reverse, apply the inverse via `border_factor`.
 
 * `CnetCollapsed()`, `CnetExemplar()`, `CnetCluster()` have new
 arguments 'legend_x', 'legend_y' which are passed to `mem_legend()`
@@ -46,7 +51,7 @@ to control the position of the legend.
    * Changed default 'byCols' to favor 'minp_rank' instead of
    'composite_rank'.
 
-* `jam_igraph()` new argument `edge_factor` to adjust frame and border
+* `jam_igraph()` new argument `border_factor` to adjust frame and border
 line width.
 
 # multienrichjam 0.0.114.950

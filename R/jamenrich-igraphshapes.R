@@ -214,17 +214,17 @@ shape.coloredrectangle.plot <- function
    if (length(vertex.frame.color) == 0) {
       vertex.frame.color <- "grey30";
    }
-   vertex.frame.lwd <- getparam("frame.lwd");
-   if (length(vertex.frame.lwd) == 0) {
-      vertex.frame.lwd <- rep(1,
+   vertex.frame.width <- getparam("frame.width");
+   if (length(vertex.frame.width) == 0) {
+      vertex.frame.width <- rep(1,
          length.out=length(vertex.frame.color));
    }
-   vertex.frame.lwd <- ifelse(
+   vertex.frame.width <- ifelse(
       is.na(vertex.frame.color) | jamba::col2alpha(vertex.frame.color) < 0.01,
       0,
-      vertex.frame.lwd);
-   if (length(vertex.frame.lwd) == 0) {
-      vertex.frame.lwd <- 1;
+      vertex.frame.width);
+   if (length(vertex.frame.width) == 0) {
+      vertex.frame.width <- 1;
    }
 
    vertex.coloredrect.color <- getparam("coloredrect.color");
@@ -354,6 +354,7 @@ shape.coloredrectangle.plot <- function
    }
 
    vertex.size <- cbind(vertex.size1, vertex.size2);
+   jamba::printDebug("vertex.size:");print(vertex.size);# debug
 
    ## Define custom function to help vectorize drawing, by creating a
    ## data.frame of coordinates for each square and rectangle
@@ -499,7 +500,9 @@ shape.coloredrectangle.plot <- function
             rectDFi$rectx <- outer_coords$rectangles[, 1];
             rectDFi$recty <- outer_coords$rectangles[, 2];
          }
-         
+         if (any(is.na(rectDFi$bg))) {
+            rectDFi[is.na(rectDFi$bg), "fg"] <- NA;
+         }
          graphics::symbols(x=rectDFi$x,
             y=rectDFi$y,
             bg=rectDFi$bg,
@@ -534,7 +537,7 @@ shape.coloredrectangle.plot <- function
       border=vertex.coloredrect.border,
       lty=vertex.coloredrect.lty,
       lwd=vertex.coloredrect.lwd,
-      frame.lwd=vertex.frame.lwd,
+      frame.lwd=vertex.frame.width,
       frame.color=vertex.frame.color,
       byrow=vertex.coloredrect.byrow);
 
@@ -1085,8 +1088,6 @@ shape.jampie.plot <- function
    # Todo: Resolve frame.lwd or frame.width
    vertex.frame.lwd <- getparam("frame.lwd")
    vertex.frame.width <- getparam("frame.width")
-   # jamba::printDebug("vertex.frame.lwd:");print(vertex.frame.lwd);# debug
-   # jamba::printDebug("vertex.frame.width:");print(vertex.frame.width);# debug
    ## 0.0.101.900: stop dividing by 200 bc it is done in jam_igraph()
    # vertex.size <- rep(1/200 * getparam("size"), length.out=nrow(coords))
    vertex.size <- rep(1/1 * getparam("size"), length.out=nrow(coords))

@@ -1,7 +1,8 @@
 # TODO
 
-## 13may2026
+## 15may2026
 
+* Fix/Improve coloredrect rendering, vertex.size, vertex.size2.
 * DONE. Consider `jam_igraph` border_factor which adjusts border line width.
 * DONE. Fix `mem_legend()` in CnetCollapsed() with directional colors.
 * DONE. Consider Rmarkdown tabbed output using '{.tabset}' instead of PDF pages.
