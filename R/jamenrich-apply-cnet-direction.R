@@ -61,12 +61,12 @@
 #'    have the same `pie.border` color, the 'pie.border' is defined
 #'    as `NA`, and 'frame.color' is assigned to this color.
 #'    The effect is to display the outline color and not each wedge.
-#'    Both 'pie.lwd' and 'frame.lwd' will be assigned `border_lwd`,
+#'    Both 'pie.lwd' and 'frame.width' will be assigned `border_lwd`,
 #'    and since 'pie.border' is `NA` it will not be rendered. Only the
 #'    'frame.color' will be rendered.
 #'    * When `hide_solo_pie=FALSE` each pie wedge border color is assigned
 #'    to 'pie.border', `frame.color` will be assigned 'frame_blank',
-#'    and 'frame.lwd' will be assigned 'frame_lwd_blank' which is useful
+#'    and 'frame.width' will be assigned 'frame_lwd_blank' which is useful
 #'    for displaying a small outer frame for each node.
 #' @param frame_blank `character` string to define the color used
 #'    for 'frame.color' when colors are defined in 'pie.border'.
@@ -86,7 +86,7 @@
 #'    When the colors are applied to 'pie.color',
 #'    the border is defined with 'pie.lwd'.
 #'    When colors are applied to 'frame.color', the border is defined
-#'    with 'frame.lwd'.
+#'    with 'frame.width'.
 #' @param do_reorder `logical` default FALSE, whether to reorder nodes
 #'    by node attributes such as color and border, by calling
 #'    `reorder_igraph_nodes()`.
@@ -252,7 +252,7 @@ apply_cnet_direction <- function
                apply_frame_only,
                NA,
                section_color)
-            # frame.lwd is tied to this value during rendering
+            # frame.width is tied to this value during rendering
             # so all pie.lwd must be at least the frame border lwd
             icolordf$use_border_lwd <- border_lwd;
 
@@ -326,18 +326,12 @@ apply_cnet_direction <- function
          # igraph::vertex_attr(cnet, "frame.color",
          #    index=icolordf_frame$whichv) <- icolordf_frame$use_frame;
          
-         # frame.lwd
+         # frame.width
          igraph::vertex_attr(cnet,
             index=as.integer(as.character(icolordf_frame$whichv)),
-            name="frame.lwd") <- icolordf_frame$use_frame_lwd;
-         # jamba::printDebug("frame.lwd:");print(igraph::vertex_attr(cnet,
-         #    index=icolordf_frame$whichv,
-         #    name="frame.lwd"));# debug
-         
-         # igraph::vertex_attr(cnet, "frame.lwd",
-         #    index=icolordf_frame$whichv) <- icolordf_frame$use_frame_lwd;
-         igraph::vertex_attr(cnet, "frame.width") <- (
-            igraph::vertex_attr(cnet, "frame.lwd"));
+            name="frame.width") <- icolordf_frame$use_frame_lwd;
+         # igraph::vertex_attr(cnet, "frame.lwd") <- (
+         #    igraph::vertex_attr(cnet, "frame.width"));
       }
       
       # looping each vector (below) seems inefficient, and is quite slow
@@ -433,7 +427,7 @@ apply_cnet_direction <- function
       })
       igraph::vertex_attr(cnet, "frame.color") <- cnet_framecolor
    
-      # frame.lwd
+      # frame.width
       cnet_framelwd <- sapply(seq_along(igraph::V(cnet)), function(i){
          iname <- igraph::vertex_attr(cnet, "name")[[i]];
          icolor <- igraph::vertex_attr(cnet, "pie.color")[[i]];
@@ -447,7 +441,7 @@ apply_cnet_direction <- function
             ienrich <- names(icolor);
          }
          iframecolor <- igraph::vertex_attr(cnet, "frame.color")[[i]];
-         iframelwd <- igraph::vertex_attr(cnet, "frame.lwd")[[i]];
+         iframelwd <- igraph::vertex_attr(cnet, "frame.width")[[i]];
          if (length(iframelwd) == 0) {
             iframelwd <- 1;
          }
@@ -462,10 +456,10 @@ apply_cnet_direction <- function
             }
             return(frame_lwd_blank)
          }
-         # if no directionality, then keep the existing frame.lwd
+         # if no directionality, then keep the existing frame.width
          return(iframelwd)
       })
-      igraph::vertex_attr(cnet, "frame.lwd") <- cnet_framelwd
+      igraph::vertex_attr(cnet, "frame.width") <- cnet_framelwd
    }
 
    # optionally reorder nodes using new border color

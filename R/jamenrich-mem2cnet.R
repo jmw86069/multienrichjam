@@ -403,7 +403,8 @@ mem2cnet <- function
       categoryLabelColor,
       geneLabelColor);
    igraph::V(g)$color <- ifelse(isset, categoryColor, geneColor);
-   igraph::V(g)$frame.lwd <- 1;
+   # igraph::V(g)$frame.lwd <- 1;
+   igraph::V(g)$frame.width <- 1;
    if (length(frame_darkFactor) > 0 && frame_darkFactor != 1) {
       igraph::V(g)$frame.color <- jamba::makeColorDarker(
          igraph::V(g)$color,

@@ -239,8 +239,11 @@
 #' @param label_factor `numeric` value multiplied by `igraph::V(x)$label.cex`
 #'    and `igraph::E(x)$label.cex` to adjust the relative size of all labels on
 #'    nodes and edges by a common numeric scalar value.
-#' @param border_factor `numeric` value multiplied by frame.lwd and pie.lwd
-#'    to adjust the relative width of node borders.
+#' @param border_factor `numeric` value multiplied by frame.width and pie.lwd
+#'    to adjust the relative width of node borders. Note that border line width
+#'    is also affected by `node_factor` and `node_factor_l` when provided.
+#'    To prevent borders being adjusted by `node_factor`, set `border_factor`
+#'    to the reciprocal, for example `border_factor=1/node_factor`.
 #' @param label_dist_factor `numeric` value multiplied by `igraph::V(x)$label.dist`
 #'    to adjust the relative distance of all nodes labels from the node center
 #'    by a common numeric scalar value.
@@ -450,32 +453,10 @@ jam_igraph <- function
       edge.label.cex <- edge.label.cex * label_factor;
    }
 
-   if (is.function(node_factor)) {
-      vertex.size <- node_factor(vertex.size);
-      vertex.size2 <- node_factor(vertex.size2);
-   } else {
-      vertex.size <- vertex.size * node_factor;
-      vertex.size2 <- vertex.size2 * node_factor;
-   }
-
    # Todo: do not adjust frame.lwd for jampie single-color nodes
    vertex.frame.width <- params("vertex", "frame.width");
    # vertex.frame.lwd <- params("vertex", "frame.lwd");
    vertex.pie.lwd <- params("vertex", "pie.lwd");
-   if (is.function(border_factor)) {
-      vertex.frame.width <- border_factor(vertex.frame.width);
-      vertex.pie.lwd <- border_factor(vertex.pie.lwd);
-      vertex.pie.lwd <- lapply(vertex.pie.lwd, function(i){
-         border_factor(i);
-      })
-   } else {
-      vertex.frame.width <- vertex.frame.width * border_factor;
-      vertex.pie.lwd <- lapply(vertex.pie.lwd, function(i){
-         i * border_factor;
-      })
-   }
-   environment(params)$p$vertex$frame.width <- vertex.frame.width;
-   environment(params)$p$vertex$pie.lwd <- vertex.pie.lwd;
 
    vertex.label.dist <- params("vertex", "label.dist");
    if (is.function(label_dist_factor)) {
@@ -509,6 +490,15 @@ jam_igraph <- function
          i_values=vertex.label.dist,
          attr_type="node");
    }
+
+   vertex.size_orig <- vertex.size;
+   if (is.function(node_factor)) {
+      vertex.size <- node_factor(vertex.size);
+      vertex.size2 <- node_factor(vertex.size2);
+   } else {
+      vertex.size <- vertex.size * node_factor;
+      vertex.size2 <- vertex.size2 * node_factor;
+   }
    if (length(node_factor_l) > 0) {
       if (verbose) {
          jamba::printDebug("jam_igraph(): ",
@@ -527,6 +517,39 @@ jam_igraph <- function
          i_values=vertex.size2,
          attr_type="node");
    }
+   effective_node_factor <- vertex.size / vertex.size_orig;
+
+   if (is.function(border_factor)) {
+      vertex.frame.width <- border_factor(
+         vertex.frame.width * effective_node_factor);
+      if (length(vertex.pie.lwd) > 0) {
+         if (is.list(vertex.pie.lwd)) {
+            vertex.pie.lwd <- lapply(vertex.pie.lwd, function(i){
+               border_factor(i * effective_node_factor);
+            })
+         } else {
+            vertex.pie.lwd <- border_factor(
+               vertex.pie.lwd * effective_node_factor);
+         }
+      }
+   } else {
+      vertex.frame.width <- (vertex.frame.width *
+         border_factor *
+         effective_node_factor);
+      if (length(vertex.pie.lwd) > 0) {
+         if (is.list(vertex.pie.lwd)) {
+            vertex.pie.lwd <- lapply(vertex.pie.lwd, function(i){
+               i * border_factor * effective_node_factor;
+            })
+         } else {
+            vertex.pie.lwd <- (vertex.pie.lwd *
+               border_factor *
+               effective_node_factor);
+         }
+      }
+   }
+   environment(params)$p$vertex$frame.width <- vertex.frame.width;
+   environment(params)$p$vertex$pie.lwd <- vertex.pie.lwd;
 
    edge.width <- params("edge", "width");
    if (is.function(edge_factor)) {

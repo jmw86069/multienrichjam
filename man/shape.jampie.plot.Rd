@@ -84,12 +84,12 @@ igraph::V(g1)$pie.color <- lapply(vseq, function(i){
       igraph::V(g1)$pie.border[[i]])
 })
 igraph::V(g1)$pie.lwd <- rep(5, igraph::vcount(g1))
-igraph::V(g1)$frame.lwd <- c(2, 1, 1, 1, 1)*2;
+igraph::V(g1)$frame.width <- c(2, 1, 1, 1, 1)*3;
 igraph::V(g1)$frame.color <- NA
 igraph::V(g1)$size <- c(45, 25, 25, 25, 25);
 igraph::V(g1)$shape <- "jampie";
 
-par("mar"=c(2, 2, 3, 2))
+withr::local_par(list("mar"=c(2, 2, 3, 2)))
 igraph::plot.igraph(g1, vertex.label="",
    vertex.shape="pie", vertex.frame.color="grey45",
    main="shape='pie'\nigraph::plot.igraph()")
@@ -98,16 +98,18 @@ jam_igraph(g1, vertex.label="",
    main="shape='jampie', frame.color=NA\njam_igraph()")
 
 
-jam_igraph(g1, vertex.label="",
-   vertex.frame.lwd=2,
+jam_igraph(g1,
+   use_shadowText=TRUE, label_factor=3,
    main="shape='jampie', frame.color='black'\njam_igraph()",
-   vertex.shape="jampie", vertex.frame.color="black")
+   vertex.frame.width=1,
+   vertex.frame.color="black")
 
 jam_igraph(g1, vertex.label="", vertex.frame.color="black")
 
 # print pie.color data
 print(igraph::vertex_attr(g1)$pie.color);
 
+withr::deferred_clear()
 }
 \seealso{
 Other jam igraph shapes: 

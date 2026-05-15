@@ -49,6 +49,9 @@ mem_plot_folio(
   column_anno_padding = grid::unit(3, "mm"),
   returnType = c("MemPlotFolio", "list"),
   do_plot = TRUE,
+  do_rmd_tabs = FALSE,
+  rmd_tab_level = 2,
+  rmd_tab_title = "Mem Plot Folio",
   verbose = FALSE,
   ...
 )
@@ -96,6 +99,8 @@ prepare_folio(
   row_anno_padding = grid::unit(3, "mm"),
   column_anno_padding = grid::unit(3, "mm"),
   returnType = c("MemPlotFolio", "list"),
+  do_rmd_tabs = FALSE,
+  rmd_tab_level = 2,
   do_plot = FALSE,
   verbose = FALSE,
   ...
@@ -247,6 +252,27 @@ Default \code{TRUE} for \code{mem_plot_folio()}, and \code{FALSE} for \code{prep
 In either case, plot data are created and returned, but \code{do_plot=TRUE}
 will draw each plot on a unique page, suitable for use with
 PDF output and \code{onefile=TRUE} for example.}
+
+\item{do_rmd_tabs}{\code{logical} default FALSE, whether to print Rmarkdown
+tabs to STDOUT using \code{cat()}, and only used when \code{do_plot=TRUE}.
+When active, before each plot is drawn, an Rmd tab header is
+printed in the form '## Plot Type {.tabset}', where the '##'
+heading is defined by 'rmd_tab_level'.}
+
+\item{rmd_tab_level}{\code{integer} default 2, used when
+\code{do_rmd_tabs=TRUE} to define the heading level.}
+
+\item{rmd_tab_title}{\code{character} default 'Mem Plot Folio' which
+is printed using \code{cat()} when \code{do_rmd_tabs=TRUE}.
+To skip the title, use \code{rmd_tab_title=NULL}, or set to ''.
+The title is printed as '## Title {.tabset}' and all plots are
+printed as sub-headings.
+The main reason not to use 'rmd_tab_title' is to
+to create the title in the Rmd (or Qmd) file itself,
+however when doing so, be sure to include ' {.tabset}' at
+the end of you heading, for example '# My Mem Plots {.tabset}'.
+The default here is to include a title to ensure all plot
+sub-headings also appear as tabs.}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 

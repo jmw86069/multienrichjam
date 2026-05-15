@@ -27,7 +27,7 @@
 #'   These borders are drawn as inner borders so they do not overlap
 #'   optional frame border.
 #'   * Each node may have a frame border, defined by `frame.color`,
-#'   `frame.lwd`, and `frame.lty`. The frame border is drawn as an outer
+#'   `frame.width`, and `frame.lty`. The frame border is drawn as an outer
 #'   border so it does not overlap inner borders, adding some height and width
 #'   to the final node. The frame border is drawn before the
 #'   node squares are drawn.
@@ -138,7 +138,7 @@
 #' igraph::V(g1)$coloredrect.ncol <- c(2, 2, 2, 1, 1);
 #' igraph::V(g1)$coloredrect.nrow <- c(2, 1, 1, 2, 1);
 #' igraph::V(g1)$coloredrect.lwd <- rep(3, igraph::vcount(g1))
-#' igraph::V(g1)$frame.lwd <- c(2, 1, 1, 1, 1);
+#' igraph::V(g1)$frame.width <- c(2, 1, 1, 1, 1);
 #' igraph::V(g1)$frame.color <- "black"
 #' igraph::V(g1)$size2 <- 10;
 #' igraph::V(g1)$shape <- "coloredrectangle";
@@ -1040,12 +1040,12 @@ shape.ellipse.clip <- function
 #'       igraph::V(g1)$pie.border[[i]])
 #' })
 #' igraph::V(g1)$pie.lwd <- rep(5, igraph::vcount(g1))
-#' igraph::V(g1)$frame.lwd <- c(2, 1, 1, 1, 1)*2;
+#' igraph::V(g1)$frame.width <- c(2, 1, 1, 1, 1)*3;
 #' igraph::V(g1)$frame.color <- NA
 #' igraph::V(g1)$size <- c(45, 25, 25, 25, 25);
 #' igraph::V(g1)$shape <- "jampie";
 #'
-#' par("mar"=c(2, 2, 3, 2))
+#' withr::local_par(list("mar"=c(2, 2, 3, 2)))
 #' igraph::plot.igraph(g1, vertex.label="",
 #'    vertex.shape="pie", vertex.frame.color="grey45",
 #'    main="shape='pie'\nigraph::plot.igraph()")
@@ -1054,16 +1054,18 @@ shape.ellipse.clip <- function
 #'    main="shape='jampie', frame.color=NA\njam_igraph()")
 #'
 #'
-#' jam_igraph(g1, vertex.label="",
-#'    vertex.frame.lwd=2,
+#' jam_igraph(g1,
+#'    use_shadowText=TRUE, label_factor=3,
 #'    main="shape='jampie', frame.color='black'\njam_igraph()",
-#'    vertex.shape="jampie", vertex.frame.color="black")
+#'    vertex.frame.width=1,
+#'    vertex.frame.color="black")
 #'
 #' jam_igraph(g1, vertex.label="", vertex.frame.color="black")
 #'
 #' # print pie.color data
 #' print(igraph::vertex_attr(g1)$pie.color);
-#'
+#' 
+#' withr::deferred_clear()
 #' @export
 shape.jampie.plot <- function
 (coords,
@@ -1083,6 +1085,8 @@ shape.jampie.plot <- function
    # Todo: Resolve frame.lwd or frame.width
    vertex.frame.lwd <- getparam("frame.lwd")
    vertex.frame.width <- getparam("frame.width")
+   # jamba::printDebug("vertex.frame.lwd:");print(vertex.frame.lwd);# debug
+   # jamba::printDebug("vertex.frame.width:");print(vertex.frame.width);# debug
    ## 0.0.101.900: stop dividing by 200 bc it is done in jam_igraph()
    # vertex.size <- rep(1/200 * getparam("size"), length.out=nrow(coords))
    vertex.size <- rep(1/1 * getparam("size"), length.out=nrow(coords))
@@ -1168,7 +1172,8 @@ shape.jampie.plot <- function
    # because polygon() does not accept multiple lwd values in one call
    overall_lwd <- rep(
       pmax(
-         vertex.frame.lwd,
+         # vertex.frame.lwd,
+         vertex.frame.width,
          vertex.pie.lwd.max,
          na.rm=TRUE),
       length.out=nrow(coords))
@@ -1205,12 +1210,21 @@ shape.jampie.plot <- function
          } else {
             vertex.frame.color[[i]]
          }
-         frame.lwd <- if (length(vertex.frame.lwd) == 1) {
-            vertex.frame.lwd[[1]]
-         } else if (length(vertex.frame.lwd) == 0) {
-            1
+         # frame.lwd <- if (length(vertex.frame.lwd) == 1) {
+         #    vertex.frame.lwd[[1]]
+         # } else if (length(vertex.frame.lwd) == 0) {
+         #    0.1
+         #    # 1
+         # } else {
+         #    vertex.frame.lwd[[i]]
+         # }
+         frame.width <- if (length(vertex.frame.width) == 1) {
+            vertex.frame.width[[1]]
+         } else if (length(vertex.frame.width) == 0) {
+            0.1
+            # 1
          } else {
-            vertex.frame.lwd[[i]]
+            vertex.frame.width[[i]]
          }
          jam_mypie(
             x=coords[i, 1],
@@ -1223,7 +1237,8 @@ shape.jampie.plot <- function
             density=na.omit(vertex.pie.density[c(i, 1)])[1],
             border=border,
             frame.color=frame.color,
-            frame.lwd=frame.lwd,
+            frame.lwd=frame.width,
+            # frame.lwd=frame.lwd,
             # frame.lwd=overall_lwd[i],
             lty=vertex.pie.lty[[i]],
             lwd=vertex.pie.lwd[[i]])
@@ -1312,7 +1327,8 @@ shape.jampie.clip <- function
    vmax <- length(vertex.pie);
    vertex.size <- rep(vertex.size, length.out=vmax);
 
-   vertex.frame.lwd <- params("vertex", "frame.lwd")
+   # vertex.frame.lwd <- params("vertex", "frame.lwd")
+   vertex.frame.width <- params("vertex", "frame.width")
    vertex.frame.color <- params("vertex", "frame.color")
    vertex.pie.lwd <- params("vertex", "pie.lwd")
    if (length(vertex.pie.lwd) == 0) {
@@ -1332,32 +1348,49 @@ shape.jampie.clip <- function
    vertex.pie.lwd.max <- sapply(jamba::rmNULL(nullValue=0, vertex.pie.lwd),
       max, na.rm=TRUE)
 
-   if (length(vertex.frame.lwd) == 0) {
-      vertex.frame.lwd <- 1
-   }
-   vertex.frame.lwd <- rep(vertex.frame.lwd,
-      length.out=vmax);
-   if (length(vertex.frame.color) == 0) {
-      vertex.frame.color <- NA
-   }
    vertex.frame.color <- rep(vertex.frame.color,
       length.out=vmax);
-   vertex.frame.lwd <- ifelse(
+   if (length(vertex.frame.width) == 0) {
+      vertex.frame.width <- 1
+   }
+   vertex.frame.width <- rep(vertex.frame.width,
+      length.out=vmax);
+   # if (length(vertex.frame.lwd) == 0) {
+   #    vertex.frame.lwd <- 1
+   # }
+   # vertex.frame.lwd <- rep(vertex.frame.lwd,
+   #    length.out=vmax);
+   # if (length(vertex.frame.color) == 0) {
+   #    vertex.frame.color <- NA
+   # }
+   # vertex.frame.lwd <- ifelse(
+   #    is.na(vertex.frame.color) | jamba::col2alpha(vertex.frame.color) < 0.01,
+   #    0,
+   #    vertex.frame.lwd);
+   vertex.frame.width <- ifelse(
       is.na(vertex.frame.color) | jamba::col2alpha(vertex.frame.color) < 0.01,
       0,
-      vertex.frame.lwd);
+      vertex.frame.width);
    # frame.lwd cannot be larger than the pie.lwd.max
    if (TRUE) {
-      new.frame.lwd <- ifelse(
-         vertex.frame.lwd > vertex.pie.lwd.max & vertex.pie.lwd.max > 0,
+      # new.frame.lwd <- ifelse(
+      #    vertex.frame.lwd > vertex.pie.lwd.max & 
+      #      vertex.pie.lwd.max > 0,
+      #    vertex.pie.lwd.max,
+      #    vertex.frame.lwd)
+      # vertex.frame.lwd <- new.frame.lwd;
+      new.frame.width <- ifelse(
+         vertex.frame.width > vertex.pie.lwd.max &
+           vertex.pie.lwd.max > 0,
          vertex.pie.lwd.max,
-         vertex.frame.lwd)
-      vertex.frame.lwd <- new.frame.lwd;
+         vertex.frame.width)
+      vertex.frame.width <- new.frame.width;
    }
 
    overall_lwd <- rep(
       pmax(
-         vertex.frame.lwd,
+         # vertex.frame.lwd,
+         vertex.frame.width,
          vertex.pie.lwd.max,
          na.rm=TRUE),
       length.out=length(vertex.size))
@@ -1367,8 +1400,14 @@ shape.jampie.clip <- function
    fig_adj <- diff(par("usr")[1:2]) / par("pin")[1];
    inner_adjustment <- (vertex.pie.lwd.max / 96) * fig_adj;
    # inner_adjustment <- (overall_lwd / 96) * fig_adj;
-   outer_adjustment <- (vertex.frame.lwd / 96) * fig_adj;
-   radius_add <- inner_adjustment*1.01 - outer_adjustment;
+   # outer_adjustment <- (vertex.frame.lwd / 96) * fig_adj;
+   outer_adjustment <- (vertex.frame.width / 96) * fig_adj;
+  
+   ## Two options here:
+   ## 1. Draw edges to the inner border, overlapping outer border
+   # radius_add <- inner_adjustment*1.01 - outer_adjustment;
+   ## 2. Draw edges to the outer border. Works best with par("lend"="butt", "ljoin"="mitre")
+   radius_add <- inner_adjustment*1.01;
 
    vertex.size <- vertex.size + radius_add;
 
@@ -1466,13 +1505,20 @@ shape.jampie.clip <- function
 #' @param x,y `numeric` coordinate for the center of each `igraph` node.
 #' @param values `numeric` vector of relative pie wedge sizes.
 #' @param radius `numeric` radius of pie
-#' @param edges `integer` number of edges to make a circle
-#' @param col `character` vector of R colors to fill each pie wedge, in order
+#' @param edges `integer` number of edges to make a circle, default 200.
+#' @param col `character` vector of R colors to fill each pie wedge,
+#'    in order, default NULL.
 #' @param angle,density used to draw lines to fill each pie node, passed
-#'    to `polygon()`
-#' @param border `character` vector of R colors for each pie wedge border
-#' @param frame.color `character` R color used around the entire pie circle.
-#' @param lty `numeric` or `character` line type
+#'    to `polygon()`. Default angle=45, and density=NULL so it draws none.
+#' @param border `character` vector of R colors for each pie wedge border,
+#'    default is NULL.
+#' @param frame.color `character` R color used around the entire pie circle,
+#'    default is NULL.
+#' @param frame.lwd `numeric` line width, default NULL uses `par('lwd')`
+#'    if a graphics device is open, otherwise uses 1.
+#' @param lty `numeric` or `character` line type, default NULL.
+#' @param lwd `numeric` line width, default NULL will use `par('lwd')`
+#'    if a graphics device is open, otherwise uses 1.
 #' @param init.angle `numeric` angle in degrees (0 to 360) where `0` is the
 #'    top of the circle, proceeding clockwide.
 #' @param inner_pie_border `logical` whether to apply `pie.border` colors
@@ -1499,9 +1545,9 @@ jam_mypie <- function
  density=NULL,
  border=NULL,
  frame.color=NULL,
- frame.lwd=par("lwd"),
+ frame.lwd=NULL,#par("lwd"),
  lty=NULL,
- lwd=par("lwd"),
+ lwd=NULL,#par("lwd"),
  init.angle=90,
  inner_pie_border=getOption("inner_pie_border", TRUE),
  inner_cex=1.01,
@@ -1528,8 +1574,22 @@ jam_mypie <- function
    col <- rep(jamba::rmNULL(nullValue=NA, col), length.out=nx)
    border <- rep(jamba::rmNULL(nullValue=NA, border), length.out=nx)
    frame.color <- rep(jamba::rmNULL(nullValue=NA, frame.color), length.out=nx)
+   if (length(frame.lwd) == 0) {
+      if (length(dev.list()) > 0) {
+         frame.lwd <- par("lwd")
+      } else {
+         frame.lwd <- 1;
+      }
+   }
    frame.lwd <- rep(jamba::rmNULL(nullValue=1, frame.lwd), length.out=nx)
    lty <- rep(jamba::rmNULL(nullValue=NA, lty), length.out=nx)
+   if (length(lwd) == 0) {
+      if (length(dev.list()) > 0) {
+         lwd <- par("lwd")
+      } else {
+         lwd <- 1;
+      }
+   }
    lwd <- rep(jamba::rmNULL(nullValue=1, lwd), length.out=nx)
    lwd.max <- max(lwd, na.rm=TRUE);
 
@@ -1545,17 +1605,24 @@ jam_mypie <- function
    # extra adjustment for frame.color
    # when frame.lwd=0, the frame.color is set to NA to prevent
    # rendering any color
-   frame.color <- ifelse(frame.lwd <= 0 | is.na(frame.lwd),
+   frame.color <- ifelse(
+      frame.lwd <= 0 | is.na(frame.lwd) |
+         is.na(frame.color) | nchar(frame.color) == 0,
       NA,
       frame.color)
 
    # special adjustment for frame.lwd
    frame.lwd <- ifelse(
-      is.na(frame.color) | jamba::col2alpha(frame.color) < 0.01,
+      is.na(frame.color) | 
+         jamba::col2alpha(frame.color) < 0.01 |
+         is.na(frame.lwd),
       0,
       frame.lwd);
-   # if lwd.max is non-zero, frame.lwd can be no larger than lwd.max
-   new.frame.lwd <- ifelse(frame.lwd > lwd.max & lwd.max > 0,
+   # If lwd.max is non-zero, frame.lwd cannot be larger than lwd.max.
+   # Todo: apply comparison of frame.lwd and lwd.max in same nodes.
+   new.frame.lwd <- ifelse(
+      frame.lwd > lwd.max &
+         lwd.max > 0,
       lwd.max,
       frame.lwd)
    frame.lwd <- new.frame.lwd;
@@ -1567,11 +1634,17 @@ jam_mypie <- function
    # but the effective frame.lwd.
    #
    # if lwd.max is non-zero, frame.lwd can be no smaller than lwd.max
-   use.frame.lwd <- ifelse(lwd.max > 0 & frame.lwd < lwd.max,
+   use.frame.lwd <- ifelse(
+      frame.lwd < lwd.max &
+         lwd.max > 0,
       lwd.max, frame.lwd);
    # allow frame to be zero
-   use.frame.lwd <- ifelse(lwd.max > 0 & frame.lwd < lwd.max & frame.lwd > 0,
-      lwd.max, frame.lwd);
+   use.frame.lwd <- ifelse(
+      lwd.max > 0 &
+         frame.lwd < lwd.max & 
+         frame.lwd > 0,
+      lwd.max,
+      frame.lwd);
 
    if (TRUE %in% inner_pie_border) {
       # assume line width is "point"
@@ -1581,15 +1654,16 @@ jam_mypie <- function
       #
       # Note it uses par("usr") which requires or opens a graphics device
       inner_adjustment <- ((lwd / 96) *
-            diff(par("usr")[1:2]) / par("pin")[1]);
+         diff(par("usr")[1:2]) / par("pin")[1]);
       outer_adjustment <- ((frame.lwd / 96) *
-            diff(par("usr")[1:2]) / par("pin")[1]);
-
+         diff(par("usr")[1:2]) / par("pin")[1]);
+     
       # radii <- radius + (inner_adjustment) - max(outer_adjustment);
       radii <- (radius +
             (inner_adjustment)*(max(inner_adjustment)/inner_adjustment) -
             max(outer_adjustment));
       radius <- radius + max(inner_adjustment) - max(outer_adjustment);
+
       if (length(frame.color) == 0 || all(is.na(frame.color))) {
          # no frame is displayed, therefore make the node slightly larger
          # so the output is consistent for all nodes
@@ -1710,7 +1784,8 @@ jam_mypie <- function
          # col=NA,
          col="#FFFFFF01",
          lty=head(lty, 1),
-         lwd=head(use.frame.lwd, 1))
+         lwd=head(frame.lwd, 1))
+         # lwd=head(use.frame.lwd, 1))
          # lwd=head(frame.lwd, 1))
       return_df <- jamba::rbindList(list(
          border_df,

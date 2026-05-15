@@ -64,7 +64,7 @@ render no color in that position.
 These borders are drawn as inner borders so they do not overlap
 optional frame border.
 \item Each node may have a frame border, defined by \code{frame.color},
-\code{frame.lwd}, and \code{frame.lty}. The frame border is drawn as an outer
+\code{frame.width}, and \code{frame.lty}. The frame border is drawn as an outer
 border so it does not overlap inner borders, adding some height and width
 to the final node. The frame border is drawn before the
 node squares are drawn.
@@ -156,7 +156,7 @@ igraph::V(g1)$coloredrect.color <- lapply(vseq, function(i){
 igraph::V(g1)$coloredrect.ncol <- c(2, 2, 2, 1, 1);
 igraph::V(g1)$coloredrect.nrow <- c(2, 1, 1, 2, 1);
 igraph::V(g1)$coloredrect.lwd <- rep(3, igraph::vcount(g1))
-igraph::V(g1)$frame.lwd <- c(2, 1, 1, 1, 1);
+igraph::V(g1)$frame.width <- c(2, 1, 1, 1, 1);
 igraph::V(g1)$frame.color <- "black"
 igraph::V(g1)$size2 <- 10;
 igraph::V(g1)$shape <- "coloredrectangle";

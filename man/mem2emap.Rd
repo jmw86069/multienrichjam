@@ -42,24 +42,28 @@ mem2emap(
 )
 }
 \arguments{
-\item{mem}{\code{Mem} or legacy \code{list} mem output from \code{multiEnrichMap()}}
+\item{mem}{\code{Mem} output from \code{multiEnrichMap()}}
 
 \item{overlap}{\code{numeric}, default 0.2, value between 0 and 1 with Jaccard
 overlap coefficient required between any two pathways in order to
 create a network edge connecting these two pathways.
 \itemize{
 \item Jaccard overlap coefficient is reciprocal of Jaccard distance,
-using \code{(1 - Jaccard_distance)}.
+using \code{(1 - Jaccard_distance)}, where Jaccard_distance is
+calculated with \code{dist(x, method='binary')} with incidence matrix.
 \item \code{overlap=0.2} is default, which specifies roughly 20\% overlap
-in genes shared between two pathway nodes.
+in genes shared between two pathway nodes, relative to the union
+of genes in those two pathway nodes.
 \item Note these genes must be involved in enrichment, and
 therefore does not use all possible genes annotated to a pathway.
-Therefore connections are only created with enriched genes
+Therefore, connections are only created with enriched genes
 are shared between pathways.
 }}
 
 \item{p_cutoff}{\code{numeric} threshold used for significant enrichment
-P-value. The default NULL uses the value in the \code{mem} object.}
+P-value. The default NULL uses the value in the \code{mem} object.
+This cutoff, together with \code{min_count}, define which nodes are
+included, and the color fill for those nodes.}
 
 \item{min_count}{\code{integer} threshold for minimum genes involved in
 enrichment in order for a pathway to be considered significant
@@ -217,6 +221,11 @@ A node community detection function is applied by default
 which may help visualize subgroups of nodes.
 When defined, the communities are used to define nodegroups
 for edge bundling.
+
+As of version 0.0.116.900, node size also scales the border
+line width for 'frame.width' and 'pie.border.lwd', so that
+the line width defined by \code{border_lwd} matches \code{median_size},
+and is scaled proportionally by node size.
 }
 \examples{
 emap <- mem2emap(Memtest, min_count=2, max_edge_width=5, overlap=0.33)

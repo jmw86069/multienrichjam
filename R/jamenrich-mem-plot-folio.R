@@ -356,6 +356,24 @@
 #'    In either case, plot data are created and returned, but `do_plot=TRUE`
 #'    will draw each plot on a unique page, suitable for use with
 #'    PDF output and `onefile=TRUE` for example.
+#' @param do_rmd_tabs `logical` default FALSE, whether to print Rmarkdown
+#'    tabs to STDOUT using `cat()`, and only used when `do_plot=TRUE`.
+#'    When active, before each plot is drawn, an Rmd tab header is
+#'    printed in the form '## Plot Type {.tabset}', where the '##'
+#'    heading is defined by 'rmd_tab_level'.
+#' @param rmd_tab_level `integer` default 2, used when
+#'    `do_rmd_tabs=TRUE` to define the heading level.
+#' @param rmd_tab_title `character` default 'Mem Plot Folio' which
+#'    is printed using `cat()` when `do_rmd_tabs=TRUE`.
+#'    To skip the title, use `rmd_tab_title=NULL`, or set to ''.
+#'    The title is printed as '## Title {.tabset}' and all plots are
+#'    printed as sub-headings.
+#'    The main reason not to use 'rmd_tab_title' is to
+#'    to create the title in the Rmd (or Qmd) file itself,
+#'    however when doing so, be sure to include ' {.tabset}' at
+#'    the end of you heading, for example '# My Mem Plots {.tabset}'.
+#'    The default here is to include a title to ensure all plot
+#'    sub-headings also appear as tabs.
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are passed to downstream functions.
 #'    Some useful examples:
@@ -439,6 +457,9 @@ mem_plot_folio <- function
  returnType=c("MemPlotFolio",
     "list"),
  do_plot=TRUE,
+ do_rmd_tabs=FALSE,
+ rmd_tab_level=2,
+ rmd_tab_title="Mem Plot Folio",
  verbose=FALSE,
  ...)
 {
@@ -470,6 +491,25 @@ mem_plot_folio <- function
       } else {
          min_set_ct_each <- 1;
       }
+   }
+   rmd_tab_lead <- "";
+   if (do_plot && 
+      length(do_rmd_tabs) == 1 &&
+      isTRUE(do_rmd_tabs)) {
+      if (length(rmd_tab_level) == 0) {
+         rmd_tab_level <- 2;
+      }
+      rmd_tab_level <- round(rmd_tab_level);
+      rmd_tab_lead <- paste0(rep("#", rmd_tab_level), collapse="");
+      if (length(rmd_tab_title) == 0 && nchar(rmd_tab_title) > 0) {
+         # Todo: Some better scrubbing of the title
+         rmd_tab_title <- gsub("[\r\n\t]+", "", rmd_tab_title);
+         cat(paste0("\n\n", rmd_tab_lead, " ",
+            rmd_tab_title, " {.tabset}\n\n"));
+         rmd_tab_lead <- paste0(rmd_tab_lead, "#");
+      }
+   } else {
+      do_rmd_tabs <- FALSE;
    }
    
    # do_which
@@ -679,6 +719,10 @@ mem_plot_folio <- function
          do_plot=do_plot,
          ...);
       if (do_plot) {
+         if (isTRUE(do_rmd_tabs)) {
+            cat(paste0("\n\n ", rmd_tab_lead,
+               " Enrichment Heatmap {.tabset}\n\n"));
+         }
          if (!color_by_column) {
             if ("annotation_legend_list" %in% names(attributes(mem_hm))) {
                annotation_legend_list <- attributes(mem_hm)$annotation_legend_list;
@@ -743,6 +787,10 @@ mem_plot_folio <- function
       #row_anno_padding <- ComplexHeatmap::ht_opt$ROW_ANNO_PADDING;
       #column_anno_padding <- ComplexHeatmap::ht_opt$COLUMN_ANNO_PADDING;
       if (do_plot) {
+         if (isTRUE(do_rmd_tabs)) {
+            cat(paste0("\n\n ", rmd_tab_lead,
+               " Gene-Path Heatmap {.tabset}\n\n"));
+         }
          if (length(caption_legendlist) > 0) {
             ComplexHeatmap::draw(gp_hm,
                annotation_legend_list=caption_legendlist,
@@ -796,6 +844,10 @@ mem_plot_folio <- function
          jamba::printDebug("mem_plot_folio(): ",
             "Preparing Cnet collapsed");
       }
+      if (do_plot && isTRUE(do_rmd_tabs)) {
+         cat(paste0("\n\n ", rmd_tab_lead,
+            " Cnet Collapsed {.tabset}\n\n"));
+      }
       # first apply stat cutoffs to temporary enrichIMcolors matrix
       # to ensure colors use the defined cutoffs
       # NOTE: Consider updating mem$enrichIMcolors to add missing colors
@@ -845,43 +897,6 @@ mem_plot_folio <- function
                i);
          });
 
-      if (verbose) {
-         jamba::printDebug("mem_plot_folio(): ",
-            "subsetCnetIgraph()");
-      }
-      # 0.0.104.900: this step may not be necessary
-      # - if the collapse_mem_clusters() already created layout,
-      #   and calling mem2cnet() should already remove blanks
-      if (FALSE) {
-         cnet_collapsed <- tryCatch({
-            cnet_collapsed <- subsetCnetIgraph(
-               cnet_collapsed,
-               remove_blanks=TRUE,
-               repulse=repulse,
-               verbose=verbose > 1);
-         }, error=function(e){
-            if (verbose) {
-               jamba::printDebug("mem_plot_folio(): ",
-                  "subsetCnetIgraph() error during ",
-                  "subsetCnetIgraph(..., remove_blanks=TRUE):");
-               print(e);
-            }
-            # try again without removing blanks
-            cnet_collapsed <- tryCatch({
-               cnet_collapsed <- subsetCnetIgraph(
-                  cnet_collapsed,
-                  remove_blanks=FALSE,
-                  repulse=repulse,
-                  verbose=verbose > 1);
-            }, error=function(e2){
-               jamba::printDebug("mem_plot_folio(): ",
-                  "subsetCnetIgraph() error during ",
-                  "subsetCnetIgraph(), skipping this step.");
-               print(e2);
-               cnet_collapsed;
-            })
-         })
-         }
       if (length(edge_color) > 0) {
          igraph::E(cnet_collapsed)$color <- edge_color;
       }
@@ -900,6 +915,10 @@ mem_plot_folio <- function
          }
          ## Draw Cnet collapsed
          if (do_plot) {
+            if (isTRUE(do_rmd_tabs)) {
+               cat(paste0("\n\n ", rmd_tab_lead,
+                  "# Base {.tabset}\n\n"));
+            }
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
                edge_bundling=edge_bundling,
@@ -936,6 +955,10 @@ mem_plot_folio <- function
             ret_vals$cnet_collapsed_set <- cnet_collapsed;
          }
          if (do_plot) {
+            if (isTRUE(do_rmd_tabs)) {
+               cat(paste0("\n\n ", rmd_tab_lead,
+                  "# Set Labels {.tabset}\n\n"));
+            }
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
                edge_bundling=edge_bundling,
@@ -983,6 +1006,10 @@ mem_plot_folio <- function
             ret_vals$cnet_collapsed_set2 <- cnet_collapsed;
          }
          if (do_plot) {
+            if (isTRUE(do_rmd_tabs)) {
+               cat(paste0("\n\n ", rmd_tab_lead,
+                  "# Sets, No Gene Labels {.tabset}\n\n"));
+            }
             jam_igraph(cnet_collapsed,
                use_shadowText=use_shadowText,
                edge_bundling=edge_bundling,
@@ -1020,6 +1047,10 @@ mem_plot_folio <- function
    ## Cnet exemplars
    if (any((plot_num + seq_along(exemplar_range)) %in% do_which)) {
       cnet_exemplars <- list();
+      if (do_plot && isTRUE(do_rmd_tabs)) {
+         cat(paste0("\n\n ", rmd_tab_lead,
+            " Cnet Exemplars {.tabset}\n\n"));
+      }
       for (exemplar_n in exemplar_range) {
          pluralized <- "";
          if (exemplar_n > 1) {
@@ -1053,6 +1084,12 @@ mem_plot_folio <- function
                value=cnet_title);
             ## Draw Cnet exemplar
             if (do_plot) {
+               if (isTRUE(do_rmd_tabs)) {
+                  cat(paste0("\n\n ", rmd_tab_lead,
+                     "# ", exemplar_n, " Exemplar",
+                     ifelse(exemplar_n > 1, "s", ""),
+                     " {.tabset}\n\n"));
+               }
                jam_igraph(cnet_exemplar,
                   use_shadowText=use_shadowText,
                   edge_bundling=edge_bundling,
@@ -1081,6 +1118,10 @@ mem_plot_folio <- function
    if (length(do_which) == 0 ||
          any((plot_num + seq_len(pathway_clusters_n)) %in% do_which)) {
       cnet_clusters <- list();
+      if (do_plot && isTRUE(do_rmd_tabs)) {
+         cat(paste0("\n\n ", rmd_tab_lead,
+            " Cnet Clusters {.tabset}\n\n"));
+      }
       for (cluster_name in names(clusters_mem)) {
          plot_num <- plot_num + 1;
          if (length(do_which) == 0 || plot_num %in% do_which) {
@@ -1107,6 +1148,12 @@ mem_plot_folio <- function
                value=cnet_title);
             ## Draw Cnet cluster
             if (do_plot) {
+               if (isTRUE(do_rmd_tabs)) {
+                  cat(paste0("\n\n ", rmd_tab_lead,
+                     "# Cluster ",
+                     cluster_name,
+                     " {.tabset}\n\n"));
+               }         
                jam_igraph(cnet_cluster,
                   use_shadowText=use_shadowText,
                   edge_bundling=edge_bundling,
@@ -1181,6 +1228,8 @@ prepare_folio <- function
  column_anno_padding=grid::unit(3, "mm"),
  returnType=c("MemPlotFolio",
  	"list"),
+ do_rmd_tabs=FALSE,
+ rmd_tab_level=2,
  do_plot=FALSE,
  verbose=FALSE,
  ...)

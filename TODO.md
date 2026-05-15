@@ -2,9 +2,17 @@
 
 ## 13may2026
 
-* Consider `jam_igraph` border_factor which adjusts border line width.
-* Wrapper functions to create summary labels: Emap mark.groups;
-Mpf Clusters; Mpf GenePathHeatmap column_title.
+* DONE. Consider `jam_igraph` border_factor which adjusts border line width.
+* DONE. Fix `mem_legend()` in CnetCollapsed() with directional colors.
+* DONE. Consider Rmarkdown tabbed output using '{.tabset}' instead of PDF pages.
+* Wrapper functions to create summary labels:
+
+   * Emap mark.groups; Mpf Clusters; Mpf GenePathHeatmap column_title.
+   * Need clean mechanic to store/update/edit summary labels.
+
+* `fixSetLabels()`: Consider way to store original values alongside
+custom so they are not first-class identifiers for things like
+combining two Mem objects.
 * Consider adding genes to Emap `igraph` edges, along with the number
 of genes in the overlap. It might be convenient to grab genes by edges,
 or do tricks with nodes in communities.
@@ -41,9 +49,9 @@ or do tricks with nodes in communities.
 
 * Update `mem2emap()`
 
-   * Consider border_lwd which scales consistent with node size. Currently fixed.
-	* Add to `prepare_folio()`.
+   * DONE. Consider border_lwd which scales consistent with node size.
 	* DONE. Option for weights (Jaccard overlap) to define edge width, color, alpha.
+	* Add to `prepare_folio()`.
 	* Consider lower `overlap` then show connection width more clearly.
 	Edges can be filtered at visualization time, keeping layout.
 	Some case could be made to use median(weight) based upon observations.
@@ -56,18 +64,15 @@ or do tricks with nodes in communities.
 
 	* Add option to display numeric label to each cell, e.g. gene count.
 
+* Improve rendering of 'jampie' igraph node shapes.
 
-* Improve rendering of piejam igraph node shapes.
-
+   * DONE. fix 'frame.lwd' when also rendering 'pie.lwd', currently frame is too wide.
 	* Consider JamPolygon, to avoid sf dependency.
-	* Review visual glitches seen in Positron, result of its use of
-	separate device with custom dpi.
-	* Consider ggraph
+	* DEFER. Review visual glitches seen in Positron, result of its use of
+	separate device with custom dpi. Apparently it scales with Plots viewer
+   dimensions, which seem to be independent of `dev.size()`.
+	* Consider ggraph: edge bundling; custom pie node rendering with inner borders.
 
-* Fix `mem_legend()` in CnetCollapsed() with directional colors,
-it currently recycles the color fill from `colorV` with directional
-border colors.
-* Consider Rmarkdown tabbed output using '{.tabset}' instead of PDF pages.
 * Consider using S7 in place of S4. Long-term benefit, short-term unclear.
 * Consider collaborating with YuLab for `enrichResult` re-use.
 

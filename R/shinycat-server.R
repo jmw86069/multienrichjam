@@ -209,7 +209,7 @@ shinycat_server <- function
       use_cnet <- adjusted_cnet()
 
       # highlight the active node?
-      # currently, jampie nodes cannot have wider frame.lwd than pie.lwd
+      # currently, jampie nodes cannot have wider frame.width than pie.lwd
       # so the pie.lwd must be increased
       if (length(use_active_node) == 1) {
          # highlight edges
@@ -220,20 +220,20 @@ shinycat_server <- function
          #
          if (any(c("pie", "jampie") %in% igraph::V(use_cnet)$shape) &&
                "pie.lwd" %in% igraph::vertex_attr_names(use_cnet)) {
-            if ("frame.lwd" %in% igraph::vertex_attr_names(use_cnet)) {
-               igraph::V(use_cnet)[use_active_node]$frame.lwd <- (3 +
-                     igraph::V(use_cnet)[use_active_node]$frame.lwd);
-               igraph::V(use_cnet)$frame.width <- igraph::V(use_cnet)$frame.lwd;
+            if ("frame.width" %in% igraph::vertex_attr_names(use_cnet)) {
+               igraph::V(use_cnet)[use_active_node]$frame.width <- (3 +
+                     igraph::V(use_cnet)[use_active_node]$frame.width);
+               igraph::V(use_cnet)$frame.width <- igraph::V(use_cnet)$frame.width;
             }
             k <- match(use_active_node, igraph::V(use_cnet)$name);
             pw <- igraph::V(use_cnet)[use_active_node]$pie.lwd;
             igraph::V(use_cnet)[use_active_node]$pie.lwd <- lapply(pw, function(i){
                i + 3;
             })
-         } else if ("frame.lwd" %in% igraph::vertex_attr_names(use_cnet)) {
-            igraph::V(use_cnet)[use_active_node]$frame.lwd <- (3 +
-                  igraph::V(use_cnet)[use_active_node]$frame.lwd);
-            igraph::V(use_cnet)$frame.width <- igraph::V(use_cnet)$frame.lwd;
+         } else if ("frame.width" %in% igraph::vertex_attr_names(use_cnet)) {
+            igraph::V(use_cnet)[use_active_node]$frame.width <- (3 +
+                  igraph::V(use_cnet)[use_active_node]$frame.width);
+            igraph::V(use_cnet)$frame.width <- igraph::V(use_cnet)$frame.width;
          } else if ("frame.width" %in% igraph::vertex_attr_names(use_cnet)) {
             igraph::V(use_cnet)[use_active_node]$frame.width <- (3 +
                   igraph::V(use_cnet)[use_active_node]$frame.width);

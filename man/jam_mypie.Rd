@@ -15,9 +15,9 @@ jam_mypie(
   density = NULL,
   border = NULL,
   frame.color = NULL,
-  frame.lwd = par("lwd"),
+  frame.lwd = NULL,
   lty = NULL,
-  lwd = par("lwd"),
+  lwd = NULL,
   init.angle = 90,
   inner_pie_border = getOption("inner_pie_border", TRUE),
   inner_cex = 1.01,
@@ -33,18 +33,27 @@ jam_mypie(
 
 \item{radius}{\code{numeric} radius of pie}
 
-\item{edges}{\code{integer} number of edges to make a circle}
+\item{edges}{\code{integer} number of edges to make a circle, default 200.}
 
-\item{col}{\code{character} vector of R colors to fill each pie wedge, in order}
+\item{col}{\code{character} vector of R colors to fill each pie wedge,
+in order, default NULL.}
 
 \item{angle, density}{used to draw lines to fill each pie node, passed
-to \code{polygon()}}
+to \code{polygon()}. Default angle=45, and density=NULL so it draws none.}
 
-\item{border}{\code{character} vector of R colors for each pie wedge border}
+\item{border}{\code{character} vector of R colors for each pie wedge border,
+default is NULL.}
 
-\item{frame.color}{\code{character} R color used around the entire pie circle.}
+\item{frame.color}{\code{character} R color used around the entire pie circle,
+default is NULL.}
 
-\item{lty}{\code{numeric} or \code{character} line type}
+\item{frame.lwd}{\code{numeric} line width, default NULL uses \code{par('lwd')}
+if a graphics device is open, otherwise uses 1.}
+
+\item{lty}{\code{numeric} or \code{character} line type, default NULL.}
+
+\item{lwd}{\code{numeric} line width, default NULL will use \code{par('lwd')}
+if a graphics device is open, otherwise uses 1.}
 
 \item{init.angle}{\code{numeric} angle in degrees (0 to 360) where \code{0} is the
 top of the circle, proceeding clockwide.}

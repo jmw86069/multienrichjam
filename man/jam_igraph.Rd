@@ -87,8 +87,11 @@ the relative width of all edges by a common numeric scalar value.}
 and \code{igraph::E(x)$label.cex} to adjust the relative size of all labels on
 nodes and edges by a common numeric scalar value.}
 
-\item{border_factor}{\code{numeric} value multiplied by frame.lwd and pie.lwd
-to adjust the relative width of node borders.}
+\item{border_factor}{\code{numeric} value multiplied by frame.width and pie.lwd
+to adjust the relative width of node borders. Note that border line width
+is also affected by \code{node_factor} and \code{node_factor_l} when provided.
+To prevent borders being adjusted by \code{node_factor}, set \code{border_factor}
+to the reciprocal, for example \code{border_factor=1/node_factor}.}
 
 \item{label_dist_factor}{\code{numeric} value multiplied by \code{igraph::V(x)$label.dist}
 to adjust the relative distance of all nodes labels from the node center

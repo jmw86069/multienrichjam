@@ -47,12 +47,12 @@ to each pie wedge using 'pie.border'.
 have the same \code{pie.border} color, the 'pie.border' is defined
 as \code{NA}, and 'frame.color' is assigned to this color.
 The effect is to display the outline color and not each wedge.
-Both 'pie.lwd' and 'frame.lwd' will be assigned \code{border_lwd},
+Both 'pie.lwd' and 'frame.width' will be assigned \code{border_lwd},
 and since 'pie.border' is \code{NA} it will not be rendered. Only the
 'frame.color' will be rendered.
 \item When \code{hide_solo_pie=FALSE} each pie wedge border color is assigned
 to 'pie.border', \code{frame.color} will be assigned 'frame_blank',
-and 'frame.lwd' will be assigned 'frame_lwd_blank' which is useful
+and 'frame.width' will be assigned 'frame_lwd_blank' which is useful
 for displaying a small outer frame for each node.
 }}
 
@@ -76,7 +76,7 @@ matches \code{rownames(hitim)}.
 When the colors are applied to 'pie.color',
 the border is defined with 'pie.lwd'.
 When colors are applied to 'frame.color', the border is defined
-with 'frame.lwd'.}
+with 'frame.width'.}
 
 \item{do_reorder}{\code{logical} default FALSE, whether to reorder nodes
 by node attributes such as color and border, by calling

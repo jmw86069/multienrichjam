@@ -1,4 +1,4 @@
-# multienrichjam 0.0.115.900
+# multienrichjam 0.0.115.950
 
 ## Bug Fixes
 
@@ -6,8 +6,32 @@
 node fill color to appear as fill color for directional borders.
 Also fixed alignment using 'added-top' and 'added-bottom' for
 multi-column output.
+* `jam_mypie()` used to render pie nodes, updated to use proper
+`frame.lwd` line widths for each node.
 
 ## Changes to existing functions
+
+* `mem_plot_folio()` and `prepare_folio()` have new option to
+print Rmarkdown (Rmd) tab headers, using `do_rmd_tabs=TRUE`.
+The original target for `mem_plot_folio()` was multi-page PDF,
+however for HTML output the Rmd tabs are a convenient option.
+* Several functions now use 'vertex.frame.width' instead of
+'vertex.frame.lwd' as new attribute name since igraph 1.3.0:
+`mem2emap()`, `mem2cnet()`, `apply_cnet_direction()`, `jam_igraph()`.
+* `shape.jampie.clip()` now clips to the outer border instead of
+the edge of the inner border. Mostly noticeable with transparent
+outer border, or wide border where it was clear the arrow head
+was too close and was cropped.
+* `mem2emap()` node border line width is now scaled by node size,
+relative to the median node size. Otherwise, small nodes only showed
+the border color.
+* `jam_igraph()`
+
+   * now applies `node_factor` to borders 'frame.width' and
+   'pie.border.lwd' by default. Previously, nodes would be smaller
+   but the border maintained absolute width and could fill the
+   node completely.
+   To reverse, apply the inverse via `edge_factor`.
 
 * `CnetCollapsed()`, `CnetExemplar()`, `CnetCluster()` have new
 arguments 'legend_x', 'legend_y' which are passed to `mem_legend()`

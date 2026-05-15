@@ -843,19 +843,6 @@ multiEnrichMap <- function
       stop("enrichIM is entirely NA.");
    }
 
-   ## Clean the rownames consistent with descriptionColname
-   ## used in igraphs later on
-   ##
-   ## NOTE: we defer renaming the rownames here since it causes problems
-   ## in trying to maintain consistent rownames and descriptionColname
-   ## values.
-   if (1 == 2) {
-      rownames(enrichIM) <- memAdjustLabel(
-         x=rownames(enrichIM),
-         descriptionCurateFrom=descriptionCurateFrom,
-         descriptionCurateTo=descriptionCurateTo);
-   }
-
    enrichIMM <- as.matrix(enrichIM[,names(enrichList),drop=FALSE]);
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",

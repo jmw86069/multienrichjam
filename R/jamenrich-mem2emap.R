@@ -17,6 +17,12 @@
 #' which may help visualize subgroups of nodes.
 #' When defined, the communities are used to define nodegroups
 #' for edge bundling.
+#' 
+#' As of version 0.0.116.900, node size also scales the border
+#' line width for 'frame.width' and 'pie.border.lwd', so that
+#' the line width defined by `border_lwd` matches `median_size`,
+#' and is scaled proportionally by node size.
+#' 
 #'
 #' @family jam Mem utilities
 #' @family jam igraph functions
@@ -34,20 +40,24 @@
 #'    a function to convert weight to color, and can be used to
 #'    create a color legend.
 #'
-#' @param mem `Mem` or legacy `list` mem output from `multiEnrichMap()`
+#' @param mem `Mem` output from `multiEnrichMap()`
 #' @param overlap `numeric`, default 0.2, value between 0 and 1 with Jaccard
 #'    overlap coefficient required between any two pathways in order to
 #'    create a network edge connecting these two pathways.
 #'    * Jaccard overlap coefficient is reciprocal of Jaccard distance,
-#'    using `(1 - Jaccard_distance)`.
+#'    using `(1 - Jaccard_distance)`, where Jaccard_distance is
+#'    calculated with `dist(x, method='binary')` with incidence matrix.
 #'    * `overlap=0.2` is default, which specifies roughly 20% overlap
-#'    in genes shared between two pathway nodes.
+#'    in genes shared between two pathway nodes, relative to the union
+#'    of genes in those two pathway nodes.
 #'    * Note these genes must be involved in enrichment, and
 #'    therefore does not use all possible genes annotated to a pathway.
-#'    Therefore connections are only created with enriched genes
+#'    Therefore, connections are only created with enriched genes
 #'    are shared between pathways.
 #' @param p_cutoff `numeric` threshold used for significant enrichment
 #'    P-value. The default NULL uses the value in the `mem` object.
+#'    This cutoff, together with `min_count`, define which nodes are
+#'    included, and the color fill for those nodes.
 #' @param min_count `integer` threshold for minimum genes involved in
 #'    enrichment in order for a pathway to be considered significant
 #'    during this analysis. When NULL it uses the threshold in `mem`.
@@ -457,9 +467,18 @@ mem2emap <- function
 	         dir_col_fn(enrichIMdirection(mem)[j, knames])
 	      })
 	      igraph::V(jacc_g)$pie.border <- pie_borders;
-	      igraph::V(jacc_g)$pie.lwd <- border_lwd;
-	      igraph::V(jacc_g)$frame.lwd <- border_lwd / 10;
+         # scale pie.border by node size
+         border_adj <- (igraph::V(jacc_g)$size / median_size);
+	      igraph::V(jacc_g)$pie.lwd <- border_lwd * border_adj;
+	      # igraph::V(jacc_g)$frame.lwd <- border_lwd * border_adj / 10;
+         igraph::V(jacc_g)$frame.width <- border_lwd * border_adj / 10;
 	   } else {
+         # scale pie.border by node size
+         border_adj <- (igraph::V(jacc_g)$size / median_size);
+         igraph::V(jacc_g)$pie.lwd <- border_lwd * border_adj;
+         igraph::V(jacc_g)$pie.border <- NA;
+	      # igraph::V(jacc_g)$frame.lwd <- border_lwd * border_adj;
+         igraph::V(jacc_g)$frame.width <- border_lwd * border_adj;
 	      apply_direction <- FALSE
 	   }
 	
