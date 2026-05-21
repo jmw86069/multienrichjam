@@ -179,8 +179,107 @@ setMethod("GeneClusters", "MemPlotFolio", function(x) {
 
 #' @param x `MemPlotFolio` object
 #' @docType methods
+#' @describeIn MemPlotFolio-class Returns cluster labels stored in the
+#'    `metadata` slot of `MemPlotFolio`.
+#' @aliases ClusterLabels
+#' @returns `ClusterLabels(MemPlotFolio)` returns a named `character` vector
+#'    of cluster labels, or `NULL` if none are defined.
+#' @export
+setMethod("ClusterLabels", "MemPlotFolio", function(x) {
+   x@metadata$cluster_labels
+})
+
+
+#' @param x `MemPlotFolio` object
+#' @param value named `character` vector of cluster labels, where names
+#'    correspond to cluster names as returned by `Clusters(x)`.
+#' @docType methods
+#' @describeIn MemPlotFolio-class Sets cluster labels in the `metadata` slot
+#'    of `MemPlotFolio`.
+#' @aliases ClusterLabels
+#' @returns `ClusterLabels<-(MemPlotFolio)` returns the updated `MemPlotFolio`
+#'    object with new cluster labels stored in `metadata$cluster_labels`.
+#' @export
+setReplaceMethod("ClusterLabels", "MemPlotFolio", function(x, value) {
+   # validate length
+   xClusters <- Clusters(x)
+   if (length(value) == 0) {
+      # blank cluster_labels
+      x@metadata$cluster_labels <- NULL;
+   } else {
+      if (!length(value) == length(xClusters)) {
+         stop(paste0("length(ClusterLabels(x)) must equal ",
+            "length(Clusters(x))."))
+      }
+      # validate names(value) is equal to names(Clusters(x))
+      # it empty, assign consistent names
+      if (length(names(value)) == 0) {
+         names(value) <- names(xClusters);
+      }
+      if (!all(names(value) == names(xClusters))) {
+         stop(paste0("names(ClusterLabels(x)) do not match ",
+            "names(Clusters(x))."))
+      }
+      x@metadata$cluster_labels <- value;
+   }
+   validObject(x)
+   x
+})
+
+
+#' @param x `MemPlotFolio` object
+#' @docType methods
+#' @describeIn MemPlotFolio-class Returns cluster data stored in the
+#'    `metadata` slot of `MemPlotFolio`, intended to store further
+#'    information to describe each cluster.
+#' @aliases ClusterData
+#' @returns `ClusterData(MemPlotFolio)` returns a named `list`
+#'    of cluster data, or `NULL` if none are defined.
+#' @export
+setMethod("ClusterData", "MemPlotFolio", function(x) {
+   x@metadata$cluster_data
+})
+
+
+#' @param x `MemPlotFolio` object
+#' @param value named `character` vector of cluster labels, where names
+#'    correspond to cluster names as returned by `Clusters(x)`.
+#' @docType methods
+#' @describeIn MemPlotFolio-class Sets cluster data in the `metadata` slot
+#'    of `MemPlotFolio`, intended to store further information to
+#'    describe each cluster. It should be the same length as `Clusters(x)`
+#'    and have no names, or have names equal to `names(Clusters(x))`.
+#' @aliases ClusterData
+#' @returns `ClusterData<-(MemPlotFolio)` returns the updated `MemPlotFolio`
+#'    object with new cluster data stored in `metadata$cluster_data`.
+#' @export
+setReplaceMethod("ClusterData", "MemPlotFolio", function(x, value) {
+   # validate length
+   xClusters <- Clusters(x)
+   if (!length(value) == length(xClusters)) {
+      stop(paste0("length(ClusterData(x)) must equal ",
+      "length(Clusters(x))."))
+   }
+   # validate names(value) is equal to names(Clusters(x))
+   # it empty, assign consistent names
+   if (length(names(value)) == 0) {
+      names(value) <- names(xClusters);
+   }
+   if (!all(names(value) == names(xClusters))) {
+      stop(paste0("names(ClusterData(x)) do not match ",
+      "names(Clusters(x))."))
+   }
+   x@metadata$cluster_data <- value;
+   validObject(x)
+   x
+})
+
+
+#' @param x `MemPlotFolio` object
+#' @docType methods
 #' @describeIn MemPlotFolio-class Returns the thresholds used with
 #'    `MemPlotFolio`.
+#' @aliases thresholds
 #' @returns `thresholds(MemPlotFolio)` returns a `list` of
 #'    thresholds used with `mem_plot_folio()`.
 #' @export
@@ -193,6 +292,7 @@ setMethod("thresholds", "MemPlotFolio", function(x) {
 #' @docType methods
 #' @describeIn MemPlotFolio-class Returns the metadata used with
 #'    `MemPlotFolio`.
+#' @aliases metadata
 #' @returns `metadata(MemPlotFolio)` returns a `list` of
 #'    metadata used with `mem_plot_folio()`.
 #' @export
@@ -205,6 +305,7 @@ setMethod("metadata", "MemPlotFolio", function(x) {
 #' @docType methods
 #' @describeIn MemPlotFolio-class Returns the caption summary for
 #'    `MemPlotFolio`.
+#' @aliases Caption
 #' @returns `metadata(MemPlotFolio)` returns a `character` string
 #'    with caption summary used with `mem_plot_folio()`.
 #'    Multiple lines are delimited by newline characters.
@@ -218,6 +319,7 @@ setMethod("Caption", "MemPlotFolio", function(x, ...) {
 #' @docType methods
 #' @describeIn MemPlotFolio-class Returns the caption summary for
 #'    `MemPlotFolio` as `ComplexHeatmap::Legends`.
+#' @aliases CaptionLegendList
 #' @returns `metadata(MemPlotFolio)` returns the caption summary
 #'    in the form of `ComplexHeatmap::Legends` suitable to `draw()`
 #'    as R grid graphics.
@@ -230,11 +332,23 @@ setMethod("CaptionLegendList", "MemPlotFolio", function(x, ...) {
 #' @param x `MemPlotFolio` object
 #' @docType methods
 #' @describeIn MemPlotFolio-class Draws the enrichment heatmap
-#'    from `MemPlotFolio` results.
+#'    from `MemPlotFolio` results.  
+#'    Optional arguments '...' include:
+#'    * 'main' or 'column_title' for overall plot title;
+#'    * 'column_title_gp' as `grid::gpar()` to adjust title font;
+#'    * 'use_cluster_labels' `logical` whether to use `ClusterLabels()`
+#'    as row title entries.
+#' @aliases EnrichmentHeatmap
 #' @returns `EnrichmentHeatmap(MemPlotFolio)` returns a
 #'    `ComplexHeatmap::HeatmapList` when do_plot is TRUE (default),
+#'    in addition to rendering the heatmap. It returns
 #'    `ComplexHeatmap::Heatmap` when do_plot is FALSE, containing
-#'    enrichment P-values by enrichment, and pathway rows in clusters.
+#'    enrichment P-values by enrichment, and pathway rows in clusters.  
+#'    Optional arguments '...' include:
+#'    * 'main' or 'column_title' for overall plot title;
+#'    * 'column_title_gp' as `grid::gpar()` to adjust title font;
+#'    * 'use_cluster_labels' `logical` whether to use `ClusterLabels()`
+#'    as row title entries.
 #' 
 #' @examples
 #' data(Memtest)
@@ -261,9 +375,35 @@ setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
+   arglist <- list(...);
+   if ("width" %in% names(arglist)) {
+      suppressWarnings(width <- jamba::rmNA(naValue=30,
+         as.numeric(arglist$width)));
+      arglist[["width"]] <- NULL;
+   } else {
+      width <- 30;
+   }
+
+   if ("use_cluster_labels" %in% names(arglist)) {
+      use_cluster_labels <- arglist$use_cluster_labels;
+   } else {
+      use_cluster_labels <- TRUE;
+   }
+   if (isTRUE(use_cluster_labels) &&
+      length(ClusterLabels(x)) > 0) {
+      hm_row_title <- fixSetLabels(
+         paste0(names(Clusters(x)), ": ",
+            ClusterLabels(x)),
+         width=width,
+         lowercaseAll=FALSE,
+         adjustCase=FALSE,
+         removeGrep=NULL,
+         do_abbreviations=FALSE)
+      x@enrichment_hm@row_title <- hm_row_title;
+   }
+
    if (isTRUE(do_plot)) {
       # check for off-book arguments in '...'
-      arglist <- list(...);
       column_title <- NULL;
       column_title_gp <- grid::gpar(fontsize=18);
       if ("main" %in% names(arglist)) {
@@ -279,10 +419,13 @@ setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
          attr(x@enrichment_hm, "annotation_legend_list"),
          x@caption$caption_legendlist);
       ComplexHeatmap::draw(x@enrichment_hm,
+         newpage=mem_do_newpage(),
          annotation_legend_list=annotation_legend_list,
          column_title=column_title,
          column_title_gp=column_title_gp,
          merge_legends=TRUE)
+      # return invisibly?
+      return(invisible(x@enrichment_hm));
    } else {
       x@enrichment_hm;
    }
@@ -293,6 +436,7 @@ setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
 #' @docType methods
 #' @describeIn MemPlotFolio-class Draws the gene-pathway set heatmap
 #'    from `MemPlotFolio` results.
+#' @aliases GenePathHeatmap
 #' @returns `GenePathHeatmap(MemPlotFolio)` returns a
 #'    `ComplexHeatmap::HeatmapList` when do_plot is TRUE (default),
 #'    `ComplexHeatmap::Heatmap` when do_plot is FALSE, containing
@@ -336,6 +480,7 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
       
       caption_legendlist <- x@caption$caption_legendlist;
       ComplexHeatmap::draw(x@gp_hm,
+         newpage=mem_do_newpage(),
          annotation_legend_list=caption_legendlist,
          column_title=column_title,
          column_title_gp=column_title_gp,
@@ -353,13 +498,29 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
 #' @describeIn MemPlotFolio-class Draws the Cnet collapsed
 #'    network from `MemPlotFolio` results. Note that '...' arguments are
 #'    passed to `jam_igraph()` and `mem_legend()` when `do_plot=TRUE`.
-#'    Argument `type` can be:
-#'    * `type=''` (default) to use cluster title
+#'    When 'type' is not defined: it uses  type='cluster' if
+#'    `ClusterLabels()` is defined, otherwise type='set';
+#'    then it appends '2' to the end if there are more than 1000 nodes.
+#'    Argument 'type' can be:
+#'    * `type='title'` or `type=''` to use cluster title
 #'    * `type='set'` to use abbreviated pathway names
-#'    * `type='set2'` to use abbreviated pathway names, with hidden gene labels
+#'    * `type='cluster'` to use cluster labels
+#'    * `type='attribute'` to use any existing vertex attribute.
+#'    * Append **'2'** to the end to hide gene labels. For example `type='set2'`.
+#' 
+#'    Recognized arguments in '...':
+#'    * `'width'` to apply word-wrap to cluster labels, or vertex attribute.
+#'    * `'maxNchar'` to set maximum string character length, passed to
+#'    `fixSetLabels()`.
+#'    * `'layout'` passed to `set_igraph_layout(cnet, layout)` to update
+#'    the node layout.
+#'    * `'rotate_degrees'` with `numeric` value. When set, it calls
+#'    `rotate_igraph_layout()` with defaults.
+#'    * All other '...' arguments are passed to `jam_igraph()`.
 #'    
 #'    The legend includes direction if encoded in the 'MemPlotFolio', but
 #'    can be forced with `do_directional=TRUE` or FALSE.
+#' @aliases CnetCollapsed
 #' @returns `CnetCollapsed(MemPlotFolio)` returns an `igraph` object invisibly,
 #'    with Gene and Set nodes representing the collapsed pathway clusters.
 #'    The legend position can be adjusted using 'legend_x', 'legend_y' which
@@ -377,45 +538,129 @@ setMethod("CnetCollapsed", "MemPlotFolio",
          "use:\nmem_plot_folio(Mem, do_which=3)");
       stop(stop_msg);
    }
+   arglist <- list(...);
+   if ("width" %in% names(arglist)) {
+      suppressWarnings(width <- jamba::rmNA(naValue=30,
+         as.numeric(arglist$width)));
+      arglist[["width"]] <- NULL;
+   } else {
+      width <- 30;
+   }
+   maxNchar <- Inf;
+   if ("maxNchar" %in% names(arglist)) {
+      maxNchar <- arglist$maxNchar;
+      arglist[["maxNchar"]] <- NULL;
+   }
+
+   if ("layout" %in% names(arglist)) {
+      cnet <- set_igraph_layout(g=cnet,
+         layout=arglist$layout)
+      arglist[["layout"]] <- NULL;
+   }
+   if ("rotate_degrees" %in% names(arglist)) {
+      cnet <- rotate_igraph_layout(cnet,
+         degrees=arglist$rotate_degrees)
+      arglist[["rotate_degrees"]] <- NULL;
+   }
+
    if (missing(type)) {
+      type <- "title";
+      if (length(ClusterLabels(Mpf)) > 0) {
+         type <- "cluster";
+      }
+      if (igraph::vcount(cnet) > 1000) {
+         type <- paste0(type, "2");
+      }
+   }
+   if (length(type) == 0) {
       type <- "";
    }
    type <- head(type, 1);
-   if (type %in% c(NA, "")) {
-      # no changes required
-   } else if (type %in% c("set", "set2")) {
+   if (type %in% c(NA, "") || grepl("^title[ \t\n2]*$", type)) {
+      if (!"label" %in% igraph::vertex_attr_names(cnet)) {
+         igraph::V(cnet)$label <- igraph::V(cnet)$name;
+      }
+   } else if (any(grepl("^(set|cluster)[ \t\n2]*$", type))) {
       # add set_names to labels
-      if ("set_labels" %in% igraph::vertex_attr_names(cnet)) {
+      if (any(grepl("^cluster", type))) {
+         # add cluster_labels to labels
+         cluster_labels <- ClusterLabels(x);
+         if (length(cluster_labels) == 0) {
+            ## no cluster_labels, what to do? Error, inaction, warning?
+            # return(invisible(NULL))
+            ## for testing use "Cluster A", "Cluster B", etc.
+            ## In future use "A", "B", etc.
+            cluster_labels <- jamba::nameVector(
+               # names(x@clusters),
+               paste("Cluster", names(x@clusters)),
+               names(x@clusters))
+         }
+         # match igraph Set nodes to names(cluster_labels)
+         isset <- which(igraph::V(cnet)$nodeType %in% "Set");
+         clmatch <- match(igraph::V(cnet)$name[isset], names(cluster_labels))
+         if (!"label" %in% igraph::vertex_attr_names(cnet)) {
+            igraph::V(cnet)$label <- igraph::V(cnet)$name;
+         }
+         # any non-NA match gets updated
+         # NA match re-uses the original node name, there is no label
+         igraph::V(cnet)$label[isset] <- ifelse(!is.na(clmatch),
+            cluster_labels[clmatch],
+            igraph::V(cnet)$label[isset])
+      } else if ("set_labels" %in% igraph::vertex_attr_names(cnet)) {
+         # add set_names to labels
          use_labels <- ifelse(
             nchar(jamba::rmNA(naValue="", igraph::V(cnet)$set_labels)) > 0,
             igraph::V(cnet)$set_labels,
             igraph::V(cnet)$name);
          igraph::V(cnet)$label <- use_labels;
       }
-      if ("set2" %in% type) {
-         # remove gene labels
-         isgene <- which(tolower(igraph::vertex_attr(cnet, "nodeType")) %in%
-               "gene");
-         igraph::vertex_attr(cnet, index=isgene, name="label") <- "";
+   } else {
+      # check if type matches vertex attribute names
+      test_type <- gsub("[ \n]*2$", "", type);
+      if (!test_type %in% igraph::vertex_attr_names(cnet)) {
+         stop_msg <- paste0(
+            "The 'type' did not contain 'title', 'set', 'cluster', ",
+            "nor any vertex attribute names.")
+         stop(stop_msg);   
       }
-   } else if (type %in% igraph::vertex_attr_names(cnet)) {
+      use_type <- type;
+      if (!type %in% igraph::vertex_attr_names(cnet)) {
+         use_type <- test_type;
+      }
       use_labels <- ifelse(
          nchar(jamba::rmNA(naValue="",
-            igraph::vertex_attr(cnet, name=type))) > 0,
-         igraph::vertex_attr(cnet, name=type),
+            igraph::vertex_attr(cnet, name=use_type))) > 0,
+         igraph::vertex_attr(cnet, name=use_type),
          igraph::V(cnet)$name);
-   } else {
-      stop_msg <- paste0("The 'type' did not match '', 'set', 'set2', nor ",
-         "any vertex attribute names.")
-      stop(stop_msg);
+      # apply word wrap
+      if (length(width) > 0) {
+         use_labels <- fixSetLabels(
+            x=use_labels,
+            width=width,
+            lowercaseAll=FALSE,
+            adjustCase=FALSE,
+            removeGrep=NULL,
+            do_abbreviations=FALSE,
+            maxNchar=maxNchar)
+      }
+      igraph::V(cnet)$label <- use_labels;
+   }
+   # hide gene labels when type ends with '2'
+   if (grepl("2$", type)) {
+      isgene <- jamba::igrep("^gene$",
+         igraph::vertex_attr(cnet, "nodeType"));
+      if (length(isgene) > 0) {
+         igraph::vertex_attr(cnet, index=isgene, name="label") <- "";
+      }
    }
    
    if (isTRUE(do_plot)) {
-      jam_igraph(cnet,
-         ...)
+      do.call(jam_igraph,
+         c(
+            alist(x=cnet),
+            arglist))
    	
    	# determine whether to include direction in the legend
-   	arglist <- list(...);
       arglist$x <- legend_x;
       arglist$y <- legend_y;
    	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
@@ -444,12 +689,14 @@ setMethod("CnetCollapsed", "MemPlotFolio",
 #'    passed to `jam_igraph()` and `mem_legend()` when `do_plot=TRUE`.
 #'    
 #'    The legend includes direction if encoded in the 'MemPlotFolio', but
-#'    can be forced with `do_directional=TRUE` or FALSE.
+#'    can be forced with `do_directional=TRUE` or FALSE. Legend position
+#'    is controlled by legend_x,legend_y, default legend_x="bottomleft".
+#' @aliases CnetExemplar
 #' @returns `CnetExemplar(MemPlotFolio)` returns an `igraph` object
 #'    with Gene and Set nodes for the 'num' number of exemplars per cluster.
 #' @export
 setMethod("CnetExemplar", "MemPlotFolio",
-   function(x, num, do_plot, legend_x="bottomleft", legend_y=NULL, ...) {
+   function(x, num, do_plot, legend_x="bottomleft", legend_y=NULL, main=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
@@ -493,7 +740,7 @@ setMethod("CnetExemplar", "MemPlotFolio",
    			arglist))
    }
    invisible(cnet);
-})
+   })
 
 
 #' @param x `MemPlotFolio` object
@@ -505,14 +752,27 @@ setMethod("CnetExemplar", "MemPlotFolio",
 #'    
 #'    The legend includes direction if encoded in the 'MemPlotFolio', but
 #'    can be forced with `do_directional=TRUE` or FALSE.
+#'    Plot title 'main', default NULL uses the cluster label if present,
+#'    then cluster name. Use main=FALSE or main="" to hide the title.
+#' @aliases CnetCluster
 #' @returns `CnetCluster(MemPlotFolio)` returns an `igraph` object invisibly,
 #'    using all pathways in the cluster defined with argument `cluster`.
 #' @export
 setMethod("CnetCluster", "MemPlotFolio",
-   function(x, cluster, do_plot, legend_x="bottomleft", legend_y=NULL, ...) {
+   function(x, cluster, do_plot, legend_x="bottomleft", legend_y=NULL, main=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
+   if (length(main) == 0) {
+      if (length(x@metadata$cluster_labels) > 0) {
+         main <- x@metadata$cluster_labels[cluster];
+      } else {
+         main <- names(Clusters(x)[cluster]);
+      }
+   }
+      if (isFALSE(main)) {
+         main <- NULL;
+      }
 
    # type indicates which cnet data to use
    if (missing(cluster) || length(cluster) == 0) {
@@ -553,6 +813,7 @@ setMethod("CnetCluster", "MemPlotFolio",
    if (isTRUE(do_plot)) {
    	# draw the igraph
       jam_igraph(cnet,
+         main=main,
          ...)
    	
    	# determine whether to include direction in the legend
@@ -574,4 +835,14 @@ setMethod("CnetCluster", "MemPlotFolio",
 	      	arglist))
    }
    invisible(cnet)
+   })
+
+#' @describeIn MemPlotFolio-class Plot a `MemPlotFolio` object calling
+#'    `plot_mpf()`
+#' @param x `MemPlotFolio` object
+#' @param y ignored
+#' @param ... additional arguments passed to `plot_mpf()`
+#' @export
+setMethod("plot", signature(x = "MemPlotFolio"), function(x, y, ...) {
+   plot_mpf(x, y, ...)
 })

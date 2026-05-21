@@ -387,6 +387,7 @@ setMethod("names", "Mem", function(x) names(x@enrichList))
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class Names for the enrichment tests in a Mem object
+#' @aliases enrichments
 #' @returns `enrichments()` returns the `character` vector of enrichment names
 #' @export
 setMethod("enrichments", "Mem", function(x) names(x@enrichList))
@@ -437,6 +438,7 @@ setMethod("enrichments<-", "Mem", function(x, value) {
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class List pathway gene set names in a Mem object
+#' @aliases sets
 #' @returns `sets()` returns the `character` vector of pathway gene sets
 #' @export
 setMethod("sets", "Mem",
@@ -483,6 +485,7 @@ setMethod("sets<-", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class List genes represented
+#' @aliases genes
 #' @export
 setMethod("genes", "Mem",
    function(x, ...) rownames(x@geneIM)
@@ -538,6 +541,7 @@ setMethod("genes<-", "Mem",
 #' @docType methods
 #' @describeIn Mem-class The gene-enrichment matrix of genes represented in
 #'    enrichment tests.
+#' @aliases geneIM
 #' @export
 setMethod("geneIM", "Mem",
    function(x, ...) x@geneIM
@@ -549,6 +553,7 @@ setMethod("geneIM", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class The matrix of genes tested versus enrichment tests, with directionality.
+#' @aliases geneIMdirection
 #' @export
 setMethod("geneIMdirection", "Mem",
    function(x, ...) x@geneIMdirection
@@ -588,6 +593,7 @@ setMethod("geneIMdirection<-", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class The matrix of colors indicating genes in each enrichment test
+#' @aliases geneIMcolors
 #' @export
 setMethod("geneIMcolors", "Mem",
    function(x, ...) x@geneIMcolors
@@ -627,6 +633,7 @@ setMethod("geneIMcolors<-", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class The list of enrichResult data in an Mem object
+#' @aliases enrichList
 #' @export
 setMethod("enrichList", "Mem",
    function(x, ...) x@enrichList
@@ -638,6 +645,7 @@ setMethod("enrichList", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class The pathway/P-value matrix
+#' @aliases enrichIM
 #' @export
 setMethod("enrichIM", "Mem",
    function(x, ...) x@enrichIM
@@ -649,6 +657,7 @@ setMethod("enrichIM", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class The pathway-enrichment directional color matrix
+#' @aliases enrichIMcolors
 #' @export
 setMethod("enrichIMcolors", "Mem",
    function(x, ...) x@enrichIMcolors
@@ -688,6 +697,7 @@ setMethod("enrichIMcolors<-", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class The pathway-enrichment directional score matrix
+#' @aliases enrichIMdirection
 #' @export
 setMethod("enrichIMdirection", "Mem",
    function(x, ...) x@enrichIMdirection
@@ -728,6 +738,7 @@ setMethod("enrichIMdirection<-", "Mem",
 #' @docType methods
 #' @describeIn Mem-class Pathway-enrichment gene count matrix, genes involved
 #'    in enrichment of each pathway, for each enrichment test.
+#' @aliases enrichIMgeneCount
 #' @export
 setMethod("enrichIMgeneCount", "Mem",
    function(x, ...) x@enrichIMgeneCount
@@ -739,6 +750,7 @@ setMethod("enrichIMgeneCount", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class The gene-pathway incidence matrix
+#' @aliases memIM
 #' @export
 setMethod("memIM", "Mem",
    function(x, ...) x@memIM
@@ -751,6 +763,7 @@ setMethod("memIM", "Mem",
 #' @docType methods
 #' @describeIn Mem-class The matrix of genes tested for enrichment, including
 #'    genes not associated with enrichment results.
+#' @aliases geneHitIM
 #' @export
 setMethod("geneHitIM", "Mem",
    function(x, ...) x@geneHitIM
@@ -790,6 +803,7 @@ setMethod("geneHitIM<-", "Mem",
 #' @docType methods
 #' @describeIn Mem-class The list of genes tested for enrichment, including
 #'    genes not associated with enrichment results.
+#' @aliases geneHitList
 #' @export
 setMethod("geneHitList", "Mem",
    function(x, ...) x@geneHitList
@@ -832,6 +846,7 @@ setMethod("headers", "Mem", function(x) x@headers)
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class List colors assigned to  represented
+#' @aliases colorV
 #' @export
 setMethod("colorV", "Mem",
    function(x, ...) x@colorV
@@ -873,6 +888,7 @@ setMethod("colorV<-", "Mem",
 #' @param ... additional arguments are ignored
 #' @docType methods
 #' @describeIn Mem-class List thresholds defined
+#' @aliases thresholds
 #' @export
 setMethod("thresholds", "Mem",
    function(x, ...) x@thresholds
@@ -1084,7 +1100,8 @@ setMethod("updateObject",
 #'
 #' @param x `Mem` object
 #' @docType methods
-#' @describeIn Mem-class Genes in each pathway set (category)
+#' @describeIn Mem-class Genes in each category (pathway, gene set)
+#' @aliases geneInCategory
 #' @returns `geneInCategory()` returns a `list` named by pathway, containing
 #'    `character` vectors with genes in each pathway.
 #' @export
@@ -1095,8 +1112,11 @@ setMethod("geneInCategory", "Mem", function(x) im2list(memIM(x)))
 #'
 #' @param x `Mem` object
 #' @docType methods
-#' @describeIn Mem-class Pathways gene sets associated with each gene
-#' @returns `geneInCategory()` returns a `list` named by gene,
+#' @describeIn Mem-class Pathway gene sets associated with each gene
+#' @aliases setsByGene
+#' @returns `setsByGene()` returns a `list` named by gene,
 #'    containing `character` vectors with associated gene sets.
+#' @examples
+#' setsByGene(Memtest)
 #' @export
 setMethod("setsByGene", "Mem", function(x) im2list(t(memIM(x))))

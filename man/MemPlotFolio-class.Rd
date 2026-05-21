@@ -9,15 +9,31 @@
 \alias{show,MemPlotFolio-method}
 \alias{Clusters,MemPlotFolio-method}
 \alias{GeneClusters,MemPlotFolio-method}
+\alias{ClusterLabels,MemPlotFolio-method}
+\alias{ClusterLabels}
+\alias{ClusterLabels<-,MemPlotFolio-method}
+\alias{ClusterData,MemPlotFolio-method}
+\alias{ClusterData}
+\alias{ClusterData<-,MemPlotFolio-method}
 \alias{thresholds,MemPlotFolio-method}
+\alias{thresholds}
 \alias{metadata,MemPlotFolio-method}
+\alias{metadata}
 \alias{Caption,MemPlotFolio-method}
+\alias{Caption}
 \alias{CaptionLegendList,MemPlotFolio-method}
+\alias{CaptionLegendList}
 \alias{EnrichmentHeatmap,MemPlotFolio-method}
+\alias{EnrichmentHeatmap}
 \alias{GenePathHeatmap,MemPlotFolio-method}
+\alias{GenePathHeatmap}
 \alias{CnetCollapsed,MemPlotFolio-method}
+\alias{CnetCollapsed}
 \alias{CnetExemplar,MemPlotFolio-method}
+\alias{CnetExemplar}
 \alias{CnetCluster,MemPlotFolio-method}
+\alias{CnetCluster}
+\alias{plot,MemPlotFolio,ANY-method}
 \title{Mem S4 class, accessors, getters, and setters}
 \usage{
 list_to_MemPlotFolio(mpf)
@@ -29,6 +45,14 @@ MemPlotFolio_to_list(x, ...)
 \S4method{Clusters}{MemPlotFolio}(x)
 
 \S4method{GeneClusters}{MemPlotFolio}(x)
+
+\S4method{ClusterLabels}{MemPlotFolio}(x)
+
+\S4method{ClusterLabels}{MemPlotFolio}(x) <- value
+
+\S4method{ClusterData}{MemPlotFolio}(x)
+
+\S4method{ClusterData}{MemPlotFolio}(x) <- value
 
 \S4method{thresholds}{MemPlotFolio}(x)
 
@@ -44,16 +68,39 @@ MemPlotFolio_to_list(x, ...)
 
 \S4method{CnetCollapsed}{MemPlotFolio}(x, type, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
 
-\S4method{CnetExemplar}{MemPlotFolio}(x, num, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
+\S4method{CnetExemplar}{MemPlotFolio}(
+  x,
+  num,
+  do_plot,
+  legend_x = "bottomleft",
+  legend_y = NULL,
+  main = NULL,
+  ...
+)
 
-\S4method{CnetCluster}{MemPlotFolio}(x, cluster, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
+\S4method{CnetCluster}{MemPlotFolio}(
+  x,
+  cluster,
+  do_plot,
+  legend_x = "bottomleft",
+  legend_y = NULL,
+  main = NULL,
+  ...
+)
+
+\S4method{plot}{MemPlotFolio,ANY}(x, y, ...)
 }
 \arguments{
 \item{mpf}{\code{list} output from \code{mem_plot_folio()}}
 
 \item{x}{\code{MemPlotFolio} object}
 
-\item{...}{additional arguments are ignored}
+\item{...}{additional arguments passed to \code{plot_mpf()}}
+
+\item{value}{named \code{character} vector of cluster labels, where names
+correspond to cluster names as returned by \code{Clusters(x)}.}
+
+\item{y}{ignored}
 }
 \value{
 \code{list_to_MemPlotFolio()} returns a \code{MemPlotFolio} S4 object,
@@ -66,6 +113,18 @@ named by cluster.
 
 \code{GeneClusters(MemPlotFolio)} returns a \code{list} of
 \code{character} vectors, named by cluster.
+
+\code{ClusterLabels(MemPlotFolio)} returns a named \code{character} vector
+of cluster labels, or \code{NULL} if none are defined.
+
+\code{ClusterLabels<-(MemPlotFolio)} returns the updated \code{MemPlotFolio}
+object with new cluster labels stored in \code{metadata$cluster_labels}.
+
+\code{ClusterData(MemPlotFolio)} returns a named \code{list}
+of cluster data, or \code{NULL} if none are defined.
+
+\code{ClusterData<-(MemPlotFolio)} returns the updated \code{MemPlotFolio}
+object with new cluster data stored in \code{metadata$cluster_data}.
 
 \code{thresholds(MemPlotFolio)} returns a \code{list} of
 thresholds used with \code{mem_plot_folio()}.
@@ -83,8 +142,16 @@ as R grid graphics.
 
 \code{EnrichmentHeatmap(MemPlotFolio)} returns a
 \code{ComplexHeatmap::HeatmapList} when do_plot is TRUE (default),
+in addition to rendering the heatmap. It returns
 \code{ComplexHeatmap::Heatmap} when do_plot is FALSE, containing
 enrichment P-values by enrichment, and pathway rows in clusters.
+Optional arguments '...' include:
+\itemize{
+\item 'main' or 'column_title' for overall plot title;
+\item 'column_title_gp' as \code{grid::gpar()} to adjust title font;
+\item 'use_cluster_labels' \code{logical} whether to use \code{ClusterLabels()}
+as row title entries.
+}
 
 \code{GenePathHeatmap(MemPlotFolio)} returns a
 \code{ComplexHeatmap::HeatmapList} when do_plot is TRUE (default),
@@ -123,6 +190,21 @@ containing \code{character} vectors of pathway gene sets.
 \code{MemPlotFolio} results as a \code{list} named by gene cluster,
 containing \code{character} vectors of genes.
 
+\item \code{ClusterLabels(MemPlotFolio)}: Returns cluster labels stored in the
+\code{metadata} slot of \code{MemPlotFolio}.
+
+\item \code{ClusterLabels(MemPlotFolio) <- value}: Sets cluster labels in the \code{metadata} slot
+of \code{MemPlotFolio}.
+
+\item \code{ClusterData(MemPlotFolio)}: Returns cluster data stored in the
+\code{metadata} slot of \code{MemPlotFolio}, intended to store further
+information to describe each cluster.
+
+\item \code{ClusterData(MemPlotFolio) <- value}: Sets cluster data in the \code{metadata} slot
+of \code{MemPlotFolio}, intended to store further information to
+describe each cluster. It should be the same length as \code{Clusters(x)}
+and have no names, or have names equal to \code{names(Clusters(x))}.
+
 \item \code{thresholds(MemPlotFolio)}: Returns the thresholds used with
 \code{MemPlotFolio}.
 
@@ -137,6 +219,13 @@ containing \code{character} vectors of genes.
 
 \item \code{EnrichmentHeatmap(MemPlotFolio)}: Draws the enrichment heatmap
 from \code{MemPlotFolio} results.
+Optional arguments '...' include:
+\itemize{
+\item 'main' or 'column_title' for overall plot title;
+\item 'column_title_gp' as \code{grid::gpar()} to adjust title font;
+\item 'use_cluster_labels' \code{logical} whether to use \code{ClusterLabels()}
+as row title entries.
+}
 
 \item \code{GenePathHeatmap(MemPlotFolio)}: Draws the gene-pathway set heatmap
 from \code{MemPlotFolio} results.
@@ -144,11 +233,28 @@ from \code{MemPlotFolio} results.
 \item \code{CnetCollapsed(MemPlotFolio)}: Draws the Cnet collapsed
 network from \code{MemPlotFolio} results. Note that '...' arguments are
 passed to \code{jam_igraph()} and \code{mem_legend()} when \code{do_plot=TRUE}.
-Argument \code{type} can be:
+When 'type' is not defined: it uses  type='cluster' if
+\code{ClusterLabels()} is defined, otherwise type='set';
+then it appends '2' to the end if there are more than 1000 nodes.
+Argument 'type' can be:
 \itemize{
-\item \code{type=''} (default) to use cluster title
+\item \code{type='title'} or \code{type=''} to use cluster title
 \item \code{type='set'} to use abbreviated pathway names
-\item \code{type='set2'} to use abbreviated pathway names, with hidden gene labels
+\item \code{type='cluster'} to use cluster labels
+\item \code{type='attribute'} to use any existing vertex attribute.
+\item Append \strong{'2'} to the end to hide gene labels. For example \code{type='set2'}.
+}
+
+Recognized arguments in '...':
+\itemize{
+\item \code{'width'} to apply word-wrap to cluster labels, or vertex attribute.
+\item \code{'maxNchar'} to set maximum string character length, passed to
+\code{fixSetLabels()}.
+\item \code{'layout'} passed to \code{set_igraph_layout(cnet, layout)} to update
+the node layout.
+\item \code{'rotate_degrees'} with \code{numeric} value. When set, it calls
+\code{rotate_igraph_layout()} with defaults.
+\item All other '...' arguments are passed to \code{jam_igraph()}.
 }
 
 The legend includes direction if encoded in the 'MemPlotFolio', but
@@ -160,7 +266,8 @@ Note that '...' arguments are
 passed to \code{jam_igraph()} and \code{mem_legend()} when \code{do_plot=TRUE}.
 
 The legend includes direction if encoded in the 'MemPlotFolio', but
-can be forced with \code{do_directional=TRUE} or FALSE.
+can be forced with \code{do_directional=TRUE} or FALSE. Legend position
+is controlled by legend_x,legend_y, default legend_x="bottomleft".
 
 \item \code{CnetCluster(MemPlotFolio)}: Draws the Cnet network
 from \code{MemPlotFolio} results for a specific cluster.
@@ -169,6 +276,11 @@ passed to \code{jam_igraph()} and \code{mem_legend()} when \code{do_plot=TRUE}.
 
 The legend includes direction if encoded in the 'MemPlotFolio', but
 can be forced with \code{do_directional=TRUE} or FALSE.
+Plot title 'main', default NULL uses the cluster label if present,
+then cluster name. Use main=FALSE or main="" to hide the title.
+
+\item \code{plot(x = MemPlotFolio, y = ANY)}: Plot a \code{MemPlotFolio} object calling
+\code{plot_mpf()}
 
 }}
 \examples{

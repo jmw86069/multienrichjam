@@ -1,5 +1,36 @@
 # TODO
 
+## 19may2026
+
+* Verify all R package dependencies are covered.
+* `rotate_igraph_layout()` could simply apply the same rotation
+to existing igraph label angles, skipping `spread_igraph_labels()`.
+* Add new cluster labeling functions.
+* Add new cluster data functions, summarize a cluster.
+* Complete `plot_mpf()` as a stand-alone plot for `MemPlotFolio`.
+
+   * Support Rmd or Qmd tabset styles.
+   * Support customizations.
+
+* `CnetExemplar()` when not defined, prepare `igraph` and plot.
+* `CnetCollapsed()` permit customizations.
+
+   * subset by cluster
+   * change layout, adjust repulse
+
+* `CnetCluster()` permit customizations.
+
+   * subset by sets
+   * change layout, adjust repulse
+   * hide/spread labels
+
+* `MemPlotFolio`
+
+   * Consider way to split a specific cluster
+   * Subset by clusters: subset Mem, repeat `prepare_folio()`
+   (Should Mem be stored inside Mpf? Should Mpf be stored in Mem?)
+
+
 ## 15may2026
 
 * Fix/Improve coloredrect rendering, vertex.size, vertex.size2.

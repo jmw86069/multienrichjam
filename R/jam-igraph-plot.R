@@ -362,6 +362,7 @@ jam_igraph <- function
  xlim=NULL,
  ylim=NULL,
  expand=0.03,
+#  main=NULL,
  rescale=FALSE,
  node_factor=1,
  node_factor_l=NULL,
@@ -663,7 +664,7 @@ jam_igraph <- function
          }, error=function(e){
             NULL
          })
-         if (any(mark.cex) == 0) {
+         if (any(mark.cex == 0)) {
          	names(mark.groups) <- NULL;
          	mark.cex <- 1;
          }
@@ -693,9 +694,21 @@ jam_igraph <- function
          "mark.groups" %in% igraph::graph_attr_names(x)) {
       mark.groups <- igraph::graph_attr(x, "mark.groups");
       # convert to list
-      mark.groups <- setNames(
-         split(mark.groups$names, mark.groups$membership),
-         jamba::cPaste(mark.groups$cluster_names, ",\n"))
+      if (!is.list(mark.groups$cluster_names)) {
+         mark.groups$cluster_names <- as.list(mark.groups$cluster_names)
+      }
+      # confirm all elements of mark.groups are present as node names
+      if (!all(igraph::V(x)$name %in% mark.groups$names)) {
+         mark.groups <- NULL;
+      } else {
+         k <- (mark.groups$names %in% igraph::V(x)$name);
+         new.mark.groups <- split(mark.groups$names[k],
+            factor(mark.groups$membership)[k]);
+         names(new.mark.groups) <- rep(
+            jamba::cPaste(mark.groups$cluster_names, sep=",\n"),
+            length.out=length(new.mark.groups))
+         mark.groups <- new.mark.groups[lengths(new.mark.groups) > 0];
+      }
       # confirm all elements of mark.groups are present as node names
       if (!all(unlist(mark.groups) %in% igraph::V(x)$name)) {
          mark.groups <- NULL;
@@ -706,7 +719,7 @@ jam_igraph <- function
          }
       }
    }
-   if (any(mark.cex) == 0) {
+   if (any(mark.cex == 0)) {
    	if (length(mark.groups) > 0) {
 	   	names(mark.groups) <- NULL;
    	}

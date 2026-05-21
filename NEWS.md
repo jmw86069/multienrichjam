@@ -1,3 +1,75 @@
+# multienrichjam 0.0.116.900
+
+* Added dependencies: 'withr', 'ggforce', 'circlize',
+'shinydashboardPlus'.
+* Support for MemPlotFolio cluster labels, and cluster data.
+The cluster labels are intended to support short summary
+title or phrase, addressing the common "What's that cluster?"
+* New `plot_mpf()` paradigm for MemPlotFolio, supporting
+Rmd and Qmd tabbed and non-tabbed output.
+
+## Changes
+
+* `prepare_folio()` and `mem_plot_folio()`
+
+   * Quietly adds 'Mem' to metadata(Mpf)$Mem for use
+   in other MemPlotFolio related functions. Experimental.
+
+* `MemPlotFolio`
+
+   * New accessor and setter `ClusterLabels()` stores
+   custom labels for each pathway cluster.
+   `ClusterData()` stores data in `list` format, intended
+   to store summary information for each cluster.
+   * Slot 'metadata' now enforces
+   * 'cluster_labels' as named `character` vector of labels,
+   named by `names(Clusters(Mpf))`. These names are short,
+   usually single-letter codes for each cluster, while the
+   labels are words or phrases, which may appear in
+   `CnetCollapsed()`, `CnetCluster()`, or potentially the
+   cluster title on `GenePathHeatmap()`.
+   * 'cluster_data' is a named `list` of data, content to
+   be determined.
+
+* `CnetCollapsed()`
+
+   * 'type' argument recognizes: 'cluster', 'set', 'title'.
+   A suffix '2' hides gene node labels, for example `type='set2'`.
+   The 'cluster' uses `ClusterLabels()` if present.
+   The 'set' uses the top N pathways, shortened to M
+   characters.
+   * Arguments in '...' are used: 'layout', 'rotate_degrees',
+   'width' applies word wrap, 'maxNchar' applies label cropping.
+
+* `CnetCluster()`
+
+   * Default for argument 'main' will use `ClusterLabels()` as
+   plot title when present.
+
+* `jam_igraph()`
+
+   * `mark.groups` is a little more robust to subset igraph,
+   and cluster_names as vector, list, or NULL.
+
+* `EnrichmentHeatmap()`, `GenePathHeatmap()` now call
+`ComplexHeatmap::draw(x, newpage=FALSE)` when running inside Positron,
+and not running inside knitr, to prevent the `grid::grid.newpage()`
+from causing Positron to ignore subsequent figure grobs.
+More testing necessary to confirm no other conditions inside
+Positron are affected.
+
+
+## New functions
+
+* `plot_mpf()`
+
+   * Distinct function from `prepare_folio()` to enable plotting
+   one or more plots from the `MemPlotFolio` (Mpf) object.
+   * Enables optional Rmarkdown (Rmd) or Quarto (Qmd) tabsets,
+   including Quarto open/close style, and sub-tabs where relevant.
+   * In the next release, this function will likely replace all
+   active plotting functions currently done within `mem_plot_folio()`.
+
 # multienrichjam 0.0.115.950
 
 ## Bug Fixes

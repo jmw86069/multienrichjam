@@ -133,6 +133,22 @@ setGeneric("Clusters", signature="x",
    function(x) standardGeneric("Clusters")
 )
 
+setGeneric("ClusterLabels", signature="x",
+   function(x) standardGeneric("ClusterLabels")
+)
+
+setGeneric("ClusterLabels<-", signature="x",
+   function(x, value) standardGeneric("ClusterLabels<-")
+)
+
+setGeneric("ClusterData", signature="x",
+   function(x) standardGeneric("ClusterData")
+)
+
+setGeneric("ClusterData<-", signature="x",
+   function(x, value) standardGeneric("ClusterData<-")
+)
+
 setGeneric("GeneClusters", signature="x",
    function(x) standardGeneric("GeneClusters")
 )

@@ -581,7 +581,8 @@ mem_plot_folio <- function
    # metadata
    metadata <- list(
       colorV=Mem@colorV,
-   	hasDirection=hasDirection
+   	hasDirection=hasDirection,
+      Mem=Mem
    );
    
    return_mpf <- function(ret_vals, returnType="MemPlotFolio") {

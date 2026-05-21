@@ -29,3 +29,6 @@
       plot=shape.jampie.plot);
    
 }
+
+#' @importFrom graphics plot
+NULL

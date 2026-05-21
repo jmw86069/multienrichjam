@@ -263,7 +263,7 @@ check_MemPlotFolio <- function
       "gp_hm",         # Heatmap
       "caption",      # list with text, Legends
       "clusters",      # list with pathway clusters
-      "gene_clusters",      # list with pathway clusters
+      "gene_clusters",      # list with gene clusters
       "cnet_collapsed",# list with igraph objects
       "cnet_exemplars",# list with igraph objects
       "cnet_clusters", # list with igraph objects
@@ -287,11 +287,22 @@ check_MemPlotFolio <- function
    gro <- NULL;
    gco <- NULL;
    memclusters <- NULL;
+   memcluster_label_names <- NULL;
+   memcluster_data_names <- NULL;
    geneclusters <- NULL;
    ccnames <- NULL;
    if (is.list(object@clusters) && length(object@clusters) > 0) {
       memclusters <- object@clusters
    }
+   if (length(object@metadata) > 0) {
+      if ("cluster_labels" %in% names(object@metadata)) {
+         memcluster_label_names <- names(object@metadata$cluster_labels);
+      }
+      if ("cluster_data" %in% names(object@metadata)) {
+         memcluster_data_names <- names(object@metadata$cluster_data);
+      }
+   }
+   
    if (is.list(object@gene_clusters) && length(object@gene_clusters) > 0) {
       geneclusters <- object@gene_clusters
    }
@@ -324,6 +335,22 @@ check_MemPlotFolio <- function
             all(ccnames %in% names(memclusters))
       )
    )
+   if (length(memcluster_label_names) > 0 && length(memclusters) > 0) {
+      criteria_set <- c(criteria_set,
+         `cluster names, cluster label names`=(
+            length(memclusters) == length(memcluster_label_names) &&
+               all(names(memclusters) == memcluster_label_names)
+         )
+      )
+   }
+   if (length(memcluster_data_names) > 0 && length(memclusters) > 0) {
+      criteria_set <- c(criteria_set,
+         `cluster names, cluster data names`=(
+            length(memclusters) == length(memcluster_data_names) &&
+               all(names(memclusters) == memcluster_data_names)
+         )
+      )
+   }
    if (!all(criteria_set)) {
       jamba::printDebug(
          "MemPlotFolio Invalid:\n- ",

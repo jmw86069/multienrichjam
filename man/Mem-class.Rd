@@ -10,32 +10,48 @@
 \alias{as.list,Mem-method}
 \alias{names,Mem-method}
 \alias{enrichments,Mem-method}
+\alias{enrichments}
 \alias{enrichments<-,Mem-method}
 \alias{sets,Mem-method}
+\alias{sets}
 \alias{sets<-,Mem-method}
 \alias{genes,Mem-method}
+\alias{genes}
 \alias{genes<-,Mem-method}
 \alias{geneIM,Mem-method}
+\alias{geneIM}
 \alias{geneIMdirection,Mem-method}
+\alias{geneIMdirection}
 \alias{geneIMdirection<-,Mem-method}
 \alias{geneIMcolors,Mem-method}
+\alias{geneIMcolors}
 \alias{geneIMcolors<-,Mem-method}
 \alias{enrichList,Mem-method}
+\alias{enrichList}
 \alias{enrichIM,Mem-method}
+\alias{enrichIM}
 \alias{enrichIMcolors,Mem-method}
+\alias{enrichIMcolors}
 \alias{enrichIMcolors<-,Mem-method}
 \alias{enrichIMdirection,Mem-method}
+\alias{enrichIMdirection}
 \alias{enrichIMdirection<-,Mem-method}
 \alias{enrichIMgeneCount,Mem-method}
+\alias{enrichIMgeneCount}
 \alias{memIM,Mem-method}
+\alias{memIM}
 \alias{geneHitIM,Mem-method}
+\alias{geneHitIM}
 \alias{geneHitIM<-,Mem-method}
 \alias{geneHitList,Mem-method}
+\alias{geneHitList}
 \alias{geneHitList<-,Mem-method}
 \alias{headers,Mem-method}
 \alias{colorV,Mem-method}
+\alias{colorV}
 \alias{colorV<-,Mem-method}
 \alias{thresholds,Mem-method}
+\alias{thresholds}
 \alias{thresholds<-,Mem-method}
 \alias{dim,Mem-method}
 \alias{dimnames,Mem-method}
@@ -44,7 +60,9 @@
 \alias{list_to_Mem}
 \alias{updateObject,Mem-method}
 \alias{geneInCategory,Mem-method}
+\alias{geneInCategory}
 \alias{setsByGene,Mem-method}
+\alias{setsByGene}
 \title{Mem S4 class, accessors, getters, and setters}
 \usage{
 \S4method{[}{Mem,ANY,ANY,ANY}(x, i, j, k, drop = FALSE)
@@ -162,7 +180,7 @@ class versions.
 \code{geneInCategory()} returns a \code{list} named by pathway, containing
 \code{character} vectors with genes in each pathway.
 
-\code{geneInCategory()} returns a \code{list} named by gene,
+\code{setsByGene()} returns a \code{list} named by gene,
 containing \code{character} vectors with associated gene sets.
 }
 \description{
@@ -260,9 +278,9 @@ Mem object.
 
 \item \code{updateObject(Mem)}: Confirm Mem object meets current class definition.
 
-\item \code{geneInCategory(Mem)}: Genes in each pathway set (category)
+\item \code{geneInCategory(Mem)}: Genes in each category (pathway, gene set)
 
-\item \code{setsByGene(Mem)}: Pathways gene sets associated with each gene
+\item \code{setsByGene(Mem)}: Pathway gene sets associated with each gene
 
 }}
 \examples{
@@ -276,6 +294,7 @@ data(Memtest)
 mem <- as(Memtest, "list")
 Mem <- list_to_Mem(mem)
 
+setsByGene(Memtest)
 }
 \seealso{
 Other Mem: 
