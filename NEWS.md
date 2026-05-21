@@ -1,5 +1,6 @@
 # multienrichjam 0.0.116.900
 
+* Hotfix: Added 'BiocStyle', 'kableExtra' dependencies.
 * Added dependencies: 'withr', 'ggforce', 'circlize',
 'shinydashboardPlus'.
 * Support for MemPlotFolio cluster labels, and cluster data.

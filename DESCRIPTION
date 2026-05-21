@@ -43,7 +43,9 @@ Imports: jamba (>= 1.0.4),
     S4Vectors,
     interp,
     withr,
-    ggforce
+    ggforce,
+    BiocStyle,
+    kableExtra
 Suggests: 
     knitr,
     openxlsx,
