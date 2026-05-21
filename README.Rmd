@@ -11,13 +11,13 @@ output:
 
 ```{r knitr_init, echo=FALSE}
 knitr::opts_chunk$set(
-  collapse=TRUE,
-  warning=FALSE,
-  message=FALSE,
-  comment="#>",
-  fig.path="man/figures/README-"
-);
-options(knitr.table.format='markdown')
+   collapse = TRUE,
+   warning = FALSE,
+   message = FALSE,
+   comment = "#>",
+   fig.path = "man/figures/README-"
+)
+options(knitr.table.format = 'markdown')
 ```
 # multienrichjam
 
@@ -90,33 +90,36 @@ from clusterProfiler, and must have the following columns:
 * **Enrichment P-value**: Typically adjusted P-value, or FDR
 * **genes**: one field with genes involved in enrichment of each pathway
 
-Any `enrichResult` will have this data already.
+Any `enrichResult` or `gseaResult` from clusterProfiler
+will have the required data already.
 
 ## `multiEnrichMap()` to create `Mem` output
 
-```{r import-ipa, echo=FALSE}
+```{r import-ipa}
 library(multienrichjam)
 
-ipafiles <- system.file("extdata",
-   c("Newborns-IPA.txt",
-      "OlderChildren-IPA.txt"),
-   package="multienrichjam");
+ipafiles <- system.file(
+   "extdata",
+   c("Newborns-IPA.txt", "OlderChildren-IPA.txt"),
+   package = "multienrichjam"
+)
 names(ipafiles) <- c("Newborns", "OlderChildren")
-ipa_l <- lapply(ipafiles, importIPAenrichment);
-erlist <- lapply(ipa_l, function(i){
-   i[["Canonical Pathways"]];
-});
-er_Newborns <- erlist$Newborns;
-er_OlderChildren <- erlist$OlderChildren;
+ipa_l <- lapply(ipafiles, importIPAenrichment)
+erlist <- lapply(ipa_l, function(i) {
+   i[["Canonical Pathways"]]
+})
+er_Newborns <- erlist$Newborns
+er_OlderChildren <- erlist$OlderChildren
 
 ## Turn off ComplexHeatmap warnings
-ComplexHeatmap::ht_opt("message"=FALSE)
+ComplexHeatmap::ht_opt("message" = FALSE)
 ```
 
 ```{r mem}
 Mem <- multiEnrichMap(list(
-   Newborns=er_Newborns,
-   OlderChildren=er_OlderChildren))
+   Newborns = er_Newborns,
+   OlderChildren = er_OlderChildren
+))
 ```
 
 The output can be summarized by printing the object.
@@ -178,21 +181,24 @@ CnetCollapsed(Mpf)
 
 ```{r cnet-collapsed, echo=FALSE, fig.alt="Concept network (Cnet) with pathways collapsed by cluster."}
 igraph::V(Mpf@cnet_collapsed[[1]])[29:32]$label.dist <- 0
-CnetCollapsed(Mpf,
-   vertex.label.font=2, use_shadowText=TRUE)
+CnetCollapsed(Mpf, vertex.label.font = 2, use_shadowText = TRUE)
 ```
 
 By default, the cluster titles ("A", "B", "C", "D") are displayed,
 however the pathways can be used to form a label.
 
 ```{r cnet-collapsed-set-show, eval=FALSE}
-CnetCollapsed(Mpf, type="set")
+CnetCollapsed(Mpf, type = "set")
 ```
 
 ```{r cnet-collapsed-set, echo=FALSE, fig.alt="Concept network (Cnet) showing pathways collapsed by set, using pathway names for each cluster label."}
-CnetCollapsed(Mpf, type="set",
-   label_factor_l=list(nodeType=c(Gene=1, Set=0.7)),
-   use_shadowText=TRUE, vertex.label.font=2)
+CnetCollapsed(
+   Mpf,
+   type = "set",
+   label_factor_l = list(nodeType = c(Gene = 1, Set = 0.7)),
+   use_shadowText = TRUE,
+   vertex.label.font = 2
+)
 ```
 
 ## `CnetExemplar()`
@@ -205,8 +211,7 @@ CnetExemplar(Mpf)
 ```
 
 ```{r cnet-exemplar, echo=FALSE, fig.alt="Concept network (Cnet) showing one exemplar pathway to represent each pathway cluster."}
-CnetExemplar(Mpf,
-   vertex.label.font=2, use_shadowText=TRUE)
+CnetExemplar(Mpf, vertex.label.font = 2, use_shadowText = TRUE)
 ```
 
 A Cnet exemplar plot can also be created using user-defined
@@ -219,8 +224,9 @@ custom_sets <- c(
    "RAR Activation",
    "mTOR Signaling",
    "Growth Hormone Signaling",
-   "Tight Junction Signaling")
-cnet <- mem2cnet(Mem[, custom_sets, ], spread_labels=TRUE)
+   "Tight Junction Signaling"
+)
+cnet <- mem2cnet(Mem[, custom_sets, ], spread_labels = TRUE)
 
 jam_igraph(cnet)
 ```
@@ -230,12 +236,16 @@ custom_sets <- c(
    "RAR Activation",
    "mTOR Signaling",
    "Growth Hormone Signaling",
-   "Tight Junction Signaling")
+   "Tight Junction Signaling"
+)
 cnet <- mem2cnet(Mem[, custom_sets, ])
 
-jam_igraph(spread_igraph_labels(cnet),
-   label_factor_l=list(nodeType=c(Gene=1, Set=1)),
-   use_shadowText=TRUE, vertex.label.font=2)
+jam_igraph(
+   spread_igraph_labels(cnet),
+   label_factor_l = list(nodeType = c(Gene = 1, Set = 1)),
+   use_shadowText = TRUE,
+   vertex.label.font = 2
+)
 ```
 
 Note that this process is two-steps:
@@ -250,10 +260,9 @@ cluster. It is not used very often, and typically is helpful when
 there might be different sub-networks within one cluster.
 
 ```{r cnet-cluster-show, eval=FALSE}
-CnetCluster(Mpf, cluster="C")
+CnetCluster(Mpf, cluster = "C")
 ```
 
 ```{r cnet-cluster, echo=FALSE, fig.alt="Concept network (Cnet) showing all pathways from the pathway cluster 'C'."}
-CnetCluster(Mpf, cluster="C",
-   vertex.label.font=2, use_shadowText=TRUE)
+CnetCluster(Mpf, cluster = "C", vertex.label.font = 2, use_shadowText = TRUE)
 ```

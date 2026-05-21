@@ -565,7 +565,7 @@ setMethod("CnetCollapsed", "MemPlotFolio",
 
    if (missing(type)) {
       type <- "title";
-      if (length(ClusterLabels(Mpf)) > 0) {
+      if (length(ClusterLabels(x)) > 0) {
          type <- "cluster";
       }
       if (igraph::vcount(cnet) > 1000) {

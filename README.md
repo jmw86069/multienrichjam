@@ -70,14 +70,36 @@ have the following columns:
 - **Enrichment P-value**: Typically adjusted P-value, or FDR
 - **genes**: one field with genes involved in enrichment of each pathway
 
-Any `enrichResult` will have this data already.
+Any `enrichResult` or `gseaResult` from clusterProfiler will have the
+required data already.
 
 ## `multiEnrichMap()` to create `Mem` output
 
 ``` r
+library(multienrichjam)
+
+ipafiles <- system.file(
+   "extdata",
+   c("Newborns-IPA.txt", "OlderChildren-IPA.txt"),
+   package = "multienrichjam"
+)
+names(ipafiles) <- c("Newborns", "OlderChildren")
+ipa_l <- lapply(ipafiles, importIPAenrichment)
+erlist <- lapply(ipa_l, function(i) {
+   i[["Canonical Pathways"]]
+})
+er_Newborns <- erlist$Newborns
+er_OlderChildren <- erlist$OlderChildren
+
+## Turn off ComplexHeatmap warnings
+ComplexHeatmap::ht_opt("message" = FALSE)
+```
+
+``` r
 Mem <- multiEnrichMap(list(
-   Newborns=er_Newborns,
-   OlderChildren=er_OlderChildren))
+   Newborns = er_Newborns,
+   OlderChildren = er_OlderChildren
+))
 ```
 
 The output can be summarized by printing the object.
@@ -93,7 +115,6 @@ Mem
 #> - top N per enrichment: 20
 #> - significance threshold: 0.05 (colname: p.adjust)
 #> - min gene count: 3
-#> - direction colname:
 ```
 
 ## `prepare_folio()` to create `MemPlotFolio` output
@@ -151,7 +172,7 @@ By default, the cluster titles (“A”, “B”, “C”, “D”) are displaye
 however the pathways can be used to form a label.
 
 ``` r
-CnetCollapsed(Mpf, type="set")
+CnetCollapsed(Mpf, type = "set")
 ```
 
 <img src="man/figures/README-cnet-collapsed-set-1.png" alt="Concept network (Cnet) showing pathways collapsed by set, using pathway names for each cluster label."  />
@@ -177,8 +198,9 @@ custom_sets <- c(
    "RAR Activation",
    "mTOR Signaling",
    "Growth Hormone Signaling",
-   "Tight Junction Signaling")
-cnet <- mem2cnet(Mem[, custom_sets, ], spread_labels=TRUE)
+   "Tight Junction Signaling"
+)
+cnet <- mem2cnet(Mem[, custom_sets, ], spread_labels = TRUE)
 
 jam_igraph(cnet)
 ```
@@ -197,7 +219,7 @@ cluster. It is not used very often, and typically is helpful when there
 might be different sub-networks within one cluster.
 
 ``` r
-CnetCluster(Mpf, cluster="C")
+CnetCluster(Mpf, cluster = "C")
 ```
 
 <img src="man/figures/README-cnet-cluster-1.png" alt="Concept network (Cnet) showing all pathways from the pathway cluster 'C'."  />
