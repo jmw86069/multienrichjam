@@ -8,3 +8,5 @@
 ^LICENSE\.md$
 ^[.]?air[.]toml$
 ^\.vscode$
+^doc$
+^Meta$

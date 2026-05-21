@@ -6,3 +6,5 @@ inst/doc
 mem_vignettes.md
 .vscode
 air.toml
+/doc/
+/Meta/

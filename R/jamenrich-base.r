@@ -353,6 +353,7 @@ multiEnrichMap <- function
 		"pvalueColname", "descriptionColname",
 		"nameColname", "countColname", "directionColname",
 		"geneHits")
+   optional_cols <- c("directionColname", "geneHits")
    if (length(enrichList) > 1) {
    	# iterate each enrichList and confirm colnames are consistent
    	for (j in seq_along(enrichList)) {
@@ -360,7 +361,10 @@ multiEnrichMap <- function
    		for (docol in docols) {
    			main_col <- get(paste0("use_", docol));
    			if (length(main_col) == 0) {
-   				stop(paste0("There is no column for ", docol, "."));
+               if (!docol %in% optional_cols) {
+                  stop(paste0("There is no column for ", docol, "."));
+               }
+               next;
    			}
    			if (main_col %in% colnames(ier@result)) {
    				next;

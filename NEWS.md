@@ -1,6 +1,9 @@
 # multienrichjam 0.0.116.900
 
 * Hotfix: Added 'BiocStyle', 'kableExtra' dependencies.
+* Hotfix: Removed requirement for directionColname in IPA
+data, common for older format IPA files as included
+as *sigh* package data.
 * Added dependencies: 'withr', 'ggforce', 'circlize',
 'shinydashboardPlus'.
 * Support for MemPlotFolio cluster labels, and cluster data.

@@ -1,5 +1,10 @@
 # TODO
 
+## 21may2026
+
+* Add tests for steps in the vignettes, including input enrichment
+with directionColname in one file, but not the other.
+
 ## 19may2026
 
 * Verify all R package dependencies are covered.
