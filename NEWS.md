@@ -1,3 +1,22 @@
+# multienrichjam 0.0.117.900
+
+## New functions
+
+* `EnrichmentMap()` as proper method for `Mem` and
+`MemPlotFolio()` objects. Internally it calls `mem2emap()`
+then applies optional arguments to define node groups.
+When using `MemPlotFolio` it allows clustering by
+`Clusters()`, while `Mem` input only supports
+network communities.
+Node groups supported: clusters, cluster_labels,
+communities, or none.
+`plot_mpf()` now calls `EnrichmentMap()` directly.
+
+## Bug fixes
+
+* edge bundling error fixed when points were co-linear.
+
+
 # multienrichjam 0.0.116.900
 
 * Hotfix: Added 'BiocStyle', 'kableExtra' dependencies.

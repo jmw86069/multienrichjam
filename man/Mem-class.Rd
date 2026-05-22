@@ -63,6 +63,8 @@
 \alias{geneInCategory}
 \alias{setsByGene,Mem-method}
 \alias{setsByGene}
+\alias{EnrichmentMap,Mem-method}
+\alias{EnrichmentMap}
 \title{Mem S4 class, accessors, getters, and setters}
 \usage{
 \S4method{[}{Mem,ANY,ANY,ANY}(x, i, j, k, drop = FALSE)
@@ -142,6 +144,15 @@ list_to_Mem(mem)
 \S4method{geneInCategory}{Mem}(x)
 
 \S4method{setsByGene}{Mem}(x)
+
+\S4method{EnrichmentMap}{Mem}(
+  x,
+  do_plot,
+  legend_x = "bottomleft",
+  legend_y = NULL,
+  params = list(),
+  ...
+)
 }
 \arguments{
 \item{x}{\code{Mem} object}
@@ -179,9 +190,11 @@ class versions.
 
 \code{geneInCategory()} returns a \code{list} named by pathway, containing
 \code{character} vectors with genes in each pathway.
+For the reciprocal, see \code{setsByGene()}.
 
 \code{setsByGene()} returns a \code{list} named by gene,
 containing \code{character} vectors with associated gene sets.
+For the reciprocal, see \code{geneInCategory()}.
 }
 \description{
 Mem class containing results from \code{multiEnrichMap()},
@@ -281,6 +294,14 @@ Mem object.
 \item \code{geneInCategory(Mem)}: Genes in each category (pathway, gene set)
 
 \item \code{setsByGene(Mem)}: Pathway gene sets associated with each gene
+
+\item \code{EnrichmentMap(Mem)}: EnrichmentMap \code{igraph} network to connect
+pathway gene sets based upon Jaccard overlap between each
+pathway pair.
+Note '...' arguments are passed to \code{jam_igraph()} and
+\code{mem_legend()} when \code{do_plot=TRUE}.
+Argument \code{'params'} is a \code{list} with additional arguments:
+'repulse', 'width', 'group', 'mark.expand', 'do_legend'.
 
 }}
 \examples{

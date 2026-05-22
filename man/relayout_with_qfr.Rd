@@ -53,6 +53,7 @@ while also returning the \code{igraph} object ready to be plotted as-is.
 }
 \seealso{
 Other jam igraph layouts: 
+\code{\link{layout_communities}()},
 \code{\link{layout_with_qfr}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{removeIgraphSinglets}()},

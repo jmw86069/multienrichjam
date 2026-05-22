@@ -233,6 +233,7 @@ representing biologically-driven pathway clusters.
 \seealso{
 Other custom plot functions: 
 \code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()}
+\code{\link{mem_legend}()},
+\code{\link{plot_mpf}()}
 }
 \concept{custom plot functions}

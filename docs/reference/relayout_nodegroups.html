@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -211,14 +211,14 @@ strategies to attempt to minimize the issue.</p></li>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam cnet utilities:
-<code><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset</a>()</code>,
-<code><a href="adjust_cnet_set_relayout_gene.html">adjust_cnet_set_relayout_gene</a>()</code>,
-<code><a href="apply_nodeset_spacing.html">apply_nodeset_spacing</a>()</code>,
-<code><a href="bulk_cnet_adjustments.html">bulk_cnet_adjustments</a>()</code>,
-<code><a href="get_cnet_nodeset.html">get_cnet_nodeset</a>()</code>,
-<code><a href="get_cnet_nodeset_vector.html">get_cnet_nodeset_vector</a>()</code>,
-<code><a href="launch_shinycat.html">launch_shinycat</a>()</code>,
-<code><a href="make_cnet_test.html">make_cnet_test</a>()</code></p></div>
+<code><a href="adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code>,
+<code><a href="adjust_cnet_set_relayout_gene.html">adjust_cnet_set_relayout_gene()</a></code>,
+<code><a href="apply_nodeset_spacing.html">apply_nodeset_spacing()</a></code>,
+<code><a href="bulk_cnet_adjustments.html">bulk_cnet_adjustments()</a></code>,
+<code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>,
+<code><a href="get_cnet_nodeset_vector.html">get_cnet_nodeset_vector()</a></code>,
+<code><a href="launch_shinycat.html">launch_shinycat()</a></code>,
+<code><a href="make_cnet_test.html">make_cnet_test()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -232,8 +232,8 @@ strategies to attempt to minimize the issue.</p></li>
 <span class="r-plt img"><img src="relayout_nodegroups-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">cnet2</span> <span class="op">&lt;-</span> <span class="fu">relayout_nodegroups</span><span class="op">(</span><span class="va">cnet</span>, nodegroups<span class="op">=</span><span class="va">ns</span><span class="op">[</span><span class="st">"SetA,SetB"</span><span class="op">]</span>, do_final_layout<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:30:14</span>) 16Dec2025:   <span style="color: #FF8700;">relayout_nodegroups(): </span><span style="color: #00AFFF;">Using nodegroups as supplied.</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">12:30:14</span>) 16Dec2025:   <span style="color: #FF8700;">relayout_nodegroups(): </span><span style="color: #00AFFF;">Applying to nodegroup '</span><span style="color: #FF8700;">SetA,SetB</span><span style="color: #00AFFF;">' with members: </span><span style="color: #FF8700;">BH</span>,<span style="color: #FFAF5F;">BT</span>,<span style="color: #FF8700;">BU</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:03:42</span>) 22May2026:   <span style="color: #FF8700;">relayout_nodegroups(): </span><span style="color: #00AFFF;">Using nodegroups as supplied.</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:03:42</span>) 22May2026:   <span style="color: #FF8700;">relayout_nodegroups(): </span><span style="color: #00AFFF;">Applying to nodegroup '</span><span style="color: #FF8700;">SetA,SetB</span><span style="color: #00AFFF;">' with members: </span><span style="color: #FF8700;">BH</span>,<span style="color: #FFAF5F;">BT</span>,<span style="color: #FF8700;">BU</span> </span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet2</span>, mark.groups<span class="op">=</span><span class="va">ns</span><span class="op">[</span><span class="st">"SetA,SetB"</span><span class="op">]</span>, nodegroups<span class="op">=</span><span class="va">ns</span>,</span></span>
 <span class="r-in"><span>   main<span class="op">=</span><span class="st">"This nodegroup is 'encouraged' to re-group"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="relayout_nodegroups-2.png" alt="" width="960" height="960"></span>
@@ -255,7 +255,7 @@ strategies to attempt to minimize the issue.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

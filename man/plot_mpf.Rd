@@ -214,3 +214,10 @@ or event-driven data for each pathway or gene cluster.
 }
 }
 }
+\seealso{
+Other custom plot functions: 
+\code{\link{mem_enrichment_heatmap}()},
+\code{\link{mem_gene_path_heatmap}()},
+\code{\link{mem_legend}()}
+}
+\concept{custom plot functions}

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,11 +93,62 @@
 <span>  column_anno_padding <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>  returnType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MemPlotFolio"</span>, <span class="st">"list"</span><span class="op">)</span>,</span>
 <span>  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  do_rmd_tabs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rmd_tab_level <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  rmd_tab_title <span class="op">=</span> <span class="st">"Mem Plot Folio"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">prepare_folio</span><span class="op">(</span><span class="va">...</span>, do_plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">prepare_folio</span><span class="op">(</span></span>
+<span>  <span class="va">mem</span>,</span>
+<span>  do_which <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mpf <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p_cutoff <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p_floor <span class="op">=</span> <span class="fl">1e-10</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  use_raster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  min_gene_ct <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  min_set_ct <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  min_set_ct_each <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column_method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
+<span>  cluster_columns <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row_method <span class="op">=</span> <span class="st">"euclidean"</span>,</span>
+<span>  cluster_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  exemplar_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  pathway_column_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pathway_column_title <span class="op">=</span> <span class="va">LETTERS</span>,</span>
+<span>  gene_row_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene_row_title <span class="op">=</span> <span class="va">letters</span>,</span>
+<span>  edge_color <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cex.main <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  cex.sub <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>  row_cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  column_cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  max_labels <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  max_nchar_labels <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>  include_cluster_title <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  repulse <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  use_shadowText <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  color_by_column <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  style <span class="op">=</span> <span class="st">"dotplot_inverted"</span>,</span>
+<span>  enrich_im_weight <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>  gene_im_weight <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  colorize_by_gene <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cluster_color_min_fraction <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>  byCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"composite_rank"</span>, <span class="st">"minp_rank"</span>, <span class="st">"gene_count_rank"</span><span class="op">)</span>,</span>
+<span>  edge_bundling <span class="op">=</span> <span class="st">"connections"</span>,</span>
+<span>  apply_direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rotate_heatmap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  row_anno_padding <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>  column_anno_padding <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>  returnType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MemPlotFolio"</span>, <span class="st">"list"</span><span class="op">)</span>,</span>
+<span>  do_rmd_tabs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rmd_tab_level <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  do_plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -294,6 +345,33 @@ will draw each plot on a unique page, suitable for use with
 PDF output and <code>onefile=TRUE</code> for example.</p></dd>
 
 
+<dt id="arg-do-rmd-tabs">do_rmd_tabs<a class="anchor" aria-label="anchor" href="#arg-do-rmd-tabs"></a></dt>
+<dd><p><code>logical</code> default FALSE, whether to print Rmarkdown
+tabs to STDOUT using <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat()</a></code>, and only used when <code>do_plot=TRUE</code>.
+When active, before each plot is drawn, an Rmd tab header is
+printed in the form '## Plot Type .tabset', where the '##'
+heading is defined by 'rmd_tab_level'.</p></dd>
+
+
+<dt id="arg-rmd-tab-level">rmd_tab_level<a class="anchor" aria-label="anchor" href="#arg-rmd-tab-level"></a></dt>
+<dd><p><code>integer</code> default 2, used when
+<code>do_rmd_tabs=TRUE</code> to define the heading level.</p></dd>
+
+
+<dt id="arg-rmd-tab-title">rmd_tab_title<a class="anchor" aria-label="anchor" href="#arg-rmd-tab-title"></a></dt>
+<dd><p><code>character</code> default 'Mem Plot Folio' which
+is printed using <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat()</a></code> when <code>do_rmd_tabs=TRUE</code>.
+To skip the title, use <code>rmd_tab_title=NULL</code>, or set to ”.
+The title is printed as '## Title .tabset' and all plots are
+printed as sub-headings.
+The main reason not to use 'rmd_tab_title' is to
+to create the title in the Rmd (or Qmd) file itself,
+however when doing so, be sure to include ' .tabset' at
+the end of you heading, for example '# My Mem Plots .tabset'.
+The default here is to include a title to ensure all plot
+sub-headings also appear as tabs.</p></dd>
+
+
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p><code>logical</code> indicating whether to print verbose output.</p></dd>
 
@@ -316,17 +394,17 @@ dendrogram.</p></li>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code>MemPlotFolio</code> object using <code><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible()</a></code>, containing each
 plot object enabled by the argument <code>do_which</code>.
-The <code>MemPlotFolio-class</code> data are accessible using common functions:</p><ul><li><p><code>EnrichmentHeatmap()</code></p></li>
-<li><p><code>GenePathHeatmap()</code></p></li>
-<li><p><code>CnetCollapsed()</code></p></li>
-<li><p><code>CnetExemplar()</code></p></li>
-<li><p><code>CnetCluster()</code></p></li>
+The <code>MemPlotFolio-class</code> data are accessible using common functions:</p><ul><li><p><code><a href="MemPlotFolio-class.html">EnrichmentHeatmap()</a></code></p></li>
+<li><p><code><a href="MemPlotFolio-class.html">GenePathHeatmap()</a></code></p></li>
+<li><p><code><a href="MemPlotFolio-class.html">CnetCollapsed()</a></code></p></li>
+<li><p><code><a href="MemPlotFolio-class.html">CnetExemplar()</a></code></p></li>
+<li><p><code><a href="MemPlotFolio-class.html">CnetCluster()</a></code></p></li>
 <li><p><code>Clusters()</code></p></li>
 <li><p><code>GeneClusters()</code></p></li>
-<li><p><code>thresholds()</code></p></li>
-<li><p><code>metadata()</code></p></li>
-<li><p><code>Caption()</code></p></li>
-<li><p><code>CaptionLegendList()</code></p></li>
+<li><p><code><a href="https://jmw86069.github.io/multienrichjam/reference/Mem-class.html">thresholds()</a></code></p></li>
+<li><p><code><a href="MemPlotFolio-class.html">metadata()</a></code></p></li>
+<li><p><code><a href="MemPlotFolio-class.html">Caption()</a></code></p></li>
+<li><p><code><a href="MemPlotFolio-class.html">CaptionLegendList()</a></code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -352,7 +430,7 @@ The resulting hclust/dendrogram is split using <code>pathway_column_split</code>
 with an <code>integer</code> number of sub-clusters. The default (NULL) will
 determine a default based upon the total Sets in the analysis, and
 is intended to be customized by the analyst.</p>
-<p>The data to be clustered include the <code>memIM()</code> matrix of Genes (rows)
+<p>The data to be clustered include the <code><a href="Mem-class.html">memIM()</a></code> matrix of Genes (rows)
 and Sets (columns), itself an incidence matrix. It could therefore
 be clustered using <code>column_method="binary"</code>. However, the default
 behavior is to append <code>-log10()</code> values from the <code>enrichIM</code> matrix,
@@ -373,7 +451,7 @@ ground truth.
 As such, the results are considered stable for the methods and
 parameters used, and the interpretation is performed in that context.</p>
 <p>The clustering methods and parameters are included in the legend
-alongside the <code>GenePathHeatmap()</code> and the <code>EnrichmentHeatmap()</code>
+alongside the <code><a href="MemPlotFolio-class.html">GenePathHeatmap()</a></code> and the <code><a href="MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>
 for clarity.</p>
 <p>Our experience is that clusters do not need to be perfect to be
 useful, informative, and valid.</p><div class="section">
@@ -405,7 +483,7 @@ which have proven useful in other contexts.</p>
 <p>Pathways can be grouped manually by defining <code>pathway_column_split</code>
 as a <code>list</code> of <code>character</code> vectors, where those vectors match
 pathway names returned by <code>sets(Mem)</code> - which are also colnames
-of the <code>memIM()</code> incidence matrix.
+of the <code><a href="Mem-class.html">memIM()</a></code> incidence matrix.
 This step may also use a subset of sets, for example including only
 pathways of relevance to the downstream analysis.</p>
 </div>
@@ -468,8 +546,8 @@ ways to influence and optimize the outcome.</p>
 <h3 id="cnet-exemplar-plot">Cnet Exemplar Plot<a class="anchor" aria-label="anchor" href="#cnet-exemplar-plot"></a></h3>
 
 
-<p>There are two general paradigms for Concept networks (Cnets).</p><ol><li><p>Pathways in clusters: <code>CnetCollapsed()</code></p></li>
-<li><p>Exemplar Pathways per cluster: <code>CnetExemplar()</code></p></li>
+<p>There are two general paradigms for Concept networks (Cnets).</p><ol><li><p>Pathways in clusters: <code><a href="MemPlotFolio-class.html">CnetCollapsed()</a></code></p></li>
+<li><p>Exemplar Pathways per cluster: <code><a href="MemPlotFolio-class.html">CnetExemplar()</a></code></p></li>
 </ol><p>The Cnet Exemplar plot includes one pathway for each pathway cluster
 <code>num=1</code> but may include two <code>num=2</code> or three <code>num=3</code> pathways
 per cluster if relevant. The exemplar pathway is intended as a
@@ -481,7 +559,7 @@ distinctive, for example when one pathway cluster does not appear
 to have a common set of genes shared with other pathways in the same
 cluster.</p>
 <p>The alternative occurs when pathways in each cluster do share
-many of the same genes, and in this case the <code>CnetCollapsed()</code>
+many of the same genes, and in this case the <code><a href="MemPlotFolio-class.html">CnetCollapsed()</a></code>
 plot may be more effective.</p>
 <p>Finally, a custom Cnet exemplar plot may be warranted when
 displaying a few pathways with particular relevance to a
@@ -510,11 +588,11 @@ the results.</p>
 <p>When using <code>mem_plot_folio()</code> plots are produced in a specific order.
 The argument <code>do_which</code> may also be useful to focus the output
 only on a particular plot, thereby skipping the preparatory
-steps used for other plot types.</p><ol><li><p><strong>Enrichment Heatmap</strong> (Plot #1), <code>EnrichmentHeatmap()</code>.
+steps used for other plot types.</p><ol><li><p><strong>Enrichment Heatmap</strong> (Plot #1), <code><a href="MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>.
 Detailed arguments are described in <code><a href="mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>.</p></li>
-<li><p><strong>Gene-Pathway Heatmap</strong> (Plot #2) <code>GenePathHeatmap()</code>.
+<li><p><strong>Gene-Pathway Heatmap</strong> (Plot #2) <code><a href="MemPlotFolio-class.html">GenePathHeatmap()</a></code>.
 Detailed arguments are described in <code><a href="mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>.</p></li>
-<li><p><strong>Cnet Cluster Plot</strong> (Plots #3,#4,#5) <code>CnetCollapsed()</code>.
+<li><p><strong>Cnet Cluster Plot</strong> (Plots #3,#4,#5) <code><a href="MemPlotFolio-class.html">CnetCollapsed()</a></code>.
 Detailed arguments are described in <code><a href="collapse_mem_clusters.html">collapse_mem_clusters()</a></code> and
 <code><a href="mem2cnet.html">mem2cnet()</a></code>.</p><ul><li><p>For <code>mem_plot_folio()</code> three styles are produced,
 with different node labeling strategies.</p></li>
@@ -522,9 +600,9 @@ with different node labeling strategies.</p></li>
 <li><p>Plot #4 uses pathway names.</p></li>
 <li><p>Plot #5 uses pathway names, and hides gene labels.</p></li>
 </ul></li>
-<li><p><strong>Cnet Exemplar Plots</strong> (Plots #6,#7,#8) <code>CnetExemplar()</code>.
+<li><p><strong>Cnet Exemplar Plots</strong> (Plots #6,#7,#8) <code><a href="MemPlotFolio-class.html">CnetExemplar()</a></code>.
 The number of exemplars uses <code>exemplar_range=c(1, 2, 3)</code>.</p></li>
-<li><p><strong>Cnet Cluster Plots</strong> (Plots #9,#10,#11,etc.) <code>CnetCluster()</code>.
+<li><p><strong>Cnet Cluster Plots</strong> (Plots #9,#10,#11,etc.) <code><a href="MemPlotFolio-class.html">CnetCluster()</a></code>.
 Detailed arguments are described in <code><a href="mem2cnet.html">mem2cnet()</a></code>.</p></li>
 </ol></div>
 
@@ -547,36 +625,33 @@ or any non-blank column for headers(Mem) 'directionColname'.</p></li>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other multienrichjam core functions:
-<code><a href="jam_igraph.html">jam_igraph</a>()</code>,
-<code><a href="multiEnrichMap.html">multiEnrichMap</a>()</code></p></div>
+<code><a href="jam_igraph.html">jam_igraph()</a></code>,
+<code><a href="multiEnrichMap.html">multiEnrichMap()</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">Mpf</span> <span class="op">&lt;-</span> <span class="fu">prepare_folio</span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="mem_plot_folio-1.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span><span class="fu"><a href="MemPlotFolio-class.html">GenePathHeatmap</a></span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># take a subset of clusters and re-Mpf</span></span></span>
 <span class="r-in"><span><span class="va">MpfSub</span> <span class="op">&lt;-</span> <span class="fu">prepare_folio</span><span class="op">(</span><span class="va">Memtest</span>,</span></span>
 <span class="r-in"><span>   pathway_column_split<span class="op">=</span><span class="fu">Clusters</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">MpfSub</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="mem_plot_folio-2.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span><span class="fu"><a href="MemPlotFolio-class.html">GenePathHeatmap</a></span><span class="op">(</span><span class="va">MpfSub</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># adjust set names</span></span></span>
 <span class="r-in"><span><span class="va">Memtest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="fixSetLabels.html">fixSetLabels</a></span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">Mpf2</span> <span class="op">&lt;-</span> <span class="fu">prepare_folio</span><span class="op">(</span><span class="va">Memtest2</span>,</span></span>
 <span class="r-in"><span>   row_names_rot<span class="op">=</span><span class="fl">0</span>,</span></span>
 <span class="r-in"><span>   column_names_rot<span class="op">=</span><span class="fl">60</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="mem_plot_folio-3.png" alt="" width="960" height="960"></span>
+<span class="r-in"><span><span class="fu"><a href="MemPlotFolio-class.html">GenePathHeatmap</a></span><span class="op">(</span><span class="va">Mpf2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now add a temporary buffer for the heatmap dimnames</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="with_ht_opts.html">with_ht_opts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>DIMNAME_PADDING<span class="op">=</span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>   <span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf2</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="MemPlotFolio-class.html">GenePathHeatmap</a></span><span class="op">(</span><span class="va">Mpf2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="mem_plot_folio-4.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="mem_plot_folio-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -589,7 +664,7 @@ or any non-blank column for headers(Mem) 'directionColname'.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

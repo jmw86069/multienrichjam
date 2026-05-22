@@ -132,6 +132,7 @@ Other jam cnet igraph functions:
 \code{\link{apply_cnet_direction}()}
 
 Other jam igraph layouts: 
+\code{\link{layout_communities}()},
 \code{\link{layout_with_qfr}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{relayout_with_qfr}()},

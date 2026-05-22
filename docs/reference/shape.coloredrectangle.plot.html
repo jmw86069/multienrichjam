@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,7 +112,7 @@ render no color in that position.</p></li>
 These borders are drawn as inner borders so they do not overlap
 optional frame border.</p></li>
 <li><p>Each node may have a frame border, defined by <code>frame.color</code>,
-<code>frame.lwd</code>, and <code>frame.lty</code>. The frame border is drawn as an outer
+<code>frame.width</code>, and <code>frame.lty</code>. The frame border is drawn as an outer
 border so it does not overlap inner borders, adding some height and width
 to the final node. The frame border is drawn before the
 node squares are drawn.</p></li>
@@ -170,15 +170,15 @@ drawn as an outer border and slightly increases the size of the node.</p>
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://r.igraph.org/reference/shapes.html" class="external-link">igraph::shapes()</a></code></p>
 <p>Other jam igraph shapes:
-<code><a href="jam_mypie.html">jam_mypie</a>()</code>,
-<code><a href="shape.ellipse.clip.html">shape.ellipse.clip</a>()</code>,
-<code><a href="shape.ellipse.plot.html">shape.ellipse.plot</a>()</code>,
-<code><a href="shape.jampie.plot.html">shape.jampie.plot</a>()</code></p>
+<code><a href="jam_mypie.html">jam_mypie()</a></code>,
+<code><a href="shape.ellipse.clip.html">shape.ellipse.clip()</a></code>,
+<code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code>,
+<code><a href="shape.jampie.plot.html">shape.jampie.plot()</a></code></p>
 <p>Other jam igraph shapes:
-<code><a href="jam_mypie.html">jam_mypie</a>()</code>,
-<code><a href="shape.ellipse.clip.html">shape.ellipse.clip</a>()</code>,
-<code><a href="shape.ellipse.plot.html">shape.ellipse.plot</a>()</code>,
-<code><a href="shape.jampie.plot.html">shape.jampie.plot</a>()</code></p></div>
+<code><a href="jam_mypie.html">jam_mypie()</a></code>,
+<code><a href="shape.ellipse.clip.html">shape.ellipse.clip()</a></code>,
+<code><a href="shape.ellipse.plot.html">shape.ellipse.plot()</a></code>,
+<code><a href="shape.jampie.plot.html">shape.jampie.plot()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -209,12 +209,19 @@ drawn as an outer border and slightly increases the size of the node.</p>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.ncol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.nrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">coloredrect.lwd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">frame.lwd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>;</span></span>
+<span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">frame.width</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>;</span></span>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">frame.color</span> <span class="op">&lt;-</span> <span class="st">"black"</span></span></span>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">size2</span> <span class="op">&lt;-</span> <span class="fl">10</span>;</span></span>
 <span class="r-in"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span><span class="op">$</span><span class="va">shape</span> <span class="op">&lt;-</span> <span class="st">"coloredrectangle"</span>;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:03:55</span>) 22May2026:   <span style="color: #FF8700;">vertex.size:</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      vertex.size1 vertex.size2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    0.5555556    0.5555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    0.5555556    0.2777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    0.5555556    0.2777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    0.2777778    0.5555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    0.2777778    0.2777778</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">1.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"Each square is consistent size by vertex.size2\n"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, cex.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">0.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
@@ -224,6 +231,13 @@ drawn as an outer border and slightly increases the size of the node.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># equalize shortest side to size2</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>, vertex.coloredrect.equalize_sizes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:03:55</span>) 22May2026:   <span style="color: #FF8700;">vertex.size:</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      vertex.size1 vertex.size2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    0.2777778    0.2777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    0.5555556    0.2777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    0.5555556    0.2777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    0.2777778    0.5555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    0.2777778    0.2777778</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">1.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"The shortest side is fixed by vertex.size2\n"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, cex.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">0.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
@@ -233,6 +247,13 @@ drawn as an outer border and slightly increases the size of the node.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># equalize longest side to size2</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">g1</span>, vertex.label<span class="op">=</span><span class="st">""</span>, vertex.coloredrect.equalize_sizes<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ##  (<span style="color: #00FFFF; font-weight: bold;">11:03:56</span>) 22May2026:   <span style="color: #FF8700;">vertex.size:</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      vertex.size1 vertex.size2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    0.2777778    0.2777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    0.2777778    0.1388889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    0.2777778    0.1388889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    0.1388889    0.2777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    0.2777778    0.2777778</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">1.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="st">"The longest side is fixed by vertex.size2\n"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span>font.main<span class="op">=</span><span class="fl">1</span>, cex.main<span class="op">=</span><span class="fl">1</span>, line<span class="op">=</span><span class="fl">0.5</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
@@ -251,7 +272,7 @@ drawn as an outer border and slightly increases the size of the node.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -4,6 +4,7 @@
 
 * Add tests for steps in the vignettes, including input enrichment
 with directionColname in one file, but not the other.
+* Test interactive `GenePathHeatmap()` with InteractiveComplexHeatmap.
 
 ## 19may2026
 

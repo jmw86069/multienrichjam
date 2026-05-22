@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
 <span>  <span class="va">clusters</span>,</span>
 <span>  choose <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  per_cluster <span class="op">=</span> <span class="cn">Inf</span>,</span>
-<span>  byCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"composite_rank"</span>, <span class="st">"minp_rank"</span>, <span class="st">"gene_count_rank"</span><span class="op">)</span>,</span>
+<span>  byCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"minp_rank"</span>, <span class="st">"composite_rank"</span>, <span class="st">"gene_count_rank"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -74,24 +74,31 @@
 
 
 <dt id="arg-choose">choose<a class="anchor" aria-label="anchor" href="#arg-choose"></a></dt>
-<dd><p>optional vector indicating which clusters to
-return. If an integer vector, it refers to the elements
-in the input <code>clusters</code>. If a character vector, it must
-contain values in <code>names(clusters)</code>. When <code>choose</code> is <code>NULL</code>,
-all clusters are returned.</p></dd>
+<dd><p><code>character</code> vector with optional subset of clusters
+to return, matching <code>names(clusters)</code>;
+or <code>integer</code> vector referring to <code>clusters</code> by index position.
+When <code>choose</code> is <code>NULL</code>, all clusters are returned.</p></dd>
 
 
 <dt id="arg-per-cluster">per_cluster<a class="anchor" aria-label="anchor" href="#arg-per-cluster"></a></dt>
-<dd><p>integer vector with the number of entries
+<dd><p><code>integer</code> vector with the number of entries
 to return for each cluster. Values will be recycled to the
 length of the clusters to be returned, defined by <code>choose</code>
 or by <code>length(clusters)</code> when <code>choose</code> is <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-bycols">byCols<a class="anchor" aria-label="anchor" href="#arg-bycols"></a></dt>
-<dd><p>character vector used to sort the resulting
+<dd><p><code>character</code> vector used to sort the resulting
 <code>data.frame</code> within each cluster. This argument is passed
-directly to <code><a href="https://jmw86069.github.io/jamba/reference/mixedSortDF.html" class="external-link">jamba::mixedSortDF()</a></code>.</p></dd>
+directly to <code><a href="https://jmw86069.github.io/jamba/reference/mixedSortDF.html" class="external-link">jamba::mixedSortDF()</a></code>. Default 'minp_rank'.
+Recognized columns:</p><ul><li><p>'<strong>minp_rank</strong>': the lowest P-value for all enrichments.</p></li>
+<li><p>'<strong>composite_rank</strong>': a composite score which sorts by the
+order of magnitude of the lowest P-value, then by number
+of genes.</p></li>
+<li><p>'<strong>gene_count_rank</strong>': the set with the most genes.</p></li>
+</ul><p>Note that any column order can be reversed using "-" prefix,
+for example '-gene_count_rank' would return the set with the
+lowest gene count.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -105,8 +112,16 @@ directly to <code><a href="https://jmw86069.github.io/jamba/reference/mixedSortD
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code>data.frame</code> sorted by the criteria defined by <code>byCols</code>,
-with colname <code>"set"</code> to indicate the pathway/set name.</p>
-    </div>
+with colname <code>"set"</code> to indicate the pathway/set name.
+It includes additional columns which may be useful in
+filtering or sorting.</p><ul><li><p>'gene_count': the total number of genes involved in enrichment</p></li>
+<li><p>'minp': the lowest enrichment P-value</p></li>
+<li><p>'gene_count_rank': the rank by descending gene count per cluster.</p></li>
+<li><p>'minp_rank': the rank by ascending minimum P-value.</p></li>
+<li><p>'composite_rank': the rank of the composite score, ascending.
+The composite rank uses the order of magnitude of minimum P-value,
+then descending number of genes.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function takes <code>list</code> output from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code>, and
@@ -123,31 +138,31 @@ pathways from specific clusters.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam utility functions:
-<code><a href="ashape.html">ashape</a>()</code>,
-<code><a href="avg_angles.html">avg_angles</a>()</code>,
-<code><a href="avg_colors_by_list.html">avg_colors_by_list</a>()</code>,
-<code><a href="cell_fun_bivariate.html">cell_fun_bivariate</a>()</code>,
-<code><a href="collapse_mem_clusters.html">collapse_mem_clusters</a>()</code>,
-<code><a href="colorRamp2D.html">colorRamp2D</a>()</code>,
-<code><a href="curateIPAcolnames.html">curateIPAcolnames</a>()</code>,
-<code><a href="deconcat_df2.html">deconcat_df2</a>()</code>,
-<code><a href="display_colorRamp2D.html">display_colorRamp2D</a>()</code>,
-<code><a href="enrichList2geneHitList.html">enrichList2geneHitList</a>()</code>,
-<code><a href="find_colname.html">find_colname</a>()</code>,
-<code><a href="find_enrich_colnames.html">find_enrich_colnames</a>()</code>,
-<code><a href="get_hull_data.html">get_hull_data</a>()</code>,
-<code><a href="get_igraph_layout.html">get_igraph_layout</a>()</code>,
-<code><a href="gsubs_remove.html">gsubs_remove</a>()</code>,
-<code><a href="handle_igraph_param_list.html">handle_igraph_param_list</a>()</code>,
-<code><a href="isColorBlank.html">isColorBlank</a>()</code>,
-<code><a href="make_legend_bivariate.html">make_legend_bivariate</a>()</code>,
-<code><a href="make_point_hull.html">make_point_hull</a>()</code>,
-<code><a href="mem_find_overlap.html">mem_find_overlap</a>()</code>,
-<code><a href="order_colors.html">order_colors</a>()</code>,
-<code><a href="rotate_coordinates.html">rotate_coordinates</a>()</code>,
-<code><a href="summarize_node_spacing.html">summarize_node_spacing</a>()</code>,
-<code><a href="with_ht_opts.html">with_ht_opts</a>()</code>,
-<code><a href="xyAngle.html">xyAngle</a>()</code></p></div>
+<code><a href="ashape.html">ashape()</a></code>,
+<code><a href="avg_angles.html">avg_angles()</a></code>,
+<code><a href="avg_colors_by_list.html">avg_colors_by_list()</a></code>,
+<code><a href="cell_fun_bivariate.html">cell_fun_bivariate()</a></code>,
+<code><a href="collapse_mem_clusters.html">collapse_mem_clusters()</a></code>,
+<code><a href="colorRamp2D.html">colorRamp2D()</a></code>,
+<code><a href="curateIPAcolnames.html">curateIPAcolnames()</a></code>,
+<code><a href="deconcat_df2.html">deconcat_df2()</a></code>,
+<code><a href="display_colorRamp2D.html">display_colorRamp2D()</a></code>,
+<code><a href="enrichList2geneHitList.html">enrichList2geneHitList()</a></code>,
+<code><a href="find_colname.html">find_colname()</a></code>,
+<code><a href="find_enrich_colnames.html">find_enrich_colnames()</a></code>,
+<code><a href="get_hull_data.html">get_hull_data()</a></code>,
+<code><a href="get_igraph_layout.html">get_igraph_layout()</a></code>,
+<code><a href="gsubs_remove.html">gsubs_remove()</a></code>,
+<code><a href="handle_igraph_param_list.html">handle_igraph_param_list()</a></code>,
+<code><a href="isColorBlank.html">isColorBlank()</a></code>,
+<code><a href="make_legend_bivariate.html">make_legend_bivariate()</a></code>,
+<code><a href="make_point_hull.html">make_point_hull()</a></code>,
+<code><a href="mem_find_overlap.html">mem_find_overlap()</a></code>,
+<code><a href="order_colors.html">order_colors()</a></code>,
+<code><a href="rotate_coordinates.html">rotate_coordinates()</a></code>,
+<code><a href="summarize_node_spacing.html">summarize_node_spacing()</a></code>,
+<code><a href="with_ht_opts.html">with_ht_opts()</a></code>,
+<code><a href="xyAngle.html">xyAngle()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -170,7 +185,7 @@ pathways from specific clusters.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

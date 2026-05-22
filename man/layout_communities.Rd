@@ -18,10 +18,29 @@ layout_communities(g, layout = layout_with_qfrf(repulse = 3), ...)
 \code{igraph}
 }
 \description{
-Layout igraph communities, applies layout to each node community
+Layout igraph communities, applies layout to each node community,
+experimental.
 }
 \details{
 This function mimics \code{igraph::layout_components()}, in that it
 splits the input \code{igraph} into a \code{list}, applies layout to
 each graph, then merges the layouts together.
+
+This layout is experimental, as it currently uses methods in
+\code{igraph} which assume each component is not connected, therefore
+the placement of disjoint nodesets is not at all based upon
+any relationship to other nodesets. In this case, communities
+may be connected to each other, and so placement could usually
+be improved. This layout is an area for future development.
 }
+\seealso{
+Other jam igraph layouts: 
+\code{\link{layout_with_qfr}()},
+\code{\link{layout_with_qfrf}()},
+\code{\link{relayout_with_qfr}()},
+\code{\link{removeIgraphSinglets}()},
+\code{\link{reorderIgraphNodes}()},
+\code{\link{rotate_igraph_layout}()},
+\code{\link{spread_igraph_labels}()}
+}
+\concept{jam igraph layouts}

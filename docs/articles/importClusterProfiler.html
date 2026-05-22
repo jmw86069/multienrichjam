@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -718,7 +718,7 @@ detail in <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a><
 <span>   do_which<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>,</span>
 <span>   main<span class="op">=</span><span class="st">"Canonical Pathways"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required namespace: gridtext</span></span></code></pre></div>
-<p><img src="importClusterProfiler_files/figure-html/mem-folio-1.png" alt="mem_plot_folio, plot 1, enrichment heatmap" width="100%" style="display: block; margin: auto;"><img src="importClusterProfiler_files/figure-html/mem-folio-2.png" alt="mem_plot_folio, plot 2, Gene-Pathway heatmap" width="100%" style="display: block; margin: auto;"><img src="importClusterProfiler_files/figure-html/mem-folio-3.png" alt="mem_plot_folio, plot 3, Cnet plot with Cluster Letters" width="100%" style="display: block; margin: auto;"><img src="importClusterProfiler_files/figure-html/mem-folio-4.png" alt="mem_plot_folio, plot 4, Cnet plot with Cluster Summary Labels" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="importClusterProfiler_files/figure-html/mem-folio-1.png" class="r-plt" alt="mem_plot_folio, plot 1, enrichment heatmap" width="100%" style="display: block; margin: auto;"><img src="importClusterProfiler_files/figure-html/mem-folio-2.png" class="r-plt" alt="mem_plot_folio, plot 2, Gene-Pathway heatmap" width="100%" style="display: block; margin: auto;"><img src="importClusterProfiler_files/figure-html/mem-folio-3.png" class="r-plt" alt="mem_plot_folio, plot 3, Cnet plot with Cluster Letters" width="100%" style="display: block; margin: auto;"><img src="importClusterProfiler_files/figure-html/mem-folio-4.png" class="r-plt" alt="mem_plot_folio, plot 4, Cnet plot with Cluster Summary Labels" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="cnet-collapsed-cluster-plot">Cnet Collapsed Cluster Plot<a class="anchor" aria-label="anchor" href="#cnet-collapsed-cluster-plot"></a>
@@ -732,7 +732,7 @@ Cnet <code>igraph</code> object.</li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># extract the cnet</span></span>
-<span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf</span>, do_plot<span class="op">=</span><span class="cn">FALSE</span>, type<span class="op">=</span><span class="st">"set"</span><span class="op">)</span>;</span></code></pre></div>
+<span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MemPlotFolio-class.html">CnetCollapsed</a></span><span class="op">(</span><span class="va">Mpf</span>, do_plot<span class="op">=</span><span class="cn">FALSE</span>, type<span class="op">=</span><span class="st">"set"</span><span class="op">)</span>;</span></code></pre></div>
 <p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> is a custom plotting function with
 enhancements:</p>
 <ul>
@@ -757,7 +757,7 @@ for Gene and Set.</li>
 <span>   use_shadowText<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>   label_dist_factor<span class="op">=</span><span class="fl">5</span>,</span>
 <span>   label_factor_l<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nodeType<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Gene<span class="op">=</span><span class="fl">2</span>, Set<span class="op">=</span><span class="fl">0.8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="importClusterProfiler_files/figure-html/cnet-collapsed-1.png" alt="Cnet collapsed plot suitable for customization." width="100%" style="display: block; margin: auto;"></p>
+<p><img src="importClusterProfiler_files/figure-html/cnet-collapsed-1.png" class="r-plt" alt="Cnet collapsed plot suitable for customization." width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -805,7 +805,7 @@ RData” from within the R-shiny app. For example:</p>
 <h3 id="shinycat-screenshot">ShinyCat Screenshot<a class="anchor" aria-label="anchor" href="#shinycat-screenshot"></a>
 </h3>
 <p>An example of ShinyCat in action is shown below.</p>
-<p><img src="shinycat-2.png" alt="Screenshot of ShinyCat in action, with a Cnet network plot in the center, and several inputs on the left to adjust the layout." width="100%" style="display: block; margin: auto;"></p>
+<p><img src="shinycat-2.png" class="r-plt" alt="Screenshot of ShinyCat in action, with a Cnet network plot in the center, and several inputs on the left to adjust the layout." width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -819,7 +819,7 @@ RData” from within the R-shiny app. For example:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

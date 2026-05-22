@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,12 +103,12 @@ to each pie wedge using 'pie.border'.</p><ul><li><p>Default <code>hide_solo_pie=
 have the same <code>pie.border</code> color, the 'pie.border' is defined
 as <code>NA</code>, and 'frame.color' is assigned to this color.
 The effect is to display the outline color and not each wedge.
-Both 'pie.lwd' and 'frame.lwd' will be assigned <code>border_lwd</code>,
+Both 'pie.lwd' and 'frame.width' will be assigned <code>border_lwd</code>,
 and since 'pie.border' is <code>NA</code> it will not be rendered. Only the
 'frame.color' will be rendered.</p></li>
 <li><p>When <code>hide_solo_pie=FALSE</code> each pie wedge border color is assigned
 to 'pie.border', <code>frame.color</code> will be assigned 'frame_blank',
-and 'frame.lwd' will be assigned 'frame_lwd_blank' which is useful
+and 'frame.width' will be assigned 'frame_lwd_blank' which is useful
 for displaying a small outer frame for each node.</p></li>
 </ul></dd>
 
@@ -138,7 +138,7 @@ matches <code>rownames(hitim)</code>.
 When the colors are applied to 'pie.color',
 the border is defined with 'pie.lwd'.
 When colors are applied to 'frame.color', the border is defined
-with 'frame.lwd'.</p></dd>
+with 'frame.width'.</p></dd>
 
 
 <dt id="arg-do-reorder">do_reorder<a class="anchor" aria-label="anchor" href="#arg-do-reorder"></a></dt>
@@ -197,7 +197,7 @@ previously did not exist. It would probably optionally also use
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam cnet igraph functions:
-<code><a href="rotate_igraph_layout.html">rotate_igraph_layout</a>()</code></p></div>
+<code><a href="rotate_igraph_layout.html">rotate_igraph_layout()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -209,7 +209,7 @@ previously did not exist. It would probably optionally also use
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

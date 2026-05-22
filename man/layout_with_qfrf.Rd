@@ -30,6 +30,7 @@ layout parameters in the same call.
 }
 \seealso{
 Other jam igraph layouts: 
+\code{\link{layout_communities}()},
 \code{\link{layout_with_qfr}()},
 \code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphSinglets}()},

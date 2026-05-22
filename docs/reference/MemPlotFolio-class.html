@@ -9,7 +9,7 @@ current class version "1.0.0".'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,19 @@ current class version "1.0.0".</p>
 <span><span class="fu">GeneClusters</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
-<span><span class="fu">thresholds</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">ClusterLabels</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
+<span><span class="fu">ClusterLabels</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
+<span><span class="fu">ClusterData</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
+<span><span class="fu">ClusterData</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
+<span><span class="fu"><a href="https://jmw86069.github.io/multienrichjam/reference/Mem-class.html">thresholds</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
 <span><span class="fu">metadata</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -84,13 +96,42 @@ current class version "1.0.0".</p>
 <span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">x</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
-<span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">x</span>, <span class="va">type</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">x</span>, <span class="va">type</span>, <span class="va">do_plot</span>, legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>, legend_y <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
-<span><span class="fu">CnetExemplar</span><span class="op">(</span><span class="va">x</span>, <span class="va">num</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">CnetExemplar</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">num</span>,</span>
+<span>  <span class="va">do_plot</span>,</span>
+<span>  legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
+<span>  legend_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
-<span><span class="fu">CnetCluster</span><span class="op">(</span><span class="va">x</span>, <span class="va">cluster</span>, <span class="va">do_plot</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">CnetCluster</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">cluster</span>,</span>
+<span>  <span class="va">do_plot</span>,</span>
+<span>  legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
+<span>  legend_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'MemPlotFolio,ANY'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'MemPlotFolio'</span></span>
+<span><span class="fu">EnrichmentMap</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  do_plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
+<span>  legend_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -106,7 +147,16 @@ current class version "1.0.0".</p>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional arguments are ignored</p></dd>
+<dd><p>additional arguments passed to <code><a href="plot_mpf.html">plot_mpf()</a></code></p></dd>
+
+
+<dt id="arg-value">value<a class="anchor" aria-label="anchor" href="#arg-value"></a></dt>
+<dd><p>named <code>character</code> vector of cluster labels, where names
+correspond to cluster names as returned by <code>Clusters(x)</code>.</p></dd>
+
+
+<dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
+<dd><p>ignored</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -118,6 +168,14 @@ from 'list' or 'MemPlotFolio' input.</p>
 named by cluster.</p>
 <p><code>GeneClusters(MemPlotFolio)</code> returns a <code>list</code> of
 <code>character</code> vectors, named by cluster.</p>
+<p><code>ClusterLabels(MemPlotFolio)</code> returns a named <code>character</code> vector
+of cluster labels, or <code>NULL</code> if none are defined.</p>
+<p><code>ClusterLabels&lt;-(MemPlotFolio)</code> returns the updated <code>MemPlotFolio</code>
+object with new cluster labels stored in <code>metadata$cluster_labels</code>.</p>
+<p><code>ClusterData(MemPlotFolio)</code> returns a named <code>list</code>
+of cluster data, or <code>NULL</code> if none are defined.</p>
+<p><code>ClusterData&lt;-(MemPlotFolio)</code> returns the updated <code>MemPlotFolio</code>
+object with new cluster data stored in <code>metadata$cluster_data</code>.</p>
 <p><code>thresholds(MemPlotFolio)</code> returns a <code>list</code> of
 thresholds used with <code><a href="mem_plot_folio.html">mem_plot_folio()</a></code>.</p>
 <p><code>metadata(MemPlotFolio)</code> returns a <code>list</code> of
@@ -130,14 +188,21 @@ in the form of <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legends.htm
 as R grid graphics.</p>
 <p><code>EnrichmentHeatmap(MemPlotFolio)</code> returns a
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapList.html" class="external-link">ComplexHeatmap::HeatmapList</a></code> when do_plot is TRUE (default),
+in addition to rendering the heatmap. It returns
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code> when do_plot is FALSE, containing
-enrichment P-values by enrichment, and pathway rows in clusters.</p>
-<p><code>GenePathHeatmap(MemPlotFolio)</code> returns a
+enrichment P-values by enrichment, and pathway rows in clusters.
+Optional arguments '...' include:</p><ul><li><p>'main' or 'column_title' for overall plot title;</p></li>
+<li><p>'column_title_gp' as <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> to adjust title font;</p></li>
+<li><p>'use_cluster_labels' <code>logical</code> whether to use <code>ClusterLabels()</code>
+as row title entries.</p></li>
+</ul><p><code>GenePathHeatmap(MemPlotFolio)</code> returns a
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapList.html" class="external-link">ComplexHeatmap::HeatmapList</a></code> when do_plot is TRUE (default),
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code> when do_plot is FALSE, containing
 the genes-pathways incidence matrix and associated caption.</p>
 <p><code>CnetCollapsed(MemPlotFolio)</code> returns an <code>igraph</code> object invisibly,
-with Gene and Set nodes representing the collapsed pathway clusters.</p>
+with Gene and Set nodes representing the collapsed pathway clusters.
+The legend position can be adjusted using 'legend_x', 'legend_y' which
+are passed to <code><a href="mem_legend.html">mem_legend()</a></code> as 'x' and 'y'.</p>
 <p><code>CnetExemplar(MemPlotFolio)</code> returns an <code>igraph</code> object
 with Gene and Set nodes for the 'num' number of exemplars per cluster.</p>
 <p><code>CnetCluster(MemPlotFolio)</code> returns an <code>igraph</code> object invisibly,
@@ -156,6 +221,17 @@ containing <code>character</code> vectors of pathway gene sets.</p></li>
 <li><p><code>GeneClusters(MemPlotFolio)</code>: Returns the order of genes from
 <code>MemPlotFolio</code> results as a <code>list</code> named by gene cluster,
 containing <code>character</code> vectors of genes.</p></li>
+<li><p><code>ClusterLabels(MemPlotFolio)</code>: Returns cluster labels stored in the
+<code>metadata</code> slot of <code>MemPlotFolio</code>.</p></li>
+<li><p><code>ClusterLabels(MemPlotFolio) &lt;- value</code>: Sets cluster labels in the <code>metadata</code> slot
+of <code>MemPlotFolio</code>.</p></li>
+<li><p><code>ClusterData(MemPlotFolio)</code>: Returns cluster data stored in the
+<code>metadata</code> slot of <code>MemPlotFolio</code>, intended to store further
+information to describe each cluster.</p></li>
+<li><p><code>ClusterData(MemPlotFolio) &lt;- value</code>: Sets cluster data in the <code>metadata</code> slot
+of <code>MemPlotFolio</code>, intended to store further information to
+describe each cluster. It should be the same length as <code>Clusters(x)</code>
+and have no names, or have names equal to <code>names(Clusters(x))</code>.</p></li>
 <li><p><code>thresholds(MemPlotFolio)</code>: Returns the thresholds used with
 <code>MemPlotFolio</code>.</p></li>
 <li><p><code>metadata(MemPlotFolio)</code>: Returns the metadata used with
@@ -165,15 +241,33 @@ containing <code>character</code> vectors of genes.</p></li>
 <li><p><code>CaptionLegendList(MemPlotFolio)</code>: Returns the caption summary for
 <code>MemPlotFolio</code> as <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legends.html" class="external-link">ComplexHeatmap::Legends</a></code>.</p></li>
 <li><p><code>EnrichmentHeatmap(MemPlotFolio)</code>: Draws the enrichment heatmap
-from <code>MemPlotFolio</code> results.</p></li>
+from <code>MemPlotFolio</code> results.
+Optional arguments '...' include:</p><ul><li><p>'main' or 'column_title' for overall plot title;</p></li>
+<li><p>'column_title_gp' as <code><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">grid::gpar()</a></code> to adjust title font;</p></li>
+<li><p>'use_cluster_labels' <code>logical</code> whether to use <code>ClusterLabels()</code>
+as row title entries.</p></li>
+</ul></li>
 <li><p><code>GenePathHeatmap(MemPlotFolio)</code>: Draws the gene-pathway set heatmap
 from <code>MemPlotFolio</code> results.</p></li>
 <li><p><code>CnetCollapsed(MemPlotFolio)</code>: Draws the Cnet collapsed
 network from <code>MemPlotFolio</code> results. Note that '...' arguments are
 passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and <code><a href="mem_legend.html">mem_legend()</a></code> when <code>do_plot=TRUE</code>.
-Argument <code>type</code> can be:</p><ul><li><p><code>type=''</code> (default) to use cluster title</p></li>
+When 'type' is not defined: it uses  type='cluster' if
+<code>ClusterLabels()</code> is defined, otherwise type='set';
+then it appends '2' to the end if there are more than 1000 nodes.
+Argument 'type' can be:</p><ul><li><p><code>type='title'</code> or <code>type=''</code> to use cluster title</p></li>
 <li><p><code>type='set'</code> to use abbreviated pathway names</p></li>
-<li><p><code>type='set2'</code> to use abbreviated pathway names, with hidden gene labels</p></li>
+<li><p><code>type='cluster'</code> to use cluster labels</p></li>
+<li><p><code>type='attribute'</code> to use any existing vertex attribute.</p></li>
+<li><p>Append <strong>'2'</strong> to the end to hide gene labels. For example <code>type='set2'</code>.</p></li>
+</ul><p>Recognized arguments in '...':</p><ul><li><p><code>'width'</code> to apply word-wrap to cluster labels, or vertex attribute.</p></li>
+<li><p><code>'maxNchar'</code> to set maximum string character length, passed to
+<code><a href="fixSetLabels.html">fixSetLabels()</a></code>.</p></li>
+<li><p><code>'layout'</code> passed to <code>set_igraph_layout(cnet, layout)</code> to update
+the node layout.</p></li>
+<li><p><code>'rotate_degrees'</code> with <code>numeric</code> value. When set, it calls
+<code><a href="rotate_igraph_layout.html">rotate_igraph_layout()</a></code> with defaults.</p></li>
+<li><p>All other '...' arguments are passed to <code><a href="jam_igraph.html">jam_igraph()</a></code>.</p></li>
 </ul><p>The legend includes direction if encoded in the 'MemPlotFolio', but
 can be forced with <code>do_directional=TRUE</code> or FALSE.</p></li>
 <li><p><code>CnetExemplar(MemPlotFolio)</code>: Draws the Cnet exemplar network
@@ -181,24 +275,36 @@ from <code>MemPlotFolio</code> results for 'num' exemplar per cluster.
 Note that '...' arguments are
 passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and <code><a href="mem_legend.html">mem_legend()</a></code> when <code>do_plot=TRUE</code>.</p>
 <p>The legend includes direction if encoded in the 'MemPlotFolio', but
-can be forced with <code>do_directional=TRUE</code> or FALSE.</p></li>
+can be forced with <code>do_directional=TRUE</code> or FALSE. Legend position
+is controlled by legend_x,legend_y, default legend_x="bottomleft".</p></li>
 <li><p><code>CnetCluster(MemPlotFolio)</code>: Draws the Cnet network
 from <code>MemPlotFolio</code> results for a specific cluster.
 Note that '...' arguments are
 passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and <code><a href="mem_legend.html">mem_legend()</a></code> when <code>do_plot=TRUE</code>.</p>
 <p>The legend includes direction if encoded in the 'MemPlotFolio', but
-can be forced with <code>do_directional=TRUE</code> or FALSE.</p></li>
+can be forced with <code>do_directional=TRUE</code> or FALSE.
+Plot title 'main', default NULL uses the cluster label if present,
+then cluster name. Use main=FALSE or main="" to hide the title.</p></li>
+<li><p><code>plot(x = MemPlotFolio, y = ANY)</code>: Plot a <code>MemPlotFolio</code> object calling
+<code><a href="plot_mpf.html">plot_mpf()</a></code></p></li>
+<li><p><code>EnrichmentMap(MemPlotFolio)</code>: EnrichmentMap <code>igraph</code> network to connect
+pathway gene sets based upon Jaccard overlap between each
+pathway pair.
+Note '...' arguments are passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and
+<code><a href="mem_legend.html">mem_legend()</a></code> when <code>do_plot=TRUE</code>.
+Argument <code>'params'</code> is a <code>list</code> with additional arguments:
+'repulse', 'width', 'group', 'mark.expand', 'do_legend'.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam Mem utilities:
 <code><a href="Mem-class.html">Mem-class</a></code>,
-<code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
-<code><a href="mem2cnet.html">mem2cnet</a>()</code>,
-<code><a href="mem2emap.html">mem2emap</a>()</code></p>
+<code><a href="fixSetLabels.html">fixSetLabels()</a></code>,
+<code><a href="mem2cnet.html">mem2cnet()</a></code>,
+<code><a href="mem2emap.html">mem2emap()</a></code></p>
 <p>Other MemPlotFolio:
-<code><a href="check_MemPlotFolio.html">check_MemPlotFolio</a>()</code>,
-<code><a href="score_gene_path_clusters.html">score_gene_path_clusters</a>()</code></p></div>
+<code><a href="check_MemPlotFolio.html">check_MemPlotFolio()</a></code>,
+<code><a href="score_gene_path_clusters.html">score_gene_path_clusters()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -215,23 +321,22 @@ can be forced with <code>do_directional=TRUE</code> or FALSE.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># enrichment heatmap</span></span></span>
 <span class="r-in"><span><span class="fu">EnrichmentHeatmap</span><span class="op">(</span><span class="va">Mpf</span>, column_title<span class="op">=</span><span class="st">"Enrichment Heatmap"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="MemPlotFolio-class-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Gene-path heatmap</span></span></span>
 <span class="r-in"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf</span>, column_title<span class="op">=</span><span class="st">"Gene-Path Heatmap"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="MemPlotFolio-class-2.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="MemPlotFolio-class-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Cnet collapsed sets</span></span></span>
 <span class="r-in"><span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf</span>, type<span class="op">=</span><span class="st">"set"</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, main<span class="op">=</span><span class="st">"Cnet Collapsed Sets"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="MemPlotFolio-class-3.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="MemPlotFolio-class-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Cnet exemplar plot</span></span></span>
 <span class="r-in"><span><span class="fu">CnetExemplar</span><span class="op">(</span><span class="va">Mpf</span>, num<span class="op">=</span><span class="fl">2</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, main<span class="op">=</span><span class="st">"Cnet Exemplars, num=2"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="MemPlotFolio-class-4.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="MemPlotFolio-class-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Cnet cluster plot</span></span></span>
 <span class="r-in"><span><span class="fu">CnetCluster</span><span class="op">(</span><span class="va">Mpf</span>, cluster<span class="op">=</span><span class="st">"B"</span>, use_shadowText<span class="op">=</span><span class="cn">TRUE</span>, main<span class="op">=</span><span class="st">"Cnet Cluster 'B'"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="MemPlotFolio-class-5.png" alt="" width="960" height="960"></span>
+<span class="r-plt img"><img src="MemPlotFolio-class-4.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -244,7 +349,7 @@ can be forced with <code>do_directional=TRUE</code> or FALSE.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

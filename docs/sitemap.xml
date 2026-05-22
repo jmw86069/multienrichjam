@@ -65,6 +65,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_hull_data.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_igraph_arrow_mode.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/get_igraph_layout.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/gr2er.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/grid_with_title.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/gsubs.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/gsubs_remove.html</loc></url>
@@ -82,6 +83,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/imSigned2list.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/imSigned2list_dep.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/index.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/internal_EnrichmentMap.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/IPAlist_to_hits.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/isColorBlank.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_igraph.html</loc></url>
@@ -90,6 +92,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/jam_plot_igraph.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/label_communities.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/launch_shinycat.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/layout_communities.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/layout_with_qfr.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/layout_with_qfrf.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/list2concordance.html</loc></url>
@@ -105,6 +108,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem2cnet.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem2emap.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_do_newpage.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_find_overlap.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/mem_gene_path_heatmap.html</loc></url>
@@ -119,6 +123,7 @@
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/order_colors.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/parse_igraph_plot_params.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/plot_layout_scale.html</loc></url>
+<url><loc>https://jmw86069.github.io/multienrichjam/reference/plot_mpf.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/rank_mem_clusters.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/rectifyPiegraph.html</loc></url>
 <url><loc>https://jmw86069.github.io/multienrichjam/reference/relayout_nodegroups.html</loc></url>

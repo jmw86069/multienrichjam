@@ -9,7 +9,7 @@ current class version "1.0.0".'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -145,10 +145,10 @@ current class version "1.0.0".</p>
 <span><span class="fu">colorV</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'Mem'</span></span>
-<span><span class="fu">thresholds</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://jmw86069.github.io/multienrichjam/reference/Mem-class.html">thresholds</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'Mem'</span></span>
-<span><span class="fu">thresholds</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu"><a href="https://jmw86069.github.io/multienrichjam/reference/Mem-class.html">thresholds</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'Mem'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -165,7 +165,17 @@ current class version "1.0.0".</p>
 <span><span class="fu">geneInCategory</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'Mem'</span></span>
-<span><span class="fu">setsByGene</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">setsByGene</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'Mem'</span></span>
+<span><span class="fu">EnrichmentMap</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">do_plot</span>,</span>
+<span>  legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
+<span>  legend_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -214,9 +224,11 @@ class version, and current valid class definition. It should be
 able to update any serialized 'Mem' object from previous
 class versions.</p>
 <p><code>geneInCategory()</code> returns a <code>list</code> named by pathway, containing
-<code>character</code> vectors with genes in each pathway.</p>
-<p><code>geneInCategory()</code> returns a <code>list</code> named by gene,
-containing <code>character</code> vectors with associated gene sets.</p>
+<code>character</code> vectors with genes in each pathway.
+For the reciprocal, see <code>setsByGene()</code>.</p>
+<p><code>setsByGene()</code> returns a <code>list</code> named by gene,
+containing <code>character</code> vectors with associated gene sets.
+For the reciprocal, see <code>geneInCategory()</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
@@ -273,20 +285,27 @@ Mem object.</p></li>
 <li><p><code>dimnames(Mem)</code>: dimension names for each genes, sets, and enrichments</p></li>
 <li><p><code>list_to_Mem()</code>: Convert legacy <code>list</code> mem format to S4 <code>Mem</code></p></li>
 <li><p><code>updateObject(Mem)</code>: Confirm Mem object meets current class definition.</p></li>
-<li><p><code>geneInCategory(Mem)</code>: Genes in each pathway set (category)</p></li>
-<li><p><code>setsByGene(Mem)</code>: Pathways gene sets associated with each gene</p></li>
+<li><p><code>geneInCategory(Mem)</code>: Genes in each category (pathway, gene set)</p></li>
+<li><p><code>setsByGene(Mem)</code>: Pathway gene sets associated with each gene</p></li>
+<li><p><code>EnrichmentMap(Mem)</code>: EnrichmentMap <code>igraph</code> network to connect
+pathway gene sets based upon Jaccard overlap between each
+pathway pair.
+Note '...' arguments are passed to <code><a href="jam_igraph.html">jam_igraph()</a></code> and
+<code><a href="mem_legend.html">mem_legend()</a></code> when <code>do_plot=TRUE</code>.
+Argument <code>'params'</code> is a <code>list</code> with additional arguments:
+'repulse', 'width', 'group', 'mark.expand', 'do_legend'.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other Mem:
 <code><a href="Mem-data.html">Mem-data</a></code>,
 <code><a href="Mem-slots.html">Mem-slots</a></code>,
-<code><a href="check_Mem.html">check_Mem</a>()</code></p>
+<code><a href="check_Mem.html">check_Mem()</a></code></p>
 <p>Other jam Mem utilities:
 <code><a href="MemPlotFolio-class.html">MemPlotFolio-class</a></code>,
-<code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
-<code><a href="mem2cnet.html">mem2cnet</a>()</code>,
-<code><a href="mem2emap.html">mem2emap</a>()</code></p></div>
+<code><a href="fixSetLabels.html">fixSetLabels()</a></code>,
+<code><a href="mem2cnet.html">mem2cnet()</a></code>,
+<code><a href="mem2emap.html">mem2emap()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -319,6 +338,123 @@ Mem object.</p></li>
 <span class="r-in"><span><span class="va">mem</span> <span class="op">&lt;-</span> <span class="fu">as</span><span class="op">(</span><span class="va">Memtest</span>, <span class="st">"list"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">Mem</span> <span class="op">&lt;-</span> <span class="fu">list_to_Mem</span><span class="op">(</span><span class="va">mem</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">setsByGene</span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ADCY3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Role Of Nfat In Cardiac Hypertrophy"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "RAR Activation"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Creb Signaling In Neurons"                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "Dopamine-Darpp32 Feedback In Camp Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "Hepatic Cholestasis"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "eNOS Signaling"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $CASP8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Huntington's Disease Signaling" "eNOS Signaling"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $CITED2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "RAR Activation"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $DDIT4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mTOR Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $IGF1R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Huntington's Disease Signaling"      "Role Of Nfat In Cardiac Hypertrophy"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Synaptic Long Term Depression"       "Glioma Signaling"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "Growth Hormone Signaling"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $IL4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Hepatic Cholestasis"                                                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "Production Of Nitric Oxide And Reactive Oxygen Species In Macrophages"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Fc Epsilon RI Signaling"                                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "p70S6K Signaling"                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $MS4A2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Fc Epsilon RI Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $NAPA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Huntington's Disease Signaling" "Tight Junction Signaling"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $NR0B2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Hepatic Cholestasis"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $PATJ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Tight Junction Signaling" "HIPPO Signaling"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $POLR2B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Huntington's Disease Signaling" "Creb Signaling In Neurons"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $PPP2CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mTOR Signaling"                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "Tight Junction Signaling"                                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Dopamine-Darpp32 Feedback In Camp Signaling"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "Production Of Nitric Oxide And Reactive Oxygen Species In Macrophages"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "Synaptic Long Term Depression"                                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "HIPPO Signaling"                                                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "p70S6K Signaling"                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $PRKAR2B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Role Of Nfat In Cardiac Hypertrophy"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "RAR Activation"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "Creb Signaling In Neurons"                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "Tight Junction Signaling"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "Dopamine-Darpp32 Feedback In Camp Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "Hepatic Cholestasis"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "eNOS Signaling"                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $PRKCH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Huntington's Disease Signaling"                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] "mTOR Signaling"                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Role Of Nfat In Cardiac Hypertrophy"                                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "RAR Activation"                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Creb Signaling In Neurons"                                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "Dopamine-Darpp32 Feedback In Camp Signaling"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Hepatic Cholestasis"                                                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "eNOS Signaling"                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Production Of Nitric Oxide And Reactive Oxygen Species In Macrophages"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "Synaptic Long Term Depression"                                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "Fc Epsilon RI Signaling"                                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "Glioma Signaling"                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Growth Hormone Signaling"                                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "p70S6K Signaling"                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $PRKCZ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Huntington's Disease Signaling"                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] "mTOR Signaling"                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Role Of Nfat In Cardiac Hypertrophy"                                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "RAR Activation"                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Creb Signaling In Neurons"                                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "Tight Junction Signaling"                                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Dopamine-Darpp32 Feedback In Camp Signaling"                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "Hepatic Cholestasis"                                                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "eNOS Signaling"                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "Production Of Nitric Oxide And Reactive Oxygen Species In Macrophages"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "Synaptic Long Term Depression"                                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "Fc Epsilon RI Signaling"                                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Glioma Signaling"                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "HIPPO Signaling"                                                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "Growth Hormone Signaling"                                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "p70S6K Signaling"                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $RBL2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Glioma Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $RPS6KA2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mTOR Signaling"           "Growth Hormone Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $RPS23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mTOR Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $RPTOR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mTOR Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $SLC7A1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "eNOS Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $SMARCD3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "RAR Activation"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $YWHAQ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HIPPO Signaling"  "p70S6K Signaling"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -330,7 +466,7 @@ Mem object.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

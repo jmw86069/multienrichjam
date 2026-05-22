@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,17 +111,36 @@
 <li>
 <strong>genes</strong>: one field with genes involved in enrichment of each pathway</li>
 </ul>
-<p>Any <code>enrichResult</code> will have this data already.</p>
+<p>Any <code>enrichResult</code> or <code>gseaResult</code> from clusterProfiler will have the required data already.</p>
 <div class="section level2">
 <h2 id="multienrichmap-to-create-mem-output">
 <code>multiEnrichMap()</code> to create <code>Mem</code> output<a class="anchor" aria-label="anchor" href="#multienrichmap-to-create-mem-output"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Mem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/multiEnrichMap.html">multiEnrichMap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>   Newborns<span class="op">=</span><span class="va">er_Newborns</span>,</span>
-<span>   OlderChildren<span class="op">=</span><span class="va">er_OlderChildren</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The output can be summarized by printing the object.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jmw86069.github.io/multienrichjam/">multienrichjam</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ipafiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>   <span class="st">"extdata"</span>,</span>
+<span>   <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Newborns-IPA.txt"</span>, <span class="st">"OlderChildren-IPA.txt"</span><span class="op">)</span>,</span>
+<span>   package <span class="op">=</span> <span class="st">"multienrichjam"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ipafiles</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Newborns"</span>, <span class="st">"OlderChildren"</span><span class="op">)</span></span>
+<span><span class="va">ipa_l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ipafiles</span>, <span class="va">importIPAenrichment</span><span class="op">)</span></span>
+<span><span class="va">erlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ipa_l</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>   <span class="va">i</span><span class="op">[[</span><span class="st">"Canonical Pathways"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="va">er_Newborns</span> <span class="op">&lt;-</span> <span class="va">erlist</span><span class="op">$</span><span class="va">Newborns</span></span>
+<span><span class="va">er_OlderChildren</span> <span class="op">&lt;-</span> <span class="va">erlist</span><span class="op">$</span><span class="va">OlderChildren</span></span>
+<span></span>
+<span><span class="co">## Turn off ComplexHeatmap warnings</span></span>
+<span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/ht_opt.html" class="external-link">ht_opt</a></span><span class="op">(</span><span class="st">"message"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Mem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/multiEnrichMap.html">multiEnrichMap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>   Newborns <span class="op">=</span> <span class="va">er_Newborns</span>,</span>
+<span>   OlderChildren <span class="op">=</span> <span class="va">er_OlderChildren</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The output can be summarized by printing the object.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Mem</span></span>
 <span><span class="co">#&gt; class: Mem</span></span>
 <span><span class="co">#&gt; dim: 2 enrichments, 21 sets, 28 genes</span></span>
@@ -131,15 +150,14 @@
 <span><span class="co">#&gt; Analysis parameters:</span></span>
 <span><span class="co">#&gt; - top N per enrichment: 20</span></span>
 <span><span class="co">#&gt; - significance threshold: 0.05 (colname: p.adjust)</span></span>
-<span><span class="co">#&gt; - min gene count: 3</span></span>
-<span><span class="co">#&gt; - direction colname:</span></span></code></pre></div>
+<span><span class="co">#&gt; - min gene count: 3</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="prepare_folio-to-create-memplotfolio-output">
 <code>prepare_folio()</code> to create <code>MemPlotFolio</code> output<a class="anchor" aria-label="anchor" href="#prepare_folio-to-create-memplotfolio-output"></a>
 </h2>
 <p>This step determines pathway clusters, and defines other custom features used to produce a “Mem Plot Folio” - which is a collection of data visualization plots to navigate the results.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Mpf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mem_plot_folio.html">prepare_folio</a></span><span class="op">(</span><span class="va">Mem</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -147,8 +165,8 @@
 <code>GenePathHeatmap()</code><a class="anchor" aria-label="anchor" href="#genepathheatmap"></a>
 </h2>
 <p>This step displays the underlying gene-versus-pathway data, and forms the basis for most of the <strong>multienrichjam</strong> analysis.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">GenePathHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/MemPlotFolio-class.html">GenePathHeatmap</a></span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-gp-heatmap-1.png" alt="Heatmap with gene-versus-pathway incidence matrix."></p>
 <p>Pathways are clustered according to gene content. This step is intended to reduce redundancy, and to organize enrichment results based upon shared subsets of genes.</p>
 <p>Genes are also clustered according to shared pathways, which can provide insights into the core genes involved across multiple pathways.</p>
@@ -158,8 +176,8 @@
 <code>EnrichmentHeatmap()</code><a class="anchor" aria-label="anchor" href="#enrichmentheatmap"></a>
 </h2>
 <p>This step displays the enrichment P-values in -log10 scale, using the same pathway clusters as defined in the gene-pathway heatmap.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EnrichmentHeatmap</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap</a></span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-enrichment-heatmap-1.png" alt="Heatmap with enrichment P-values."></p>
 </div>
 <div class="section level2">
@@ -167,12 +185,12 @@
 <code>CnetCollapsed()</code><a class="anchor" aria-label="anchor" href="#cnetcollapsed"></a>
 </h2>
 <p>The “Cnet collapsed” network represents the Concept Network (Cnet) plot using collapsed pathway clusters. The first step <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code> is critical to define or customize the pathway cluster assignment.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/MemPlotFolio-class.html">CnetCollapsed</a></span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-cnet-collapsed-1.png" alt="Concept network (Cnet) with pathways collapsed by cluster."></p>
 <p>By default, the cluster titles (“A”, “B”, “C”, “D”) are displayed, however the pathways can be used to form a label.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">CnetCollapsed</span><span class="op">(</span><span class="va">Mpf</span>, type<span class="op">=</span><span class="st">"set"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/MemPlotFolio-class.html">CnetCollapsed</a></span><span class="op">(</span><span class="va">Mpf</span>, type <span class="op">=</span> <span class="st">"set"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-cnet-collapsed-set-1.png" alt="Concept network (Cnet) showing pathways collapsed by set, using pathway names for each cluster label."></p>
 </div>
 <div class="section level2">
@@ -180,20 +198,21 @@
 <code>CnetExemplar()</code><a class="anchor" aria-label="anchor" href="#cnetexemplar"></a>
 </h2>
 <p>A “Cnet exemplar” plot uses one exemplar pathway per cluster, providing an alternative network summary view.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">CnetExemplar</span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/MemPlotFolio-class.html">CnetExemplar</a></span><span class="op">(</span><span class="va">Mpf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-cnet-exemplar-1.png" alt="Concept network (Cnet) showing one exemplar pathway to represent each pathway cluster."></p>
 <p>A Cnet exemplar plot can also be created using user-defined pathways of interest.</p>
 <div class="section level3">
 <h3 id="custom-cnet-exemplar">Custom Cnet Exemplar<a class="anchor" aria-label="anchor" href="#custom-cnet-exemplar"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>   <span class="st">"RAR Activation"</span>,</span>
 <span>   <span class="st">"mTOR Signaling"</span>,</span>
 <span>   <span class="st">"Growth Hormone Signaling"</span>,</span>
-<span>   <span class="st">"Tight Junction Signaling"</span><span class="op">)</span></span>
-<span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mem2cnet.html">mem2cnet</a></span><span class="op">(</span><span class="va">Mem</span><span class="op">[</span>, <span class="va">custom_sets</span>, <span class="op">]</span>, spread_labels<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>   <span class="st">"Tight Junction Signaling"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">cnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mem2cnet.html">mem2cnet</a></span><span class="op">(</span><span class="va">Mem</span><span class="op">[</span>, <span class="va">custom_sets</span>, <span class="op">]</span>, spread_labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">cnet</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-cnet-exemplar-custom-1.png" alt="Concept network (Cnet) showing a custom subset of exemplar pathways chosen by the scientist."></p>
@@ -209,8 +228,8 @@
 <code>CnetCluster()</code><a class="anchor" aria-label="anchor" href="#cnetcluster"></a>
 </h2>
 <p>A “Cnet cluster” network displays the pathways only in one pathway cluster. It is not used very often, and typically is helpful when there might be different sub-networks within one cluster.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">CnetCluster</span><span class="op">(</span><span class="va">Mpf</span>, cluster<span class="op">=</span><span class="st">"C"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/MemPlotFolio-class.html">CnetCluster</a></span><span class="op">(</span><span class="va">Mpf</span>, cluster <span class="op">=</span> <span class="st">"C"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-cnet-cluster-1.png" alt="Concept network (Cnet) showing all pathways from the pathway cluster 'C'."></p>
 </div>
 </div>
@@ -257,7 +276,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -846,3 +846,29 @@ setMethod("CnetCluster", "MemPlotFolio",
 setMethod("plot", signature(x = "MemPlotFolio"), function(x, y, ...) {
    plot_mpf(x, y, ...)
 })
+
+#' @param x `MemPlotFolio` object
+#' @docType methods
+#' @describeIn MemPlotFolio-class EnrichmentMap `igraph` network to connect
+#'    pathway gene sets based upon Jaccard overlap between each
+#'    pathway pair.
+#'    Note '...' arguments are passed to `jam_igraph()` and
+#'    `mem_legend()` when `do_plot=TRUE`.
+#'    Argument `'params'` is a `list` with additional arguments:
+#'    'repulse', 'width', 'group', 'mark.expand', 'do_legend'.
+#' @aliases EnrichmentMap
+setMethod("EnrichmentMap", "MemPlotFolio",
+   function(x, do_plot=TRUE,
+      legend_x="bottomleft", legend_y=NULL, 
+      params=list(), ...) {
+   if (missing(do_plot)) {
+      do_plot <- TRUE
+   }
+   # call internal function
+   internal_EnrichmentMap(x=x,
+      do_plot=do_plot,
+      legend_x=legend_x,
+      legend_y=legend_y,
+      params=params,
+      ...)
+})

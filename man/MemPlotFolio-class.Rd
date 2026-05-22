@@ -34,6 +34,8 @@
 \alias{CnetCluster,MemPlotFolio-method}
 \alias{CnetCluster}
 \alias{plot,MemPlotFolio,ANY-method}
+\alias{EnrichmentMap,MemPlotFolio-method}
+\alias{EnrichmentMap}
 \title{Mem S4 class, accessors, getters, and setters}
 \usage{
 list_to_MemPlotFolio(mpf)
@@ -89,6 +91,15 @@ MemPlotFolio_to_list(x, ...)
 )
 
 \S4method{plot}{MemPlotFolio,ANY}(x, y, ...)
+
+\S4method{EnrichmentMap}{MemPlotFolio}(
+  x,
+  do_plot = TRUE,
+  legend_x = "bottomleft",
+  legend_y = NULL,
+  params = list(),
+  ...
+)
 }
 \arguments{
 \item{mpf}{\code{list} output from \code{mem_plot_folio()}}
@@ -281,6 +292,14 @@ then cluster name. Use main=FALSE or main="" to hide the title.
 
 \item \code{plot(x = MemPlotFolio, y = ANY)}: Plot a \code{MemPlotFolio} object calling
 \code{plot_mpf()}
+
+\item \code{EnrichmentMap(MemPlotFolio)}: EnrichmentMap \code{igraph} network to connect
+pathway gene sets based upon Jaccard overlap between each
+pathway pair.
+Note '...' arguments are passed to \code{jam_igraph()} and
+\code{mem_legend()} when \code{do_plot=TRUE}.
+Argument \code{'params'} is a \code{list} with additional arguments:
+'repulse', 'width', 'group', 'mark.expand', 'do_legend'.
 
 }}
 \examples{

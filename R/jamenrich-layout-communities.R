@@ -1,11 +1,21 @@
 
 #' Layout igraph communities
 #' 
-#' Layout igraph communities, applies layout to each node community
+#' Layout igraph communities, applies layout to each node community,
+#' experimental.
 #' 
 #' This function mimics `igraph::layout_components()`, in that it
 #' splits the input `igraph` into a `list`, applies layout to
 #' each graph, then merges the layouts together.
+#' 
+#' This layout is experimental, as it currently uses methods in
+#' `igraph` which assume each component is not connected, therefore
+#' the placement of disjoint nodesets is not at all based upon
+#' any relationship to other nodesets. In this case, communities
+#' may be connected to each other, and so placement could usually
+#' be improved. This layout is an area for future development.
+#' 
+#' @family jam igraph layouts
 #' 
 #' @returns `igraph`
 #' 

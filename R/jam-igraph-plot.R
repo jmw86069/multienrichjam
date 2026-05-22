@@ -539,8 +539,10 @@ jam_igraph <- function
          effective_node_factor);
       if (length(vertex.pie.lwd) > 0) {
          if (is.list(vertex.pie.lwd)) {
-            vertex.pie.lwd <- lapply(vertex.pie.lwd, function(i){
-               i * border_factor * effective_node_factor;
+            vertex.pie.lwd <- lapply(seq_along(vertex.pie.lwd), function(i){
+               vertex.pie.lwd[[i]] *
+                  border_factor *
+                  effective_node_factor[i];
             })
          } else {
             vertex.pie.lwd <- (vertex.pie.lwd *

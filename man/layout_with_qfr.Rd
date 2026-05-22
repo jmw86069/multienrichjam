@@ -95,6 +95,7 @@ plot(g, main="layout_with_qfr, repulse=6\n(qgraph custom)",
 \code{qgraph::qgraph.layout.fruchtermanreingold()}
 
 Other jam igraph layouts: 
+\code{\link{layout_communities}()},
 \code{\link{layout_with_qfrf}()},
 \code{\link{relayout_with_qfr}()},
 \code{\link{removeIgraphSinglets}()},

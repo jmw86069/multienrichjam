@@ -58,6 +58,8 @@
 #' 
 #' @returns `list` plot data, named by type, returned invisibly.
 #' 
+#' @family custom plot functions
+#' 
 #' @param Mpf `MemPlotFolio` object as returned by
 #'    `prepare_folio()` or `mem_plot_folio()`.
 #' @param plot_which `character` vector with one or more plots,
@@ -436,42 +438,18 @@ plot_mpf <- function
                   heading=icc,
                   md_tab_suffix=md_tab_suffix)
             }
-            em_repulse <- ifelse(
-               is.numeric(params$em$repulse),
-               params$em$repulse, 3.5);
-            Emap <- mem2emap(Mem,
-               # num_keep_terms=0,
-               repulse=em_repulse,
-               ...)
-            # optional cluster
-            if (grepl("clusters|cluster_labels", icc)) {
-               nodegroups <- Clusters(Mpf);
-               cl <- nodegroups2communities(nodegroups);
-               if (grepl("cluster_labels", icc) &&
-                  length(ClusterLabels(Mpf)) > 0) {
-                  cl$cluster_names <- fixSetLabels(
-                     do_abbreviations=FALSE,
-                     removeGrep=NULL,
-                     ClusterLabels(Mpf),
-                     width=params$em$width,
-                     ...)
-                  names(nodegroups) <- cl$cluster_names;
-               }
-               igraph::graph_attr(Emap, "mark.groups") <- cl;
-               igraph::graph_attr(Emap, "nodegroups") <- nodegroups;
-               igraph::graph_attr(Emap, "mark.colors") <- colorjam::rainbowJam(
-                  n=length(nodegroups),
-                  alpha=0.15)
-                  # ...)
-            }
-            jam_igraph(Emap,
-               mark.expand=3,
+            # em_repulse <- ifelse(
+            #    is.numeric(params$em$repulse),
+            #    params$em$repulse, 3.5);
+            Emap <- EnrichmentMap(Mpf,
+               do_plot=TRUE,
+               params=params$em,
                ...)
             if (isTRUE(do_newpage)) grid::grid.newpage();
             plot_names <- c(plot_names,
                paste0("EnrichmentMap", icc))
             plot_list$EnrichmentMap <- Emap;
-         }
+            }
          if (length(cc_type) > 1 && isTRUE(do_md_tabs)) {
             md_tab_level <- md_tab_level - 1;
             cat_md_tab_close(md_tab_close=md_tab_close);

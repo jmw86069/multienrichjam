@@ -458,6 +458,7 @@ appropriately.
 \seealso{
 Other custom plot functions: 
 \code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_legend}()}
+\code{\link{mem_legend}()},
+\code{\link{plot_mpf}()}
 }
 \concept{custom plot functions}

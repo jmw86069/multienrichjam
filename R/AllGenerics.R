@@ -177,6 +177,10 @@ setGeneric("CnetCluster", signature=c("x", "cluster", "do_plot"),
    function(x, cluster, do_plot, ...) standardGeneric("CnetCluster")
 )
 
+setGeneric("EnrichmentMap", signature=c("x", "do_plot"),
+   function(x, do_plot, ...) standardGeneric("EnrichmentMap")
+)
+
 setGeneric("Caption", signature=c("x"),
    function(x, ...) standardGeneric("Caption")
 )

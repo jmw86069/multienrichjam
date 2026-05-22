@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,6 +62,7 @@
 <span>  edge_factor_l <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label_factor <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  label_factor_l <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  border_factor <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  label_fontsize_l <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label_dist_factor <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  label_dist_factor_l <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -151,6 +152,14 @@ the relative width of all edges by a common numeric scalar value.</p></dd>
 <dd><p><code>numeric</code> value multiplied by <code>igraph::V(x)$label.cex</code>
 and <code>igraph::E(x)$label.cex</code> to adjust the relative size of all labels on
 nodes and edges by a common numeric scalar value.</p></dd>
+
+
+<dt id="arg-border-factor">border_factor<a class="anchor" aria-label="anchor" href="#arg-border-factor"></a></dt>
+<dd><p><code>numeric</code> value multiplied by frame.width and pie.lwd
+to adjust the relative width of node borders. Note that border line width
+is also affected by <code>node_factor</code> and <code>node_factor_l</code> when provided.
+To prevent borders being adjusted by <code>node_factor</code>, set <code>border_factor</code>
+to the reciprocal, for example <code>border_factor=1/node_factor</code>.</p></dd>
 
 
 <dt id="arg-label-dist-factor">label_dist_factor<a class="anchor" aria-label="anchor" href="#arg-label-dist-factor"></a></dt>
@@ -267,7 +276,8 @@ be changed except for very customized uses. By default
 <li><p><code>list</code> output from <code><a href="https://r.igraph.org/reference/components.html" class="external-link">igraph::components</a></code> which contains 'membership',
 'csize', and 'no' elements.</p></li>
 <li><p><code>TRUE</code> will attempt <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code> when the graph is bipartite
-and contains vertex attribute name 'nodeType' as with Cnet data.</p></li>
+and contains vertex attribute name 'nodeType' as with Cnet data.
+<strong>To turn off labels, set <code>mark.cex=0</code>.</strong></p></li>
 <li><p><code>FALSE</code> will not apply any 'mark.groups' even when provided
 in graph attributes.</p></li>
 <li><p><code>communities</code> object from one of the igraph cluster functions
@@ -285,17 +295,15 @@ used when defined together with 'mark.groups'.</p></li>
 
 
 <dt id="arg-mark-shape">mark.shape<a class="anchor" aria-label="anchor" href="#arg-mark-shape"></a></dt>
-<dd><p>A numeric scalar or vector. Controls the smoothness of the
-vertex group marking polygons. This is basically the ‘shape’
-parameter of the <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code> function, its possible
-values are between -1 and 1. If it is a vector, then a different value is
-used for the different vertex groups.</p></dd>
+<dd><p><code>numeric</code> default 1/2 ultimately passed to
+<code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code> when smoothing the alpha hull produced
+by <code><a href="make_point_hull.html">make_point_hull()</a></code>.</p></dd>
 
 
 <dt id="arg-mark-col">mark.col<a class="anchor" aria-label="anchor" href="#arg-mark-col"></a></dt>
-<dd><p>A scalar or vector giving the colors of marking the
-polygons, in any format accepted by <code><a href="https://rdrr.io/r/graphics/xspline.html" class="external-link">graphics::xspline()</a></code>; e.g.
-numeric color ids, symbolic color names, or colors in RGB.</p></dd>
+<dd><p><code>character</code> color assigned to each group in <code>mark.groups</code>.
+When NULL, default, it calls <code><a href="https://jmw86069.github.io/colorjam/reference/rainbowJam.html" class="external-link">colorjam::rainbowJam()</a></code> for categorical
+colors, which is applied together with <code>mark.alpha</code> for transparency.</p></dd>
 
 
 <dt id="arg-mark-alpha">mark.alpha<a class="anchor" aria-label="anchor" href="#arg-mark-alpha"></a></dt>
@@ -305,16 +313,17 @@ used only when <code>mark.groups</code> is defined, and <code>mark.col</code> is
 
 
 <dt id="arg-mark-border">mark.border<a class="anchor" aria-label="anchor" href="#arg-mark-border"></a></dt>
-<dd><p>A scalar or vector giving the colors of the borders of
-the vertex group marking polygons. If it is <code>NA</code>, then no border is
-drawn.</p></dd>
+<dd><p><code>character</code> color assigned to each group in <code>mark.groups</code>.
+When NULL, default, it calls <code><a href="https://jmw86069.github.io/colorjam/reference/rainbowJam.html" class="external-link">colorjam::rainbowJam()</a></code> for categorical
+colors.</p></dd>
 
 
 <dt id="arg-mark-expand">mark.expand<a class="anchor" aria-label="anchor" href="#arg-mark-expand"></a></dt>
-<dd><p>A numeric scalar or vector, the size of the border around
-the marked vertex groups. It is in the same units as the vertex sizes. If a
-vector is given, then different values are used for the different vertex
-groups.</p></dd>
+<dd><p><code>numeric</code> default NULL will choose a sensible default.
+The expand is a fraction of point range, typically <code>0.05</code> is 5% which
+is reasonable. The expansion is used by <code><a href="make_point_hull.html">make_point_hull()</a></code> in a
+non-exact process by which the region is adjusted until a suitable
+alpha hull solution is found for the points provided.</p></dd>
 
 
 <dt id="arg-mark-lwd-mark-lty">mark.lwd, mark.lty<a class="anchor" aria-label="anchor" href="#arg-mark-lwd-mark-lty"></a></dt>
@@ -322,9 +331,14 @@ groups.</p></dd>
 <code>mark.groups</code> polygon.</p></dd>
 
 
+<dt id="arg-mark-smooth">mark.smooth<a class="anchor" aria-label="anchor" href="#arg-mark-smooth"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to smooth the point
+hull boundary.</p></dd>
+
+
 <dt id="arg-mark-cex">mark.cex<a class="anchor" aria-label="anchor" href="#arg-mark-cex"></a></dt>
-<dd><p><code>numeric</code> adjustment for mark label font size, used
-when <code>mark.groups</code> is supplied and has <code>names(mark.groups)</code>.</p></dd>
+<dd><p><code>numeric</code> default 1, used to resize the mark.group labels.
+<strong>To turn off labels, set <code>mark.cex=0</code>.</strong></p></dd>
 
 
 <dt id="arg-mark-x-nudge-mark-y-nudge">mark.x.nudge, mark.y.nudge<a class="anchor" aria-label="anchor" href="#arg-mark-x-nudge-mark-y-nudge"></a></dt>
@@ -481,12 +495,19 @@ This behavior can be controlled by supplying a <code>character</code>
 vector with specific colors for <code>mark.col</code> and <code>mark.border</code>. Note
 that the border should match the colors, or it can be set to <code>"grey45"</code>
 for a generally visible border.</p>
+<p>When <code>mark.groups</code> is <code>NULL</code> and graph attribute 'mark.groups' is
+defined, it will be used.</p>
 <p>When <code>names(mark.groups)</code> is defined, the values are used as
 labels, positioned at the outer edge of each polygon. The label
 text size is adjusted with <code>label.cex</code>, and the position can
 be adjusted with <code>mark.x.nudge</code>, <code>mark.y.nudge</code>, in units of
 fraction of the maximum x- or y-axis range (effectively fraction
 of the layout size).</p>
+<p>When <code>mark.groups=TRUE</code> it will attempt to call <code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>
+to define nodegroups, and use them as the <code>mark.groups</code>. Note that
+'...' are passed to this function, meaning <code>min_size</code> can be used
+to filter nodesets to minimum size, and <code>min_points</code> can be used
+to filter the alpha hull to require this many points.</p>
 <p>Optional argument <code>nodegroups</code> can be supplied, which is a <code>list</code>
 of vectors, where each vector represents a group of nodes. The
 <code>nodegroups</code> can be used with <code>edge_bundling="nodegroups"</code> to
@@ -503,15 +524,15 @@ to render group borders as with <code>mark.groups</code>.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other multienrichjam core functions:
-<code><a href="mem_plot_folio.html">mem_plot_folio</a>()</code>,
-<code><a href="multiEnrichMap.html">multiEnrichMap</a>()</code></p>
+<code><a href="mem_plot_folio.html">mem_plot_folio()</a></code>,
+<code><a href="multiEnrichMap.html">multiEnrichMap()</a></code></p>
 <p>Other jam igraph utilities:
-<code><a href="color_edges_by_nodegroups.html">color_edges_by_nodegroups</a>()</code>,
-<code><a href="color_edges_by_nodes.html">color_edges_by_nodes</a>()</code>,
-<code><a href="color_nodes_by_nodegroups.html">color_nodes_by_nodegroups</a>()</code>,
-<code><a href="get_cnet_nodeset.html">get_cnet_nodeset</a>()</code>,
-<code><a href="launch_shinycat.html">launch_shinycat</a>()</code>,
-<code><a href="subgraph_jam.html">subgraph_jam</a>()</code></p></div>
+<code><a href="color_edges_by_nodegroups.html">color_edges_by_nodegroups()</a></code>,
+<code><a href="color_edges_by_nodes.html">color_edges_by_nodes()</a></code>,
+<code><a href="color_nodes_by_nodegroups.html">color_nodes_by_nodegroups()</a></code>,
+<code><a href="get_cnet_nodeset.html">get_cnet_nodeset()</a></code>,
+<code><a href="launch_shinycat.html">launch_shinycat()</a></code>,
+<code><a href="subgraph_jam.html">subgraph_jam()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -627,7 +648,7 @@ to render group borders as with <code>mark.groups</code>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -73,6 +73,7 @@ a color key to a plot, typically for \code{igraph} plots.
 \seealso{
 Other custom plot functions: 
 \code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_gene_path_heatmap}()}
+\code{\link{mem_gene_path_heatmap}()},
+\code{\link{plot_mpf}()}
 }
 \concept{custom plot functions}

@@ -1013,7 +1013,7 @@ list_to_Mem <- function
          "Not all required slot names were provided:\n",
          jamba::cPaste(missing_slots, sep=", ")))
    }
-   # print(jamba::sdim(x[names(use_slots)]));# debug
+   
    Mem <- new("Mem",
       enrichList=mem$enrichList,
       enrichLabels=mem$enrichLabels,
@@ -1104,6 +1104,7 @@ setMethod("updateObject",
 #' @aliases geneInCategory
 #' @returns `geneInCategory()` returns a `list` named by pathway, containing
 #'    `character` vectors with genes in each pathway.
+#'    For the reciprocal, see `setsByGene()`.
 #' @export
 setMethod("geneInCategory", "Mem", function(x) im2list(memIM(x)))
 
@@ -1116,7 +1117,208 @@ setMethod("geneInCategory", "Mem", function(x) im2list(memIM(x)))
 #' @aliases setsByGene
 #' @returns `setsByGene()` returns a `list` named by gene,
 #'    containing `character` vectors with associated gene sets.
+#'    For the reciprocal, see `geneInCategory()`.
 #' @examples
 #' setsByGene(Memtest)
 #' @export
 setMethod("setsByGene", "Mem", function(x) im2list(t(memIM(x))))
+
+
+#' EnrichmentMap internal function
+#' 
+#' @keywords internal
+#' 
+#' @returns `igraph` Enrichment Map network is returned.
+#'    When `do_plot=TRUE` the network is drawn using
+#'    `jam_igraph(Emap, ...)`.
+#' 
+#' @param x `Mem` or `MemPlotFolio` object.
+#' @param do_plot `logical` whether to render the `igraph`, which
+#'    is done using `jam_igraph(Emap, ...)`.
+#' @param legend_x,legend_y passed to `mem_legend()` to render
+#'    a color legend for the plot.
+#' @param params `list` of parameters specific to EnrichmentMap:
+#'    * `'repulse'`: `numeric` default 3.5 to define the initial
+#'    network layout.
+#'    * `'width'`: `integer` character width to apply word-wrap
+#'    to node labels, and to community or nodegroup labels.
+#'    * `'group'`: `character` string indicating the type of
+#'    node grouping to use:
+#'       * `'default'`: will use, in order of preference:
+#'       if supplied a `MemPlotFolio` object, it will use
+#'       cluster labels if available, then cluster titles;
+#'       if supplied a `Mem` object it will use `igraph`
+#'       community detection and the corresponding top keywords.
+#'       * `'clusters'`: requires `MemPlotFolio` input and uses
+#'       cluster titles.
+#'       * `'cluster_labels'`: requires `MemPlotFolio` input and
+#'       cluster labels if available, otherwise cluster titles.
+#'       * `'community'`: will use `igraph` community detection.
+#'       * `'none'`: will not use node grouping.
+#'    
+#'    * `'mark.expand'`: `numeric` passed to `jam_igraph()` to define
+#'    node group expansion for the shaded hull around node groups,
+#'    default 4. Units are percentage of plot dimensions.
+#'    * `'do_legend'`: `logical` default TRUE, whether to render
+#'    the color legend.
+#'    * Other parameters will be added to the function arguments
+#'    with default values when implemented.
+#' 
+#' @param ... additional arguments are passed through to
+#'    `mem2emap()`, `jam_igraph()`, and `mem_legend()`.
+#' 
+internal_EnrichmentMap <- function
+(x,
+ do_plot,
+ legend_x="bottomleft",
+ legend_y=NULL,
+ params=list(repulse=3.5,
+    width=30,
+    group="default",
+    mark.expand=4,
+    do_legend=TRUE),
+ ...)
+{
+   #
+   # validate arguments
+   params <- modifyList(
+      eval(formals(internal_EnrichmentMap)$params),
+      params)
+
+   arglist <- list(...);
+
+   # em_group
+   em_group <- "community";
+   if ("group" %in% names(params)) {
+      em_group <- params$group;
+   } else if ("em_group" %in% names(arglist)) {
+      em_group <- arglist$group;
+   }
+   em_group <- intersect(em_group,
+      c("default",
+      "community",
+      "communities",
+      "clusters",
+      "cluster_labels",
+      "nodegroups",
+      "none"));
+   if (length(em_group) == 0) {
+      em_group <- "none";
+   }
+
+   Mpf <- NULL;
+   cl <- NULL;
+   cln <- NULL;
+   if (inherits(x, "MemPlotFolio")) {
+      if (!inherits(x@metadata$Mem, "Mem")) {
+         stop_msg <- paste0("Input MemPlotFolio must ",
+            "contain x@metadata[['Mem']].")
+         stop(stop_msg);
+      }
+      Mpf <- x;
+      cl <- Clusters(Mpf);
+      cln <- ClusterLabels(Mpf);
+      if (length(cln) == 0 || "clusters" %in% em_group) {
+         cln <- names(cl);
+         if ("default" %in% em_group) {
+            em_group <- "clusters";
+         }
+      } else if ("default" %in% em_group) {
+         em_group <- "cluster_labels";
+      }
+      x <- x@metadata$Mem;
+   } else {
+      if (any(grepl("cluster", em_group))) {
+         em_group <- "community";
+      }
+   }
+   if (!inherits(x, "Mem")) {
+      stop_msg <- paste0("Input must inherit 'Mem'.")
+      stop(stop_msg);
+   }
+
+   if ("default" %in% em_group) {
+      em_group <- "community";
+   }
+
+   em_repulse <- ifelse(
+      is.numeric(head(params$repulse, 1)),
+      head(params$repulse, 1), 3.5);
+   
+   # Prepare the igraph
+   Emap <- mem2emap(x,
+      # num_keep_terms=0,
+      repulse=em_repulse,
+      ...)
+
+   # optionally remove node groups
+   if ("none" %in% em_group) {
+      Emap <- igraph::delete_graph_attr(Emap, "mark.groups")
+      Emap <- igraph::delete_graph_attr(Emap, "nodegroups")
+      Emap <- igraph::delete_graph_attr(Emap, "mark.colors")
+   }
+
+   # optional cluster
+   if (grepl("clusters|cluster_labels", em_group)) {
+      # Todo: Consider input with nodegroups argument
+      nodegroups <- cl;
+      cl <- nodegroups2communities(cl);
+      cl$cluster_names <- fixSetLabels(
+         do_abbreviations=FALSE,
+         removeGrep=NULL,
+         cln,
+         width=params$width,
+         ...)
+      names(nodegroups) <- cl$cluster_names;
+      igraph::graph_attr(Emap, "mark.groups") <- cl;
+      igraph::graph_attr(Emap, "nodegroups") <- nodegroups;
+      igraph::graph_attr(Emap, "mark.colors") <- colorjam::rainbowJam(
+         n=length(nodegroups),
+         alpha=0.15)
+         # ...)
+   }
+
+   # Render the igraph
+   if (do_plot) {
+      mark.expand <- ifelse(length(params$mark.expand) > 0,
+         params$mark.expand, 3.5)
+      
+      jam_igraph(Emap,
+         mark.expand=mark.expand,
+         ...)
+      # color legend
+      if (params$do_legend) {
+         mem_legend(mem=x,
+            x=legend_x,
+            y=legend_y,
+            ...)
+      }
+   }
+   return(invisible(Emap))
+}
+
+#' @param x `Mem` object
+#' @docType methods
+#' @describeIn Mem-class EnrichmentMap `igraph` network to connect
+#'    pathway gene sets based upon Jaccard overlap between each
+#'    pathway pair.
+#'    Note '...' arguments are passed to `jam_igraph()` and
+#'    `mem_legend()` when `do_plot=TRUE`.
+#'    Argument `'params'` is a `list` with additional arguments:
+#'    'repulse', 'width', 'group', 'mark.expand', 'do_legend'.
+#' @aliases EnrichmentMap
+setMethod("EnrichmentMap", "Mem",
+   function(x, do_plot, 
+      legend_x="bottomleft", legend_y=NULL, 
+      params=list(), ...) {
+   if (missing(do_plot)) {
+      do_plot <- TRUE
+   }
+   # call internal function
+   internal_EnrichmentMap(x=x,
+      do_plot=do_plot,
+      legend_x=legend_x,
+      legend_y=legend_y,
+      params=params,
+      ...)
+   })

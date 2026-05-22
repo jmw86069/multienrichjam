@@ -9,7 +9,7 @@ Subset list of enrichResult for top enrichment results by source"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@ Subset list of enrichResult for top enrichment results by source"></head><body>
 <span>    <span class="st">"-Count"</span>, <span class="st">"-geneHits"</span><span class="op">)</span>,</span>
 <span>  countColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene_count"</span>, <span class="st">"count"</span>, <span class="st">"geneHits"</span><span class="op">)</span>,</span>
 <span>  pvalueColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P.Value"</span>, <span class="st">"pvalue"</span>, <span class="st">"FDR"</span>, <span class="st">"adj.P.Val"</span>, <span class="st">"qvalue"</span><span class="op">)</span>,</span>
-<span>  directionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"activation.z.{0,1}score"</span>, <span class="st">"z.{0,1}score"</span><span class="op">)</span>,</span>
+<span>  directionColname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"activation.z.{0,1}score"</span>, <span class="st">"NES"</span>, <span class="st">"direction"</span>, <span class="st">"z.{0,1}score"</span><span class="op">)</span>,</span>
 <span>  direction_cutoff <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  newColname <span class="op">=</span> <span class="st">"EnrichGroup"</span>,</span>
 <span>  curateFrom <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -301,9 +301,9 @@ comparative analysis.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam enrichment functions:
-<code><a href="add_pathway_direction.html">add_pathway_direction</a>()</code></p>
+<code><a href="add_pathway_direction.html">add_pathway_direction()</a></code></p>
 <p>Other jam enrichment functions:
-<code><a href="add_pathway_direction.html">add_pathway_direction</a>()</code></p></div>
+<code><a href="add_pathway_direction.html">add_pathway_direction()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -315,7 +315,7 @@ comparative analysis.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

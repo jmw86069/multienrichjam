@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,184 @@
 
 <div id="todo" class="section level1">
 
+<div class="section level2">
+<h2 id="id_21may2026">21may2026<a class="anchor" aria-label="anchor" href="#id_21may2026"></a></h2>
+<ul><li>Add tests for steps in the vignettes, including input enrichment with directionColname in one file, but not the other.</li>
+<li>Test interactive <code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code> with InteractiveComplexHeatmap.</li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_19may2026">19may2026<a class="anchor" aria-label="anchor" href="#id_19may2026"></a></h2>
+<ul><li><p>Verify all R package dependencies are covered.</p></li>
+<li><p><code><a href="reference/rotate_igraph_layout.html">rotate_igraph_layout()</a></code> could simply apply the same rotation to existing igraph label angles, skipping <code><a href="reference/spread_igraph_labels.html">spread_igraph_labels()</a></code>.</p></li>
+<li><p>Add new cluster labeling functions.</p></li>
+<li><p>Add new cluster data functions, summarize a cluster.</p></li>
+<li>
+<p>Complete <code><a href="reference/plot_mpf.html">plot_mpf()</a></code> as a stand-alone plot for <code>MemPlotFolio</code>.</p>
+<ul><li>Support Rmd or Qmd tabset styles.</li>
+<li>Support customizations.</li>
+</ul></li>
+<li><p><code><a href="reference/MemPlotFolio-class.html">CnetExemplar()</a></code> when not defined, prepare <code>igraph</code> and plot.</p></li>
+<li>
+<p><code><a href="reference/MemPlotFolio-class.html">CnetCollapsed()</a></code> permit customizations.</p>
+<ul><li>subset by cluster</li>
+<li>change layout, adjust repulse</li>
+</ul></li>
+<li>
+<p><code><a href="reference/MemPlotFolio-class.html">CnetCluster()</a></code> permit customizations.</p>
+<ul><li>subset by sets</li>
+<li>change layout, adjust repulse</li>
+<li>hide/spread labels</li>
+</ul></li>
+<li>
+<p><code>MemPlotFolio</code></p>
+<ul><li>Consider way to split a specific cluster</li>
+<li>Subset by clusters: subset Mem, repeat <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code> (Should Mem be stored inside Mpf? Should Mpf be stored in Mem?)</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_15may2026">15may2026<a class="anchor" aria-label="anchor" href="#id_15may2026"></a></h2>
+<ul><li><p>Fix/Improve coloredrect rendering, vertex.size, vertex.size2.</p></li>
+<li><p>DONE. Consider <code>jam_igraph</code> border_factor which adjusts border line width.</p></li>
+<li><p>DONE. Fix <code><a href="reference/mem_legend.html">mem_legend()</a></code> in CnetCollapsed() with directional colors.</p></li>
+<li><p>DONE. Consider Rmarkdown tabbed output using ‘{.tabset}’ instead of PDF pages.</p></li>
+<li>
+<p>Wrapper functions to create summary labels:</p>
+<ul><li>Emap mark.groups; Mpf Clusters; Mpf GenePathHeatmap column_title.</li>
+<li>Need clean mechanic to store/update/edit summary labels.</li>
+</ul></li>
+<li><p><code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code>: Consider way to store original values alongside custom so they are not first-class identifiers for things like combining two Mem objects.</p></li>
+<li><p>Consider adding genes to Emap <code>igraph</code> edges, along with the number of genes in the overlap. It might be convenient to grab genes by edges, or do tricks with nodes in communities.</p></li>
+<li>
+<p>Consider adding lollipop style plot to supplement <code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>.</p>
+<ul><li>x-axis: significance, or fold enrichment, or # of genes, etc.</li>
+<li>y-axis: pathways; optionally sub-grouped; optionally sorted</li>
+<li>Needs ability to display multiple enrichments, with or without y-offset.</li>
+</ul></li>
+<li>
+<p>multiEnrichMap updates</p>
+<ul><li>Fix termsim for multiEnrichResult and each enrichList</li>
+<li>
+<code>fixSetLabels(Mem)</code> should adjust sets(Mem), termsim, <a href="mailto:er@result" class="email">er@result</a>$Description.</li>
+</ul></li>
+<li>
+<p>Mpf updates</p>
+<ul><li>
+<p>Add <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> generic for <code>MemPlotFolio</code> object.</p>
+<ul><li>Option to adjust layout and/or repulse.</li>
+<li>Add option to print Rmd tab <code>{.tabset}</code> output.</li>
+</ul></li>
+<li><p>Allow defer layouts <code><a href="reference/MemPlotFolio-class.html">CnetCollapsed()</a></code>, <code><a href="reference/MemPlotFolio-class.html">CnetExemplar()</a></code>, <code><a href="reference/MemPlotFolio-class.html">CnetCluster()</a></code>. Option in <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code> prepare or skip layouts as needed. New optional function <code>ApplyLayouts()</code>?</p></li>
+<li><p>Consider Mpf subset?</p></li>
+<li><p>Allow <code><a href="reference/MemPlotFolio-class.html">CnetCollapsed()</a></code> to subset by cluster. (Somehow.)</p></li>
+<li><p>Add way to show Cnet plot using specific Mpf clusters.</p></li>
+<li><p>Consider pushing exemplar logic and layout into <code><a href="reference/MemPlotFolio-class.html">CnetExemplar()</a></code>, to happen dynamically. Allow user-provided sets, adjust ranking, etc. Subset Mem by Mpf cluster, then re-create a new Mpf?</p></li>
+<li><p>Consider re-layout inside <code>Cnet*</code> functions, so it orders nodes, and arranges labels.</p></li>
+<li><p>Add method to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> an Mpf, which effectively calls each plot function.</p></li>
+</ul></li>
+<li>
+<p>Update <code><a href="reference/mem2emap.html">mem2emap()</a></code></p>
+<ul><li>DONE. Consider border_lwd which scales consistent with node size.</li>
+<li>DONE. Option for weights (Jaccard overlap) to define edge width, color, alpha.</li>
+<li>Add to <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code>.</li>
+<li>Consider lower <code>overlap</code> then show connection width more clearly. Edges can be filtered at visualization time, keeping layout. Some case could be made to use median(weight) based upon observations.</li>
+<li>Explore integrating path-gene clustering with Emap communities. Some missing opportunity for synergy with Mpf. Already possible with: <code>graph_attr(g, 'mark.groups') &lt;- nodegroups2communities(Clusters(Mpf))</code>
+</li>
+</ul></li>
+<li>
+<p><code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code></p>
+<ul><li>Add option to display numeric label to each cell, e.g. gene count.</li>
+</ul></li>
+<li>
+<p>Improve rendering of ‘jampie’ igraph node shapes.</p>
+<ul><li>DONE. fix ‘frame.lwd’ when also rendering ‘pie.lwd’, currently frame is too wide.</li>
+<li>Consider JamPolygon, to avoid sf dependency.</li>
+<li>DEFER. Review visual glitches seen in Positron, result of its use of separate device with custom dpi. Apparently it scales with Plots viewer dimensions, which seem to be independent of <code><a href="https://rdrr.io/r/grDevices/dev.size.html" class="external-link">dev.size()</a></code>.</li>
+<li>Consider ggraph: edge bundling; custom pie node rendering with inner borders.</li>
+</ul></li>
+<li><p>Consider using S7 in place of S4. Long-term benefit, short-term unclear.</p></li>
+<li><p>Consider collaborating with YuLab for <code>enrichResult</code> re-use.</p></li>
+</ul><div class="section level3">
+<h3 id="future-integration">Future integration<a class="anchor" aria-label="anchor" href="#future-integration"></a></h3>
+<ul><li>Review <code>BiocSet</code> Bioconductor class for gene set formatting, see ‘sparrow’, ‘sparrow.shiny’ packages.</li>
+</ul></div>
+</div>
+<div class="section level2">
+<h2 id="id_13apr2026">13apr2026<a class="anchor" aria-label="anchor" href="#id_13apr2026"></a></h2>
+<ul><li>Debug using <code>pvalueColname</code> to make sure it populates the correct column in ‘headers(Mem)$pvalueColname’. Long-term may want to associate <code>pvalueColname</code> with each <code>enrichList</code> entry.</li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_06apr2026">06apr2026<a class="anchor" aria-label="anchor" href="#id_06apr2026"></a></h2>
+<ul><li><p>Make it easier to adjust the <code>type='set'</code> title derived per cluster.</p></li>
+<li>
+<p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li>Make <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function to plot the object as stored.</li>
+<li>Consider option to create Rmarkdown-friendly tabbed output, which assumes ‘{.tabset}’ in the .Rmd document.</li>
+</ul></li>
+<li>
+<p>Consider method to “consolidate” pathways whose names are identical.</p>
+<ul><li>Might be convenient and apparent when using <code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code>.</li>
+<li>The approach might focus on gene sets before pathway analysis, in the realm of “preparing gene sets for use”.</li>
+<li>This strategy might push multienrichjam beyond just “consumer” of enrichment results.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_24mar2026">24mar2026<a class="anchor" aria-label="anchor" href="#id_24mar2026"></a></h2>
+<ul><li>
+<code><a href="reference/importIPAenrichment.html">importIPAenrichment()</a></code> consider importing the IPA parameters stored in the header, before the first header line, for example:</li>
+</ul><pre><code>Reference set   User Dataset
+Relationship to include Direct and Indirect
+Includes Endogenous Chemicals   Yes
+Optional Analyses       My Pathways My List
+Filter Summary
+Consider only molecules and/or relationships where
+(species = Human) AND
+(confidence = Experimentally Observed)</code></pre>
+</div>
+<div class="section level2">
+<h2 id="id_12feb2026">12feb2026<a class="anchor" aria-label="anchor" href="#id_12feb2026"></a></h2>
+<ul><li><p>DONE. <code>prep_folio()</code> - add arguments for proper autofill.</p></li>
+<li><p>DONE. Debug <code><a href="reference/importIPAenrichment.html">importIPAenrichment()</a></code> returning multiple</p></li>
+<li><p>DONE. <code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code> should not assign duplicate labels, use <code><a href="https://jmw86069.github.io/jamba/reference/makeNames.html" class="external-link">jamba::makeNames()</a></code> especially for <code>Mem</code> input objects.</p></li>
+<li><p>Consider adding pathway direction to gene-pathway heatmap at the top.</p></li>
+<li><p>DEFER. Consider adding <code>EmapPlot()</code> method for ‘Mem’ object, providing <code><a href="reference/mem2emap.html">mem2emap()</a></code> in a more consistent way. For now, just use <code><a href="reference/mem2emap.html">mem2emap()</a></code> and improve documentation and examples/vignette.</p></li>
+<li><p>Prototype InteractiveComplexHeatmap for gene-pathway heatmap. ‘geneNames.ipa.ipa’ columns.</p></li>
+<li>
+<p>Reduce dependencies. <code>pak::pkg_deps_tree("jmw86069/multienrichjam")</code> It seems much bigger than it could be. Some notable outliers:</p>
+<ul><li><p><code>qgraph</code> has a lot of dependencies not needed by multienrichjam, all we need is layout Fruchterman-Reingold with custom repulse.</p></li>
+<li>
+<p><strong>Dependencies clusterProfiler,DOSE,enrichplot could become optional.</strong></p>
+<ul><li>Consider removing dependency on <code>clusterProfiler</code> due to its heavy dependencies. For example it requires ggtree, which is difficult to install on R-4.4.* and older. That said, it has a large number of dependencies, and make this package also heavy to install. Can it be moved to “Enhances”? Nice to have, but not critical?</li>
+<li>
+<code>enrichplot</code>, <code>DOSE</code> are heavy, required by clusterProfiler; ggtree, scatterpie. DOSE is only used for the <code>enrichResult</code> object, which is not specifically required for multienrichjam workflows, and could become optional. Other methods are used via enrichplot, e.g. <code>genesInCategory()</code> which could be performed with a simple wrapper function.</li>
+</ul></li>
+<li><p>Eventually remove <code>sf</code> and replace with <code>polyclip</code> methods, used for inner/outer border of pie nodes.</p></li>
+<li><p><code>shiny</code>,<code>shinydashboard</code> could be “Suggests”</p></li>
+<li><p><code>S4Vectors</code> is common for anything in Bioconductor.</p></li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_03feb2026">03feb2026<a class="anchor" aria-label="anchor" href="#id_03feb2026"></a></h2>
+<ul><li>Consider making cnet functions work with <code>MemPlotFolio</code> input, to adjust the internal cnet <code>igraph</code> object: <code>relayout_qith_qfr()</code>, <code><a href="reference/adjust_cnet_nodeset.html">adjust_cnet_nodeset()</a></code>, etc.</li>
+<li>DONE. Fix bug type <code>ipFile</code> in <code><a href="reference/importIPAenrichment.html">importIPAenrichment()</a></code>.</li>
+<li>Confirm <code>pvalue</code> column and <code>headers(mem)$pvalueColname</code> are working properly, possible that sometimes ‘pvalue’ is assumed to be the colname.</li>
+<li>DONE. Update words.txt with newer pathway examples.</li>
+</ul></div>
+<div class="section level2">
+<h2 id="id_18dec2025">18dec2025<a class="anchor" aria-label="anchor" href="#id_18dec2025"></a></h2>
+<ul><li>
+<p>Write basic exporter for ‘Mem’ objects, bonus points for ‘MemPlotFolio’ to include set <code>Clusters()</code>.</p>
+<ul><li>Option to split <code>geneID</code> into up/down per enrichList entry.</li>
+<li>Option to write enrichIM, enrichIMgeneCount, enrichIMdirection.</li>
+</ul></li>
+<li><p>Option to make “tidy” (tall), annotated memIM? New function?</p></li>
+<li><p><code><a href="reference/MemPlotFolio-class.html">CnetExemplar()</a></code> does not seem to use ‘repulse’ from <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code>.</p></li>
+<li><p>When supplying <code>pathway_column_split</code> as <code>list</code>, <code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code> uses the groupings, but <code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code> apparently does not.</p></li>
+<li><p>When colorizing ‘Set’ nodes, very dark colors (red,blue) are hard to distinguish as node borders. Consider <code>trimRampc(2,2)</code> to make the max color more colorful, less dark.</p></li>
+<li><p><code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code> consider argument <code>mark_rows</code> to add gene labels.</p></li>
+<li><p><code><a href="reference/relayout_nodegroups.html">relayout_nodegroups()</a></code> consider number of passes, repeat layout cycle.</p></li>
+<li><p>Consider removing dependency on gridtext, use marquee or just grid.</p></li>
+<li><p>Polish the IPA import, prevent creating ‘p.adjust’ which does not exist.</p></li>
+</ul></div>
 <div class="section level2">
 <h2 id="id_15dec2025">15dec2025<a class="anchor" aria-label="anchor" href="#id_15dec2025"></a></h2>
 <ul><li>Bug: <code><a href="reference/get_hull_data.html">get_hull_data()</a></code> sometimes returns single-node hull when there are two nodes very near each other. Also consider enabling single-node hull when preferred.</li>
@@ -98,7 +276,7 @@
 <ul><li>apply shadowText, bold labels</li>
 <li>filter words to remove more “stop” words</li>
 </ul></li>
-<li><p>FIXED. Fix bug with <code>CnetCluster()</code>, <code>CnetCollapsed()</code> when drawing <code><a href="reference/mem_legend.html">mem_legend()</a></code>, it should include <code>do_directional=TRUE</code> when relevant, and proper fill colors.</p></li>
+<li><p>FIXED. Fix bug with <code><a href="reference/MemPlotFolio-class.html">CnetCluster()</a></code>, <code><a href="reference/MemPlotFolio-class.html">CnetCollapsed()</a></code> when drawing <code><a href="reference/mem_legend.html">mem_legend()</a></code>, it should include <code>do_directional=TRUE</code> when relevant, and proper fill colors.</p></li>
 <li><p>DONE. Consider storing “hasDirection” in MemPlotFolio</p></li>
 <li><p><code><a href="reference/mem2cnet.html">mem2cnet()</a></code> non-directional Cnet plot would not apply a red border.</p></li>
 <li><p>Continue adding more abbreviations.</p></li>
@@ -144,7 +322,7 @@
 </ul></li>
 <li>
 <p><code>MemPlotFolio</code> enhancements</p>
-<ul><li>Make it so <code>GenePathHeatmap()</code> and <code>EnrichmentHeatmap()</code> can dynamically re-create the heatmap, so customizations can be made without re-running <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code>?</li>
+<ul><li>Make it so <code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code> and <code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code> can dynamically re-create the heatmap, so customizations can be made without re-running <code><a href="reference/mem_plot_folio.html">prepare_folio()</a></code>?</li>
 </ul></li>
 <li><p>Revisit exporters like <code>Mem_to_dataframe()</code>, for supplemental tables.</p></li>
 <li><p><code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code>, <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code>, <code><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge()</a></code> to combine multiple Mem objects.</p></li>
@@ -170,8 +348,8 @@
 <ul><li>intended to combine “equivalent” pathways (TLR signaling v1, TLR signaling v2) together.</li>
 <li>Bonus points: Pathways with identical names (v1, v2, etc) with greater than threshold (75%?) identical genes, automatically merge them.</li>
 </ul></li>
-<li><p><code>CnetCollapsed()</code> need some way to adjust layout, and apply reorder, spread labels, etc.</p></li>
-<li><p><code>CnetExemplar()</code> consider adding pathway title as prefix, for example “A: Pleural Mesothelioma”, to indicate the cluster for each exemplar.</p></li>
+<li><p><code><a href="reference/MemPlotFolio-class.html">CnetCollapsed()</a></code> need some way to adjust layout, and apply reorder, spread labels, etc.</p></li>
+<li><p><code><a href="reference/MemPlotFolio-class.html">CnetExemplar()</a></code> consider adding pathway title as prefix, for example “A: Pleural Mesothelioma”, to indicate the cluster for each exemplar.</p></li>
 <li><p><code><a href="reference/removeIgraphSinglets.html">removeIgraphSinglets()</a></code> should subset graph_attr(“mark.groups”).</p></li>
 <li>
 <p><code><a href="reference/jam_igraph.html">jam_igraph()</a></code></p>
@@ -207,13 +385,13 @@
 <p><code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
 <ul><li>Accept optional <code>MemPlotFolio</code> input, to re-use identical settings.</li>
 <li>consider new <code>PrepareFolio()</code> with <code>do_plot=FALSE</code>?<br>
-Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> <code>PrepareFolio()</code> individual plots: <code>EnrichmentHeatmap()</code>, <code>GenePathHeatmap()</code>, etc. <code>PlotFolio()</code>
+Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></code> <code>PrepareFolio()</code> individual plots: <code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>, <code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code>, etc. <code>PlotFolio()</code>
 </li>
 <li>new arg <code>do_whichbyname</code> accept <code>character</code> string?</li>
-<li>consider replacing plots 3,4,5 with one Cnet, then move the custom label into <code>CnetCollapsed()</code>
+<li>consider replacing plots 3,4,5 with one Cnet, then move the custom label into <code><a href="reference/MemPlotFolio-class.html">CnetCollapsed()</a></code>
 </li>
 </ul></li>
-<li><p><code>CnetHeatmap()</code>, <code>GenePathHeatmap()</code> could use <code>Mem</code> input? Secretly call <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> behind the scenes.</p></li>
+<li><p><code>CnetHeatmap()</code>, <code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code> could use <code>Mem</code> input? Secretly call <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code> behind the scenes.</p></li>
 </ul></li>
 <li>
 <p>COMPLETE. Move <code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code> logic to config file which is prepared upon loading the package.</p>
@@ -256,7 +434,7 @@ Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></co
 <li>
 <p>Make some Mem slots optional, consider gradual reduction of slots?</p>
 <ul><li>Use slot type “matrix_OR_NULL” with <code>setClassUnion("matrix_OR_NULL", c("matrix", "NULL"))</code>.</li>
-<li>The <code>geneIMcolors()</code> accessor would return geneIMcolors when defined, or generate the color matrix dynamically using thresholds and colorV.</li>
+<li>The <code><a href="reference/Mem-class.html">geneIMcolors()</a></code> accessor would return geneIMcolors when defined, or generate the color matrix dynamically using thresholds and colorV.</li>
 <li>Candidates: geneIMcolors, enrichIMcolors, geneIMdirection multiEnrichDF, multiEnrichList</li>
 </ul></li>
 <li><p>Add <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind()</a></code> and <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> to combine multiple Mem objects.</p></li>
@@ -545,7 +723,7 @@ Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></co
 <ul><li>
 <p>Consider using <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code> as the top_annotation for <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, including for example the dotplot format.</p>
 <ul><li>Easiest prototype might be to use <code>+</code> to display the gene-path heatmap rotated with <code>rotate_heatmap=TRUE</code> beside the enrichment heatmap,then merge the color legends:</li>
-</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">mpf</span><span class="op">$</span><span class="va">enrichment_hm</span> <span class="op">+</span> <span class="va">mpf</span><span class="op">$</span><span class="va">gp_hm</span>,</span>
 <span>   annotation_legend_list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">mpf</span><span class="op">$</span><span class="va">enrichment_hm</span>, <span class="st">"annotation_legend_list"</span><span class="op">)</span>,</span>
 <span>   merge_legends<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -633,7 +811,7 @@ Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></co
 <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/mem2cnet.html">mem2cnet()</a></code>
 </li>
 <li>
-<code>enrichList()</code> - accessor for <code>mem@enrichList</code>
+<code><a href="reference/Mem-class.html">enrichList()</a></code> - accessor for <code>mem@enrichList</code>
 </li>
 <li>
 <code>mem2dfs()</code> - create series of <code>data.frame</code> summarizing content, intended for export to Excel xlsx.</li>
@@ -776,7 +954,7 @@ Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></co
 <code><a href="reference/mem_plot_folio.html">mem_plot_folio()</a></code>, supporting functions: <code><a href="reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>, <code><a href="reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>, <code><a href="reference/mem2cnet.html">mem2cnet()</a></code>
 </li>
 <li>
-<code>enrichList()</code> - accessor for <code>mem@enrichList</code>
+<code><a href="reference/Mem-class.html">enrichList()</a></code> - accessor for <code>mem@enrichList</code>
 </li>
 <li>
 <code>mem2dfs()</code> - create series of <code>data.frame</code> summarizing content, intended for export to Excel xlsx.</li>
@@ -916,7 +1094,7 @@ Workflow: <code><a href="reference/multiEnrichMap.html">multiEnrichMap()</a></co
 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> could print summary of content: enrichments, pathways, genes</li>
 <li>consider <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> - convert to wide <code>data.frame</code> summary?</li>
 <li>
-<code>memIM()</code>, <code>geneIM()</code>, <code>enrichIM()</code> convenient access to slot data</li>
+<code><a href="reference/Mem-class.html">memIM()</a></code>, <code><a href="reference/Mem-class.html">geneIM()</a></code>, <code><a href="reference/Mem-class.html">enrichIM()</a></code> convenient access to slot data</li>
 <li>convenient way to get <code>list</code> format for IMs?</li>
 </ul></li>
 <li>
@@ -1638,7 +1816,7 @@ gsub_vertex(g,
 <li>Requires <code>enrichIM</code> which contains enrichment-to-pathway whose values are P-values. When this data is not supplied, it should use 0.001 by default. I think these values are only used as an optional gradient color for the pathway nodes.</li>
 <li>Optional <code>geneIMcolors</code> which is the same as <code>geneIM</code> except the cells contain colors to use for each gene. Currently the function does not fill these colors, the best method is to use <code><a href="https://jmw86069.github.io/colorjam/reference/matrix2heatColors.html" class="external-link">colorjam::matrix2heatColors()</a></code>
 </li>
-</ul><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+</ul><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">geneIMcolors</span> <span class="op">&lt;-</span> <span class="fu">colorjam</span><span class="fu">::</span><span class="fu"><a href="https://jmw86069.github.io/colorjam/reference/matrix2heatColors.html" class="external-link">matrix2heatColors</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">geneIM</span>,</span>
 <span>   colorV<span class="op">=</span><span class="va">colorV</span><span class="op">)</span></span></code></pre></div>
 </li>
@@ -1905,7 +2083,7 @@ gsub_vertex(g,
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

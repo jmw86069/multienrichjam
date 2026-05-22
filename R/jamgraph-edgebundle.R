@@ -728,7 +728,11 @@ edge_bundle_nodegroups <- function
             edge.coords[ix1, 3:4, drop=FALSE])
          # jamba::printDebug("etest_xy:");print(etest_xy);
          # test by correlation
-         cor_xy <- cor(etest_xy[,1], etest_xy[,2]);
+         cor_xy <- tryCatch({
+            cor(etest_xy[,1], etest_xy[,2])
+         }, error=function(e){
+            NA
+         });
          ifelse(is.na(cor_xy), 1, cor_xy)
       })
       if (length(debug) > 0 &&

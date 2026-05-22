@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,14 +64,21 @@
 <span>  color_by_nodes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  size_by_genes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  median_size <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  max_size <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>  apply_edge_width <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  max_edge_width <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  min_edge_width <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  apply_edge_color <span class="op">=</span> <span class="va">apply_edge_width</span>,</span>
 <span>  apply_direction <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  direction_max <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  direction_floor <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  border_lwd <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  spread_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  label_min_dist <span class="op">=</span> <span class="fl">2.5</span>,</span>
 <span>  y_bias <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  vertex.label.font <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  use_layout_components <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  use_shadowText <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  do_express <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  do_plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -85,26 +92,30 @@
 
 
 <dl><dt id="arg-mem">mem<a class="anchor" aria-label="anchor" href="#arg-mem"></a></dt>
-<dd><p><code>Mem</code> or legacy <code>list</code> mem output from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code></p></dd>
+<dd><p><code>Mem</code> output from <code><a href="multiEnrichMap.html">multiEnrichMap()</a></code></p></dd>
 
 
 <dt id="arg-overlap">overlap<a class="anchor" aria-label="anchor" href="#arg-overlap"></a></dt>
 <dd><p><code>numeric</code>, default 0.2, value between 0 and 1 with Jaccard
 overlap coefficient required between any two pathways in order to
 create a network edge connecting these two pathways.</p><ul><li><p>Jaccard overlap coefficient is reciprocal of Jaccard distance,
-using <code>(1 - Jaccard_distance)</code>.</p></li>
+using <code>(1 - Jaccard_distance)</code>, where Jaccard_distance is
+calculated with <code>dist(x, method='binary')</code> with incidence matrix.</p></li>
 <li><p><code>overlap=0.2</code> is default, which specifies roughly 20% overlap
-in genes shared between two pathway nodes.</p></li>
+in genes shared between two pathway nodes, relative to the union
+of genes in those two pathway nodes.</p></li>
 <li><p>Note these genes must be involved in enrichment, and
 therefore does not use all possible genes annotated to a pathway.
-Therefore connections are only created with enriched genes
+Therefore, connections are only created with enriched genes
 are shared between pathways.</p></li>
 </ul></dd>
 
 
 <dt id="arg-p-cutoff">p_cutoff<a class="anchor" aria-label="anchor" href="#arg-p-cutoff"></a></dt>
 <dd><p><code>numeric</code> threshold used for significant enrichment
-P-value. The default NULL uses the value in the <code>mem</code> object.</p></dd>
+P-value. The default NULL uses the value in the <code>mem</code> object.
+This cutoff, together with <code>min_count</code>, define which nodes are
+included, and the color fill for those nodes.</p></dd>
 
 
 <dt id="arg-min-count">min_count<a class="anchor" aria-label="anchor" href="#arg-min-count"></a></dt>
@@ -152,8 +163,8 @@ without spending time on layout each iteration.</p></li>
 
 
 <dt id="arg-remove-singlets">remove_singlets<a class="anchor" aria-label="anchor" href="#arg-remove-singlets"></a></dt>
-<dd><p><code>logical</code>, default TRUE, whether to remove pathway
-singlets which have no connections to any other pathways.</p><ul><li><p>Using TRUE will help simplify busy figures, at the expense of
+<dd><p><code>logical</code>, default FALSE, whether to remove
+pathway singlets which have no connections to other pathways.</p><ul><li><p>Using TRUE will help simplify busy figures, at the expense of
 being less complete.</p></li>
 </ul></dd>
 
@@ -163,6 +174,42 @@ being less complete.</p></li>
 clusters using node colors in each cluster.
 Note that a mix of colors often turns brown, so this feature has
 unpredictable benefit.</p></dd>
+
+
+<dt id="arg-size-by-genes">size_by_genes<a class="anchor" aria-label="anchor" href="#arg-size-by-genes"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to size nodes
+proportional to the number of genes involved in enrichment.</p></dd>
+
+
+<dt id="arg-median-size">median_size<a class="anchor" aria-label="anchor" href="#arg-median-size"></a></dt>
+<dd><p><code>numeric</code> used when <code>size_by_genes=TRUE</code> to define
+the median size, default is 5.</p></dd>
+
+
+<dt id="arg-apply-edge-width">apply_edge_width<a class="anchor" aria-label="anchor" href="#arg-apply-edge-width"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to apply edge
+width based upon the edge weight, which represents the Jaccard
+overlap.</p></dd>
+
+
+<dt id="arg-max-edge-width">max_edge_width<a class="anchor" aria-label="anchor" href="#arg-max-edge-width"></a></dt>
+<dd><p><code>numeric</code> maximum edge width, used when
+<code>apply_edge_width=TRUE</code>. Default 25 is intended to represent
+roughly the full size of a node.</p></dd>
+
+
+<dt id="arg-min-edge-width">min_edge_width<a class="anchor" aria-label="anchor" href="#arg-min-edge-width"></a></dt>
+<dd><p><code>numeric</code> minimum edge width, used after
+<code>max_edge_width</code> has been applied. The minimum is applied as a
+noise floor, so that any edge at or below the <code>min_edge_width</code>
+is set to this width. All edges above this width are left as-is.</p></dd>
+
+
+<dt id="arg-apply-edge-color">apply_edge_color<a class="anchor" aria-label="anchor" href="#arg-apply-edge-color"></a></dt>
+<dd><p><code>logical</code> whether to apply edge
+color based upon the edge weight, which represents the Jaccard
+overlap. The default matches <code>apply_edge_width</code> so that they are
+applied together.</p></dd>
 
 
 <dt id="arg-apply-direction">apply_direction<a class="anchor" aria-label="anchor" href="#arg-apply-direction"></a></dt>
@@ -185,9 +232,45 @@ for any color to be applied, below which values are considered
 at or below 0.5 may be considered "not directional."</p></dd>
 
 
+<dt id="arg-border-lwd">border_lwd<a class="anchor" aria-label="anchor" href="#arg-border-lwd"></a></dt>
+<dd><p><code>numeric</code> line width of node borders, used to convey
+any direction associated with enrichment.</p></dd>
+
+
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
 <dd><p><code>numeric</code> passed to <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> via the <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code>
 layout algorithm, default 123.</p></dd>
+
+
+<dt id="arg-spread-labels">spread_labels<a class="anchor" aria-label="anchor" href="#arg-spread-labels"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to call
+<code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>.</p></dd>
+
+
+<dt id="arg-label-min-dist">label_min_dist<a class="anchor" aria-label="anchor" href="#arg-label-min-dist"></a></dt>
+<dd><p><code>numeric</code> default 2.5 defines the label distance
+used in <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>.</p></dd>
+
+
+<dt id="arg-y-bias">y_bias<a class="anchor" aria-label="anchor" href="#arg-y-bias"></a></dt>
+<dd><p><code>numeric</code> default 10, passed to <code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code>.</p></dd>
+
+
+<dt id="arg-vertex-label-font">vertex.label.font<a class="anchor" aria-label="anchor" href="#arg-vertex-label-font"></a></dt>
+<dd><p><code>integer</code> to define the font style, default 2
+sets bold font; alternatively use 1 for normal font.</p></dd>
+
+
+<dt id="arg-use-layout-components">use_layout_components<a class="anchor" aria-label="anchor" href="#arg-use-layout-components"></a></dt>
+<dd><p><code>logical</code> default FALSE, whether to call
+<code><a href="https://r.igraph.org/reference/merge_coords.html" class="external-link">igraph::layout_components()</a></code> to combine multiple network components,
+rather than calling <code><a href="layout_with_qfr.html">layout_with_qfr()</a></code> on the overall graph object.</p></dd>
+
+
+<dt id="arg-use-shadowtext">use_shadowText<a class="anchor" aria-label="anchor" href="#arg-use-shadowtext"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to render node
+labels using <code><a href="https://jmw86069.github.io/jamba/reference/shadowText.html" class="external-link">jamba::shadowText()</a></code>. This setting is also stored in
+the graph attributes and is used by <code><a href="jam_igraph.html">jam_igraph()</a></code>.</p></dd>
 
 
 <dt id="arg-do-express">do_express<a class="anchor" aria-label="anchor" href="#arg-do-express"></a></dt>
@@ -212,6 +295,20 @@ the network plot, used when <code>do_plot=TRUE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p><code>igraph</code> object with an Enrichment Map, nodes are pathways,
+and edges are defined by the Jaccard overlap of genes involved
+in enrichment of each pair of pathways.</p><ul><li><p>Edges are defined only when the Jaccard overlap is at least
+<code>overlap</code>.</p></li>
+<li><p>Node sizes are proportional to the number of genes involved
+in enrichment, with median node size defined by <code>median_size</code>.</p></li>
+<li><p>By default, edge width and color is defined by the overlap,
+ranging from 0 to 1. Graph attributes store the <code>max_edge_width</code>
+with edge width at Jaccard overlap 1; and <code>edge_colramp</code> as
+a function to convert weight to color, and can be used to
+create a color legend.</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function is currently In development.</p>
 <p>This function is intended to convert <code>mem</code> output from
@@ -220,40 +317,45 @@ which represents the statistical enrichment support from each
 pathway enrichment.</p>
 <p>This function can apply P-value thresholds using the input <code>mem</code>,
 or using a custom value.</p>
-<p>A node clustering function is applied by default, which may help
-define suitable subgroups of nodes. When defined, the clusters
-are used to define nodegroups for edge bundling.</p>
+<p>A node community detection function is applied by default
+which may help visualize subgroups of nodes.
+When defined, the communities are used to define nodegroups
+for edge bundling.</p>
+<p>As of version 0.0.116.900, node size also scales the border
+line width for 'frame.width' and 'pie.border.lwd', so that
+the line width defined by <code>border_lwd</code> matches <code>median_size</code>,
+and is scaled proportionally by node size.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other jam Mem utilities:
 <code><a href="Mem-class.html">Mem-class</a></code>,
 <code><a href="MemPlotFolio-class.html">MemPlotFolio-class</a></code>,
-<code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
-<code><a href="mem2cnet.html">mem2cnet</a>()</code></p>
+<code><a href="fixSetLabels.html">fixSetLabels()</a></code>,
+<code><a href="mem2cnet.html">mem2cnet()</a></code></p>
 <p>Other jam igraph functions:
-<code><a href="communities2nodegroups.html">communities2nodegroups</a>()</code>,
-<code><a href="drawEllipse.html">drawEllipse</a>()</code>,
-<code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite</a>()</code>,
-<code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups</a>()</code>,
-<code><a href="fixSetLabels.html">fixSetLabels</a>()</code>,
-<code><a href="flip_edges.html">flip_edges</a>()</code>,
-<code><a href="get_bipartite_nodeset.html">get_bipartite_nodeset</a>()</code>,
-<code><a href="highlight_edges_by_node.html">highlight_edges_by_node</a>()</code>,
-<code><a href="igraph2pieGraph.html">igraph2pieGraph</a>()</code>,
-<code><a href="label_communities.html">label_communities</a>()</code>,
-<code><a href="mem2cnet.html">mem2cnet</a>()</code>,
-<code><a href="nodegroups2communities.html">nodegroups2communities</a>()</code>,
-<code><a href="rectifyPiegraph.html">rectifyPiegraph</a>()</code>,
-<code><a href="removeIgraphBlanks.html">removeIgraphBlanks</a>()</code>,
-<code><a href="subsetCnetIgraph.html">subsetCnetIgraph</a>()</code>,
-<code><a href="subset_igraph_components.html">subset_igraph_components</a>()</code>,
-<code><a href="sync_igraph_communities.html">sync_igraph_communities</a>()</code></p></div>
+<code><a href="communities2nodegroups.html">communities2nodegroups()</a></code>,
+<code><a href="drawEllipse.html">drawEllipse()</a></code>,
+<code><a href="edge_bundle_bipartite.html">edge_bundle_bipartite()</a></code>,
+<code><a href="edge_bundle_nodegroups.html">edge_bundle_nodegroups()</a></code>,
+<code><a href="fixSetLabels.html">fixSetLabels()</a></code>,
+<code><a href="flip_edges.html">flip_edges()</a></code>,
+<code><a href="get_bipartite_nodeset.html">get_bipartite_nodeset()</a></code>,
+<code><a href="highlight_edges_by_node.html">highlight_edges_by_node()</a></code>,
+<code><a href="igraph2pieGraph.html">igraph2pieGraph()</a></code>,
+<code><a href="label_communities.html">label_communities()</a></code>,
+<code><a href="mem2cnet.html">mem2cnet()</a></code>,
+<code><a href="nodegroups2communities.html">nodegroups2communities()</a></code>,
+<code><a href="rectifyPiegraph.html">rectifyPiegraph()</a></code>,
+<code><a href="removeIgraphBlanks.html">removeIgraphBlanks()</a></code>,
+<code><a href="subsetCnetIgraph.html">subsetCnetIgraph()</a></code>,
+<code><a href="subset_igraph_components.html">subset_igraph_components()</a></code>,
+<code><a href="sync_igraph_communities.html">sync_igraph_communities()</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">emap</span> <span class="op">&lt;-</span> <span class="fu">mem2emap</span><span class="op">(</span><span class="va">Memtest</span>, min_count<span class="op">=</span><span class="fl">2</span>,<span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">emap</span> <span class="op">&lt;-</span> <span class="fu">mem2emap</span><span class="op">(</span><span class="va">Memtest</span>, min_count<span class="op">=</span><span class="fl">2</span>, max_edge_width<span class="op">=</span><span class="fl">5</span>, overlap<span class="op">=</span><span class="fl">0.33</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">emap</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mem2emap-1.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
@@ -261,7 +363,9 @@ are used to define nodegroups for edge bundling.</p>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">emap2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mem2emap-2.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">emapB</span> <span class="op">&lt;-</span> <span class="fu">mem2emap</span><span class="op">(</span><span class="fu"><a href="fixSetLabels.html">fixSetLabels</a></span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span>, min_count<span class="op">=</span><span class="fl">2</span>, overlap<span class="op">=</span><span class="fl">0.35</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">emapB</span> <span class="op">&lt;-</span> <span class="fu">mem2emap</span><span class="op">(</span><span class="fu"><a href="fixSetLabels.html">fixSetLabels</a></span><span class="op">(</span><span class="va">Memtest</span><span class="op">)</span>, min_count<span class="op">=</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>   overlap<span class="op">=</span><span class="fl">0.35</span>, median_size<span class="op">=</span><span class="fl">10</span>,</span></span>
+<span class="r-in"><span>   apply_edge_width<span class="op">=</span><span class="cn">TRUE</span>, max_edge_width<span class="op">=</span><span class="fl">15</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jam_igraph.html">jam_igraph</a></span><span class="op">(</span><span class="va">emapB</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mem2emap-3.png" alt="" width="960" height="960"></span>
 <span class="r-in"><span></span></span>
@@ -276,7 +380,7 @@ are used to define nodegroups for edge bundling.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

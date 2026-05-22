@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.110.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.117.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,191 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.117.900" id="multienrichjam-00117900">multienrichjam 0.0.117.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00117900"></a></h2>
+<div class="section level3">
+<h3 id="new-functions-0-0-117-900">New functions<a class="anchor" aria-label="anchor" href="#new-functions-0-0-117-900"></a></h3>
+<ul><li>
+<code>EnrichmentMap()</code> as proper method for <code>Mem</code> and <code><a href="../reference/MemPlotFolio-class.html">MemPlotFolio()</a></code> objects. Internally it calls <code><a href="../reference/mem2emap.html">mem2emap()</a></code> then applies optional arguments to define node groups. When using <code>MemPlotFolio</code> it allows clustering by <code>Clusters()</code>, while <code>Mem</code> input only supports network communities. Node groups supported: clusters, cluster_labels, communities, or none. <code><a href="../reference/plot_mpf.html">plot_mpf()</a></code> now calls <code>EnrichmentMap()</code> directly.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-117-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-117-900"></a></h3>
+<ul><li>edge bundling error fixed when points were co-linear.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.116.900" id="multienrichjam-00116900">multienrichjam 0.0.116.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00116900"></a></h2>
+<ul><li>Hotfix: Added ‘BiocStyle’, ‘kableExtra’ dependencies.</li>
+<li>Hotfix: Removed requirement for directionColname in IPA data, common for older format IPA files as included as <em>sigh</em> package data.</li>
+<li>Hotfix: Un-hid the initial example code chunk.</li>
+<li>Added dependencies: ‘withr’, ‘ggforce’, ‘circlize’, ‘shinydashboardPlus’.</li>
+<li>Support for MemPlotFolio cluster labels, and cluster data. The cluster labels are intended to support short summary title or phrase, addressing the common “What’s that cluster?”</li>
+<li>New <code><a href="../reference/plot_mpf.html">plot_mpf()</a></code> paradigm for MemPlotFolio, supporting Rmd and Qmd tabbed and non-tabbed output.</li>
+</ul><div class="section level3">
+<h3 id="changes-0-0-116-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-116-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code> and <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li>Quietly adds ‘Mem’ to metadata(Mpf)$Mem for use in other MemPlotFolio related functions. Experimental.</li>
+</ul></li>
+<li>
+<p><code>MemPlotFolio</code></p>
+<ul><li>New accessor and setter <code><a href="../reference/MemPlotFolio-class.html">ClusterLabels()</a></code> stores custom labels for each pathway cluster. <code><a href="../reference/MemPlotFolio-class.html">ClusterData()</a></code> stores data in <code>list</code> format, intended to store summary information for each cluster.</li>
+<li>Slot ‘metadata’ now enforces</li>
+<li>‘cluster_labels’ as named <code>character</code> vector of labels, named by <code>names(Clusters(Mpf))</code>. These names are short, usually single-letter codes for each cluster, while the labels are words or phrases, which may appear in <code><a href="../reference/MemPlotFolio-class.html">CnetCollapsed()</a></code>, <code><a href="../reference/MemPlotFolio-class.html">CnetCluster()</a></code>, or potentially the cluster title on <code><a href="../reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code>.</li>
+<li>‘cluster_data’ is a named <code>list</code> of data, content to be determined.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/MemPlotFolio-class.html">CnetCollapsed()</a></code></p>
+<ul><li>‘type’ argument recognizes: ‘cluster’, ‘set’, ‘title’. A suffix ‘2’ hides gene node labels, for example <code>type='set2'</code>. The ‘cluster’ uses <code><a href="../reference/MemPlotFolio-class.html">ClusterLabels()</a></code> if present. The ‘set’ uses the top N pathways, shortened to M characters.</li>
+<li>Arguments in ‘…’ are used: ‘layout’, ‘rotate_degrees’, ‘width’ applies word wrap, ‘maxNchar’ applies label cropping.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/MemPlotFolio-class.html">CnetCluster()</a></code></p>
+<ul><li>Default for argument ‘main’ will use <code><a href="../reference/MemPlotFolio-class.html">ClusterLabels()</a></code> as plot title when present.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>
+<code>mark.groups</code> is a little more robust to subset igraph, and cluster_names as vector, list, or NULL.</li>
+</ul></li>
+<li><p><code><a href="../reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>, <code><a href="../reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code> now call <code>ComplexHeatmap::draw(x, newpage=FALSE)</code> when running inside Positron, and not running inside knitr, to prevent the <code><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid::grid.newpage()</a></code> from causing Positron to ignore subsequent figure grobs. More testing necessary to confirm no other conditions inside Positron are affected.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-functions-0-0-116-900">New functions<a class="anchor" aria-label="anchor" href="#new-functions-0-0-116-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/plot_mpf.html">plot_mpf()</a></code></p>
+<ul><li>Distinct function from <code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code> to enable plotting one or more plots from the <code>MemPlotFolio</code> (Mpf) object.</li>
+<li>Enables optional Rmarkdown (Rmd) or Quarto (Qmd) tabsets, including Quarto open/close style, and sub-tabs where relevant.</li>
+<li>In the next release, this function will likely replace all active plotting functions currently done within <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.115.950" id="multienrichjam-00115950">multienrichjam 0.0.115.950<a class="anchor" aria-label="anchor" href="#multienrichjam-00115950"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-115-950">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-115-950"></a></h3>
+<ul><li>
+<code><a href="../reference/mem_legend.html">mem_legend()</a></code> fixed visual glitch in the color legend causing node fill color to appear as fill color for directional borders. Also fixed alignment using ‘added-top’ and ‘added-bottom’ for multi-column output.</li>
+<li>
+<code><a href="../reference/jam_mypie.html">jam_mypie()</a></code> used to render pie nodes, updated to use proper <code>frame.lwd</code> line widths for each node.</li>
+<li>
+<code><a href="../reference/mem2emap.html">mem2emap()</a></code> and <code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> now define ‘vertex.size2’ used for igraph node shape=‘coloredrectangle’. Rarely used, but an OG that may be preferred when analyzing a lot of enrichments.</li>
+<li>
+<code><a href="../reference/shape.coloredrectangle.plot.html">shape.coloredrectangle.plot()</a></code> fixed bug causing blank cells to re-use recycled border colors.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-115-950">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-115-950"></a></h3>
+<ul><li><p><code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> and <code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code> have new option to print Rmarkdown (Rmd) tab headers, using <code>do_rmd_tabs=TRUE</code>. The original target for <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> was multi-page PDF, however for HTML output the Rmd tabs are a convenient option.</p></li>
+<li><p>Several functions now use ‘vertex.frame.width’ instead of ‘vertex.frame.lwd’ as new attribute name since igraph 1.3.0: <code><a href="../reference/mem2emap.html">mem2emap()</a></code>, <code><a href="../reference/mem2cnet.html">mem2cnet()</a></code>, <code><a href="../reference/apply_cnet_direction.html">apply_cnet_direction()</a></code>, <code><a href="../reference/jam_igraph.html">jam_igraph()</a></code>.</p></li>
+<li><p><code><a href="../reference/shape.jampie.plot.html">shape.jampie.clip()</a></code> now clips to the outer border instead of the edge of the inner border. Mostly noticeable with transparent outer border, or wide border where it was clear the arrow head was too close and was cropped.</p></li>
+<li><p><code><a href="../reference/mem2emap.html">mem2emap()</a></code> node border line width is now scaled by node size, relative to the median node size. Otherwise, small nodes only showed the border color.</p></li>
+<li>
+<p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code></p>
+<ul><li>now applies <code>node_factor</code> to borders ‘frame.width’ and ‘pie.border.lwd’ by default. Previously, nodes would be smaller but the border maintained absolute width and could fill the node completely. To reverse, apply the inverse via <code>border_factor</code>.</li>
+</ul></li>
+<li><p><code><a href="../reference/MemPlotFolio-class.html">CnetCollapsed()</a></code>, <code><a href="../reference/MemPlotFolio-class.html">CnetExemplar()</a></code>, <code><a href="../reference/MemPlotFolio-class.html">CnetCluster()</a></code> have new arguments ‘legend_x’, ‘legend_y’ which are passed to <code><a href="../reference/mem_legend.html">mem_legend()</a></code> to control the position of the legend.</p></li>
+<li>
+<p><code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code></p>
+<ul><li>Sped Cnet exemplar and cluster generation in large networks by skipping the global Cnet step, which is not necessary.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/rank_mem_clusters.html">rank_mem_clusters()</a></code></p>
+<ul><li>Changed default ‘byCols’ to favor ‘minp_rank’ instead of ‘composite_rank’.</li>
+</ul></li>
+<li><p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> new argument <code>border_factor</code> to adjust frame and border line width.</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.114.950" id="multienrichjam-00114950">multienrichjam 0.0.114.950<a class="anchor" aria-label="anchor" href="#multienrichjam-00114950"></a></h2>
+<ul><li>Minor update to improve defaults for <code><a href="../reference/mem2emap.html">mem2emap()</a></code>.</li>
+</ul><div class="section level3">
+<h3 id="updates-to-existing-functions-0-0-114-950">Updates to existing functions<a class="anchor" aria-label="anchor" href="#updates-to-existing-functions-0-0-114-950"></a></h3>
+<ul><li>
+<p><code><a href="../reference/mem2emap.html">mem2emap()</a></code></p>
+<ul><li>New arguments: ‘apply_edge_width=TRUE’, ‘apply_edge_color=TRUE’, ‘max_edge_width=25’ apply edge color and width by default.</li>
+<li>Node size calculation improved to set <code>median_size</code> and <code>max_size</code>.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.114.900" id="multienrichjam-00114900">multienrichjam 0.0.114.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00114900"></a></h2>
+<ul><li>Changes to support <code>gseaResult</code> input to <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code>, and to support it alongside <code>enrichResult</code> when relevant.</li>
+</ul><div class="section level3">
+<h3 id="bug-fixes-0-0-114-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-114-900"></a></h3>
+<ul><li>Fixed bug in <code><a href="../reference/mem2emap.html">mem2emap()</a></code> caused by its use of <code><a href="../reference/spread_igraph_labels.html">spread_igraph_labels()</a></code> calling <code><a href="../reference/reorderIgraphNodes.html">reorder_igraph_nodes()</a></code>. When it could not define Cnet nodesets, singlets could be NA in the updated layout.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-114-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-114-900"></a></h3>
+<ul><li><p><code><a href="../reference/enrichList2df.html">enrichList2df()</a></code> fixed when input list had different colnames.</p></li>
+<li>
+<p><code><a href="../reference/get_igraph_layout.html">get_igraph_layout()</a></code></p>
+<ul><li>Much more robust in checking layout rownames, and the order of rownames in the event the igraph was subset and the layout was not. It only works when there are rownames(layout), which is not the typical igraph default.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>With <code>gseaResult</code> input, it calls internal <code><a href="../reference/gr2er.html">gr2er()</a></code> which populates the common colnames into the <code>gseaResult</code> object for convenient use alongside <code>enrichResult</code> objects.</li>
+<li>Arg ‘directionColname’ defaults now include <code>'NES'</code> to use GSEA normalized enrichment score (NES) for enrichment directionality.</li>
+<li>Internally, the various ’*Colnames’ args are applied to each entry in <code>enrichList</code>, to tolerate different colnames. This change embraces situations like having both <code>enrichResult</code> and <code>gseaResult</code> together, and any non-clusterProfiler enrichment table. Previously, colnames must be consistent across inputs.</li>
+<li>When the <code>enrichList</code> tables contain different colnames, it now goes through each entry and updates colnames to match the first matching colname of each type.<br>
+The updated enrichments can be reviewed with <code>enrichList(Mem)</code>.</li>
+<li>Work is active and ongoing to handle multiple types of enrichment data.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.113.900" id="multienrichjam-00113900">multienrichjam 0.0.113.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00113900"></a></h2>
+<div class="section level3">
+<h3 id="changes-to-existing-functions-0-0-113-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-113-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
+<ul><li>When ‘enrichList’ is supplied with <code>data.frame</code>, the call to <code><a href="../reference/enrichDF2enrichResult.html">enrichDF2enrichResult()</a></code> now passes proper arguments in addition to ‘…’, which permits columns ‘pvalueColname’ to be respected.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.112.900" id="multienrichjam-00112900">multienrichjam 0.0.112.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00112900"></a></h2>
+<ul><li>Added ‘readr’ to Enhances, it can be used as a backup import option for now.</li>
+<li>Removed some dependencies internally. More to be done.</li>
+</ul><div class="section level3">
+<h3 id="updates-to-existing-functions-0-0-112-900">Updates to existing functions<a class="anchor" aria-label="anchor" href="#updates-to-existing-functions-0-0-112-900"></a></h3>
+<ul><li>
+<p><code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code></p>
+<ul><li>Added formal arguments to the definition, instead of passing ‘…’ to <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>, so they appear with <code><a href="https://rdrr.io/r/base/args.html" class="external-link">args()</a></code>, <code><a href="https://jmw86069.github.io/jamba/reference/jargs.html" class="external-link">jamba::jargs()</a></code>, and R argument auto-fill.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code></p>
+<ul><li>Argument ‘removeGrep’ accepts a vector, and will insert delimiter ‘|’.</li>
+<li>Argument ‘removeGrep’ includes more common pathway prefixes, formats including: Wp:Pathway, Wp12345:Pathway, Hsa:Pathway, R-Hsa-152:Pathway, M12345:Pathway. Also recognizes some common species codes: Hsa|Mmu|Rno|Dme.</li>
+<li>New argument ‘makeUnique’ optionally calls <code><a href="https://jmw86069.github.io/jamba/reference/makeNames.html" class="external-link">jamba::makeNames()</a></code> to enforce unique names after adjustments are made. It is fairly common that several pathway sources provide the same pathway, for example “T-cell signaling”.</li>
+<li>All <code>Mem</code> input automatically uses <code>makeUnique=TRUE</code> to protect the integrity of the output <code>Mem</code> object.</li>
+<li>Added tests to cover new removeGrep, and makeUnique=TRUE.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.111.950" id="multienrichjam-00111950">multienrichjam 0.0.111.950<a class="anchor" aria-label="anchor" href="#multienrichjam-00111950"></a></h2>
+<div class="section level3">
+<h3 id="updates-quick-fix-still-in-progress-0-0-111-950">Updates (Quick Fix, still in progress)<a class="anchor" aria-label="anchor" href="#updates-quick-fix-still-in-progress-0-0-111-950"></a></h3>
+<ul><li>
+<p><code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code></p>
+<ul><li>Argument ‘removeGrep’ now removes the longer KEGG Medicus prefixes: “KEGG_MEDICUS_”, “KEGG_MEDICUS_REFERENCE_”, “KEGG_MEDICUS_VARIANT_”, “KEGG_MEDICUS_PATHOGEN_”. It does not (yet) remove “KEGG_MEDICUS_ENV_FACTOR” because what is that? Environmental factor pathways? We will revisit in future.</li>
+</ul></li>
+<li><p><code><a href="../reference/importIPAenrichment.html">importIPAenrichment()</a></code> fixed bug where <code>revert_ipa_xref</code> was not propagated to multi-sheet xlsx import consistently.</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.111.900" id="multienrichjam-00111900">multienrichjam 0.0.111.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00111900"></a></h2>
+<div class="section level3">
+<h3 id="updates-0-0-111-900">Updates<a class="anchor" aria-label="anchor" href="#updates-0-0-111-900"></a></h3>
+<ul><li>
+<p>words.txt,abbrev.txt</p>
+<ul><li>“Signaling by X Y” is only abbreviated to “X Y” with two or more words.</li>
+<li>Added some capitalizations from recent IPA data: BBSome, ID1, GABAergic, PDGF, PDGFR, PDGFRB.</li>
+<li>IL 24 is edited to IL-24; Ifn to IFN; Robo and Robos to ROBO and ROBOs; Nmd to NMD; Pml to PML; Hes Hey to HES/HEY; Slits to SLITs; Cmyb to c-Myb; Ctcf to CTCF; Gna12 13 to GNA12/GNA13; Rhoa to RhoA; Hcmv to HCMV; Pirna to piRNA; Classiii to ClassIII; Ndkdynamin to NDK/Dynamin</li>
+<li>Fixed “Signaling By” so it is only removed when one word follows it, e.g. “Signaling By VEGF” is kept as-is, but “Signaling By Erbb2 in Cancer” is converted to “Erbb2 in Cancer”.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.110.900" id="multienrichjam-00110900">multienrichjam 0.0.110.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00110900"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-0-0-110-900">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-110-900"></a></h3>
@@ -54,17 +239,28 @@
 <li>Added examples.</li>
 </ul></li>
 <li><p><code><a href="../reference/get_cnet_nodeset_vector.html">get_cnet_nodeset_vector()</a></code> fixed missing argument ‘nodegroups’.</p></li>
+<li><p><code><a href="../reference/get_hull_data.html">get_hull_data()</a></code> updated to support one-point hulls.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="changes-to-existing-functions-0-0-110-900">Changes to existing functions<a class="anchor" aria-label="anchor" href="#changes-to-existing-functions-0-0-110-900"></a></h3>
-<ul><li>
+<ul><li><p><code><a href="../reference/jam_igraph.html">jam_igraph()</a></code> passes ‘…’ to <code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code> when used with <code>mark.groups=TRUE</code> to make it easy to pass <code>min_size</code> to filter nodesets to at least this many nodes.</p></li>
+<li>
 <p><code><a href="../reference/color_edges_by_nodegroups.html">color_edges_by_nodegroups()</a></code></p>
 <ul><li>more robust to argument ‘nodegroups’</li>
 <li>new adjustments ‘darkFactor’,‘sFactor’ to distinguish from node colors.</li>
 <li>added examples</li>
 </ul></li>
 <li><p><code><a href="../reference/get_igraph_layout.html">get_igraph_layout()</a></code> now always returns colnames ‘x’,‘y’,‘z’ as many as needed.</p></li>
-<li><p><code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code> now tolerates data without ‘nodeType’, but does not filter ‘Set’ nodes of course.</p></li>
+<li>
+<p><code><a href="../reference/make_point_hull.html">make_point_hull()</a></code></p>
+<ul><li>Now produces a point hull for 1 and 2 point data, as originally intended.</li>
+<li>Adds argument ‘min_points’ to allow filtering for 3+ points, for legacy behavior.</li>
+</ul></li>
+<li>
+<p><code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code></p>
+<ul><li>now tolerates data without ‘nodeType’, but does not filter ‘Set’ nodes of course.</li>
+<li>new argument ‘min_size’ to require nodesets to have at least this many nodes. Intended mainly for use with <code><a href="../reference/make_point_hull.html">make_point_hull()</a></code>.</li>
+</ul></li>
 <li>
 <p><code><a href="../reference/get_cnet_nodeset_vector.html">get_cnet_nodeset_vector()</a></code></p>
 <ul><li>now tolerates argument nodegroups as NULL, which calls <code><a href="../reference/get_cnet_nodeset.html">get_cnet_nodeset()</a></code>. Help docs clarify that <code>filter_set_only=FALSE</code> will assign a nodeset to ‘Set’ nodes, otherwise they are NA.</li>
@@ -121,7 +317,7 @@
 <h3 id="changes-0-0-107-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-107-900"></a></h3>
 <ul><li>‘MemPlotFolio’ metadata now includes <code>logical</code> ‘hasDirection’ as convenient way to tell if data include directionality.</li>
 <li>
-<code>CnetCollapsed()</code>, <code>CnetExemplar()</code>, <code>CnetCluster()</code> show direction in the color legend if defined in the ‘MemPlotFolio’ object. It can be overridden with <code>do_directional=FALSE</code>.</li>
+<code><a href="../reference/MemPlotFolio-class.html">CnetCollapsed()</a></code>, <code><a href="../reference/MemPlotFolio-class.html">CnetExemplar()</a></code>, <code><a href="../reference/MemPlotFolio-class.html">CnetCluster()</a></code> show direction in the color legend if defined in the ‘MemPlotFolio’ object. It can be overridden with <code>do_directional=FALSE</code>.</li>
 <li>Added more words.txt.</li>
 </ul></div>
 <div class="section level3">
@@ -201,7 +397,7 @@
 <li>
 <code><a href="../reference/score_gene_path_clusters.html">score_gene_path_clusters()</a></code>: Experimental, intriguing effort to find “hot spots” in the Gene-Path Heatmap clustering.</li>
 <li>
-<code><a href="../reference/with_ht_opts.html">with_ht_opts()</a></code>, <code><a href="../reference/with_ht_opts.html">local_ht_opts()</a></code>: applies withr style options using <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/ht_opt.html" class="external-link">ComplexHeatmap::ht_opt()</a></code>, and added to <code>GenePathHeatmap()</code>
+<code><a href="../reference/with_ht_opts.html">with_ht_opts()</a></code>, <code><a href="../reference/with_ht_opts.html">local_ht_opts()</a></code>: applies withr style options using <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/ht_opt.html" class="external-link">ComplexHeatmap::ht_opt()</a></code>, and added to <code><a href="../reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code>
 </li>
 </ul></div>
 <div class="section level3">
@@ -227,12 +423,12 @@
 </ul></li>
 <li>
 <p><code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code></p>
-<ul><li>includes <code>direction_cutoff</code> in <code>thresholds()</code> to use by <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> which calls <code><a href="../reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code>. This threshold determines when to colorize set nodes with up/down directionality.</li>
+<ul><li>includes <code>direction_cutoff</code> in <code><a href="https://jmw86069.github.io/multienrichjam/reference/Mem-class.html">thresholds()</a></code> to use by <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> which calls <code><a href="../reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code>. This threshold determines when to colorize set nodes with up/down directionality.</li>
 </ul></li>
 <li>
 <p><code><a href="../reference/collapse_mem_clusters.html">collapse_mem_clusters()</a></code></p>
-<ul><li>now calculates aggregate directional scores for <code>enrichIMdirection()</code>, previously it used the aggregate <code>enrichIM()</code> values.</li>
-<li>the <code>enrichIMdirection()</code> values are now used to colorize Set nodes, using <code>direction_cutoff</code> as a minimum to apply up/down color.</li>
+<ul><li>now calculates aggregate directional scores for <code><a href="../reference/Mem-class.html">enrichIMdirection()</a></code>, previously it used the aggregate <code><a href="../reference/Mem-class.html">enrichIM()</a></code> values.</li>
+<li>the <code><a href="../reference/Mem-class.html">enrichIMdirection()</a></code> values are now used to colorize Set nodes, using <code>direction_cutoff</code> as a minimum to apply up/down color.</li>
 </ul></li>
 <li>
 <p><code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code></p>
@@ -247,18 +443,18 @@
 <ul><li><p>Added <code>MemPlotFolio</code> S4 class as default output from <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code>. Nobody in theory should have been using <code><a href="../reference/mem_plot_folio.html">mem_plot_folio()</a></code> output directly. However, you can use <code>returnType="list"</code> for legacy output.</p></li>
 <li>
 <p>There are several accessors, a few of which can plot the data, and return the corresponding graphical objects to be customized.</p>
-<ul><li><code>EnrichmentHeatmap()</code></li>
-<li><code>GenePathHeatmap()</code></li>
-<li><code>CnetCollapsed()</code></li>
-<li><code>CnetExemplar()</code></li>
-<li><code>CnetCluster()</code></li>
+<ul><li><code><a href="../reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code></li>
+<li><code><a href="../reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code></li>
+<li><code><a href="../reference/MemPlotFolio-class.html">CnetCollapsed()</a></code></li>
+<li><code><a href="../reference/MemPlotFolio-class.html">CnetExemplar()</a></code></li>
+<li><code><a href="../reference/MemPlotFolio-class.html">CnetCluster()</a></code></li>
 </ul></li>
 <li><p>Vignettes and tests have been updated to use the new MemPlotFolio S4 functions, a much cleaner approach overall.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-mem-methods-0-0-103-900">New Mem methods<a class="anchor" aria-label="anchor" href="#new-mem-methods-0-0-103-900"></a></h3>
 <ul><li>
-<code>geneInCategory()</code> mimics <code><a href="https://rdrr.io/pkg/DOSE/man/geneInCategory.html" class="external-link">DOSE::geneInCategory()</a></code> by listing genes in each pathway.</li>
+<code><a href="../reference/Mem-class.html">geneInCategory()</a></code> mimics <code><a href="https://rdrr.io/pkg/DOSE/man/geneInCategory.html" class="external-link">DOSE::geneInCategory()</a></code> by listing genes in each pathway.</li>
 <li>
 <code>genesBySet()</code> lists pathways associated to each gene.</li>
 </ul></div>
@@ -2401,7 +2597,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
