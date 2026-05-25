@@ -150,7 +150,8 @@ list_to_Mem(mem)
   do_plot,
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(),
+  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
+    = TRUE),
   ...
 )
 }
@@ -301,7 +302,17 @@ pathway pair.
 Note '...' arguments are passed to \code{jam_igraph()} and
 \code{mem_legend()} when \code{do_plot=TRUE}.
 Argument \code{'params'} is a \code{list} with additional arguments:
-'repulse', 'width', 'group', 'mark.expand', 'do_legend'.
+\itemize{
+\item 'repulse': \code{numeric} repulse passed to \code{layout_with_qfr()}.
+\item 'width': \code{integer} word-wrap width used for cluster labels.
+\item 'group': \code{character} used to define the type of node group,
+'clusters' uses pathway cluster title; 'cluster_labels' uses
+cluster labels if defined; 'community' uses igraph community,
+'none' display no node grouping.
+\item 'mark.expand': passed to \code{jam_igraph()} to control the buffer
+around the alpha hull shaded regions for node groups.
+\item 'do_legend': \code{logical} whether to display the legend
+}
 
 }}
 \examples{

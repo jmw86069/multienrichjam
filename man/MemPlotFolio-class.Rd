@@ -23,6 +23,7 @@
 \alias{Caption}
 \alias{CaptionLegendList,MemPlotFolio-method}
 \alias{CaptionLegendList}
+\alias{CaptionLegendList<-,MemPlotFolio-method}
 \alias{EnrichmentHeatmap,MemPlotFolio-method}
 \alias{EnrichmentHeatmap}
 \alias{GenePathHeatmap,MemPlotFolio-method}
@@ -64,11 +65,21 @@ MemPlotFolio_to_list(x, ...)
 
 \S4method{CaptionLegendList}{MemPlotFolio}(x, ...)
 
-\S4method{EnrichmentHeatmap}{MemPlotFolio}(x, do_plot, ...)
+\S4method{CaptionLegendList}{MemPlotFolio}(x) <- value
 
-\S4method{GenePathHeatmap}{MemPlotFolio}(x, do_plot, ...)
+\S4method{EnrichmentHeatmap}{MemPlotFolio}(x, do_plot, params = list(width = 30), ...)
 
-\S4method{CnetCollapsed}{MemPlotFolio}(x, type, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
+\S4method{GenePathHeatmap}{MemPlotFolio}(x, do_plot, params = list(width = 30), ...)
+
+\S4method{CnetCollapsed}{MemPlotFolio}(
+  x,
+  type,
+  do_plot,
+  legend_x = "bottomleft",
+  legend_y = NULL,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  ...
+)
 
 \S4method{CnetExemplar}{MemPlotFolio}(
   x,
@@ -76,6 +87,7 @@ MemPlotFolio_to_list(x, ...)
   do_plot,
   legend_x = "bottomleft",
   legend_y = NULL,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   main = NULL,
   ...
 )
@@ -87,6 +99,7 @@ MemPlotFolio_to_list(x, ...)
   legend_x = "bottomleft",
   legend_y = NULL,
   main = NULL,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   ...
 )
 
@@ -97,7 +110,8 @@ MemPlotFolio_to_list(x, ...)
   do_plot = TRUE,
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(),
+  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
+    = TRUE),
   ...
 )
 }
@@ -108,8 +122,8 @@ MemPlotFolio_to_list(x, ...)
 
 \item{...}{additional arguments passed to \code{plot_mpf()}}
 
-\item{value}{named \code{character} vector of cluster labels, where names
-correspond to cluster names as returned by \code{Clusters(x)}.}
+\item{value}{\code{Legends} object from ComplexHeatmap package. Use NULL
+to hide the caption legend list entries.}
 
 \item{y}{ignored}
 }
@@ -150,6 +164,9 @@ Multiple lines are delimited by newline characters.
 \code{metadata(MemPlotFolio)} returns the caption summary
 in the form of \code{ComplexHeatmap::Legends} suitable to \code{draw()}
 as R grid graphics.
+
+\code{CaptionLegendList<-(MemPlotFolio)} returns the updated \code{MemPlotFolio}
+object with new caption legend list.
 
 \code{EnrichmentHeatmap(MemPlotFolio)} returns a
 \code{ComplexHeatmap::HeatmapList} when do_plot is TRUE (default),
@@ -227,6 +244,9 @@ and have no names, or have names equal to \code{names(Clusters(x))}.
 
 \item \code{CaptionLegendList(MemPlotFolio)}: Returns the caption summary for
 \code{MemPlotFolio} as \code{ComplexHeatmap::Legends}.
+
+\item \code{CaptionLegendList(MemPlotFolio) <- value}: Sets define caption legend list to display
+in \code{EnrichmentHeatmap()} and \code{GenePathHeatmap()}.
 
 \item \code{EnrichmentHeatmap(MemPlotFolio)}: Draws the enrichment heatmap
 from \code{MemPlotFolio} results.

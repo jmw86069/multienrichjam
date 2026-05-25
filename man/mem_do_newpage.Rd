@@ -6,6 +6,12 @@
 \usage{
 mem_do_newpage(x, ...)
 }
+\arguments{
+\item{x}{not currently implemented, it may be used
+in future.}
+
+\item{...}{additional arguments are ignored.}
+}
 \description{
 Determine whether Mem should call newpage
 }

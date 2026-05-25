@@ -2,9 +2,16 @@
 
 ## 21may2026
 
+* Consider Cnet/Emap info legend similar to GenePathHeatmap?
+number of genes/sets, layout details?, cluster methods (if Mpf)
+* Add option in `mem2emap()` and `EnrichmentMap()` to define
+edge labels by gene count or weight.
+* Optimize edge bundling, feels like more could be vectorized.
 * Add tests for steps in the vignettes, including input enrichment
 with directionColname in one file, but not the other.
 * Test interactive `GenePathHeatmap()` with InteractiveComplexHeatmap.
+* Low prio: Consider better `mem_legend()` for multi-column legend,
+spacing is identical per column which makes it wider than necessary.
 
 ## 19may2026
 

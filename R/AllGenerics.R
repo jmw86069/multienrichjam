@@ -157,28 +157,55 @@ setGeneric("metadata", signature="x",
    function(x) standardGeneric("metadata")
 )
 
-setGeneric("EnrichmentHeatmap", signature=c("x", "do_plot"),
-   function(x, do_plot, ...) standardGeneric("EnrichmentHeatmap")
+setGeneric("EnrichmentHeatmap", signature=c("x", "do_plot", "params"),
+   function(x, do_plot,
+      params=list(width=30),
+      ...) standardGeneric("EnrichmentHeatmap")
 )
 
-setGeneric("GenePathHeatmap", signature=c("x", "do_plot"),
-   function(x, do_plot, ...) standardGeneric("GenePathHeatmap")
+setGeneric("GenePathHeatmap", signature=c("x", "do_plot", "params"),
+   function(x, do_plot,
+      params=list(width=30),
+      ...) standardGeneric("GenePathHeatmap")
 )
 
-setGeneric("CnetCollapsed", signature=c("x", "type", "do_plot"),
-   function(x, type, do_plot, ...) standardGeneric("CnetCollapsed")
+setGeneric("CnetCollapsed", signature=c("x", "type", "do_plot", "params"),
+   function(x, type, do_plot,
+      params=list(
+         width=30,
+         maxNchar=Inf,
+         layout=NULL,
+         rotate_degrees=0), ...) standardGeneric("CnetCollapsed")
 )
 
-setGeneric("CnetExemplar", signature=c("x", "num", "do_plot"),
-   function(x, num, do_plot, ...) standardGeneric("CnetExemplar")
+setGeneric("CnetExemplar", signature=c("x", "num", "do_plot", "params"),
+   function(x, num, do_plot,
+      params=list(
+         width=30,
+         maxNchar=Inf,
+         layout=NULL,
+         rotate_degrees=0),
+      ...) standardGeneric("CnetExemplar")
 )
 
-setGeneric("CnetCluster", signature=c("x", "cluster", "do_plot"),
-   function(x, cluster, do_plot, ...) standardGeneric("CnetCluster")
+setGeneric("CnetCluster", signature=c("x", "cluster", "do_plot", "params"),
+   function(x, cluster, do_plot,
+      params=list(
+         width=30,
+         maxNchar=Inf,
+         layout=NULL,
+         rotate_degrees=0),
+      ...) standardGeneric("CnetCluster")
 )
 
-setGeneric("EnrichmentMap", signature=c("x", "do_plot"),
-   function(x, do_plot, ...) standardGeneric("EnrichmentMap")
+setGeneric("EnrichmentMap", signature=c("x", "do_plot", "params"),
+   function(x, do_plot,
+      params=list(repulse=3.5,
+         width=30,
+         group="default",
+         mark.expand=4,
+         do_legend=TRUE),
+      ...) standardGeneric("EnrichmentMap")
 )
 
 setGeneric("Caption", signature=c("x"),
@@ -187,4 +214,8 @@ setGeneric("Caption", signature=c("x"),
 
 setGeneric("CaptionLegendList", signature=c("x"),
    function(x, ...) standardGeneric("CaptionLegendList")
+)
+
+setGeneric("CaptionLegendList<-", signature="x",
+   function(x, ...) standardGeneric("CaptionLegendList<-")
 )

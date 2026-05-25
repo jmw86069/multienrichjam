@@ -8,7 +8,7 @@ mem_legend(
   mem,
   x = "bottomleft",
   y = NULL,
-  bg = "#FFFFFF99",
+  bg = "#FFFFFF00",
   box.col = "transparent",
   title = "Color Key",
   cex = 0.8,

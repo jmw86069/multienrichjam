@@ -330,6 +330,33 @@ setMethod("CaptionLegendList", "MemPlotFolio", function(x, ...) {
 
 
 #' @param x `MemPlotFolio` object
+#' @param value `Legends` object from ComplexHeatmap package. Use NULL
+#'    to hide the caption legend list entries.
+#' @docType methods
+#' @describeIn MemPlotFolio-class Sets define caption legend list to display
+#'    in `EnrichmentHeatmap()` and `GenePathHeatmap()`.
+#' @returns `CaptionLegendList<-(MemPlotFolio)` returns the updated `MemPlotFolio`
+#'    object with new caption legend list.
+#' @export
+setReplaceMethod("CaptionLegendList", "MemPlotFolio", function(x, value) {
+   # validate length
+   xCLL <- CaptionLegendList(x)
+   if (length(value) == 0) {
+      # blank caption_legendlist
+      x@caption$caption_legendlist <- NULL;
+   } else {
+      if (!inherits(value, "Legends")) {
+         # Todo: Consider converting text to legend?
+         stop("value must inherit ComplexHeatmap 'Legends'.")
+      }
+      x@caption$caption_legendlist <- value;
+   }
+   validObject(x)
+   x
+})
+
+
+#' @param x `MemPlotFolio` object
 #' @docType methods
 #' @describeIn MemPlotFolio-class Draws the enrichment heatmap
 #'    from `MemPlotFolio` results.  
@@ -371,21 +398,30 @@ setMethod("CaptionLegendList", "MemPlotFolio", function(x, ...) {
 #' CnetCluster(Mpf, cluster="B", use_shadowText=TRUE, main="Cnet Cluster 'B'")
 #' 
 #' @export
-setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
+setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x,
+   do_plot,
+   params=list(width=30),
+   ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
    arglist <- list(...);
-   if ("width" %in% names(arglist)) {
+   params <- modifyList(
+      eval(formals(EnrichmentHeatmap)$params),
+      params)
+   for (iname in names(arglist)) {
+      params[[iname]] <- arglist[[iname]];
+   }
+   if ("width" %in% names(params)) {
       suppressWarnings(width <- jamba::rmNA(naValue=30,
-         as.numeric(arglist$width)));
-      arglist[["width"]] <- NULL;
+         as.numeric(params$width)));
+         params[["width"]] <- NULL;
    } else {
       width <- 30;
    }
 
-   if ("use_cluster_labels" %in% names(arglist)) {
-      use_cluster_labels <- arglist$use_cluster_labels;
+   if ("use_cluster_labels" %in% names(params)) {
+      use_cluster_labels <- params$use_cluster_labels;
    } else {
       use_cluster_labels <- TRUE;
    }
@@ -406,13 +442,13 @@ setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
       # check for off-book arguments in '...'
       column_title <- NULL;
       column_title_gp <- grid::gpar(fontsize=18);
-      if ("main" %in% names(arglist)) {
-         column_title <- arglist$main;
-      } else if ("column_title" %in% names(arglist)) {
-         column_title <- arglist$column_title;
+      if ("main" %in% names(params)) {
+         column_title <- params$main;
+      } else if ("column_title" %in% names(params)) {
+         column_title <- params$column_title;
       }
-      if ("column_title_gp" %in% names(arglist)) {
-         column_title_gp <- arglist$column_title_gp;
+      if ("column_title_gp" %in% names(params)) {
+         column_title_gp <- params$column_title_gp;
       }
 
       annotation_legend_list <- c(
@@ -442,22 +478,31 @@ setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
 #'    `ComplexHeatmap::Heatmap` when do_plot is FALSE, containing
 #'    the genes-pathways incidence matrix and associated caption.
 #' @export
-setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
+setMethod("GenePathHeatmap", "MemPlotFolio", function(x,
+   do_plot,
+   params=list(width=30),
+   ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
+   arglist <- list(...);
+   params <- modifyList(
+      eval(formals(GenePathHeatmap)$params),
+      params)
+   for (iname in names(arglist)) {
+      params[[iname]] <- arglist[[iname]];
+   }
    if (isTRUE(do_plot)) {
       # check for off-book arguments in '...'
-      arglist <- list(...);
       use_thresholds <- thresholds(x);
       use_ht_opts <- list();
-      if ("column_anno_padding" %in% names(arglist)) {
-         use_ht_opts$COLUMN_ANNO_PADDING <- arglist$column_anno_padding;
+      if ("column_anno_padding" %in% names(params)) {
+         use_ht_opts$COLUMN_ANNO_PADDING <- params$column_anno_padding;
       } else if ("column_anno_padding" %in% names(use_thresholds)) {
          use_ht_opts$COLUMN_ANNO_PADDING <- use_thresholds$column_anno_padding;
       }
-      if ("row_anno_padding" %in% names(arglist)) {
-         use_ht_opts$ROW_ANNO_PADDING <- arglist$row_anno_padding;
+      if ("row_anno_padding" %in% names(params)) {
+         use_ht_opts$ROW_ANNO_PADDING <- params$row_anno_padding;
       } else if ("row_anno_padding" %in% names(use_thresholds)) {
          use_ht_opts$ROW_ANNO_PADDING <- use_thresholds$row_anno_padding;
       }
@@ -469,13 +514,13 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
       
       column_title <- title_list$column_title;
       column_title_gp <- title_list$column_title_gp;
-      if ("main" %in% names(arglist)) {
-         column_title <- arglist$main;
-      } else if ("column_title" %in% names(arglist)) {
-         column_title <- arglist$column_title;
+      if ("main" %in% names(params)) {
+         column_title <- params$main;
+      } else if ("column_title" %in% names(params)) {
+         column_title <- params$column_title;
       }
-      if ("column_title_gp" %in% names(arglist)) {
-         column_title_gp <- arglist$column_title_gp;
+      if ("column_title_gp" %in% names(params)) {
+         column_title_gp <- params$column_title_gp;
       }
       
       caption_legendlist <- x@caption$caption_legendlist;
@@ -527,10 +572,28 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x, do_plot, ...) {
 #'    are passed to `mem_legend()` as 'x' and 'y'.
 #' @export
 setMethod("CnetCollapsed", "MemPlotFolio",
-   function(x, type, do_plot, legend_x="bottomleft", legend_y=NULL, ...) {
+   function(x, type, do_plot,
+      legend_x="bottomleft", legend_y=NULL,
+      params=list(
+         width=30,
+         maxNchar=Inf,
+         layout=NULL,
+         rotate_degrees=0),
+      ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
+   arglist <- list(...);
+   params <- modifyList(
+      eval(formals(CnetCollapsed)$params),
+      params)
+   # For now, arglist can override params
+   for (iname in names(arglist)) {
+      # if (iname %in% names(arglist)) {
+         params[[iname]] <- arglist[[iname]];
+      # }
+   }
+
    # type indicates which cnet data to use
    cnet <- x@cnet_collapsed$collapsed;
    if (!inherits(cnet, "igraph")) {
@@ -538,30 +601,25 @@ setMethod("CnetCollapsed", "MemPlotFolio",
          "use:\nmem_plot_folio(Mem, do_which=3)");
       stop(stop_msg);
    }
-   arglist <- list(...);
-   if ("width" %in% names(arglist)) {
-      suppressWarnings(width <- jamba::rmNA(naValue=30,
-         as.numeric(arglist$width)));
-      arglist[["width"]] <- NULL;
-   } else {
-      width <- 30;
-   }
-   maxNchar <- Inf;
-   if ("maxNchar" %in% names(arglist)) {
-      maxNchar <- arglist$maxNchar;
-      arglist[["maxNchar"]] <- NULL;
-   }
+   width <- jamba::rmNA(naValue=30,
+      rmNULL=TRUE,
+      nullValue=30,
+      as.numeric(params$width))
+   params[["width"]] <- NULL;
+   maxNchar <- params$maxNchar;
+   params[["maxNchar"]] <- NULL;
 
-   if ("layout" %in% names(arglist)) {
+   if (length(params$layout) > 0) {
       cnet <- set_igraph_layout(g=cnet,
-         layout=arglist$layout)
-      arglist[["layout"]] <- NULL;
+         layout=params$layout)
+      params[["layout"]] <- NULL;
    }
-   if ("rotate_degrees" %in% names(arglist)) {
+   if ("rotate_degrees" %in% names(params) &&
+      !params$rotate_degrees %in% c(NA, 0, 360)) {
       cnet <- rotate_igraph_layout(cnet,
-         degrees=arglist$rotate_degrees)
-      arglist[["rotate_degrees"]] <- NULL;
+         degrees=params$rotate_degrees)
    }
+   params[["rotate_degrees"]] <- NULL;
 
    if (missing(type)) {
       type <- "title";
@@ -585,6 +643,7 @@ setMethod("CnetCollapsed", "MemPlotFolio",
       if (any(grepl("^cluster", type))) {
          # add cluster_labels to labels
          cluster_labels <- ClusterLabels(x);
+
          if (length(cluster_labels) == 0) {
             ## no cluster_labels, what to do? Error, inaction, warning?
             # return(invisible(NULL))
@@ -594,6 +653,15 @@ setMethod("CnetCollapsed", "MemPlotFolio",
                # names(x@clusters),
                paste("Cluster", names(x@clusters)),
                names(x@clusters))
+         } else {
+            cluster_labels <- fixSetLabels(
+               x=cluster_labels,
+               width=width,
+               adjustCase=FALSE,
+               removeGrep=NULL,
+               do_abbreviations=FALSE,
+               maxNchar=maxNchar)
+            names(cluster_labels) <- names(ClusterLabels(x));
          }
          # match igraph Set nodes to names(cluster_labels)
          isset <- which(igraph::V(cnet)$nodeType %in% "Set");
@@ -627,17 +695,21 @@ setMethod("CnetCollapsed", "MemPlotFolio",
       if (!type %in% igraph::vertex_attr_names(cnet)) {
          use_type <- test_type;
       }
+      if ("label" %in% igraph::vertex_attr_names(cnet)) {
+         use_names <- igraph::V(cnet)$label;
+      } else {
+         use_names <- igraph::V(cnet)$name;
+      }
       use_labels <- ifelse(
          nchar(jamba::rmNA(naValue="",
             igraph::vertex_attr(cnet, name=use_type))) > 0,
          igraph::vertex_attr(cnet, name=use_type),
-         igraph::V(cnet)$name);
+         use_names);
       # apply word wrap
       if (length(width) > 0) {
          use_labels <- fixSetLabels(
             x=use_labels,
             width=width,
-            lowercaseAll=FALSE,
             adjustCase=FALSE,
             removeGrep=NULL,
             do_abbreviations=FALSE,
@@ -658,27 +730,27 @@ setMethod("CnetCollapsed", "MemPlotFolio",
       do.call(jam_igraph,
          c(
             alist(x=cnet),
-            arglist))
+            params))
    	
    	# determine whether to include direction in the legend
-      arglist$x <- legend_x;
-      arglist$y <- legend_y;
-   	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
-         do_directional <- arglist[["do_directional"]];
-   		# arglist <- arglist[-match("do_directional", names(arglsit))];
+      params$x <- legend_x;
+      params$y <- legend_y;
+   	if (length(params) > 0 && "do_directional" %in% names(params)) {
+         do_directional <- params[["do_directional"]];
+   		# arglist <- arglist[-match("do_directional", names(arglist))];
       } else {
          hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
             TRUE, FALSE)
-   		arglist[["do_directional"]] <- hasDirection;
+            params[["do_directional"]] <- hasDirection;
    	}
    	# draw the legend
    	do.call(mem_legend,
    		c(
    			alist(mem=x),
-   			arglist))
+   			params))
    }
    invisible(cnet);
-})
+   })
 
 
 #' @param x `MemPlotFolio` object
@@ -696,10 +768,31 @@ setMethod("CnetCollapsed", "MemPlotFolio",
 #'    with Gene and Set nodes for the 'num' number of exemplars per cluster.
 #' @export
 setMethod("CnetExemplar", "MemPlotFolio",
-   function(x, num, do_plot, legend_x="bottomleft", legend_y=NULL, main=NULL, ...) {
+   function(x, num, do_plot,
+      legend_x="bottomleft", legend_y=NULL,
+      params=list(
+         width=30,
+         maxNchar=Inf,
+         layout=NULL,
+         rotate_degrees=0),
+      main=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
+   arglist <- list(...);
+   params <- modifyList(
+      eval(formals(CnetCollapsed)$params),
+      params)
+   for (iname in names(arglist)) {
+      params[[iname]] <- arglist[[iname]];
+   }
+   if (length(main) == 0) {
+      main <- paste0("Cnet With ", num, " Exemplars")
+   }
+   if (isFALSE(main)) {
+      main <- NULL;
+   }
+
    # type indicates which cnet data to use
    if (missing(num)) {
       cnet <- x@cnet_exemplars[[1]];
@@ -717,21 +810,62 @@ setMethod("CnetExemplar", "MemPlotFolio",
       cnet <- x@cnet_exemplars[[num]];
    }
 
+   width <- jamba::rmNA(naValue=30,
+      rmNULL=TRUE,
+      nullValue=30,
+      as.numeric(params$width))
+   params[["width"]] <- NULL;
+   maxNchar <- params$maxNchar;
+   params[["maxNchar"]] <- NULL;
+   isset <- (tolower(igraph::V(cnet)$nodeType) %in% "set");
+   if (any(isset)) {
+      if ("label" %in% igraph::vertex_attr_names(cnet)) {
+         use_names <- igraph::V(cnet)$label;
+      } else {
+         use_names <- igraph::V(cnet)$name;
+      }
+      igraph::V(cnet)[isset]$label <- fixSetLabels(
+         x=use_names[isset],
+         width=width,
+         adjustCase=FALSE,
+         removeGrep=NULL,
+         do_abbreviations=FALSE,
+         maxNchar=maxNchar)
+   }
+
+   if (length(params$layout) > 0) {
+      cnet <- set_igraph_layout(g=cnet,
+         layout=params$layout)
+      params[["layout"]] <- NULL;
+   }
+   if ("rotate_degrees" %in% names(params) &&
+      !params$rotate_degrees %in% c(NA, 0, 360)) {
+      cnet <- rotate_igraph_layout(cnet,
+         degrees=params$rotate_degrees)
+   }
+   params[["rotate_degrees"]] <- NULL;
+
    if (isTRUE(do_plot)) {
-      jam_igraph(cnet,
-         ...)
+      if (length(main) > 0) {
+         params$main <- main;
+      }
+      do.call(jam_igraph,
+         c(
+            alist(x=cnet),
+            params))
+      # jam_igraph(cnet,
+      #    ...)
    	
    	# determine whether to include direction in the legend
    	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
    		TRUE, FALSE)
-   	arglist <- list(...);
-      arglist$x <- legend_x;
-      arglist$y <- legend_y;
-   	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
-   		do_directional <- arglist[["do_directional"]];
-   		# arglist <- arglist[-match("do_directional", names(arglsit))];
+      params$x <- legend_x;
+      params$y <- legend_y;
+   	if (length(params) > 0 && "do_directional" %in% names(params)) {
+   		do_directional <- params[["do_directional"]];
+   		# arglist <- arglist[-match("do_directional", names(arglist))];
    	} else {
-   		arglist[["do_directional"]] <- hasDirection;
+   		params[["do_directional"]] <- hasDirection;
    	}
    	# draw the legend
    	do.call(mem_legend,
@@ -759,9 +893,24 @@ setMethod("CnetExemplar", "MemPlotFolio",
 #'    using all pathways in the cluster defined with argument `cluster`.
 #' @export
 setMethod("CnetCluster", "MemPlotFolio",
-   function(x, cluster, do_plot, legend_x="bottomleft", legend_y=NULL, main=NULL, ...) {
+   function(x, cluster, do_plot,
+      legend_x="bottomleft", legend_y=NULL,
+      main=NULL,
+      params=list(
+         width=30,
+         maxNchar=Inf,
+         layout=NULL,
+         rotate_degrees=0),
+      ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
+   }
+   arglist <- list(...);
+   params <- modifyList(
+      eval(formals(CnetCluster)$params),
+      params)
+   for (iname in names(arglist)) {
+      params[[iname]] <- arglist[[iname]];
    }
    if (length(main) == 0) {
       if (length(x@metadata$cluster_labels) > 0) {
@@ -770,9 +919,9 @@ setMethod("CnetCluster", "MemPlotFolio",
          main <- names(Clusters(x)[cluster]);
       }
    }
-      if (isFALSE(main)) {
-         main <- NULL;
-      }
+   if (isFALSE(main)) {
+      main <- NULL;
+   }
 
    # type indicates which cnet data to use
    if (missing(cluster) || length(cluster) == 0) {
@@ -810,6 +959,42 @@ setMethod("CnetCluster", "MemPlotFolio",
    }
    cnet <- x@cnet_clusters[[cluster]];
 
+   # adjust cnet as needed
+   width <- jamba::rmNA(naValue=30,
+      rmNULL=TRUE,
+      nullValue=30,
+      as.numeric(params$width))
+   params[["width"]] <- NULL;
+   maxNchar <- params$maxNchar;
+   params[["maxNchar"]] <- NULL;
+   isset <- (tolower(igraph::V(cnet)$nodeType) %in% "set");
+   if (any(isset)) {
+      if ("label" %in% igraph::vertex_attr_names(cnet)) {
+         use_names <- igraph::V(cnet)$label;
+      } else {
+         use_names <- igraph::V(cnet)$name;
+      }
+      igraph::V(cnet)[isset]$label <- fixSetLabels(
+         x=use_names[isset],
+         width=width,
+         adjustCase=FALSE,
+         removeGrep=NULL,
+         do_abbreviations=FALSE,
+         maxNchar=maxNchar)
+   }
+
+   if (length(params$layout) > 0) {
+      cnet <- set_igraph_layout(g=cnet,
+         layout=params$layout)
+      params[["layout"]] <- NULL;
+   }
+   if ("rotate_degrees" %in% names(params) &&
+      !params$rotate_degrees %in% c(NA, 0, 360)) {
+      cnet <- rotate_igraph_layout(cnet,
+         degrees=params$rotate_degrees)
+   }
+   params[["rotate_degrees"]] <- NULL;
+
    if (isTRUE(do_plot)) {
    	# draw the igraph
       jam_igraph(cnet,
@@ -819,20 +1004,19 @@ setMethod("CnetCluster", "MemPlotFolio",
    	# determine whether to include direction in the legend
    	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
    		TRUE, FALSE)
-   	arglist <- list(...);
-      arglist$x <- legend_x;
-      arglist$y <- legend_y;
-   	if (length(arglist) > 0 && "do_directional" %in% names(arglist)) {
-   		do_directional <- arglist[["do_directional"]];
-   		# arglist <- arglist[-match("do_directional", names(arglsit))];
+      params$x <- legend_x;
+      params$y <- legend_y;
+   	if (length(params) > 0 && "do_directional" %in% names(params)) {
+   		do_directional <- params[["do_directional"]];
+   		# arglist <- arglist[-match("do_directional", names(arglist))];
    	} else {
-   		arglist[["do_directional"]] <- hasDirection;
+   		params[["do_directional"]] <- hasDirection;
    	}
    	# draw the legend
    	do.call(mem_legend,
    		c(
    			alist(mem=metadata(x)),
-	      	arglist))
+	      	params))
    }
    invisible(cnet)
    })
@@ -860,10 +1044,18 @@ setMethod("plot", signature(x = "MemPlotFolio"), function(x, y, ...) {
 setMethod("EnrichmentMap", "MemPlotFolio",
    function(x, do_plot=TRUE,
       legend_x="bottomleft", legend_y=NULL, 
-      params=list(), ...) {
+      params=list(repulse=3.5,
+         width=30,
+         group="default",
+         mark.expand=4,
+         do_legend=TRUE),
+      ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE
    }
+   params <- modifyList(
+      eval(formals(EnrichmentMap)$params),
+      params)
    # call internal function
    internal_EnrichmentMap(x=x,
       do_plot=do_plot,
@@ -871,4 +1063,4 @@ setMethod("EnrichmentMap", "MemPlotFolio",
       legend_y=legend_y,
       params=params,
       ...)
-})
+   })

@@ -1,3 +1,38 @@
+# multienrichjam 0.0.118.900
+
+* `plot_mpf()` will become the primary method to visualize
+`MemPlotFolio` objects, called internally by
+`mem_plot_folio()`. Generic `plot()` works with `MemPlotFolio`.
+
+## Hot Fixes
+
+* `mem_legend()` default background is now transparent.
+* `plot_mpf()` added missing GenePathHeatmap().
+
+## New functions
+
+* `plot()` generic for `MemPlotFolio` objects, it calls `plot_mpf()`
+
+## Changes to existing functions
+
+* `mem2emap()`
+
+   * New behavior, `overlap=NULL` uses an automated threshold
+   based upon the median and mean Jaccard overlap. Intent is
+   to provide more connectivity than conservative, in order
+   to visualize structure in the data, then aggressively use
+   edge color and width to convery overlap.
+
+* `plot_mpf()`
+
+   * Passes optional arguments to internal functions via argument
+   'params' as a `list` named by type of plot.
+
+* New setter method `CaptionLegendList<-` to customize the
+caption legend list entries shown in `EnrichmentHeatmap()` and
+`GenePathHeatmap()`.
+
+
 # multienrichjam 0.0.117.900
 
 ## New functions

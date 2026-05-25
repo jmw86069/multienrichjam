@@ -50,6 +50,8 @@
 #'    * `overlap=0.2` is default, which specifies roughly 20% overlap
 #'    in genes shared between two pathway nodes, relative to the union
 #'    of genes in those two pathway nodes.
+#'    * `overlap=NULL` is a special case which uses the average between
+#'    median and mean Jaccard overlap, excluding the diagonal.
 #'    * Note these genes must be involved in enrichment, and
 #'    therefore does not use all possible genes annotated to a pathway.
 #'    Therefore, connections are only created with enriched genes
@@ -78,9 +80,9 @@
 #'    used to separate terms, used together with `num_keep_terms`.
 #' @param repulse `numeric` value passed to `layout_with_qfr()`,
 #'    default 3.3.
-#'    * Use repulse 'FALSE', 'NULL', or '0' will skip the layout, which
-#'    is used by `mem_find_overlap()` to iterate numerous overlaps
-#'    without spending time on layout each iteration.
+#'    * Use repulse 'FALSE', 'NULL', or '0' will skip the layout, as
+#'    is used internally by `mem_find_overlap()` to iterate numerous
+#'    overlaps without spending time on layout each iteration.
 #' @param remove_singlets `logical`, default FALSE, whether to remove
 #'    pathway singlets which have no connections to other pathways.
 #'    * Using TRUE will help simplify busy figures, at the expense of
@@ -273,10 +275,19 @@ mem2emap <- function
    jacc_overlap <- 1 - as.matrix(
       dist(t(memIM(mem)[, col_match, drop=FALSE]),
          method="binary"));
+   diag(jacc_overlap) <- NA;
    jacc_summary <- summary(as.vector(jacc_overlap), na.rm=TRUE);
+   diag(jacc_overlap) <- 0;
    jacc_cutoff <- mean(c(jacc_summary[c("Median", "Mean")]))
-   # print(summary(jacc_cutoff));# debug
+   if (is.na(jacc_cutoff) || jacc_cutoff == 0) {
+      jacc_cutoff <- 0.1;
+   }
    
+   # if overlap is NULL, define some kind of threshold
+   if (length(overlap) == 0) {
+      # some kind of automated action
+      overlap <- jacc_cutoff;
+   }
    # convert to graph using Jaccard overlap threshold
    jacc_overlap_filtered <- jacc_overlap * (jacc_overlap >= overlap)
    jacc_g <- igraph::graph_from_adjacency_matrix(

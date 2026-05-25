@@ -54,6 +54,8 @@ calculated with \code{dist(x, method='binary')} with incidence matrix.
 \item \code{overlap=0.2} is default, which specifies roughly 20\% overlap
 in genes shared between two pathway nodes, relative to the union
 of genes in those two pathway nodes.
+\item \code{overlap=NULL} is a special case which uses the average between
+median and mean Jaccard overlap, excluding the diagonal.
 \item Note these genes must be involved in enrichment, and
 therefore does not use all possible genes annotated to a pathway.
 Therefore, connections are only created with enriched genes
@@ -94,9 +96,9 @@ used to separate terms, used together with \code{num_keep_terms}.}
 \item{repulse}{\code{numeric} value passed to \code{layout_with_qfr()},
 default 3.3.
 \itemize{
-\item Use repulse 'FALSE', 'NULL', or '0' will skip the layout, which
-is used by \code{mem_find_overlap()} to iterate numerous overlaps
-without spending time on layout each iteration.
+\item Use repulse 'FALSE', 'NULL', or '0' will skip the layout, as
+is used internally by \code{mem_find_overlap()} to iterate numerous
+overlaps without spending time on layout each iteration.
 }}
 
 \item{remove_singlets}{\code{logical}, default FALSE, whether to remove

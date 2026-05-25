@@ -6,11 +6,11 @@
 \usage{
 internal_EnrichmentMap(
   x,
-  do_plot,
+  do_plot = TRUE,
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
-    = TRUE),
+  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4,
+    do_fixSetLabels = FALSE, do_legend = TRUE),
   ...
 )
 }
@@ -49,8 +49,18 @@ node group expansion for the shaded hull around node groups,
 default 4. Units are percentage of plot dimensions.
 \item \code{'do_legend'}: \code{logical} default TRUE, whether to render
 the color legend.
+\item \code{'do_fixSetLabels'}: \code{logical} whether to apply \code{fixSetLabels()}
+to adjust pathway/set nodes to be more user-friendly.
+Default is FALSE.
+When TRUE it calls \code{fixSetLabels()} with \code{width=params$width},
+and when FALSE it calls \code{fixSetLabels()} with
+\code{width=params$width} however it does no other adjustments except
+to apply word-wrap. For pathways with underscores, it will
+therefore not word-wrap at all, which may not be ideal.
+\itemize{
 \item Other parameters will be added to the function arguments
 with default values when implemented.
+}
 }}
 
 \item{...}{additional arguments are passed through to

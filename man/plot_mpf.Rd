@@ -6,7 +6,7 @@
 \usage{
 plot_mpf(
   Mpf,
-  plot_which = c("all", "EnrichmentHeatmap", "eh", "GenePathHeatmap", "gphm",
+  plot_which = c("all", "EnrichmentHeatmap", "eh", "GenePathHeatmap", "gp",
     "CnetCollapsed", "cc", "CnetExemplar", "ce", "CnetCluster", "c", "EnrichmentMap",
     "em"),
   do_md_tabs = FALSE,
@@ -20,7 +20,8 @@ plot_mpf(
   c_cluster = NULL,
   em_group = NULL,
   Mem = NULL,
-  params = list(em = list(repulse = 3.5, width = 30)),
+  params = list(em = list(repulse = 3.5, node_factor = 1, width = 30), cc = list(repulse
+    = 3.5, node_factor = 1), ce = list(node_factor = 1), c = list(node_factor = 1)),
   do_newpage = NULL,
   verbose = FALSE,
   ...
@@ -120,8 +121,12 @@ Mpf objects which do not have 'Mem' included in metadata.
 Experimental.}
 
 \item{params}{\code{list} named by shorthand plot type
-('eh','gphm','em', 'cc', 'ce', 'c') each containing a list of
+('eh','gp','em', 'cc', 'ce', 'c') each containing a list of
 optional parameters relevant to each plot.
+In each case, parameters in \code{params} are passed to the
+internal function as arguments.For example,
+\code{em=list(repulse=3.5)} is passed as
+\code{EnrichmentMap(..., repulse=3.5)}.
 Limited functionality currently, however check here for
 recognized arguments as they become available.
 \itemize{

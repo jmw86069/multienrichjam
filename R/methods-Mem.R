@@ -1161,6 +1161,14 @@ setMethod("setsByGene", "Mem", function(x) im2list(t(memIM(x))))
 #'    default 4. Units are percentage of plot dimensions.
 #'    * `'do_legend'`: `logical` default TRUE, whether to render
 #'    the color legend.
+#' * `'do_fixSetLabels'`: `logical` whether to apply `fixSetLabels()`
+#'    to adjust pathway/set nodes to be more user-friendly.
+#'    Default is FALSE.
+#'    When TRUE it calls `fixSetLabels()` with `width=params$width`,
+#'    and when FALSE it calls `fixSetLabels()` with
+#'    `width=params$width` however it does no other adjustments except
+#'    to apply word-wrap. For pathways with underscores, it will
+#'    therefore not word-wrap at all, which may not be ideal.
 #'    * Other parameters will be added to the function arguments
 #'    with default values when implemented.
 #' 
@@ -1169,13 +1177,14 @@ setMethod("setsByGene", "Mem", function(x) im2list(t(memIM(x))))
 #' 
 internal_EnrichmentMap <- function
 (x,
- do_plot,
+ do_plot=TRUE,
  legend_x="bottomleft",
  legend_y=NULL,
  params=list(repulse=3.5,
     width=30,
     group="default",
     mark.expand=4,
+    do_fixSetLabels=FALSE,
     do_legend=TRUE),
  ...)
 {
@@ -1264,9 +1273,10 @@ internal_EnrichmentMap <- function
       nodegroups <- cl;
       cl <- nodegroups2communities(cl);
       cl$cluster_names <- fixSetLabels(
+         cln,
          do_abbreviations=FALSE,
          removeGrep=NULL,
-         cln,
+         adjustCase=FALSE,
          width=params$width,
          ...)
       names(nodegroups) <- cl$cluster_names;
@@ -1276,6 +1286,28 @@ internal_EnrichmentMap <- function
          n=length(nodegroups),
          alpha=0.15)
          # ...)
+   }
+
+   # fixSetLabels()
+   label_attr <- head(intersect(c("label", "name"),
+      igraph::vertex_attr_names(Emap)), 1)
+   if (length(label_attr) == 1) {
+      if (isTRUE(params$do_fixSetLabels)) {
+         igraph::V(Emap)$label <- fixSetLabels(
+            igraph::vertex_attr(Emap, label_attr),
+            # do_abbreviations=FALSE,
+            # removeGrep=NULL,
+            width=params$width,
+            ...)
+      } else {
+         igraph::V(Emap)$label <- fixSetLabels(
+            igraph::vertex_attr(Emap, label_attr),
+            do_abbreviations=FALSE,
+            removeGrep=NULL,
+            adjustCase=FALSE,
+            width=params$width,
+            ...)
+      }
    }
 
    # Render the igraph
@@ -1305,15 +1337,31 @@ internal_EnrichmentMap <- function
 #'    Note '...' arguments are passed to `jam_igraph()` and
 #'    `mem_legend()` when `do_plot=TRUE`.
 #'    Argument `'params'` is a `list` with additional arguments:
-#'    'repulse', 'width', 'group', 'mark.expand', 'do_legend'.
+#'    * 'repulse': `numeric` repulse passed to `layout_with_qfr()`.
+#'    * 'width': `integer` word-wrap width used for cluster labels.
+#'    * 'group': `character` used to define the type of node group,
+#'    'clusters' uses pathway cluster title; 'cluster_labels' uses
+#'    cluster labels if defined; 'community' uses igraph community,
+#'    'none' display no node grouping.
+#'    * 'mark.expand': passed to `jam_igraph()` to control the buffer
+#'    around the alpha hull shaded regions for node groups.
+#'    * 'do_legend': `logical` whether to display the legend
 #' @aliases EnrichmentMap
 setMethod("EnrichmentMap", "Mem",
    function(x, do_plot, 
-      legend_x="bottomleft", legend_y=NULL, 
-      params=list(), ...) {
+      legend_x="bottomleft", legend_y=NULL,
+      params=list(repulse=3.5,
+         width=30,
+         group="default",
+         mark.expand=4,
+         do_legend=TRUE),
+           ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE
    }
+   params <- modifyList(
+      eval(formals(EnrichmentMap)$params),
+      params)
    # call internal function
    internal_EnrichmentMap(x=x,
       do_plot=do_plot,
