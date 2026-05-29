@@ -573,12 +573,12 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x,
 #' @export
 setMethod("CnetCollapsed", "MemPlotFolio",
    function(x, type, do_plot,
-      legend_x="bottomleft", legend_y=NULL,
       params=list(
          width=30,
          maxNchar=Inf,
          layout=NULL,
          rotate_degrees=0),
+      legend_x="bottomleft", legend_y=NULL,
       ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
@@ -587,6 +587,12 @@ setMethod("CnetCollapsed", "MemPlotFolio",
    params <- modifyList(
       eval(formals(CnetCollapsed)$params),
       params)
+   if ("legend_x" %in% names(params)) {
+      legend_x <- params$legend_x;
+   }
+   if ("legend_y" %in% names(params)) {
+      legend_y <- params$legend_y;
+   }
    # For now, arglist can override params
    for (iname in names(arglist)) {
       # if (iname %in% names(arglist)) {
@@ -769,12 +775,12 @@ setMethod("CnetCollapsed", "MemPlotFolio",
 #' @export
 setMethod("CnetExemplar", "MemPlotFolio",
    function(x, num, do_plot,
-      legend_x="bottomleft", legend_y=NULL,
       params=list(
          width=30,
          maxNchar=Inf,
          layout=NULL,
          rotate_degrees=0),
+      legend_x="bottomleft", legend_y=NULL,
       main=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
@@ -783,6 +789,12 @@ setMethod("CnetExemplar", "MemPlotFolio",
    params <- modifyList(
       eval(formals(CnetCollapsed)$params),
       params)
+   if ("legend_x" %in% names(params)) {
+      legend_x <- params$legend_x;
+   }
+   if ("legend_y" %in% names(params)) {
+      legend_y <- params$legend_y;
+   }
    for (iname in names(arglist)) {
       params[[iname]] <- arglist[[iname]];
    }
@@ -823,6 +835,7 @@ setMethod("CnetExemplar", "MemPlotFolio",
          use_names <- igraph::V(cnet)$label;
       } else {
          use_names <- igraph::V(cnet)$name;
+         igraph::V(cnet)$label <- use_names;
       }
       igraph::V(cnet)[isset]$label <- fixSetLabels(
          x=use_names[isset],
@@ -894,13 +907,13 @@ setMethod("CnetExemplar", "MemPlotFolio",
 #' @export
 setMethod("CnetCluster", "MemPlotFolio",
    function(x, cluster, do_plot,
-      legend_x="bottomleft", legend_y=NULL,
-      main=NULL,
       params=list(
          width=30,
          maxNchar=Inf,
          layout=NULL,
          rotate_degrees=0),
+      main=NULL,
+      legend_x="bottomleft", legend_y=NULL,
       ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
@@ -909,6 +922,12 @@ setMethod("CnetCluster", "MemPlotFolio",
    params <- modifyList(
       eval(formals(CnetCluster)$params),
       params)
+   if ("legend_x" %in% names(params)) {
+      legend_x <- params$legend_x;
+   }
+   if ("legend_y" %in% names(params)) {
+      legend_y <- params$legend_y;
+   }
    for (iname in names(arglist)) {
       params[[iname]] <- arglist[[iname]];
    }
@@ -973,6 +992,7 @@ setMethod("CnetCluster", "MemPlotFolio",
          use_names <- igraph::V(cnet)$label;
       } else {
          use_names <- igraph::V(cnet)$name;
+         igraph::V(cnet)$label <- use_names;
       }
       igraph::V(cnet)[isset]$label <- fixSetLabels(
          x=use_names[isset],
@@ -997,9 +1017,13 @@ setMethod("CnetCluster", "MemPlotFolio",
 
    if (isTRUE(do_plot)) {
    	# draw the igraph
-      jam_igraph(cnet,
-         main=main,
-         ...)
+      do.call(jam_igraph,
+         c(
+            alist(x=cnet),
+            params))
+      # jam_igraph(cnet,
+      #    main=main,
+      #    ...)
    	
    	# determine whether to include direction in the legend
    	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
@@ -1043,12 +1067,12 @@ setMethod("plot", signature(x = "MemPlotFolio"), function(x, y, ...) {
 #' @aliases EnrichmentMap
 setMethod("EnrichmentMap", "MemPlotFolio",
    function(x, do_plot=TRUE,
-      legend_x="bottomleft", legend_y=NULL, 
       params=list(repulse=3.5,
          width=30,
          group="default",
          mark.expand=4,
          do_legend=TRUE),
+      legend_x="bottomleft", legend_y=NULL, 
       ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE
@@ -1056,6 +1080,12 @@ setMethod("EnrichmentMap", "MemPlotFolio",
    params <- modifyList(
       eval(formals(EnrichmentMap)$params),
       params)
+   if ("legend_x" %in% names(params)) {
+      legend_x <- params$legend_x;
+   }
+   if ("legend_y" %in% names(params)) {
+      legend_y <- params$legend_y;
+   }
    # call internal function
    internal_EnrichmentMap(x=x,
       do_plot=do_plot,

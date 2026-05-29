@@ -75,9 +75,9 @@ MemPlotFolio_to_list(x, ...)
   x,
   type,
   do_plot,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   ...
 )
 
@@ -85,9 +85,9 @@ MemPlotFolio_to_list(x, ...)
   x,
   num,
   do_plot,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   main = NULL,
   ...
 )
@@ -96,10 +96,10 @@ MemPlotFolio_to_list(x, ...)
   x,
   cluster,
   do_plot,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  main = NULL,
   legend_x = "bottomleft",
   legend_y = NULL,
-  main = NULL,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   ...
 )
 
@@ -108,10 +108,10 @@ MemPlotFolio_to_list(x, ...)
 \S4method{EnrichmentMap}{MemPlotFolio}(
   x,
   do_plot = TRUE,
-  legend_x = "bottomleft",
-  legend_y = NULL,
   params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
     = TRUE),
+  legend_x = "bottomleft",
+  legend_y = NULL,
   ...
 )
 }

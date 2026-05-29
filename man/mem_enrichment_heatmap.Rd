@@ -172,6 +172,7 @@ When only one type is shown, there is no prefix, but for multiple
 types, a prefix is shown for each. The metrics in order include:
 \enumerate{
 \item "-log10P"
+\item "direction"
 \item "z-score"
 \item "number of genes"
 }}

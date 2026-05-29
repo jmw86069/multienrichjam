@@ -1,3 +1,28 @@
+# multienrichjam 0.0.118.950
+
+* Fixed some S4 method dispatch issues, specifically
+how 'params' arguments are passed to generics.
+
+## Hot fixes
+
+* `plot_mpf()` dispatch to generic functions was not properly
+passing 'params' and 'legend_x', causing errors. Arg order
+and use of 'params' to pass 'legend_x','legend_y' is workaround.
+* `CnetCluster()` and `CnetExemplar()` were updated to prefer
+'params' instead of '...' for custom arguments.
+Fixed hidden gene labels.
+* `EnrichmentMap` improved how 'params' is used without '...'
+
+## Other updates
+
+* 'directionColname' priority is: "direction", "NES", "activation z-score",
+so the GSEA NES is used before any type of calculated z-score-like stat.
+In future, 'direction' with be preferred, as a generic metric.
+* `plot_mpf()` hides gene label in 'CnetCollapsed' with over 500 nodes.
+* `make_point_hull()` adjusts the text label adjustment for lower magnitude
+with longer labels. Over about 20 nchar width will become 0.5 the magnitude,
+the maximum effect.
+
 # multienrichjam 0.0.118.900
 
 * `plot_mpf()` will become the primary method to visualize

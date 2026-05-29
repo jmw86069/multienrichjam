@@ -27,10 +27,17 @@
 #'    gene counts.
 #' @param pvalueColname `character` default 'padjust' with the best available
 #'    column to use for statistical significance of enrichment.
-#' @param directionColname `character` default 'zscore' with a directional
-#'    score, typically a z-score or some other reasonably scaled
-#'    numeric value where the sign indicates directionality, with '+'
-#'    meaning activated and '-' meaning suppressed.
+#' @param directionColname `character` default looks for matching entries
+#'    in order:
+#'    * 'direction': some directional score with positive and negative
+#'    scores, reasonably scaled so that -2 and +2 are meaningful values,
+#'    but the exact values are not critical to this analysis.
+#'    * 'NES': the GSEA normalized enrichment score),
+#'    * 'activation z-score': provided by Ingenuity Pathway Analysis
+#'    * 'z-score' or 'zScore': provided alternative by some tools. This
+#'    score may be removedin future, since clusterProfiler provides it as
+#'    a supplement to the hypergeometric enrichment, and it only
+#'    contains positive values, therefore it is not directional.
 #' @param pathGenes `character` default 'setSize' indicating the number
 #'    of genes in each set as tested for enrichment. This number is not
 #'    always reported, however it is not used by 'multienrichjam', but
@@ -89,9 +96,10 @@ find_enrich_colnames <- function
     "p.value",
     "pval",
     "FDR"),
- directionColname=c("activation.z.{0,1}score",
- 	 "NES",
- 	 "direction",
+ directionColname=c(
+    "direction",
+    "NES",
+    "activation.z.{0,1}score",
     "z.{0,1}score"),
  pathGenes=c("setSize",
     "pathGenes",

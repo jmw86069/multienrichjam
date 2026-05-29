@@ -14,7 +14,7 @@ find_enrich_colnames(
   geneRatioColname = c("GeneRatio", "^Ratio"),
   pvalueColname = c("padjust", "p.adjust", "adjp", "padj", "qvalue", "qval", "q.value",
     "pvalue", "p.value", "pval", "FDR"),
-  directionColname = c("activation.z.{0,1}score", "NES", "direction", "z.{0,1}score"),
+  directionColname = c("direction", "NES", "activation.z.{0,1}score", "z.{0,1}score"),
   pathGenes = c("setSize", "pathGenes", "Count"),
   geneHits = c("Count", "geneHits", "gene_count"),
   verbose = FALSE,
@@ -49,10 +49,19 @@ gene counts.}
 \item{pvalueColname}{\code{character} default 'padjust' with the best available
 column to use for statistical significance of enrichment.}
 
-\item{directionColname}{\code{character} default 'zscore' with a directional
-score, typically a z-score or some other reasonably scaled
-numeric value where the sign indicates directionality, with '+'
-meaning activated and '-' meaning suppressed.}
+\item{directionColname}{\code{character} default looks for matching entries
+in order:
+\itemize{
+\item 'direction': some directional score with positive and negative
+scores, reasonably scaled so that -2 and +2 are meaningful values,
+but the exact values are not critical to this analysis.
+\item 'NES': the GSEA normalized enrichment score),
+\item 'activation z-score': provided by Ingenuity Pathway Analysis
+\item 'z-score' or 'zScore': provided alternative by some tools. This
+score may be removedin future, since clusterProfiler provides it as
+a supplement to the hypergeometric enrichment, and it only
+contains positive values, therefore it is not directional.
+}}
 
 \item{pathGenes}{\code{character} default 'setSize' indicating the number
 of genes in each set as tested for enrichment. This number is not

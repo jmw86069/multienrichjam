@@ -99,7 +99,7 @@ col_fun <- colorRamp2D(column_breaks=column_breaks,
    mcolor=mcolor)
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="z-score",
+   xlab="direction",
    pretty.n=5);
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
@@ -108,7 +108,7 @@ ComplexHeatmap::draw(lgds)
 # and slightly larger font sizes
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="z-score",
+   xlab="direction",
    title_fontsize=14,
    legend_fontsize=12,
    grid_height=grid::unit(7, "mm"),
@@ -118,14 +118,14 @@ ComplexHeatmap::draw(lgds)
 
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="z-score",
+   xlab="direction",
    pretty.n=NULL);
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="z-score",
+   xlab="direction",
    column_breaks=c(-1, -0.5,  0, 0.5, 1),
    row_breaks=c(0, 0.25, 0.5, 0.75, 1),
    column_gap=grid::unit(1, "mm"),

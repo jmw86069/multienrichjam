@@ -1253,12 +1253,17 @@ internal_EnrichmentMap <- function
    em_repulse <- ifelse(
       is.numeric(head(params$repulse, 1)),
       head(params$repulse, 1), 3.5);
+   params[["repulse"]] <- NULL;
    
    # Prepare the igraph
-   Emap <- mem2emap(x,
-      # num_keep_terms=0,
-      repulse=em_repulse,
-      ...)
+   Emap <- do.call(mem2emap,
+      c(alist(mem=x,
+         repulse=em_repulse),
+         params))
+   # Emap <- mem2emap(x,
+   #    # num_keep_terms=0,
+   #    repulse=em_repulse,
+   #    ...)
 
    # optionally remove node groups
    if ("none" %in% em_group) {
@@ -1312,12 +1317,17 @@ internal_EnrichmentMap <- function
 
    # Render the igraph
    if (do_plot) {
-      mark.expand <- ifelse(length(params$mark.expand) > 0,
+      params$mark.expand <- ifelse(length(params$mark.expand) > 0,
          params$mark.expand, 3.5)
+      # params[["mark.expand"]] <- NULL;
       
-      jam_igraph(Emap,
-         mark.expand=mark.expand,
-         ...)
+      do.call(jam_igraph,
+         c(
+            alist(x=Emap),
+            params))
+      # jam_igraph(Emap,
+      #    mark.expand=mark.expand,
+      #    ...)
       # color legend
       if (params$do_legend) {
          mem_legend(mem=x,
@@ -1349,12 +1359,12 @@ internal_EnrichmentMap <- function
 #' @aliases EnrichmentMap
 setMethod("EnrichmentMap", "Mem",
    function(x, do_plot, 
-      legend_x="bottomleft", legend_y=NULL,
       params=list(repulse=3.5,
          width=30,
          group="default",
          mark.expand=4,
          do_legend=TRUE),
+      legend_x="bottomleft", legend_y=NULL,
            ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE
@@ -1362,6 +1372,12 @@ setMethod("EnrichmentMap", "Mem",
    params <- modifyList(
       eval(formals(EnrichmentMap)$params),
       params)
+   if ("legend_x" %in% names(params)) {
+      legend_x <- params$legend_x;
+   }
+   if ("legend_y" %in% names(params)) {
+      legend_y <- params$legend_y;
+   }
    # call internal function
    internal_EnrichmentMap(x=x,
       do_plot=do_plot,

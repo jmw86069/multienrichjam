@@ -1,5 +1,46 @@
 # TODO
 
+## 26may2026
+
+* `plot_mpf()`
+
+   * 'CnetCluster' should use cluster labels as
+   plot title by default.
+   * Add option to re-color labels white, when using shadowText.
+   * Add `repulse` and relayout options to Cnet* methods.
+   * DONE. Make sure `plot_mpf()` passes all params to
+   'EnrichmentMap' such as 'node_factor' or other igraph options.
+
+* `EnrichmentMap()`
+
+   * store the overlap threshold somewhere, potentially
+   use as figure caption.
+   * Make border colors more similar to what is shown in
+   'EnrichmentHeatmap'. Ideally it should use the same logic,
+   which implies it should also display the 2D color legend.
+
+* `EnrichmentHeatmap()`
+
+   * Rename 'z-score' to 'direction' in the 2D color legend.
+   * Add option to display 'enrichIMdirection' as top annotation,
+   same as 'geneIMdirection' used as row annotation.
+   Include option to show both, choose one or neither.
+
+* Consider option to store enrichIMrank, representing the
+"top N" number for each enrichment.
+Addresses "Why is this pathway being shown?"
+* Evaluate option to flip the border/fill color?
+Node fill by direction, node border by enrichment?
+* Make `EnrichmentMap()` exportable method/function.
+* Add convenient method to apply GSEA direction/score to
+geneIMdirection. For example logFC-ranked data would apply
+logFC; signedP-ranked data would apply signedP;
+t-statistic-ranked would apply t-statistic.
+Multiply by existing geneIM values.
+* Add method to store and use `fixSetLabels()` output in
+`Mem` and `MemPlotFolio` objects, to keep original term
+and custom label distinct.
+
 ## 21may2026
 
 * Consider Cnet/Emap info legend similar to GenePathHeatmap?

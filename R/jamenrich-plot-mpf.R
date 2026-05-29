@@ -500,7 +500,7 @@ plot_mpf <- function
             } else {
                cc_type <- "set";
             }
-            if (igraph::vcount(Mpf@cnet_collapsed[[1]]) <= 500) {
+            if (igraph::vcount(Mpf@cnet_collapsed[[1]]) > 500) {
                cc_type <- paste0(cc_type, "2");
             }
          }
@@ -564,8 +564,8 @@ plot_mpf <- function
             plot_list$CnetExemplar[[icc]] <- do.call(CnetExemplar,
                c(
                   alist(x=Mpf,
-                  num=icc),
-                  params$ce))
+                  num=icc,
+                  params=params$ce)))
             # plot_list$CnetExemplar <- CnetExemplar(Mpf,
             #    num=icc,
             #    params=params$ce,
@@ -605,8 +605,8 @@ plot_mpf <- function
             plot_list$CnetCluster[[icc]] <- do.call(CnetCluster,
                c(
                   alist(x=Mpf,
-                  cluster=icc),
-                  params[["c"]]))
+                  cluster=icc,
+                  params=params[["c"]])))
             # plot_list$CnetCluster <- CnetCluster(Mpf,
             #    cluster=icc,
             #    params=params[["c"]],

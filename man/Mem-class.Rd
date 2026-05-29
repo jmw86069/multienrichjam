@@ -148,10 +148,10 @@ list_to_Mem(mem)
 \S4method{EnrichmentMap}{Mem}(
   x,
   do_plot,
-  legend_x = "bottomleft",
-  legend_y = NULL,
   params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
     = TRUE),
+  legend_x = "bottomleft",
+  legend_y = NULL,
   ...
 )
 }

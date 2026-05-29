@@ -584,7 +584,7 @@ cell_fun_bivariate <- function
 #'    mcolor=mcolor)
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
-#'    xlab="z-score",
+#'    xlab="direction",
 #'    pretty.n=5);
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
@@ -593,7 +593,7 @@ cell_fun_bivariate <- function
 #' # and slightly larger font sizes
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
-#'    xlab="z-score",
+#'    xlab="direction",
 #'    title_fontsize=14,
 #'    legend_fontsize=12,
 #'    grid_height=grid::unit(7, "mm"),
@@ -603,14 +603,14 @@ cell_fun_bivariate <- function
 #'
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
-#'    xlab="z-score",
+#'    xlab="direction",
 #'    pretty.n=NULL);
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
 #'
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
-#'    xlab="z-score",
+#'    xlab="direction",
 #'    column_breaks=c(-1, -0.5,  0, 0.5, 1),
 #'    row_breaks=c(0, 0.25, 0.5, 0.75, 1),
 #'    column_gap=grid::unit(1, "mm"),
@@ -837,8 +837,11 @@ cell_fun_points <- function
  width,
  height,
  fill,
- col_hm)
+ col_hm,
+ ct_approxfun,
+ cexCellnote=1)
 {
+   # Not currently used in multienrichjam, placeholder?
    cell_value <- jamba::rmNA(naValue=0,
       use_matrix[i, j]);
    cell_color <- col_hm(cell_value);

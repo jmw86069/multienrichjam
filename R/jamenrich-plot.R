@@ -1242,8 +1242,9 @@ mem_gene_path_heatmap <- function
 #'    When only one type is shown, there is no prefix, but for multiple
 #'    types, a prefix is shown for each. The metrics in order include:
 #'    1. "-log10P"
-#'    2. "z-score"
-#'    3. "number of genes"
+#'    2. "direction"
+#'    3. "z-score"
+#'    4. "number of genes"
 #' @param use_raster `logical` passed to `ComplexHeatmap::Heatmap()`
 #'    indicating whether to rasterize the heatmap output, used when
 #'    `style="heatmap"`. Rasterization is not relevant to dotplot output
@@ -1541,13 +1542,14 @@ mem_enrichment_heatmap <- function
       }
 
       # custom cell label, hide 2 when directional data are not available
-      if (2 %in% show_enrich && length(use_direction) == 0) {
-         show_enrich <- setdiff(show_enrich, 2);
+      if (any(c(2, 3) %in% show_enrich) && length(use_direction) == 0) {
+         show_enrich <- setdiff(show_enrich, c(2, 3));
       }
       use_prefix <- NULL;
       if (length(show_enrich) > 1) {
          use_prefix <- c(
             "-log10P: ",
+            "direction: ",
             "z-score: ",
             "genes: ")[show_enrich]
       }
@@ -1583,11 +1585,12 @@ mem_enrichment_heatmap <- function
             mcolor);
          size_by <- match("geneCount",
             c("-log10Pvalue",
+               "direction",
                "z-score",
                "geneCount"));
          legend_bivariate <- make_legend_bivariate(col_bivariate,
             ylab="-log10pvalue",
-            xlab="z-score");
+            xlab="direction");
          use_col_fn <- col_bivariate;
          # if ("dotplot_inverted" %in% style) {
          #    use_col_fn <- function(x, y){
@@ -1622,7 +1625,7 @@ mem_enrichment_heatmap <- function
          #    };
          # }
          show_heatmap_legend <- TRUE;
-         # remove show_enrich=2 if no supporting directional data is present
+         # remove show_enrich 2 or 3 if no supporting directional data is present
          cell_fun_custom <- cell_fun_bivariate(
             list(
                use_matrix,

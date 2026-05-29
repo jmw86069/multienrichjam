@@ -349,36 +349,48 @@ make_point_hull <- function
             label_adj_preset <- label_preset;
          }
          # calculate preset position
+         adj_vals <- c(bottom="top",
+            center="center",
+            top="bottom",
+            right="left",
+            left="right");
+         if (is.character(label_preset) &&
+            label_preset == label_adj_preset &&
+               label_preset %in% adj_vals) {
+            label_preset <- adj_vals[label_adj_preset];
+         }
          label_xy <- jamba::coordPresets(
             preset=label_preset,
             adjPreset=label_adj_preset);
-         # now scale relative to polygon and not plot coordinates
-         if (FALSE) {
-            label_x <- jamba::normScale(x=label_xy[,1],
-               low=parusr[1], high=parusr[2],
-               from=min(mxys[,1], na.rm=TRUE),
-               to=max(mxys[,1], na.rm=TRUE))
-            label_y <- jamba::normScale(x=label_xy[,2],
-               low=parusr[3], high=parusr[4],
-               from=min(mxys[,2], na.rm=TRUE),
-               to=max(mxys[,2], na.rm=TRUE))
-         } else {
-            label_x <- mxys[use_mxys, 1];
-            label_y <- mxys[use_mxys, 2];
+         
+         # 0.0.101.900 - convert list to delimited string
+         if (is.list(label)) {
+            label <- jamba::cPaste(label,
+               sep=", \n")
          }
+         # take nchar as max width of any one line of text
+         label_nchar <- max(nchar(unlist(strsplit(label, "\n"))));
+   
+         # 0.0.118.950: adj_ex scales the adjustment down for longer strings
+         # since in Positron the text labels were wayyyy too adjusted.
+         # Revisit since it might be Positron viewer specific.
+         adj_ex <- 1/label_nchar * 0.4 + 0.6;
+         label_xy$adjX <- (label_xy$adjX - 0.5) * adj_ex + 0.5;
+         label_xy$adjY <- (label_xy$adjY - 0.5) * adj_ex + 0.5;
+         
+         # now scale relative to polygon and not plot coordinates
+         label_x <- mxys[use_mxys, 1];
+         label_y <- mxys[use_mxys, 2];
+         # points(label_x, label_y, pch=20, cex=2, col="green");# debug
+
          if (length(label.x.nudge) == 1 && !label.x.nudge == 0) {
             label_x <- label_x + label.x.nudge;
          }
          if (length(label.y.nudge) == 1 && !label.y.nudge == 0) {
             label_y <- label_y + label.y.nudge;
          }
-         # 0.0.101.900 - convert list to delimited string
-         if (is.list(label)) {
-            label <- jamba::cPaste(label,
-               sep=", \n")
-         }
-         
-         jamba::drawLabels(txt=unlist(label),
+         # draw the label
+         jamba::drawLabels(txt=label,
             labelCex=label.cex,
             boxCexAdjust=c(2.2, 2.2),
             x=label_x, y=label_y,
