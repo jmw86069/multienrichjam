@@ -178,6 +178,7 @@ plot_mpf <- function
  em_group=NULL,
  Mem=NULL,
  params=list(
+   eh=list(do_plot=TRUE),
    em=list(repulse=3.5,
       node_factor=1,
       width=30),
@@ -407,7 +408,12 @@ plot_mpf <- function
       #################################
       ## EnrichmentHeatmap
       if (grepl("EnrichmentHeatmap", iplot)) {
-         plot_list$EnrichmentHeatmap <- EnrichmentHeatmap(Mpf, ...);
+         plot_list$EnrichmentHeatmap <- do.call(
+            EnrichmentHeatmap,
+            c(
+               alist(x=Mpf,
+                  params=params$eh)))
+         # plot_list$EnrichmentHeatmap <- EnrichmentHeatmap(Mpf, ...);
          if (isTRUE(do_newpage)) grid::grid.newpage();
          plot_names <- c(plot_names, "EnrichmentHeatmap")
       }

@@ -31,6 +31,10 @@
 #'   border so it does not overlap inner borders, adding some height and width
 #'   to the final node. The frame border is drawn before the
 #'   node squares are drawn.
+#'   * **New 0.0.119.900**: Each square can display a text label via
+#'   `coloredrect.label` and sized with `coloredrect.label.cex`. It will
+#'   use graph attribute 'use_shadowText' to enable `jamba::shadowText()`
+#'   to draw the label.
 #'   * The size of each square inside the rectangle is defined by `size2`,
 #'   such that the rectangle width is `coloredrect.ncol * size2` and
 #'   the rectangle height is `coloredrect.nrow * size2`.
@@ -137,13 +141,21 @@
 #' })
 #' igraph::V(g1)$coloredrect.ncol <- c(2, 2, 2, 1, 1);
 #' igraph::V(g1)$coloredrect.nrow <- c(2, 1, 1, 2, 1);
-#' igraph::V(g1)$coloredrect.lwd <- rep(3, igraph::vcount(g1))
+#' igraph::V(g1)$coloredrect.lwd <- rep(4, igraph::vcount(g1))
 #' igraph::V(g1)$frame.width <- c(2, 1, 1, 1, 1);
 #' igraph::V(g1)$frame.color <- "black"
 #' igraph::V(g1)$size2 <- 10;
 #' igraph::V(g1)$shape <- "coloredrectangle";
-#'
-#' jam_igraph(g1, vertex.label="")
+#' 
+#' igraph::V(g1)$coloredrect.label <- lapply(igraph::V(g1)$coloredrect.color,
+#'    function(i){
+#'    head(LETTERS, length(i))
+#' })
+#' igraph::V(g1)$coloredrect.label.cex <- 2;
+#' 
+#' igraph::graph_attr(g1, "use_shadowText") <- TRUE;
+#' jam_igraph(g1, label_factor=2)
+#' 
 #' title(font.main=1, line=1.5, main=paste0(
 #'    "Each square is consistent size by vertex.size2\n"))
 #' title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -188,6 +200,12 @@ shape.coloredrectangle.plot <- function
    ##
    ## This function combines some logic from
    ## igraph:::.igraph.shape.pie.plot() as well.
+
+   # use_shadowText is only used with optional coloredrect.label
+   use_shadowText <- params("plot", "use_shadowText");
+   if (length(use_shadowText) == 0) {
+      use_shadowText <- FALSE;
+   }
 
    getparam <- function(pname) {
       p <- params("vertex", pname)
@@ -252,6 +270,14 @@ shape.coloredrectangle.plot <- function
       jamba::printDebug("shape.coloredrectangle.plot(): ",
          "vertex.coloredrect.color:");
       print(vertex.coloredrect.color);
+   }
+
+   # 24jun2026: Optional label per cell
+   vertex.coloredrect.label <- getparam("coloredrect.label");
+   vertex.coloredrect.label.cex <- getparam("coloredrect.label.cex");
+   if (length(vertex.coloredrect.label.cex) == 0) {
+      vertex.coloredrect.label.cex <- rep(1,
+         length.out=length(vertex.coloredrect.label))
    }
 
    vertex.coloredrect.byrow <- getparam("coloredrect.byrow") > 0;
@@ -354,7 +380,6 @@ shape.coloredrectangle.plot <- function
    }
 
    vertex.size <- cbind(vertex.size1, vertex.size2);
-   jamba::printDebug("vertex.size:");print(vertex.size);# debug
 
    ## Define custom function to help vectorize drawing, by creating a
    ## data.frame of coordinates for each square and rectangle
@@ -372,9 +397,12 @@ shape.coloredrectangle.plot <- function
     frame.lwd=0.5,
     frame.color="grey30",
     byrow=TRUE,
+    label=NULL,
+    label.cex=1,
+    use_shadowText=FALSE,
     ...)
    {
-      ## Purpose is to draw a rectangle filles with multi-color squares
+      ## Purpose is to draw a rectangle filled with multi-color squares
       nrow <- rep(nrow, length.out=length(x));
       ncol <- rep(ncol, length.out=length(x));
       ncells <- nrow * ncol;
@@ -388,6 +416,9 @@ shape.coloredrectangle.plot <- function
       ## Iterate each vertex, create a data.frame describing
       ## frame and square colors, then combine into one large
       ## data.frame for vectorized drawing.
+      if (length(label.cex) < length(x)) {
+         label.cex <- rep(label.cex, length.out=length(x))
+      }
       rectDF <- jamba::rbindList(lapply(seq_along(x), function(k){
          xk <- x[[k]];
          yk <- y[[k]];
@@ -422,12 +453,32 @@ shape.coloredrectangle.plot <- function
          # colk <- rep(col[[k]], length.out=length(x01v));
          colk <- rep(NA, length.out=length(x01v));
          colk[seq_along(col[[k]])] <- col[[k]];
+         ## borderk no longer fully repeats to ncell length
+         # borderk <- rep(NA, length.out=length(colk));
+         # borderk[seq_along(col[[k]])] <- rep(border[[k]], length.out=length(col[[k]]));
+         ## borderk is only visible in cells with non-NA color (?)
          borderk <- rep(border[[k]], length.out=length(colk));
-         # borderk <- rep(NA, length.out=length(x01v));
-         # borderk[seq_along(border[[k]])] <- border[[k]];
+
+         ## 0.0.119.900 - use color as border when NA,
+         ## to avoid tiny gaps between cells from rounding errors.
+         borderk_na <- is.na(borderk);
+         if (any(borderk_na)) {
+            borderk[borderk_na] <- jamba::makeColorDarker(colk[borderk_na], darkFactor=1.3);
+         }
+
+         labelk <- rep("", length(x01v));
+         kl <- seq_along(label[[k]])
+         labelk[kl] <- label[[k]];
+         label.cexk <- rep(1, length(x01v));
+         label.cexk[kl] <- rep(label.cex[[k]],
+            length.out=length(kl));
 
          ltyk <- rep(lty[[k]], length.out=length(colk));
          lwdk <- rep(lwd[[k]], length.out=length(colk));
+         # with any non-NA lwdk, fill borderk_na with max border
+         if (any(borderk_na) && any(!is.na(lwdk))) {
+            lwdk[borderk_na] <- max(lwdk, na.rm=TRUE);
+         }
          if (TRUE %in% getOption("debug", FALSE)) {
             jamba::printDebug("k:", k,
                ", numk:", numk,
@@ -442,7 +493,9 @@ shape.coloredrectangle.plot <- function
                ", y01:", signif(digits=3, y01),
                ", colk:", colk,
                ", size1v:", signif(digits=3, size1v),
-               ", size2v:", signif(digits=3, size2v)
+               ", size2v:", signif(digits=3, size2v),
+               ", labelk:", labelk,
+               ", label.cexk:", label.cexk
             );
          }
          kDF <- data.frame(
@@ -450,16 +503,17 @@ shape.coloredrectangle.plot <- function
             x=c(xk, x01v),
             y=c(yk, y01v),
             bg=c("transparent", colk),
-            fg=c(head(frame.color[[k]],1),
+            fg=c(head(frame.color[[k]], 1),
                borderk),
-            rectx=c(head(size1v,1)*ncolk, size1v),
-            recty=c(head(size2v,1)*nrowk, size2v),
+            label=c("", labelk),
+            label.cex=c(1, label.cexk),
+            rectx=c(head(size1v, 1)*ncolk, size1v),
+            recty=c(head(size2v, 1)*nrowk, size2v),
             lty=c(head(ltyk,1), ltyk),
-            ## lwd=c(head(frame.lwd[[k]], 1)*2.5, wdk/4),
-            # lwd=c(head(frame.lwd[[k]], 1) * 1, lwdk),
             lwd=c(frame.lwd[[k]], lwdk),
-            rect_type=rep(factor(c("frame","square")),
-               c(1,length(borderk)))
+            rect_type=rep(
+               factor(c("frame", "square")),
+               c(1, length(x01v)))
          );
          kDF;
       }));
@@ -473,6 +527,7 @@ shape.coloredrectangle.plot <- function
             "names(rectDFL):", names(rectDFL));
       }
 
+      # Draw order: node frames, node squares, all else
       rect_order <- jamba::provigrep(c("frame", "square", "."), names(rectDFL));
       for (rectDFi in rectDFL[rect_order]) {
          rectDFi$lwd <- ifelse(is.na(rectDFi$fg), 1, rectDFi$lwd);
@@ -487,8 +542,8 @@ shape.coloredrectangle.plot <- function
                rectangles=as.matrix(rectDFi[,c("rectx", "recty")]),
                type="inner",
                lwd=rectDFi$lwd);
-            rectDFi$rectx <- inner_coords$rectangles[,1];
-            rectDFi$recty <- inner_coords$rectangles[,2];
+            rectDFi$rectx <- inner_coords$rectangles[, 1];
+            rectDFi$recty <- inner_coords$rectangles[, 2];
          } else {
             # jamba::printDebug("outer lwd: ", rectDFi$lwd);
             outer_coords <- adjust_rect_border(
@@ -503,17 +558,37 @@ shape.coloredrectangle.plot <- function
          if (any(is.na(rectDFi$bg))) {
             rectDFi[is.na(rectDFi$bg), "fg"] <- NA;
          }
-         graphics::symbols(x=rectDFi$x,
-            y=rectDFi$y,
-            bg=rectDFi$bg,
-            fg=rectDFi$fg,
-            rectangles=(as.matrix(rectDFi[,c("rectx", "recty")])),
-            add=TRUE,
-            inches=FALSE,
-            lty=rectDFi$lty,
-            lwd=rectDFi$lwd,
-            xpd=TRUE);
-      }
+         ## 0.0.119.900 - add ljoin='mitre', lend='square'
+         ## to ensure pointed corners inside the frame.
+         withr::with_par(list(ljoin="mitre", lend="square"), {
+            graphics::symbols(x=rectDFi$x,
+               y=rectDFi$y,
+               bg=rectDFi$bg,
+               fg=rectDFi$fg,
+               rectangles=(as.matrix(rectDFi[,c("rectx", "recty")])),
+               add=TRUE,
+               inches=FALSE,
+               lty=rectDFi$lty,
+               lwd=rectDFi$lwd,
+               xpd=TRUE);
+         })
+         if (any(!rectDFi$label %in% c("", " ", NA))) {
+            rectDFi_label <- subset(rectDFi, !label %in% c("", " ", NA));
+            if (isTRUE(use_shadowText)) {
+               jamba::shadowText(x=rectDFi_label$x,
+                  y=rectDFi_label$y,
+                  col=jamba::setTextContrastColor(rectDFi_label$bg),
+                  cex=rectDFi_label$label.cex,
+                  labels=rectDFi_label$label)
+            } else {
+               text(x=rectDFi_label$x,
+                  y=rectDFi_label$y,
+                  col=jamba::setTextContrastColor(rectDFi_label$bg),
+                  cex=rectDFi_label$label.cex,
+                  labels=rectDFi_label$label)
+            }
+         }
+         }
       return(rectDFL);
    }
 
@@ -539,6 +614,9 @@ shape.coloredrectangle.plot <- function
       lwd=vertex.coloredrect.lwd,
       frame.lwd=vertex.frame.width,
       frame.color=vertex.frame.color,
+      label=vertex.coloredrect.label,
+      label.cex=vertex.coloredrect.label.cex,
+      use_shadowText=use_shadowText,
       byrow=vertex.coloredrect.byrow);
 
 }

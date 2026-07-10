@@ -1,9 +1,9 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.118.950
+Version: 0.0.119.900
 Authors@R: c(
-    person(given="James M.",
+    person(given=c("James", "M."),
        family="Ward",
        email="jmw86069@gmail.com",
        comment=c(ORCID="0000-0002-9510-2848"),

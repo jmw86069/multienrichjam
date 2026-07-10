@@ -311,6 +311,8 @@ cell_fun_bivariate <- function
  prefix="",
  suffix="",
  cex=1,
+ placement="center",
+ font=2,
  col_hm,
  outline=FALSE,
  outline_style=c("none",
@@ -437,6 +439,8 @@ cell_fun_bivariate <- function
                y=y + height * c(0, 0, NA, -1/2, 1/2),
                gp=grid::gpar(col=grid_color));
          }
+         # default text color
+         text_col <- "black";
          if (TRUE %in% invert) {
             # fill the cell
             if (FALSE %in% outline) {
@@ -451,8 +455,13 @@ cell_fun_bivariate <- function
                gp=grid::gpar(
                   col=rect_col,
                   fill=cell_color));
-            text_col <- jamba::setTextContrastColor(cell_color,
-               useGrey=15);
+            ## For invert=TRUE the background is white?
+            # Darker color cell has larger circles, so either
+            # way the cell is light, or mostly white, keep font black
+            # if (!"center" %in% placement) {
+            #    text_col <- jamba::setTextContrastColor(cell_color,
+            #       useGrey=15);
+            # }
             # draw the point
             grid::grid.points(x=x,
                y=y,
@@ -472,10 +481,11 @@ cell_fun_bivariate <- function
                gp=grid::gpar(
                   col=outline_col,
                   fill=cell_color));
+            text_col <- jamba::setTextContrastColor(cell_color,
+               useGrey=15);
          }
-         text_col <- jamba::setTextContrastColor(cell_color,
-            useGrey=15);
-         # text_col <- "black";
+         # text_col <- jamba::setTextContrastColor(cell_color,
+         #    useGrey=15);
       } else {
          grid::grid.rect(x=x,
             y=y,
@@ -490,29 +500,63 @@ cell_fun_bivariate <- function
       if (cex > 0 && !"" %in% cell_label) {
          fontsize <- (10 * cex);
          # grid::grid.text(cell_label,
+         xnote <- x;
+         ynote <- y;
+         just <- c("center", "center");
+         if (any(grepl("bottom", placement))) {
+            ynote <- y - height / 2.1;
+            just[2] <- "bottom";
+         } else if (any(grepl("top", placement))) {
+            ynote <- y + height / 2.1;
+            just[2] <- "top";
+         }
+         if (any(grepl("left", placement))) {
+            xnote <- x - width / 2.1;
+            just[1] <- "left";
+         } else if (any(grepl("right", placement))) {
+            xnote <- x + width / 2.1;
+            just[1] <- "right";
+         }
          if (requireNamespace("shadowtext", quietly=TRUE)) {
             shadowtext::grid.shadowtext(cell_label,
-               x=x,
-               y=y,
+               # x=x,
+               # y=y,
+               x=xnote,
+               y=ynote,
+               just=unique(just),
                rot=rot,
                bg.colour=jamba::alpha2col(alpha=0.3,
                   jamba::setTextContrastColor(text_col)),
-               bg.r=0.2,
+               bg.r=0.05,
                gp=grid::gpar(
                   fontsize=fontsize,
-                  fontface=1,
+                  fontface=font,
                   col=text_col
                ));
          } else {
+            #
+            # bottom-left position
             grid::grid.text(cell_label,
-               x=x,
-               y=y,
+               x=xnote,
+               y=ynote,
+               just=unique(just),
                rot=rot,
                gp=grid::gpar(
                   fontsize=fontsize,
-                  fontface=1,
+                  fontface=font,
                   col=text_col
                ));
+
+            # center position
+            # grid::grid.text(cell_label,
+            #    x=x,
+            #    y=y,
+            #    rot=rot,
+            #    gp=grid::gpar(
+            #       fontsize=fontsize,
+            #       fontface=1,
+            #       col=text_col
+            #    ));
          }
       }
    }

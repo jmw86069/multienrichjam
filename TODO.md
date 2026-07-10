@@ -1,5 +1,28 @@
 # TODO
 
+## 26jun2026
+
+* Pass more arguments through `plot_mpf()` to internal functions.
+* 'coloredrectangle' vertex shape
+
+   * Consider enforcing local ljoin='mitre' to avoid rounded
+   corners leaving tiny gaps.
+   * When coloredrect.border is NA, use coloredrect.color, also
+   to avoid tiny gaps in rounding errors. Visible when one cell
+   has border and the others do not.
+   
+
+* Fix `subgraph_jam()` when input `v` is out of order,
+it does not keep layout in order.
+* Consider LollipopPlot() or something similar?
+
+   * x-axis by significance, odds ratio, number of genes, etc.
+
+* `subset_igraph_components()`
+
+   * Consider new argument 'containing' with node name of
+   component(s) to keep.
+
 ## 26may2026
 
 * `plot_mpf()`

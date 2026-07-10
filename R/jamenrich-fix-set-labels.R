@@ -172,8 +172,8 @@ fixSetLabels <- function
    
    # use default words
    if (length(words_from) == 0) {
-      words_from <- words$from;
-      words_to <- words$to;
+      words_from <- multienrichjam::words$from;
+      words_to <- multienrichjam::words$to;
    }
    # use default abbrev
    if (length(abbrev_from) == 0) {

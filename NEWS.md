@@ -1,3 +1,29 @@
+# multienrichjam 0.0.119.900
+
+## Changes
+
+* igraph vertex shape 'coloredrectangle' has optional label
+for each colored square, via `vertex.coloredrect.label` and
+sized with `vertex.coloredrect.label.cex`.
+* Fixed bug in `fixSetLabels()` when called without loading
+the package.
+* `mem_enrichment_heatmap()` new arguments `placementCellnote`
+and `fontCellnote` to customize placement of cell labels,
+allowing the gene count to be displayed in each cell, in a
+custom location, and optionally using bold font.
+* `cell_fun_bivariate()` gains arguments 'placement' and 'font'
+to customize placement of labels when shown.
+* `plot_mpf()` now properly passes extra params to
+`EnrichmentHeatmap()`.
+* Two options are recognized to help fine tune inner/outer
+border calculations with 'jampie' `igraph` node shapes:
+getOption("jam.lwd_inch", 1/96/2), and
+getOption("jam.inner_cex", 1.001).
+The 'jam.lwd_inch' adjusts the line width per inch, related
+to dpi calculation, and is now smaller to reduce tiny gaps
+between the inner and outer borders. It is especially noticeable
+in Positron, whose dpi is calculated some non-standard way.
+
 # multienrichjam 0.0.118.950
 
 * Fixed some S4 method dispatch issues, specifically

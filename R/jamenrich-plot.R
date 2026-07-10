@@ -1286,6 +1286,11 @@ mem_enrichment_heatmap <- function
  cex.axis=1,
  lens=3,
  cexCellnote=1,
+ placementCellnote=c("center",
+    "bottomleft", "bottom", "bottomright",
+    "right",
+    "topleft", "top", "topright", "left"),
+ fontCellnote=2,
  column_title=NULL,
  row_names_max_width=grid::unit(300, "mm"),
  column_names_max_height=grid::unit(300, "mm"),
@@ -1311,7 +1316,8 @@ mem_enrichment_heatmap <- function
    } else {
       Mem <- list_to_Mem(mem);
    }
-   
+   placementCellnote <- match.arg(placementCellnote);
+
    if (length(p_cutoff) == 0) {
       if ("p_cutoff" %in% names(thresholds(Mem))) {
          p_cutoff <- thresholds(Mem)$p_cutoff;
@@ -1585,7 +1591,7 @@ mem_enrichment_heatmap <- function
             mcolor);
          size_by <- match("geneCount",
             c("-log10Pvalue",
-               "direction",
+               # "direction",
                "z-score",
                "geneCount"));
          legend_bivariate <- make_legend_bivariate(col_bivariate,
@@ -1611,6 +1617,8 @@ mem_enrichment_heatmap <- function
             show=show_enrich,
             outline=outline,
             cex=cexCellnote,
+            placement=placementCellnote,
+            font=fontCellnote,
             prefix=use_prefix,
             ...
          );

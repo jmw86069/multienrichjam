@@ -428,7 +428,7 @@ setMethod("EnrichmentHeatmap", "MemPlotFolio", function(x,
    if (isTRUE(use_cluster_labels) &&
       length(ClusterLabels(x)) > 0) {
       hm_row_title <- fixSetLabels(
-         paste0(names(Clusters(x)), ": ",
+         x=paste0(names(Clusters(x)), ": ",
             ClusterLabels(x)),
          width=width,
          lowercaseAll=FALSE,
