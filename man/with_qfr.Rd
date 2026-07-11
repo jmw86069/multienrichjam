@@ -10,10 +10,10 @@ with_qfr(..., repulse = 4)
 Layout specification for Qgraph Fruchterman-Reingold, deprecated
 }
 \seealso{
-Other jam deprecated functions: 
-\code{\link{cnetplotJam}()},
-\code{\link{enrichMapJam}()},
-\code{\link{grid_with_title}()},
-\code{\link{mem_multienrichplot}()}
+Other jam deprecated functions:
+\code{\link[=cnetplotJam]{cnetplotJam()}},
+\code{\link[=enrichMapJam]{enrichMapJam()}},
+\code{\link[=grid_with_title]{grid_with_title()}},
+\code{\link[=mem_multienrichplot]{mem_multienrichplot()}}
 }
 \concept{jam deprecated functions}

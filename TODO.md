@@ -1,5 +1,13 @@
 # TODO
 
+## 10jul2026
+
+* DONE. Add `c()` to combine two or more Mem objects.
+Genes and sets are unioned (jamba::mixedSort), matrices expanded
+with appropriate fill values (0 for numeric, NA for p-values/colors).
+Overlapping enrichment names raise an error. First object's metadata
+(thresholds, headers) is used. 18 unit tests in test-Mem-combine.R.
+
 ## 26jun2026
 
 * Pass more arguments through `plot_mpf()` to internal functions.

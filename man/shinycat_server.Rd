@@ -13,8 +13,8 @@ shinycat_server(input, output, session)
 R-shiny server function for shinycat, internal use by launch_shinycat()
 }
 \seealso{
-Other jam shiny functions: 
-\code{\link{launch_shinycat}()},
-\code{\link{shinycat_ui}()}
+Other jam shiny functions:
+\code{\link[=launch_shinycat]{launch_shinycat()}},
+\code{\link[=shinycat_ui]{shinycat_ui()}}
 }
 \concept{jam shiny functions}

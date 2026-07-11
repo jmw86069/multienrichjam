@@ -59,11 +59,11 @@ im2list(imtf);
 
 }
 \seealso{
-Other jam list functions: 
-\code{\link{colors_from_list}()},
-\code{\link{imSigned2list}()},
-\code{\link{list2concordance}()},
-\code{\link{list2im}()},
-\code{\link{list2imSigned}()}
+Other jam list functions:
+\code{\link[=colors_from_list]{colors_from_list()}},
+\code{\link[=imSigned2list]{imSigned2list()}},
+\code{\link[=list2concordance]{list2concordance()}},
+\code{\link[=list2im]{list2im()}},
+\code{\link[=list2imSigned]{list2imSigned()}}
 }
 \concept{jam list functions}

@@ -283,9 +283,9 @@ by \code{multienrichjam::jam_igraph()}.
 All other arguments are documented in \code{igraph::plot.igraph()}.
 }
 \seealso{
-Other jam igraph internal functions: 
-\code{\link{default_igraph_values}()},
-\code{\link{get_igraph_arrow_mode}()},
-\code{\link{jam_igraph_arrows}()}
+Other jam igraph internal functions:
+\code{\link[=default_igraph_values]{default_igraph_values()}},
+\code{\link[=get_igraph_arrow_mode]{get_igraph_arrow_mode()}},
+\code{\link[=jam_igraph_arrows]{jam_igraph_arrows()}}
 }
 \concept{jam igraph internal functions}

@@ -532,17 +532,17 @@ title(main="edge_bundling='connections'")
 
 }
 \seealso{
-Other multienrichjam core functions: 
-\code{\link{mem_plot_folio}()},
-\code{\link{multiEnrichMap}()}
+Other multienrichjam core functions:
+\code{\link[=mem_plot_folio]{mem_plot_folio()}},
+\code{\link[=multiEnrichMap]{multiEnrichMap()}}
 
-Other jam igraph utilities: 
-\code{\link{color_edges_by_nodegroups}()},
-\code{\link{color_edges_by_nodes}()},
-\code{\link{color_nodes_by_nodegroups}()},
-\code{\link{get_cnet_nodeset}()},
-\code{\link{launch_shinycat}()},
-\code{\link{subgraph_jam}()}
+Other jam igraph utilities:
+\code{\link[=color_edges_by_nodegroups]{color_edges_by_nodegroups()}},
+\code{\link[=color_edges_by_nodes]{color_edges_by_nodes()}},
+\code{\link[=color_nodes_by_nodegroups]{color_nodes_by_nodegroups()}},
+\code{\link[=get_cnet_nodeset]{get_cnet_nodeset()}},
+\code{\link[=launch_shinycat]{launch_shinycat()}},
+\code{\link[=subgraph_jam]{subgraph_jam()}}
 }
 \concept{jam igraph utilities}
 \concept{multienrichjam core functions}

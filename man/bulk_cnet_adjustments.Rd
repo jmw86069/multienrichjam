@@ -67,14 +67,14 @@ In any event, this function is intended to replicated the effect done
 by \code{launch_shinycat()}.
 }
 \seealso{
-Other jam cnet utilities: 
-\code{\link{adjust_cnet_nodeset}()},
-\code{\link{adjust_cnet_set_relayout_gene}()},
-\code{\link{apply_nodeset_spacing}()},
-\code{\link{get_cnet_nodeset}()},
-\code{\link{get_cnet_nodeset_vector}()},
-\code{\link{launch_shinycat}()},
-\code{\link{make_cnet_test}()},
-\code{\link{relayout_nodegroups}()}
+Other jam cnet utilities:
+\code{\link[=adjust_cnet_nodeset]{adjust_cnet_nodeset()}},
+\code{\link[=adjust_cnet_set_relayout_gene]{adjust_cnet_set_relayout_gene()}},
+\code{\link[=apply_nodeset_spacing]{apply_nodeset_spacing()}},
+\code{\link[=get_cnet_nodeset]{get_cnet_nodeset()}},
+\code{\link[=get_cnet_nodeset_vector]{get_cnet_nodeset_vector()}},
+\code{\link[=launch_shinycat]{launch_shinycat()}},
+\code{\link[=make_cnet_test]{make_cnet_test()}},
+\code{\link[=relayout_nodegroups]{relayout_nodegroups()}}
 }
 \concept{jam cnet utilities}

@@ -1,7 +1,7 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.119.900
+Version: 0.0.120.900
 Authors@R: c(
     person(given=c("James", "M."),
        family="Ward",
@@ -66,5 +66,5 @@ URL: https://jmw86069.github.io/multienrichjam/
 BugReports: http://github.com/jmw86069/multienrichjam/issues
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

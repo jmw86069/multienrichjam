@@ -70,11 +70,11 @@ list2imSigned(L2);
 
 }
 \seealso{
-Other jam list functions: 
-\code{\link{colors_from_list}()},
-\code{\link{im2list}()},
-\code{\link{imSigned2list}()},
-\code{\link{list2concordance}()},
-\code{\link{list2im}()}
+Other jam list functions:
+\code{\link[=colors_from_list]{colors_from_list()}},
+\code{\link[=im2list]{im2list()}},
+\code{\link[=imSigned2list]{imSigned2list()}},
+\code{\link[=list2concordance]{list2concordance()}},
+\code{\link[=list2im]{list2im()}}
 }
 \concept{jam list functions}

@@ -22,12 +22,12 @@ which for some unknown reason does not subset the layout
 matrix consistent with the subset of \code{igraph} nodes.
 }
 \seealso{
-Other jam igraph utilities: 
-\code{\link{color_edges_by_nodegroups}()},
-\code{\link{color_edges_by_nodes}()},
-\code{\link{color_nodes_by_nodegroups}()},
-\code{\link{get_cnet_nodeset}()},
-\code{\link{jam_igraph}()},
-\code{\link{launch_shinycat}()}
+Other jam igraph utilities:
+\code{\link[=color_edges_by_nodegroups]{color_edges_by_nodegroups()}},
+\code{\link[=color_edges_by_nodes]{color_edges_by_nodes()}},
+\code{\link[=color_nodes_by_nodegroups]{color_nodes_by_nodegroups()}},
+\code{\link[=get_cnet_nodeset]{get_cnet_nodeset()}},
+\code{\link[=jam_igraph]{jam_igraph()}},
+\code{\link[=launch_shinycat]{launch_shinycat()}}
 }
 \concept{jam igraph utilities}

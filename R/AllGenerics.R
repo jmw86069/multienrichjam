@@ -219,3 +219,5 @@ setGeneric("CaptionLegendList", signature=c("x"),
 setGeneric("CaptionLegendList<-", signature="x",
    function(x, ...) standardGeneric("CaptionLegendList<-")
 )
+
+

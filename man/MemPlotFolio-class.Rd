@@ -350,15 +350,15 @@ CnetCluster(Mpf, cluster="B", use_shadowText=TRUE, main="Cnet Cluster 'B'")
 
 }
 \seealso{
-Other jam Mem utilities: 
+Other jam Mem utilities:
 \code{\link{Mem-class}},
-\code{\link{fixSetLabels}()},
-\code{\link{mem2cnet}()},
-\code{\link{mem2emap}()}
+\code{\link[=fixSetLabels]{fixSetLabels()}},
+\code{\link[=mem2cnet]{mem2cnet()}},
+\code{\link[=mem2emap]{mem2emap()}}
 
-Other MemPlotFolio: 
-\code{\link{check_MemPlotFolio}()},
-\code{\link{score_gene_path_clusters}()}
+Other MemPlotFolio:
+\code{\link[=check_MemPlotFolio]{check_MemPlotFolio()}},
+\code{\link[=score_gene_path_clusters]{score_gene_path_clusters()}}
 }
 \concept{MemPlotFolio}
 \concept{jam Mem utilities}

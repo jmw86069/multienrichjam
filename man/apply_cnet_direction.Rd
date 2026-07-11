@@ -136,7 +136,7 @@ previously did not exist. It would probably optionally also use
 }
 }
 \seealso{
-Other jam cnet igraph functions: 
-\code{\link{rotate_igraph_layout}()}
+Other jam cnet igraph functions:
+\code{\link[=rotate_igraph_layout]{rotate_igraph_layout()}}
 }
 \concept{jam cnet igraph functions}

@@ -27,23 +27,23 @@ typically co-located in the network layout, which works well
 with this style of edge bundling.
 }
 \seealso{
-Other jam igraph functions: 
-\code{\link{communities2nodegroups}()},
-\code{\link{drawEllipse}()},
-\code{\link{edge_bundle_nodegroups}()},
-\code{\link{fixSetLabels}()},
-\code{\link{flip_edges}()},
-\code{\link{get_bipartite_nodeset}()},
-\code{\link{highlight_edges_by_node}()},
-\code{\link{igraph2pieGraph}()},
-\code{\link{label_communities}()},
-\code{\link{mem2cnet}()},
-\code{\link{mem2emap}()},
-\code{\link{nodegroups2communities}()},
-\code{\link{rectifyPiegraph}()},
-\code{\link{removeIgraphBlanks}()},
-\code{\link{subsetCnetIgraph}()},
-\code{\link{subset_igraph_components}()},
-\code{\link{sync_igraph_communities}()}
+Other jam igraph functions:
+\code{\link[=communities2nodegroups]{communities2nodegroups()}},
+\code{\link[=drawEllipse]{drawEllipse()}},
+\code{\link[=edge_bundle_nodegroups]{edge_bundle_nodegroups()}},
+\code{\link[=fixSetLabels]{fixSetLabels()}},
+\code{\link[=flip_edges]{flip_edges()}},
+\code{\link[=get_bipartite_nodeset]{get_bipartite_nodeset()}},
+\code{\link[=highlight_edges_by_node]{highlight_edges_by_node()}},
+\code{\link[=igraph2pieGraph]{igraph2pieGraph()}},
+\code{\link[=label_communities]{label_communities()}},
+\code{\link[=mem2cnet]{mem2cnet()}},
+\code{\link[=mem2emap]{mem2emap()}},
+\code{\link[=nodegroups2communities]{nodegroups2communities()}},
+\code{\link[=rectifyPiegraph]{rectifyPiegraph()}},
+\code{\link[=removeIgraphBlanks]{removeIgraphBlanks()}},
+\code{\link[=subsetCnetIgraph]{subsetCnetIgraph()}},
+\code{\link[=subset_igraph_components]{subset_igraph_components()}},
+\code{\link[=sync_igraph_communities]{sync_igraph_communities()}}
 }
 \concept{jam igraph functions}

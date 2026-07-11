@@ -33,9 +33,9 @@ jamba::ssdim(default_igraph_values())
 
 }
 \seealso{
-Other jam igraph internal functions: 
-\code{\link{get_igraph_arrow_mode}()},
-\code{\link{jam_igraph_arrows}()},
-\code{\link{jam_plot_igraph}()}
+Other jam igraph internal functions:
+\code{\link[=get_igraph_arrow_mode]{get_igraph_arrow_mode()}},
+\code{\link[=jam_igraph_arrows]{jam_igraph_arrows()}},
+\code{\link[=jam_plot_igraph]{jam_plot_igraph()}}
 }
 \concept{jam igraph internal functions}

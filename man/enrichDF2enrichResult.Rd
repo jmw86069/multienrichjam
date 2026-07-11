@@ -85,15 +85,15 @@ This object is supported by other functions in the \code{clusterProfiler}
 suite of tools.
 }
 \seealso{
-Other jam import functions: 
-\code{\link{IPAlist_to_hits}()},
-\code{\link{importIPAenrichment}()}
+Other jam import functions:
+\code{\link[=IPAlist_to_hits]{IPAlist_to_hits()}},
+\code{\link[=importIPAenrichment]{importIPAenrichment()}}
 
-Other jam conversion functions: 
-\code{\link{cnet2df}()},
-\code{\link{cnet2im}()},
-\code{\link{enrichList2IM}()},
-\code{\link{enrichList2df}()}
+Other jam conversion functions:
+\code{\link[=cnet2df]{cnet2df()}},
+\code{\link[=cnet2im]{cnet2im()}},
+\code{\link[=enrichList2IM]{enrichList2IM()}},
+\code{\link[=enrichList2df]{enrichList2df()}}
 }
 \concept{jam conversion functions}
 \concept{jam import functions}

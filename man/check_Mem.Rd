@@ -31,7 +31,7 @@ to prevent the need to access slots directly.
 }
 }
 \seealso{
-Other Mem: 
+Other Mem:
 \code{\link{Mem-class}},
 \code{\link{Mem-data}},
 \code{\link{Mem-slots}}

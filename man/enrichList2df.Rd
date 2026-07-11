@@ -64,10 +64,10 @@ primary count column reports the number of unique genes.
 }
 }
 \seealso{
-Other jam conversion functions: 
-\code{\link{cnet2df}()},
-\code{\link{cnet2im}()},
-\code{\link{enrichDF2enrichResult}()},
-\code{\link{enrichList2IM}()}
+Other jam conversion functions:
+\code{\link[=cnet2df]{cnet2df()}},
+\code{\link[=cnet2im]{cnet2im()}},
+\code{\link[=enrichDF2enrichResult]{enrichDF2enrichResult()}},
+\code{\link[=enrichList2IM]{enrichList2IM()}}
 }
 \concept{jam conversion functions}

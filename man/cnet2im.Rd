@@ -32,10 +32,10 @@ columns are "Set" node names and whose rows are "Gene"
 node names.
 }
 \seealso{
-Other jam conversion functions: 
-\code{\link{cnet2df}()},
-\code{\link{enrichDF2enrichResult}()},
-\code{\link{enrichList2IM}()},
-\code{\link{enrichList2df}()}
+Other jam conversion functions:
+\code{\link[=cnet2df]{cnet2df()}},
+\code{\link[=enrichDF2enrichResult]{enrichDF2enrichResult()}},
+\code{\link[=enrichList2IM]{enrichList2IM()}},
+\code{\link[=enrichList2df]{enrichList2df()}}
 }
 \concept{jam conversion functions}

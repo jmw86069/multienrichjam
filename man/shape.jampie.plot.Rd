@@ -112,16 +112,10 @@ print(igraph::vertex_attr(g1)$pie.color);
 withr::deferred_clear()
 }
 \seealso{
-Other jam igraph shapes: 
-\code{\link{jam_mypie}()},
-\code{\link{shape.coloredrectangle.plot}()},
-\code{\link{shape.ellipse.clip}()},
-\code{\link{shape.ellipse.plot}()}
-
-Other jam igraph shapes: 
-\code{\link{jam_mypie}()},
-\code{\link{shape.coloredrectangle.plot}()},
-\code{\link{shape.ellipse.clip}()},
-\code{\link{shape.ellipse.plot}()}
+Other jam igraph shapes:
+\code{\link[=jam_mypie]{jam_mypie()}},
+\code{\link[=shape.coloredrectangle.plot]{shape.coloredrectangle.plot()}},
+\code{\link[=shape.ellipse.clip]{shape.ellipse.clip()}},
+\code{\link[=shape.ellipse.plot]{shape.ellipse.plot()}}
 }
 \concept{jam igraph shapes}

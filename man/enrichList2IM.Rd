@@ -69,10 +69,10 @@ may be moved to its own proper R package for set and list
 manipulation, without the dependencies incurred by \code{venndir}.
 }
 \seealso{
-Other jam conversion functions: 
-\code{\link{cnet2df}()},
-\code{\link{cnet2im}()},
-\code{\link{enrichDF2enrichResult}()},
-\code{\link{enrichList2df}()}
+Other jam conversion functions:
+\code{\link[=cnet2df]{cnet2df()}},
+\code{\link[=cnet2im]{cnet2im()}},
+\code{\link[=enrichDF2enrichResult]{enrichDF2enrichResult()}},
+\code{\link[=enrichList2df]{enrichList2df()}}
 }
 \concept{jam conversion functions}

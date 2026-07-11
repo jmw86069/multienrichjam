@@ -9,6 +9,7 @@
 \alias{Mem_to_list}
 \alias{as.list,Mem-method}
 \alias{names,Mem-method}
+\alias{names<-,Mem-method}
 \alias{enrichments,Mem-method}
 \alias{enrichments}
 \alias{enrichments<-,Mem-method}
@@ -65,6 +66,7 @@
 \alias{setsByGene}
 \alias{EnrichmentMap,Mem-method}
 \alias{EnrichmentMap}
+\alias{c,Mem-method}
 \title{Mem S4 class, accessors, getters, and setters}
 \usage{
 \S4method{[}{Mem,ANY,ANY,ANY}(x, i, j, k, drop = FALSE)
@@ -76,6 +78,8 @@ Mem_to_list(x, ...)
 \S4method{as.list}{Mem}(x)
 
 \S4method{names}{Mem}(x)
+
+\S4method{names}{Mem}(x) <- value
 
 \S4method{enrichments}{Mem}(x)
 
@@ -154,9 +158,11 @@ list_to_Mem(mem)
   legend_y = NULL,
   ...
 )
+
+\S4method{c}{Mem}(x, ..., recursive = FALSE)
 }
 \arguments{
-\item{x}{\code{Mem} object}
+\item{x}{first \code{Mem} object}
 
 \item{i}{\code{character} or \code{integer} with gene names}
 
@@ -164,11 +170,13 @@ list_to_Mem(mem)
 
 \item{drop}{\code{logical} always set to FALSE for Mem objects.}
 
-\item{...}{additional arguments are ignored}
+\item{...}{additional \code{Mem} objects to combine}
 
 \item{value}{\code{character} vector of names to assign to pathway gene sets}
 
 \item{mem}{\code{list} output from \code{multiEnrichMap()}}
+
+\item{y}{second \code{Mem} object}
 }
 \value{
 \code{Mem_to_list()} returns a \code{list} suitable for other mem functions.
@@ -196,10 +204,33 @@ For the reciprocal, see \code{setsByGene()}.
 \code{setsByGene()} returns a \code{list} named by gene,
 containing \code{character} vectors with associated gene sets.
 For the reciprocal, see \code{geneInCategory()}.
+
+A new \code{Mem} object with combined enrichment data
 }
 \description{
 Mem class containing results from \code{multiEnrichMap()},
 current class version "1.0.0".
+
+Combine two or more \code{Mem} objects by concatenating along the enrichment
+dimension. All input enrichment names must not overlap. Note that in
+some cases, performing new multienrichment may be preferred, in order
+to retain consistent pathways from each enrichment result.
+}
+\details{
+This method combines \code{Mem} objects by adding new enrichments while keeping
+the same genes and sets. This is useful when you have enrichment results
+from different databases (e.g., GO, KEGG) and want to combine them into
+a single \code{Mem} object for integrated visualization and analysis.
+
+The combining process:
+\itemize{
+\item Verifies all input \code{Mem} objects are valid
+\item Checks that all objects have identical genes and sets
+\item Checks that enrichment names do not overlap (error if they do)
+\item Column-binds all enrichment-related matrices
+\item Combines enrichment lists and color vectors
+\item Uses thresholds and headers from the first object
+}
 }
 \section{Functions}{
 \itemize{
@@ -215,6 +246,9 @@ Also includes a list of analysis parameters: topN, and thresholds.
 \item \code{as.list(Mem)}: Coerce S4 \code{Mem} to legacy \code{list} mem format
 
 \item \code{names(Mem)}: Names for the enrichment tests in a Mem object
+
+\item \code{names(Mem) <- value}: Assign enrichment names via \verb{names<-}, equivalent to
+\verb{enrichments<-(x, value)}.
 
 \item \code{enrichments(Mem)}: Names for the enrichment tests in a Mem object
 
@@ -314,6 +348,9 @@ around the alpha hull shaded regions for node groups.
 \item 'do_legend': \code{logical} whether to display the legend
 }
 
+\item \code{c(Mem)}: Combine multiple Mem objects by concatenating
+enrichments (same genes and sets required, overlapping enrichments error)
+
 }}
 \examples{
 # examples for Mem_to_list and as(Mem, "list")
@@ -327,18 +364,22 @@ mem <- as(Memtest, "list")
 Mem <- list_to_Mem(mem)
 
 setsByGene(Memtest)
+# Example assumes you have two Mem objects with same genes/sets
+# but different enrichments (e.g., from different databases)
+# mem_combined <- c(mem_GO, mem_KEGG)
+
 }
 \seealso{
-Other Mem: 
+Other Mem:
 \code{\link{Mem-data}},
 \code{\link{Mem-slots}},
-\code{\link{check_Mem}()}
+\code{\link[=check_Mem]{check_Mem()}}
 
-Other jam Mem utilities: 
+Other jam Mem utilities:
 \code{\link{MemPlotFolio-class}},
-\code{\link{fixSetLabels}()},
-\code{\link{mem2cnet}()},
-\code{\link{mem2emap}()}
+\code{\link[=fixSetLabels]{fixSetLabels()}},
+\code{\link[=mem2cnet]{mem2cnet()}},
+\code{\link[=mem2emap]{mem2emap()}}
 }
 \concept{Mem}
 \concept{jam Mem utilities}

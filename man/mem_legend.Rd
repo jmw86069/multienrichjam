@@ -71,9 +71,9 @@ This function is a simple wrapper around \code{legend()} to add
 a color key to a plot, typically for \code{igraph} plots.
 }
 \seealso{
-Other custom plot functions: 
-\code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_gene_path_heatmap}()},
-\code{\link{plot_mpf}()}
+Other custom plot functions:
+\code{\link[=mem_enrichment_heatmap]{mem_enrichment_heatmap()}},
+\code{\link[=mem_gene_path_heatmap]{mem_gene_path_heatmap()}},
+\code{\link[=plot_mpf]{plot_mpf()}}
 }
 \concept{custom plot functions}

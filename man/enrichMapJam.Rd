@@ -88,10 +88,10 @@ with this filter, and it appears to be a helpful option.
 }
 }
 \seealso{
-Other jam deprecated functions: 
-\code{\link{cnetplotJam}()},
-\code{\link{grid_with_title}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{with_qfr}()}
+Other jam deprecated functions:
+\code{\link[=cnetplotJam]{cnetplotJam()}},
+\code{\link[=grid_with_title]{grid_with_title()}},
+\code{\link[=mem_multienrichplot]{mem_multienrichplot()}},
+\code{\link[=with_qfr]{with_qfr()}}
 }
 \concept{jam deprecated functions}

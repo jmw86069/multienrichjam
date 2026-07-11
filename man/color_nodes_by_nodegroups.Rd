@@ -65,12 +65,12 @@ jam_igraph(cnet2, mark.groups=TRUE)
 
 }
 \seealso{
-Other jam igraph utilities: 
-\code{\link{color_edges_by_nodegroups}()},
-\code{\link{color_edges_by_nodes}()},
-\code{\link{get_cnet_nodeset}()},
-\code{\link{jam_igraph}()},
-\code{\link{launch_shinycat}()},
-\code{\link{subgraph_jam}()}
+Other jam igraph utilities:
+\code{\link[=color_edges_by_nodegroups]{color_edges_by_nodegroups()}},
+\code{\link[=color_edges_by_nodes]{color_edges_by_nodes()}},
+\code{\link[=get_cnet_nodeset]{get_cnet_nodeset()}},
+\code{\link[=jam_igraph]{jam_igraph()}},
+\code{\link[=launch_shinycat]{launch_shinycat()}},
+\code{\link[=subgraph_jam]{subgraph_jam()}}
 }
 \concept{jam igraph utilities}

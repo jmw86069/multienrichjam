@@ -39,7 +39,7 @@ and small steps across the range, using \code{big_tick} and \code{small_tick},
 respectively.
 }
 \seealso{
-Other jam plot functions: 
-\code{\link{adjust_polygon_border}()}
+Other jam plot functions:
+\code{\link[=adjust_polygon_border]{adjust_polygon_border()}}
 }
 \concept{jam plot functions}

@@ -564,8 +564,8 @@ with_ht_opts(list(DIMNAME_PADDING=grid::unit(c(2), "mm")), {
 
 }
 \seealso{
-Other multienrichjam core functions: 
-\code{\link{jam_igraph}()},
-\code{\link{multiEnrichMap}()}
+Other multienrichjam core functions:
+\code{\link[=jam_igraph]{jam_igraph()}},
+\code{\link[=multiEnrichMap]{multiEnrichMap()}}
 }
 \concept{multienrichjam core functions}

@@ -63,11 +63,11 @@ list2im(L1, sort_rows=sort);
 
 }
 \seealso{
-Other jam list functions: 
-\code{\link{colors_from_list}()},
-\code{\link{im2list}()},
-\code{\link{imSigned2list}()},
-\code{\link{list2concordance}()},
-\code{\link{list2imSigned}()}
+Other jam list functions:
+\code{\link[=colors_from_list]{colors_from_list()}},
+\code{\link[=im2list]{im2list()}},
+\code{\link[=imSigned2list]{imSigned2list()}},
+\code{\link[=list2concordance]{list2concordance()}},
+\code{\link[=list2imSigned]{list2imSigned()}}
 }
 \concept{jam list functions}

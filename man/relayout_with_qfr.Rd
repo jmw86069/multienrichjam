@@ -52,13 +52,13 @@ and node label positions in one step,
 while also returning the \code{igraph} object ready to be plotted as-is.
 }
 \seealso{
-Other jam igraph layouts: 
-\code{\link{layout_communities}()},
-\code{\link{layout_with_qfr}()},
-\code{\link{layout_with_qfrf}()},
-\code{\link{removeIgraphSinglets}()},
-\code{\link{reorderIgraphNodes}()},
-\code{\link{rotate_igraph_layout}()},
-\code{\link{spread_igraph_labels}()}
+Other jam igraph layouts:
+\code{\link[=layout_communities]{layout_communities()}},
+\code{\link[=layout_with_qfr]{layout_with_qfr()}},
+\code{\link[=layout_with_qfrf]{layout_with_qfrf()}},
+\code{\link[=removeIgraphSinglets]{removeIgraphSinglets()}},
+\code{\link[=reorderIgraphNodes]{reorderIgraphNodes()}},
+\code{\link[=rotate_igraph_layout]{rotate_igraph_layout()}},
+\code{\link[=spread_igraph_labels]{spread_igraph_labels()}}
 }
 \concept{jam igraph layouts}

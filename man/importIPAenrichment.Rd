@@ -244,8 +244,8 @@ ipalist <- importIPAenrichment(ipaFile)
 
 }
 \seealso{
-Other jam import functions: 
-\code{\link{IPAlist_to_hits}()},
-\code{\link{enrichDF2enrichResult}()}
+Other jam import functions:
+\code{\link[=IPAlist_to_hits]{IPAlist_to_hits()}},
+\code{\link[=enrichDF2enrichResult]{enrichDF2enrichResult()}}
 }
 \concept{jam import functions}

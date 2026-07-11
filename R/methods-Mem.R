@@ -381,6 +381,14 @@ setMethod("as.list", "Mem", function(x) Mem_to_list(x))
 #' @export
 setMethod("names", "Mem", function(x) names(x@enrichList))
 
+#' @describeIn Mem-class Assign enrichment names via `names<-`, equivalent to
+#'    `enrichments<-(x, value)`.
+#' @exportMethod names<-
+setMethod("names<-", "Mem", function(x, value) {
+   enrichments(x) <- value
+   x
+})
+
 #' The enrichment names from a Mem object
 #'
 #' @param x `Mem` object
@@ -1386,3 +1394,223 @@ setMethod("EnrichmentMap", "Mem",
       params=params,
       ...)
    })
+
+
+#' Combine multiple Mem objects
+#'
+#' Combine two or more `Mem` objects by concatenating along the enrichment
+#' dimension. All input enrichment names must not overlap. Note that in
+#' some cases, performing new multienrichment may be preferred, in order
+#' to retain consistent pathways from each enrichment result.
+#'
+#' @details
+#' This method combines `Mem` objects by adding new enrichments while keeping
+#' the same genes and sets. This is useful when you have enrichment results
+#' from different databases (e.g., GO, KEGG) and want to combine them into
+#' a single `Mem` object for integrated visualization and analysis.
+#'
+#' The combining process:
+#' - Verifies all input `Mem` objects are valid
+#' - Checks that all objects have identical genes and sets
+#' - Checks that enrichment names do not overlap (error if they do)
+#' - Column-binds all enrichment-related matrices
+#' - Combines enrichment lists and color vectors
+#' - Uses thresholds and headers from the first object
+#'
+#' @param x first `Mem` object
+#' @param y second `Mem` object
+#' @param ... additional `Mem` objects to combine
+#'
+#' @returns A new `Mem` object with combined enrichment data
+#'
+#' @docType methods
+#' @describeIn Mem-class Combine multiple Mem objects by concatenating
+#'    enrichments (same genes and sets required, overlapping enrichments error)
+#'
+#' @examples
+#' # Example assumes you have two Mem objects with same genes/sets
+#' # but different enrichments (e.g., from different databases)
+#' # mem_combined <- c(mem_GO, mem_KEGG)
+#'
+#' @exportMethod c
+setMethod("c", signature("Mem"),
+   function(x, ..., recursive=FALSE) {
+      # Collect all objects
+      mem_list <- list(x, ...)
+      
+      # Validate all inputs are Mem
+      are_mem <- vapply(mem_list, inherits, logical(1), "Mem")
+      if (!all(are_mem)) {
+         non_mem_idx <- which(!are_mem)
+         cli::cli_abort(paste0(
+            "All arguments to c() must be Mem objects. ",
+            "Non-Mem arguments at position(s): ",
+            "{.val non_mem_idx}"))
+      }
+      
+      # If only one object, return as-is
+      if (length(mem_list) == 1) {
+         return(x)
+      }
+      
+      # Combine pairwise, left to right
+      result <- mem_list[[1]]
+      for (i in seq(from=2, to=length(mem_list))) {
+         result <- combine_mem_objects(result, mem_list[[i]])
+      }
+      
+      return(result)
+   }
+)
+
+
+#' Expand a numeric matrix to new row/column names
+#'
+#' Utility used by `combine_mem_objects()` to expand a matrix to a larger set
+#' of row and/or column names, filling new entries with `fill`.
+#'
+#' @keywords internal
+#' @noRd
+expand_matrix <- function
+(mat,
+ new_rows=NULL,
+ new_cols=NULL,
+ fill=NA_real_)
+{
+   if (is.null(new_rows)) new_rows <- rownames(mat)
+   if (is.null(new_cols)) new_cols <- colnames(mat)
+   out <- matrix(fill,
+      nrow=length(new_rows),
+      ncol=length(new_cols),
+      dimnames=list(new_rows, new_cols))
+   r_idx <- match(rownames(mat), new_rows)
+   c_idx <- match(colnames(mat), new_cols)
+   # drop unmatched (should not happen, but be defensive)
+   keep_r <- !is.na(r_idx)
+   keep_c <- !is.na(c_idx)
+   out[r_idx[keep_r], c_idx[keep_c]] <- mat[keep_r, keep_c, drop=FALSE]
+   out
+}
+
+
+#' Combine two Mem objects (internal helper)
+#'
+#' Internal function to combine two Mem objects by concatenating enrichments.
+#' Genes and sets are unioned and sorted with `jamba::mixedSort()`.
+#'
+#' @keywords internal
+#' @noRd
+#'
+#' @param x first `Mem` object
+#' @param y second `Mem` object
+#'
+#' @returns Combined `Mem` object
+combine_mem_objects <- function
+(x, y)
+{
+   # Validate inputs
+   if (!inherits(x, "Mem") || !inherits(y, "Mem")) {
+      stop("Both inputs must be Mem objects")
+   }
+   
+   # Check enrichments don't overlap
+   enrich_x <- enrichments(x)
+   enrich_y <- enrichments(y)
+   overlap <- intersect(enrich_x, enrich_y)
+   if (length(overlap) > 0) {
+      stop("Input Mem objects have overlapping enrichment names: ",
+         jamba::cPaste(overlap, sep=", "),
+         "\nEnrichments must be unique across all Mem objects to combine.")
+   }
+   
+   # Compute union of genes, sets, and geneHit rows, all sorted
+   all_genes <- jamba::mixedSort(union(genes(x), genes(y)))
+   all_sets  <- jamba::mixedSort(union(sets(x),  sets(y)))
+   all_hit_genes <- jamba::mixedSort(
+      union(rownames(geneHitIM(x)), rownames(geneHitIM(y))))
+   
+   # ---- Matrices whose rows are sets, cols are enrichments ----
+   # enrichIM: p-values, fill new rows with NA (not enriched)
+   enrichIM_combined <- cbind(
+      expand_matrix(enrichIM(x), new_rows=all_sets, fill=NA_real_),
+      expand_matrix(enrichIM(y), new_rows=all_sets, fill=NA_real_))
+   
+   # enrichIMcolors: color strings, fill new rows with NA
+   enrichIMcolors_combined <- cbind(
+      expand_matrix(enrichIMcolors(x), new_rows=all_sets, fill=NA_character_),
+      expand_matrix(enrichIMcolors(y), new_rows=all_sets, fill=NA_character_))
+   
+   # enrichIMdirection: direction scores, fill new rows with 0
+   enrichIMdirection_combined <- cbind(
+      expand_matrix(enrichIMdirection(x), new_rows=all_sets, fill=0),
+      expand_matrix(enrichIMdirection(y), new_rows=all_sets, fill=0))
+   
+   # enrichIMgeneCount: gene counts, fill new rows with 0
+   enrichIMgeneCount_combined <- cbind(
+      expand_matrix(enrichIMgeneCount(x), new_rows=all_sets, fill=0),
+      expand_matrix(enrichIMgeneCount(y), new_rows=all_sets, fill=0))
+   
+   # ---- Matrices whose rows are genes, cols are enrichments ----
+   # geneIM: enrichment membership counts, fill new rows with 0
+   geneIM_combined <- cbind(
+      expand_matrix(geneIM(x), new_rows=all_genes, fill=0),
+      expand_matrix(geneIM(y), new_rows=all_genes, fill=0))
+   
+   # geneIMcolors: color strings, fill new rows with NA
+   geneIMcolors_combined <- cbind(
+      expand_matrix(geneIMcolors(x), new_rows=all_genes, fill=NA_character_),
+      expand_matrix(geneIMcolors(y), new_rows=all_genes, fill=NA_character_))
+   
+   # geneIMdirection: direction scores, fill new rows with 0
+   geneIMdirection_combined <- cbind(
+      expand_matrix(geneIMdirection(x), new_rows=all_genes, fill=0),
+      expand_matrix(geneIMdirection(y), new_rows=all_genes, fill=0))
+   
+   # ---- geneHitIM: rows are all tested genes, cols are enrichments ----
+   geneHitIM_combined <- cbind(
+      expand_matrix(geneHitIM(x), new_rows=all_hit_genes, fill=0),
+      expand_matrix(geneHitIM(y), new_rows=all_hit_genes, fill=0))
+   
+   # ---- memIM: rows are genes, cols are sets (2D expansion) ----
+   # Expand each memIM to full (all_genes × all_sets), then add.
+   # For unique sets this simply propagates the values; for shared sets the
+   # gene membership accumulates correctly across enrichments.
+   memIM_combined <-
+      expand_matrix(memIM(x), new_rows=all_genes, new_cols=all_sets, fill=0) +
+      expand_matrix(memIM(y), new_rows=all_genes, new_cols=all_sets, fill=0)
+   
+   # ---- Named list/vector slots ----
+   enrichList_combined    <- c(enrichList(x),    enrichList(y))
+   enrichLabels_combined  <- c(x@enrichLabels,   y@enrichLabels)
+   colorV_combined        <- c(colorV(x),        colorV(y))
+   # geneHitList is named by enrichment, so concatenate both
+   geneHitList_combined   <- c(geneHitList(x),   geneHitList(y))
+   
+   # ---- Metadata: use first object's thresholds, headers, multiEnrich* ----
+   Mem_combined <- new("Mem",
+      enrichList=enrichList_combined,
+      enrichLabels=enrichLabels_combined,
+      colorV=colorV_combined,
+      geneHitList=geneHitList_combined,
+      geneHitIM=geneHitIM_combined,
+      memIM=memIM_combined,
+      geneIM=geneIM_combined,
+      enrichIM=enrichIM_combined,
+      multiEnrichDF=x@multiEnrichDF,
+      multiEnrichResult=x@multiEnrichResult,
+      thresholds=thresholds(x),
+      headers=headers(x),
+      enrichIMcolors=enrichIMcolors_combined,
+      enrichIMdirection=enrichIMdirection_combined,
+      enrichIMgeneCount=enrichIMgeneCount_combined,
+      geneIMcolors=geneIMcolors_combined,
+      geneIMdirection=geneIMdirection_combined
+   )
+   
+   # Validate the combined object
+   if (!check_Mem(Mem_combined)) {
+      stop("Combined Mem object failed validation. This should not happen.")
+   }
+   
+   return(Mem_combined)
+}

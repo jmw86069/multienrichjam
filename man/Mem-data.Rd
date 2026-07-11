@@ -74,10 +74,10 @@ head(names(Reese_genes$OlderChildren))
 
 }
 \seealso{
-Other Mem: 
+Other Mem:
 \code{\link{Mem-class}},
 \code{\link{Mem-slots}},
-\code{\link{check_Mem}()}
+\code{\link[=check_Mem]{check_Mem()}}
 }
 \concept{Mem}
 \keyword{datasets}

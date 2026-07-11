@@ -14,10 +14,10 @@ This function defines the clipping function for custom igraph vertex
 shape ellipse.
 }
 \seealso{
-Other jam igraph shapes: 
-\code{\link{jam_mypie}()},
-\code{\link{shape.coloredrectangle.plot}()},
-\code{\link{shape.ellipse.plot}()},
-\code{\link{shape.jampie.plot}()}
+Other jam igraph shapes:
+\code{\link[=jam_mypie]{jam_mypie()}},
+\code{\link[=shape.coloredrectangle.plot]{shape.coloredrectangle.plot()}},
+\code{\link[=shape.ellipse.plot]{shape.ellipse.plot()}},
+\code{\link[=shape.jampie.plot]{shape.jampie.plot()}}
 }
 \concept{jam igraph shapes}

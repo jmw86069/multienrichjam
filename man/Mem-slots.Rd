@@ -102,9 +102,9 @@ Values are the number of genes involved in the enrichment of each pathway.
 }
 
 \seealso{
-Other Mem: 
+Other Mem:
 \code{\link{Mem-class}},
 \code{\link{Mem-data}},
-\code{\link{check_Mem}()}
+\code{\link[=check_Mem]{check_Mem()}}
 }
 \concept{Mem}

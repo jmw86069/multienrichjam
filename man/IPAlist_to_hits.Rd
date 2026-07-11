@@ -57,8 +57,8 @@ produce a single \code{list} or incidence \code{matrix} representing
 all gene hits tested by IPA.
 }
 \seealso{
-Other jam import functions: 
-\code{\link{enrichDF2enrichResult}()},
-\code{\link{importIPAenrichment}()}
+Other jam import functions:
+\code{\link[=enrichDF2enrichResult]{enrichDF2enrichResult()}},
+\code{\link[=importIPAenrichment]{importIPAenrichment()}}
 }
 \concept{jam import functions}

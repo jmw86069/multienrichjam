@@ -113,10 +113,10 @@ Then call this function with increasing \code{overlap} until the
 visualization has insightful structure.
 }
 \seealso{
-Other jam deprecated functions: 
-\code{\link{cnetplotJam}()},
-\code{\link{enrichMapJam}()},
-\code{\link{grid_with_title}()},
-\code{\link{with_qfr}()}
+Other jam deprecated functions:
+\code{\link[=cnetplotJam]{cnetplotJam()}},
+\code{\link[=enrichMapJam]{enrichMapJam()}},
+\code{\link[=grid_with_title]{grid_with_title()}},
+\code{\link[=with_qfr]{with_qfr()}}
 }
 \concept{jam deprecated functions}

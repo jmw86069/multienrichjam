@@ -96,13 +96,13 @@ of each node. There is no other logic to position small or
 large labels to avoid overlapping labels.
 }
 \seealso{
-Other jam igraph layouts: 
-\code{\link{layout_communities}()},
-\code{\link{layout_with_qfr}()},
-\code{\link{layout_with_qfrf}()},
-\code{\link{relayout_with_qfr}()},
-\code{\link{removeIgraphSinglets}()},
-\code{\link{reorderIgraphNodes}()},
-\code{\link{rotate_igraph_layout}()}
+Other jam igraph layouts:
+\code{\link[=layout_communities]{layout_communities()}},
+\code{\link[=layout_with_qfr]{layout_with_qfr()}},
+\code{\link[=layout_with_qfrf]{layout_with_qfrf()}},
+\code{\link[=relayout_with_qfr]{relayout_with_qfr()}},
+\code{\link[=removeIgraphSinglets]{removeIgraphSinglets()}},
+\code{\link[=reorderIgraphNodes]{reorderIgraphNodes()}},
+\code{\link[=rotate_igraph_layout]{rotate_igraph_layout()}}
 }
 \concept{jam igraph layouts}

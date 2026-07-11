@@ -81,7 +81,7 @@ direction <- log2(1.2 + abs(direction_1)) * sign(direction_1)
 }
 }
 \seealso{
-Other jam enrichment functions: 
-\code{\link{topEnrichBySource}()}
+Other jam enrichment functions:
+\code{\link[=topEnrichBySource]{topEnrichBySource()}}
 }
 \concept{jam enrichment functions}

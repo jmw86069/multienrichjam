@@ -20,8 +20,9 @@ plot_mpf(
   c_cluster = NULL,
   em_group = NULL,
   Mem = NULL,
-  params = list(em = list(repulse = 3.5, node_factor = 1, width = 30), cc = list(repulse
-    = 3.5, node_factor = 1), ce = list(node_factor = 1), c = list(node_factor = 1)),
+  params = list(eh = list(do_plot = TRUE), em = list(repulse = 3.5, node_factor = 1,
+    width = 30), cc = list(repulse = 3.5, node_factor = 1), ce = list(node_factor = 1), c
+    = list(node_factor = 1)),
   do_newpage = NULL,
   verbose = FALSE,
   ...
@@ -220,9 +221,9 @@ or event-driven data for each pathway or gene cluster.
 }
 }
 \seealso{
-Other custom plot functions: 
-\code{\link{mem_enrichment_heatmap}()},
-\code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()}
+Other custom plot functions:
+\code{\link[=mem_enrichment_heatmap]{mem_enrichment_heatmap()}},
+\code{\link[=mem_gene_path_heatmap]{mem_gene_path_heatmap()}},
+\code{\link[=mem_legend]{mem_legend()}}
 }
 \concept{custom plot functions}

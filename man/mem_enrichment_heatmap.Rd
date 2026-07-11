@@ -32,6 +32,9 @@ mem_enrichment_heatmap(
   cex.axis = 1,
   lens = 3,
   cexCellnote = 1,
+  placementCellnote = c("center", "bottomleft", "bottom", "bottomright", "right",
+    "topleft", "top", "topright", "left"),
+  fontCellnote = 2,
   column_title = NULL,
   row_names_max_width = grid::unit(300, "mm"),
   column_names_max_height = grid::unit(300, "mm"),
@@ -232,9 +235,9 @@ representing biologically-driven pathway clusters.
 }
 }
 \seealso{
-Other custom plot functions: 
-\code{\link{mem_gene_path_heatmap}()},
-\code{\link{mem_legend}()},
-\code{\link{plot_mpf}()}
+Other custom plot functions:
+\code{\link[=mem_gene_path_heatmap]{mem_gene_path_heatmap()}},
+\code{\link[=mem_legend]{mem_legend()}},
+\code{\link[=plot_mpf]{plot_mpf()}}
 }
 \concept{custom plot functions}

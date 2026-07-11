@@ -1,3 +1,16 @@
+# multienrichjam 0.0.120.900
+
+## New methods
+
+* `c()` will combine multiple `Mem` objects. While potentially
+powerful, in hindsight it may be more useful to repeat the
+`multiEnrichMap()` with the original input data.
+More to be done in this space in future, notably to enable
+`rbind()` functionality to append multiple results to the
+same enrichment names.
+* `names()<-` now works like `enrichments()<-` to assign names,
+which are enrichment names, in `Mem` objects.
+
 # multienrichjam 0.0.119.900
 
 ## Changes

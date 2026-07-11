@@ -18,8 +18,8 @@ Internal use by \code{launch_shinycat()}, this function provides the
 'ui' component for the R-shiny app.
 }
 \seealso{
-Other jam shiny functions: 
-\code{\link{launch_shinycat}()},
-\code{\link{shinycat_server}()}
+Other jam shiny functions:
+\code{\link[=launch_shinycat]{launch_shinycat()}},
+\code{\link[=shinycat_server]{shinycat_server()}}
 }
 \concept{jam shiny functions}

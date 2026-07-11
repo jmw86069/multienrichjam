@@ -43,5 +43,10 @@ Useful links:
 \author{
 \strong{Maintainer}: James M. Ward \email{jmw86069@gmail.com} (\href{https://orcid.org/0000-0002-9510-2848}{ORCID}) [copyright holder]
 
+Authors:
+\itemize{
+  \item James M. Ward \email{jmw86069@gmail.com} (\href{https://orcid.org/0000-0002-9510-2848}{ORCID}) [copyright holder]
+}
+
 }
 \keyword{internal}

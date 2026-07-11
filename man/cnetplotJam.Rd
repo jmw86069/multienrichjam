@@ -76,10 +76,10 @@ where \code{nodeType="Gene"} identifies gene nodes, and \code{nodeType="Set"}
 identifies pathway/gene set nodes.
 }
 \seealso{
-Other jam deprecated functions: 
-\code{\link{enrichMapJam}()},
-\code{\link{grid_with_title}()},
-\code{\link{mem_multienrichplot}()},
-\code{\link{with_qfr}()}
+Other jam deprecated functions:
+\code{\link[=enrichMapJam]{enrichMapJam()}},
+\code{\link[=grid_with_title]{grid_with_title()}},
+\code{\link[=mem_multienrichplot]{mem_multienrichplot()}},
+\code{\link[=with_qfr]{with_qfr()}}
 }
 \concept{jam deprecated functions}

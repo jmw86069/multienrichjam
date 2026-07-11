@@ -42,10 +42,10 @@ for the connected component containing a node of interest, or
 filter for \code{"Set"} nodes with more than one \code{"Gene"}.
 }
 \seealso{
-Other jam conversion functions: 
-\code{\link{cnet2im}()},
-\code{\link{enrichDF2enrichResult}()},
-\code{\link{enrichList2IM}()},
-\code{\link{enrichList2df}()}
+Other jam conversion functions:
+\code{\link[=cnet2im]{cnet2im()}},
+\code{\link[=enrichDF2enrichResult]{enrichDF2enrichResult()}},
+\code{\link[=enrichList2IM]{enrichList2IM()}},
+\code{\link[=enrichList2df]{enrichList2df()}}
 }
 \concept{jam conversion functions}

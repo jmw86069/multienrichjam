@@ -241,8 +241,8 @@ argument \code{colorV}, otherwise colors are assigned using
 
 }
 \seealso{
-Other multienrichjam core functions: 
-\code{\link{jam_igraph}()},
-\code{\link{mem_plot_folio}()}
+Other multienrichjam core functions:
+\code{\link[=jam_igraph]{jam_igraph()}},
+\code{\link[=mem_plot_folio]{mem_plot_folio()}}
 }
 \concept{multienrichjam core functions}

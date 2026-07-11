@@ -61,8 +61,8 @@ jam_igraph(gpnet)
 
 }
 \seealso{
-Other MemPlotFolio: 
+Other MemPlotFolio:
 \code{\link{MemPlotFolio-class}},
-\code{\link{check_MemPlotFolio}()}
+\code{\link[=check_MemPlotFolio]{check_MemPlotFolio()}}
 }
 \concept{MemPlotFolio}

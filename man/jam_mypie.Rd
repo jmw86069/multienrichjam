@@ -107,10 +107,10 @@ or \code{V(g)[2]$frame.color <- NA}.
 
 }
 \seealso{
-Other jam igraph shapes: 
-\code{\link{shape.coloredrectangle.plot}()},
-\code{\link{shape.ellipse.clip}()},
-\code{\link{shape.ellipse.plot}()},
-\code{\link{shape.jampie.plot}()}
+Other jam igraph shapes:
+\code{\link[=shape.coloredrectangle.plot]{shape.coloredrectangle.plot()}},
+\code{\link[=shape.ellipse.clip]{shape.ellipse.clip()}},
+\code{\link[=shape.ellipse.plot]{shape.ellipse.plot()}},
+\code{\link[=shape.jampie.plot]{shape.jampie.plot()}}
 }
 \concept{jam igraph shapes}

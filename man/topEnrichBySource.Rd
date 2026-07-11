@@ -217,10 +217,7 @@ be included for all enrichments for the purpose of
 comparative analysis.
 }
 \seealso{
-Other jam enrichment functions: 
-\code{\link{add_pathway_direction}()}
-
-Other jam enrichment functions: 
-\code{\link{add_pathway_direction}()}
+Other jam enrichment functions:
+\code{\link[=add_pathway_direction]{add_pathway_direction()}}
 }
 \concept{jam enrichment functions}

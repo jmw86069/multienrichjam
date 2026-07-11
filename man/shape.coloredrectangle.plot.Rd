@@ -68,6 +68,10 @@ optional frame border.
 border so it does not overlap inner borders, adding some height and width
 to the final node. The frame border is drawn before the
 node squares are drawn.
+\item \strong{New 0.0.119.900}: Each square can display a text label via
+\code{coloredrect.label} and sized with \code{coloredrect.label.cex}. It will
+use graph attribute 'use_shadowText' to enable \code{jamba::shadowText()}
+to draw the label.
 \item The size of each square inside the rectangle is defined by \code{size2},
 such that the rectangle width is \code{coloredrect.ncol * size2} and
 the rectangle height is \code{coloredrect.nrow * size2}.
@@ -155,13 +159,21 @@ igraph::V(g1)$coloredrect.color <- lapply(vseq, function(i){
 })
 igraph::V(g1)$coloredrect.ncol <- c(2, 2, 2, 1, 1);
 igraph::V(g1)$coloredrect.nrow <- c(2, 1, 1, 2, 1);
-igraph::V(g1)$coloredrect.lwd <- rep(3, igraph::vcount(g1))
+igraph::V(g1)$coloredrect.lwd <- rep(4, igraph::vcount(g1))
 igraph::V(g1)$frame.width <- c(2, 1, 1, 1, 1);
 igraph::V(g1)$frame.color <- "black"
 igraph::V(g1)$size2 <- 10;
 igraph::V(g1)$shape <- "coloredrectangle";
 
-jam_igraph(g1, vertex.label="")
+igraph::V(g1)$coloredrect.label <- lapply(igraph::V(g1)$coloredrect.color,
+   function(i){
+   head(LETTERS, length(i))
+})
+igraph::V(g1)$coloredrect.label.cex <- 2;
+
+igraph::graph_attr(g1, "use_shadowText") <- TRUE;
+jam_igraph(g1, label_factor=2)
+
 title(font.main=1, line=1.5, main=paste0(
    "Each square is consistent size by vertex.size2\n"))
 title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -188,16 +200,10 @@ title(font.main=1, cex.main=1, line=0.5, main=paste0(
 \seealso{
 \code{igraph::shapes()}
 
-Other jam igraph shapes: 
-\code{\link{jam_mypie}()},
-\code{\link{shape.ellipse.clip}()},
-\code{\link{shape.ellipse.plot}()},
-\code{\link{shape.jampie.plot}()}
-
-Other jam igraph shapes: 
-\code{\link{jam_mypie}()},
-\code{\link{shape.ellipse.clip}()},
-\code{\link{shape.ellipse.plot}()},
-\code{\link{shape.jampie.plot}()}
+Other jam igraph shapes:
+\code{\link[=jam_mypie]{jam_mypie()}},
+\code{\link[=shape.ellipse.clip]{shape.ellipse.clip()}},
+\code{\link[=shape.ellipse.plot]{shape.ellipse.plot()}},
+\code{\link[=shape.jampie.plot]{shape.jampie.plot()}}
 }
 \concept{jam igraph shapes}

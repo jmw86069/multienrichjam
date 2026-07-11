@@ -94,13 +94,13 @@ plot(g, main="layout_with_qfr, repulse=6\n(qgraph custom)",
 \seealso{
 \code{qgraph::qgraph.layout.fruchtermanreingold()}
 
-Other jam igraph layouts: 
-\code{\link{layout_communities}()},
-\code{\link{layout_with_qfrf}()},
-\code{\link{relayout_with_qfr}()},
-\code{\link{removeIgraphSinglets}()},
-\code{\link{reorderIgraphNodes}()},
-\code{\link{rotate_igraph_layout}()},
-\code{\link{spread_igraph_labels}()}
+Other jam igraph layouts:
+\code{\link[=layout_communities]{layout_communities()}},
+\code{\link[=layout_with_qfrf]{layout_with_qfrf()}},
+\code{\link[=relayout_with_qfr]{relayout_with_qfr()}},
+\code{\link[=removeIgraphSinglets]{removeIgraphSinglets()}},
+\code{\link[=reorderIgraphNodes]{reorderIgraphNodes()}},
+\code{\link[=rotate_igraph_layout]{rotate_igraph_layout()}},
+\code{\link[=spread_igraph_labels]{spread_igraph_labels()}}
 }
 \concept{jam igraph layouts}
