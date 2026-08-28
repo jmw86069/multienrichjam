@@ -49,7 +49,7 @@
 #'    When no genes in a gene set are present in `gene_hits` the
 #'    expected directional value is `NA`.
 #'
-#' @param x `enrichResult` object as returned by `clusterProfiler::enricher()`
+#' @param x `enrichResult` object as used with `clusterProfiler`
 #' @param gene_hits `numeric` vector, with values `c(-1, 1)` to
 #'    indicate up or down, respectively, and whose `names(gene_hits)`
 #'    should match the gene symbols (or values) in `x@result$geneID`.
@@ -63,18 +63,20 @@
 #' @param ... additional arguments are ignored.
 #'
 #' @export
-add_pathway_direction <- function
-(x,
- gene_hits,
- delim="/",
- dir_colname="z-score",
- verbose=FALSE,
- ...)
-{
+add_pathway_direction <- function(
+   x,
+   gene_hits,
+   delim="/",
+   dir_colname="z-score",
+   verbose=FALSE,
+   ...
+) {
    #
    result_genes <- strsplit(x@result$geneID, delim);
-   result_genes_im <- venndir::list2im_opt(result_genes,
-      do_sparse=FALSE)
+
+   # result_genes_im <- venndir::list2im_opt(result_genes, do_sparse=FALSE)
+   result_genes_im <- list2im(result_genes)
+
    if (is.list(gene_hits)) {
       if (length(gene_hits) > 1) {
          stop("gene_hits may be a list of length one, or a single vector.")
@@ -84,11 +86,12 @@ add_pathway_direction <- function
    if (!is.numeric(gene_hits)) {
       gene_hits <- as.numeric(gene_hits);
    }
-   if (any(is.na(gene_hits))) {
+   if (anyNA(gene_hits)) {
       stop("gene_hits must be numeric, coercible to numeric, and must not contain NA values.")
    }
-   gene_hits_im <- venndir::list2im_value(list(hits=gene_hits),
-      do_sparse=FALSE)
+
+   # gene_hits_im <- venndir::list2im_value(list(hits=gene_hits), do_sparse=FALSE)
+   gene_hits_im <- list2imSigned(list(hits=gene_hits), emptyValue=0)
 
    if (verbose > 1) {
       jamba::printDebug("add_pathway_direction(): ",

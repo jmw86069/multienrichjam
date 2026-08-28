@@ -9,6 +9,9 @@ check_MemPlotFolio(object)
 \arguments{
 \item{object}{\code{MemPlotFolio} object}
 }
+\value{
+\code{logical} whether the object is valid.
+}
 \description{
 Check whether a MemPlotFolio object is valid.
 }

@@ -1,5 +1,62 @@
 # TODO
 
+## 27aug2026
+
+* Consider an approach with one object `Mem` and `Mpf` is optional.
+
+   * Internally it stores settings, basic clustering results.
+   * Methods `EnrichmentHeatmap()` become wrapper for actual method,
+   calculates it on the fly, which is more flexible.
+   * Store less results, store mostly the key parameters to define
+   clusters.
+
+## 24aug2026
+
+* `MemPlotFolio`
+
+   * Subset functions: by GeneClusters, Clusters.
+   * Would be nice to subset and create `GenePathHeatmap()` for
+   specific Cluster and GeneCluster, to "zoom in".
+   * Test `InteractiveComplexHeatmap()` for `GenePathHeatmap()`.
+   Main goal is to zoom into specific clusters, zoom back out.
+   * When `ClusterLabels()` are defined, the print method should be
+   'A: Cluster Label', 'B: Cluster Label' and on multiple lines.
+
+* `EnrichmentHeatmap()`
+
+   * adjust `row_title_gp` after `prepare_folio()`
+   * Generally, allow more customizations, somehow, even if it
+   means creating a new heatmap to do so.
+   * Test some way of defining `hm_cell_size` using 'snpc' units to
+   maintain square cells, while keeping point size consistent?
+   E.g. point size could use some multiple of the max cell size.
+
+## 20aug2026
+
+* `prepare_folio()` support `rotate_heatmap=TRUE` for GP heatmap,
+update validation method, etc.
+* GenePathHeatmap, display `ClusterLabels()` somehow.
+   * Consider "flip axis" view?
+* GenePathHeatmap, options for enrichment P-value
+   * Straight P-value color using "Reds"
+   * Color by enrichDirection
+* GenePathHeatmap and EnrichmentHeatmap should display 'topEnrichN'.
+* Convnience function: Take `enrichResult@result`, make it pretty:
+Run `fixSetNames()` on 'Description'.
+Put all 'geneID*' columns last.
+Create attribute 'colWidths' for kable or Excel.
+Create attribute 'color_list' with colors.
+* Convenience function: color_list for enrichResult.
+* Convenience function: color gradient function for P-values,
+which applies a P-value cutoff.
+Bonus points: Make it work with signed P-values.
+* Consider novel GenePathHeatmap clustering options.
+
+   * One cluster is often "miscellaneous" and not well-defined.
+   * Consider scoring clusters by cohesiveness.
+   * Consider methods to use clusters above cohesiveness threshold.
+   * Consider splitting "miscellaneous" clusters above N.
+
 ## 10jul2026
 
 * DONE. Add `c()` to combine two or more Mem objects.
@@ -7,6 +64,8 @@ Genes and sets are unioned (jamba::mixedSort), matrices expanded
 with appropriate fill values (0 for numeric, NA for p-values/colors).
 Overlapping enrichment names raise an error. First object's metadata
 (thresholds, headers) is used. 18 unit tests in test-Mem-combine.R.
+* Add `EnrichmentMap()` method for `Mem` and `MemPlotFolio` classes,
+update `plot_mpf()` params with common options, notably 'overlap'.
 
 ## 26jun2026
 

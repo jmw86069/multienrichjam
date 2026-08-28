@@ -65,6 +65,8 @@ nodes with the same edges, typically most common in a cnet
 plot where many gene nodes may be connected to the same
 pathway set nodes.}
 
+\item{repulse}{\code{numeric} used for layout when necessary.}
+
 \item{layout}{function that takes \code{igraph} object and returns a
 numeric matrix of node coordinates. This function is only
 called when \code{force_relayout=TRUE}, and must be supplied as
@@ -75,6 +77,9 @@ do so with \code{igraph::set_graph_attr(g, "layout", layout)}.}
 \item{verbose}{logical indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
+}
+\value{
+\code{igraph} after subset operations.
 }
 \description{
 Subset Cnet igraph
@@ -115,7 +120,6 @@ Other jam igraph functions:
 \code{\link[=flip_edges]{flip_edges()}},
 \code{\link[=get_bipartite_nodeset]{get_bipartite_nodeset()}},
 \code{\link[=highlight_edges_by_node]{highlight_edges_by_node()}},
-\code{\link[=igraph2pieGraph]{igraph2pieGraph()}},
 \code{\link[=label_communities]{label_communities()}},
 \code{\link[=mem2cnet]{mem2cnet()}},
 \code{\link[=mem2emap]{mem2emap()}},

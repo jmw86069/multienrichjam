@@ -77,7 +77,6 @@ Other jam igraph functions:
 \code{\link[=fixSetLabels]{fixSetLabels()}},
 \code{\link[=flip_edges]{flip_edges()}},
 \code{\link[=get_bipartite_nodeset]{get_bipartite_nodeset()}},
-\code{\link[=igraph2pieGraph]{igraph2pieGraph()}},
 \code{\link[=label_communities]{label_communities()}},
 \code{\link[=mem2cnet]{mem2cnet()}},
 \code{\link[=mem2emap]{mem2emap()}},

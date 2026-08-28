@@ -19,14 +19,35 @@ relayout_with_qfr(
 \arguments{
 \item{g}{\code{igraph} object}
 
-\item{repulse}{exponent power used to scale the radius effect around
-each vertex. The default is slightly higher than the cube of
+\item{repulse}{\code{numeric} exponent power used to scale the radius
+effect around each vertex.
+The default is slightly higher than the cube of
 the number of vertices, but as the number of vertices increases,
 values from 3.5 to 4 and higher are more effective for layout.}
 
-\item{spread_labels}{logical indicating whether to call
+\item{spread_labels}{\code{logical} indicating whether to call
 \code{spread_igraph_labels()}, which places node labels at an angle offset
 from the node, in order to improve default label positions.}
+
+\item{seed}{\code{numeric} to set consistent random seed.}
+
+\item{init}{optional \code{numeric} matrix with initial positions.
+Default NULL will use existing layout coordinates if defined,
+otherwise it uses NULL.}
+
+\item{constrain}{\code{character} optional vector of node names that should
+be constrained. This argument is a convenient shortcut for defining
+\code{constraints}, which is a layout coordinate matrix with \code{NA} values
+on each row where the coordinate is free to move, and \code{numeric}
+values where the coordinate is fixed. For graph \code{g} that contains layout
+in \code{igraph::graph_attr(g, "layout")}, the \code{init} can be defined with
+this layout, then \code{constraints} is defined using \code{constrain}.}
+
+\item{constraints}{optional two-column matrix with the coordinates of
+nodes which should not be modified, and NA values for nodes where
+the position can be modified.}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
 
 \item{...}{additional arguments are passed to \code{layout_with_qfr()} and
 \code{spread_igraph_labels()} as needed.}

@@ -14,6 +14,9 @@ connections, also known as the "degree", required for each node.}
 
 \item{...}{additional arguments are ignored.}
 }
+\value{
+\code{igraph} with singlet (disconnected) nodes removed.
+}
 \description{
 Remove igraph singlet nodes
 }

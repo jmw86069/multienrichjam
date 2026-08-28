@@ -32,6 +32,14 @@
 #'    values where the coordinate is fixed. For graph `g` that contains layout
 #'    in `igraph::graph_attr(g, "layout")`, the `init` can be defined with
 #'    this layout, then `constraints` is defined using `constrain`.
+#' @param seed `numeric` to set consistent random seed.
+#' @param weights,niter,max.delta,cool.exp,groups,rotation,layout.control,round,digits
+#'    arguments passed to
+#'    `qgraph::qgraph.layout.fruchtermanreingold()`.
+#' @param init optional `numeric` matrix with initial positions.
+#'    Default NULL will use existing layout coordinates if defined,
+#'    otherwise it uses NULL.
+#' @param verbose `logical` whether to print verbose output.
 #' @param ... other arguments are sent to
 #'    `qgraph::qgraph.layout.fruchtermanreingold()`
 #'
@@ -218,14 +226,20 @@ layout_with_qfrf <- function
 #'
 #' @family jam igraph layouts
 #'
+#' @inheritParams layout_with_qfr
 #' @param g `igraph` object
-#' @param repulse exponent power used to scale the radius effect around
-#'    each vertex. The default is slightly higher than the cube of
+#' @param repulse `numeric` exponent power used to scale the radius
+#'    effect around each vertex.
+#'    The default is slightly higher than the cube of
 #'    the number of vertices, but as the number of vertices increases,
 #'    values from 3.5 to 4 and higher are more effective for layout.
-#' @param spread_labels logical indicating whether to call
+#' @param spread_labels `logical` indicating whether to call
 #'    `spread_igraph_labels()`, which places node labels at an angle offset
 #'    from the node, in order to improve default label positions.
+#' @param seed `numeric` to set consistent random seed.
+#' @param init optional `numeric` matrix with initial positions.
+#'    Default NULL will use existing layout coordinates if defined,
+#'    otherwise it uses NULL.
 #' @param ... additional arguments are passed to `layout_with_qfr()` and
 #'    `spread_igraph_labels()` as needed.
 #'
@@ -243,7 +257,7 @@ relayout_with_qfr <- function
 {
    # if layout exists, use that for init
    if (length(init) == 0) {
-   	init <- get_igraph_layout(g, default_layout=NULL); 
+      init <- get_igraph_layout(g, default_layout=NULL); 
       if (verbose && length(init) > 0) {
          jamba::printDebug("relayout_with_qfr(): ",
             "head(init):");
@@ -278,296 +292,6 @@ relayout_with_qfr <- function
    return(g);
 }
 
-#' Create a cnetplot igraph object, deprecated
-#'
-#' Create a cnetplot igraph object, deprecated, use `mem2cnet()`.
-#'
-#' The purpose of this function is to mimic the steps in `DOSE:::cnetplot()`
-#' except not plot the output, and provide some customizations.
-#'
-#' This function calls `cnetplot_internalJam()`, which among other things
-#' adds a node attribute to the resulting `igraph`, `"nodeType"`,
-#' where `nodeType="Gene"` identifies gene nodes, and `nodeType="Set"`
-#' identifies pathway/gene set nodes.
-#'
-#' @param x enrichResults object
-#' @param showCategory integer number of categories to include in the
-#'    resulting Cnet plot.
-#' @param categorySize character value indicating how to size the pathway
-#'    nodes, where `"geneNum"` sizes nodes by the number of genes in that
-#'    pathway, and `"pvalue"` sizes nodes by the enrichment P-value using
-#'    the format `-log10(pvalue)`.
-#' @param nodeLabel character value indicating which colname in
-#'    `as.data.frame(x)` to use as a node label. Depending upon the source
-#'    of data, there may be alternative colnames that are more suitable
-#'    as node labels.
-#' @param foldChange numeric vector named by gene, or NULL. When supplied,
-#'    the vector names must use the same nomenclature as the `x` input
-#'    object, which can be inspected with `print(head(x@gene))`.
-#' @param fixed optional argument passed to `netplot`.
-#' @param doPlot logical indicating whether to plot the result.
-#' @param categoryColor,geneColor character color, used to colorize
-#'    category (pathway) nodes, or gene nodes, respectively.
-#' @param normalizeGeneSize logical indicating whether to re-scale the
-#'    gene node sizes so the mean gene node size is no larger than the
-#'    median category node size. This option is intended to help gene
-#'    and category node sizes to be in relative proportion.
-#' @param labelCex numeric value to re-scale label text in the igraph
-#'    object, and is applied directly to the igraph object.
-#' @param colorSub character vector of valid R colors, whose names
-#'    are compared to node names, for example `V(g)$name %in% names(colorSub)`.
-#' @param verbose logical indicating whether to print verbose output.
-#' @param ... additional arguments are ignored.
-#'
-#' @family jam deprecated functions
-#'
-#' @export
-cnetplotJam <- function
-(x,
- showCategory=5,
- categorySize="geneNum",
- nodeLabel=c("Name", "Description", "ID"),
- foldChange=NULL,
- fixed=TRUE,
- doPlot=FALSE,
- categoryColor="#E5C494",
- geneColor="#B3B3B3",
- normalizeGeneSize=TRUE,
- labelCex=0.45,
- colorSub=NULL,
- verbose=FALSE,
- ...)
-{
-   ## Purpose is to run DOSE::cnetplot() but not create a plot.
-   ##
-   ## categoryColor if supplied is an alternative color for categories.
-   ## Note that colorSub can be used to override category colors subsequently.
-   ##
-   ## geneColor if supplied is an alternative color for categories.
-   ## Note that colorSub can be used to override category colors subsequently.
-   ##
-   ## colorSub if supplied, is a vector of colors, whose names match
-   ## V(g)$name. Matching nodes will have their node colors adjusted
-   ## based upon colorSub.
-   ##
-   if (!requireNamespace("DOSE", quietly=TRUE)) {
-      stop("cnetplotJam() requires the DOSE package.");
-   }
-
-   y <- as.data.frame(x);
-   nodeLabel <- intersect(nodeLabel, colnames(y));
-   dColname <- head(nodeLabel, 1);
-   if (verbose) {
-      jamba::printDebug("cnetplotJam(): ",
-         "dColname:",
-         dColname);
-   }
-   keepColnames <- intersect(c(nodeLabel, "pvalue"),
-      names(y));
-   if (inherits(x, "enrichResult") || inherits(x, "gseaResult")) {
-      gc <- DOSE::geneInCategory(x);
-      names(gc) <- y[[dColname]];
-      if (verbose) {
-         jamba::printDebug("cnetplotJam(): ",
-            "assigned gc <- geneInCategory(x), length(gc):",
-            length(gc),
-            ", head(gc, 2):");
-         print(head(gc, 2));
-      }
-   } else {
-      stop("x should be an 'enrichResult' or 'gseaResult' object...")
-   }
-   if (verbose) {
-      jamba::printDebug("cnetplotJam(): ",
-         "keepColnames:",
-         keepColnames);
-   }
-
-
-   if (is.numeric(showCategory) && (showCategory > length(gc))) {
-      showCategory <- length(gc);
-   }
-   if (categorySize == "pvalue") {
-      pvalue <- y$pvalue;
-      names(pvalue) <- y[[dColname]];
-   } else {
-      pvalue <- NULL;
-   }
-   readable <- x@readable;
-   organism <- x@organism;
-   if (readable & (!is.null(foldChange))) {
-      gid <- names(foldChange);
-      if (length(x@gene2Symbol) > 0) {
-         if (is(x, "gseaResult")) {
-            ii <- gid %in% names(x@geneList);
-         } else {
-            ii <- gid %in% x@gene;
-         }
-         gid[ii] <- x@gene2Symbol[gid[ii]];
-         names(foldChange) <- gid;
-      }
-   }
-
-   ## Convert to igraph
-   g <- cnetplot_internalJam(inputList=gc,
-      showCategory=showCategory,
-      categorySize=categorySize,
-      pvalue=pvalue,
-      foldChange=foldChange,
-      fixed=fixed,
-      doPlot=doPlot,
-      ...);
-   igraph::V(g)$frame.color <- jamba::makeColorDarker(igraph::V(g)$color,
-      darkFactor=1.5,
-      alpha=0.5);
-   igraph::V(g)$label.cex <- labelCex;
-
-   ## Match category and gene color
-   categoryColorMatch <- "#E5C494";
-   geneColorMatch <- "#B3B3B3";
-   iWhichCat <- which(igraph::V(g)$color %in% categoryColorMatch);
-   iWhichGene <- which(igraph::V(g)$color %in% geneColorMatch);
-
-   #V(g)$color <- ifelse(V(g)$color %in% categoryColorMatch,
-   #   categoryColor,
-   #   ifelse(V(g)$color %in% geneColorMatch,
-   #      geneColor,
-   #      V(g)$color));
-   if (!all(categoryColor %in% categoryColorMatch) &&
-         length(iWhichCat) > 0) {
-      igraph::V(g)[iWhichCat]$color <- rep(categoryColor,
-         length.out=length(iWhichCat));
-   }
-   if (!all(geneColor %in% geneColorMatch) &&
-         length(iWhichGene) > 0) {
-      igraph::V(g)[iWhichGene]$color <- rep(geneColor,
-         length.out=length(iWhichGene));
-   }
-
-   ## Optionally custom color nodes using colorSub
-   if (!is.null(colorSub)) {
-      if (any(names(colorSub) %in% igraph::V(g)$name)) {
-         iWhich <- which(igraph::V(g)$name %in% names(colorSub));
-         if (length(iWhich) > 0) {
-            igraph::V(g)[iWhich]$color <- colorSub[igraph::V(g)[iWhich]$name];
-         }
-      }
-   }
-
-   ## Normalize gene and category node sizes
-   if (normalizeGeneSize && length(iWhichCat) && length(iWhichGene)) {
-      geneSize <- mean(igraph::V(g)[iWhichGene]$size);
-      catSizes <- igraph::V(g)[iWhichCat]$size;
-      degreeCat <- igraph::degree(g)[iWhichCat];
-      #catSize <- sqrt(degreeCat/pi)/2;
-      catSize <- sqrt(degreeCat/pi);
-      igraph::V(g)[iWhichCat]$size <- catSize;
-      if (geneSize > median(catSize)) {
-         if (verbose) {
-            jamba::printDebug("cnetplotJam(): ",
-               "Shrinking gene nodes to median category node size.");
-         }
-         geneSize <- median(catSize);
-         igraph::V(g)[iWhichGene]$size <- geneSize;
-      }
-   }
-
-   invisible(g);
-}
-
-#' cnetplot internal function
-#'
-#' cnetplot internal function
-#'
-#' This function is intended to mimic the `DOSE:::cnetplot_internal()`
-#' function to support `cnetplotJam()` customizations, including
-#' not plotting the output, and including additional custom igraph
-#' attributes.
-#'
-#' @family jam deprecated functions
-#' @keywords internal
-#' @noRd
-cnetplot_internalJam <- function
-(inputList,
- categorySize="geneNum",
- showCategory=5,
- pvalue=NULL,
- foldChange=NULL,
- fixed=TRUE,
- DE.foldChange=NULL,
- categoryColor="#E5C494",
- geneColor="#B3B3B3",
- colorRamp="RdBu_r",
- ...)
-{
-   ## Purpose is to customize DOSE:::cnetplot_internal() to allow
-   ## optionally not creating a plot.
-   ##
-   ## also allow custom categoryColor.
-   ## also use vals2colorLevels() instead of DOSE:::get.col.scale() which
-   ## does colors nodes with zero fold change using the positive fold change
-   ## color gradient, making the positive and negative gradients not
-   ## symmetric. It also does not allow specifying the color ramp.
-   ##
-   ## colorRamp="RdBu_r" uses brewer.pal("RdBu") in reverse,
-   ## so blue is low (cold) and red is high (hot).
-   ##
-   ## categorySize can be numeric vector, or "geneNum" or "pvalue"
-   ##
-   #categorySize <- match.arg(categorySize);
-   if (is.numeric(showCategory)) {
-      inputList <- inputList[1:showCategory];
-      if (!is.null(pvalue)) {
-         pvalue <- pvalue[1:showCategory];
-      }
-   } else {
-      inputList <- inputList[showCategory];
-      if (!is.null(pvalue)) {
-         pvalue <- pvalue[showCategory];
-      }
-   }
-   g <- list2graph_ggt(inputList);
-   #g <- DOSE::setting.graph.attributes(g);
-   lengthOfCategory <- length(inputList);
-
-   ## Color gene nodes by fold change if supplied
-   if (!is.null(foldChange)) {
-      node.idx <- (lengthOfCategory + 1):igraph::vcount(g);
-      fcColors <- colorjam::vals2colorLevels(foldChange,
-         col=colorRamp,
-         divergent=TRUE,
-         ...);
-      igraph::V(g)[node.idx]$color <- fcColors;
-      g <- scaleNodeColor(g, foldChange, node.idx, DE.foldChange);
-   }
-
-   igraph::V(g)$size <- 5;
-   igraph::V(g)$color <- geneColor;
-   igraph::V(g)[seq_len(lengthOfCategory)]$size <- 30;
-   igraph::V(g)[seq_len(lengthOfCategory)]$color <- categoryColor;
-
-   ## 0.0.39.900 - update to add nodeType "Set" or "Gene"
-   igraph::V(g)$nodeType <- "Gene";
-   igraph::V(g)[seq_len(lengthOfCategory)]$nodeType <- "Set";
-
-   ## Size category nodes
-   if (is.numeric(categorySize)) {
-      ## If supplied a numeric vector, size categories directly
-      igraph::V(g)[1:lengthOfCategory]$size <- categorySize;
-   } else {
-      if (categorySize == "geneNum") {
-         n <- igraph::degree(g)[1:lengthOfCategory];
-         igraph::V(g)[1:lengthOfCategory]$size <- n/sum(n) * 100;
-      } else if (categorySize == "pvalue") {
-         if (is.null(pvalue) || any(is.na(pvalue))) {
-            stop("pvalue must not be NULL or contain NA values.");
-         }
-         pScore <- -log10(pvalue);
-         igraph::V(g)[1:lengthOfCategory]$size <- pScore/sum(pScore) * 100;
-      }
-   }
-   invisible(g);
-}
 
 #' Convert igraph to use pie node shapes
 #'
@@ -591,25 +315,26 @@ cnetplot_internalJam <- function
 #' used for numeric values in each column, and other options are passed
 #' to `colorjam::matrix2heatColors()` via `...` arguments.
 #'
-#' @family jam igraph functions
-#'
-#' @export
-igraph2pieGraph <- function
-(g,
- valueIM=NULL,
- valueIMcolors=NULL,
- colorV=NULL,
- updateLabels=FALSE,
- maxNchar=62,
- backgroundColor="white",
- seed=123,
- defineLayout=FALSE,
- repulse=3.6,
- removeNA=FALSE,
- NAvalues=c(NA,"transparent"),
- verbose=FALSE,
- ...)
-{
+#' @returns `igraph` with 'pie' node shapes.
+#' 
+#' @keywords internal
+#' @noRd
+igraph2pieGraph <- function(
+   g,
+   valueIM=NULL,
+   valueIMcolors=NULL,
+   colorV=NULL,
+   updateLabels=FALSE,
+   maxNchar=62,
+   backgroundColor="white",
+   seed=123,
+   defineLayout=FALSE,
+   repulse=3.6,
+   removeNA=FALSE,
+   NAvalues=c(NA,"transparent"),
+   verbose=FALSE,
+   ...
+) {
    ## Purpose is to convert an igraph to one using pie nodes, where
    ## wedges are colored using values in an incident matrix valueIM.
    ##
@@ -775,17 +500,19 @@ igraph2pieGraph <- function
 #'
 #' # optionally different origin
 #' xyAngle(1, 1, origin.x=1, origin.y=0);
-#'
+#' 
+#' @returns `numeric` vector of angles in radians.
+#' 
 #' @export
-xyAngle <- function
-(x,
- y=NULL,
- directed=FALSE,
- deg=TRUE,
- origin.x=0,
- origin.y=0,
- ...)
-{
+xyAngle <- function(
+   x,
+   y=NULL,
+   directed=FALSE,
+   deg=TRUE,
+   origin.x=0,
+   origin.y=0,
+   ...
+) {
    ## Get angle from zero to given x,y coordinates
    if (length(y) == 0) {
       y <- x[,2];
@@ -907,30 +634,30 @@ drawEllipse <- function
    }
 
    ## Fix various vector lengths
-   y <- rep(y, length.out=length(x));
-   a <- rep(a, length.out=length(x));
-   b <- rep(b, length.out=length(x));
-   col <- rep(col, length.out=length(x));
-   border <- rep(border, length.out=length(x));
+   y <- rep_len(y, length(x));
+   a <- rep_len(a, length(x));
+   b <- rep_len(b, length(x));
+   col <- rep_len(col, length(x));
+   border <- rep_len(border, length(x));
 
    ## if input is in degrees
    if (deg) {
       angle <- angle * pi/180;
       segment <- segment * pi/180;
    }
-   segment <- rep(segment,
-      length.out=length(x) * 2);
+   segment <- rep_len(segment,
+      length(x) * 2);
    segment_seq <- seq(from=1, to=length(segment), by=2);
    segment1 <- segment[segment_seq];
    segment2 <- segment[segment_seq + 1];
 
-   angle <- rep(angle,
-      length.out=length(segment1));
+   angle <- rep_len(angle,
+      length(segment1));
    if (length(arc.only) == 0) {
       arc.only <- TRUE;
    }
-   arc.only <- rep(arc.only,
-      length.out=length(segment1));
+   arc.only <- rep_len(arc.only,
+      length(segment1));
    if (length(segment1) == 1) {
       z <- seq(from=segment[1],
          to=segment[2],
@@ -939,7 +666,7 @@ drawEllipse <- function
          z <- c(NA, z, NA, NA);
       }
       z_idx <- rep(1, length(z));
-      z_angle <- rep(angle, length.out=length(z));
+      z_angle <- rep_len(angle, length(z));
       z_cumsum <- length(z);
       z_lengths <- length(z);
    } else {
@@ -968,7 +695,7 @@ drawEllipse <- function
    rad <- sqrt(xx^2 + yy^2)
    xp <- rad * cos(alpha - z_angle) + x[z_idx];
    yp <- rad * sin(alpha - z_angle) + y[z_idx];
-   if (any(!arc.only)) {
+   if (!all(arc.only)) {
       which_wedge <- which(!arc.only);
       # jamba::printDebug("which_wedge: ", which_wedge);
       wedge_x <- x[which_wedge];
@@ -996,8 +723,8 @@ drawEllipse <- function
       y=yp,
       z=z
    )));
-   invisible(list(x=xp,
-      y=yp));
+   # invisible(list(x=xp,
+   #    y=yp));
 }
 
 #' Summarize Cnet igraph as a data.frame
@@ -1058,7 +785,11 @@ cnet2df <- function
       im <- cnet2im(df=df)
       ## determine if neighbors for a Set node are completely contained
       ## in another Set node
+      
+      # crossprod() is generic since R-4.4.0, but before that? Idk.
       imSet <- (t(im) %*% im);
+      # imSet <- crossprod(im, im);
+
       # isSubset <- (rowSums(imSet >= rowMaxs(imSet)) > 1);
       isSubset <- (rowSums(imSet >= apply(imSet, 1, max, na.rm=TRUE)) > 1);
       df$isSubset <- FALSE;
@@ -1093,13 +824,13 @@ cnet2df <- function
 #' @param ... additional arguments are ignored.
 #'
 #' @export
-cnet2im <- function
-(g=NULL,
- df=NULL,
- ...)
-{
+cnet2im <- function(
+   g=NULL,
+   df=NULL,
+   ...
+) {
    ## Purpose is to convert a Cnet igraph to an incidence matrix
-   if (length(g) > 0 && "data.frame" %in% class(g)) {
+   if (length(g) > 0 && inherits(g, "data.frame")) {
       df <- g;
    } else if (length(df) == 0) {
       df <- cnet2df(g,
@@ -1242,7 +973,7 @@ removeIgraphBlanks <- function
 
    constrain <- match.arg(constrain);
    #ixV <- which(V(g)$shape %in% "coloredrectangle");
-   ixV <- which(lengths(igraph::V(g)$coloredrect.color) > 0);
+   # ixV <- which(lengths(igraph::V(g)$coloredrect.color) > 0);
 
    if ("coloredrect.color" %in% igraph::vertex_attr_names(g)) {
       if (verbose) {
@@ -1277,8 +1008,8 @@ removeIgraphBlanks <- function
       ## Vector of TRUE,FALSE
       crBlanksV <- unlist(unname(crBlanksL));
       ## Iterate each attribute
-      crAttrs <- intersect(c("coloredrect.color", "coloredrect.names"),
-         igraph::vertex_attr_names(g));
+      # crAttrs <- intersect(c("coloredrect.color", "coloredrect.names"),
+      #    igraph::vertex_attr_names(g));
       crAttr <- "coloredrect.color";
       crName <- "coloredrect.names";
 
@@ -1347,7 +1078,7 @@ removeIgraphBlanks <- function
             crL <- unname(split(unlist(crAttrL)[!crBlanksV],
                crSplitV[!crBlanksV]));
             crLengthsNew <- lengths(crL);
-            crChanged <- (crLengths != crLengthsNew);
+            # crChanged <- (crLengths != crLengthsNew);
             ncolV <- ifelse(nrowV == 1 | ncolV > 1, crLengthsNew, ncolV);
             nrowV <- ifelse(nrowV == 1 | ncolV > 1, 1, crLengthsNew);
 
@@ -1580,7 +1311,7 @@ removeIgraphBlanks <- function
                   if (verbose > 1) {
                      jamba::printDebug("removeIgraphBlanks(): ",
                         "length(pieL):", length(pieL),
-                        ", vcount(g):", vcount(g),
+                        ", vcount(g):", igraph::vcount(g),
                         ", length(unique(pieSplitV)):", length(unique(pieSplitV)),
                         ", length(unique(pieSplitV[!pieBlanksV])):", length(unique(pieSplitV[!pieBlanksV])),
                         ", sum(!pieBlanksV):", sum(!pieBlanksV)); # debug
@@ -1982,7 +1713,7 @@ reorderIgraphNodes <- function
    }
 
    # validate sortAttributes, also get reverse
-   sortOrders <- ifelse(grepl("^[-]", sortAttributes), TRUE, FALSE);
+   sortOrders <- grepl("^[-]", sortAttributes);
    sortAttributes <- gsub("^[-]", "", sortAttributes);
    keep_attrs <- (!duplicated(sortAttributes) & sortAttributes %in% v_attrs);
    sortOrders <- sortOrders[keep_attrs];
@@ -2005,7 +1736,7 @@ reorderIgraphNodes <- function
             jamba::printDebug("reorderIgraphNodes(): ",
                "sortAttribute: ", sortAttribute);
          }
-         sortOrder <- sortOrders[sortAttribute];
+         # sortOrder <- sortOrders[sortAttribute];
          if (sortAttribute %in% length_attrs) {
             # length attributes convert values to count before sorting
             length_pattern <- paste0("[.](", paste(length_suffices, collapse="|"), ")$");
@@ -2152,7 +1883,7 @@ reorderIgraphNodes <- function
                jamba::printDebug("reorderIgraphNodes(): ",
                   c("head(j_sorted):", head(j_sorted)));
             }
-            j_rank <- match(j_colors_v, unique(j_sorted));
+            # j_rank <- match(j_colors_v, unique(j_sorted));
             jString <- factor(j_sorted,
                levels=unique(j_sorted));
             if (verbose) {
@@ -2269,10 +2000,10 @@ reorderIgraphNodes <- function
          paste0('"', nodesets, '"'));
    }
 
-   if (!any(grepl("x", nodeSortBy))) {
+   if (!any(grepl("x", fixed=TRUE, nodeSortBy))) {
       nodeSortBy <- c(nodeSortBy, "x");
    }
-   if (!any(grepl("y", nodeSortBy))) {
+   if (!any(grepl("y", fixed=TRUE, nodeSortBy))) {
       nodeSortBy <- c(nodeSortBy, "-y");
    }
    use_nodeSortBy <- nodeSortBy;
@@ -2335,26 +2066,26 @@ reorderIgraphNodes <- function
       # If there are repeated sortAttributes, we use them to place subsets
       # of nodes top to bottom within each group of coordinates
       # 0.0.67.900 - ignore this section for now
-      if (FALSE) {
-         if (length(jamba::tcount(nodeOrder[,"sortAttribute"], minCount=2)) > 0) {
-            nodeOrder <- jamba::rbindList(lapply(split(nodeOrder, nodeOrder[,"sortAttribute"]), function(jDF){
-               if (nrow(jDF) > 1) {
-                  byCols <- match(rev(nodeSortBy), colnames(jDF));
-                  if (nodeSortBy[2] %in% "y") {
-                     #byCols <- byCols * c(-1,1);
-                     byCols <- byCols * c(-1,-1);
-                  } else {
-                     byCols <- byCols * c(1,1);
-                  }
-                  jDFcoord <- jamba::mixedSortDF(jDF,
-                     byCols=byCols);
-                  jDF[,c("x","y")] <- jDFcoord[,c("x","y")];
-               }
-               jDF;
-            }));
-            rownames(nodeOrder) <- nodeOrder$vertex;
-         }
-      }
+      # if (FALSE) {
+      #    if (length(jamba::tcount(nodeOrder[,"sortAttribute"], minCount=2)) > 0) {
+      #       nodeOrder <- jamba::rbindList(lapply(split(nodeOrder, nodeOrder[,"sortAttribute"]), function(jDF){
+      #          if (nrow(jDF) > 1) {
+      #             byCols <- match(rev(nodeSortBy), colnames(jDF));
+      #             if (nodeSortBy[2] %in% "y") {
+      #                #byCols <- byCols * c(-1,1);
+      #                byCols <- byCols * c(-1,-1);
+      #             } else {
+      #                byCols <- byCols * c(1,1);
+      #             }
+      #             jDFcoord <- jamba::mixedSortDF(jDF,
+      #                byCols=byCols);
+      #             jDF[,c("x","y")] <- jDFcoord[,c("x","y")];
+      #          }
+      #          jDF;
+      #       }));
+      #       rownames(nodeOrder) <- nodeOrder$vertex;
+      #    }
+      # }
       nodeOrder;
    }));
    iMatch <- match(newDF$vertex, neighborDF$vertex);
@@ -2403,13 +2134,15 @@ reorder_igraph_nodes <- reorderIgraphNodes
 #' @param min_degree numeric threshold with the minimum number of
 #'    connections, also known as the "degree", required for each node.
 #' @param ... additional arguments are ignored.
-#'
+#' 
+#' @returns `igraph` with singlet (disconnected) nodes removed.
+#' 
 #' @export
-removeIgraphSinglets <- function
-(g,
- min_degree=1,
- ...)
-{
+removeIgraphSinglets <- function(
+   g,
+   min_degree=1,
+   ...
+) {
    keep_nodes <- (igraph::degree(g) >= min_degree);
    g_new <- subgraph_jam(g,
       which(keep_nodes));
@@ -2450,19 +2183,21 @@ removeIgraphSinglets <- function
 #'    Otherwise, the components are somewhat randomly labeled based
 #'    upon the output of `igraph::components()`.
 #' @param ... additional arguments are passed to `igraph::components()`.
-#'
+#' 
+#' @returns `igraph`
+#' 
 #' @export
-subset_igraph_components <- function
-(g,
- keep=NULL,
- min_size=1,
- order_by_size=TRUE,
- ...)
-{
+subset_igraph_components <- function(
+   g,
+   keep=NULL,
+   min_size=1,
+   order_by_size=TRUE,
+   ...
+) {
    gc <- igraph::components(g,
       ...);
    vnum <- seq_len(igraph::vcount(g));
-   gc_list <- split(vnum, membership(gc));
+   gc_list <- split(vnum, igraph::membership(gc));
    if (order_by_size) {
       gc_order <- names(rev(sort(lengths(gc_list))));
       gc_list <- gc_list[gc_order];
@@ -2479,15 +2214,26 @@ subset_igraph_components <- function
    return(g);
 }
 
-#' Layout specification for Qgraph Fruchterman-Reingold, deprecated
-#'
-#' @family jam deprecated functions
-#'
-#' @export
-with_qfr <- function (...,repulse=4) {
-   layout_qfr <- function(graph,...){layout_with_qfr(graph,repulse=repulse,...)}
-   igraph:::layout_spec(layout_qfr, ...)
-}
+# #' Layout specification for Qgraph Fruchterman-Reingold, deprecated
+# #'
+# #' @family jam deprecated functions
+# #' 
+# #' @returns `igraph` object with layout applied
+# #' 
+# #' @export
+# with_qfr <- function(
+#    ...,
+#    repulse=4
+# ) {
+#    layout_qfr <- function(graph,...){
+#       layout_with_qfr(
+#          graph,
+#          repulse=repulse,
+#          ...
+#       )
+#    }
+#    igraph:::layout_spec(layout_qfr, ...)
+# }
 
 #' Subgraph using Jam extended logic
 #'
@@ -2503,12 +2249,14 @@ with_qfr <- function (...,repulse=4) {
 #' @param graph `igraph` object
 #' @param v `integer` or `logical` vector indicating the nodes to
 #'    retain in the final `igraph` object.
-#'
+#' 
+#' @returns `igraph` after applying the subset operations.
+#' 
 #' @export
-subgraph_jam <- function
-(graph,
- v)
-{
+subgraph_jam <- function(
+   graph,
+   v
+) {
    if ("layout" %in% igraph::graph_attr_names(graph)) {
       g_layout <- igraph::graph_attr(graph, "layout");
       if (any(c("numeric","matrix") %in% class(g_layout))) {
@@ -2561,7 +2309,12 @@ subgraph_jam <- function
 #'
 #' @return character vector of unique colors in `x`
 #'
-#' @param x list of character vectors that contain valid R colors.
+#' @param x `list` of character vectors that contain valid R colors.
+#' @param return_type `character` string with object type to return:
+#'    * 'colors': `character` vector of colors
+#'    * 'order': `numeric` order
+#' @param verbose `logical` whether to print verbose output.
+#' @param ... additional arguments are ignored.
 #'
 #' @export
 colors_from_list <- function
@@ -2599,7 +2352,7 @@ colors_from_list <- function
             "color"))
       colorV <- pcdf_u_sort$color;
       colorVnames <- pcdf_u_sort$name;
-      if (all(!is.na(colorVnames))) {
+      if (!anyNA(colorVnames)) {
          names(colorV) <- colorVnames;
       } else {
          names(colorV) <- seq_along(colorV);
@@ -2628,7 +2381,7 @@ colors_from_list <- function
          colorV <- pcu;
       }
       colorVnames <- pcdf1$name[match(colorV, pcdf1$color)];
-      if (all(!is.na(colorVnames))) {
+      if (!anyNA(colorVnames)) {
          names(colorV) <- colorVnames;
       } else {
          names(colorV) <- seq_along(colorV);
@@ -2707,14 +2460,16 @@ colors_from_list <- function
 #' plot(g1);
 #' g2 <- flip_edges(g1, 3:4);
 #' plot(g2);
-#'
+#' 
+#' @returns `igraph` with edges reversed
+#' 
 #' @export
-flip_edges <- function
-(g,
- edge_idx,
- verbose=FALSE,
- ...)
-{
+flip_edges <- function(
+   g,
+   edge_idx,
+   verbose=FALSE,
+   ...
+) {
    #
    # validate edge_idx
    g_edge_ids <- igraph::as_ids(igraph::E(g));
@@ -2725,7 +2480,7 @@ flip_edges <- function
          edge_seq_matched=ifelse(is.na(edge_idx_match),
             "", edge_idx),
          edge_idx=edge_idx_match)
-      edge_idx_seq <- edge_idx[!is.na(edge_idx_match)];
+      # edge_idx_seq <- edge_idx[!is.na(edge_idx_match)];
       edge_idx <- edge_idx_match[!is.na(edge_idx_match)];
    } else {
       edge_summary_df <- data.frame(

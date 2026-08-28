@@ -82,9 +82,6 @@ for arranging one or more heatmaps and associated annotations.
 }
 \seealso{
 Other jam deprecated functions:
-\code{\link[=cnetplotJam]{cnetplotJam()}},
-\code{\link[=enrichMapJam]{enrichMapJam()}},
-\code{\link[=mem_multienrichplot]{mem_multienrichplot()}},
-\code{\link[=with_qfr]{with_qfr()}}
+\code{\link[=mem_multienrichplot]{mem_multienrichplot()}}
 }
 \concept{jam deprecated functions}

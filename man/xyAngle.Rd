@@ -34,6 +34,9 @@ of each segment.}
 
 \item{...}{additional arguments are ignored.}
 }
+\value{
+\code{numeric} vector of angles in radians.
+}
 \description{
 Get angle from origin to vector of x,y coordinates
 }

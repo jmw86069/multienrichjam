@@ -31,6 +31,9 @@ upon the output of \code{igraph::components()}.}
 
 \item{...}{additional arguments are passed to \code{igraph::components()}.}
 }
+\value{
+\code{igraph}
+}
 \description{
 Subset igraph by connected components
 }
@@ -58,7 +61,6 @@ Other jam igraph functions:
 \code{\link[=flip_edges]{flip_edges()}},
 \code{\link[=get_bipartite_nodeset]{get_bipartite_nodeset()}},
 \code{\link[=highlight_edges_by_node]{highlight_edges_by_node()}},
-\code{\link[=igraph2pieGraph]{igraph2pieGraph()}},
 \code{\link[=label_communities]{label_communities()}},
 \code{\link[=mem2cnet]{mem2cnet()}},
 \code{\link[=mem2emap]{mem2emap()}},

@@ -20,14 +20,15 @@
 #' * The aim is to support all user-facing tasks using S4 methods,
 #' to prevent the need to access slots directly.
 #'
-#' @importClassesFrom DOSE enrichResult
 #' @importClassesFrom Biobase Versioned
 #' @importFrom BiocGenerics updateObject
 #' 
 #' @param object `Mem` object
 #'
 #' @family Mem
-#'
+#' 
+#' @returns `logical` whether the object is valid.
+#' 
 #' @export
 check_Mem <- function
 (object)
@@ -252,7 +253,9 @@ setClassUnion("list_OR_NULL", c("list", "NULL"))
 #' @param object `MemPlotFolio` object
 #'
 #' @family MemPlotFolio
-#'
+#' 
+#' @returns `logical` whether the object is valid.
+#' 
 #' @export
 check_MemPlotFolio <- function
 (object)
@@ -283,13 +286,13 @@ check_MemPlotFolio <- function
    # jamba::heatmap_column_order(mpf$gp_hm)
    # names(mpf$clusters_mem)
    ero <- NULL;
-   eco <- NULL;
-   gro <- NULL;
+   # eco <- NULL;
+   # gro <- NULL;
    gco <- NULL;
    memclusters <- NULL;
    memcluster_label_names <- NULL;
    memcluster_data_names <- NULL;
-   geneclusters <- NULL;
+   # geneclusters <- NULL;
    ccnames <- NULL;
    if (is.list(object@clusters) && length(object@clusters) > 0) {
       memclusters <- object@clusters
@@ -303,16 +306,16 @@ check_MemPlotFolio <- function
       }
    }
    
-   if (is.list(object@gene_clusters) && length(object@gene_clusters) > 0) {
-      geneclusters <- object@gene_clusters
-   }
+   # if (is.list(object@gene_clusters) && length(object@gene_clusters) > 0) {
+   #    geneclusters <- object@gene_clusters
+   # }
    withr::with_options(list("warn"=-1), {
       if (inherits(object@enrichment_hm, "Heatmap")) {
          ero <- jamba::heatmap_row_order(object@enrichment_hm);
-         eco <- jamba::heatmap_column_order(object@enrichment_hm);
+         # eco <- jamba::heatmap_column_order(object@enrichment_hm);
       }
       if (inherits(object@gp_hm, "Heatmap")) {
-         gro <- jamba::heatmap_row_order(object@gp_hm);
+         # gro <- jamba::heatmap_row_order(object@gp_hm);
          gco <- jamba::heatmap_column_order(object@gp_hm);
       }
    })

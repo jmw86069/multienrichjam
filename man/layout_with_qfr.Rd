@@ -53,6 +53,17 @@ values where the coordinate is fixed. For graph \code{g} that contains layout
 in \code{igraph::graph_attr(g, "layout")}, the \code{init} can be defined with
 this layout, then \code{constraints} is defined using \code{constrain}.}
 
+\item{seed}{\code{numeric} to set consistent random seed.}
+
+\item{weights, niter, max.delta, cool.exp, groups, rotation, layout.control, round, digits}{arguments passed to
+\code{qgraph::qgraph.layout.fruchtermanreingold()}.}
+
+\item{init}{optional \code{numeric} matrix with initial positions.
+Default NULL will use existing layout coordinates if defined,
+otherwise it uses NULL.}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
+
 \item{...}{other arguments are sent to
 \code{qgraph::qgraph.layout.fruchtermanreingold()}}
 }

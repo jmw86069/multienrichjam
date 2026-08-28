@@ -12,6 +12,9 @@ subgraph_jam(graph, v)
 \item{v}{\code{integer} or \code{logical} vector indicating the nodes to
 retain in the final \code{igraph} object.}
 }
+\value{
+\code{igraph} after applying the subset operations.
+}
 \description{
 Subgraph using Jam extended logic
 }

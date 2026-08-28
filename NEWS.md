@@ -1,3 +1,11 @@
+# multienrichjam 0.0.121.900
+
+* Improve support of `enrichResult` and `gseaResult` without
+package dependency on DOSE, enrichplot, enrichit.
+* Added cli dependency.
+* Removed deprecated `cnetplotJam()`, `cnetplot_internalJam()`.
+* Fixed numerous R syntax issues from Arity.
+
 # multienrichjam 0.0.120.900
 
 ## New methods

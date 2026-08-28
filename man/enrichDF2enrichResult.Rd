@@ -14,8 +14,10 @@ enrichDF2enrichResult(
   geneHits = "geneHits",
   geneRatioColname = c("GeneRatio", "^Ratio"),
   geneDelim = "[,/ ]+",
-  geneSep = ",",
-  pvalueColname = c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
+  geneSep = "/",
+  pvalueColname = c("P.Value", "Pvalue", "Pval", "FDR", "adj.P.Val"),
+  padjustColname = c("p.adjust", "p.adjusted", "padjust", "adjp", "adj.P.Val", "FDR"),
+  qvalueColname = c("Q.Value", "Qvalue", "qval", "FDR"),
   descriptionColname = c("Description", "Name", "Pathway", "ID"),
   readable = NULL,
   msigdbGmtT = NULL,
@@ -35,22 +37,22 @@ in downstream processing.}
 adjustment method, or \code{"none"} for no additional adjustment.
 See \code{stats::p.adjust()} for valid values.}
 
-\item{keyColname}{\code{character} value of the \code{colname(enrichDF)}
+\item{keyColname}{\code{character} value of the \code{colnames(enrichDF)}
 containing the unique row identifier. It can be a pathway_ID
 or any uniquely identifying value.}
 
-\item{pathGenes}{\code{character} or value of the \code{colname(enrichDF)}
+\item{pathGenes}{\code{character} or value of the \code{colnames(enrichDF)}
 containing the number of genes in each pathway. This value will be
 derived from \code{geneRatioColname} if needed.}
 
-\item{geneColname}{\code{character} value of the \code{colname(enrichDF)}
+\item{geneColname}{\code{character} value of the \code{colnames(enrichDF)}
 containing delimiited genes in each pathway.}
 
-\item{geneHits}{\code{character} value of the \code{colname(enrichDF)}
+\item{geneHits}{\code{character} value of the \code{colnames(enrichDF)}
 containing the integer count of the gene hits in each pathway.
 This value will be derived from \code{geneRatioColname} if needed.}
 
-\item{geneRatioColname}{\code{character} value of the \code{colname(enrichDF)}
+\item{geneRatioColname}{\code{character} value of the \code{colnames(enrichDF)}
 containing the character ratio of gene hits to pathway size,
 in format "50/100". This value is used when either \code{"pathGenes"}
 or \code{"geneHits"} are not supplied.}
@@ -59,28 +61,47 @@ or \code{"geneHits"} are not supplied.}
 genes in the \code{pathGenes} column into a vector of character
 values.}
 
-\item{pvalueColname}{\code{character} value of the \code{colname(enrichDF)}
-containing enrichment P-values to use in downstream processing.}
+\item{geneSep}{\code{character} string with separator to use for output
+genes. Only \code{'/'} is supported for most \code{enrichResult} methods.}
+
+\item{pvalueColname, padjustColname, qvalueColname}{\code{character} vector
+to search \code{colnames(enrichDF)}, with enrichment P-value,
+adjusted P-value, and Q-value, respectively.
+\itemize{
+\item The P-value is stored in 'pvalue' in the output object, to match
+\code{enrichResult} convention.
+\item When there is no adjusted P-value column matched, by default it
+uses the P-value without change, since some downstream methods
+require 'p.adjust' exists.
+\item When there is no Q-value column matched, by default it uses
+the adjusted P-value column value 'p.adjust' without change.
+Note that the 'p.adjust' may also contain the value from 'pvalue'
+as described above.
+}}
+
+\item{descriptionColname}{\code{character} vector
+to search \code{colnames(enrichDF)}, for pathway or gene set description.}
 
 \item{readable}{\code{logical} default NULL, sets the 'readable' flag for
 the resulting \code{enrichResult} object.}
 
-\item{msigdbGmtT}{optional GmtT object (not currently implemented)}
+\item{msigdbGmtT}{optional 'GmtT' object (not currently implemented)}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
 }
 \value{
-\code{DOSE::enrichResult-class} object.
+\code{enrichResult} object.
 }
 \description{
 Convert data.frame to enrichResult
 }
 \details{
 This function takes a \code{data.frame} containing gene set enrichment
-results, and converts it to a proper 'enrichResult' object
-defined in \code{DOSE::enrichResult-class}.
+results, and converts it to a proper \verb{enrichResult`` object defined in }DOSE\verb{for R-4.5 and older, or}enrichit` for
+R-4.6 and newer.
+
 This object is supported by other functions in the \code{clusterProfiler}
 suite of tools.
 }

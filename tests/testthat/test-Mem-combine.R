@@ -102,10 +102,10 @@ test_that("Mem combine - preserves first object metadata", {
 
    Mem1 <- multiEnrichMap(
       list(TestA=enrichDF2enrichResult(base_enrichdf)),
-      topEnrichN=5, cutoffRowMinP=0.05)
+      topEnrichN=5, p_cutoff=0.05)
    Mem2 <- multiEnrichMap(
       list(TestB=enrichDF2enrichResult(base2)),
-      topEnrichN=10, cutoffRowMinP=0.01)
+      topEnrichN=10, p_cutoff=0.01)
 
    Mem_combined <- c(Mem1, Mem2)
 

@@ -7,7 +7,17 @@
 colors_from_list(x, return_type = c("colors", "order"), verbose = FALSE, ...)
 }
 \arguments{
-\item{x}{list of character vectors that contain valid R colors.}
+\item{x}{\code{list} of character vectors that contain valid R colors.}
+
+\item{return_type}{\code{character} string with object type to return:
+\itemize{
+\item 'colors': \code{character} vector of colors
+\item 'order': \code{numeric} order
+}}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
+
+\item{...}{additional arguments are ignored.}
 }
 \value{
 character vector of unique colors in \code{x}

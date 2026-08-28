@@ -34,6 +34,9 @@ vector and some edges do not match the \code{g} input.
 
 \item{...}{additional arguments are ignored.}
 }
+\value{
+\code{igraph} with edges reversed
+}
 \description{
 Flip direction of igraph edges
 }
@@ -74,7 +77,6 @@ Other jam igraph functions:
 \code{\link[=fixSetLabels]{fixSetLabels()}},
 \code{\link[=get_bipartite_nodeset]{get_bipartite_nodeset()}},
 \code{\link[=highlight_edges_by_node]{highlight_edges_by_node()}},
-\code{\link[=igraph2pieGraph]{igraph2pieGraph()}},
 \code{\link[=label_communities]{label_communities()}},
 \code{\link[=mem2cnet]{mem2cnet()}},
 \code{\link[=mem2emap]{mem2emap()}},

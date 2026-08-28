@@ -34,6 +34,9 @@ because it is not easily converted to HCL color space.}
 
 \item{...}{additional arguments are ignored.}
 }
+\value{
+\code{logical} indicating whether each color is considered 'blank'.
+}
 \description{
 Determine if colors are blank colors
 }

@@ -234,7 +234,7 @@ The combining process:
 }
 \section{Functions}{
 \itemize{
-\item \code{x[i}: Subset a Mem object, \code{Mem[i, j, k]},
+\item \code{x = Mem[i = ANY, j = ANY, drop = ANY]}: Subset a Mem object, \code{Mem[i, j, k]},
 where \code{i} are genes, \code{j} are pathways, and \code{k} are enrichments.
 
 \item \code{show(Mem)}: Show summary of a Mem object, dimensions defined by

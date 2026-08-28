@@ -9,6 +9,9 @@ check_Mem(object)
 \arguments{
 \item{object}{\code{Mem} object}
 }
+\value{
+\code{logical} whether the object is valid.
+}
 \description{
 Check whether a Mem object is valid.
 }

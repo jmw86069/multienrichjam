@@ -9,9 +9,6 @@ multiEnrichMap(
   geneHitList = NULL,
   geneHitIM = NULL,
   colorV = NULL,
-  nrow = NULL,
-  ncol = NULL,
-  byrow = FALSE,
   enrichLabels = NULL,
   subsetSets = NULL,
   overlapThreshold = deprecated(),
@@ -38,13 +35,11 @@ multiEnrichMap(
   descriptionColname = c("Description", "Name", "Pathway", "ID"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
   descriptionCurateTo = c(""),
-  directionColname = c("direction", "NES", "activation.z.{0,1}score", "z.{0,1}score"),
+  directionColname = c("direction", "NES", "activation.z.{0,1}score"),
   direction_cutoff = 0,
   pathGenes = c("setSize", "pathGenes", "Count"),
   geneHits = c("Count", "geneHits", "gene_count"),
   geneDelim = "[,/ ]+",
-  GmtTname = NULL,
-  msigdbGmtT = NULL,
   returnType = c("Mem", "list"),
   verbose = FALSE,
   ...
@@ -79,13 +74,6 @@ and either can be supplied.}
 \item{colorV}{\code{character} vector of colors, length
 equal to \code{length(enrichList)},
 used to assign specific colors to each enrichment result.}
-
-\item{nrow, ncol, byrow}{optional arguments used to customize
-\code{igraph} node shape \code{"coloredrectangle"}, useful when the
-number of \code{enrichList} results is larger than around 4. It
-defines the number of columns and rows used for each node,
-to display enrichment result colors, and whether to fill
-colors by row when \code{byrow=TRUE}, or by column when \code{byrow=FALSE}.}
 
 \item{enrichLabels}{\code{character} vector of enrichment labels to use,
 as an optional alternative to \code{names(enrichList)}.}
@@ -139,6 +127,10 @@ output enabled with \code{returnType="list"}.
 \item To create a Multi-Enrichment Map \code{igraph} object, see \code{mem2emap()}.
 }}
 
+\item{min_count}{\code{integer} minimum genes involved in enrichment, in
+order for a pathway to be considered 'enriched'.
+Default \code{3} requires at least three genes involved.}
+
 \item{topEnrichN}{\code{integer} maximum rows to retain from each
 \code{enrichResult} in 'enrichList', for each source when supplied.
 Set \code{topEnrichN=0} or \code{topEnrichN=NULL} to retain all rows.
@@ -149,13 +141,14 @@ least one enrichment in 'enrichList' will be retained.}
 is greater than \code{0}. The default values are used only when
 input data matches these patterns.}
 
-\item{keyColname, nameColname, geneColname, pvalueColname, descriptionColname}{\code{character} vector in each case with text strings or patterns to
+\item{keyColname, nameColname, geneColname, countColname, pvalueColname, descriptionColname}{\code{character} vector in each case with text strings or patterns to
 use when matching or prioritizing colnames to assign to each type:
 \itemize{
 \item \code{key}: The primary unique key for each pathway
 \item \code{name}: The short name for each pathway
 \item \code{gene}: column with delimited gene symbols or identifiers tested
 for enrichment of each pathway.
+\item \code{count}: integer number of genes associated with enrichment.
 \item \code{pvalue}: column with enrichment P-value, typically prioritizing
 either 'qvalue' or 'p.adjust'. Per \code{enrichResult} convention,
 the selected column is renamed to 'pvalue'.
@@ -176,6 +169,24 @@ These label can be manually curated later in the \code{Mem-class}
 methods, specifically \verb{sets()<-} will allows assignment of custom
 names.}
 
+\item{directionColname}{\code{character} values to search colnames for
+directionality, and is optional. The default looks for:
+\itemize{
+\item 'direction' - typically a signed value
+\item 'NES' - GSEA normalized enrichment score, which can be positive
+or negative
+\item 'activation z-score' - as produced by Ingenuity Pathway Analysis
+(IPA)
+\item \strong{Change:} It no longer uses 'z-score' or 'zScore' by default,
+since \code{clusterProfiler} now reports an enrichment z-score which
+does not indicate directionality.
+}}
+
+\item{direction_cutoff}{\code{numeric} default 0, used when \code{directionColname}
+is defined, to apply a minimum \code{numeric} magnitude to be considered
+'up' or 'down'. This value is not yet strictly enforced in downstream
+methods.}
+
 \item{pathGenes, geneHits}{\code{character} values indicating the colnames
 that contain the number of pathway genes, and the number of gene
 hits, respectively. These values are optional, and not specifically
@@ -185,6 +196,13 @@ used by multienrichjam.}
 split multiple gene values into a list of vectors.
 The default (required) delimiter for \code{enrichResult} objects
 is \code{'/'}. A common alternative is \code{','} (comma-delimited).}
+
+\item{returnType}{\code{character} string, deprecated, to define return type.
+\itemize{
+\item 'Mem' (default) is recommended.
+\item 'list' is older legacy format, and features are being removed
+to simplify the R codebase.
+}}
 
 \item{verbose}{\code{logical} indicating whether to print verbose output.
 For \code{verbose} to cascade to internal functions, use \code{verbose=2}.}

@@ -1,63 +1,62 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.120.900
+Version: 0.0.121.900
 Authors@R: c(
-    person(given=c("James", "M."),
-       family="Ward",
-       email="jmw86069@gmail.com",
-       comment=c(ORCID="0000-0002-9510-2848"),
-       role=c("aut", "cre", "cph")))
+   person(given=c("James", "M."),
+      family="Ward",
+      email="jmw86069@gmail.com",
+      comment=c(ORCID="0000-0002-9510-2848"),
+      role=c("aut", "cre", "cph")))
 Maintainer: James M. Ward <jmw86069@gmail.com>
 Description: Methods to analyze multiple gene set enrichment results,
-    visualize gene-pathway relationships, cluster pathways, create
-    concept network plots, and render igraph networks with edge bundling
-    for bipartite graphs.
-    Extends EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu)
-    functions specifically to explore and compare multiple enrichment
-    results.
+   visualize gene-pathway relationships, cluster pathways, create
+   concept network plots, and render igraph networks with edge bundling
+   for bipartite graphs.
+   Extends EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu)
+   functions specifically to explore and compare multiple enrichment
+   results.
 Depends: R (>= 3.5.0)
 biocViews:
 Imports: jamba (>= 1.0.4),
-    colorjam (>= 0.0.33.900),
-    igraph,
-    qgraph,
-    dplyr,
-    Biobase,
-    DOSE,
-    enrichplot,
-    clusterProfiler,
-    ComplexHeatmap,
-    circlize,
-    glue,
-    farver,
-    amap,
-    sf,
-    bezier,
-    shiny,
-    shinydashboard,
-    shinydashboardPlus,
-    tidyr,
-    lifecycle,
-    methods,
-    S4Vectors,
-    interp,
-    withr,
-    ggforce,
-    BiocStyle,
-    kableExtra
+   colorjam (>= 0.0.33.900),
+   igraph,
+   qgraph,
+   dplyr,
+   Biobase,
+   clusterProfiler,
+   ComplexHeatmap,
+   circlize,
+   glue,
+   farver,
+   amap,
+   sf,
+   bezier,
+   shiny,
+   shinydashboard,
+   shinydashboardPlus,
+   tidyr,
+   lifecycle,
+   methods,
+   S4Vectors,
+   interp,
+   withr,
+   ggforce,
+   BiocStyle,
+   kableExtra,
+   cli
 Suggests: 
-    knitr,
-    openxlsx,
-    rmarkdown,
-    testthat (>= 3.0.0)
+   knitr,
+   openxlsx,
+   rmarkdown,
+   testthat (>= 3.0.0)
 Enhances:
-    alphahull,
-    shadowtext,
-    vdiffr,
-    msigdbr,
-    ragg,
-    readr
+   alphahull,
+   shadowtext,
+   vdiffr,
+   msigdbr,
+   ragg,
+   readr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -67,4 +66,4 @@ BugReports: http://github.com/jmw86069/multienrichjam/issues
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.0.0.9000

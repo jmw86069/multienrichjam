@@ -3,12 +3,14 @@
 #' Convert data.frame to enrichResult
 #'
 #' This function takes a `data.frame` containing gene set enrichment
-#' results, and converts it to a proper 'enrichResult' object
-#' defined in `DOSE::enrichResult-class`.
+#' results, and converts it to a proper `enrichResult`` object
+#' defined in `DOSE` for R-4.5 and older, or `enrichit` for
+#' R-4.6 and newer.
+#' 
 #' This object is supported by other functions in the `clusterProfiler`
 #' suite of tools.
 #' 
-#' @returns `DOSE::enrichResult-class` object.
+#' @returns `enrichResult` object.
 #'
 #' @param enrichDF `data.frame` representing gene set enrichment
 #'    results.
@@ -18,62 +20,74 @@
 #' @param pAdjustMethod `character` string to define the P-value
 #'    adjustment method, or `"none"` for no additional adjustment.
 #'    See `stats::p.adjust()` for valid values.
-#' @param keyColname `character` value of the `colname(enrichDF)`
+#' @param keyColname `character` value of the `colnames(enrichDF)`
 #'    containing the unique row identifier. It can be a pathway_ID
 #'    or any uniquely identifying value.
-#' @param geneColname `character` value of the `colname(enrichDF)`
+#' @param geneColname `character` value of the `colnames(enrichDF)`
 #'    containing delimiited genes in each pathway.
-#' @param pathGenes `character` or value of the `colname(enrichDF)`
+#' @param pathGenes `character` or value of the `colnames(enrichDF)`
 #'    containing the number of genes in each pathway. This value will be
 #'    derived from `geneRatioColname` if needed.
-#' @param geneHits `character` value of the `colname(enrichDF)`
+#' @param geneHits `character` value of the `colnames(enrichDF)`
 #'    containing the integer count of the gene hits in each pathway.
 #'    This value will be derived from `geneRatioColname` if needed.
-#' @param geneRatioColname `character` value of the `colname(enrichDF)`
+#' @param geneRatioColname `character` value of the `colnames(enrichDF)`
 #'    containing the character ratio of gene hits to pathway size,
 #'    in format "50/100". This value is used when either `"pathGenes"`
 #'    or `"geneHits"` are not supplied.
 #' @param geneDelim `character` regular expression pattern used to separate
 #'    genes in the `pathGenes` column into a vector of character
 #'    values.
-#' @param pvalueColname `character` value of the `colname(enrichDF)`
-#'    containing enrichment P-values to use in downstream processing.
+#' @param geneSep `character` string with separator to use for output
+#'    genes. Only `'/'` is supported for most `enrichResult` methods.
+#' @param pvalueColname,padjustColname,qvalueColname `character` vector
+#'    to search `colnames(enrichDF)`, with enrichment P-value,
+#'    adjusted P-value, and Q-value, respectively.
+#'    * The P-value is stored in 'pvalue' in the output object, to match
+#'    `enrichResult` convention.
+#'    * When there is no adjusted P-value column matched, by default it
+#'    uses the P-value without change, since some downstream methods
+#'    require 'p.adjust' exists.
+#'    * When there is no Q-value column matched, by default it uses
+#'    the adjusted P-value column value 'p.adjust' without change.
+#'    Note that the 'p.adjust' may also contain the value from 'pvalue'
+#'    as described above.
+#' @param descriptionColname `character` vector
+#'    to search `colnames(enrichDF)`, for pathway or gene set description.
 #' @param readable `logical` default NULL, sets the 'readable' flag for
 #'    the resulting `enrichResult` object.
-#' @param msigdbGmtT optional GmtT object (not currently implemented)
+#' @param msigdbGmtT optional 'GmtT' object (not currently implemented)
 #' @param verbose `logical` indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
 #' @family jam import functions
 #' @family jam conversion functions
-#' 
-#' @importClassesFrom DOSE enrichResult
 #'
 #' @export
-enrichDF2enrichResult <- function
-(enrichDF=NULL,
- pvalueCutoff=1,
- pAdjustMethod="none",
- keyColname=c("itemsetID", "ID", "Name", "Pathway"),
- pathGenes="pathGenes",
- geneColname=c("geneNames", "geneID", "Gene", "Genes"),
- geneHits="geneHits",
- geneRatioColname=c("GeneRatio", "^Ratio"),
- geneDelim="[,/ ]+",
- geneSep=",",
- pvalueColname=c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
- descriptionColname=c("Description", "Name", "Pathway", "ID"),
- readable=NULL,
- msigdbGmtT=NULL,
- verbose=FALSE,
- ...)
-{
+enrichDF2enrichResult <- function(
+   enrichDF=NULL,
+   pvalueCutoff=1,
+   pAdjustMethod="none",
+   keyColname=c("itemsetID", "ID", "Name", "Pathway"),
+   pathGenes="pathGenes",
+   geneColname=c("geneNames", "geneID", "Gene", "Genes"),
+   geneHits="geneHits",
+   geneRatioColname=c("GeneRatio", "^Ratio"),
+   geneDelim="[,/ ]+",
+   geneSep="/",
+   pvalueColname=c("P.Value", "Pvalue", "Pval", "FDR", "adj.P.Val"),
+   padjustColname=c("p.adjust", "p.adjusted", "padjust", "adjp", "adj.P.Val", "FDR"),
+   qvalueColname=c("Q.Value", "Qvalue", "qval", "FDR"),
+   descriptionColname=c("Description", "Name", "Pathway", "ID"),
+   readable=NULL,
+   msigdbGmtT=NULL,
+   verbose=FALSE,
+   ...
+) {
    ## Purpose is to convert an enrichment data.frame
    ## into enrichResult class format usable by clusterProfiler
    ## methods, like enrichMap()
-   if (!requireNamespace("DOSE", quietly=TRUE)) {
-      stop("enrichDF2enrichResult() requires the DOSE package.");
-   }
+
    ## Find each colname in the input data.frame
    keyColname <- find_colname(keyColname, enrichDF);
    pathGenes <- find_colname(pathGenes, enrichDF);
@@ -81,34 +95,43 @@ enrichDF2enrichResult <- function
    geneHits <- find_colname(geneHits, enrichDF);
    geneRatioColname <- find_colname(geneRatioColname, enrichDF);
    pvalueColname <- find_colname(pvalueColname, enrichDF);
+   padjustColname <- find_colname(padjustColname, enrichDF);
+   qvalueColname <- find_colname(qvalueColname, enrichDF);
    descriptionColname <- find_colname(descriptionColname, enrichDF);
    if (verbose) {
-      jamba::printDebug("enrichDF2enrichResult(): ",
-         "Colnames matched in the input data:",
-         "\nkeyColname:", keyColname,
-         "\npathGenes:", pathGenes,
-         "\ngeneColname:", geneColname,
-         "\ngeneHits:", geneHits,
-         "\ngeneRatioColname:", geneRatioColname,
-         "\npvalueColname:", pvalueColname,
-         "\ndescriptionColname:", descriptionColname);
+      cli::cli_inform(c(
+         "{.pkg enrichDF2enrichResult} colnames matched: ",
+         "keyColname: {.val {keyColname}}",
+         "pathGenes: {.val {pathGenes}}",
+         "geneColname: {.val {geneColname}}",
+         "geneHits: {.val {geneHits}}",
+         "geneRatioColname: {.val {geneRatioColname}}",
+         "pvalueColname: {.val {pvalueColname}}",
+         "padjustColname: {.val {padjustColname}}",
+         "qvalueColname: {.val {qvalueColname}}",
+         "descriptionColname: {.val {descriptionColname}}"
+      ));
    }
    if (length(c(keyColname, pvalueColname, geneColname)) < 3) {
-      stop("Could not find c(keyColname, pvalueColname, geneColname) in the input colnames.");
+      cli::cli_abort(paste0(
+         "Could not find {.var keyColname}, {.var pvalueColname}, ",
+         "or {.var geneColname} in the input colnames."));
    }
 
    ## Confirm Description column
    if (length(descriptionColname) == 0) {
-      warning(paste("No 'Description' colname was found in enrichDF,",
+      cli::cli_warn(c(
+         "No {.var descriptionColname} colname was found in {.var enrichDF},",
          "which prevents this data from being used by",
-         "enrichplot and clusterProfiler functions.",
+         "{.pkg enrichplot}, {.pkg clusterProfiler} functions.",
          "The Description column is recommended to contain",
-         "the full name of the gene set.",
-         sep="\n"));
+         "the full name of the gene set."));
    } else if (descriptionColname %in% c(keyColname)) {
       # If it is also the keyColname we need to make two columns
       # so both names can co-exist.
-      enrichDF$Description <- enrichDF[[descriptionColname]];
+      if (!"Description" %in% descriptionColname) {
+         enrichDF$Description <- enrichDF[[descriptionColname]];
+      }
    } else {
       ## Otherwise rename to make sure the final colname
       ## is 'Description' to fit expectations of
@@ -116,13 +139,23 @@ enrichDF2enrichResult <- function
       enrichDF <- jamba::renameColumn(enrichDF,
          from=descriptionColname,
          to="Description");
-      descriptionColname <- "Description";
    }
 
    enrichDF2 <- jamba::renameColumn(enrichDF,
       from=c(keyColname, pvalueColname, geneColname),
       to=c("ID", "pvalue", "geneID"));
-   enrichDF2[,"p.adjust"] <- enrichDF2[,"pvalue"];
+   # p.adjust
+   if (length(padjustColname) == 1) {
+      enrichDF2[["p.adjust"]] <- enrichDF2[[padjustColname]];
+   } else {
+      enrichDF2[["p.adjust"]] <- enrichDF2[["pvalue"]];
+   }
+   # qvalue
+   if (length(qvalueColname) == 1) {
+      enrichDF2[["qvalue"]] <- enrichDF2[[qvalueColname]];
+   } else {
+      enrichDF2[["qvalue"]] <- enrichDF2[["p.adjust"]];
+   }
 
 
    ## Ensure all entries in column "ID" are unique
@@ -133,7 +166,7 @@ enrichDF2enrichResult <- function
 
    ## Convert gene delimiters all to "/"
    enrichDF2[["geneID"]] <- gsub(geneDelim,
-      "/",
+      geneSep,
       enrichDF2[["geneID"]]);
    
    ## set readable when needed
@@ -255,9 +288,9 @@ enrichDF2enrichResult <- function
       print(head(enrichDF2, 3));
    }
    keepcolids <- match(
-      unique(jamba::provigrep(c("^ID$","."), colnames(enrichDF2))),
+      unique(jamba::provigrep(c("^ID$", "."), colnames(enrichDF2))),
       colnames(enrichDF2));
-   enrichDF2 <- enrichDF2[,keepcolids,drop=FALSE];
+   enrichDF2 <- enrichDF2[, keepcolids, drop=FALSE];
    #enrichDF2a <- dplyr::select(enrichDF2,
    #   dplyr::matches("^ID$"), tidyselect::everything());
    #enrichDF2 <- enrichDF2a;
@@ -268,7 +301,7 @@ enrichDF2enrichResult <- function
 
    gene <- jamba::mixedSort(unique(unlist(
       strsplit(
-         as.character(enrichDF2[,"geneID"]),
+         as.character(enrichDF2[["geneID"]]),
          "[/]+"))));
    if (verbose) {
       jamba::printDebug("enrichDF2enrichResult(): ",
@@ -301,16 +334,18 @@ enrichDF2enrichResult <- function
    }
 
    ## gene is list of hit genes tested for enrichment
-   x <- new("enrichResult",
-      result=enrichDF2,
-      pvalueCutoff=pvalueCutoff,
-      pAdjustMethod=pAdjustMethod,
-      gene=as.character(gene),
-      universe=universe,
-      geneSets=geneSets,
-      organism="UNKNOWN",
-      keytype="UNKNOWN",
-      ontology="UNKNOWN",
-      readable=readable);
-   x;
+   return(
+      methods::new(
+         "enrichResult",
+         result=enrichDF2,
+         pvalueCutoff=pvalueCutoff,
+         pAdjustMethod=pAdjustMethod,
+         gene=as.character(gene),
+         universe=universe,
+         geneSets=geneSets,
+         organism="UNKNOWN",
+         keytype="UNKNOWN",
+         ontology="UNKNOWN",
+         readable=readable
+      ))
 }

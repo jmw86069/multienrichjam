@@ -14,7 +14,7 @@ add_pathway_direction(
 )
 }
 \arguments{
-\item{x}{\code{enrichResult} object as returned by \code{clusterProfiler::enricher()}}
+\item{x}{\code{enrichResult} object as used with \code{clusterProfiler}}
 
 \item{gene_hits}{\code{numeric} vector, with values \code{c(-1, 1)} to
 indicate up or down, respectively, and whose \code{names(gene_hits)}
