@@ -1,5 +1,30 @@
 # TODO
 
+## 05oct2026
+
+* `CnetCluster()`
+   * DONE. Fix border line width adjustment.
+   * DONE. For `plot_mpf()` use the cluster letter, not the number.
+
+* `mem_enrichment_heatmap()`
+   * Change `show_enrich` to use terms instead of integer.
+   Add option for asterisk to indicate significance, useful
+   together with `color_non_hits=TRUE`.
+   * When `show_enrich` is active, use contrasting text color.
+
+* `EnrichmentMap()`
+   * Consider some way to abbreviate/shorten labels based upon
+   the number of nodes in the graph. Many nodes shouldn't
+   have long labels blocking everything.
+
+* Evaluate `EnrichmentMapCollapsed()` to visualize the effect
+of collapsed pathway clusters.
+   * Is it useful?
+   * Could it inform a better layout, perhaps hierarchical?
+   E.g.- Draw `CnetCluster()` for each cluster, then arrange
+   them using `EnrichmentMapCollapsed()`.
+   (There still is no convenient hierarchical layout function.)
+
 ## 02oct2026
 
 * Consider options for custom clustering.

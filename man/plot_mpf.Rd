@@ -39,12 +39,12 @@ which follows the default order.
 The following values are recognized:
 \itemize{
 \item 'all': All available plot types are included.
-\item 'EnrichmentHeatmap' or 'eh': \code{EnrichmentHeatmap()}
-\item 'GenePathHeatmap' or 'gp': \code{GenePathHeatmap()}
-\item 'CnetCollapsed' or 'cc': \code{CnetCollapsed()}
-\item 'CnetExemplar' or 'ce': \code{CnetExemplar()}
-\item 'CnetCluster' or 'c': \code{CnetCluster()}
-\item 'EnrichmentMap' or 'em': \code{mem2emap()}. Note this plot
+\item 'eh' or 'EnrichmentHeatmap': \code{EnrichmentHeatmap()}
+\item 'gp' or 'GenePathHeatmap': \code{GenePathHeatmap()}
+\item 'cc' or 'CnetCollapsed': \code{CnetCollapsed()}
+\item 'ce' or 'CnetExemplar': \code{CnetExemplar()}
+\item 'c' or 'CnetCluster': \code{CnetCluster()}
+\item 'em' or 'EnrichmentMap': \code{mem2emap()}. Note this plot
 requires either 'Mem' argument, or 'Mem' being included
 in the \code{Mpf@metadata$Mem}.
 }}

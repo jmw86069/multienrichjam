@@ -68,12 +68,12 @@
 #' which follows the default order.  
 #' The following values are recognized:
 #'    * 'all': All available plot types are included.
-#'    * 'EnrichmentHeatmap' or 'eh': `EnrichmentHeatmap()`
-#'    * 'GenePathHeatmap' or 'gp': `GenePathHeatmap()`
-#'    * 'CnetCollapsed' or 'cc': `CnetCollapsed()`
-#'    * 'CnetExemplar' or 'ce': `CnetExemplar()`
-#'    * 'CnetCluster' or 'c': `CnetCluster()`
-#'    * 'EnrichmentMap' or 'em': `mem2emap()`. Note this plot
+#'    * 'eh' or 'EnrichmentHeatmap': `EnrichmentHeatmap()`
+#'    * 'gp' or 'GenePathHeatmap': `GenePathHeatmap()`
+#'    * 'cc' or 'CnetCollapsed': `CnetCollapsed()`
+#'    * 'ce' or 'CnetExemplar': `CnetExemplar()`
+#'    * 'c' or 'CnetCluster': `CnetCluster()`
+#'    * 'em' or 'EnrichmentMap': `mem2emap()`. Note this plot
 #'    requires either 'Mem' argument, or 'Mem' being included
 #'    in the `Mpf@metadata$Mem`.
 #' @param do_md_tabs `logical` default FALSE, whether to print
@@ -228,8 +228,14 @@ plot_mpf <- function
 
    if ("all" %in% plot_which) {
       # do them all
-      plot_which <- unique(plot_which_set[
-         c("eh", "em", "gp", "cc", "ce", "c", "em")]);
+      plot_which <- unique(plot_which_set[c(
+         "eh",
+         "gp",
+         "cc",
+         "ce",
+         "c",
+         "em"
+      )]);
    } else {
       # convert to recognized plot types
       plot_which <- unique(plot_which_set[plot_which])
@@ -589,6 +595,7 @@ plot_mpf <- function
       #################################
       ## CnetCluster
       if (grepl("CnetCluster", iplot)) {
+         c_clusters <- Clusters(Mpf);
          if (length(c_cluster) == 0) {
             c_cluster <- seq_along(Clusters(Mpf));
          }
@@ -601,24 +608,36 @@ plot_mpf <- function
          }
          for (icc in c_cluster) {
             if (length(c_cluster) > 1 && isTRUE(do_md_tabs)) {
-               cat_md_tab(md_tab_level=md_tab_level,
-                  heading=icc,
-                  md_tab_suffix=md_tab_suffix)
+               cat_md_tab(
+                  md_tab_level=md_tab_level,
+                  heading=c_clusters[icc],
+                  md_tab_suffix=md_tab_suffix
+               )
             }
             if (length(plot_list$CnetExemplar) == 0) {
                plot_list$CnetCluster <- list();
             }
-            plot_list$CnetCluster[[icc]] <- do.call(CnetCluster,
+            plot_list$CnetCluster[[c_clusters[icc]]] <- do.call(CnetCluster,
                c(
-                  alist(x=Mpf,
-                  cluster=icc,
-                  params=params[["c"]])))
+                  alist(
+                     x=Mpf,
+                     cluster=c_clusters[icc],
+                     params=params[["c"]]
+                  )
+               )
+            )
             # plot_list$CnetCluster <- CnetCluster(Mpf,
             #    cluster=icc,
             #    params=params[["c"]],
             #    ...);
             if (isTRUE(do_newpage)) grid::grid.newpage();
-            plot_names <- c(plot_names, paste0("CnetCluster ", icc))
+            plot_names <- c(
+               plot_names,
+               paste0(
+                  "CnetCluster ",
+                  c_clusters[icc]
+               )
+            )
          }
          if (length(c_cluster) > 1 && isTRUE(do_md_tabs)) {
             md_tab_level <- md_tab_level - 1;

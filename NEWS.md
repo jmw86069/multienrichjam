@@ -8,6 +8,11 @@
    It is applied consistently for directional and
    non-directional colors.
 
+* `plot_mpf()`
+   * Moved EnrichmentMap 'em' to the end of the default order.
+   * `CnetCluster()` fixed Markdown labels to use
+   cluster letters from `Clusters()` instead of integers.
+
 * `make_legend_bivariate()`
    * New default `pretty.n=c(5, 10)` so the P-value steps
    are typically each log10 unit from 1 through 10.
