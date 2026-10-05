@@ -1,3 +1,18 @@
+# multienrichjam 0.0.122.900
+
+## Changes
+
+* `mem_enrichment_heatmap()`
+   * New argument 'color_non_hits=TRUE' optionally colors
+   pathways which do not meet the P-value threshold.
+   It is applied consistently for directional and
+   non-directional colors.
+
+* `make_legend_bivariate()`
+   * New default `pretty.n=c(5, 10)` so the P-value steps
+   are typically each log10 unit from 1 through 10.
+
+
 # multienrichjam 0.0.121.900
 
 * Improve support of `enrichResult` and `gseaResult` without

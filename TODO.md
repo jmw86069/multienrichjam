@@ -1,14 +1,74 @@
 # TODO
 
+## 02oct2026
+
+* Consider options for custom clustering.
+   * Custom function `cluster_columns`.
+   * `list` input with user-defined clusters.
+   * Test `pvclust` for dynamic cutree.
+
+* Reduce dependencies
+   * Is clusterProfiler necessary?
+   Can `enrichResult`/`gseaResult` be used without DOSE/enrichit?
+
+* EnrichmentHeatmap:
+   * Option to use the full color gradient.
+
+* Eventually remove 'sf' and use JamPolygons or ggraph/tidygraph.
+Probably either requires ggplot2 or grid for graph rendering.
+
+## 25sep2026
+
+* CnetCollapsed: Include cluster letter in the title
+* CnetExemplar: include cluster letter in the title
+* Reconsider option to rotate `GenePathHeatmap()` so it uses
+row labels `ClusterLabels()`.
+* Evaluate using "NES" in EnrichmentHeatmap() for point sizes.
+Deepak suggestion.
+
 ## 27aug2026
 
-* Consider an approach with one object `Mem` and `Mpf` is optional.
+* Dare I even suggest: `jam_igraph()` using grid? Perhaps JamPolygons?
+* Add `CnetHeatmap()`
+   * Requires something like `heatmap_se()` internally.
+   Simplest form: Require 'centered' data from user.
+   * Requires expression, or log2fold-type grouped matrix.
 
+      * Column colors, 'hit boxes' require: enrichment-to-rep
+      * Without association, heatmap without 'hit boxes'
+   
+   * Define or provide 'Cnet'.
+   * Define heatmap layout.
+   CnetCollapsed uses Clusters.
+   CnetExemplar shows one cluster?
+
+* Make 'Cnet' functions work for 'Mpf'
+   * User must define which 'Cnet' to use.
+
+* Consider a refactor: one object 'Mem', and 'Mpf' becomes an
+optional component?
+   * Pros: Simpler workflow, less duplication since Mem is embedded
+   inside Mpf anyway.
+   * Cons: Potentially more confusing, Mpf gives clear separation
+   that clusters are independent from Mem.
    * Internally it stores settings, basic clustering results.
    * Methods `EnrichmentHeatmap()` become wrapper for actual method,
    calculates it on the fly, which is more flexible.
    * Store less results, store mostly the key parameters to define
    clusters.
+
+* Another potential refactor: store less in 'Mpf', generate when needed.
+Or start to transition some prep to dynamic when needed.
+   * `EnrichmentHeatmap()` calls `mem_enrichment_heatmap()` when
+   custom options require.
+   * `GenePathHeatmap()` calls `mem_gene_path_heatmap()` when
+   custom options require.
+
+* Refactor function docs:
+   * Move `mem_enrichment_heatmap()`, `mem_gene_path_heatmap()`, and similar
+   to exported but internally-called functions.
+   Not typically user-facing.
+   * Create `Cnet` focused functions.
 
 ## 24aug2026
 

@@ -16,6 +16,16 @@ colorRamp2D(
   ...
 )
 }
+\value{
+\code{function} that takes input with arguments
+\itemize{
+\item x: numeric x-axis value
+\item y: numeric y-axis value
+\item return_rgb: \code{logical} whether to return RGB color
+\item max_value: maximum value, ignored
+\item ...: additional arguments are ignored
+}
+}
 \description{
 Color ramp for bivariate colors
 }

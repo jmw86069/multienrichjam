@@ -6,7 +6,7 @@
 \usage{
 make_legend_bivariate(
   col_fun,
-  pretty.n = 5,
+  pretty.n = c(5, 10),
   name = "bivariate",
   xlab = "",
   ylab = "",
@@ -112,7 +112,7 @@ lgds <- make_legend_bivariate(col_fun,
    title_fontsize=14,
    legend_fontsize=12,
    grid_height=grid::unit(7, "mm"),
-   pretty.n=5);
+   pretty.n=c(5, 10));
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 
@@ -130,7 +130,7 @@ lgds <- make_legend_bivariate(col_fun,
    row_breaks=c(0, 0.25, 0.5, 0.75, 1),
    column_gap=grid::unit(1, "mm"),
    row_gap=grid::unit(1, "mm"),
-   pretty.n=5);
+   pretty.n=c(5, 10));
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 

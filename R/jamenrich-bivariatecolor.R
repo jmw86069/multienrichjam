@@ -43,19 +43,25 @@
 #'    space="LUV",
 #'    mcolor=mcolor1)
 #' display_colorRamp2D(col_fun1);
-#'
+#' 
+#' @returns `function` that takes input with arguments
+#'    * x: numeric x-axis value
+#'    * y: numeric y-axis value
+#'    * return_rgb: `logical` whether to return RGB color
+#'    * max_value: maximum value, ignored
+#'    * ...: additional arguments are ignored
 #' @export
-colorRamp2D <- function
-(column_breaks,
- row_breaks,
- mcolor,
- na_color="grey15",
- return_rgb=FALSE,
- transparency=0,
- space="sRGB",
- verbose=FALSE,
- ...)
-{
+colorRamp2D <- function(
+   column_breaks,
+   row_breaks,
+   mcolor,
+   na_color="grey15",
+   return_rgb=FALSE,
+   transparency=0,
+   space="sRGB",
+   verbose=FALSE,
+   ...
+) {
    #
    use_space <- space;
    x_funs <- lapply(seq_along(column_breaks), function(colnum){
@@ -351,7 +357,7 @@ cell_fun_bivariate <- function
       suffix <- "";
    }
    if (length(mcolor) > 0) {
-      if (!is.matrix(mcolor) || !"character" %in% class(mcolor)) {
+      if (!is.matrix(mcolor) || !inherits(mcolor, "character")) {
          stop("mcolor must be a character matrix");
       }
       if (nrow(mcolor) == nrow(m[[1]]) && ncol(mcolor) == ncol(m[[1]])) {
@@ -361,10 +367,10 @@ cell_fun_bivariate <- function
       }
    }
 
-   prefix <- rep(prefix, length.out=length(show));
-   suffix <- rep(suffix, length.out=length(show));
+   prefix <- rep_len(prefix, length(show));
+   suffix <- rep_len(suffix, length(show));
    sep <- c("",
-      head(rep(sep, length.out=length(show)), -1));
+      head(rep_len(sep, length(show)), -1));
    cell_fun_return <- function(j, i, x, y, width, height, fill) {
       # convert NA to zero
       #cell_value1 <- jamba::rmNA(naValue=0, m[[1]][i, j]);
@@ -641,7 +647,7 @@ cell_fun_bivariate <- function
 #'    title_fontsize=14,
 #'    legend_fontsize=12,
 #'    grid_height=grid::unit(7, "mm"),
-#'    pretty.n=5);
+#'    pretty.n=c(5, 10));
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
 #'
@@ -659,44 +665,44 @@ cell_fun_bivariate <- function
 #'    row_breaks=c(0, 0.25, 0.5, 0.75, 1),
 #'    column_gap=grid::unit(1, "mm"),
 #'    row_gap=grid::unit(1, "mm"),
-#'    pretty.n=5);
+#'    pretty.n=c(5, 10));
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
 #'
 #' @export
-make_legend_bivariate <- function
-(col_fun,
- pretty.n=5,
- name="bivariate",
- xlab="",
- ylab="",
- title="",
- border=TRUE,
- digits=3,
- title_fontsize=11,
- legend_fontsize=10,
- grid_height=grid::unit(5, "mm"),
- grid_width=grid_height,
- row_breaks=NULL,
- column_breaks=NULL,
- row_gap=grid::unit(0, "mm"),
- column_gap=grid::unit(0, "mm"),
- ...)
-{
+make_legend_bivariate <- function(
+   col_fun,
+   pretty.n=c(5, 10),
+   name="bivariate",
+   xlab="",
+   ylab="",
+   title="",
+   border=TRUE,
+   digits=3,
+   title_fontsize=11,
+   legend_fontsize=10,
+   grid_height=grid::unit(5, "mm"),
+   grid_width=grid_height,
+   row_breaks=NULL,
+   column_breaks=NULL,
+   row_gap=grid::unit(0, "mm"),
+   column_gap=grid::unit(0, "mm"),
+   ...
+) {
    if (length(pretty.n) > 0) {
-      pretty.n <- rep(pretty.n, length.out=2);
+      pretty.n <- rep_len(pretty.n, 2);
    }
 
    if (length(column_breaks) == 0) {
       column_breaks <- attr(col_fun, "column_breaks");
-      if (length(pretty.n) > 0) {
+      if (length(pretty.n) == 2 && pretty.n[1] > 0) {
          column_breaks <- pretty(column_breaks,
             n=pretty.n[1])
       }
    }
    if (length(row_breaks) == 0) {
       row_breaks <- attr(col_fun, "row_breaks");
-      if (length(pretty.n) > 0) {
+      if (length(pretty.n) == 2 && pretty.n[2] > 0) {
          row_breaks <- pretty(row_breaks,
             n=pretty.n[2]);
       }
