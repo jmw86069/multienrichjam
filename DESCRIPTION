@@ -1,7 +1,7 @@
 Package: multienrichjam
 Type: Package
 Title: Analysis and Visualization of Multiple Gene Set Enrichments
-Version: 0.0.122.900
+Version: 0.0.122.950
 Authors@R: c(
    person(given=c("James", "M."),
       family="Ward",
@@ -9,13 +9,12 @@ Authors@R: c(
       comment=c(ORCID="0000-0002-9510-2848"),
       role=c("aut", "cre", "cph")))
 Maintainer: James M. Ward <jmw86069@gmail.com>
-Description: Methods to analyze multiple gene set enrichment results,
-   visualize gene-pathway relationships, cluster pathways, create
-   concept network plots, and render igraph networks with edge bundling
-   for bipartite graphs.
-   Extends EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu)
-   functions specifically to explore and compare multiple enrichment
-   results.
+Description: Analysis of multiple gene set enrichment results,
+   focused on pathway clustering driven by gene content,
+   visualization of gene-pathway relationships, condensing
+   redundant pathways to produce interpretable gene-pathway
+   concept network graphs. Bipartite graphs render with edge
+   bundling and efficient vectorized node rendering.
 Depends: R (>= 3.5.0)
 biocViews:
 Imports: jamba (>= 1.0.4),

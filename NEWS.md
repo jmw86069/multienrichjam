@@ -1,4 +1,4 @@
-# multienrichjam 0.0.122.900
+# multienrichjam 0.0.122.950
 
 ## Changes
 
@@ -7,11 +7,22 @@
    pathways which do not meet the P-value threshold.
    It is applied consistently for directional and
    non-directional colors.
+   * Fixed `show_enrich` label to be consistent when
+   using bivariate color, which colors by direction
+   first, however `show_enrich=1` should label -log10
+   P-value.
+
+* `GenePathHeatmap()` and `mem_gene_path_heatmap()`
+   * Added 'topEnrichN' to the legend Thresholds.
 
 * `plot_mpf()`
    * Moved EnrichmentMap 'em' to the end of the default order.
    * `CnetCluster()` fixed Markdown labels to use
    cluster letters from `Clusters()` instead of integers.
+   * `CnetCluster()` fixed missing plot 'main' title.
+   * Added `ClusterSummary` to produce markdown output
+   when available in `ClusterData()` for the Mpf object,
+   for example from `llamajam::summarize_mpf_clusters()`.
 
 * `make_legend_bivariate()`
    * New default `pretty.n=c(5, 10)` so the P-value steps

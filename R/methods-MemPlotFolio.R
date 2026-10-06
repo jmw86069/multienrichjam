@@ -799,7 +799,11 @@ setMethod("CnetExemplar", "MemPlotFolio",
       params[[iname]] <- arglist[[iname]];
    }
    if (length(main) == 0) {
-      main <- paste0("Cnet With ", num, " Exemplars")
+      if (num == 1) {
+         main <- paste0("Cnet With ", num, " Exemplar")
+      } else {
+         main <- paste0("Cnet With ", num, " Exemplars")
+      }
    }
    if (isFALSE(main)) {
       main <- NULL;
@@ -868,23 +872,23 @@ setMethod("CnetExemplar", "MemPlotFolio",
             params))
       # jam_igraph(cnet,
       #    ...)
-   	
-   	# determine whether to include direction in the legend
-   	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
-   		TRUE, FALSE)
+      
+      # determine whether to include direction in the legend
+      hasDirection <- isTRUE(metadata(x)[["hasDirection"]]);
+
       params$x <- legend_x;
       params$y <- legend_y;
-   	if (length(params) > 0 && "do_directional" %in% names(params)) {
-   		do_directional <- params[["do_directional"]];
-   		# arglist <- arglist[-match("do_directional", names(arglist))];
-   	} else {
-   		params[["do_directional"]] <- hasDirection;
-   	}
-   	# draw the legend
-   	do.call(mem_legend,
-   		c(
-   			alist(mem=metadata(x)),
-   			arglist))
+      if (length(params) > 0 && "do_directional" %in% names(params)) {
+         # do_directional <- params[["do_directional"]];
+         # arglist <- arglist[-match("do_directional", names(arglist))];
+      } else {
+         params[["do_directional"]] <- hasDirection;
+      }
+      # draw the legend
+      do.call(mem_legend,
+         c(
+            alist(mem=metadata(x)),
+            arglist))
    }
    invisible(cnet);
    })
@@ -912,9 +916,8 @@ setMethod("CnetCluster", "MemPlotFolio",
          maxNchar=Inf,
          layout=NULL,
          rotate_degrees=0),
-      main=NULL,
       legend_x="bottomleft", legend_y=NULL,
-      ...) {
+      main=NULL, ...) {
    if (missing(do_plot)) {
       do_plot <- TRUE;
    }
@@ -933,7 +936,10 @@ setMethod("CnetCluster", "MemPlotFolio",
    }
    if (length(main) == 0) {
       if (length(x@metadata$cluster_labels) > 0) {
-         main <- x@metadata$cluster_labels[cluster];
+         main <- paste0(
+            names(Clusters(x)[cluster]), ": ",
+            x@metadata$cluster_labels[cluster]
+         );
       } else {
          main <- names(Clusters(x)[cluster]);
       }
@@ -1016,7 +1022,10 @@ setMethod("CnetCluster", "MemPlotFolio",
    params[["rotate_degrees"]] <- NULL;
 
    if (isTRUE(do_plot)) {
-   	# draw the igraph
+      if (length(main) > 0) {
+         params$main <- main;
+      }
+      # draw the igraph
       do.call(jam_igraph,
          c(
             alist(x=cnet),
@@ -1024,26 +1033,28 @@ setMethod("CnetCluster", "MemPlotFolio",
       # jam_igraph(cnet,
       #    main=main,
       #    ...)
-   	
-   	# determine whether to include direction in the legend
-   	hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
-   		TRUE, FALSE)
+      
+      # determine whether to include direction in the legend
+      hasDirection <- isTRUE(metadata(x)[["hasDirection"]])
+
       params$x <- legend_x;
       params$y <- legend_y;
-   	if (length(params) > 0 && "do_directional" %in% names(params)) {
-   		do_directional <- params[["do_directional"]];
-   		# arglist <- arglist[-match("do_directional", names(arglist))];
-   	} else {
-   		params[["do_directional"]] <- hasDirection;
-   	}
-   	# draw the legend
-   	do.call(mem_legend,
-   		c(
-   			alist(mem=metadata(x)),
-	      	params))
+      if (length(params) > 0 && "do_directional" %in% names(params)) {
+         # do_directional <- params[["do_directional"]];
+         # arglist <- arglist[-match("do_directional", names(arglist))];
+      } else {
+         params[["do_directional"]] <- hasDirection;
+      }
+      # draw the legend
+      do.call(mem_legend,
+         c(
+            alist(mem=metadata(x)),
+            params
+         )
+      )
    }
    invisible(cnet)
-   })
+})
 
 #' @describeIn MemPlotFolio-class Plot a `MemPlotFolio` object calling
 #'    `plot_mpf()`

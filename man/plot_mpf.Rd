@@ -8,7 +8,7 @@ plot_mpf(
   Mpf,
   plot_which = c("all", "EnrichmentHeatmap", "eh", "GenePathHeatmap", "gp",
     "CnetCollapsed", "cc", "CnetExemplar", "ce", "CnetCluster", "c", "EnrichmentMap",
-    "em"),
+    "em", "ClusterSummary", "cs"),
   do_md_tabs = FALSE,
   md_tab_open = NULL,
   md_tab_suffix = NULL,
@@ -18,6 +18,7 @@ plot_mpf(
   cc_type = NULL,
   ce_num = NULL,
   c_cluster = NULL,
+  cs_cluster = NULL,
   em_group = NULL,
   Mem = NULL,
   params = list(eh = list(do_plot = TRUE), em = list(repulse = 3.5, node_factor = 1,
@@ -47,6 +48,11 @@ The following values are recognized:
 \item 'em' or 'EnrichmentMap': \code{mem2emap()}. Note this plot
 requires either 'Mem' argument, or 'Mem' being included
 in the \code{Mpf@metadata$Mem}.
+\item 'cs' or 'ClusterSummary': Relevant when \code{llamajam} is
+installed and when clusters are summarized using
+\code{llamajam::summarize_mpf_clusters()}.
+Alternatively, any data stored in \code{ClusterData(Mpf)} can
+be used. It is expected to provide markdown formatting.
 }}
 
 \item{do_md_tabs}{\code{logical} default FALSE, whether to print
@@ -96,8 +102,8 @@ underneath at a lower heading.
 \item Use md_title=FALSE or md_title=NULL to suppress this header.
 }}
 
-\item{cc_type, ce_num, c_cluster}{passed to corresponding functions,
-and supports multiple values.
+\item{cc_type, ce_num, c_cluster, cs_cluster}{passed to corresponding
+functions, and supports multiple values.
 \itemize{
 \item cc_type: passed to CnetCollapsed(Mpf, type=cc_type).
 When NULL it will use 'cluster' if \code{ClusterLabels(Mpf)} is
@@ -107,6 +113,9 @@ available, otherwise 'set'. If more than 500 nodes, it appends
 it will use ce_num=1.
 \item c_cluster: passed to CnetCluster(Mpf, cluster=c_cluster).
 When NULL it will iterate each cluster in Mpf.
+\item cs_cluster: describes which cluster summaries to print.
+When NULL it will iterate each cluster in Mpf, provided
+there is data available from \code{ClusterData(Mpf)}.
 }}
 
 \item{em_group}{\code{character} default NULL uses

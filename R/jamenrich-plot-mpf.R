@@ -76,6 +76,11 @@
 #'    * 'em' or 'EnrichmentMap': `mem2emap()`. Note this plot
 #'    requires either 'Mem' argument, or 'Mem' being included
 #'    in the `Mpf@metadata$Mem`.
+#'    * 'cs' or 'ClusterSummary': Relevant when `llamajam` is
+#'    installed and when clusters are summarized using
+#'    `llamajam::summarize_mpf_clusters()`.
+#'    Alternatively, any data stored in `ClusterData(Mpf)` can
+#'    be used. It is expected to provide markdown formatting.
 #' @param do_md_tabs `logical` default FALSE, whether to print
 #'    markdown-compatible tab headers before rendering each
 #'    plot, done using `cat()` to STDOUT.
@@ -107,8 +112,8 @@
 #'    print a title heading using `md_tab_level`, then create the tabset
 #'    underneath at a lower heading.
 #'    * Use md_title=FALSE or md_title=NULL to suppress this header.
-#' @param cc_type,ce_num,c_cluster passed to corresponding functions,
-#'    and supports multiple values.
+#' @param cc_type,ce_num,c_cluster,cs_cluster passed to corresponding
+#'    functions, and supports multiple values.
 #'    * cc_type: passed to CnetCollapsed(Mpf, type=cc_type).
 #'    When NULL it will use 'cluster' if `ClusterLabels(Mpf)` is
 #'    available, otherwise 'set'. If more than 500 nodes, it appends
@@ -117,6 +122,9 @@
 #'    it will use ce_num=1.
 #'    * c_cluster: passed to CnetCluster(Mpf, cluster=c_cluster).
 #'    When NULL it will iterate each cluster in Mpf.
+#'    * cs_cluster: describes which cluster summaries to print.
+#'    When NULL it will iterate each cluster in Mpf, provided
+#'    there is data available from `ClusterData(Mpf)`.
 #' @param em_group `character` default NULL uses 
 #'    community detection in `mem2emap()`.
 #'    * 'community': uses community detection in `mem2emap()`.
@@ -165,7 +173,8 @@ plot_mpf <- function
     "CnetCollapsed", "cc",
     "CnetExemplar", "ce",
     "CnetCluster", "c",
-    "EnrichmentMap", "em"),
+    "EnrichmentMap", "em",
+    "ClusterSummary", "cs"),
  do_md_tabs=FALSE,
  md_tab_open=NULL,
  md_tab_suffix=NULL,
@@ -175,6 +184,7 @@ plot_mpf <- function
  cc_type=NULL,
  ce_num=NULL,
  c_cluster=NULL,
+ cs_cluster=NULL,
  em_group=NULL,
  Mem=NULL,
  params=list(
@@ -223,22 +233,41 @@ plot_mpf <- function
       "c"="CnetCluster",
       CnetCluster="CnetCluster",
       em="EnrichmentMap",
-      EnrichmentMap="EnrichmentMap")
+      EnrichmentMap="EnrichmentMap",
+      "cs"="ClusterSummary",
+      ClusterSummary="ClusterSummary")
+   
+   ## Note ClusterSummary does not require llamajam, it only
+   ## requires data stored in ClusterData()
+   if (length(ClusterData(Mpf)) == 0) {
+      plot_which_set <- jamba::unvigrep(
+         "ClusterSummary",
+         plot_which_set)
+   }
    # em alternative that uses clusters instead of communities
 
    if ("all" %in% plot_which) {
       # do them all
-      plot_which <- unique(plot_which_set[c(
-         "eh",
-         "gp",
-         "cc",
-         "ce",
-         "c",
-         "em"
-      )]);
+      use_names <- intersect(
+         c(
+            "eh",
+            "gp",
+            "cc",
+            "ce",
+            "c",
+            "em",
+            "cs"
+         ),
+         names(plot_which_set)
+      );
+      plot_which <- unique(plot_which_set[use_names]);
    } else {
       # convert to recognized plot types
-      plot_which <- unique(plot_which_set[plot_which])
+      use_names <- intersect(
+         plot_which,
+         names(plot_which_set)
+      )
+      plot_which <- unique(plot_which_set[use_names])
    }
    if (verbose) {
       jamba::printDebug("plot_mpf(): ",
@@ -330,7 +359,7 @@ plot_mpf <- function
       if (length(md_tab_suffix) == 0) {
          md_tab_suffix <- "";
       }
-      if (length(heading) > 0 && nchar(heading) > 0) {
+      if (length(heading) > 0 && nzchar(heading)) {
          md_string <- paste0("\n\n",
             md_header, " ",
             heading, " ",
@@ -357,7 +386,7 @@ plot_mpf <- function
       } else {
          md_tab_suffix <- paste0(" ", md_tab_suffix);
       }
-      if (length(heading) > 0 && nchar(heading) > 0) {
+      if (length(heading) > 0 && nzchar(heading)) {
          md_string <- paste0("\n\n",
             md_header, " ",
             heading,
@@ -372,7 +401,7 @@ plot_mpf <- function
    (md_tab_close=NULL,
     ...)
    {
-      if (length(md_tab_close) > 0 && nchar(md_tab_close) > 0) {
+      if (length(md_tab_close) > 0 && nzchar(md_tab_close)) {
          md_string <- paste0("\n\n",
             md_tab_close,
             "\n\n");
@@ -390,7 +419,7 @@ plot_mpf <- function
          heading=md_title,
          md_tab_open=md_tab_open,
          md_tab_suffix=md_tab_suffix)
-      if (length(md_title) > 0 && nchar(md_title) > 0) {
+      if (length(md_title) > 0 && nzchar(md_title)) {
          md_tab_level <- md_tab_level + 1;
       }
    }
@@ -413,7 +442,7 @@ plot_mpf <- function
 
       #################################
       ## EnrichmentHeatmap
-      if (grepl("EnrichmentHeatmap", iplot)) {
+      if (grepl("EnrichmentHeatmap", fixed=TRUE, iplot)) {
          plot_list$EnrichmentHeatmap <- do.call(
             EnrichmentHeatmap,
             c(
@@ -426,7 +455,7 @@ plot_mpf <- function
 
       #################################
       ## GenePathHeatmap
-      if (grepl("GenePathHeatmap", iplot)) {
+      if (grepl("GenePathHeatmap", fixed=TRUE, iplot)) {
          plot_list$GenePathHeatmap <- do.call(GenePathHeatmap,
             c(
                alist(x=Mpf),
@@ -438,7 +467,7 @@ plot_mpf <- function
 
       #################################
       ## EnrichmentMap
-      if (grepl("EnrichmentMap", iplot)) {
+      if (grepl("EnrichmentMap", fixed=TRUE, iplot)) {
          # makeshift mem object?
          if (length(Mem) == 0) {
             Mem <- metadata(Mpf)$Mem;
@@ -505,7 +534,7 @@ plot_mpf <- function
 
       #################################
       ## CnetCollapsed
-      if (grepl("CnetCollapsed", iplot)) {
+      if (grepl("CnetCollapsed", fixed=TRUE, iplot)) {
          if (length(cc_type) == 0) {
             if (length(ClusterLabels(Mpf)) > 0) {
                cc_type <- "cluster";
@@ -553,7 +582,7 @@ plot_mpf <- function
 
       #################################
       ## CnetExemplar
-      if (grepl("CnetExemplar", iplot)) {
+      if (grepl("CnetExemplar", fixed=TRUE, iplot)) {
          if (length(ce_num) == 0) {
             ce_num <- 1;
          }
@@ -594,13 +623,14 @@ plot_mpf <- function
 
       #################################
       ## CnetCluster
-      if (grepl("CnetCluster", iplot)) {
-         c_clusters <- Clusters(Mpf);
+      if (grepl("CnetCluster", fixed=TRUE, iplot)) {
+         c_clusters <- jamba::nameVectorN(Clusters(Mpf));
          if (length(c_cluster) == 0) {
             c_cluster <- seq_along(Clusters(Mpf));
          }
          if (length(c_cluster) > 1 && isTRUE(do_md_tabs)) {
-            cat_md_header(md_tab_level=md_tab_level,
+            cat_md_header(
+               md_tab_level=md_tab_level,
                heading=NULL,
                md_tab_open=md_tab_open,
                md_tab_suffix=md_tab_suffix)
@@ -621,7 +651,7 @@ plot_mpf <- function
                c(
                   alist(
                      x=Mpf,
-                     cluster=c_clusters[icc],
+                     cluster=icc,
                      params=params[["c"]]
                   )
                )
@@ -645,6 +675,92 @@ plot_mpf <- function
          }
          if (isTRUE(do_newpage)) grid::grid.newpage();
       }
+
+      #################################
+      ## ClusterSummary
+      if (grepl("ClusterSummary", fixed=TRUE, iplot)) {
+         cs_clusters <- jamba::nameVectorN(Clusters(Mpf));
+         cs_clusterdata <- ClusterData(Mpf);
+         if (length(cs_cluster) == 0) {
+            cs_cluster <- seq_along(cs_clusters);
+         }
+         if (length(cs_cluster) > 1 && isTRUE(do_md_tabs)) {
+            cat_md_header(
+               md_tab_level=md_tab_level,
+               heading=NULL,
+               md_tab_open=md_tab_open,
+               md_tab_suffix=md_tab_suffix)
+            md_tab_level <- md_tab_level + 1;
+         }
+         for (icc in cs_cluster) {
+            add_hd <- paste0(
+               rep("#", md_tab_level),
+               collapse=""
+            );
+            if (length(cs_cluster) > 1 && isTRUE(do_md_tabs)) {
+               cat_md_tab(
+                  md_tab_level=md_tab_level,
+                  heading=cs_clusters[icc],
+                  md_tab_suffix=md_tab_suffix
+               )
+               add_hd <- paste0(
+                  rep("#", md_tab_level + 1),
+                  collapse=""
+               );
+            }
+            use_clusterdata <- cs_clusterdata[[icc]];
+            # system prompt if defined
+            use_sys_prompt <- attr(use_clusterdata, "system_prompt")
+            # wrap the prompt in <details>
+            jprompt <- unlist(strsplit(use_clusterdata, "\n"));
+            sw1 <- head(which(startsWith(jprompt, "## Prompt")), 1);
+            if (length(sw1) == 1) {
+               h2 <- which(startsWith(jprompt, "## "));
+               h2 <- head(h2[h2 > sw1], 1);
+               if (length(h2) == 1) {
+                  # only update when start and end are found
+                  jprompt[sw1] <- paste0(
+                     "<details><summary>**Prompt**</summary>\n\n"
+                     # jprompt[sw1]
+                  )
+                  jprompt[h2] <- paste0(
+                     "\n\n</details>\n\n",
+                     jprompt[h2]
+                  )
+               }
+            }
+            use_clusterdata <- paste0(jprompt, collapse="\n")
+            # append system_prompt
+            if (length(use_sys_prompt) > 0) {
+               if (length(use_sys_prompt) > 1) {
+                  use_sys_prompt <- paste0(
+                     use_sys_prompt,
+                     collapse="\n"
+                  )
+               }
+               use_sys_prompt <- gsub(
+                  "[#]+ System Prompt(.+)$",
+                  "<details><summary>**System Prompt**</summary>\n\n\\1\n\n</details>\n\n",
+                  use_sys_prompt
+               )
+               use_clusterdata <- paste0(
+                  use_clusterdata,
+                  use_sys_prompt
+               )
+            }
+            # adjust markdown headers
+            use_clusterdata_lines <- strsplit(
+               use_clusterdata,
+               "\n"
+            )[[1]];
+            use_clusterdata_lines <- paste0(
+               gsub("^#", add_hd,
+                  use_clusterdata_lines),
+               collapse="\n");
+            cat(use_clusterdata_lines);
+         }
+      }
+
    }
 
    # Optionally close md tabs

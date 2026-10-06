@@ -97,9 +97,9 @@ MemPlotFolio_to_list(x, ...)
   cluster,
   do_plot,
   params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
-  main = NULL,
   legend_x = "bottomleft",
   legend_y = NULL,
+  main = NULL,
   ...
 )
 

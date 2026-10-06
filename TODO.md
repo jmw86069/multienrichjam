@@ -2,6 +2,17 @@
 
 ## 05oct2026
 
+* Improve bivariate color legend.
+   * Include the P-value threshold as a label.
+   * Implement directional score threshold, show a label.
+   * Use consistent P-value steps for color_non_hits
+   TRUE and FALSE.
+
+* DONE. Add Cluster Summary to `plot_mpf()`
+* `mem_enrichment_heatmap()`
+   * Provide some way to obtain the matrices used
+   for clustering, for independent evaluation.
+
 * `CnetCluster()`
    * DONE. Fix border line width adjustment.
    * DONE. For `plot_mpf()` use the cluster letter, not the number.

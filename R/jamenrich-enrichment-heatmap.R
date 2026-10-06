@@ -568,12 +568,20 @@ mem_enrichment_heatmap <- function(
          #       rep("#FFFFFF", length.out=length(x))
          #    };
          # }
+         ## Switch show_enrich 1:2 to 2:1;
+         show_enrich <- ifelse(
+            show_enrich %in% 1, 2,
+            ifelse(
+               show_enrich %in% 2, 1,
+               show_enrich
+            )
+         )
          cell_fun_custom <- cell_fun_bivariate(
             list(
                use_direction,
                use_matrix,
                enrichIMgeneCount(Mem)),
-            invert=grepl("invert", style),
+            invert=grepl("invert", fixed=TRUE, style),
             pch=pch,
             size_fun=ct_approxfun,
             size_by=size_by,

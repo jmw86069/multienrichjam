@@ -742,11 +742,18 @@ mem_gene_path_heatmap <- function
       caption_clustering <- rev(caption_clustering);
       caption_im_weights <- rev(caption_im_weights);
    }
+   topEnrichN <- thresholds(Mem)$topEnrichN;
    caption_list <- list(
       Summary=caption,
       Clustering=caption_clustering,
       Filtering=jamba::rmNA(c(
          paste0("enrichment P <= ", p_cutoff),
+         ifelse(length(topEnrichN) == 1 &
+            !any(is.infinite(topEnrichN)),
+            paste0(
+               "Top N: ", topEnrichN
+            ),
+            NA),
          ifelse(min_set_ct_each > 1,
             paste0(gene_type, "s per ",
                set_type, " >= ", min_set_ct_each,
