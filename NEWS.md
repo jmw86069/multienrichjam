@@ -27,7 +27,8 @@
 * `make_legend_bivariate()`
    * New default `pretty.n=c(5, 10)` so the P-value steps
    are typically each log10 unit from 1 through 10.
-
+   * Added option 'p_cutoff' to display the cutoff label,
+   making it clearer the color at this threshold.
 
 # multienrichjam 0.0.121.900
 

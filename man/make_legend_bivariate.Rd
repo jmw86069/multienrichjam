@@ -21,6 +21,7 @@ make_legend_bivariate(
   column_breaks = NULL,
   row_gap = grid::unit(0, "mm"),
   column_gap = grid::unit(0, "mm"),
+  p_cutoff = NULL,
   ...
 )
 }
@@ -68,6 +69,11 @@ visible gaps between color squares in the color legend. By default,
 there is no gap. These arguments are provided as a convenient way
 to impose a gap, since the method used does not otherwise provide
 a reasonable way to adjust the spacing.}
+
+\item{p_cutoff}{\code{numeric} optional P-value cutoff, used to add a label
+indicating this cutoff on the legend. It is NULL by default,
+which makes it ignored. When provided, it should be in P-value
+units (between 0 and 1) and will be -log10 transformed.}
 
 \item{...}{additional arguments are ignored.}
 }

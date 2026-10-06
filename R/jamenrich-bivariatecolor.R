@@ -612,6 +612,10 @@ cell_fun_bivariate <- function
 #'    there is no gap. These arguments are provided as a convenient way
 #'    to impose a gap, since the method used does not otherwise provide
 #'    a reasonable way to adjust the spacing.
+#' @param p_cutoff `numeric` optional P-value cutoff, used to add a label
+#'    indicating this cutoff on the legend. It is NULL by default,
+#'    which makes it ignored. When provided, it should be in P-value
+#'    units (between 0 and 1) and will be -log10 transformed.
 #' @param ... additional arguments are ignored.
 #'
 #' @return `ComplexHeatmap::Legends-class` object as returned by
@@ -687,6 +691,7 @@ make_legend_bivariate <- function(
    column_breaks=NULL,
    row_gap=grid::unit(0, "mm"),
    column_gap=grid::unit(0, "mm"),
+   p_cutoff=NULL,
    ...
 ) {
    if (length(pretty.n) > 0) {
@@ -705,6 +710,12 @@ make_legend_bivariate <- function(
       if (length(pretty.n) == 2 && pretty.n[2] > 0) {
          row_breaks <- pretty(row_breaks,
             n=pretty.n[2]);
+      }
+      if (length(p_cutoff) == 1 && is.numeric(p_cutoff)) {
+         p_cut_val <- -log10(p_cutoff);
+         if (!p_cut_val %in% row_breaks) {
+            row_breaks <- sort(c(row_breaks, p_cut_val))
+         }
       }
    }
    row_breaks <- rev(row_breaks);

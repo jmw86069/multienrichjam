@@ -6,7 +6,7 @@
 \alias{multienrichjam-package}
 \title{Multi-enrichment analysis with multienrichjam}
 \description{
-Methods to analyze multiple gene set enrichment results, visualize gene-pathway relationships, cluster pathways, create concept network plots, and render igraph networks with edge bundling for bipartite graphs. Extends EnrichMap (Merico, Bader) and clusterProfiler (Guangchuang Yu) functions specifically to explore and compare multiple enrichment results.
+Analysis of multiple gene set enrichment results, focused on pathway clustering driven by gene content, visualization of gene-pathway relationships, condensing redundant pathways to produce interpretable gene-pathway concept network graphs. Bipartite graphs render with edge bundling and efficient vectorized node rendering.
 }
 \details{
 This package aims to enable analysis for one or multiple

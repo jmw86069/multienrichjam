@@ -2,6 +2,9 @@
 
 ## 05oct2026
 
+* Consider moving shiny functions to new package.
+* Consider porting `layout_with_qfr()` to remove qgraph
+dependency.
 * Improve bivariate color legend.
    * Include the P-value threshold as a label.
    * Implement directional score threshold, show a label.

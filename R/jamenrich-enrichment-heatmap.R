@@ -480,7 +480,7 @@ mem_enrichment_heatmap <- function(
       if (length(ct_ticks) >= 8) {
          pt_legend_ncol <- 2;
       }
-      if (any(grepl("dotplot", style))) {
+      if (any(grepl("dotplot", fixed=TRUE, style))) {
          pt_legend <- ComplexHeatmap::Legend(
             labels=ct_ticks,
             title="Gene Count",
@@ -514,39 +514,52 @@ mem_enrichment_heatmap <- function(
       }
       # improved cell_fun
       if (apply_direction) {
-         tcount <- jamba::tcount;
+         # tcount <- jamba::tcount;
          dir_colors <- c("royalblue4", "gold3", "firebrick3");
          dir_colors2 <- c("skyblue", "gold", "indianred1");
          dir_colors3 <- c("white", "white", "white");
-         mcolor <- jamba::rbindList(list(dir_colors3, dir_colors2, dir_colors))
+         dir_colors2.5 <- sapply(dir_colors2, function(i){
+            colorjam::blend_colors(c(i, "white"))
+         })
+         mcolor <- jamba::rbindList(list(
+            dir_colors3,
+            dir_colors2.5,
+            dir_colors2,
+            dir_colors))
          # jamba::imageByColors(mcolor)
          # white_num controls the intensity of the first non-white color
          # in the color gradient
-         white_num <- 2;
-         mcolor2 <- matrix(ncol=3,
-            c("white", "white", "white",
-               colorjam::blend_colors(c(dir_colors[1], rep("white", white_num))),
-               colorjam::blend_colors(c(dir_colors[2], rep("white", white_num))),
-               colorjam::blend_colors(c(dir_colors[3], rep("white", white_num))),
-               dir_colors),
-            byrow=TRUE);
+         # white_num <- 2;
+         # mcolor2 <- matrix(ncol=3,
+         #    c("white", "white", "white",
+         #       colorjam::blend_colors(c(dir_colors[1], rep("white", white_num))),
+         #       colorjam::blend_colors(c(dir_colors[2], rep("white", white_num))),
+         #       colorjam::blend_colors(c(dir_colors[3], rep("white", white_num))),
+         #       dir_colors),
+         #    byrow=TRUE);
+         p_cut_lvl <- 10^(-1 * (ceiling(-log10(p_cutoff)) + 5));
          row_breaks <- c(
-            -log10(p_cutoff) - 1e-10,
+            -log10(p_cutoff),
             seq(from=-log10(p_cutoff),
                to=-log10(p_floor),
-               length.out=2));
-         if (p_cutoff < 1 && isTRUE(color_non_hits)) {
-            row_breaks <- c(
-               0,
-               seq(from=-log10(p_cutoff),
-                  to=-log10(p_floor),
-                  length.out=2));
-
-         }
+               length.out=3));
          if (p_cutoff == 1) {
-            row_breaks <- tail(row_breaks, -1);
-            mcolor <- mcolor[-2, , drop=FALSE]
+            row_breaks[2] <- row_breaks[1] + p_cut_lvl;
+         } else {
+            row_breaks[1] <- row_breaks[2] - p_cut_lvl;
          }
+         if (p_cutoff < 1) {
+            if (isTRUE(color_non_hits)) {
+               row_breaks[1] <- 0;
+            } else {
+               row_breaks <- c(0, row_breaks);
+               mcolor <- rbind(mcolor[1, , drop=FALSE], mcolor)
+            }
+         }
+         # if (p_cutoff == 1) {
+         #    row_breaks <- tail(row_breaks, -1);
+         #    mcolor <- mcolor[-2, , drop=FALSE]
+         # }
          col_bivariate <- colorRamp2D(
             column_breaks=seq(from=-2, to=2, length.out=3),
             row_breaks=row_breaks,
@@ -559,6 +572,7 @@ mem_enrichment_heatmap <- function(
                "geneCount"));
          legend_bivariate <- make_legend_bivariate(
             col_bivariate,
+            p_cutoff=p_cutoff,
             ylab="-log10pvalue",
             xlab="direction"
          );
