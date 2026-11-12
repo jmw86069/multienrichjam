@@ -19,11 +19,11 @@ plot_mpf(
   ce_num = NULL,
   c_cluster = NULL,
   cs_cluster = NULL,
-  em_group = NULL,
+  em_group = "default",
   Mem = NULL,
   params = list(eh = list(do_plot = TRUE), em = list(repulse = 3.5, node_factor = 1,
-    width = 30), cc = list(repulse = 3.5, node_factor = 1), ce = list(node_factor = 1), c
-    = list(node_factor = 1)),
+    width = 30), cc = list(repulse = 3.5, node_factor = 1), ce = list(node_factor = 1),
+    gp = list(width = 30), c = list(node_factor = 1)),
   do_newpage = NULL,
   verbose = FALSE,
   ...
@@ -168,7 +168,12 @@ another plot call a newpage is not problematic.}
 \item{...}{additional arguments are ignored.}
 }
 \value{
-\code{list} plot data, named by type, returned invisibly.
+\code{list} returned invisibly with:
+\itemize{
+\item plot_list: \code{list} with each plot object, named by type.
+\item plot_names: \code{character} vector of plot names, in the
+order they were created.
+}
 }
 \description{
 Plot function for MemPlotFolio objects

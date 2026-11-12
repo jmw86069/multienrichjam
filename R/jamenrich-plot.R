@@ -183,6 +183,11 @@
 #'    `NULL` the nrow/ncol of the heatmap are used to infer a reasonable
 #'    starting point fontsize, which can be adjusted with `column_cex`
 #'    and `row_cex`.
+#' @param column_cex,row_cex `numeric` expansion factor to adjust column
+#'    and row text label sizes, respectively. It is applied to the
+#'    fontsize which is either defined using `column_fontsize` / `row_fontsize`
+#'    or using the automatic fontsize calculated based upon the number
+#'    of columns / rows, respectively.
 #' @param row_method,column_method `character` string with distance method,
 #'    default is 'binary' which considers all non-zero values to be 1.
 #'    It is used for row and column hierarchical clustering
@@ -222,6 +227,14 @@
 #'    by `gene_annotations`, with optional suffix to add to the annotation
 #'    labels. For example, as by default, it may be helpful to add
 #'    "hit" or "dir" to distinguish the enrichment labels.
+#' @param simple_anno_size `grid::unit` with default size of each annotation
+#'    stripe in the row and column annotations, the default is 5mm.
+#' @param cluster_columns,cluster_rows default NULL, with optional
+#'    `function` to cluster columns and rows, respectively. The function
+#'    should produce `hclust` or `dendrogram` output.
+#' @param cluster_column_slices,cluster_row_slices `logical` default FALSE,
+#'    whether to cluster the column and row clusters among each other to
+#'    produce one large dendrogram.
 #' @param name `character` value passed to `ComplexHeatmap::Heatmap()`,
 #'    used as a label above the heatmap color legend. Default `NULL`
 #'    uses "Gene Hits by Enrichment".
@@ -232,6 +245,9 @@
 #'    at least the minimum P-value threshold. The default
 #'    is taken from input `mem` for
 #'    consistency with the input multienrichment analysis.
+#' @param p_floor `numeric` lowest P-value used in the color gradient,
+#'    default `1e-10` will show the -log10 P-value gradient only
+#'    up to `10`, which is usually a reasonable and consistent default.
 #' @param column_split,row_split row and column split, default NULL,
 #'    detects an appropriate number of clusters.
 #'    Passed to `ComplexHeatmap::Heatmap()`.
@@ -353,54 +369,54 @@
 #'
 #'
 #' @export
-mem_gene_path_heatmap <- function
-(mem,
- genes=NULL,
- sets=NULL,
- min_gene_ct=1,
- min_set_ct=1,
- min_set_ct_each=4,
- column_fontsize=NULL,
- column_cex=1,
- row_fontsize=NULL,
- row_cex=1,
- row_method="binary",
- column_method="binary",
- enrich_im_weight=0.3,
- gene_im_weight=0.5,
- gene_annotations=c("im",
-    "direction",
-    "default"),
- annotation_suffix=c(im="hit",
-    direction="dir"),
- simple_anno_size=grid::unit(5, "mm"),
- cluster_columns=NULL,
- cluster_rows=NULL,
- cluster_row_slices=FALSE,
- cluster_column_slices=FALSE,
- name=NULL,
- p_cutoff=NULL,
- p_floor=1e-10,
- row_split=NULL,
- column_split=NULL,
- auto_split=TRUE,
- column_title=LETTERS,
- row_title=letters,
- row_title_rot=0,
- colorize_by_gene=TRUE,
- na_col="white",
- rotate_heatmap=FALSE,
- colramp="Reds",
- column_names_max_height=grid::unit(8, "cm"),
- column_names_rot=90,
- show_gene_legend=FALSE,
- show_pathway_legend=TRUE,
- show_heatmap_legend=8,
- use_raster=FALSE,
- seed=123,
- verbose=FALSE,
- ...)
-{
+mem_gene_path_heatmap <- function(
+   mem,
+   genes=NULL,
+   sets=NULL,
+   min_gene_ct=1,
+   min_set_ct=1,
+   min_set_ct_each=4,
+   column_fontsize=NULL,
+   column_cex=1,
+   row_fontsize=NULL,
+   row_cex=1,
+   row_method="binary",
+   column_method="binary",
+   enrich_im_weight=0.3,
+   gene_im_weight=0.5,
+   gene_annotations=c("im",
+      "direction",
+      "default"),
+   annotation_suffix=c(im="hit",
+      direction="dir"),
+   simple_anno_size=grid::unit(5, "mm"),
+   cluster_columns=NULL,
+   cluster_rows=NULL,
+   cluster_row_slices=FALSE,
+   cluster_column_slices=FALSE,
+   name=NULL,
+   p_cutoff=NULL,
+   p_floor=1e-10,
+   row_split=NULL,
+   column_split=NULL,
+   auto_split=TRUE,
+   column_title=LETTERS,
+   row_title=letters,
+   row_title_rot=0,
+   colorize_by_gene=TRUE,
+   na_col="white",
+   rotate_heatmap=FALSE,
+   colramp="Reds",
+   column_names_max_height=grid::unit(8, "cm"),
+   column_names_rot=90,
+   show_gene_legend=FALSE,
+   show_pathway_legend=TRUE,
+   show_heatmap_legend=8,
+   use_raster=FALSE,
+   seed=123,
+   verbose=FALSE,
+   ...
+) {
    #
    if (length(seed) > 0) {
       set.seed(head(seed, 1));
@@ -484,7 +500,7 @@ mem_gene_path_heatmap <- function
       })
    );
    met_criteria <- rowSums(met_p_cutoff & met_min_set_ct_each) > 0;
-   if (any(!met_criteria) && verbose) {
+   if (!all(met_criteria) && verbose) {
       jamba::printDebug("mem_gene_path_heatmap(): ",
          "Filtered out ",
          sum(!met_criteria),
@@ -609,6 +625,7 @@ mem_gene_path_heatmap <- function
                   n=3,
                   lens=3)))
       )
+      i_ramp
    });
    
    ## Optionally colorize the matrix by gene
@@ -646,8 +663,8 @@ mem_gene_path_heatmap <- function
       geneVlist <- im2list(t(mem$geneIM));
       geneV <- jamba::cPasteS(geneVlist,
          sep=sep);
-      geneColors <- jamba::nameVector(gene_colorsV[geneV],
-         names(geneV));
+      # geneColors <- jamba::nameVector(gene_colorsV[geneV],
+      #    names(geneV));
 
       ## convert memIM to memIM_note
       memIM_note <- apply(memIM, 2, function(i){
@@ -786,6 +803,7 @@ mem_gene_path_heatmap <- function
          grob=caption_grob,
          title_position="topleft",
          type="grid")
+      text_legend2
    })
    caption_legendlist <- ComplexHeatmap::packLegend(
       list=caption_legends,
@@ -793,13 +811,13 @@ mem_gene_path_heatmap <- function
    # jamba::nullPlot(plotAreaTitle="");ComplexHeatmap::draw(caption_legendlist);
    ## Unclear if we will use draw_caption() in future,
    ## since we prefer caption_legendlist as ComplexHeatmap legend
-   draw_caption <- function
-   (use_caption=caption_legendlist,
-    x=grid::unit(1, "npc"),
-    y=grid::unit(0, "npc"),
-    just=NULL,
-    ...)
-   {
+   draw_caption <- function(
+      use_caption=caption_legendlist,
+      x=grid::unit(1, "npc"),
+      y=grid::unit(0, "npc"),
+      just=NULL,
+      ...
+   ) {
       if (length(x) == 0) {
          x <- 0.5;
       }
@@ -830,7 +848,7 @@ mem_gene_path_heatmap <- function
             just[2] <- "center";
          }
       }
-      just <- rep(just, length.out=2);
+      just <- rep_len(just, 2);
       brc <- grid::viewport(x=x,
          y=y,
          width=0.03, height=0.03,
@@ -875,8 +893,9 @@ mem_gene_path_heatmap <- function
             if ("direction" %in% names(annotation_suffix) &&
                   any(nchar(annotation_suffix[["direction"]])) > 0) {
                colnames(dir_matrix) <- paste(colnames(dir_matrix),
-                  rep(annotation_suffix[["direction"]],
-                     length.out=ncol(dir_matrix)));
+                  rep_len(
+                     annotation_suffix[["direction"]],
+                     ncol(dir_matrix)));
             }
             gene_anno_list <- c(
                list(direction=dir_matrix),
@@ -902,15 +921,15 @@ mem_gene_path_heatmap <- function
             if ("im" %in% names(annotation_suffix) &&
                   any(nchar(annotation_suffix[["im"]])) > 0) {
                colnames(im_matrix) <- paste(colnames(im_matrix),
-                  rep(annotation_suffix[["im"]],
-                     length.out=ncol(im_matrix)));
+                  rep_len(annotation_suffix[["im"]],
+                     ncol(im_matrix)));
                names(col_iml1) <- paste(names(col_iml1),
-                  rep(annotation_suffix[["im"]],
-                     length.out=length(col_iml1)));
+                  rep_len(annotation_suffix[["im"]],
+                     length(col_iml1)));
                names(gene_annotation_legend_param) <- paste(
                   names(gene_annotation_legend_param),
-                  rep(annotation_suffix[["im"]],
-                     length.out=length(gene_annotation_legend_param)));
+                  rep_len(annotation_suffix[["im"]],
+                     length(gene_annotation_legend_param)));
             }
             gene_anno_list <- c(
                as.list(data.frame(check.names=FALSE, im_matrix)),
@@ -1162,6 +1181,21 @@ mem_gene_path_heatmap <- function
 #'    from the node, in order to improve default label positions.
 #' @param y_bias numeric value passed to `spread_igraph_labels()` when
 #'    `spread_labels=TRUE`.
+#' @param label_edges `character` vector with edge attribute to use as
+#' an edge label. It takes the first matching value in the `igraph` edge
+#' attributes, if it exists. The defaults:
+#'    * 'overlap_count'
+#'    * 'count'
+#'    * 'overlap': the overlap metric, current Jaccard overlap
+#'    * 'label': uses any existing edge 'label' attribute
+#'    * 'none': no label
+#' @param edge_cex,node_cex `numeric` expansion factor to adjust the default
+#'    edge and node size, respectively.
+#' @param node_size `numeric`` with default node size, default is 5.
+#' @param edge_color,frame_color `character` color used for default
+#'    edge and node frame color, respectively.
+#' @param shape `character` node shape, default 'pie' uses pie nodes,
+#'    which are interpreted as 'jampie' by `jam_igraph()`.
 #' @param repulse numeric value used for network layout when
 #'    `layout_with_qfrf()` is used.
 #' @param sets optional character vector of enriched sets to include,
@@ -1175,6 +1209,8 @@ mem_gene_path_heatmap <- function
 #'    layout aspect intact, in cases where the x- and y-axis ranges
 #'    are not roughly the same size, for example a short-wide
 #'    layout.
+#' @param edge_bundling `character` string passed to `edge_bundle_groups()`
+#'    to control edge bundling behavior. Default 'connections'.
 #' @param main character string used as the title when `do_plot=TRUE`.
 #'    This character string is passed to `glue::glue()` in order to
 #'    include certain argument values such as `overlap`.
@@ -1182,30 +1218,36 @@ mem_gene_path_heatmap <- function
 #'    `removeIgraphSinglets()`, and `spread_igraph_labels()` as needed.
 #'
 #' @export
-mem_multienrichplot <- function
-(mem,
- overlap=0.1,
- overlap_count=2,
- do_plot=TRUE,
- do_legend=TRUE,
- remove_blanks=TRUE,
- remove_singlets=TRUE,
- spread_labels=TRUE,
- y_bias=1,
- label_edges=c("overlap_count","count","overlap","label","none"),
- edge_cex=1,
- node_cex=0.8,
- node_size=5,
- edge_color="#55555588",
- frame_color="#55555500",
- shape="pie",
- repulse=3.7,
- sets=NULL,
- rescale=TRUE,
- edge_bundling="connections",
- main="MultiEnrichMap\noverlap >= {overlap}, overlap_count >= {overlap_count}",
- ...)
-{
+mem_multienrichplot <- function(
+   mem,
+   overlap=0.1,
+   overlap_count=2,
+   do_plot=TRUE,
+   do_legend=TRUE,
+   remove_blanks=TRUE,
+   remove_singlets=TRUE,
+   spread_labels=TRUE,
+   y_bias=1,
+   label_edges=c(
+      "overlap_count",
+      "count",
+      "overlap",
+      "label",
+      "none"
+   ),
+   edge_cex=1,
+   node_cex=0.8,
+   node_size=5,
+   edge_color="#55555588",
+   frame_color="#55555500",
+   shape="pie",
+   repulse=3.7,
+   sets=NULL,
+   rescale=TRUE,
+   edge_bundling="connections",
+   main="MultiEnrichMap\noverlap >= {overlap}, overlap_count >= {overlap_count}",
+   ...
+) {
    ##
    if (!is.list(mem) || !"multiEnrichMap2" %in% names(mem)) {
       stop("Input mem must be a list with element 'multiEnrichMap2'.");
@@ -1341,31 +1383,36 @@ mem_multienrichplot <- function
 #'    To remove the entry `"no change"`, supply a new vector:
 #'    `directional_colors=c(up.regulated="firebrick3", down.regulated="blue")`
 #' @param ... additional arguments are passed to `legend()`.
-#'
+#' 
+#' @returns invisible output from `graphics::legend()`
+#' 
 #' @export
-mem_legend <- function
-(mem,
- x="bottomleft",
- y=NULL,
- bg="#FFFFFF00",
- box.col="transparent",
- title="Color Key",
- cex=0.8,
- ncol=1,
- pch=21,
- pt.cex=2,
- pt.lwd=2,
- inset=0,
- do_directional=NULL,
- directional_column=c("same",
-    "added-bottom",
-    "added-top"),
- directional_colors=c(
-    `up-regulated`="firebrick3",
-    `no change`="grey80",
-    `down-regulated`="blue"),
- ...)
-{
+mem_legend <- function(
+   mem,
+   x="bottomleft",
+   y=NULL,
+   bg="#FFFFFF00",
+   box.col="transparent",
+   title="Color Key",
+   cex=0.8,
+   ncol=1,
+   pch=21,
+   pt.cex=2,
+   pt.lwd=2,
+   inset=0,
+   do_directional=NULL,
+   directional_column=c(
+      "same",
+      "added-bottom",
+      "added-top"
+   ),
+   directional_colors=c(
+      `up-regulated`="firebrick3",
+      `no change`="grey80",
+      `down-regulated`="blue"
+   ),
+   ...
+) {
    ##
    Mem <- NULL;
    hasDirection <- FALSE;
@@ -1384,8 +1431,7 @@ mem_legend <- function
    } else if (inherits(mem, "MemPlotFolio")) {
    	# extract only the metadata as a list
    	mem <- metadata(mem);
-   	hasDirection <- ifelse(isTRUE(mem$hasDirection),
-   		TRUE, FALSE);
+   	hasDirection <- isTRUE(mem$hasDirection);
    }
    if (length(do_directional) == 0) {
    	do_directional <- hasDirection;
@@ -1410,8 +1456,10 @@ mem_legend <- function
             rep(NA, length(directional_colors)))
          col <- c(colorVb,
             directional_colors);
-         pch <- c(rep(pch, length.out=length(colorV)),
-            rep(1, length(directional_colors)));
+         pch <- c(
+            rep_len(pch, length(colorV)),
+            rep(1, length(directional_colors))
+         );
          legend_names <- c(names(colorV),
             names(directional_colors));
       } else {
@@ -1421,7 +1469,7 @@ mem_legend <- function
             ceiling(length(colorV) / ncol)));
          # added-top
          legend_n_buff <- (ncol * legend_nrow) - length(colorV);
-         legend_n_buff1 <- legend_n_buff;
+         # legend_n_buff1 <- legend_n_buff;
          if ("added-bottom" %in% directional_column) {
             # additional buffer
             legend_n_buff <- legend_n_buff + (legend_nrow - length(directional_colors));
@@ -1432,9 +1480,11 @@ mem_legend <- function
          col <- c(colorVb,
             rep(NA, legend_n_buff),
             directional_colors);
-         pch <- c(rep(pch, length.out=length(colorV)),
+         pch <- c(
+            rep_len(pch, length(colorV)),
             rep(NA, legend_n_buff),
-            rep(1, length(directional_colors)));
+            rep(1, length(directional_colors))
+         );
          legend_names <- c(names(colorV),
             rep("", legend_n_buff),
             names(directional_colors));
@@ -1537,20 +1587,20 @@ mem_legend <- function
 #' @param verbose logical indicating whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
-#'
+#' 
 #' @export
-grid_with_title <- function
-(object,
- title=NULL,
- title_fontsize=18,
- title_just="centre",
- caption=NULL,
- caption_fontsize=12,
- caption_just="left",
- caption_x=NULL,
- verbose=FALSE,
- ...)
-{
+grid_with_title <- function(
+   object,
+   title=NULL,
+   title_fontsize=18,
+   title_just="centre",
+   caption=NULL,
+   caption_fontsize=12,
+   caption_just="left",
+   caption_x=NULL,
+   verbose=FALSE,
+   ...
+) {
    ## This function requires grid, need to verify function prefixing
    ##
    if (!any(c("gTree", "Heatmap") %in% class(object))) {
@@ -1563,7 +1613,7 @@ grid_with_title <- function
    title_units <- NULL;
    caption_row <- 2;
    hm_row <- 1;
-   if (length(title) > 0 && nchar(title) > 0) {
+   if (length(title) > 0 && nzchar(title)) {
       title_nlines <- length(unlist(
          strsplit(title, "\n"))) * (title_fontsize / 10);
       title_units <- "lines";
@@ -1572,7 +1622,7 @@ grid_with_title <- function
    }
    caption_nlines <- NULL;
    caption_units <- NULL;
-   if (length(caption) > 0 && nchar(caption) > 0) {
+   if (length(caption) > 0 && nzchar(caption)) {
       caption_nlines <- length(unlist(
          strsplit(caption, "\n"))) * (caption_fontsize / 10);
       caption_units <- "lines";
@@ -1614,7 +1664,7 @@ grid_with_title <- function
    grid::pushViewport(
       grid::viewport(
          layout.pos.row=hm_row));
-   if ("gTree" %in% class(object)) {
+   if (inherits(object, "gTree")) {
       grid::grid.draw(object);
    } else {
       if (verbose) {

@@ -1,17 +1,38 @@
 
 #' Color ramp for bivariate colors
 #'
-#' Color ramp for bivariate colors
+#' Color ramp for bivariate colors, using x- and y-axis
+#' input values to apply colors.
+#' 
+#' This function is intentionally similar to
+#' `circlize::colorRamp2()`, in that it defines a specific color
+#' to a specific numeric value. In this case, it uses
+#' two numeric input values, intended to be x- and y-axis
+#' values, columns and rows, respectively.
+#' 
+#' The default condition it to use divergent colors as
+#' x-axis (columns), and a white-to-dark gradient as
+#' y-axis (rows). In this way the y-axis represents
+#' P-value significance, and x-axis represents direction,
+#' with -2 (down), 0 (no direction), and +2 (up).
+#' 
+#' This function is not intended to be particularly
+#' user-friendly, it simply takes column_breaks, row_breaks,
+#' and a matrix of colors, and returns a color function
+#' that generates one color for each x,y value provided.
 #'
 #' @family jam utility functions
 #'
 #' @examples
-#' mcolor <- matrix(ncol=3,
-#'    c("seashell", "salmon1", "firebrick3",
-#'       "gray99", "lightgoldenrod1", "gold",
-#'       "aliceblue", "skyblue", "dodgerblue3"));
+#' mcolor <- cbind(
+#'    jamba::getColorRamp("Reds", n=3, trimRamp=c(0, 2)),
+#'    jamba::getColorRamp("Oranges", n=3, trimRamp=c(0, 3)),
+#'    jamba::getColorRamp("gold", n=3, trimRamp=c(0, 3)),
+#'    jamba::getColorRamp("Greens", n=3, trimRamp=c(0, 3)),
+#'    jamba::getColorRamp("Blues", n=3, trimRamp=c(0, 2))
+#' )
 #' row_breaks <- c(0, 0.5, 1);
-#' column_breaks <- c(-1, 0, 1);
+#' column_breaks <- c(-2, -1, 0, 1, 2);
 #' rownames(mcolor) <- row_breaks;
 #' colnames(mcolor) <- column_breaks;
 #' jamba::imageByColors(mcolor);
@@ -22,10 +43,11 @@
 #'    xlab="Directionality",
 #'    ylab="Score");
 #'
-#' col_fun <- colorRamp2D(column_breaks=column_breaks,
+#' col_fun <- colorRamp2D(
+#'    column_breaks=column_breaks,
 #'    row_breaks=row_breaks,
 #'    mcolor=mcolor)
-#' display_colorRamp2D(col_fun, pretty.n=c(4, 5));
+#' display_colorRamp2D(col_fun, pretty.n=c(8, 5));
 #' display_colorRamp2D(col_fun, pretty.n=NULL);
 #'
 #' mcolor1 <- matrix(ncol=3,
@@ -44,17 +66,32 @@
 #'    mcolor=mcolor1)
 #' display_colorRamp2D(col_fun1);
 #' 
-#' @returns `function` that takes input with arguments
-#'    * x: numeric x-axis value
-#'    * y: numeric y-axis value
+#' @param column_breaks `numeric` vector of column breaks.
+#' @param row_breaks `numeric` vector of row breaks.
+#' @param mcolor `character` matrix of R colors, with dimensions
+#'    equal to the number of `column_breaks` and `row_breaks`.
+#' @param na_color `character` color used for NA values.
+#' @param return_rgb `logical` default FALSE, whether the color
+#'    function should return RGB color format, or `character`
+#'    hex colors.
+#' @param transparency `numeric` default 0, passed to
+#'    `circlize::colorRamp2()`.
+#' @param space `character` string with color space, default 'sRGB'.
+#' @param verbose `logical` whether to print verbose output.
+#' @param ... additional arguments are ignored.
+#' 
+#' @returns `function` that takes input with arguments:
+#'    * x: numeric x-axis value. It only accepts one value.
 #'    * return_rgb: `logical` whether to return RGB color
 #'    * max_value: maximum value, ignored
+#'    * y: numeric y-axis value. It only accepts one value.
 #'    * ...: additional arguments are ignored
+#' 
 #' @export
 colorRamp2D <- function(
-   column_breaks,
-   row_breaks,
-   mcolor,
+   column_breaks=c(-2, -1, 0, 1, 2),
+   row_breaks=c(0, 5, 10),
+   mcolor=NULL,
    na_color="grey15",
    return_rgb=FALSE,
    transparency=0,
@@ -63,6 +100,19 @@ colorRamp2D <- function(
    ...
 ) {
    #
+   if (length(mcolor) == 0) {
+      #
+      mcolor <- cbind(
+         jamba::getColorRamp("Reds", n=3, trimRamp=c(0, 2)),
+         jamba::getColorRamp("Oranges", n=3, trimRamp=c(0, 3)),
+         jamba::getColorRamp("gold", n=3, trimRamp=c(0, 3)),
+         jamba::getColorRamp("Greens", n=3, trimRamp=c(0, 3)),
+         jamba::getColorRamp("Blues", n=3, trimRamp=c(0, 2))
+      )
+      if (length(column_breaks) == 3) {
+         mcolor <- mcolor[, c(1, 3, 5), drop=FALSE];
+      }
+   }
    use_space <- space;
    x_funs <- lapply(seq_along(column_breaks), function(colnum){
       if (verbose) {
@@ -86,13 +136,13 @@ colorRamp2D <- function(
       na_color=na_color,
       space=use_space)
 
-   fun <- function
-   (x=NULL,
+   fun <- function(
+      x=NULL,
       return_rgb=FALSE,
       max_value=1,
       y=NULL,
-      ...)
-   {
+      ...
+   ) {
       if (length(x) == 0) {
          stop("x is required")
       }
@@ -125,7 +175,14 @@ colorRamp2D <- function(
 #'
 #' This function provides a very rudimentary method for displaying
 #' a bivariate 2-D color matrix out from `colorRamp2D()`.
-#'
+#' 
+#' ## Todo
+#' 
+#' * Use optional attributes with pre-determined breaks
+#' and labels, useful when cutoffs (floors) were defined.
+#' In this case, `pretty.n` would likely be ignored, in favor
+#' of using label positions already in place.
+#' 
 #' @family jam utility functions
 #'
 #' @param col_fun `function` output from `colorRamp2D()`.
@@ -133,22 +190,74 @@ colorRamp2D <- function(
 #'    y-axis and x-axis label breaks, respectively, or
 #'    `NULL` to use breaks encoded in `col_fun`.
 #' @param xlab,ylab,main `character` strings passed to `title()`.
+#' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are passed to `title()`.
-#'
+#' 
+#' @returns `matrix` with `character` R colors, invisibly.
+#' 
 #' @export
-display_colorRamp2D <- function
-(col_fun,
- pretty.n=12,
- xlab="",
- ylab="",
- main="",
- ...)
-{
+display_colorRamp2D <- function(
+   col_fun,
+   pretty.n=12,
+   xlab="",
+   ylab="",
+   main="",
+   verbose=FALSE,
+   ...
+) {
+   # Default uses color breaks as-is
    row_breaks <- attr(col_fun, "row_breaks");
    column_breaks <- attr(col_fun, "column_breaks");
+   row_labels <- row_breaks;
+   column_labels <- column_breaks;
+
+   # Alternatively, use custom 'at' and 'label'
+   row_at <- attr(col_fun, "row_at");
+   row_label <- attr(col_fun, "row_label");
+   column_at <- attr(col_fun, "column_at");
+   column_label <- attr(col_fun, "column_label");
+   if (length(row_at) > 0) {
+      pretty.n[1] <- NA;
+      row_breaks <- row_at;
+      if (length(row_label) == length(row_at)) {
+         row_labels <- row_label;
+      } else {
+         row_labels <- signif(digits=3, row_at);
+      }
+   }
+   if (length(column_at) > 0) {
+      pretty.n[2] <- NA;
+      column_breaks <- column_at;
+      if (length(column_label) == length(column_at)) {
+         column_labels <- column_label;
+      } else {
+         column_labels <- signif(digits=3, column_at);
+      }
+   }
+   if (verbose) {
+      jamba::printDebug(
+         "display_colorRamp2D(): ",
+         "row_breaks: ",
+         row_breaks
+      )
+      print(data.frame(row_breaks, row_labels));# debug
+      jamba::printDebug(
+         "display_colorRamp2D(): ",
+         "column_breaks: ",
+         column_breaks
+      )
+      print(data.frame(column_breaks, column_labels));# debug
+   }
    if (length(pretty.n) > 0) {
-      row_breaks <- pretty(row_breaks, n=pretty.n)
-      column_breaks <- pretty(column_breaks, n=pretty.n)
+      pretty.n <- rep_len(pretty.n, 2);
+      if (!is.na(pretty.n[1])) {
+         row_breaks <- pretty(row_breaks, n=pretty.n[1])
+         row_labels <- signif(digits=3, row_breaks);
+      }
+      if (!is.na(pretty.n[2])) {
+         column_breaks <- pretty(column_breaks, n=pretty.n[2]);
+         column_labels <- signif(digits=3, column_breaks);
+      }
    }
    new_mcolor1 <- do.call(rbind, lapply(row_breaks, function(y){
       do.call(cbind, lapply(column_breaks, function(x){
@@ -156,14 +265,22 @@ display_colorRamp2D <- function
             y=y)
       }))
    }))
-   colnames(new_mcolor1) <- column_breaks;
-   rownames(new_mcolor1) <- row_breaks;
+   if (verbose) {
+      jamba::printDebug(
+         "display_colorRamp2D(): ",
+         "new_mcolor1: "
+      )
+      print(new_mcolor1);# debug
+   }
+   colnames(new_mcolor1) <- column_labels;
+   rownames(new_mcolor1) <- row_labels;
    jamba::imageByColors(new_mcolor1);
    title(
       main=main,
       xlab=xlab,
       ylab=ylab,
       ...);
+   return(invisible(new_mcolor1));
 }
 
 
@@ -193,6 +310,9 @@ display_colorRamp2D <- function
 #' @param prefix,suffix `character` vectors that define a prefix and
 #'    suffix for each value in `m` for each cell.
 #' @param cex `numeric` adjustment for the fontsize used for each label
+#' @param placement `character` placement of text label, when defined.
+#' @param font `numeric` font style when a label is used, default 2
+#'    applies bont font.
 #' @param col_hm `function` whose first two arguments accept `numeric`
 #'    values, and which returns a single color. Note that when `mcolor`
 #'    is provided, this argument is ignored.
@@ -225,6 +345,8 @@ display_colorRamp2D <- function
 #'    is also defined. Together these arguments allow customized points.
 #' @param size_fun `function` used to define point size, only when `pch`
 #'    is also defined. Together these arguments allow customized points.
+#' @param size_by `integer` indicating which matrix of values
+#'    to use for point sizing.
 #' @param grid_color `character` valid R color used with `style="dotplot"`
 #'    to draw lines through the center of each cell.
 #' @param type `character` string indicating whether the color function
@@ -233,6 +355,7 @@ display_colorRamp2D <- function
 #' @param invert `logical` indicating whether to invert the color fill,
 #'    such that each cell is filled with color, and the circle is drawn
 #'    empty on top.
+#' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are passed to `col_hm()` to allow
 #'    custom options relevant to that function.
 #'
@@ -310,38 +433,41 @@ display_colorRamp2D <- function
 #'    show_heatmap_legend=FALSE,
 #' )
 #' ComplexHeatmap::draw(hm2, annotation_legend_list=lgds)
-#'
+#' 
+#' @returns `function` that takes x,y numeric values,
+#'    and returns a color.
+#' 
 #' @export
-cell_fun_bivariate <- function
-(m,
- prefix="",
- suffix="",
- cex=1,
- placement="center",
- font=2,
- col_hm,
- outline=FALSE,
- outline_style=c("none",
-    "darker",
-    "contrast",
-    "lighter",
-    "black",
-    "same"),
- abbrev=FALSE,
- show=NULL,
- rot=0,
- sep="\n",
- mcolor=NULL,
- pch=NULL,
- size_fun=NULL,
- size_by=1,
- grid_color="grey80",
- type=c("bivariate",
-    "univariate"),
- invert=FALSE,
- verbose=FALSE,
- ...)
-{
+cell_fun_bivariate <- function(
+   m,
+   prefix="",
+   suffix="",
+   cex=1,
+   placement="center",
+   font=2,
+   col_hm,
+   outline=FALSE,
+   outline_style=c("none",
+      "darker",
+      "contrast",
+      "lighter",
+      "black",
+      "same"),
+   abbrev=FALSE,
+   show=NULL,
+   rot=0,
+   sep="\n",
+   mcolor=NULL,
+   pch=NULL,
+   size_fun=NULL,
+   size_by=1,
+   grid_color="grey80",
+   type=c("bivariate",
+      "univariate"),
+   invert=FALSE,
+   verbose=FALSE,
+   ...
+) {
    outline_style <- match.arg(outline_style);
    type <- match.arg(type);
    if (TRUE %in% invert) {
@@ -435,7 +561,7 @@ cell_fun_bivariate <- function
             outline_col <- "black";
          }
       }
-      if (length(pch) > 0 && "function" %in% class(size_fun)) {
+      if (length(pch) > 0 && inherits(size_fun, "function")) {
          mx <- m[[size_by]];
          cell_value2 <- jamba::rmNA(naValue=0, mx[i, j]);
          cell_size <- size_fun(cell_value2);
@@ -509,17 +635,17 @@ cell_fun_bivariate <- function
          xnote <- x;
          ynote <- y;
          just <- c("center", "center");
-         if (any(grepl("bottom", placement))) {
+         if (any(grepl("bottom", placement, fixed = TRUE))) {
             ynote <- y - height / 2.1;
             just[2] <- "bottom";
-         } else if (any(grepl("top", placement))) {
+         } else if (any(grepl("top", placement, fixed = TRUE))) {
             ynote <- y + height / 2.1;
             just[2] <- "top";
          }
-         if (any(grepl("left", placement))) {
+         if (any(grepl("left", placement, fixed = TRUE))) {
             xnote <- x - width / 2.1;
             just[1] <- "left";
-         } else if (any(grepl("right", placement))) {
+         } else if (any(grepl("right", placement, fixed = TRUE))) {
             xnote <- x + width / 2.1;
             just[1] <- "right";
          }
@@ -699,6 +825,10 @@ make_legend_bivariate <- function(
    }
 
    if (length(column_breaks) == 0) {
+      # column_at <- attr(col_fun, "column_at");
+      # if (length(column_at) > 0) {
+      #    #
+      # }
       column_breaks <- attr(col_fun, "column_breaks");
       if (length(pretty.n) == 2 && pretty.n[1] > 0) {
          column_breaks <- pretty(column_breaks,
@@ -817,13 +947,13 @@ make_legend_bivariate <- function(
    #
    # now assemble a larger legend grob
    if (FALSE &&
-         ((length(xlab) == 1 && nchar(xlab) > 0) ||
+         ((length(xlab) == 1 && nzchar(xlab)) ||
          #(length(ylab) == 1 && nchar(ylab) > 0) ||
-         (length(title) == 1 && nchar(title) > 0))) {
+         (length(title) == 1 && nzchar(title)))) {
       legend_body <- legend_list@grob;
 
       xlab_gp <- grid::gpar(fontsize=11, fontface=2);
-      if (length(xlab) == 0 || nchar(xlab) == 0) {
+      if (length(xlab) == 0 || !nzchar(xlab)) {
          xlab_height <- grid::unit(0, "mm");
          xlab_width <- grid::unit(0, "mm");
       } else {
@@ -832,7 +962,7 @@ make_legend_bivariate <- function(
          xlab_width <- grid::convertWidth(grid::grobWidth(xlab_grob), "mm")
       }
       title_gp <- grid::gpar(fontsize=12, fontface=2);
-      if (length(title) == 0 || nchar(title) == 0) {
+      if (length(title) == 0 || !nzchar(title)) {
          title_height <- grid::unit(0, "mm");
          title_width <- grid::unit(0, "mm");
       } else {
@@ -881,63 +1011,65 @@ make_legend_bivariate <- function(
       );
       legend_list@grob <- gf;
    }
-   if (length(name) == 1 && nchar(name) > 0) {
+   if (length(name) == 1 && nzchar(name)) {
       legend_list@name <- name;
    }
 
    return(legend_list);
 }
 
-#' @keywords internal
-#' @noRd
-cell_fun_points <- function
-(j,
- i,
- x,
- y,
- width,
- height,
- fill,
- col_hm,
- ct_approxfun,
- cexCellnote=1)
-{
-   # Not currently used in multienrichjam, placeholder?
-   cell_value <- jamba::rmNA(naValue=0,
-      use_matrix[i, j]);
-   cell_color <- col_hm(cell_value);
-   # draw grid through center of each cell
-   grid::grid.lines(x=x + width * c(-1/2, 1/2, NA, 0, 0),
-      y=y + height * c(0, 0, NA, -1/2, 1/2),
-      gp=grid::gpar(col="grey80"));
-   if (abs(cell_value) >= -log10(p_cutoff)) {
-      cell_size <- ct_approxfun(mem$enrichIMgeneCount[i, j]);
-      grid::grid.points(x=x,
-         y=y,
-         pch=21,
-         default.units="mm",
-         size=grid::unit(cell_size, "mm"),
-         gp=grid::gpar(
-            col=jamba::makeColorDarker(cell_color),
-            fill=cell_color))
-      if (cexCellnote > 0.01) {
-         grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
-            x=x,
-            y=y,
-            gp=grid::gpar(
-               fontsize=20 * cexCellnote * 1.05,
-               fontface=2,
-               col=jamba::setTextContrastColor(jamba::setTextContrastColor(cell_color, useGrey=15)))
-         )
-         grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
-            x=x,
-            y=y,
-            gp=grid::gpar(
-               fontsize=20 * cexCellnote,
-               fontface=1,
-               col=jamba::setTextContrastColor(cell_color, useGrey=15))
-         )
-      }
-   }
-}
+# #' @keywords internal
+# #' @noRd
+# cell_fun_points <- function(
+#    j,
+#    i,
+#    x,
+#    y,
+#    width,
+#    height,
+#    fill,
+#    col_hm,
+#    ct_approxfun,
+#    cexCellnote=1,
+#    p_cutoff=0.01,
+#    use_matrix=NULL
+# ) {
+#    # Not currently used in multienrichjam, placeholder?
+#    cell_value <- jamba::rmNA(naValue=0,
+#       use_matrix[i, j]);
+#    cell_color <- col_hm(cell_value);
+#    # draw grid through center of each cell
+#    grid::grid.lines(x=x + width * c(-1/2, 1/2, NA, 0, 0),
+#       y=y + height * c(0, 0, NA, -1/2, 1/2),
+#       gp=grid::gpar(col="grey80"));
+#    if (abs(cell_value) >= -log10(p_cutoff)) {
+#       cell_size <- ct_approxfun(mem$enrichIMgeneCount[i, j]);
+#       grid::grid.points(x=x,
+#          y=y,
+#          pch=21,
+#          default.units="mm",
+#          size=grid::unit(cell_size, "mm"),
+#          gp=grid::gpar(
+#             col=jamba::makeColorDarker(cell_color),
+#             fill=cell_color))
+#       if (cexCellnote > 0.01) {
+#          grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
+#             x=x,
+#             y=y,
+#             gp=grid::gpar(
+#                fontsize=20 * cexCellnote * 1.05,
+#                fontface=2,
+#                col=jamba::setTextContrastColor(jamba::setTextContrastColor(cell_color, useGrey=15)))
+#          )
+#          grid::grid.text(round(mem$enrichIMgeneCount[i, j]),
+#             x=x,
+#             y=y,
+#             gp=grid::gpar(
+#                fontsize=20 * cexCellnote,
+#                fontface=1,
+#                col=jamba::setTextContrastColor(cell_color, useGrey=15))
+#          )
+#       }
+#    }
+# }
 

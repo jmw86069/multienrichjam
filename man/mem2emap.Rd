@@ -8,6 +8,7 @@ mem2emap(
   mem,
   overlap = 0.2,
   p_cutoff = NULL,
+  p_floor = NULL,
   min_count = NULL,
   colorV = NULL,
   cluster_function = igraph::cluster_walktrap,
@@ -67,6 +68,12 @@ P-value. The default NULL uses the value in the \code{mem} object.
 This cutoff, together with \code{min_count}, define which nodes are
 included, and the color fill for those nodes.}
 
+\item{p_floor}{\code{numeric} threshold used as the maximum enrichment
+P-value for color gradient scales. It should be in P-value
+form, and is transformed internally by \code{-log10(p_floor)}.
+It will use \code{thresholds()} to determine if a default value is defined,
+otherwise it uses \code{1e-10}.}
+
 \item{min_count}{\code{integer} threshold for minimum genes involved in
 enrichment in order for a pathway to be considered significant
 during this analysis. When NULL it uses the threshold in \code{mem}.}
@@ -118,6 +125,8 @@ proportional to the number of genes involved in enrichment.}
 
 \item{median_size}{\code{numeric} used when \code{size_by_genes=TRUE} to define
 the median size, default is 5.}
+
+\item{max_size}{\code{numeric} max node size.}
 
 \item{apply_edge_width}{\code{logical} default TRUE, whether to apply edge
 width based upon the edge weight, which represents the Jaccard

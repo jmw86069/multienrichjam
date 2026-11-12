@@ -23,6 +23,10 @@ reference:
   desc: Functions to use external data in multienrichjam
   contents:
   - has_concept("jam import functions")
+- subtitle: Enrichment functions
+  desc: Pathway and gene set enrichment functions
+  contents:
+  - has_concept("jam enrich functions")
 - title: Other Useful Functions
 - subtitle: Custom plot functions
   desc: Customized plotting for 'Mem' results

@@ -63,6 +63,9 @@ To remove the entry \code{"no change"}, supply a new vector:
 
 \item{...}{additional arguments are passed to \code{legend()}.}
 }
+\value{
+invisible output from \code{graphics::legend()}
+}
 \description{
 MultiEnrichMap color legend
 }

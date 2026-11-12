@@ -56,7 +56,10 @@
 #' interactive capability, for example detailed mouse-over
 #' or event-driven data for each pathway or gene cluster.
 #' 
-#' @returns `list` plot data, named by type, returned invisibly.
+#' @returns `list` returned invisibly with:
+#'    * plot_list: `list` with each plot object, named by type.
+#'    * plot_names: `character` vector of plot names, in the
+#'    order they were created.
 #' 
 #' @family custom plot functions
 #' 
@@ -165,42 +168,47 @@
 #' @param ... additional arguments are ignored.
 #' 
 #' @export
-plot_mpf <- function
-(Mpf,
- plot_which=c("all",
-    "EnrichmentHeatmap", "eh",
-    "GenePathHeatmap", "gp",
-    "CnetCollapsed", "cc",
-    "CnetExemplar", "ce",
-    "CnetCluster", "c",
-    "EnrichmentMap", "em",
-    "ClusterSummary", "cs"),
- do_md_tabs=FALSE,
- md_tab_open=NULL,
- md_tab_suffix=NULL,
- md_tab_close=NULL,
- md_tab_level=2,
- md_title="Multi-Enrichment Folio",
- cc_type=NULL,
- ce_num=NULL,
- c_cluster=NULL,
- cs_cluster=NULL,
- em_group=NULL,
- Mem=NULL,
- params=list(
-   eh=list(do_plot=TRUE),
-   em=list(repulse=3.5,
-      node_factor=1,
-      width=30),
-   cc=list(repulse=3.5,
-      node_factor=1),
-   ce=list(node_factor=1),
-   "c"=list(node_factor=1)
- ),
- do_newpage=NULL,
- verbose=FALSE,
- ...)
-{
+plot_mpf <- function(
+   Mpf,
+   plot_which=c(
+      "all",
+      "EnrichmentHeatmap", "eh",
+      "GenePathHeatmap", "gp",
+      "CnetCollapsed", "cc",
+      "CnetExemplar", "ce",
+      "CnetCluster", "c",
+      "EnrichmentMap", "em",
+      "ClusterSummary", "cs"
+   ),
+   do_md_tabs=FALSE,
+   md_tab_open=NULL,
+   md_tab_suffix=NULL,
+   md_tab_close=NULL,
+   md_tab_level=2,
+   md_title="Multi-Enrichment Folio",
+   cc_type=NULL,
+   ce_num=NULL,
+   c_cluster=NULL,
+   cs_cluster=NULL,
+   em_group="default",
+   Mem=NULL,
+   params=list(
+      eh=list(do_plot=TRUE),
+      em=list(
+         repulse=3.5,
+         node_factor=1,
+         width=30),
+      cc=list(
+         repulse=3.5,
+         node_factor=1),
+      ce=list(node_factor=1),
+      gp=list(width=30),
+      "c"=list(node_factor=1)
+   ),
+   do_newpage=NULL,
+   verbose=FALSE,
+   ...
+) {
    # context
    is_knitting <- isTRUE(getOption("knitr.in.progress"));
    # validate arguments
@@ -213,7 +221,7 @@ plot_mpf <- function
       do_newpage <- isTRUE(is_knitting);
    }
    # verbose remove '##' comments to prevent markdown headings
-   if (verbose && (isTRUE(do_md_tabs) || nchar(do_md_tabs) > 0)) {
+   if (verbose && (isTRUE(do_md_tabs) || nzchar(do_md_tabs))) {
       withr::local_options(list(
          jam.comment=FALSE));
    }
@@ -366,7 +374,7 @@ plot_mpf <- function
             md_tab_suffix, "\n\n");
          cat(md_string);
       }
-      if (length(md_tab_open) > 0 && nchar(md_tab_open) > 0) {
+      if (length(md_tab_open) > 0 && nzchar(md_tab_open)) {
          md_string <- paste0("\n\n", md_tab_open, "\n\n")
          cat(md_string);
       }
@@ -446,8 +454,12 @@ plot_mpf <- function
          plot_list$EnrichmentHeatmap <- do.call(
             EnrichmentHeatmap,
             c(
-               alist(x=Mpf,
-                  params=params$eh)))
+               alist(
+                  x=Mpf,
+                  params=params$eh
+               )
+            )
+         )
          # plot_list$EnrichmentHeatmap <- EnrichmentHeatmap(Mpf, ...);
          if (isTRUE(do_newpage)) grid::grid.newpage();
          plot_names <- c(plot_names, "EnrichmentHeatmap")
@@ -456,13 +468,29 @@ plot_mpf <- function
       #################################
       ## GenePathHeatmap
       if (grepl("GenePathHeatmap", fixed=TRUE, iplot)) {
-         plot_list$GenePathHeatmap <- do.call(GenePathHeatmap,
+         # Todo: check why this format differs from EnrichmentHeatmap
+         # plot_list$GenePathHeatmap <- do.call(
+         #    GenePathHeatmap,
+         #    c(
+         #       alist(
+         #          x=Mpf
+         #       ),
+         #       params$gp
+         #    )
+         # )
+         ## 0.0.123:900: Use same format as EnrichmentHeatmap
+         plot_list$GenePathHeatmap <- do.call(
+            GenePathHeatmap,
             c(
-               alist(x=Mpf),
-               params$gp))
+               alist(
+                  x=Mpf,
+                  params=params$gp
+               )
+            )
+         )
          # plot_list$GenePathHeatmap <- GenePathHeatmap(Mpf, ...);
          if (isTRUE(do_newpage)) grid::grid.newpage();
-         plot_names <- c(plot_names, "EnrichmentHeatmap")
+         plot_names <- c(plot_names, "GenePathHeatmap")
       }
 
       #################################
@@ -489,10 +517,12 @@ plot_mpf <- function
             em_group <- "community";
          }
          if (length(em_group) > 1 && isTRUE(do_md_tabs)) {
-            cat_md_header(md_tab_level=md_tab_level,
+            cat_md_header(
+               md_tab_level=md_tab_level,
                heading=NULL,
                md_tab_open=md_tab_open,
-               md_tab_suffix=md_tab_suffix)
+               md_tab_suffix=md_tab_suffix
+            )
             md_tab_level <- md_tab_level + 1;
          }
          for (icc in em_group) {
@@ -501,18 +531,25 @@ plot_mpf <- function
                   "Doing plot subtype: ", c(iplot, icc));
             }
             if (length(em_group) > 1 && isTRUE(do_md_tabs)) {
-               cat_md_tab(md_tab_level=md_tab_level,
+               cat_md_tab(
+                  md_tab_level=md_tab_level,
                   heading=icc,
                   md_tab_suffix=md_tab_suffix)
             }
             # em_repulse <- ifelse(
             #    is.numeric(params$em$repulse),
             #    params$em$repulse, 3.5);
-            Emap <- do.call(EnrichmentMap,
+            Emap <- do.call(
+               EnrichmentMap,
                c(
-                  alist(x=Mpf,
+                  alist(
+                     x=Mpf,
                      do_plot=TRUE,
-                     params=params$em)))
+                     em_group=icc,
+                     params=params$em
+                  )
+               )
+            )
             # Emap <- EnrichmentMap(Mpf,
             #    do_plot=TRUE,
             #    params=params$em,
@@ -561,7 +598,8 @@ plot_mpf <- function
             if (length(plot_list$CnetCollapsed) == 0) {
                plot_list$CnetCollapsed <- list();
             }
-            plot_list$CnetCollapsed[[icc]] <- do.call(CnetCollapsed,
+            plot_list$CnetCollapsed[[icc]] <- do.call(
+               CnetCollapsed,
                c(
                   alist(x=Mpf,
                   type=icc,
@@ -584,7 +622,12 @@ plot_mpf <- function
       ## CnetExemplar
       if (grepl("CnetExemplar", fixed=TRUE, iplot)) {
          if (length(ce_num) == 0) {
-            ce_num <- 1;
+            ce_num <- names(Mpf@cnet_exemplars);
+         } else {
+            ce_num <- intersect(
+               ce_num,
+               names(Mpf@cnet_exemplars)
+            )
          }
          if (length(ce_num) > 1 && isTRUE(do_md_tabs)) {
             cat_md_header(md_tab_level=md_tab_level,
@@ -602,17 +645,25 @@ plot_mpf <- function
             if (length(plot_list$CnetExemplar) == 0) {
                plot_list$CnetExemplar <- list();
             }
-            plot_list$CnetExemplar[[icc]] <- do.call(CnetExemplar,
+            plot_list$CnetExemplar[[icc]] <- do.call(
+               CnetExemplar,
                c(
-                  alist(x=Mpf,
-                  num=icc,
-                  params=params$ce)))
+                  alist(
+                     x=Mpf,
+                     num=icc,
+                     params=params$ce
+                  )
+               )
+            )
             # plot_list$CnetExemplar <- CnetExemplar(Mpf,
             #    num=icc,
             #    params=params$ce,
             #    ...);
             if (isTRUE(do_newpage)) grid::grid.newpage();
-            plot_names <- c(plot_names, paste0("CnetExemplar ", icc))
+            plot_names <- c(
+               plot_names,
+               paste0("CnetExemplar ", icc)
+            )
          }
          if (length(ce_num) > 1 && isTRUE(do_md_tabs)) {
             md_tab_level <- md_tab_level - 1;
@@ -647,7 +698,8 @@ plot_mpf <- function
             if (length(plot_list$CnetExemplar) == 0) {
                plot_list$CnetCluster <- list();
             }
-            plot_list$CnetCluster[[c_clusters[icc]]] <- do.call(CnetCluster,
+            plot_list$CnetCluster[[c_clusters[icc]]] <- do.call(
+               CnetCluster,
                c(
                   alist(
                      x=Mpf,
@@ -738,9 +790,13 @@ plot_mpf <- function
                      collapse="\n"
                   )
                }
+               sys_replace <- paste0(
+                  "<details><summary>**System Prompt**</summary>",
+                  "\n\n\\1\n\n</details>\n\n"
+               )
                use_sys_prompt <- gsub(
                   "[#]+ System Prompt(.+)$",
-                  "<details><summary>**System Prompt**</summary>\n\n\\1\n\n</details>\n\n",
+                  sys_replace,
                   use_sys_prompt
                )
                use_clusterdata <- paste0(
@@ -758,20 +814,35 @@ plot_mpf <- function
                   use_clusterdata_lines),
                collapse="\n");
             cat(use_clusterdata_lines);
+            # Add to plot_list?
+            plot_list$ClusterSummary[[cs_clusters[icc]]] <- use_clusterdata_lines;
+            # Add to plot_names?
+            plot_names <- c(
+               plot_names,
+               paste0(
+                  "ClusterSummary ",
+                  cs_clusters[icc]
+               )
+            )
+
          }
       }
+      #################################
+
 
    }
 
    # Optionally close md tabs
    if (isTRUE(do_md_tabs)) {
       cat_md_tab_close(md_tab_close=md_tab_close);
-      if (length(md_title) > 0 && nchar(md_title) > 0) {
+      if (length(md_title) > 0 && nzchar(md_title)) {
          md_tab_level <- md_tab_level - 1;
       }
    }
-   return(invisible(plot_list))
-   return(invisible(plot_names))
+   return(invisible(list(
+      plot_list=plot_list,
+      plot_names=plot_names
+   )))
 }
 
 #' Determine whether Mem should call newpage

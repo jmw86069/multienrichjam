@@ -10,7 +10,8 @@ internal_EnrichmentMap(
   legend_x = "bottomleft",
   legend_y = NULL,
   params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4,
-    do_fixSetLabels = FALSE, do_legend = TRUE),
+    do_fixSetLabels = FALSE, do_legend = TRUE, em_group = c("default", "community",
+    "communities", "clusters", "cluster_labels", "nodegroups", "none")),
   ...
 )
 }

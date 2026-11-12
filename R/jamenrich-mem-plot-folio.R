@@ -410,59 +410,61 @@
 #' })
 #' 
 #' @export
-mem_plot_folio <- function
-(mem,
- do_which=NULL,
- mpf=NULL,
- p_cutoff=NULL,
- p_floor=1e-10,
- main="",
- use_raster=FALSE,
- min_gene_ct=1,
- min_set_ct=1,
- min_set_ct_each=NULL,
- column_method="euclidean",
- cluster_columns=NULL,
- row_method="euclidean",
- cluster_rows=NULL,
- exemplar_range=c(1, 2, 3),
- pathway_column_split=NULL,
- pathway_column_title=LETTERS,
- gene_row_split=NULL,
- gene_row_title=letters,
- edge_color=NULL,
- cex.main=2,
- cex.sub=1.5,
- row_cex=1,
- column_cex=1,
- max_labels=4,
- max_nchar_labels=25,
- include_cluster_title=TRUE,
- repulse=4,
- use_shadowText=FALSE,
- color_by_column=FALSE,
- style="dotplot_inverted",
- enrich_im_weight=0.3,
- gene_im_weight=0.5,
- colorize_by_gene=TRUE,
- cluster_color_min_fraction=0.4,
- byCols=c("composite_rank",
-    "minp_rank",
-    "gene_count_rank"),
- edge_bundling="connections",
- apply_direction=NULL,
- rotate_heatmap=FALSE,
- row_anno_padding=grid::unit(3, "mm"),
- column_anno_padding=grid::unit(3, "mm"),
- returnType=c("MemPlotFolio",
-    "list"),
- do_plot=TRUE,
- do_rmd_tabs=FALSE,
- rmd_tab_level=2,
- rmd_tab_title="Mem Plot Folio",
- verbose=FALSE,
- ...)
-{
+mem_plot_folio <- function(
+   mem,
+   do_which=NULL,
+   mpf=NULL,
+   p_cutoff=NULL,
+   p_floor=1e-10,
+   main="",
+   use_raster=FALSE,
+   min_gene_ct=1,
+   min_set_ct=1,
+   min_set_ct_each=NULL,
+   column_method="euclidean",
+   cluster_columns=NULL,
+   row_method="euclidean",
+   cluster_rows=NULL,
+   exemplar_range=c(1, 2, 3),
+   pathway_column_split=NULL,
+   pathway_column_title=LETTERS,
+   gene_row_split=NULL,
+   gene_row_title=letters,
+   edge_color=NULL,
+   cex.main=2,
+   cex.sub=1.5,
+   row_cex=1,
+   column_cex=1,
+   max_labels=4,
+   max_nchar_labels=25,
+   include_cluster_title=TRUE,
+   repulse=4,
+   use_shadowText=FALSE,
+   color_by_column=FALSE,
+   style="dotplot_inverted",
+   enrich_im_weight=0.3,
+   gene_im_weight=0.5,
+   colorize_by_gene=TRUE,
+   cluster_color_min_fraction=0.4,
+   byCols=c(
+      "composite_rank",
+      "minp_rank",
+      "gene_count_rank"
+   ),
+   edge_bundling="connections",
+   apply_direction=NULL,
+   rotate_heatmap=FALSE,
+   row_anno_padding=grid::unit(3, "mm"),
+   column_anno_padding=grid::unit(3, "mm"),
+   returnType=c("MemPlotFolio",
+      "list"),
+   do_plot=TRUE,
+   do_rmd_tabs=FALSE,
+   rmd_tab_level=2,
+   rmd_tab_title="Mem Plot Folio",
+   verbose=FALSE,
+   ...
+) {
    # validate arguments
    returnType <- match.arg(returnType);
    
@@ -501,7 +503,7 @@ mem_plot_folio <- function
       }
       rmd_tab_level <- round(rmd_tab_level);
       rmd_tab_lead <- paste0(rep("#", rmd_tab_level), collapse="");
-      if (length(rmd_tab_title) == 0 && nchar(rmd_tab_title) > 0) {
+      if (length(rmd_tab_title) == 0 && nzchar(rmd_tab_title)) {
          # Todo: Some better scrubbing of the title
          rmd_tab_title <- gsub("[\r\n\t]+", "", rmd_tab_title);
          cat(paste0("\n\n", rmd_tab_lead, " ",
@@ -573,9 +575,10 @@ mem_plot_folio <- function
    # 3. directionColname is defined
    hasDirection <- FALSE;
    if (any(enrichIMdirection(Mem) < 0) ||
-   		any(geneIMdirection(Mem) < 0) ||
-   		!is.null(headers(Mem)[["directionColname"]])) {
-   	hasDirection <- TRUE;
+         any(geneIMdirection(Mem) < 0) ||
+         !is.null(headers(Mem)[["directionColname"]])
+   ) {
+      hasDirection <- TRUE;
    }
 
    # metadata
@@ -600,21 +603,21 @@ mem_plot_folio <- function
 
    #############################################################
    # Apply optional heatmap padding parameters
-   rowpad <- NULL;
-   columnpad <- NULL;
+   # rowpad <- NULL;
+   # columnpad <- NULL;
    use_ht_opt <- list();
    if (length(row_anno_padding) > 0) {
       if (!grid::is.unit(row_anno_padding)) {
          row_anno_padding <- grid::unit(row_anno_padding, "mm");
       }
-      rowpad <- ComplexHeatmap::ht_opt("ROW_ANNO_PADDING")
+      # rowpad <- ComplexHeatmap::ht_opt("ROW_ANNO_PADDING")
       use_ht_opt$ROW_ANNO_PADDING <- row_anno_padding;
    }
    if (length(column_anno_padding) > 0) {
       if (!grid::is.unit(column_anno_padding)) {
          column_anno_padding <- grid::unit(column_anno_padding, "mm");
       }
-      columnpad <- ComplexHeatmap::ht_opt("COLUMN_ANNO_PADDING")
+      # columnpad <- ComplexHeatmap::ht_opt("COLUMN_ANNO_PADDING")
       use_ht_opt$COLUMN_ANNO_PADDING <- column_anno_padding;
    }
    if (length(use_ht_opt) > 0) {
@@ -634,11 +637,13 @@ mem_plot_folio <- function
       p_cutoff=p_cutoff,
       p_floor=p_floor,
       row_method=row_method,
+      cluster_rows=cluster_rows,
       column_split=pathway_column_split,
       column_title=pathway_column_title,
       row_split=gene_row_split,
       row_title=gene_row_title,
       column_method=column_method,
+      cluster_columns=cluster_columns,
       row_cex=row_cex,
       column_cex=column_cex,
       use_raster=use_raster,
@@ -689,7 +694,7 @@ mem_plot_folio <- function
       if (length(apply_direction) == 0) {
          apply_direction <- FALSE;
          if ("enrichIMdirection" %in% names(mem) &&
-               any(!is.na(mem$enrichIMdirection)) &&
+               !all(is.na(mem$enrichIMdirection)) &&
                any(jamba::rmNA(mem$enrichIMdirection) < 0)) {
             apply_direction <- TRUE;
          }
@@ -729,7 +734,7 @@ mem_plot_folio <- function
                annotation_legend_list <- attributes(mem_hm)$annotation_legend_list;
             } else {
                annotation_legend_list <- NULL;
-               if (length(main) > 0 && nchar(main) > 0) {
+               if (length(main) > 0 && nzchar(main)) {
                   mem_hm <- ComplexHeatmap::draw(mem_hm,
                      annotation_legend_list=annotation_legend_list,
                      column_title=main);
@@ -890,12 +895,14 @@ mem_plot_folio <- function
             j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
                mem$colorV[names(i)],
                i);
+            j
          });
       igraph::V(cnet_collapsed)$coloredrect.color <- lapply(
          igraph::V(cnet_collapsed)$coloredrect.color, function(i){
             j <- ifelse(names(i) %in% names(mem$colorV) & !isColorBlank(i),
                mem$colorV[names(i)],
                i);
+            j
          });
 
       if (length(edge_color) > 0) {
@@ -935,7 +942,12 @@ mem_plot_folio <- function
       #isset <- (V(cnet_collapsed)$nodeType %in% "Set");
       if ("set_labels" %in% igraph::vertex_attr_names(cnet_collapsed)) {
          igraph::V(cnet_collapsed)$label <- ifelse(
-            nchar(jamba::rmNA(naValue="", igraph::V(cnet_collapsed)$set_labels)) > 0,
+            nzchar(
+               jamba::rmNA(
+                  naValue="",
+                  igraph::V(cnet_collapsed)$set_labels
+               )
+            ),
             igraph::V(cnet_collapsed)$set_labels,
             igraph::V(cnet_collapsed)$name);
       }
@@ -983,8 +995,12 @@ mem_plot_folio <- function
          if (length(igraph::V(cnet_collapsed)$label) == 0) {
             if ("set_labels" %in% igraph::vertex_attr_names(cnet_collapsed)) {
                igraph::V(cnet_collapsed)$label <- ifelse(
-                  nchar(jamba::rmNA(naValue="",
-                     igraph::V(cnet_collapsed)$set_labels)) > 0,
+                  nzchar(
+                     jamba::rmNA(
+                        naValue="",
+                        igraph::V(cnet_collapsed)$set_labels
+                     )
+                  ),
                   igraph::V(cnet_collapsed)$set_labels,
                   igraph::V(cnet_collapsed)$name);
             } else {
@@ -1028,21 +1044,21 @@ mem_plot_folio <- function
 
    #############################################################
    ## Prepare for Cnet plots
-   cnet_range <- seq_len(length(exemplar_range) + pathway_clusters_n);
-   if (any(c(plot_num + cnet_range) %in% do_which)) {
-      # spread_labels=FALSE because no layout is required yet
-      # 0.0.116.900 - skip this step,, process after subsetting later
-      if (FALSE) {
-         if (verbose) {
-            jamba::printDebug("mem_plot_folio(): ",
-               "Preparing cnet for subsetting with mem2cnet().");
-         }
-         cnet <- mem2cnet(mem,
-            remove_blanks=TRUE,
-            spread_labels=FALSE,
-            ...);
-      }
-   }
+   # cnet_range <- seq_len(length(exemplar_range) + pathway_clusters_n);
+   # if (any(c(plot_num + cnet_range) %in% do_which)) {
+   #    # spread_labels=FALSE because no layout is required yet
+   #    # 0.0.116.900 - skip this step,, process after subsetting later
+   #    if (FALSE) {
+   #       if (verbose) {
+   #          jamba::printDebug("mem_plot_folio(): ",
+   #             "Preparing cnet for subsetting with mem2cnet().");
+   #       }
+   #       cnet <- mem2cnet(mem,
+   #          remove_blanks=TRUE,
+   #          spread_labels=FALSE,
+   #          ...);
+   #    }
+   # }
 
    #############################################################
    ## Cnet exemplars

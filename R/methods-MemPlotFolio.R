@@ -646,9 +646,14 @@ setMethod("CnetCollapsed", "MemPlotFolio",
       }
    } else if (any(grepl("^(set|cluster)[ \t\n2]*$", type))) {
       # add set_names to labels
-      if (any(grepl("^cluster", type))) {
+      if (any(startsWith(type, "cluster"))) {
          # add cluster_labels to labels
-         cluster_labels <- ClusterLabels(x);
+         cluster_labels <- paste0(
+            names(Clusters(x)),
+            ": ",
+            ClusterLabels(x)
+         );
+         # cluster_labels <- ClusterLabels(x);
 
          if (length(cluster_labels) == 0) {
             ## no cluster_labels, what to do? Error, inaction, warning?
@@ -683,7 +688,7 @@ setMethod("CnetCollapsed", "MemPlotFolio",
       } else if ("set_labels" %in% igraph::vertex_attr_names(cnet)) {
          # add set_names to labels
          use_labels <- ifelse(
-            nchar(jamba::rmNA(naValue="", igraph::V(cnet)$set_labels)) > 0,
+            nzchar(jamba::rmNA(naValue="", igraph::V(cnet)$set_labels)),
             igraph::V(cnet)$set_labels,
             igraph::V(cnet)$name);
          igraph::V(cnet)$label <- use_labels;
@@ -707,8 +712,10 @@ setMethod("CnetCollapsed", "MemPlotFolio",
          use_names <- igraph::V(cnet)$name;
       }
       use_labels <- ifelse(
-         nchar(jamba::rmNA(naValue="",
-            igraph::vertex_attr(cnet, name=use_type))) > 0,
+         nzchar(jamba::rmNA(
+            naValue="",
+            igraph::vertex_attr(cnet, name=use_type)
+         )),
          igraph::vertex_attr(cnet, name=use_type),
          use_names);
       # apply word wrap
@@ -724,7 +731,7 @@ setMethod("CnetCollapsed", "MemPlotFolio",
       igraph::V(cnet)$label <- use_labels;
    }
    # hide gene labels when type ends with '2'
-   if (grepl("2$", type)) {
+   if (endsWith(type, "2")) {
       isgene <- jamba::igrep("^gene$",
          igraph::vertex_attr(cnet, "nodeType"));
       if (length(isgene) > 0) {
@@ -737,26 +744,28 @@ setMethod("CnetCollapsed", "MemPlotFolio",
          c(
             alist(x=cnet),
             params))
-   	
-   	# determine whether to include direction in the legend
+
+      # determine whether to include direction in the legend
       params$x <- legend_x;
       params$y <- legend_y;
-   	if (length(params) > 0 && "do_directional" %in% names(params)) {
-         do_directional <- params[["do_directional"]];
-   		# arglist <- arglist[-match("do_directional", names(arglist))];
+      if (length(params) > 0 && "do_directional" %in% names(params)) {
+         # do_directional <- params[["do_directional"]];
+         # arglist <- arglist[-match("do_directional", names(arglist))];
       } else {
-         hasDirection <- ifelse(isTRUE(metadata(x)[["hasDirection"]]),
-            TRUE, FALSE)
-            params[["do_directional"]] <- hasDirection;
-   	}
-   	# draw the legend
-   	do.call(mem_legend,
-   		c(
-   			alist(mem=x),
-   			params))
+         hasDirection <- isTRUE(metadata(x)[["hasDirection"]])
+         params[["do_directional"]] <- hasDirection;
+      }
+      # draw the legend
+      do.call(
+         mem_legend,
+         c(
+            alist(mem=x),
+            params
+         )
+      )
    }
    invisible(cnet);
-   })
+})
 
 
 #' @param x `MemPlotFolio` object
@@ -888,7 +897,9 @@ setMethod("CnetExemplar", "MemPlotFolio",
       do.call(mem_legend,
          c(
             alist(mem=metadata(x)),
-            arglist))
+            arglist
+         )
+      )
    }
    invisible(cnet);
    })

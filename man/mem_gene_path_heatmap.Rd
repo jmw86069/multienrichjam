@@ -75,6 +75,12 @@ to define a specific fontsize for column and row labels. When
 starting point fontsize, which can be adjusted with \code{column_cex}
 and \code{row_cex}.}
 
+\item{column_cex, row_cex}{\code{numeric} expansion factor to adjust column
+and row text label sizes, respectively. It is applied to the
+fontsize which is either defined using \code{column_fontsize} / \code{row_fontsize}
+or using the automatic fontsize calculated based upon the number
+of columns / rows, respectively.}
+
 \item{row_method, column_method}{\code{character} string with distance method,
 default is 'binary' which considers all non-zero values to be 1.
 It is used for row and column hierarchical clustering
@@ -125,6 +131,17 @@ by \code{gene_annotations}, with optional suffix to add to the annotation
 labels. For example, as by default, it may be helpful to add
 "hit" or "dir" to distinguish the enrichment labels.}
 
+\item{simple_anno_size}{\code{grid::unit} with default size of each annotation
+stripe in the row and column annotations, the default is 5mm.}
+
+\item{cluster_columns, cluster_rows}{default NULL, with optional
+\code{function} to cluster columns and rows, respectively. The function
+should produce \code{hclust} or \code{dendrogram} output.}
+
+\item{cluster_column_slices, cluster_row_slices}{\code{logical} default FALSE,
+whether to cluster the column and row clusters among each other to
+produce one large dendrogram.}
+
 \item{name}{\code{character} value passed to \code{ComplexHeatmap::Heatmap()},
 used as a label above the heatmap color legend. Default \code{NULL}
 uses "Gene Hits by Enrichment".}
@@ -136,6 +153,10 @@ at the top of the main heatmap. Any cell that has a color meets
 at least the minimum P-value threshold. The default
 is taken from input \code{mem} for
 consistency with the input multienrichment analysis.}
+
+\item{p_floor}{\code{numeric} lowest P-value used in the color gradient,
+default \code{1e-10} will show the -log10 P-value gradient only
+up to \code{10}, which is usually a reasonable and consistent default.}
 
 \item{column_split, row_split}{row and column split, default NULL,
 detects an appropriate number of clusters.

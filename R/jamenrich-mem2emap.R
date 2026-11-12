@@ -60,6 +60,11 @@
 #'    P-value. The default NULL uses the value in the `mem` object.
 #'    This cutoff, together with `min_count`, define which nodes are
 #'    included, and the color fill for those nodes.
+#' @param p_floor `numeric` threshold used as the maximum enrichment
+#'    P-value for color gradient scales. It should be in P-value
+#'    form, and is transformed internally by `-log10(p_floor)`.
+#'    It will use `thresholds()` to determine if a default value is defined,
+#'    otherwise it uses `1e-10`.
 #' @param min_count `integer` threshold for minimum genes involved in
 #'    enrichment in order for a pathway to be considered significant
 #'    during this analysis. When NULL it uses the threshold in `mem`.
@@ -95,6 +100,7 @@
 #'    proportional to the number of genes involved in enrichment.
 #' @param median_size `numeric` used when `size_by_genes=TRUE` to define
 #'    the median size, default is 5.
+#' @param max_size `numeric` max node size.
 #' @param apply_edge_width `logical` default TRUE, whether to apply edge
 #'    width based upon the edge weight, which represents the Jaccard
 #'    overlap.
@@ -160,42 +166,43 @@
 #' jam_igraph(emapB)
 #' 
 #' @export
-mem2emap <- function
-(mem,
- overlap=0.2,
- p_cutoff=NULL,
- min_count=NULL,
- colorV=NULL,
- cluster_function=igraph::cluster_walktrap,
- cluster_list=NULL,
- num_keep_terms=3,
- keep_terms_sep=",\n",
- repulse=3.3,
- remove_singlets=FALSE,
- color_by_nodes=FALSE,
- size_by_genes=TRUE,
- median_size=5,
- max_size=25,
- apply_edge_width=TRUE,
- max_edge_width=20,
- min_edge_width=0.5,
- apply_edge_color=apply_edge_width,
- apply_direction=TRUE,
- direction_max=2,
- direction_floor=0.5,
- border_lwd=3,
- seed=123,
- spread_labels=TRUE,
- label_min_dist=2.5,
- y_bias=10,
- vertex.label.font=2,
- use_layout_components=FALSE,
- use_shadowText=TRUE,
- do_express=FALSE,
- do_plot=FALSE,
- verbose=FALSE,
- ...)
-{
+mem2emap <- function(
+   mem,
+   overlap=0.2,
+   p_cutoff=NULL,
+   p_floor=NULL,
+   min_count=NULL,
+   colorV=NULL,
+   cluster_function=igraph::cluster_walktrap,
+   cluster_list=NULL,
+   num_keep_terms=3,
+   keep_terms_sep=",\n",
+   repulse=3.3,
+   remove_singlets=FALSE,
+   color_by_nodes=FALSE,
+   size_by_genes=TRUE,
+   median_size=5,
+   max_size=25,
+   apply_edge_width=TRUE,
+   max_edge_width=20,
+   min_edge_width=0.5,
+   apply_edge_color=apply_edge_width,
+   apply_direction=TRUE,
+   direction_max=2,
+   direction_floor=0.5,
+   border_lwd=3,
+   seed=123,
+   spread_labels=TRUE,
+   label_min_dist=2.5,
+   y_bias=10,
+   vertex.label.font=2,
+   use_layout_components=FALSE,
+   use_shadowText=TRUE,
+   do_express=FALSE,
+   do_plot=FALSE,
+   verbose=FALSE,
+   ...
+) {
    #
    # determine nodes to include
    if (is.list(mem) && "enrichIM" %in% names(mem)) {
@@ -212,6 +219,13 @@ mem2emap <- function
          p_cutoff <- thresholds(mem)[["cutoffRowMinP"]];
       } else {
          p_cutoff <- 1;
+      }
+   }
+   if (length(p_floor) == 0) {
+      if ("p_floor" %in% names(thresholds(mem))) {
+         p_floor <- thresholds(mem)$p_floor;
+      } else {
+         p_floor <- 1e-10;
       }
    }
    if (verbose && p_cutoff < 1) {
@@ -267,7 +281,7 @@ mem2emap <- function
    # convert memIM to Jaccard overlap matrix
    col_match <- match(enrich_rows_use,
       colnames(memIM(mem)));
-   if (any(is.na(col_match))) {
+   if (anyNA(col_match)) {
       stop_msg <- paste0("There is a mismatch in ",
          "rownames(enrichIM(mem)) and colnames(memIM(mem)).");
       stop(stop_msg);
@@ -396,16 +410,20 @@ mem2emap <- function
          if (length(repulse) == 0 || isFALSE(repulse) || repulse == 0) {
             new_layout <- NULL;
          } else {
-            if (verbose) {
-               jamba::printDebug("mem2emap(): ",
-                  "Applying layout_components() with layout_with_qfrf().");
-            }
             if (use_layout_components) {
+               if (verbose) {
+                  jamba::printDebug("mem2emap(): ",
+                     "Applying layout_components() with layout_with_qfrf().");
+               }
                new_layout <- igraph::layout_components(jacc_g,
                   layout=layout_with_qfrf(repulse=repulse,
                      seed=seed,
                      ...));
             } else {
+               if (verbose) {
+                  jamba::printDebug("mem2emap(): ",
+                     "Applying layout_with_qfr().");
+               }
                new_layout <- layout_with_qfr(jacc_g,
                   repulse=repulse,
                   seed=seed,
@@ -418,7 +436,7 @@ mem2emap <- function
             if (!all(rownames(new_layout) %in% igraph::V(jacc_g)$name)) {
                rownames(new_layout) <- igraph::V(jacc_g)$name;
             }
-            if (verbose) {
+            if (verbose > 1) {
                jamba::printDebug("mem2emap(): ",
                   "head(new_layout):");
                print(head(new_layout, 100));
@@ -464,20 +482,63 @@ mem2emap <- function
       # Todo: decide if these criteria are flexible enough
       if (TRUE %in% apply_direction && has_negative) {
          # define color gradient for border color
-         dir_col_fn <- colorjam::col_div_xf(
-            direction_max,
-            floor=direction_floor,
-            colramp=jamba::getColorRamp(
-               "RdBu_r",
-               divergent=TRUE,
-               trimRamp=c(1, 1)))
+         # 0.0.123.900 - use 2D bivariate color scale
+         p_cut_lvl <- 10^(-1 * (ceiling(-log10(p_cutoff)) + 5));
+         row_breaks <- c(
+            -log10(p_cutoff),
+            seq(from=-log10(p_cutoff),
+               to=-log10(p_floor),
+               length.out=3));
+         if (p_cutoff == 1) {
+            row_breaks[2] <- row_breaks[1] + p_cut_lvl;
+         } else {
+            row_breaks[1] <- row_breaks[2] - p_cut_lvl;
+         }
+         dir_colors <- c("royalblue4", "gold3", "firebrick3");
+         dir_colors2 <- c("skyblue", "gold", "indianred1");
+         dir_colors3 <- c("white", "white", "white");
+         dir_colors2.5 <- sapply(dir_colors2, function(i){
+            colorjam::blend_colors(c(i, "white"))
+         })
+         mcolor <- jamba::rbindList(list(
+            dir_colors3,
+            dir_colors2.5,
+            dir_colors2,
+            dir_colors))
+         if (p_cutoff < 1) {
+            # do not color non-hits
+            row_breaks <- c(0, row_breaks);
+            mcolor <- rbind(mcolor[1, , drop=FALSE], mcolor)
+         }
+         dir_col_fn <- colorRamp2D(
+            column_breaks=seq(
+               from=-direction_max,
+               to=direction_max,
+               length.out=3),
+            row_breaks=row_breaks,
+            mcolor=mcolor,
+            ...);
+         # dir_col_fn_OLD <- colorjam::col_div_xf(
+         #    direction_max,
+         #    floor=direction_floor,
+         #    colramp=jamba::getColorRamp(
+         #       "RdBu_r",
+         #       divergent=TRUE,
+         #       trimRamp=c(1, 1)))
          # apply color to borders
          pie_borders <- lapply(seq_len(igraph::vcount(jacc_g)), function(i){
             j <- match(igraph::V(jacc_g)$name[i],
                rownames(enrichIMdirection(mem)));
             k <- igraph::V(jacc_g)$pie.color[[i]];
             knames <- names(k);
-            dir_col_fn(enrichIMdirection(mem)[j, knames])
+            # dir_col_fn_OLD(enrichIMdirection(mem)[j, knames])
+            dir_col <- sapply(knames, function(kname){
+               dir_col_fn(
+                  x=enrichIMdirection(mem)[j, kname],
+                  y=-log10(enrichIM(mem)[j, kname])
+               )
+            })
+            dir_col;
          })
          igraph::V(jacc_g)$pie.border <- pie_borders;
          # scale pie.border by node size
@@ -558,7 +619,7 @@ mem2emap <- function
          jacc_g <- igraph::delete_graph_attr(jacc_g, "layout")
       }
    }
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("mem2emap(): ",
          "pre-spread head(graph_attr(g, 'layout')):");
       print(head(igraph::graph_attr(jacc_g, "layout"), 100));
@@ -571,7 +632,7 @@ mem2emap <- function
          y_bias=y_bias,
          ...)
    }
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("mem2emap(): ",
          "post-spread head(graph_attr(g, 'layout')):");
       print(head(igraph::graph_attr(jacc_g, "layout"), 100));

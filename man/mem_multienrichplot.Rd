@@ -64,6 +64,28 @@ from the node, in order to improve default label positions.}
 \item{y_bias}{numeric value passed to \code{spread_igraph_labels()} when
 \code{spread_labels=TRUE}.}
 
+\item{label_edges}{\code{character} vector with edge attribute to use as
+an edge label. It takes the first matching value in the \code{igraph} edge
+attributes, if it exists. The defaults:
+\itemize{
+\item 'overlap_count'
+\item 'count'
+\item 'overlap': the overlap metric, current Jaccard overlap
+\item 'label': uses any existing edge 'label' attribute
+\item 'none': no label
+}}
+
+\item{edge_cex, node_cex}{\code{numeric} expansion factor to adjust the default
+edge and node size, respectively.}
+
+\item{node_size}{`numeric`` with default node size, default is 5.}
+
+\item{edge_color, frame_color}{\code{character} color used for default
+edge and node frame color, respectively.}
+
+\item{shape}{\code{character} node shape, default 'pie' uses pie nodes,
+which are interpreted as 'jampie' by \code{jam_igraph()}.}
+
 \item{repulse}{numeric value used for network layout when
 \code{layout_with_qfrf()} is used.}
 
@@ -79,6 +101,9 @@ other settings during the change. The effect is mainly to keep
 layout aspect intact, in cases where the x- and y-axis ranges
 are not roughly the same size, for example a short-wide
 layout.}
+
+\item{edge_bundling}{\code{character} string passed to \code{edge_bundle_groups()}
+to control edge bundling behavior. Default 'connections'.}
 
 \item{main}{character string used as the title when \code{do_plot=TRUE}.
 This character string is passed to \code{glue::glue()} in order to

@@ -1,4 +1,46 @@
-# multienrichjam 0.0.122.950
+# multienrichjam 0.0.123.900
+
+## New functions
+
+* `col_pvdir_xf()` creates bivariate color function, with
+optional numeric floor for P-value cutoff, and directional
+cutoff. Values that do not meet the cutoffs are not
+colorized accordingly. It defines custom legend 'at' and
+'label' to indicate when the threshold(s) are defined.
+
+## Changes
+
+* `display_colorRamp2D()` recognizes optional 'row_at',
+'row_label', 'column_at', 'column_label'.
+* Added 'genejam' dependency for gene symbol resolution.
+* `plot_mpf()`
+   * 'ce_num' now uses all exemplars in 'mpf' by default.
+   * ClusterSummary is added to plot_list and plot_names.
+   * Now returns invisible `list` with 'plot_list',
+   'plot_names'.
+
+* `mem_plot_folio()`
+   * Now passes 'cluster_columns', 'cluster_rows' to internal
+   functions so a custom clustering function can be used.
+
+* `CnetCollapsed()` now uses the cluster name and label
+in the title when both are defined.
+
+## New functions
+
+* `jam_enricher()` still in development, intended as a convenient
+wrapper to produce enrichment results suitable for multienrichment
+analysis. It will iterate:
+   * method ORA or GSEA or both
+   * one or more gene tables,
+   * one or more pathway tables
+   * refreshes gene symbols using `genejam` when requested
+   * custom gene universe when provided
+   * calculates "direction" column using each gene table
+   * produces suitable `enrichResult` or `gseaResult`
+
+
+# multienrichjam 0.0.122.960
 
 ## Changes
 

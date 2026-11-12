@@ -1,8 +1,69 @@
 # TODO
 
+## 05nov2026
+
+* Revisit option to pivot `GenePathHeatmap()` so it can show
+pathway cluster labels.
+* DONE. Add cluster prefix "A:" to `EnrichmentMap()` when showing
+`ClusterLabels()`.
+* Consider creative ways to highlight Cnet plot genes.
+   * Highlight "unique" genes, or with certain patterns.
+   * Perhaps apply layouts with subgroups of genes, for
+   "genes only in enrichments 1 and 3" which is not the same
+   as genes in Pathway Clusters.
+   * Perhaps 'label_mpf_genes()' could be useful, annotate a set of genes?
+   * Consider Venn-like subgroups of genes.
+
+
+## 15oct2026
+
+* Note system dependencies? Required by 'sf' via 's2' for
+spherical data manipulations: 'abseil-cpp-devel' - s2
+'libuv-devel' - fs, however it only causes error using 'pak'.
+
 ## 05oct2026
 
-* Consider moving shiny functions to new package.
+* Use same color gradient in `GenePathHeatmap()` at the top
+as `EnrichmentHeatmap()`.
+   * Add option to include the gene circles as well.
+   * Add option to asterisk the significant pathways.
+
+* `GenePathHeatmap()`
+   * Tighten up the process for using custom clustering function.
+   * Evaluate options for dendrogram ordering, specifically
+   to help re-order gene dendrogram leaves using gene
+   directional data.
+
+* `EnrichmentMap()`
+   * use the same color scale as `EnrichmentHeatmap()`
+   for directionality, e.g. yellow as the middle color.
+   * The bivariate color function could be stored in 'Mpf',
+   so it can be used by other plots easily.
+
+* `CnetCollapsed()`
+   * When using `ClusterLabels()` it should also include
+   cluster name, e.g. "A: Immune Response Pathways".
+
+* Fix `enrichResult` class dependency: 'enrichit'?
+* Consider moving shiny functions (ShinyCat) to new package.
+* Consider "simple wrapper" `jam_enrich()` to run enrichment tests.
+   * Input: gene hits, gene scores, or gene stats tables.
+   * Input: pathway gene sets, or list of gene sets.
+   * Option: use genejam to refresh gene symbols.
+   * Option: use genejam to refresh pathway gene symbols.
+   * Apply enrichment:
+      ORA `clusterProfiler::enricher()`
+      GSEA `clusterProfiler::GSEA()` (it uses fgsea)
+      FGSEA `fgsea::fgsea()` (not necessary)
+   * Returns: `enrichResult` as `list` by: Enrichment, Source, Method
+
+* Consider 'ggplot2', e.g. 'ggraph', or 'SCP' uses vanilla 'ggplot2'.
+   * Need custom node shapes: 'jampie', 'coloredrectangle'
+   * For ggraph/tidygraph, need bipartite edge bundling.
+   For vanilla 'ggplot2' edges could be drawn with existing geoms.
+
+* Consider concaveman for alpha hull shapes
+
 * Consider porting `layout_with_qfr()` to remove qgraph
 dependency.
 * Improve bivariate color legend.

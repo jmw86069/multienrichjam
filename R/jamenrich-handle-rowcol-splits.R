@@ -77,15 +77,16 @@ handle_rowcol_splits <- function
 
    # helper function to take a peek at clustering results to see if
    # the requested split is valid for this data
-   peek_cluster_split <- function
-   (use_matrix, 
-    x_split, 
-    x_title, 
-    x_method, 
-    x_cluster=NULL,
-    seed=123,
-    verbose=FALSE)
-   {
+   peek_cluster_split <- function(
+      use_matrix, 
+      x_split, 
+      x_title, 
+      x_method, 
+      x_cluster=NULL,
+      x_link="ward",
+      seed=123,
+      verbose=FALSE
+   ) {
       #
       if (length(seed) > 0) {
          set.seed(head(seed, 1));
@@ -98,13 +99,15 @@ handle_rowcol_splits <- function
          # otherwise inform user to produce data usable by cutree().
       } else {
          cluster_x <- amap::hcluster(
-            link="ward",
             use_matrix,
-            method=x_method);
+            link=x_link,
+            method=x_method
+         );
       }
       # 0.0.101.900 - use height instead of cutree k
       if (x_split > 1) {
-         cc_h <- c(sort(decreasing=TRUE,
+         cc_h <- c(sort(
+            decreasing=TRUE,
             cluster_x$height), 0);
          # if (verbose){jamba::printDebug("cc_h:");print(cc_h);}# debug
          cc_height <- mean(c(cc_h[x_split - 1], cc_h[x_split]));
@@ -118,8 +121,10 @@ handle_rowcol_splits <- function
          # 0.0.101.900 - shorten or expand as needed?
          if (length(x_title) != x_split) {
             x_title <- jamba::makeNames(
-               rep(x_title,
-                  length.out=x_split),
+               rep_len(
+                  x_title,
+                  x_split
+               ),
                ...);
          }
       } else {
@@ -135,16 +140,16 @@ handle_rowcol_splits <- function
    
    
    # helper function for rows or columns
-   calc_split <- function
-   (x_split,
-    x_title, 
-    x_values, 
-    max_x_split, 
-    x_split_fn, 
-    trim_values=TRUE,
-    auto_split=TRUE,
-    verbose=FALSE)
-   {
+   calc_split <- function(
+      x_split,
+      x_title, 
+      x_values, 
+      max_x_split, 
+      x_split_fn, 
+      trim_values=TRUE,
+      auto_split=TRUE,
+      verbose=FALSE
+   ) {
       # x_split is empty
       if (length(x_split) == 0) {
          # auto-define cluster counts
@@ -201,7 +206,7 @@ handle_rowcol_splits <- function
       } else {
          #
          # x_split is a vector or data.frame
-         cluster_x_slices <- FALSE;
+         # cluster_x_slices <- FALSE;
          #
          if (is.atomic(x_split)) {
             if (length(names(x_split)) == 0) {
@@ -213,7 +218,7 @@ handle_rowcol_splits <- function
                stop("names(x_split) do not match any x_values");
             }
             if (TRUE %in% trim_values) {
-               if (!length(x_values) == length(x_split) ||
+               if (length(x_values) != length(x_split) ||
                   !all(x_values == names(x_split))) {
                   retvals$trimmed <- TRUE;
                }
@@ -316,7 +321,7 @@ handle_rowcol_splits <- function
          is.function(cluster_rows)) {
       #
       # generate weighted geneIM,memIM matrix
-      if (!length(gene_im_weight) == 1 || any(gene_im_weight > 1)) {
+      if (length(gene_im_weight) != 1 || any(gene_im_weight > 1)) {
          gene_im_weight <- 0.5;
       }
       gene_weight <- round(gene_im_weight * 100) / 10;
@@ -346,13 +351,15 @@ handle_rowcol_splits <- function
       # for numeric split number, peek at data to confirm the number is valid
 
       if (is.numeric(row_split) && length(row_split) == 1) {
-         row_peek <- peek_cluster_split(use_matrix=row_matrix,
+         row_peek <- peek_cluster_split(
+            use_matrix=row_matrix,
             x_split=row_split,
             x_title=row_title,
             x_method=row_method,
             x_cluster=cluster_rows,
             verbose=FALSE,
-            seed=seed)
+            seed=seed
+         )
          row_split <- row_peek$x_split;
          row_title <- row_peek$x_title;
          cluster_rows <- row_peek$cluster_x;
@@ -388,7 +395,7 @@ handle_rowcol_splits <- function
       # and cluster altogether, which has the benefit/goal of
       # accentuating similar enrichment profiles which also have
       # similar gene content.
-      if (!length(enrich_im_weight) == 1 || any(enrich_im_weight > 1)) {
+      if (length(enrich_im_weight) != 1 || any(enrich_im_weight > 1)) {
          enrich_im_weight <- 0.3;
       }
       enrich_weight <- round(enrich_im_weight * 10);
@@ -408,13 +415,15 @@ handle_rowcol_splits <- function
       );
       
       if (is.numeric(column_split) && length(column_split) == 1) {
-         column_peek <- peek_cluster_split(use_matrix=column_matrix,
+         column_peek <- peek_cluster_split(
+            use_matrix=column_matrix,
             x_split=column_split,
             x_title=column_title,
             x_method=column_method,
             x_cluster=cluster_columns,
             verbose=FALSE,
-            seed=seed)
+            seed=seed
+         )
          column_split <- column_peek$x_split;
          column_title <- column_peek$x_title;
          cluster_columns <- column_peek$cluster_x;

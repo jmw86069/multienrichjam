@@ -495,7 +495,7 @@ setMethod("sets<-", "Mem",
 #' @describeIn Mem-class List genes represented
 #' @aliases genes
 #' @export
-setMethod("genes", "Mem",
+methods::setMethod("genes", "Mem",
    function(x, ...) rownames(x@geneIM)
 )
 
@@ -506,7 +506,7 @@ setMethod("genes", "Mem",
 #' @docType methods
 #' @describeIn Mem-class Assign gene names in a Mem object
 #' @export
-setMethod("genes<-", "Mem",
+methods::setMethod("genes<-", "Mem",
    function(x, value) {
       islot_rows <- c("memIM",
          "geneIM",
@@ -1183,19 +1183,30 @@ setMethod("setsByGene", "Mem", function(x) im2list(t(memIM(x))))
 #' @param ... additional arguments are passed through to
 #'    `mem2emap()`, `jam_igraph()`, and `mem_legend()`.
 #' 
-internal_EnrichmentMap <- function
-(x,
- do_plot=TRUE,
- legend_x="bottomleft",
- legend_y=NULL,
- params=list(repulse=3.5,
-    width=30,
-    group="default",
-    mark.expand=4,
-    do_fixSetLabels=FALSE,
-    do_legend=TRUE),
- ...)
-{
+internal_EnrichmentMap <- function(
+   x,
+   do_plot=TRUE,
+   legend_x="bottomleft",
+   legend_y=NULL,
+   params=list(
+      repulse=3.5,
+      width=30,
+      group="default",
+      mark.expand=4,
+      do_fixSetLabels=FALSE,
+      do_legend=TRUE,
+      em_group=c(
+         "default",
+         "community",
+         "communities",
+         "clusters",
+         "cluster_labels",
+         "nodegroups",
+         "none"
+      )
+   ),
+   ...
+) {
    #
    # validate arguments
    params <- modifyList(
@@ -1211,14 +1222,17 @@ internal_EnrichmentMap <- function
    } else if ("em_group" %in% names(arglist)) {
       em_group <- arglist$group;
    }
-   em_group <- intersect(em_group,
-      c("default",
-      "community",
-      "communities",
-      "clusters",
-      "cluster_labels",
-      "nodegroups",
-      "none"));
+   em_group <- intersect(
+      em_group,
+      c(
+         "default",
+         "community",
+         "communities",
+         "clusters",
+         "cluster_labels",
+         "nodegroups",
+         "none"
+      ));
    if (length(em_group) == 0) {
       em_group <- "none";
    }
@@ -1226,6 +1240,7 @@ internal_EnrichmentMap <- function
    Mpf <- NULL;
    cl <- NULL;
    cln <- NULL;
+   p_floor <- 1e-10;
    if (inherits(x, "MemPlotFolio")) {
       if (!inherits(x@metadata$Mem, "Mem")) {
          stop_msg <- paste0("Input MemPlotFolio must ",
@@ -1233,6 +1248,11 @@ internal_EnrichmentMap <- function
          stop(stop_msg);
       }
       Mpf <- x;
+      if ("p_floor" %in% names(thresholds(Mpf))) {
+         p_floor <- thresholds(Mpf)$p_floor;
+      } else {
+         p_floor <- 1e-10;
+      }
       cl <- Clusters(Mpf);
       cln <- ClusterLabels(Mpf);
       if (length(cln) == 0 || "clusters" %in% em_group) {
@@ -1242,12 +1262,20 @@ internal_EnrichmentMap <- function
          }
       } else if ("default" %in% em_group) {
          em_group <- "cluster_labels";
+         # 0.0.123.900 - use cluster prefix "A: Cluster Label"
+         cln <- paste0(names(cln), ": ", cln);
       }
       x <- x@metadata$Mem;
    } else {
-      if (any(grepl("cluster", em_group))) {
+      if (any(grepl("cluster", em_group, fixed = TRUE))) {
          em_group <- "community";
       }
+      if ("p_floor" %in% names(thresholds(x))) {
+         p_floor <- thresholds(x)$p_floor;
+      }
+   }
+   if (!"p_floor" %in% names(params)) {
+      params$p_floor <- p_floor;
    }
    if (!inherits(x, "Mem")) {
       stop_msg <- paste0("Input must inherit 'Mem'.")
@@ -1260,14 +1288,20 @@ internal_EnrichmentMap <- function
 
    em_repulse <- ifelse(
       is.numeric(head(params$repulse, 1)),
-      head(params$repulse, 1), 3.5);
+      head(params$repulse, 1),
+      3.5
+   );
    params[["repulse"]] <- NULL;
    
    # Prepare the igraph
    Emap <- do.call(mem2emap,
-      c(alist(mem=x,
-         repulse=em_repulse),
-         params))
+      c(
+         alist(
+            mem=x,
+            repulse=em_repulse
+         ),
+         params
+      ))
    # Emap <- mem2emap(x,
    #    # num_keep_terms=0,
    #    repulse=em_repulse,
@@ -1291,7 +1325,8 @@ internal_EnrichmentMap <- function
          removeGrep=NULL,
          adjustCase=FALSE,
          width=params$width,
-         ...)
+         ...
+      )
       names(nodegroups) <- cl$cluster_names;
       igraph::graph_attr(Emap, "mark.groups") <- cl;
       igraph::graph_attr(Emap, "nodegroups") <- nodegroups;
