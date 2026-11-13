@@ -10,6 +10,7 @@ display_colorRamp2D(
   xlab = "",
   ylab = "",
   main = "",
+  verbose = FALSE,
   ...
 )
 }
@@ -22,7 +23,12 @@ y-axis and x-axis label breaks, respectively, or
 
 \item{xlab, ylab, main}{\code{character} strings passed to \code{title()}.}
 
+\item{verbose}{\code{logical} whether to print verbose output.}
+
 \item{...}{additional arguments are passed to \code{title()}.}
+}
+\value{
+\code{matrix} with \code{character} R colors, invisibly.
 }
 \description{
 Display colors from bivariate color function
@@ -30,6 +36,14 @@ Display colors from bivariate color function
 \details{
 This function provides a very rudimentary method for displaying
 a bivariate 2-D color matrix out from \code{colorRamp2D()}.
+\subsection{Todo}{
+\itemize{
+\item Use optional attributes with pre-determined breaks
+and labels, useful when cutoffs (floors) were defined.
+In this case, \code{pretty.n} would likely be ignored, in favor
+of using label positions already in place.
+}
+}
 }
 \seealso{
 Other jam utility functions:
@@ -37,6 +51,7 @@ Other jam utility functions:
 \code{\link[=avg_angles]{avg_angles()}},
 \code{\link[=avg_colors_by_list]{avg_colors_by_list()}},
 \code{\link[=cell_fun_bivariate]{cell_fun_bivariate()}},
+\code{\link[=col_pvdir_xf]{col_pvdir_xf()}},
 \code{\link[=collapse_mem_clusters]{collapse_mem_clusters()}},
 \code{\link[=colorRamp2D]{colorRamp2D()}},
 \code{\link[=curateIPAcolnames]{curateIPAcolnames()}},

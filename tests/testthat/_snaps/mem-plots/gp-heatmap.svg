@@ -684,10 +684,11 @@
 <text x='618.76' y='422.83' style='font-size: 10.00px; font-family: sans;' textLength='60.80px' lengthAdjust='spacingAndGlyphs'>sets = 'binary'</text>
 <text x='618.76' y='441.05' style='font-size: 10.00px; font-weight: bold; font-family: sans;' textLength='35.56px' lengthAdjust='spacingAndGlyphs'>Filtering</text>
 <text x='618.76' y='454.20' style='font-size: 10.00px; font-family: sans;' textLength='95.63px' lengthAdjust='spacingAndGlyphs'>enrichment P &lt;= 0.05</text>
-<text x='618.76' y='466.20' style='font-size: 10.00px; font-family: sans;' textLength='83.41px' lengthAdjust='spacingAndGlyphs'>genes per set &gt;= 4</text>
-<text x='618.76' y='478.20' style='font-size: 10.00px; font-family: sans;' textLength='84.48px' lengthAdjust='spacingAndGlyphs'>(within enrichment)</text>
-<text x='618.76' y='496.42' style='font-size: 10.00px; font-weight: bold; font-family: sans;' textLength='47.80px' lengthAdjust='spacingAndGlyphs'>IM weights</text>
-<text x='618.76' y='509.57' style='font-size: 10.00px; font-family: sans;' textLength='84.50px' lengthAdjust='spacingAndGlyphs'>geneIM weight: 0.5</text>
-<text x='618.76' y='521.57' style='font-size: 10.00px; font-family: sans;' textLength='78.38px' lengthAdjust='spacingAndGlyphs'>set IM weight: 0.3</text>
+<text x='618.76' y='466.20' style='font-size: 10.00px; font-family: sans;' textLength='43.91px' lengthAdjust='spacingAndGlyphs'>Top N: 20</text>
+<text x='618.76' y='478.20' style='font-size: 10.00px; font-family: sans;' textLength='83.41px' lengthAdjust='spacingAndGlyphs'>genes per set &gt;= 4</text>
+<text x='618.76' y='490.20' style='font-size: 10.00px; font-family: sans;' textLength='84.48px' lengthAdjust='spacingAndGlyphs'>(within enrichment)</text>
+<text x='618.76' y='508.42' style='font-size: 10.00px; font-weight: bold; font-family: sans;' textLength='47.80px' lengthAdjust='spacingAndGlyphs'>IM weights</text>
+<text x='618.76' y='521.57' style='font-size: 10.00px; font-family: sans;' textLength='84.50px' lengthAdjust='spacingAndGlyphs'>geneIM weight: 0.5</text>
+<text x='618.76' y='533.57' style='font-size: 10.00px; font-family: sans;' textLength='78.38px' lengthAdjust='spacingAndGlyphs'>set IM weight: 0.3</text>
 </g>
 </svg>

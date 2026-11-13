@@ -5,9 +5,9 @@
 \title{Color ramp for bivariate colors}
 \usage{
 colorRamp2D(
-  column_breaks,
-  row_breaks,
-  mcolor,
+  column_breaks = c(-2, -1, 0, 1, 2),
+  row_breaks = c(0, 5, 10),
+  mcolor = NULL,
   na_color = "grey15",
   return_rgb = FALSE,
   transparency = 0,
@@ -16,26 +16,71 @@ colorRamp2D(
   ...
 )
 }
+\arguments{
+\item{column_breaks}{\code{numeric} vector of column breaks.}
+
+\item{row_breaks}{\code{numeric} vector of row breaks.}
+
+\item{mcolor}{\code{character} matrix of R colors, with dimensions
+equal to the number of \code{column_breaks} and \code{row_breaks}.}
+
+\item{na_color}{\code{character} color used for NA values.}
+
+\item{return_rgb}{\code{logical} default FALSE, whether the color
+function should return RGB color format, or \code{character}
+hex colors.}
+
+\item{transparency}{\code{numeric} default 0, passed to
+\code{circlize::colorRamp2()}.}
+
+\item{space}{\code{character} string with color space, default 'sRGB'.}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
+
+\item{...}{additional arguments are ignored.}
+}
 \value{
-\code{function} that takes input with arguments
+\code{function} that takes input with arguments:
 \itemize{
-\item x: numeric x-axis value
-\item y: numeric y-axis value
+\item x: numeric x-axis value. It only accepts one value.
 \item return_rgb: \code{logical} whether to return RGB color
 \item max_value: maximum value, ignored
+\item y: numeric y-axis value. It only accepts one value.
 \item ...: additional arguments are ignored
 }
 }
 \description{
-Color ramp for bivariate colors
+Color ramp for bivariate colors, using x- and y-axis
+input values to apply colors.
+}
+\details{
+This function is intentionally similar to
+\code{circlize::colorRamp2()}, in that it defines a specific color
+to a specific numeric value. In this case, it uses
+two numeric input values, intended to be x- and y-axis
+values, columns and rows, respectively.
+
+The default condition it to use divergent colors as
+x-axis (columns), and a white-to-dark gradient as
+y-axis (rows). In this way the y-axis represents
+P-value significance, and x-axis represents direction,
+with -2 (down), 0 (no direction), and +2 (up).
+
+This function is not intended to be particularly
+user-friendly, it simply takes column_breaks, row_breaks,
+and a matrix of colors, and returns a color function
+that generates one color for each x,y value provided.
 }
 \examples{
-mcolor <- matrix(ncol=3,
-   c("seashell", "salmon1", "firebrick3",
-      "gray99", "lightgoldenrod1", "gold",
-      "aliceblue", "skyblue", "dodgerblue3"));
+mcolor <- cbind(
+   jamba::getColorRamp("Reds", n=3, trimRamp=c(0, 2)),
+   jamba::getColorRamp("Oranges", n=3, trimRamp=c(0, 3)),
+   jamba::getColorRamp("gold", n=3, trimRamp=c(0, 3)),
+   jamba::getColorRamp("Greens", n=3, trimRamp=c(0, 3)),
+   jamba::getColorRamp("Blues", n=3, trimRamp=c(0, 2))
+)
 row_breaks <- c(0, 0.5, 1);
-column_breaks <- c(-1, 0, 1);
+column_breaks <- c(-2, -1, 0, 1, 2);
 rownames(mcolor) <- row_breaks;
 colnames(mcolor) <- column_breaks;
 jamba::imageByColors(mcolor);
@@ -46,10 +91,11 @@ title(
    xlab="Directionality",
    ylab="Score");
 
-col_fun <- colorRamp2D(column_breaks=column_breaks,
+col_fun <- colorRamp2D(
+   column_breaks=column_breaks,
    row_breaks=row_breaks,
    mcolor=mcolor)
-display_colorRamp2D(col_fun, pretty.n=c(4, 5));
+display_colorRamp2D(col_fun, pretty.n=c(8, 5));
 display_colorRamp2D(col_fun, pretty.n=NULL);
 
 mcolor1 <- matrix(ncol=3,
@@ -75,6 +121,7 @@ Other jam utility functions:
 \code{\link[=avg_angles]{avg_angles()}},
 \code{\link[=avg_colors_by_list]{avg_colors_by_list()}},
 \code{\link[=cell_fun_bivariate]{cell_fun_bivariate()}},
+\code{\link[=col_pvdir_xf]{col_pvdir_xf()}},
 \code{\link[=collapse_mem_clusters]{collapse_mem_clusters()}},
 \code{\link[=curateIPAcolnames]{curateIPAcolnames()}},
 \code{\link[=deconcat_df2]{deconcat_df2()}},

@@ -81,6 +81,7 @@ Other jam utility functions:
 \code{\link[=avg_angles]{avg_angles()}},
 \code{\link[=avg_colors_by_list]{avg_colors_by_list()}},
 \code{\link[=cell_fun_bivariate]{cell_fun_bivariate()}},
+\code{\link[=col_pvdir_xf]{col_pvdir_xf()}},
 \code{\link[=collapse_mem_clusters]{collapse_mem_clusters()}},
 \code{\link[=colorRamp2D]{colorRamp2D()}},
 \code{\link[=deconcat_df2]{deconcat_df2()}},

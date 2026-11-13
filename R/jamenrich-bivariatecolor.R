@@ -240,13 +240,11 @@ display_colorRamp2D <- function(
          "row_breaks: ",
          row_breaks
       )
-      print(data.frame(row_breaks, row_labels));# debug
       jamba::printDebug(
          "display_colorRamp2D(): ",
          "column_breaks: ",
          column_breaks
       )
-      print(data.frame(column_breaks, column_labels));# debug
    }
    if (length(pretty.n) > 0) {
       pretty.n <- rep_len(pretty.n, 2);
@@ -733,6 +731,9 @@ cell_fun_bivariate <- function(
 #'    absolute breaks for row and column values displayed in the color
 #'    legend. When not supplied, these values are defined using `pretty`
 #'    and argument `pretty.n`.
+#' @param row_label,column_label `character` vector of labels to use,
+#'    should be equal to the length of row_breaks,column_breaks,
+#'    respectively.
 #' @param row_gap,column_gap `grid::unit()` object to define optional
 #'    visible gaps between color squares in the color legend. By default,
 #'    there is no gap. These arguments are provided as a convenient way
@@ -762,10 +763,12 @@ cell_fun_bivariate <- function(
 #' col_fun <- colorRamp2D(column_breaks=column_breaks,
 #'    row_breaks=row_breaks,
 #'    mcolor=mcolor)
+#' col_fun <- col_pvdir_xf(p_cutoff=0.01)
+#' display_colorRamp2D(col_fun)
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
 #'    xlab="direction",
-#'    pretty.n=5);
+#'    pretty.n=c(5, 10));
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
 #'
@@ -802,7 +805,7 @@ cell_fun_bivariate <- function(
 #' @export
 make_legend_bivariate <- function(
    col_fun,
-   pretty.n=c(5, 10),
+   pretty.n=c(10, 5),
    name="bivariate",
    xlab="",
    ylab="",
@@ -814,7 +817,9 @@ make_legend_bivariate <- function(
    grid_height=grid::unit(5, "mm"),
    grid_width=grid_height,
    row_breaks=NULL,
+   row_label=NULL,
    column_breaks=NULL,
+   column_label=NULL,
    row_gap=grid::unit(0, "mm"),
    column_gap=grid::unit(0, "mm"),
    p_cutoff=NULL,
@@ -824,31 +829,53 @@ make_legend_bivariate <- function(
       pretty.n <- rep_len(pretty.n, 2);
    }
 
+   # column breaks
    if (length(column_breaks) == 0) {
-      # column_at <- attr(col_fun, "column_at");
-      # if (length(column_at) > 0) {
-      #    #
-      # }
-      column_breaks <- attr(col_fun, "column_breaks");
-      if (length(pretty.n) == 2 && pretty.n[1] > 0) {
-         column_breaks <- pretty(column_breaks,
-            n=pretty.n[1])
+      column_at <- attr(col_fun, "column_at");
+      column_label <- attr(col_fun, "column_label");
+      if (length(column_at) > 0) {
+         column_breaks <- column_at;
+      } else {
+         column_breaks <- attr(col_fun, "column_breaks");
+         if (length(pretty.n) == 2 && pretty.n[2] > 0) {
+            column_breaks <- pretty(column_breaks,
+               n=pretty.n[2])
+         }
+         column_label <- signif(digits=3, column_at);
       }
    }
+   if (length(column_label) == 0 ||
+      length(column_label) != length(column_breaks)) {
+      column_label <- signif(digits=3, column_at);
+   }
+
+   # row breaks
    if (length(row_breaks) == 0) {
-      row_breaks <- attr(col_fun, "row_breaks");
-      if (length(pretty.n) == 2 && pretty.n[2] > 0) {
-         row_breaks <- pretty(row_breaks,
-            n=pretty.n[2]);
+      row_at <- attr(col_fun, "row_at");
+      row_label <- attr(col_fun, "row_label");
+      if (length(row_at) > 0) {
+         row_breaks <- row_at;
+      } else {
+         row_breaks <- attr(col_fun, "row_breaks");
+         if (length(pretty.n) == 2 && pretty.n[1] > 0) {
+            row_breaks <- pretty(row_breaks,
+               n=pretty.n[1])
+         }
+         row_label <- signif(digits=3, row_at);
       }
       if (length(p_cutoff) == 1 && is.numeric(p_cutoff)) {
-         p_cut_val <- -log10(p_cutoff);
+         p_cut_val <- signif(digits=3, -log10(p_cutoff));
          if (!p_cut_val %in% row_breaks) {
             row_breaks <- sort(c(row_breaks, p_cut_val))
          }
       }
    }
+   if (length(row_label) == 0 ||
+      length(row_label) != length(row_breaks)) {
+      row_label <- signif(digits=3, row_at);
+   }
    row_breaks <- rev(row_breaks);
+   row_label <- rev(row_label);
 
    legend_seq <- c(0, seq_along(column_breaks), length(column_breaks) + 1);
    legend_columns <- lapply(legend_seq, function(i){
@@ -868,6 +895,7 @@ make_legend_bivariate <- function(
             paste0(rep(" ", 10), collapse=""))
          title_position <- "leftcenter-rot";
          column_break <- column_breaks[1];
+         use_column_label <- NULL;
          igrid_width <- grid::unit(0.1, "mm");
          use_border <- "transparent";
          row_colors <- rep("transparent", length(row_breaks));
@@ -876,15 +904,15 @@ make_legend_bivariate <- function(
          title_gp <- grid::gpar(fontsize=title_fontsize,
             fontface="bold",
             col="transparent");
-         labels <- format(row_breaks,
-            digits=digits,
-            trim=TRUE);
+         labels <- row_label;
          column_break <- column_breaks[1];
+         use_column_label <- NULL;
          igrid_width <- grid::unit(0.1, "mm");
          use_border <- "transparent";
          row_colors <- rep("transparent", length(row_breaks));
       } else {
          column_break <- column_breaks[i];
+         use_column_label <- column_label[i];
          igrid_width <- grid_width;
          use_border <- border;
          title_gp <- grid::gpar(fontsize=legend_fontsize)
@@ -896,8 +924,24 @@ make_legend_bivariate <- function(
                r=grid::unit(0, "pt"),
                paste0("<b><span style='font-size:", title_fontsize, "pt'>",
                   xlab, "</span></b><br>",
-                  "<span style='font-size:", legend_fontsize, "pt'>",
-                  column_break, "</span>"))
+                  "<span style='",
+                     "display: inline-block; transform: rotate(270deg);",
+                     "font-size:", legend_fontsize, "pt",
+                  "'>",
+                  use_column_label, "</span>"))
+            title_position <- "topcenter";
+         } else if (i == 1) {
+            maintitle <- ComplexHeatmap::gt_render(
+               margin=grid::unit(c(0, 0, 0, 0), "pt"),
+               padding=grid::unit(c(0, legend_fontsize, 0, 0), "pt"),
+               r=grid::unit(0, "pt"),
+               paste0("<b><span style='font-size:", title_fontsize, "pt'>",
+                  " </span></b><br>",
+                  "<span style='",
+                     "display: inline-block; transform: rotate(270deg);",
+                     "font-size:", legend_fontsize, "pt",
+                  "'>",
+                  use_column_label, "</span>"))
             title_position <- "topcenter";
          } else {
             maintitle <- ComplexHeatmap::gt_render(
@@ -906,8 +950,11 @@ make_legend_bivariate <- function(
                r=grid::unit(0, "pt"),
                paste0("<b><span style='font-size:", title_fontsize, "pt'>",
                   " </span></b><br>",
-                  "<span style='font-size:", legend_fontsize, "pt'>",
-                  column_break, "</span>"))
+                  "<span style='",
+                     "display: inline-block; transform: rotate(270deg);",
+                     "font-size:", legend_fontsize, "pt",
+                  "'>",
+                  use_column_label, "</span>"))
             title_position <- "topcenter";
          }
          row_colors <- sapply(row_breaks, function(row_break) {
@@ -978,7 +1025,13 @@ make_legend_bivariate <- function(
          title_width,
          legend_width)), "mm");
 
-      total_height <- legend_height + xlab_height + xlab_height + title_height + title_height;
+      total_height <- (
+         legend_height +
+         xlab_height +
+         xlab_height +
+         title_height +
+         title_height
+      );
 
       gf <- grid::grobTree(
          grid::textGrob(xlab,
@@ -993,7 +1046,7 @@ make_legend_bivariate <- function(
             just=c("left", "top"),
             gp=title_gp,
             rot=0),
-         ComplexHeatmap:::edit_vp_in_legend_grob(legend_body,
+         CH_edit_vp_in_legend_grob(legend_body,
             x=grid::unit(1, "npc"),
             y=grid::unit(1, "npc"),
             valid.just=c(1, 1)),

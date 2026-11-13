@@ -38,6 +38,11 @@ suffix for each value in \code{m} for each cell.}
 
 \item{cex}{\code{numeric} adjustment for the fontsize used for each label}
 
+\item{placement}{\code{character} placement of text label, when defined.}
+
+\item{font}{\code{numeric} font style when a label is used, default 2
+applies bont font.}
+
 \item{col_hm}{\code{function} whose first two arguments accept \code{numeric}
 values, and which returns a single color. Note that when \code{mcolor}
 is provided, this argument is ignored.}
@@ -82,6 +87,9 @@ is also defined. Together these arguments allow customized points.}
 \item{size_fun}{\code{function} used to define point size, only when \code{pch}
 is also defined. Together these arguments allow customized points.}
 
+\item{size_by}{\code{integer} indicating which matrix of values
+to use for point sizing.}
+
 \item{grid_color}{\code{character} valid R color used with \code{style="dotplot"}
 to draw lines through the center of each cell.}
 
@@ -93,8 +101,14 @@ allow this function to be used in both scenarios for consistency.}
 such that each cell is filled with color, and the circle is drawn
 empty on top.}
 
+\item{verbose}{\code{logical} whether to print verbose output.}
+
 \item{...}{additional arguments are passed to \code{col_hm()} to allow
 custom options relevant to that function.}
+}
+\value{
+\code{function} that takes x,y numeric values,
+and returns a color.
 }
 \description{
 ComplexHeatmap cell function with bivariant color
@@ -198,6 +212,7 @@ Other jam utility functions:
 \code{\link[=ashape]{ashape()}},
 \code{\link[=avg_angles]{avg_angles()}},
 \code{\link[=avg_colors_by_list]{avg_colors_by_list()}},
+\code{\link[=col_pvdir_xf]{col_pvdir_xf()}},
 \code{\link[=collapse_mem_clusters]{collapse_mem_clusters()}},
 \code{\link[=colorRamp2D]{colorRamp2D()}},
 \code{\link[=curateIPAcolnames]{curateIPAcolnames()}},

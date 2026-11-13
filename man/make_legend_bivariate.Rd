@@ -6,7 +6,7 @@
 \usage{
 make_legend_bivariate(
   col_fun,
-  pretty.n = c(5, 10),
+  pretty.n = c(10, 5),
   name = "bivariate",
   xlab = "",
   ylab = "",
@@ -18,7 +18,9 @@ make_legend_bivariate(
   grid_height = grid::unit(5, "mm"),
   grid_width = grid_height,
   row_breaks = NULL,
+  row_label = NULL,
   column_breaks = NULL,
+  column_label = NULL,
   row_gap = grid::unit(0, "mm"),
   column_gap = grid::unit(0, "mm"),
   p_cutoff = NULL,
@@ -64,6 +66,10 @@ absolute breaks for row and column values displayed in the color
 legend. When not supplied, these values are defined using \code{pretty}
 and argument \code{pretty.n}.}
 
+\item{row_label, column_label}{\code{character} vector of labels to use,
+should be equal to the length of row_breaks,column_breaks,
+respectively.}
+
 \item{row_gap, column_gap}{\code{grid::unit()} object to define optional
 visible gaps between color squares in the color legend. By default,
 there is no gap. These arguments are provided as a convenient way
@@ -103,10 +109,12 @@ jamba::imageByColors(mcolor);
 col_fun <- colorRamp2D(column_breaks=column_breaks,
    row_breaks=row_breaks,
    mcolor=mcolor)
+col_fun <- col_pvdir_xf(p_cutoff=0.01)
+display_colorRamp2D(col_fun)
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
    xlab="direction",
-   pretty.n=5);
+   pretty.n=c(5, 10));
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 
@@ -147,6 +155,7 @@ Other jam utility functions:
 \code{\link[=avg_angles]{avg_angles()}},
 \code{\link[=avg_colors_by_list]{avg_colors_by_list()}},
 \code{\link[=cell_fun_bivariate]{cell_fun_bivariate()}},
+\code{\link[=col_pvdir_xf]{col_pvdir_xf()}},
 \code{\link[=collapse_mem_clusters]{collapse_mem_clusters()}},
 \code{\link[=colorRamp2D]{colorRamp2D()}},
 \code{\link[=curateIPAcolnames]{curateIPAcolnames()}},

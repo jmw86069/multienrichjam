@@ -560,11 +560,17 @@ mem_enrichment_heatmap <- function(
          #    row_breaks <- tail(row_breaks, -1);
          #    mcolor <- mcolor[-2, , drop=FALSE]
          # }
-         col_bivariate <- colorRamp2D(
-            column_breaks=seq(from=-2, to=2, length.out=3),
-            row_breaks=row_breaks,
-            mcolor=mcolor,
-            ...);
+         col_bivariate <- col_pvdir_xf(
+            p_cutoff=p_cutoff,
+            direction_cutoff=direction_cutoff,
+            direction_max=2,
+            color_non_hits=color_non_hits
+         )
+         # col_bivariate <- colorRamp2D(
+         #    column_breaks=seq(from=-2, to=2, length.out=3),
+         #    row_breaks=row_breaks,
+         #    mcolor=mcolor,
+         #    ...);
          size_by <- match("geneCount",
             c("-log10Pvalue",
                # "direction",
@@ -572,7 +578,7 @@ mem_enrichment_heatmap <- function(
                "geneCount"));
          legend_bivariate <- make_legend_bivariate(
             col_bivariate,
-            p_cutoff=p_cutoff,
+            p_cutoff=NULL,
             ylab="-log10pvalue",
             xlab="direction"
          );

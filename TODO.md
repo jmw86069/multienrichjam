@@ -1,5 +1,20 @@
 # TODO
 
+## 12nov2026
+
+* DONE. `EnrichmentHeatmap()` bivariate legend should use custom
+row and column label positions when defined, which will
+also enable showing the cutoffs (p_cutoff, direction_cutoff)
+when in use.
+* Add `MemtestDir` data with better example of directional
+enrichment results.
+* `make_legend_bivariate()` eventually should have the option
+to display continuous color legend, not the grid pattern.
+* `ClusterSummary()` should have other options to format the
+text summary, for example some way to show the raw output
+in the event the markdown/LaTeX formatting is not supported
+by Quarto/Rmarkdown rendering.
+
 ## 05nov2026
 
 * Revisit option to pivot `GenePathHeatmap()` so it can show

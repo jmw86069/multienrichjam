@@ -1,15 +1,10 @@
 # multienrichjam 0.0.123.900
 
-## New functions
-
-* `col_pvdir_xf()` creates bivariate color function, with
-optional numeric floor for P-value cutoff, and directional
-cutoff. Values that do not meet the cutoffs are not
-colorized accordingly. It defines custom legend 'at' and
-'label' to indicate when the threshold(s) are defined.
-
 ## Changes
 
+* `make_legend_bivariate()` recognizes optional 'row_at',
+'row_label', 'column_at', 'column_label', which are
+defined by `col_pvdir_xf()` custom bivariate label function.
 * `display_colorRamp2D()` recognizes optional 'row_at',
 'row_label', 'column_at', 'column_label'.
 * Added 'genejam' dependency for gene symbol resolution.
@@ -25,19 +20,29 @@ colorized accordingly. It defines custom legend 'at' and
 
 * `CnetCollapsed()` now uses the cluster name and label
 in the title when both are defined.
+* `EnrichmentHeatmap()` and `mem_enrichment_heatmap()` call
+`col_pvdir_xf()` to define bivariate color scale, and use
+custom labels and label positions in the legend.
 
 ## New functions
 
-* `jam_enricher()` still in development, intended as a convenient
-wrapper to produce enrichment results suitable for multienrichment
-analysis. It will iterate:
-   * method ORA or GSEA or both
-   * one or more gene tables,
-   * one or more pathway tables
-   * refreshes gene symbols using `genejam` when requested
-   * custom gene universe when provided
-   * calculates "direction" column using each gene table
-   * produces suitable `enrichResult` or `gseaResult`
+* `col_pvdir_xf()` creates bivariate color function, with
+optional numeric floor for P-value cutoff, and directional
+cutoff. Values that do not meet the cutoffs are not
+colorized accordingly. It defines custom legend 'at' and
+'label' to indicate when the threshold(s) are defined.
+
+* `jam_enricher()` still in development
+   * intended as a convenient
+   wrapper to produce enrichment results suitable for multienrichment
+   analysis. It will iterate:
+      * method ORA or GSEA or both
+      * one or more gene tables,
+      * one or more pathway tables
+      * refreshes gene symbols using `genejam` when requested
+      * custom gene universe when provided
+      * calculates "direction" column using each gene table
+      * produces suitable `enrichResult` or `gseaResult`
 
 
 # multienrichjam 0.0.122.960

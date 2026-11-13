@@ -63,11 +63,11 @@ col_pvdir_xf <- function(
    n <- 3;
    trimRamp <- c(3, 2);
    mcolor1 <- cbind(
-      c("#FFFFFF", jamba::getColorRamp("Blues", n=n, trimRamp=trimRamp)),
-      c("#FFFFFF", jamba::getColorRamp("Greens", n=n, trimRamp=trimRamp+c(0, 1))),
-      c("#FFFFFF", jamba::getColorRamp("gold", n=n, trimRamp=trimRamp)),
-      c("#FFFFFF", jamba::getColorRamp("Oranges", n=n, trimRamp=trimRamp+c(0, 1))),
-      c("#FFFFFF", jamba::getColorRamp("Reds", n=n, trimRamp=trimRamp))
+      c("#FFFFFFFF", jamba::getColorRamp("Blues", n=n, trimRamp=trimRamp)),
+      c("#FFFFFFFF", jamba::getColorRamp("Greens", n=n, trimRamp=trimRamp+c(0, 1))),
+      c("#FFFFFFFF", jamba::getColorRamp("gold", n=n, trimRamp=trimRamp)),
+      c("#FFFFFFFF", jamba::getColorRamp("Oranges", n=n, trimRamp=trimRamp+c(0, 1))),
+      c("#FFFFFFFF", jamba::getColorRamp("Reds", n=n, trimRamp=trimRamp))
    )
    # jamba::imageByColors(mcolor1)
    pretty.n <- rep_len(pretty.n, 2);
@@ -80,8 +80,6 @@ col_pvdir_xf <- function(
    );
 
    # row breaks
-   p_cutoff <- 1;
-   p_cutoff <- 0.05
    p_cut_lvl <- 10^(-1 * (ceiling(-log10(p_cutoff)) + 5));
    row_breaks <- c(
       -log10(p_cutoff),
@@ -101,17 +99,18 @@ col_pvdir_xf <- function(
    }
    row_labels <- signif(digits=3, row_breaks);
 
-   mcolor0 <- mcolor[1, , drop=FALSE];
-   mcolor0[1, ] <- "#FFFFFF";
+   mcolor0 <- mcolor1[1, , drop=FALSE];
+   mcolor0[1, ] <- "#FFFFFFFF";
    if (p_cutoff == 1) {
       row_at <- pretty(c(0, -log10(p_floor)), n=pretty.n[1])
+      row_label <- signif(digits=3, row_at);
+      row_label <- c(row_label[1], row_label);
+      row_label[2] <- paste0(">", row_label[1]);
       row_at <- c(
          row_at[1],
          row_at[1] + p_cut_lvl*2,
          row_at[-1]
       )
-      row_label <- signif(digits=3, row_at);
-      row_label[2] <- paste0(">", row_at[1])
       row_breaks[2] <- row_breaks[1] + p_cut_lvl;
       row_labels[2] <- paste0(">", row_labels[1])
    } else {
@@ -124,43 +123,39 @@ col_pvdir_xf <- function(
          row_label <- signif(digits=3, row_at);
          row_breaks <- c(
             0,
-            row_breaks#[-1]
+            row_breaks[-1]
          )
          row_labels <- c(
             0,
-            row_labels#[-1]
+            row_labels[-1]
          )
-         mcolor1 <- rbind(mcolor0, mcolor1);
+         # mcolor1 <- rbind(mcolor0, mcolor1);
       } else {
+         row_label <- signif(digits=3, row_at);
+         row_label <- c(0, row_label[1], row_label);
+         row_label[2] <- paste0("<", row_label[2]);
          row_at <- c(
             0,
             -log10(p_cutoff) - p_cut_lvl * 2,
             row_at
          )
-         row_label <- signif(digits=3, row_at);
-         row_label <- c(
-            paste0("<", signif(digits=3, row_at[3])),
-            row_label[-1:-2]
-         )
          row_breaks <- c(
             0,
-            row_breaks[2] - p_cut_lvl,
             row_breaks
          )
          row_labels <- c(
             0,
-            paste0("<", signif(digits=3, row_labels[2])),
+            paste0("<", signif(digits=3, row_labels[1])),
             row_labels[-1]
          )
+         row_breaks[2] <- row_breaks[2] - p_cut_lvl;
          mcolor1 <- rbind(
             mcolor0,
-            rbind(
-               mcolor1[1, , drop=FALSE],
-               mcolor1)
+            mcolor1
          )
       }
       colnames(mcolor1) <- column_breaks;
-      rownames(mcolor1) <- row_breaks;
+      rownames(mcolor1) <- row_labels;
    }
    mcolor <- mcolor1;
    
@@ -278,16 +273,22 @@ col_pvdir_xf <- function(
    } else {
       # no direction_cutoff
       column_labels <- column_breaks;
-      direction_label <- c(
-         paste0("<=", signif(digits=3, direction_at[1])),
-         direction_at[c(-1, -length(direction_at))],
-         paste0(">=", signif(digits=3, direction_at[length(direction_at)]))
-      )
       direction_at <- unique(sort(c(
          -1 * direction_at,
          direction_at
       )))
+      direction_label <- signif(digits=3, direction_at);
+      direction_label[1] <- paste0("<=", direction_label[1]);
+      k <- length(direction_at);
+      direction_label[k] <- paste0(">=", direction_label[k]);
    }
+   # Trim digits on direction_label
+   direction_label <- gsub("^([-<>=]*)0[.]", "\\1.", direction_label);
+   # Check duplicate numeric values
+   if (anyDuplicated(gsub("^[<>]", "", direction_label)) > 0) {
+      direction_label <- gsub("^([<>]).*", "\\1", direction_label);
+   }
+
    col_bivariate_fun <- colorRamp2D(
       column_breaks=column_breaks,
       row_breaks=row_breaks,
