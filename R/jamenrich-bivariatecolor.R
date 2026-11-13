@@ -807,8 +807,8 @@ make_legend_bivariate <- function(
    col_fun,
    pretty.n=c(10, 5),
    name="bivariate",
-   xlab="",
-   ylab="",
+   xlab="Direction",
+   ylab="-log10pvalue",
    title="",
    border=TRUE,
    digits=3,
@@ -917,6 +917,9 @@ make_legend_bivariate <- function(
          use_border <- border;
          title_gp <- grid::gpar(fontsize=legend_fontsize)
          #
+         if (is.na(xlab) || length(xlab) == 0 || nchar(xlab) == 0) {
+            xlab <- " ";
+         }
          if (i == ceiling(length(column_breaks) / 2)) {
             maintitle <- ComplexHeatmap::gt_render(
                margin=grid::unit(c(0, 0, 0, 0), "pt"),
