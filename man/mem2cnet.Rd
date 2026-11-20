@@ -308,6 +308,7 @@ jam_igraph(mem2cnet(Memtest[, use_sets, ]),
 Other jam Mem utilities:
 \code{\link{Mem-class}},
 \code{\link{MemPlotFolio-class}},
+\code{\link[=enrichIMrank]{enrichIMrank()}},
 \code{\link[=fixSetLabels]{fixSetLabels()}},
 \code{\link[=mem2emap]{mem2emap()}}
 

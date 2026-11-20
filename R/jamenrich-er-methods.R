@@ -34,8 +34,20 @@
 #' 
 #' ## Todo
 #' 
-#' * Add examples. Add example data.
+#' * Return genedata after processing so it can be reviewed.
+#' * Consider preparing hit incidence matrices, or lists.
+#'    * ORA would use genedata
+#'    * GSEA would use enrichment genes with input sign.
+#' 
+#' * Add example data and examples.
 #' * Add 'testthat' functional unit tests.
+#' * Consider multiple cutoffs, as a named list, only for ORA.
+#'    * cutoffs=list(
+#'         p01_fc1.5=c(pvalue_cutoff=0.01, fold_cutoff=1.5),
+#'         p05_fc1.5=c(pvalue_cutoff=0.05, fold_cutoff=1.5)
+#'      )
+#' 
+#' * Consider flattening the nested list output.
 #' * Consider alternative enrichment methods:
 #'    * `clusterProfiler` enrichment functions
 #'    * `enrichR::enrichr()`
@@ -229,6 +241,7 @@ jam_enricher <- function
    pathwaydata <- process_pathwaydata(
       pathwaydata=pathwaydata,
       pathwaydata_params=pathwaydata_params,
+      verbose=verbose > 1,
       ...
    )
    # names
@@ -238,16 +251,34 @@ jam_enricher <- function
    gd_results <- lapply(gdnames, function(gdname){
       igd <- genedata[[gdname]]
       # each genedata as igdf
-      igdf <- process_genedata(
-         genedata=igd,
-         genedata_params=genedata_params,
-         ...
-      )
       if (verbose) {
          jamba::printDebug(
             "jam_enricher(): ",
             "processing genedata '", gdname, "'"
          )
+      }
+      igdf <- process_genedata(
+         genedata=igd,
+         genedata_params=genedata_params,
+         verbose=verbose > 1,
+         ...
+      )
+      if (length(universe) == 0) {
+         universe <- unique(igdf[[1]]);
+         if (verbose) {
+            jamba::printDebug(
+               "jam_enricher(): ",
+               "Defined universe size: ",
+               jamba::formatInt(length(universe))
+            )
+         }
+      }
+      if (verbose > 1) {
+         jamba::printDebug(
+            "jam_enricher(): ",
+            "middle(igdf):"
+         )
+         print(jamba::middle(igdf, 20));
       }
 
       # iterate pathwaydata
@@ -270,7 +301,9 @@ jam_enricher <- function
                   jamba::printDebug(
                      "jam_enricher(): ",
                      sep="",
-                     c("ORA: ", "clusterProfiler::enricher()")
+                     c(
+                        "ORA: ",
+                        "clusterProfiler::enricher()")
                   )
                }
                use_igdf <- subset(igdf, hit & !is.na(sign) & sign != 0)
@@ -279,24 +312,27 @@ jam_enricher <- function
                   gene=use_gene,
                   pvalueCutoff=1,
                   qvalueCutoff=1,
+                  universe=universe,
                   minGSSize=10,
                   maxGSSize=10000,
                   TERM2GENE=ipdf
                )
                # add pathwaydata name as 'gs_cat'
                er@result$gs_cat <- pwname;
+               use_gene_hits <- jamba::nameVector(
+                  sign(use_igdf$sign),
+                  use_igdf$gene
+               )
                if (any(jamba::rmNA(igdf$sign) < 0)) {
                   if (verbose) {
                      jamba::printDebug(
                         "jam_enricher(): ",
                         sep="",
-                        c("ORA: ", "add_pathway_direction()")
+                        c(
+                           "ORA: ",
+                           "add_pathway_direction()")
                      )
                   }
-                  use_gene_hits <- jamba::nameVector(
-                     sign(use_igdf$sign),
-                     use_igdf$gene
-                  )
                   er <- add_pathway_direction(
                      x=er,
                      gene_hits=use_gene_hits,
@@ -304,6 +340,7 @@ jam_enricher <- function
                      dir_colname="direction"
                   )
                }
+               attr(er, "genes_signed") <- use_gene_hits;
                er
             } else if ("GSEA" %in% iem) {
                # GSEA
@@ -311,29 +348,45 @@ jam_enricher <- function
                   jamba::printDebug(
                      "jam_enricher(): ",
                      sep="",
-                     c("GSEA: ", "clusterProfiler::GSEA()")
+                     c(
+                        "GSEA: ",
+                        "clusterProfiler::GSEA()")
                   )
+               }
+               if (verbose > 1) {
+                  jamba::printDebug("jam_enricher(): ",
+                     "middle(igdf):");
+                  jamba::middle(igdf, 20);
                }
                use_genes_ordered <- jamba::nameVector(
                   jamba::mixedSortDF(igdf, "-sign")[, c("sign", "gene")]
                )
+               if (verbose > 1) {
+                  jamba::printDebug("jam_enricher(): ",
+                     "middle(use_genes_ordered):");
+                  jamba::middle(use_genes_ordered, 20);
+               }
                gsear <- clusterProfiler::GSEA(
                   geneList=use_genes_ordered,
                   TERM2GENE=ipdf,
-                  verbose=FALSE,
                   minGSSize=10,
                   maxGSSize=10000,
                   pvalueCutoff=1,
-                  eps=1e-50
+                  eps=1e-50,
+                  verbose=verbose > 1
                )
+               # add pathwaydata name as 'gs_cat'
+               gsear@result$gs_cat <- pwname;
                attr(gsear, "genes_ordered") <- use_genes_ordered;
                gsear
             } else {
-               cli::cli_abort("fgsea is not yet implemented.")
+               cli::cli_abort("No other enrichment methods yet implemented.")
             }
          })
          em_results;
       })
+      # add genedata output from process_genedata()
+      attr(pd_results, "genedata") <- igdf;
       pd_results
    })
    return(gd_results);
@@ -414,6 +467,8 @@ detect_genedata_format <- function(
 #'    * 'GENE': one gene per row, after updating genes when
 #'    `params$refresh_genes=TRUE`.
 #' 
+#' @inheritParams jam_enricher
+#' 
 #' @keywords internal
 #' @noRd
 process_pathwaydata <- function(
@@ -427,7 +482,8 @@ process_pathwaydata <- function(
          "gene_symbol",
          "db_gene_symbol",
          "gene",
-         "ncbi_gene"
+         "ncbi_gene",
+         "SYMBOL"
       ),
       pathway_colnames=c(
          "gs_name",
@@ -443,6 +499,7 @@ process_pathwaydata <- function(
       ),
       sep="/"
    ),
+   verbose=FALSE,
    ...
 ) {
    # Workflow
@@ -463,6 +520,7 @@ process_pathwaydata <- function(
          process_pathwaydata(
             pathwaydata=ipd,
             pathwaydata_params=pathwaydata_params,
+            verbose=verbose,
             ...
          )
       })
@@ -473,34 +531,60 @@ process_pathwaydata <- function(
    if (inherits(pathwaydata, c("data.frame", "tbl"))) {
       # convert data.frame,tbl to 'list'
       # then process the same as 'list'
+      if (verbose) {
+         jamba::printDebug("process_pathwaydata(): ",
+            "data.frame input.")
+      }
       use_gene_colname <- find_colname(
          params$gene_colnames,
          pathwaydata
       )
-      # use_gene_colnames <- head(intersect(
-      #    tolower(params$gene_colnames),
-      #    tolower(colnames(pathwaydata))
-      # ), 1)
-      # use_gene_colname <- colnames(pathwaydata)[match(
-      #    tolower(use_gene_colnames),
-      #    tolower(colnames(pathwaydata))
-      # )];
-      pathwaygenes <- pathwaydata[[use_gene_colname]];
-      if (is.list(pathwaygenes)) {
-         if (inherits(pathwaygenes, "AsIs")) {
-            pathwaygenes <- unclass(pathwaygenes)
-         }
-      } else {
-         pathwaygenes <- strsplit(pathwaygenes, "[;,/ ]+")
+      if (length(use_gene_colname) == 0) {
+         cli::cli_abort(c(
+            "Could not assign {.var use_gene_colname} using: ",
+            "{.val {params$gene_colnames}}"
+         ))
       }
       pathway_colname <- find_colname(
          params$pathway_colnames,
          pathwaydata
       )
+      if (length(pathway_colname) == 0) {
+         cli::cli_abort(c(
+            "Could not assign {.var pathway_colname} using: ",
+            "{.val {params$pathway_colnames}}"
+         ))
+      }
+      pathwaygenes <- pathwaydata[[use_gene_colname]];
+      pathwaynames <- pathwaydata[[pathway_colname]];
+      if (is.list(pathwaygenes)) {
+         if (inherits(pathwaygenes, "AsIs")) {
+            pathwaygenes <- unclass(pathwaygenes)
+         }
+         # Todo: Handle duplicated pathwaynames
+         names(pathwaygenes) <- pathwaynames;
+      } else {
+         if (jamba::igrepHas("[;,/]", pathwaygenes)) {
+            pathwaygenes <- strsplit(pathwaygenes, "[;,/ ]+")
+            names(pathwaygenes) <- pathwaynames;
+         } else {
+            pathwaynames <- factor(
+               pathwaynames,
+               levels=unique(pathwaynames)
+            )
+            pathwaygenes <- split(pathwaygenes, pathwaynames);
+         }
+      }
       # Note: Error will occur if names are duplicated, this is expected
       # Todo: Check first and write useful error message.
-      names(pathwaygenes) <- pathwaydata[[pathway_colname]];
       pathwaydata <- pathwaygenes;
+      if (verbose > 1) {
+         jamba::printDebug(
+            "middle(pathwaydata, 20):"
+         )
+         print(jamba::middle(pathwaydata));
+         print(table(lengths(pathwaydata)));
+      }
       rm(pathwaygenes);
    }
    if (!is.list(pathwaydata)) {
@@ -605,6 +689,16 @@ process_pathwaydata <- function(
 #'    * Number of duplicated genes
 #'    * Number of distinct output genes
 #' 
+#' * Add optional `detected_genes`.
+#'    * For now, this step is pushed onto the scientist.
+#' 
+#' * Add `mgm_cutoff` (max group mean)
+#'    * Detect 'mgm' or 'mean' columns, calculate row max.
+#'    * Apply `mgm_cutoff` to define gene hits.
+#'    * Optional: Define universe using `mgm_cutoff` genes.
+#'    * Optional: When choosing one row per gene, prefer `mgm_cutoff`
+#'    before choosing most significant row?
+#' 
 #' @returns `data.frame` with columns:
 #'    * 'gene': the gene symbol
 #'       * `genedata_params$refresh_genes=FALSE` (default) uses
@@ -644,6 +738,7 @@ process_genedata <- function(
       empty_rule="empty",
       fold_cutoff=NULL,
       pvalue_cutoff=NULL,
+      mgm_cutoff=NULL,
       gene_colnames=c(
          "SYMBOL",
          "probes",
@@ -663,6 +758,9 @@ process_genedata <- function(
          "q.val|qval",
          "adjp", "padjust", "p.adjust",
          "p.value", "pval"),
+      mgm_colnames=c(
+         "mgm", "mean", "AveExpr"
+      ),
       tstat_colnames=c("t", "t.stat"),
       rank_strategy=c(
          "signed-P",
@@ -757,6 +855,7 @@ process_genedata <- function(
       )
       fold_colname <- find_colname(params$fold_colnames, genedata)
       pvalue_colname <- find_colname(params$pvalue_colnames, genedata)
+      mgm_colname <- find_colname(params$mgm_colnames, genedata, max=5);
       gene_colname <- find_colname(params$gene_colnames, genedata)
       tstat_colname <- find_colname(params$tstat_colnames, genedata)
       # validate colnames
@@ -791,6 +890,8 @@ process_genedata <- function(
       # Define hits
       pvalue_cutoff <- params$pvalue_cutoff;
       fold_cutoff <- params$fold_cutoff;
+      mgm_cutoff <- params$mgm_cutoff;
+      # Apply P-value cutoff
       if (length(pvalue_cutoff) == 1 && is.numeric(pvalue_cutoff)) {
          if (verbose) {
             jamba::printDebug(
@@ -808,6 +909,7 @@ process_genedata <- function(
             genedata[[pvalue_colname]] <= pvalue_cutoff
          );
       }
+      # Apply fold_cutoff
       if (length(fold_cutoff) == 1 && is.numeric(fold_cutoff)) {
          if (verbose) {
             jamba::printDebug(
@@ -825,6 +927,31 @@ process_genedata <- function(
             abs(genedata[[fold_colname]]) >= fold_cutoff
          );
       }
+      # Apply mgm_cutoff
+      if (length(mgm_cutoff) == 1 &&
+         is.numeric(mgm_cutoff) &&
+         length(mgm_colname) > 0) {
+         if (verbose) {
+            jamba::printDebug(
+               "process_genedata(): ",
+               "apply mgm_cutoff:",
+               mgm_cutoff
+            )
+         }
+         if (length(mgm_colname) > 1) {
+            mgm_data <- mgm_data
+            mgm_values <- apply(mgm_data, 1, function(imgm){
+               max(imgm, na.rm=TRUE)
+            })
+         } else {
+            mgm_values <- genedata[[mgm_colname]]
+         }
+         use_gene_hits <- (
+            use_gene_hits &
+               !is.na(mgm_values) &
+               mgm_values >= mgm_cutoff
+         )
+      }
       if (length(use_gene_hits) == 0) {
          use_gene_hits <- rep_len(FALSE, nrow(genedata));
       } else {
@@ -839,6 +966,13 @@ process_genedata <- function(
       # process rank
       use_genes <- genedata[[gene_colname]];
       if ("t-statistic" %in% rank_strategy) {
+         if (verbose) {
+            jamba::printDebug(
+               "process_genedata(): ",
+               "sign by t-statistic: ",
+               tstat_colname
+            )
+         }
          use_signs <- genedata[[tstat_colname]];
       } else if ("signed-P" %in% rank_strategy) {
          # Todo: check and convert to log2fold if needed
@@ -846,11 +980,32 @@ process_genedata <- function(
             -log10(genedata[[pvalue_colname]]) *
                sign(genedata[[fold_colname]])
          );
+         if (verbose) {
+            jamba::printDebug(
+               "process_genedata(): ",
+               "sign by signed-P: ",
+               c(pvalue_colname, fold_colname)
+            )
+         }
       } else if ("P-value" %in% rank_strategy) {
          use_signs <- -log10(genedata[[pvalue_colname]]);
+         if (verbose) {
+            jamba::printDebug(
+               "process_genedata(): ",
+               "sign by P-value: ",
+               c(pvalue_colname)
+            )
+         }
       } else if ("log2fold" %in% rank_strategy) {
          # Todo: check and convert to log2fold if needed
          use_signs <- (genedata[[fold_colname]]);
+         if (verbose) {
+            jamba::printDebug(
+               "process_genedata(): ",
+               "sign by log2fold: ",
+               c(fold_colname)
+            )
+         }
       } else {
          cli::cli_abort(c(
             "{.var rank_strategy} = {.val {rank_strategy}} is not supported."
@@ -916,6 +1071,15 @@ process_genedata <- function(
 
    # remove entries with no SYMBOL
    gddf1 <- subset(gddf1, !SYMBOL %in% c("", NA))
+
+   # remove entries with sign NA
+   if (anyNA(gddf1$use_signs)) {
+      jamba::printDebug(
+         "process_genedata(): ",
+         "remove entries with NA sign"
+      )
+      gddf1 <- subset(gddf1, !is.na(use_signs))
+   }
 
    # handle multiple gene per row
    if (any(grepl(params$sep, gddf1$SYMBOL))) {

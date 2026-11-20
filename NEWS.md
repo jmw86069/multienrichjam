@@ -1,3 +1,46 @@
+# multienrichjam 0.0.124.900
+
+## Changes
+
+* `gr2er()` internal function adjusts `gseaResult` to
+similar format to `enrichResult` to be used smoothly
+in `multiEnrichMap()`; it now adds attribute attribute
+`'genes_signed'`.
+* `jam_enricher()`
+   * GSEA inserts attribute `'genes_ordered'` equivalent
+   to `'geneList'` output from GSEA itself.
+   * ORA inserts attribute `'genes_signed'` with +1, -1
+   signs for the genes provided.
+
+* `multiEnrichMap()`
+   * When `geneHitIM` and `geneHitList` are not provided,
+   it will create `geneHitList` using each enrichment
+   attribute `'genes_signed'` when present in all enrichments.
+   * Verbose output is more stratified, `verbose=TRUE` is
+   reasonable;
+   `verbose=2` adds more detail and passes `verbose=TRUE` to
+   internal functions;
+   `verbose=3` is like a debug mode with detail.
+
+* `mem_enrichment_heatmap()`
+   * `show_enrich` now accepts `character` or `integer` index
+   of label types: -log10P, direction, genes, rank. Multiple
+   labels can be shown, which then enables a prefix.
+   * Labels now use proper contrasting color based upon the
+   cell fill color.
+
+* `cell_fun_bivariate()`
+   * New argument 'round_digits=3' for values less than 1000.
+   * NA values are now hidden, useful for `show_enrich='rank'`.
+
+* `enrichIMrank()`
+   * New function returns rank-order for each enrichment column,
+   after applying thresholds `p_cutoff`, `min_count`, and
+   `topEnrichN`.
+   * It can be used with `mem_enrichment_heatmap()` to review
+   the rank as used when applying `topEnrichN`.
+
+
 # multienrichjam 0.0.123.900
 
 ## Changes

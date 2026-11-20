@@ -345,6 +345,11 @@ display_colorRamp2D <- function(
 #'    is also defined. Together these arguments allow customized points.
 #' @param size_by `integer` indicating which matrix of values
 #'    to use for point sizing.
+#' @param round_digits `integer` number of digits used to round `numeric`
+#'    values that are less than 1000. Values at or above 1000 are
+#'    rounded to `integer` then formatted using `big.mark=','`.  
+#'    Default `round_digits=3` will convert any `numeric` value at or
+#'    below `0.0005` to `0`.
 #' @param grid_color `character` valid R color used with `style="dotplot"`
 #'    to draw lines through the center of each cell.
 #' @param type `character` string indicating whether the color function
@@ -445,7 +450,8 @@ cell_fun_bivariate <- function(
    font=2,
    col_hm,
    outline=FALSE,
-   outline_style=c("none",
+   outline_style=c(
+      "none",
       "darker",
       "contrast",
       "lighter",
@@ -459,6 +465,7 @@ cell_fun_bivariate <- function(
    pch=NULL,
    size_fun=NULL,
    size_by=1,
+   round_digits=3,
    grid_color="grey80",
    type=c("bivariate",
       "univariate"),
@@ -516,21 +523,31 @@ cell_fun_bivariate <- function(
          k <- show[k1];
          mx <- m[[k]];
          cell_value2 <- jamba::rmNA(naValue=0, mx[i, j]);
-         if (abbrev && max(cell_value2) >= 1000) {
-            cell_label2 <- jamba::asSize(cell_value2,
+         if (is.na(mx[i, j])) {
+            cell_label2 <- "";
+         } else if (abbrev && max(cell_value2) >= 1000) {
+            cell_label2 <- jamba::asSize(
+               cell_value2,
                kiloSize=1000,
                unitType="",
                sep="");
-         } else {
-            cell_label2 <- format(cell_value2,
+         } else if (max(cell_value2) >= 1000) {
+            cell_label2 <- format(
+               round(cell_value2),
                big.mark=",",
                trim=TRUE)
+         } else {
+            cell_label2 <- format(
+               round(cell_value2, digits=round_digits),
+               trim=TRUE)
          }
-         cell_label <- paste(cell_label,
-            paste0(prefix[k1],
-               cell_label2,
-               suffix[k1]),
-            sep=sep[k1]);
+         if (!is.na(mx[i, j])) {
+            cell_label <- paste(cell_label,
+               paste0(prefix[k1],
+                  cell_label2,
+                  suffix[k1]),
+               sep=sep[k1]);
+         }
          if (verbose && i == 1 && j == 1) {
             print("cell_label:");
             print(cell_label);
@@ -561,6 +578,7 @@ cell_fun_bivariate <- function(
       }
       if (length(pch) > 0 && inherits(size_fun, "function")) {
          mx <- m[[size_by]];
+         # cell_value3 <- jamba::rmNA(naValue="", mx[i, j]);
          cell_value2 <- jamba::rmNA(naValue=0, mx[i, j]);
          cell_size <- size_fun(cell_value2);
          # draw grid through center of each cell
@@ -571,7 +589,7 @@ cell_fun_bivariate <- function(
          }
          # default text color
          text_col <- "black";
-         if (TRUE %in% invert) {
+         if (isTRUE(invert)) {
             # fill the cell
             if (FALSE %in% outline) {
                rect_col <- NA;
@@ -593,7 +611,8 @@ cell_fun_bivariate <- function(
             #       useGrey=15);
             # }
             # draw the point
-            grid::grid.points(x=x,
+            grid::grid.points(
+               x=x,
                y=y,
                pch=pch,
                default.units="mm",
@@ -601,7 +620,15 @@ cell_fun_bivariate <- function(
                gp=grid::gpar(
                   # col=outline_col,
                   col="black",
-                  fill="#FFFFFF"));
+                  fill="#FFFFFF"
+               )
+            );
+            if (!grepl("center", fixed=TRUE, placement)) {
+               text_col <- jamba::setTextContrastColor(
+                  cell_color,
+                  useGrey=15
+               );
+            }
          } else {
             grid::grid.points(x=x,
                y=y,
@@ -611,8 +638,13 @@ cell_fun_bivariate <- function(
                gp=grid::gpar(
                   col=outline_col,
                   fill=cell_color));
-            text_col <- jamba::setTextContrastColor(cell_color,
-               useGrey=15);
+            text_col <- "white"
+            if (grepl("center", fixed=TRUE, placement)) {
+               text_col <- jamba::setTextContrastColor(
+                  cell_color,
+                  useGrey=15
+               );
+            }
          }
          # text_col <- jamba::setTextContrastColor(cell_color,
          #    useGrey=15);
@@ -655,8 +687,11 @@ cell_fun_bivariate <- function(
                y=ynote,
                just=unique(just),
                rot=rot,
-               bg.colour=jamba::alpha2col(alpha=0.3,
-                  jamba::setTextContrastColor(text_col)),
+               bg.colour=jamba::alpha2col(
+                  alpha=0.4,
+                  jamba::setTextContrastColor(text_col)
+               ),
+               # bg.colour=jamba::setTextContrastColor(text_col),
                bg.r=0.05,
                gp=grid::gpar(
                   fontsize=fontsize,
@@ -676,17 +711,6 @@ cell_fun_bivariate <- function(
                   fontface=font,
                   col=text_col
                ));
-
-            # center position
-            # grid::grid.text(cell_label,
-            #    x=x,
-            #    y=y,
-            #    rot=rot,
-            #    gp=grid::gpar(
-            #       fontsize=fontsize,
-            #       fontface=1,
-            #       col=text_col
-            #    ));
          }
       }
    }
@@ -917,7 +941,7 @@ make_legend_bivariate <- function(
          use_border <- border;
          title_gp <- grid::gpar(fontsize=legend_fontsize)
          #
-         if (is.na(xlab) || length(xlab) == 0 || nchar(xlab) == 0) {
+         if (is.na(xlab) || length(xlab) == 0 || !nzchar(xlab)) {
             xlab <- " ";
          }
          if (i == ceiling(length(column_breaks) / 2)) {

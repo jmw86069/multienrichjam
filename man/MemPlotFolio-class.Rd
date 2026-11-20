@@ -352,6 +352,7 @@ CnetCluster(Mpf, cluster="B", use_shadowText=TRUE, main="Cnet Cluster 'B'")
 \seealso{
 Other jam Mem utilities:
 \code{\link{Mem-class}},
+\code{\link[=enrichIMrank]{enrichIMrank()}},
 \code{\link[=fixSetLabels]{fixSetLabels()}},
 \code{\link[=mem2cnet]{mem2cnet()}},
 \code{\link[=mem2emap]{mem2emap()}}

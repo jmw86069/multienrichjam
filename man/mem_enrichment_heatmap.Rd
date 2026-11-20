@@ -25,11 +25,9 @@ mem_enrichment_heatmap(
   row_split = NULL,
   row_gap = grid::unit(2, "mm"),
   cluster_rows = TRUE,
-  cluster_genes = TRUE,
   column_fontsize = NULL,
   column_cex = 1,
   cluster_columns = FALSE,
-  cluster_pathways = FALSE,
   sets = NULL,
   color_by_column = FALSE,
   cex.axis = 1,
@@ -46,6 +44,7 @@ mem_enrichment_heatmap(
   legend_height = grid::unit(6, "cm"),
   legend_cex = 1,
   direction_cutoff = 0,
+  direction_max = 2,
   gene_count_max = NULL,
   top_annotation = NULL,
   outline = TRUE,
@@ -126,6 +125,19 @@ the default is 30 mm in absolute units.}
 \item{row_fontsize, column_fontsize}{optional \code{numeric} arguments passed to
 \code{ComplexHeatmap::Heatmap()} to size row and column labels.}
 
+\item{row_cex, column_cex}{\code{numeric} expansion factor, used to adjust
+font size of rows and columns, respectively. Default 1.
+Most useful when the fontsize is not specified, and it is determined
+by the number of rows and columns.}
+
+\item{row_split}{\code{integer} number of clusters, the default NULL determines
+the number of clusters based upon the number of rows.}
+
+\item{row_gap}{\code{grid::unit} with fixed gap size used when rows are split,
+default is '2mm'.}
+
+\item{cluster_rows}{\code{logical} default TRUE, whether to cluster rows.}
+
 \item{cluster_columns}{\code{logical} indicating whether to cluster heatmap
 columns, by default columns are not clustered.}
 
@@ -151,6 +163,12 @@ of the current data.}
 when \code{color_by_column=TRUE}, used to adjust the P-value label size
 inside each heatmap cell.}
 
+\item{placementCellnote}{\code{character} string with location to place
+the cell note, default 'center'.}
+
+\item{fontCellnote}{\code{integer} with font face to use for cell notes.
+The default 2 uses bold font face; use 1 for normal font.}
+
 \item{column_title}{optional \code{character} string with title to display
 above the heatmap.}
 
@@ -175,6 +193,10 @@ This value is only used when \code{heatmap_legend_param} is not defined.}
 \item{direction_cutoff}{\code{numeric} default 0, with directional score
 cutoff required for an entry to be colorized by direction.}
 
+\item{direction_max}{\code{numeric} default 2, the maximum direction score
+for color gradient, as shown in the bivariate color legend.
+It is automatically set to at least the \code{direction_cutoff}.}
+
 \item{gene_count_max}{\code{integer} number of genes in the incidence
 matrix pathway-enrichment with gene counts, stored as
 'enrichIMgeneCount'. Default NULL uses the highest observed
@@ -196,10 +218,10 @@ enrichment metrics to show as a label in each cell.
 When only one type is shown, there is no prefix, but for multiple
 types, a prefix is shown for each. The metrics in order include:
 \enumerate{
-\item "-log10P"
-\item "direction"
-\item "z-score"
-\item "number of genes"
+\item "-log10P": the \code{-log10(P-value)}
+\item "direction": the \code{'direction'} score
+\item "genes": the number of genes
+\item "rank": the rank order of enrichment
 }}
 
 \item{use_raster}{\code{logical} passed to \code{ComplexHeatmap::Heatmap()}

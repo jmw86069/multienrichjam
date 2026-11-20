@@ -182,8 +182,22 @@ Fisher's Exact Test.
 
 \subsection{Todo}{
 \itemize{
-\item Add examples. Add example data.
+\item Return genedata after processing so it can be reviewed.
+\item Consider preparing hit incidence matrices, or lists.
+\itemize{
+\item ORA would use genedata
+\item GSEA would use enrichment genes with input sign.
+}
+\item Add example data and examples.
 \item Add 'testthat' functional unit tests.
+\item Consider multiple cutoffs, as a named list, only for ORA.
+\itemize{
+\item cutoffs=list(
+p01_fc1.5=c(pvalue_cutoff=0.01, fold_cutoff=1.5),
+p05_fc1.5=c(pvalue_cutoff=0.05, fold_cutoff=1.5)
+)
+}
+\item Consider flattening the nested list output.
 \item Consider alternative enrichment methods:
 \itemize{
 \item \code{clusterProfiler} enrichment functions

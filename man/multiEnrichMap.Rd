@@ -6,20 +6,20 @@
 \usage{
 multiEnrichMap(
   enrichList,
+  p_cutoff = 0.05,
+  min_count = 3,
+  topEnrichN = 20,
   geneHitList = NULL,
   geneHitIM = NULL,
   colorV = NULL,
   enrichLabels = NULL,
   subsetSets = NULL,
   overlapThreshold = deprecated(),
-  p_cutoff = 0.05,
   cutoffRowMinP = deprecated(),
   enrichBaseline = -log10(p_cutoff),
   enrichLens = 0,
   enrichNumLimit = 4,
   nEM = 500,
-  min_count = 3,
-  topEnrichN = 20,
   topEnrichSources = c("gs_cat", "gs_subcat"),
   topEnrichCurateFrom = NULL,
   topEnrichCurateTo = NULL,
@@ -56,6 +56,24 @@ used to recognize colnames.
 converted to \code{enrichResult} upfront.
 }}
 
+\item{p_cutoff}{\code{numeric} value between 0 and 1, default 0.05,
+enrichment P-value required by at least one enrichment result to
+be retained in downstream analyses.
+This P-value can be reviewed in \code{enrichIM(Mem)} of the output,
+which is a matrix of P-values by pathway and enrichment.
+The column header assigned as P-value is stored in
+\code{headers(Mem)$pvalueColname}.}
+
+\item{min_count}{\code{integer} minimum genes involved in enrichment, in
+order for a pathway to be considered 'enriched'.
+Default \code{3} requires at least three genes involved.}
+
+\item{topEnrichN}{\code{integer} maximum rows to retain from each
+\code{enrichResult} in 'enrichList', for each source when supplied.
+Set \code{topEnrichN=0} or \code{topEnrichN=NULL} to retain all rows.
+Only rows where the pathway met other filtering criteria in at
+least one enrichment in 'enrichList' will be retained.}
+
 \item{geneHitList}{\code{list} of character vectors, or
 \code{list} of \code{numeric} vectors whose names represent genes, or
 or \code{NULL}. When \code{NULL} the gene hit list for each enrichment
@@ -91,14 +109,6 @@ output enabled with \code{returnType="list"}.
 two pathways will be linked in the resulting network.
 }}
 
-\item{p_cutoff}{\code{numeric} value between 0 and 1, default 0.05,
-enrichment P-value required by at least one enrichment result to
-be retained in downstream analyses.
-This P-value can be reviewed in \code{enrichIM(Mem)} of the output,
-which is a matrix of P-values by pathway and enrichment.
-The column header assigned as P-value is stored in
-\code{headers(Mem)$pvalueColname}.}
-
 \item{cutoffRowMinP}{(deprecated in favor of 'p_cutoff').
 When it is non-NULL, it will be used for backward compatibility.}
 
@@ -126,16 +136,6 @@ output enabled with \code{returnType="list"}.
 \itemize{
 \item To create a Multi-Enrichment Map \code{igraph} object, see \code{mem2emap()}.
 }}
-
-\item{min_count}{\code{integer} minimum genes involved in enrichment, in
-order for a pathway to be considered 'enriched'.
-Default \code{3} requires at least three genes involved.}
-
-\item{topEnrichN}{\code{integer} maximum rows to retain from each
-\code{enrichResult} in 'enrichList', for each source when supplied.
-Set \code{topEnrichN=0} or \code{topEnrichN=NULL} to retain all rows.
-Only rows where the pathway met other filtering criteria in at
-least one enrichment in 'enrichList' will be retained.}
 
 \item{topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo, topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep}{arguments passed to \code{topEnrichListBySource()} when \code{topEnrichN}
 is greater than \code{0}. The default values are used only when

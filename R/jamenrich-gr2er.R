@@ -12,8 +12,15 @@
 #' 
 #' Specific changes:
 #' 
-#' * Renames 'core_enrichment' to 'geneID' if 'geneID' does not exist.
-#' * Uses 'geneID' to create 'Count' column with number of genes.
+#' * Renames `'core_enrichment'` to `'geneID'` if `'geneID'`
+#' does not exist.
+#' * Uses `'geneID'` to create `'Count'` column with number of
+#' genes that contribute to enrichment.
+#' * Adds new attribute `'genes_signed'` which contains a subset
+#' of the gene rank scores stored in attribute `'geneList'`,
+#' only including those genes that contribute to enrichment,
+#' which is defined by the presence of a gene in the column
+#' `'core_enrichment'`.
 #' 
 #' @returns `gseaResult`
 #' 
@@ -21,10 +28,10 @@
 #' @param ... additional arguments are ignored.
 #' 
 #' @keywords internal
-gr2er <- function
-(er,
- ...)
-{
+gr2er <- function(
+   er,
+   ...
+) {
 	#
 	if (inherits(er, "enrichResult")) {
 		return(er)
@@ -34,20 +41,42 @@ gr2er <- function
 	}
 	if (!"geneID" %in% colnames(er@result)) {
 		if (!"core_enrichment" %in% colnames(er@result)) {
-			stop("Input er@result must contain 'core_enrichment' or 'geneID'");
+			cli::cli_abort(c(
+            "Input {.var er@result} must contain ",
+            "{.val core_enrichment} or {.val geneID}"
+         ))
 		}
 		er@result <- jamba::renameColumn(er@result,
 			from=c("core_enrichment"),
 			to="geneID")
 	}
+   # Split delimited genes into vector of values
+   er_geneID <- strsplit(er@result$geneID, "[/]");
 	if (!"Count" %in% colnames(er@result)) {
-		gc <- lengths(strsplit(er@result$geneID, "[/]"));
-		er@result$Count <- gc;
+		er@result$Count <- lengths(er_geneID);
 	}
+
+   # Check for 'geneList' with rank scores
+   if ("geneList" %in% names(attributes(er))) {
+      used_geneList <- attr(er, "geneList");
+      kept_geneID <- intersect(
+         names(used_geneList),
+         unique(unlist(er_geneID))
+      )
+      used_geneList <- used_geneList[kept_geneID]
+      attr(er, "genes_signed") <- used_geneList;
+   }
+
+   # Add direction as a column if not present
 	if (!"direction" %in% colnames(er@result)) {
 		if ("NES" %in% colnames(er@result)) {
 			er@result$direction <- er@result$NES;
-		}
+		} else {
+         cli::cli_abort(c(
+            "Input {.var er@result} must contain ",
+            "{.val NES} or {.val directioin}"
+         ))
+      }
 	}
 	return(er)
 }

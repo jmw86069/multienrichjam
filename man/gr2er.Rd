@@ -27,8 +27,15 @@ within \code{multiEnrichMap()} and other supporting functions.
 
 Specific changes:
 \itemize{
-\item Renames 'core_enrichment' to 'geneID' if 'geneID' does not exist.
-\item Uses 'geneID' to create 'Count' column with number of genes.
+\item Renames \code{'core_enrichment'} to \code{'geneID'} if \code{'geneID'}
+does not exist.
+\item Uses \code{'geneID'} to create \code{'Count'} column with number of
+genes that contribute to enrichment.
+\item Adds new attribute \code{'genes_signed'} which contains a subset
+of the gene rank scores stored in attribute \code{'geneList'},
+only including those genes that contribute to enrichment,
+which is defined by the presence of a gene in the column
+\code{'core_enrichment'}.
 }
 }
 \keyword{internal}

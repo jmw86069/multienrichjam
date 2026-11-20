@@ -223,6 +223,7 @@ jamba::drawLabels(txt=x,
 Other jam Mem utilities:
 \code{\link{Mem-class}},
 \code{\link{MemPlotFolio-class}},
+\code{\link[=enrichIMrank]{enrichIMrank()}},
 \code{\link[=mem2cnet]{mem2cnet()}},
 \code{\link[=mem2emap]{mem2emap()}}
 

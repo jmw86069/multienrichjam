@@ -97,6 +97,15 @@
 #'    the default is 30 mm in absolute units.
 #' @param row_fontsize,column_fontsize optional `numeric` arguments passed to
 #'    `ComplexHeatmap::Heatmap()` to size row and column labels.
+#' @param row_cex,column_cex `numeric` expansion factor, used to adjust
+#'    font size of rows and columns, respectively. Default 1.
+#'    Most useful when the fontsize is not specified, and it is determined
+#'    by the number of rows and columns.
+#' @param row_split `integer` number of clusters, the default NULL determines
+#'    the number of clusters based upon the number of rows.
+#' @param row_gap `grid::unit` with fixed gap size used when rows are split,
+#'    default is '2mm'.
+#' @param cluster_rows `logical` default TRUE, whether to cluster rows.
 #' @param cluster_columns `logical` indicating whether to cluster heatmap
 #'    columns, by default columns are not clustered.
 #' @param sets `character` vector of sets (pathways) to include in the heatmap,
@@ -116,6 +125,10 @@
 #' @param cexCellnote `numeric` character expansion value used only
 #'    when `color_by_column=TRUE`, used to adjust the P-value label size
 #'    inside each heatmap cell.
+#' @param placementCellnote `character` string with location to place
+#'    the cell note, default 'center'.
+#' @param fontCellnote `integer` with font face to use for cell notes.
+#'    The default 2 uses bold font face; use 1 for normal font.
 #' @param column_title optional `character` string with title to display
 #'    above the heatmap.
 #' @param row_names_max_width,column_names_max_height,heatmap_legend_param
@@ -135,6 +148,9 @@
 #'    This value is only used when `heatmap_legend_param` is not defined.
 #' @param direction_cutoff `numeric` default 0, with directional score
 #'    cutoff required for an entry to be colorized by direction.
+#' @param direction_max `numeric` default 2, the maximum direction score
+#'    for color gradient, as shown in the bivariate color legend.
+#'    It is automatically set to at least the `direction_cutoff`.
 #' @param gene_count_max `integer` number of genes in the incidence
 #'    matrix pathway-enrichment with gene counts, stored as
 #'    'enrichIMgeneCount'. Default NULL uses the highest observed
@@ -152,10 +168,10 @@
 #'    enrichment metrics to show as a label in each cell.
 #'    When only one type is shown, there is no prefix, but for multiple
 #'    types, a prefix is shown for each. The metrics in order include:
-#'    1. "-log10P"
-#'    2. "direction"
-#'    3. "z-score"
-#'    4. "number of genes"
+#'    1. "-log10P": the `-log10(P-value)`
+#'    2. "direction": the `'direction'` score
+#'    3. "genes": the number of genes
+#'    4. "rank": the rank order of enrichment
 #' @param use_raster `logical` passed to `ComplexHeatmap::Heatmap()`
 #'    indicating whether to rasterize the heatmap output, used when
 #'    `style="heatmap"`. Rasterization is not relevant to dotplot output
@@ -192,11 +208,11 @@ mem_enrichment_heatmap <- function(
    row_split=NULL,
    row_gap=grid::unit(2, "mm"),
    cluster_rows=TRUE,
-   cluster_genes=TRUE,
+   # cluster_genes=TRUE,
    column_fontsize=NULL,
    column_cex=1,
    cluster_columns=FALSE,
-   cluster_pathways=FALSE,
+   # cluster_pathways=FALSE,
    sets=NULL,
    color_by_column=FALSE,
    cex.axis=1,
@@ -215,6 +231,7 @@ mem_enrichment_heatmap <- function(
    legend_height=grid::unit(6, "cm"),
    legend_cex=1,
    direction_cutoff=0,
+   direction_max=2,
    gene_count_max=NULL,
    top_annotation=NULL,
    outline=TRUE,
@@ -373,6 +390,9 @@ mem_enrichment_heatmap <- function(
    # optionally apply direction
    has_negative <- any(
       jamba::rmNA(naValue=0, enrichIMdirection(Mem)) < 0);
+   if (direction_cutoff > direction_max) {
+      direction_max <- direction_cutoff;
+   }
    if (TRUE %in% apply_direction && has_negative) {
       use_matrix <- -log10(enrichIM(Mem));
       # use_direction contains z-score values at or above direction_cutoff
@@ -500,17 +520,41 @@ mem_enrichment_heatmap <- function(
          anno_legends <- list();
       }
 
-      # custom cell label, hide 2 when directional data are not available
-      if (any(c(2, 3) %in% show_enrich) && length(use_direction) == 0) {
-         show_enrich <- setdiff(show_enrich, c(2, 3));
+      # custom cell label, hide direction when not available
+      ## 0.0.124.900
+      # show_enrich:
+      # 1: -log10(Pvalue)
+      # 2: direction / z-score
+      # 3: gene count
+      # 4: rank - pathway P-value rank
+      if (inherits(show_enrich, "character")) {
+         show_enrich_values <- c(
+            "log10p",
+            "direction",
+            "genes",
+            "rank"
+         )
+         # convert to integer
+         show_enrich <- jamba::rmNA(
+            match(
+               tolower(gsub("[-]", "", show_enrich)),
+               show_enrich_values
+         ))
+      }
+      ## 0.0.124.900
+      # if (any(c(2, 3) %in% show_enrich) && length(use_direction) == 0) {
+      if (any(c(2) %in% show_enrich) && !apply_direction) {
+         show_enrich <- setdiff(show_enrich, c(2));
       }
       use_prefix <- NULL;
       if (length(show_enrich) > 1) {
-         use_prefix <- c(
+         use_prefixes <- c(
             "-log10P: ",
             "direction: ",
-            "z-score: ",
-            "genes: ")[show_enrich]
+            # "z-score: ",
+            "genes: ",
+            "rank: ")
+         use_prefix <- use_prefixes[show_enrich];
       }
       # improved cell_fun
       if (apply_direction) {
@@ -563,7 +607,7 @@ mem_enrichment_heatmap <- function(
          col_bivariate <- col_pvdir_xf(
             p_cutoff=p_cutoff,
             direction_cutoff=direction_cutoff,
-            direction_max=2,
+            direction_max=direction_max,
             color_non_hits=color_non_hits
          )
          # col_bivariate <- colorRamp2D(
@@ -571,8 +615,10 @@ mem_enrichment_heatmap <- function(
          #    row_breaks=row_breaks,
          #    mcolor=mcolor,
          #    ...);
-         size_by <- match("geneCount",
-            c("-log10Pvalue",
+         size_by <- match(
+            "geneCount",
+            c(
+               "-log10Pvalue",
                # "direction",
                "z-score",
                "geneCount"));
@@ -596,19 +642,22 @@ mem_enrichment_heatmap <- function(
                show_enrich
             )
          )
+         cell_fun_matrixlist <- list(
+            "direction"=use_direction,
+            "log10p"=use_matrix,
+            "genes"=enrichIMgeneCount(Mem),
+            "rank"=enrichIMrank(Mem)
+         );
          cell_fun_custom <- cell_fun_bivariate(
-            list(
-               use_direction,
-               use_matrix,
-               enrichIMgeneCount(Mem)),
+            cell_fun_matrixlist,
             invert=grepl("invert", fixed=TRUE, style),
             pch=pch,
             size_fun=ct_approxfun,
             size_by=size_by,
+            outline=outline,
             outline_style="darker",
             col_hm=use_col_fn,
             show=show_enrich,
-            outline=outline,
             cex=cexCellnote,
             placement=placementCellnote,
             font=fontCellnote,

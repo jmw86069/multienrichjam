@@ -49,6 +49,24 @@
 #'    used to recognize colnames.
 #'    * Recommendation is to confirm each `data.frame` is properly
 #'    converted to `enrichResult` upfront.
+#' @param p_cutoff `numeric` value between 0 and 1, default 0.05,
+#'    enrichment P-value required by at least one enrichment result to
+#'    be retained in downstream analyses.
+#'    This P-value can be reviewed in `enrichIM(Mem)` of the output,
+#'    which is a matrix of P-values by pathway and enrichment.
+#'    The column header assigned as P-value is stored in
+#'    `headers(Mem)$pvalueColname`.
+#' @param min_count `integer` minimum genes involved in enrichment, in
+#'    order for a pathway to be considered 'enriched'.
+#'    Default `3` requires at least three genes involved.
+#' @param topEnrichN `integer` maximum rows to retain from each
+#'    `enrichResult` in 'enrichList', for each source when supplied.
+#'    Set `topEnrichN=0` or `topEnrichN=NULL` to retain all rows.
+#'    Only rows where the pathway met other filtering criteria in at
+#'    least one enrichment in 'enrichList' will be retained.
+#' @param colorV `character` vector of colors, length
+#'    equal to `length(enrichList)`,
+#'    used to assign specific colors to each enrichment result.
 #' @param geneHitList `list` of character vectors, or
 #'    `list` of `numeric` vectors whose names represent genes, or
 #'    or `NULL`. When `NULL` the gene hit list for each enrichment
@@ -62,9 +80,6 @@
 #'    of change for each gene.
 #'    Note that `geneHitList` and `geneHitIM` serve the same purpose
 #'    and either can be supplied.
-#' @param colorV `character` vector of colors, length
-#'    equal to `length(enrichList)`,
-#'    used to assign specific colors to each enrichment result.
 #' @param enrichLabels `character` vector of enrichment labels to use,
 #'    as an optional alternative to `names(enrichList)`.
 #' @param subsetSets `character` vector of optional set names to
@@ -76,13 +91,6 @@
 #'    * To create a Multi-Enrichment Map `igraph` object, see `mem2emap()`.
 #'    * overlapThreshold is the Jaccard overlap score above which
 #'    two pathways will be linked in the resulting network.
-#' @param p_cutoff `numeric` value between 0 and 1, default 0.05,
-#'    enrichment P-value required by at least one enrichment result to
-#'    be retained in downstream analyses.
-#'    This P-value can be reviewed in `enrichIM(Mem)` of the output,
-#'    which is a matrix of P-values by pathway and enrichment.
-#'    The column header assigned as P-value is stored in
-#'    `headers(Mem)$pvalueColname`.
 #' @param cutoffRowMinP (deprecated in favor of 'p_cutoff').
 #'    When it is non-NULL, it will be used for backward compatibility.
 #' @param enrichBaseline `numeric` value, default uses `-log10(p_cutoff)`,
@@ -102,14 +110,6 @@
 #'    Enrichment Map, which is only created for legacy
 #'    output enabled with `returnType="list"`.
 #'    * To create a Multi-Enrichment Map `igraph` object, see `mem2emap()`.
-#' @param min_count `integer` minimum genes involved in enrichment, in
-#'    order for a pathway to be considered 'enriched'.
-#'    Default `3` requires at least three genes involved.
-#' @param topEnrichN `integer` maximum rows to retain from each
-#'    `enrichResult` in 'enrichList', for each source when supplied.
-#'    Set `topEnrichN=0` or `topEnrichN=NULL` to retain all rows.
-#'    Only rows where the pathway met other filtering criteria in at
-#'    least one enrichment in 'enrichList' will be retained.
 #' @param topEnrichSources,topEnrichCurateFrom,topEnrichCurateTo,topEnrichSourceSubset,topEnrichDescriptionGrep,topEnrichNameGrep
 #'    arguments passed to `topEnrichListBySource()` when `topEnrichN`
 #'    is greater than `0`. The default values are used only when
@@ -180,20 +180,20 @@
 #' @export
 multiEnrichMap <- function(
    enrichList,
+   p_cutoff=0.05,
+   min_count=3,
+   topEnrichN=20,
    geneHitList=NULL,
    geneHitIM=NULL,
    colorV=NULL,
    enrichLabels=NULL,
    subsetSets=NULL,
    overlapThreshold=deprecated(), # deprecated
-   p_cutoff=0.05,
    cutoffRowMinP=deprecated(),
    enrichBaseline=-log10(p_cutoff),
    enrichLens=0,
    enrichNumLimit=4,
    nEM=500,
-   min_count=3,
-   topEnrichN=20,
    topEnrichSources=c("gs_cat", "gs_subcat"),
    topEnrichCurateFrom=NULL,
    topEnrichCurateTo=NULL,
@@ -328,24 +328,60 @@ multiEnrichMap <- function(
    ## Convert list of data.frame to enrichResult
    enrichList <- lapply(jamba::nameVectorN(enrichList), function(iname){
       ier <- enrichList[[iname]];
+      ier_type <- "(none)";
       if (inherits(ier, "enrichResult")) {
-         return(ier)
+         ier_type <- "enrichResult";
       } else if (inherits(ier, "gseaResult")) {
-         return(gr2er(ier))
-      }
-      if (inherits(ier, "data.frame")) {
-         if (verbose) {
-            jamba::printDebug("multiEnrichMap(): ",
-               "Converting '", iname, "' from data.frame")
-         }
+         ier_type <- "gseaResult";
+         ier <- gr2er(ier)
+      } else if (inherits(ier, "data.frame")) {
+         ier_type <- "data.frame";
          ier <- enrichDF2enrichResult(ier,
             keyColname=keyColname,
             geneColname=geneColname,
             pvalueColname=pvalueColname,
             descriptionColname=descriptionColname,
             ...)
+      } else {
+         cli::cli_abort(c(
+            "Import of {.val {iname}} was not a recognized format:",
+            "{.cls enrichResult}, {.cls gseaResult}, {.cls data.frame}"
+         ))
       }
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "Recognized '", iname, "' as '",
+            ier_type, "'")
+      }
+      return(ier)
    })
+
+   ## 0.0.124.900 - detect geneHitList when relevant
+   ## - only when geneHitIM and geneHitList are not provided
+   ## - only when attribute 'genes_signed' is also available
+   if (length(geneHitIM) == 0 && length(geneHitList) == 0) {
+      has_genes_signed <- sapply(enrichList, function(ier){
+         "genes_signed" %in% names(attributes(ier))
+      })
+      if (all(has_genes_signed)) {
+         if (verbose) {
+            jamba::printDebug("multiEnrichMap(): ",
+               "Preparing '",
+               "geneHitList",
+               "' from attribute '",
+               "genes_signed",
+               "'.")
+         }
+         geneHitList <- lapply(enrichList, function(ier){
+            attr(ier, "genes_signed")
+         })
+      } else {
+         if (verbose) {
+            jamba::printDebug("multiEnrichMap(): ",
+               "Default '","geneHitList","' without attribute '","genes_signed","'.")
+         }
+      }
+   }
 
    ## Define some default colnames
    #nameColname <- "Name";
@@ -404,7 +440,7 @@ multiEnrichMap <- function(
                stop(paste0("There is no ", docol, " in element ", j, "."));
             }
             # rename to match main_col
-            if (verbose > 1) {
+            if (verbose > 2) {
                jamba::printDebug("Renaming ", j, " enrichment column from '",
                   has_col, "' to '", main_col, "'.");# debug
             }
@@ -421,18 +457,20 @@ multiEnrichMap <- function(
    }
    if (verbose) {
       jamba::printDebug("multiEnrichMap(): ",
+         "Columns recognized:")
+      jamba::printDebug("         ",
          "keyColname:", keyColname);
-      jamba::printDebug("multiEnrichMap(): ",
+      jamba::printDebug("         ",
          "nameColname:", nameColname);
-      jamba::printDebug("multiEnrichMap(): ",
+      jamba::printDebug("         ",
          "geneColname:", geneColname);
-      jamba::printDebug("multiEnrichMap(): ",
+      jamba::printDebug("         ",
          "pvalueColname:", pvalueColname);
-      jamba::printDebug("multiEnrichMap(): ",
+      jamba::printDebug("         ",
          "descriptionColname:", descriptionColname);
-      jamba::printDebug("multiEnrichMap(): ",
+      jamba::printDebug("         ",
          "countColname:", countColname);
-      jamba::printDebug("multiEnrichMap(): ",
+      jamba::printDebug("         ",
          "directionColname:", directionColname);
    }
 
@@ -451,8 +489,12 @@ multiEnrichMap <- function(
    #####################################################################
    ## colors
    if (length(colorV) == 0) {
-      colorV <- jamba::nameVector(colorjam::rainbowJam(length(enrichList)),
-         names(enrichList));
+      colorV <- jamba::nameVector(
+         colorjam::rainbowJam(
+            n=length(enrichList)
+         ),
+         names(enrichList)
+      );
    } else {
       colorV <- rep_len(colorV, length(enrichList));
       if (length(names(colorV)) == 0) {
@@ -466,7 +508,7 @@ multiEnrichMap <- function(
    ## Get GmtT for use here
    #GmtT <- get(GmtTname, envir=.GlobalEnv);
 
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "dim for each enrichList entry:");
       print(jamba::sdim(enrichList));
@@ -482,7 +524,7 @@ multiEnrichMap <- function(
       keep_hitim_colnames <- intersect(names(enrichList),
          colnames(geneHitIM));
       if (length(keep_hitim_colnames) == 0) {
-         if (verbose) {
+         if (verbose > 1) {
             jamba::printDebug("multiEnrichMap(): ",
                "geneHitIM had no matching colnames, setting", " NULL");
          }
@@ -492,7 +534,7 @@ multiEnrichMap <- function(
       }
       # now populate geneHitList if needed
       if (length(geneHitList) == 0) {
-         if (verbose) {
+         if (verbose > 1) {
             jamba::printDebug("multiEnrichMap(): ",
                "Creating geneHitList from geneHitIM.");
          }
@@ -501,7 +543,7 @@ multiEnrichMap <- function(
          ## 0.0.104.900: keep the directionality
          geneHitList <- imSigned2list(geneHitIM)
       }
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("multiEnrichMap(): ",
             "sdim(geneHitList): ");
          print(jamba::sdim(geneHitList));
@@ -525,7 +567,7 @@ multiEnrichMap <- function(
             geneHitIM <- list2im(geneHitList);
          }
       }
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("multiEnrichMap(): ",
             "sdim(geneHitList): ");
          print(jamba::sdim(geneHitList));
@@ -533,16 +575,16 @@ multiEnrichMap <- function(
    }
    # Finally if no geneHitList is available, derive from enrichment results
    if (length(geneHitList) == 0) {
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("multiEnrichMap(): ",
             "creating geneHitList from enrichList.");
       }
       geneHitList <- enrichList2geneHitList(enrichList,
          geneColname=geneColname,
          geneDelim=geneDelim,
-         verbose=(verbose - 1) > 0,
+         verbose=verbose > 1,
          make_unique=TRUE);
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("multiEnrichMap(): ",
             "sdim(geneHitList): ");
          print(jamba::sdim(geneHitList));
@@ -594,7 +636,8 @@ multiEnrichMap <- function(
       direction_cutoff=direction_cutoff,
       topEnrichN=topEnrichN,
       topEnrichSources=topEnrichSources,
-      topEnrichNameGrep=topEnrichNameGrep)
+      topEnrichNameGrep=topEnrichNameGrep
+   )
    if ("list" %in% returnType) {
       thresholds$overlapThreshold <- overlapThreshold;
    }
@@ -607,7 +650,8 @@ multiEnrichMap <- function(
          length(topEnrichDescriptionGrep) > 0) {
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
-            "running topEnrichBySource().");
+            "running topEnrichBySource() with topEnrichN:",
+            topEnrichN);
       }
       enrichList <- topEnrichListBySource(enrichList,
          n=topEnrichN,
@@ -624,7 +668,7 @@ multiEnrichMap <- function(
          subsetSets=subsetSets,
          descriptionGrep=topEnrichDescriptionGrep,
          nameGrep=topEnrichNameGrep,
-         verbose=(verbose - 1) > 0,
+         verbose=verbose > 1,
          ...);
       if (verbose) {
          jamba::printDebug("multiEnrichMap(): ",
@@ -633,7 +677,7 @@ multiEnrichMap <- function(
       }
       ## Now we subset geneIM to the filtered genes
       origGenes <- jamba::mixedSort(unique(rownames(geneHitIM)));
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("multiEnrichMap(): ",
             "lengths(geneHitList) before:",
             lengths(geneHitList));
@@ -647,10 +691,10 @@ multiEnrichMap <- function(
       geneHitListNew <- enrichList2geneHitList(enrichList,
          geneColname=geneColname,
          geneDelim=geneDelim,
-         verbose=(verbose - 1) > 0,
+         verbose=verbose > 1,
          make_unique=TRUE);
       newGenes <- jamba::mixedSort(unique(unlist(geneHitListNew)));
-      if (verbose) {
+      if (verbose > 2) {
          jamba::printDebug("multiEnrichMap(): ",
             "length(newGenes):",
             length(newGenes));
@@ -662,7 +706,7 @@ multiEnrichMap <- function(
          jamba::printDebug("setdiff(newGenes, origGenes):", setdiff(newGenes, origGenes));
       }
       geneIM <- subset(geneIM, rownames(geneIM) %in% newGenes);
-      if (verbose) {
+      if (verbose > 2) {
          jamba::printDebug("multiEnrichMap(): ",
             "nrow(geneIM) after:",
             nrow(geneIM));
@@ -678,7 +722,7 @@ multiEnrichMap <- function(
       #       intersect(i, newGenes)
       #    }
       # });
-      if (verbose) {
+      if (verbose > 2) {
          jamba::printDebug("multiEnrichMap(): ",
             "lengths(geneHitList) after:",
             lengths(geneHitList));
@@ -767,8 +811,10 @@ multiEnrichMap <- function(
       dupe_keynames <- unique(dfcheck$keyname[duplicated(dfcheck$keyname)]);
       if (length(dupe_keynames) > 0) {
          k <- dfcheck$keyname %in% dupe_keynames;
-         dfcheck$name[k] <- jamba::makeNames(dfcheck$name[k],
-            suffix=check_suffix);
+         dfcheck$name[k] <- jamba::makeNames(
+            dfcheck$name[k],
+            suffix=check_suffix
+         );
       }
       dfcheck
    })
@@ -778,17 +824,27 @@ multiEnrichMap <- function(
    check_suffix_re <- paste0(check_suffix, "[0-9]+$")
    if (any(grepl(check_suffix_re, namecheck$name))) {
       # unversioned stem of versioned names
-      versioned_names <- unique(gsub(check_suffix_re, "",
-         grepv(check_suffix_re, namecheck$name)))
+      versioned_names <- unique(gsub(
+         check_suffix_re,
+         "",
+         grepv(check_suffix_re, namecheck$name)
+      ))
       k <- (namecheck$name %in% versioned_names);
       if (any(k)) {
-         namecheck$name[k] <- paste0(namecheck$name[k],
-            check_suffix, "1");
+         namecheck$name[k] <- paste0(
+            namecheck$name[k],
+            check_suffix,
+            "1"
+         );
       }
       namecheck <- unique(namecheck);
    }
    
    if (anyDuplicated(namecheck$name)) {
+      if (verbose) {
+         jamba::printDebug("multiEnrichMap(): ",
+            "Resolving duplicate pathway names.");
+      }
       # isolate duplicates to rename
       dupenames <- unique(namecheck$name[duplicated(namecheck$name)])
       dupedf <- jamba::mixedSortDF(
@@ -830,7 +886,7 @@ multiEnrichMap <- function(
          iDF[[nameColname]];
       }
    })));
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "enrichIM <- enrichList2IM() with    pvalueColname:",
          pvalueColname);
@@ -842,7 +898,7 @@ multiEnrichMap <- function(
       enrichList,
       valueColname=pvalueColname,
       keyColname=nameColname,
-      verbose=(verbose - 1) > 0,
+      verbose=verbose > 1,
       emptyValue=1
    )
       # GmtT=msigdbGmtT);
@@ -855,15 +911,15 @@ multiEnrichMap <- function(
 
    if (all(is.na(enrichIM))) {
       if (verbose) {
-         jamba::printDebug("all enrichIM is NA.");
+         # jamba::printDebug("all enrichIM is NA.");
          jamba::printDebug("pvalueColname:", pvalueColname);
          jamba::printDebug("nameColname:", nameColname);
       }
-      stop("enrichIM is entirely NA.");
+      cli::cli_abort("{.var enrichIM} is entirely {.cls NA}.");
    }
 
    enrichIMM <- as.matrix(enrichIM[,names(enrichList),drop=FALSE]);
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "head(enrichIM):");
       print(head(enrichIM));
@@ -880,20 +936,31 @@ multiEnrichMap <- function(
       "^geneHits",
       "geneCount",
       "GeneRatio");
-   if (!jamba::igrepHas("data.frame", class(enrichList[[1]]))) {
-      geneCountColname <- head(jamba::provigrep(geneCountsGrep,
-         colnames(as.data.frame(enrichList[[1]]))), 1);
+   geneCountColname <- NULL;
+   if (!inherits(enrichList[[1]], "data.frame")) {
+      geneCountColname <- head(
+         jamba::provigrep(
+            geneCountsGrep,
+            colnames(as.data.frame(enrichList[[1]]))),
+         1
+      );
    } else {
-      geneCountColname <- head(jamba::provigrep(geneCountsGrep,
-         colnames(enrichList[[1]])), 1);
+      geneCountColname <- head(
+         jamba::provigrep(
+            geneCountsGrep,
+            colnames(enrichList[[1]])),
+         1
+      );
    }
    if (length(geneCountColname) == 0) {
-      stop(paste0("geneCountColname could not be found, by default it uses `geneHits`:",
-         geneHits));
+      cli::cli_abort(c(
+         "{.var geneCountColname} could not be found, ",
+         "by default it uses {.var geneHits}: {.val {geneHits}}"
+      ));
    }
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
-         "enrichIM <- enrichList2IM() with geneCountColname:",
+         "enrichIMgeneCount <- enrichList2IM() with geneCountColname:",
          geneCountColname);
    }
 
@@ -902,9 +969,9 @@ multiEnrichMap <- function(
       keyColname=nameColname,
       valueColname=geneCountColname,
       emptyValue=0,
-      verbose=(verbose - 1) > 0
+      verbose=verbose > 1
    )
-      # GmtT=msigdbGmtT);
+   # align rows consistent with enrichIM
    match1 <- match(enrichLsetNames, rownames(enrichIMgeneCount));
    match2 <- match(names(enrichList), colnames(enrichIMgeneCount));
    enrichIMgeneCount <- enrichIMgeneCount[match1, match2, drop=FALSE];
@@ -915,11 +982,14 @@ multiEnrichMap <- function(
    #####################################################################
    ## enrichIM incidence matrix using direction
    if (length(directionColname) > 0) {
-      enrichIMdirection <- enrichList2IM(enrichList,
+      enrichIMdirection <- enrichList2IM(
+         enrichList,
          keyColname=nameColname,
          valueColname=directionColname,
          emptyValue=0,
-         verbose=(verbose - 1) > 0)[enrichLsetNames,,drop=FALSE];
+         verbose=verbose > 1
+      )
+      # [enrichLsetNames, , drop=FALSE];
       match1 <- match(enrichLsetNames, rownames(enrichIMdirection));
       match2 <- match(names(enrichList), colnames(enrichIMdirection));
       enrichIMdirection <- enrichIMdirection[match1, match2, drop=FALSE];
@@ -929,11 +999,12 @@ multiEnrichMap <- function(
       enrichIMdirection <- enrichIMgeneCount;
       enrichIMdirection[] <- 1;
    }
-   mem$enrichIMdirection <- as.matrix(enrichIMdirection);
+   enrichIMdirection <- as.matrix(enrichIMdirection)
+   mem$enrichIMdirection <- enrichIMdirection;
 
    #####################################################################
    ## enrichIM colors
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "enrichIMcolors <- matrix2heatColors(enrichIMM)");
       jamba::printDebug("multiEnrichMap(): ",
@@ -946,13 +1017,15 @@ multiEnrichMap <- function(
          "head(enrichIMM):");
       print(head(enrichIMM));
    }
-   enrichIMcolors <- colorjam::matrix2heatColors(x=-log10(enrichIMM),
+   enrichIMcolors <- colorjam::matrix2heatColors(
+      x=-log10(enrichIMM),
       colorV=colorV,
       lens=enrichLens,
       numLimit=enrichNumLimit,
       baseline=enrichBaseline,
-      trimRamp=c(2, 2));
-   if (verbose) {
+      trimRamp=c(2, 2)
+   );
+   if (verbose > 2) {
       jamba::printDebug("multiEnrichMap(): ",
          "enrichBaseline:", enrichBaseline, ", colorV:", colorV);
       jamba::printDebug("multiEnrichMap(): ",
@@ -963,8 +1036,9 @@ multiEnrichMap <- function(
    #####################################################################
    ## Subset for at least one significant enrichment P-value
    # i1use <- rownames(enrichIMM)[(matrixStats::rowMins(enrichIMM[,useCols,drop=FALSE], na.rm=TRUE) <= cutoffRowMinP)];
-   i1use <- rownames(enrichIMM)[(apply(enrichIMM[,useCols,drop=FALSE], 1, min, na.rm=TRUE) <= p_cutoff)];
-   if (verbose) {
+   row_pvalue_max <- apply(enrichIMM[,useCols,drop=FALSE], 1, min, na.rm=TRUE);
+   i1use <- rownames(enrichIMM)[(row_pvalue_max <= p_cutoff)];
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "nrow(enrichIM):",
          jamba::formatInt(nrow(enrichIM)),
@@ -975,7 +1049,7 @@ multiEnrichMap <- function(
    #####################################################################
    ## Now make sure enrichList only contains these sets
    if (nrow(enrichIM) > length(i1use)) {
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("multiEnrichMap(): ",
             "dims before filtering minimum P-value():");
          print(jamba::sdim(enrichList));
@@ -986,23 +1060,26 @@ multiEnrichMap <- function(
          }
          subset(iDF, iDF[[nameColname]] %in% i1use);
       });
-      if (verbose) {
+      if (verbose > 1) {
          jamba::printDebug("multiEnrichMap(): ",
             "dims after filtering minimum P-value():");
          print(jamba::sdim(enrichList));
       }
       ## Now circle back and subset the enrichIM and enrichIMcolors rows
-      enrichIM <- enrichIM[i1use,,drop=FALSE];
-      enrichIMM <- enrichIMM[i1use,,drop=FALSE];
-      enrichIMcolors <- enrichIMcolors[i1use,,drop=FALSE];
+      enrichIM <- enrichIM[i1use, , drop=FALSE];
+      enrichIMM <- enrichIMM[i1use, , drop=FALSE];
+      enrichIMcolors <- enrichIMcolors[i1use, , drop=FALSE];
+      enrichIMdirection <- enrichIMdirection[i1use, , drop=FALSE];
    }
    mem$enrichList <- enrichList;
    mem$enrichIM <- enrichIMM;
    mem$enrichIMcolors <- enrichIMcolors;
+   mem$enrichIMdirection <- enrichIMdirection;
 
    #####################################################################
    ## Create one enrichment data.frame from the list
-   if (verbose) {
+   ## Todo: Consider splitting geneID_up, geneID_down
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "enrichDF <- enrichList2df(enrichList[c(",
          useCols,
@@ -1019,28 +1096,28 @@ multiEnrichMap <- function(
       geneCountColname=geneCountColname,
       pvalueColname=pvalueColname,
       geneDelim=geneDelim,
-      verbose=(verbose - 1) > 0
+      verbose=verbose > 1
    );
 
    #####################################################################
    ## Some cleaning of Description
-   # 0.0.101.900 - not used for now, will use sets(Mem)<- in future
-   if (FALSE &&
-         length(descriptionColname) == 1 &&
-         descriptionColname %in% colnames(enrichDF)) {
-      if (verbose) {
-         jamba::printDebug("multiEnrichMap(): ",
-            "cleaning Description column:",
-            descriptionColname);
-         #print(lengths(enrichList[useCols]));
-      }
-      descriptionColnameFull <- paste0(descriptionColname, "Full");
-      enrichDF[,descriptionColnameFull] <- enrichDF[,descriptionColname];
-   }
+   ## 0.0.101.900 - not used for now, will use sets(Mem)<- in future
+   # if (FALSE &&
+   #       length(descriptionColname) == 1 &&
+   #       descriptionColname %in% colnames(enrichDF)) {
+   #    if (verbose) {
+   #       jamba::printDebug("multiEnrichMap(): ",
+   #          "cleaning Description column:",
+   #          descriptionColname);
+   #       #print(lengths(enrichList[useCols]));
+   #    }
+   #    descriptionColnameFull <- paste0(descriptionColname, "Full");
+   #    enrichDF[,descriptionColnameFull] <- enrichDF[,descriptionColname];
+   # }
 
    #####################################################################
    ## Convert the combined enrichDF to enrichResult
-   if (verbose) {
+   if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "head(enrichDF):");
       print(head(as.data.frame(enrichDF)));
@@ -1059,10 +1136,10 @@ multiEnrichMap <- function(
       geneDelim=geneDelim,
       pvalueColname=pvalueColname,
       # msigdbGmtT=msigdbGmtT,
-      verbose=(verbose - 1) > 0
+      verbose=verbose > 1
    );
 
-   if (verbose) {
+   if (verbose > 2) {
       jamba::printDebug("multiEnrichMap(): ",
          "head(enrichER):");
       print(head(as.data.frame(enrichER)));
@@ -1092,6 +1169,31 @@ multiEnrichMap <- function(
    memIM <- memIM[memIMsorted, enrichLsetNames, drop=FALSE];
    mem$memIM <- memIM;
 
+   ## Confirm: rownames(enrichIM) == colnames(memIM)
+   ## Confirm: rownames(geneIM) == rownames(memIM)
+   memIM_rows <- rownames(memIM)
+   memIM_columns <- colnames(memIM)
+   geneIM_rows <- rownames(geneIM)
+   enrichIM_rows <- rownames(enrichIM)
+   if (length(memIM_rows) != length(geneIM_rows) ||
+      !all(memIM_rows %in% geneIM_rows)) {
+      geneIM_diff <- setdiff(memIM_rows, geneIM_rows)
+      geneIM_diff
+      cli::cli_abort(
+         "{.var rownames(geneIM)} is not identical to {.var rownames(memIM)}:",
+         "{.val {geneIM_diff}}"
+      )
+   }
+   if (length(memIM_columns) != length(enrichIM_rows) ||
+      !all(memIM_columns %in% enrichIM_rows)) {
+      enrichIM_diff <- setdiff(memIM_columns, enrichIM_rows)
+      enrichIM_diff
+      cli::cli_abort(
+         "{.var rownames(enrichIM)} is not identical to {.var colnames(memIM)}:",
+         "{.val {enrichIM_diff}}"
+      )
+   }
+
    # Note:
    # Removed deprecated calls: enrichMapJam(), cnetplotJam()
 
@@ -1106,7 +1208,8 @@ multiEnrichMap <- function(
       descriptionColname=descriptionColname,
       directionColname=directionColname,
       pathGenes=pathGenes,
-      geneHits=geneHits)
+      geneHits=geneHits
+   )
    mem$colnames <- colnamesL;
 
    ## Add p_cutoff to output

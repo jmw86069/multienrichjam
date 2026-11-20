@@ -22,6 +22,7 @@ cell_fun_bivariate(
   pch = NULL,
   size_fun = NULL,
   size_by = 1,
+  round_digits = 3,
   grid_color = "grey80",
   type = c("bivariate", "univariate"),
   invert = FALSE,
@@ -89,6 +90,12 @@ is also defined. Together these arguments allow customized points.}
 
 \item{size_by}{\code{integer} indicating which matrix of values
 to use for point sizing.}
+
+\item{round_digits}{\code{integer} number of digits used to round \code{numeric}
+values that are less than 1000. Values at or above 1000 are
+rounded to \code{integer} then formatted using \code{big.mark=','}.
+Default \code{round_digits=3} will convert any \code{numeric} value at or
+below \code{0.0005} to \code{0}.}
 
 \item{grid_color}{\code{character} valid R color used with \code{style="dotplot"}
 to draw lines through the center of each cell.}

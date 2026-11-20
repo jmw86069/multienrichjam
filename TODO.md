@@ -1,5 +1,23 @@
 # TODO
 
+## 19nov2026
+
+* Recognize gene hits in attributes of `enrichResult` or
+`gseaResult` to be used as `geneHitList`.
+* `multiEnrichMap()`
+   * Make it work well with `jam_enricher()` output.
+   * DONE. Improve verbose levels, `TRUE` should be minimal.
+
+## 16nov2026
+
+* Future work: `jam_ggraph()`
+   * Port `jam_igraph()` to use `ggplot2` output, via `ggraph`
+   and other relevant packages.
+   * Use custom rendering to store edge-bundling intermediate points
+   for bezier curves.
+   * Create node shapes: 'jampie', 'coloredrectangle'
+   * Start with `grid` rendering, transition into ggplot2 geoms.
+
 ## 12nov2026
 
 * DONE. `EnrichmentHeatmap()` bivariate legend should use custom

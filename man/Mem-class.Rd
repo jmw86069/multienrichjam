@@ -377,6 +377,7 @@ Other Mem:
 
 Other jam Mem utilities:
 \code{\link{MemPlotFolio-class}},
+\code{\link[=enrichIMrank]{enrichIMrank()}},
 \code{\link[=fixSetLabels]{fixSetLabels()}},
 \code{\link[=mem2cnet]{mem2cnet()}},
 \code{\link[=mem2emap]{mem2emap()}}
