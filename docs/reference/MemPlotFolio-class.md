@@ -45,19 +45,31 @@ Caption(x, ...)
 CaptionLegendList(x, ...)
 
 # S4 method for class 'MemPlotFolio'
-EnrichmentHeatmap(x, do_plot, ...)
+CaptionLegendList(x) <- value
 
 # S4 method for class 'MemPlotFolio'
-GenePathHeatmap(x, do_plot, ...)
+EnrichmentHeatmap(x, do_plot, params = list(width = 30), ...)
 
 # S4 method for class 'MemPlotFolio'
-CnetCollapsed(x, type, do_plot, legend_x = "bottomleft", legend_y = NULL, ...)
+GenePathHeatmap(x, do_plot, params = list(width = 30), ...)
+
+# S4 method for class 'MemPlotFolio'
+CnetCollapsed(
+  x,
+  type,
+  do_plot,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  legend_x = "bottomleft",
+  legend_y = NULL,
+  ...
+)
 
 # S4 method for class 'MemPlotFolio'
 CnetExemplar(
   x,
   num,
   do_plot,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   legend_x = "bottomleft",
   legend_y = NULL,
   main = NULL,
@@ -69,6 +81,7 @@ CnetCluster(
   x,
   cluster,
   do_plot,
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
   legend_x = "bottomleft",
   legend_y = NULL,
   main = NULL,
@@ -82,9 +95,10 @@ plot(x, y, ...)
 EnrichmentMap(
   x,
   do_plot = TRUE,
+  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
+    = TRUE),
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(),
   ...
 )
 ```
@@ -107,8 +121,8 @@ EnrichmentMap(
 
 - value:
 
-  named `character` vector of cluster labels, where names correspond to
-  cluster names as returned by `Clusters(x)`.
+  `Legends` object from ComplexHeatmap package. Use NULL to hide the
+  caption legend list entries.
 
 - y:
 
@@ -153,6 +167,9 @@ Multiple lines are delimited by newline characters.
 `metadata(MemPlotFolio)` returns the caption summary in the form of
 [`ComplexHeatmap::Legends`](https://rdrr.io/pkg/ComplexHeatmap/man/Legends.html)
 suitable to `draw()` as R grid graphics.
+
+`CaptionLegendList<-(MemPlotFolio)` returns the updated `MemPlotFolio`
+object with new caption legend list.
 
 `EnrichmentHeatmap(MemPlotFolio)` returns a
 [`ComplexHeatmap::HeatmapList`](https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapList.html)
@@ -236,6 +253,9 @@ all pathways in the cluster defined with argument `cluster`.
 - `CaptionLegendList(MemPlotFolio)`: Returns the caption summary for
   `MemPlotFolio` as
   [`ComplexHeatmap::Legends`](https://rdrr.io/pkg/ComplexHeatmap/man/Legends.html).
+
+- `CaptionLegendList(MemPlotFolio) <- value`: Sets define caption legend
+  list to display in `EnrichmentHeatmap()` and `GenePathHeatmap()`.
 
 - `EnrichmentHeatmap(MemPlotFolio)`: Draws the enrichment heatmap from
   `MemPlotFolio` results. Optional arguments '...' include:
@@ -335,6 +355,7 @@ all pathways in the cluster defined with argument `cluster`.
 
 Other jam Mem utilities:
 [`Mem-class`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md),
+[`enrichIMrank()`](https://jmw86069.github.io/multienrichjam/reference/enrichIMrank.md),
 [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md),
 [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md),
 [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md)

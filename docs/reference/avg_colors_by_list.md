@@ -32,6 +32,20 @@ avg_colors_by_list(
   and therefore makes additive color blending more sensible.
   Specifically, "yellow and blue makes green".
 
+- Cmethod, Lmethod:
+
+  `character` string with method of combining multiple values in the 'C'
+  and 'L' color channels of HCL.
+
+- c_min:
+
+  `numeric` 'C' channel value at or below which a color is converted to
+  grey hue
+
+- grey_hue:
+
+  `numeric` hue used to identify grey colors.
+
 - ...:
 
   additional arguments are ignored.
@@ -66,6 +80,7 @@ Other jam utility functions:
 [`ashape()`](https://jmw86069.github.io/multienrichjam/reference/ashape.md),
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),

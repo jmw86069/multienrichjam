@@ -87,6 +87,10 @@ subsetCnetIgraph(
   in a cnet plot where many gene nodes may be connected to the same
   pathway set nodes.
 
+- repulse:
+
+  `numeric` used for layout when necessary.
+
 - layout:
 
   function that takes `igraph` object and returns a numeric matrix of
@@ -103,6 +107,10 @@ subsetCnetIgraph(
 - ...:
 
   additional arguments are ignored.
+
+## Value
+
+`igraph` after subset operations.
 
 ## Details
 
@@ -139,7 +147,6 @@ Other jam igraph functions:
 [`flip_edges()`](https://jmw86069.github.io/multienrichjam/reference/flip_edges.md),
 [`get_bipartite_nodeset()`](https://jmw86069.github.io/multienrichjam/reference/get_bipartite_nodeset.md),
 [`highlight_edges_by_node()`](https://jmw86069.github.io/multienrichjam/reference/highlight_edges_by_node.md),
-[`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md),
 [`label_communities()`](https://jmw86069.github.io/multienrichjam/reference/label_communities.md),
 [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md),
 [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md),

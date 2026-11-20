@@ -49,6 +49,10 @@ isColorBlank(
 
   additional arguments are ignored.
 
+## Value
+
+`logical` indicating whether each color is considered 'blank'.
+
 ## Details
 
 This function takes a vector of colors and determines if each color is
@@ -66,6 +70,7 @@ Other jam utility functions:
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),

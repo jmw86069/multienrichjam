@@ -19,6 +19,10 @@ subgraph_jam(graph, v)
   `integer` or `logical` vector indicating the nodes to retain in the
   final `igraph` object.
 
+## Value
+
+`igraph` after applying the subset operations.
+
 ## Details
 
 This function extends the

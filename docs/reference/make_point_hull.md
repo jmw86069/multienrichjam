@@ -175,6 +175,7 @@ Other jam utility functions:
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),
@@ -247,9 +248,9 @@ plot(x4, col="red", pch=20, cex=3,
    main="hull_method='chull'")
 phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
    add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="chull")
+#> (15:34:32) 20Nov2026: make_point_hull(): label.y.nudge:0
+#> (15:34:32) 20Nov2026: make_point_hull(): calculated alpha: 10
+#> (15:34:32) 20Nov2026: make_point_hull(): Iterating alpha values up to 100 times.
+#> (15:34:32) 20Nov2026: make_point_hull(): Iterated 1 times, 126 mxys points.
 
-#> ##  (11:03:18) 22May2026:   make_point_hull(): label.y.nudge:0 
-#> ##  (11:03:18) 22May2026:   make_point_hull(): calculated alpha: 10 
-#> ##  (11:03:18) 22May2026:   make_point_hull(): Iterating alpha values up to 100 times. 
-#> ##  (11:03:18) 22May2026:   make_point_hull(): Iterated 1 times, 126 mxys points. 
 ```

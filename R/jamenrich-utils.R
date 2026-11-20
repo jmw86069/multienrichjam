@@ -4,25 +4,33 @@
 #' Average geometric angles
 #'
 #' @family jam utility functions
-#'
+#' 
+#' @returns `numeric` value with average angle in degrees
+#' 
+#' @param x `numeric` angles in degrees
+#' @param w `numeric` weight applied to each angle
+#' @param maxAngle `numeric` with maximum angle, default 360.
+#' @param na.rm `logical` whether to ignore NA values.
+#' @param ... additional arguments are ignored.
+#' 
 #' @examples
 #' x <- c(90, 180);
 #' avg_angles(x);
 #'
 #' @export
-avg_angles <- function
-(x,
- w=1,
- maxAngle=360,
- na.rm=TRUE,
- ...)
-{
+avg_angles <- function(
+   x,
+   w=1,
+   maxAngle=360,
+   na.rm=TRUE,
+   ...
+) {
    ## Purpose is to average angular values, which otherwise don't average properly,
    ## e.g. 359 degrees and 1 degrees should have average angle of 0, not 180.
    if (length(x) == 0) {
       return(NULL);
    }
-   w <- rep(w, length.out=length(x));
+   w <- rep_len(w, length(x));
    x_values <- cos(x * 2*pi / maxAngle);
    y_values <- sin(x * 2*pi / maxAngle);
    xComp <- weighted.mean(x_values,
@@ -77,6 +85,11 @@ avg_angles <- function
 #'    which effectively converts the RGB angles to RYB (red-yellow-blue),
 #'    and therefore makes additive color blending more sensible.
 #'    Specifically, "yellow and blue makes green".
+#' @param Cmethod,Lmethod `character` string with method of combining
+#'    multiple values in the 'C' and 'L' color channels of HCL.
+#' @param c_min `numeric` 'C' channel value at or below which a color is
+#'    converted to grey hue
+#' @param grey_hue `numeric` hue used to identify grey colors.
 #' @param ... additional arguments are ignored.
 #'
 #' @examples
@@ -98,15 +111,15 @@ avg_angles <- function
 #'    main="Without weighted hue")
 #'
 #' @export
-avg_colors_by_list <- function
-(x,
- useWeightedHue=TRUE,
- Cmethod=c("mean", "max", "min"),
- Lmethod=c("mean", "max", "min"),
- c_min=4,
- grey_hue=359,
- ...)
-{
+avg_colors_by_list <- function(
+   x,
+   useWeightedHue=TRUE,
+   Cmethod=c("mean", "max", "min"),
+   Lmethod=c("mean", "max", "min"),
+   c_min=4,
+   grey_hue=359,
+   ...
+) {
    if (length(x) == 0) {
       return(x);
    }
@@ -221,30 +234,32 @@ avg_colors_by_list <- function
 #' @param ... additional arguments are passed to `mem2emap()`.
 #'
 #' @export
-mem_find_overlap <- function
-(mem,
- overlap_range=c(0.1, 0.99),
- max_cutoff=0.4,
- adjust=-0.01,
- debug=FALSE,
- ...)
-{
+mem_find_overlap <- function(
+   mem,
+   overlap_range=c(0.1, 0.99),
+   max_cutoff=0.4,
+   adjust=-0.01,
+   debug=FALSE,
+   ...
+) {
    # define the range of values to attempt
    overlap_range <- range(overlap_range);
    oseq <- seq(from=overlap_range[1],
       to=overlap_range[2],
       by=0.01);
    odata <- lapply(jamba::nameVector(oseq), function(i){
-      g <- mem2emap(mem,
+      g <- mem2emap(
+         mem,
          overlap=i,
          repulse=0,
-      	remove_singlets=TRUE,
-      	do_express=TRUE,
+         remove_singlets=TRUE,
+         do_express=TRUE,
          do_plot=FALSE,
-      	spread_labels=FALSE,
-         ...)
+         spread_labels=FALSE,
+         ...
+      )
       if (!inherits(g, "igraph")) {
-      	return(NULL);
+         return(NULL);
       }
       if (igraph::vcount(g) < 1) {
          return(NULL);
@@ -277,34 +292,38 @@ mem_find_overlap <- function
    # old method
    iseq <- jamba::nameVector(seq(from=max_cutoff, to=1, by=0.01));
    old_scores <- jamba::rmNULL(lapply(iseq, function(max_cutoff_i) {
-   # for (max_cutoff_i in seq(from=max_cutoff, to=1, by=0.01)) {
-   	omet <- sapply(odata, function(i){
-   		unname(i["frac_max"] <= max_cutoff_i);
-   	});
-   	if (any(omet)) {
-   		use_score <- as.numeric(names(head(omet[omet], 1)));
-   		adjusted_score <- use_score + adjust;
-   		# jamba::printDebug("max_cutoff_i: ", max_cutoff_i, " found adjusted_score: ", adjusted_score);# debug
-   		# return(use_score + adjust);
-   		return(adjusted_score)
-   	}
-   	return(NULL)
+      omet <- sapply(odata, function(i){
+         unname(i["frac_max"] <= max_cutoff_i);
+      });
+      if (any(omet)) {
+         use_score <- as.numeric(names(head(omet[omet], 1)));
+         adjusted_score <- use_score + adjust;
+         # jamba::printDebug("max_cutoff_i: ", max_cutoff_i, " found adjusted_score: ", adjusted_score);# debug
+         # return(use_score + adjust);
+         return(adjusted_score)
+      }
+      return(NULL)
    }))
    
+   debug_list <- list(
+      odata=odata,
+      remaining_nodes=oct,
+      fraction_max=o_fraction,
+      fraction_in_largest_group=omax,
+      composite_score=o_score,
+      old_scores=unlist(old_scores)
+   )
    if (length(debug) > 0 && debug) {
-      return(list(odata=odata,
-         remaining_nodes=oct,
-         fraction_max=o_fraction,
-         fraction_in_largest_group=omax,
-         composite_score=o_score,
-      	old_scores=unlist(old_scores)));
+      return(debug_list);
    }
    if (length(o_choose) > 0) {
       return(o_choose + adjust);
-   } else {
-      return(min(igraph::E(g)$overlap, na.rm=TRUE));
    }
-   return(NULL)
+   cli::cli_alert_warning(
+      "No suitable overlap was detected, returning debug data."
+   )
+   return(debug_list)
+   # return(min(igraph::E(g)$overlap, na.rm=TRUE));
 }
 
 #' Extract gene hit list from list of enrichResult
@@ -342,14 +361,14 @@ mem_find_overlap <- function
 #' @param ... additional arguments are ignored.
 #' 
 #' @export
-enrichList2geneHitList <- function
-(enrichList,
- geneColname,
- geneDelim="[,/ ]",
- make_unique=TRUE,
- verbose=FALSE,
- ...)
-{
+enrichList2geneHitList <- function(
+   enrichList,
+   geneColname,
+   geneDelim="[,/ ]",
+   make_unique=TRUE,
+   verbose=FALSE,
+   ...
+) {
    if (verbose) {
       jamba::printDebug("enrichList2geneHitList(): ",
          "geneColname: '",
@@ -362,24 +381,22 @@ enrichList2geneHitList <- function
    };
    geneHitList <- lapply(enrichList, function(iDF){
       ## Split text field of delimited genes into proper vector
-      if (!inherits(iDF, "data.frame")) {
-         if (verbose) {
-            jamba::printDebug("enrichList2geneHitList(): ",
-               "head(iDF, 3):");
-            print(head(iDF, 3));
-         }
-         k <- jamba::mixedSort(unlist(
-            strsplit(
-               as.character(
-                  as.data.frame(iDF)[[geneColname]]),
-               geneDelim)));
-      } else {
-         k <- jamba::mixedSort(unlist(
-            strsplit(
-               as.character(
-                  iDF[[geneColname]]),
-               geneDelim)));
+      if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+         iDF <- iDF@result;
+      } else if (!inherits(iDF, "data.frame")) {
+         iDF <- as.data.frame(iDF);
       }
+      if (verbose) {
+         jamba::printDebug("enrichList2geneHitList(): ",
+            "head(iDF, 3):");
+         print(head(iDF, 3));
+      }
+      k <- jamba::mixedSort(unlist(
+         strsplit(
+            as.character(iDF[[geneColname]]),
+            geneDelim
+         )
+      ));
       if (make_unique) {
          k <- unique(k);
       }
@@ -398,6 +415,8 @@ enrichList2geneHitList <- function
 #'    passed as argument 'byCols' to `colorjam::sort_colors()`.
 #' @param ... additional arguments are passed to `colorjam::sort_colors()`.
 #' 
+#' @returns `integer` index of colors in order
+#' 
 #' @examples
 #' set.seed(123);
 #' x <- sample(grep("royal|^golden", colors(), value=TRUE))
@@ -405,11 +424,11 @@ enrichList2geneHitList <- function
 #' jamba::showColors(list(input=x, sorted=x_sorted))
 #' 
 #' @export
-order_colors <- function
-(x,
- sort_by=c("H", "-L", "-C"),
- ...)
-{
+order_colors <- function(
+   x,
+   sort_by=c("H", "-L", "-C"),
+   ...
+) {
    ## hue_offset=-12 makes red the first color,
    ## and moves pink to the end with purple
    x_sorted <- colorjam::sort_colors(unique(x),
@@ -487,18 +506,18 @@ order_colors <- function
 #' # clusters_df <- rank_mem_clusters(mem, clusters)
 #'
 #' @export
-rank_mem_clusters <- function
-(mem,
- clusters,
- choose=NULL,
- per_cluster=Inf,
- byCols=c(
-    "minp_rank",
-    "composite_rank",
-    "gene_count_rank"),
- verbose=FALSE,
- ...)
-{
+rank_mem_clusters <- function(
+   mem,
+   clusters,
+   choose=NULL,
+   per_cluster=Inf,
+   byCols=c(
+      "minp_rank",
+      "composite_rank",
+      "gene_count_rank"),
+   verbose=FALSE,
+   ...
+) {
    Mem <- NULL;
    if (inherits(mem, "Mem")) {
       Mem <- mem;
@@ -528,7 +547,7 @@ rank_mem_clusters <- function
    if (length(per_cluster) == 0) {
       per_cluster <- Inf;
    }
-   per_cluster <- rep(per_cluster, length.out=length(clusters))
+   per_cluster <- rep_len(per_cluster, length(clusters))
    names(per_cluster) <- names(clusters);
    clusters_dfs <- lapply(names(clusters), function(iname){
       i <- clusters[[iname]];
@@ -617,28 +636,12 @@ rank_mem_clusters <- function
 #'    the cluster title as a prefix.
 #'    For example if the cluster name is 'A' the new title would be:
 #'    'A: pathway 1; pathway 2; pathway 3; pathway 4'.
-#' @param cluster_color_min_fraction `numeric` value between 0 and 1
-#'    used to define the cnet colors for each cluster. The number of
-#'    significant pathways is calculated per cluster for each enrichment
-#'    using `mem$enrichIMcolors`, and the fraction of significant
-#'    pathways versus the max number per enrichment is used to filter.
-#'    For example a cluster with 10 pathways, might have 8 significant
-#'    pathways in one enrichment result, and 3 significant pathways in
-#'    another enrichment result. The fraction for each enrichment is
-#'    `8/8 == 1` for the first enrichment, and `3/8 = 0.375` for the
-#'    second enrichment. When `cluster_color_min_fraction=0.5` (default)
-#'    the first enrichment color would be included, but not the second
-#'    enrichment color. The intent is to represent enrichment colors
-#'    that have at least half (`0.5`) the pathways of the most
-#'    representative (max) enrichment color. Therefore, a cluster with
-#'    only one significant pathway from a given enrichment would
-#'    typically not be representive of that enrichment, and its
-#'    enrichment color would not be included.
 #' @param cluster_color_min_fraction `numeric` value default 0.5,
 #'    the fraction of pathways in a cluster which has "non blank"
 #'    assigned color in `enrichIMcolors()` in order for the color
 #'    to be assigned to the resulting node, in the case of Cnet
-#'    output with `return_type="cnet"`.
+#'    output with `return_type="cnet"`.  
+#'    It should range from 0 to 1.
 #' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are passed to `cnet2mem()` which
 #'    includes thresholds used by `apply_cnet_direction()` such as
@@ -651,20 +654,20 @@ rank_mem_clusters <- function
 #'    non-directional.
 #' 
 #' @export
-collapse_mem_clusters <- function
-(mem,
- clusters,
- choose=NULL,
- per_cluster=Inf,
- byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
- return_type=c("cnet", "Mem", "mem"),
- max_labels=4,
- max_nchar_labels=25,
- include_cluster_title=TRUE,
- cluster_color_min_fraction=0.5,
- verbose=FALSE,
- ...)
-{
+collapse_mem_clusters <- function(
+   mem,
+   clusters,
+   choose=NULL,
+   per_cluster=Inf,
+   byCols=c("composite_rank", "minp_rank", "gene_count_rank"),
+   return_type=c("cnet", "Mem", "mem"),
+   max_labels=4,
+   max_nchar_labels=25,
+   include_cluster_title=TRUE,
+   cluster_color_min_fraction=0.5,
+   verbose=FALSE,
+   ...
+) {
    #
    return_type <- match.arg(return_type);
    ##
@@ -681,11 +684,9 @@ collapse_mem_clusters <- function
    cluster_sets_l <- split(clusters_df$set,
       clusters_df$cluster);
 
-   max_labels <- rep(max_labels,
-      length.out=length(cluster_sets_l));
+   max_labels <- rep_len(max_labels, length(cluster_sets_l));
    names(max_labels) <- names(cluster_sets_l);
-   max_nchar_labels <- rep(max_nchar_labels,
-      length.out=length(cluster_sets_l));
+   max_nchar_labels <- rep_len(max_nchar_labels, length(cluster_sets_l));
    names(max_nchar_labels) <- names(cluster_sets_l);
 
    cluster_sets <- jamba::cPaste(cluster_sets_l, sep="; ");

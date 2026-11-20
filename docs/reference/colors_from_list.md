@@ -12,7 +12,23 @@ colors_from_list(x, return_type = c("colors", "order"), verbose = FALSE, ...)
 
 - x:
 
-  list of character vectors that contain valid R colors.
+  `list` of character vectors that contain valid R colors.
+
+- return_type:
+
+  `character` string with object type to return:
+
+  - 'colors': `character` vector of colors
+
+  - 'order': `numeric` order
+
+- verbose:
+
+  `logical` whether to print verbose output.
+
+- ...:
+
+  additional arguments are ignored.
 
 ## Value
 

@@ -203,8 +203,8 @@ p05_fc1.5=c(pvalue_cutoff=0.05, fold_cutoff=1.5)
 \item Consider flattening the nested list output.
 \item Consider alternative enrichment methods:
 \itemize{
-\item \code{clusterProfiler} enrichment functions
-\item \code{enrichR::enrichr()}
+\item 'clusterProfiler' enrichment functions
+\item 'enrichR::enrichr()'
 }
 \item Consider some custom "hooks":
 \itemize{
@@ -229,5 +229,10 @@ p05_fc1.5=c(pvalue_cutoff=0.05, fold_cutoff=1.5)
 # pathwaydata is a list of gene symbol vectors, or data.frame with TERM2GENE
 # or data.frame with gene column with delimited gene symbols.
 
+}
+\seealso{
+Other jam enrich functions:
+\code{\link[=process_genedata]{process_genedata()}},
+\code{\link[=process_pathwaydata]{process_pathwaydata()}}
 }
 \concept{jam enrich functions}

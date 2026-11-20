@@ -186,6 +186,7 @@ Other jam utility functions:
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),
@@ -213,20 +214,20 @@ Other jam utility functions:
 ``` r
 g <- make_cnet_test(2, c(12, 5))
 gl <- get_igraph_layout(g, verbose=TRUE)
-#> ##  (11:02:40) 22May2026:   get_igraph_layout(): using graph_attr layout. 
+#> (15:33:57) 20Nov2026: get_igraph_layout(): using graph_attr layout.
 jam_igraph(g)
 
 
 # apply repulse=4
 gl2 <- get_igraph_layout(g, layout=layout_with_qfrf(repulse=4), verbose=TRUE)
-#> ##  (11:02:40) 22May2026:   get_igraph_layout(): creating layout using layout() 
+#> (15:33:57) 20Nov2026: get_igraph_layout(): creating layout using layout()
 jam_igraph(g, layout=gl2)
 
 
 igraph::graph_attr(g, "layout") <- layout_with_qfrf(repulse=4)
 gl3 <- get_igraph_layout(g, verbose=TRUE)
-#> ##  (11:02:40) 22May2026:   get_igraph_layout(): using graph_attr layout. 
-#> ##  (11:02:40) 22May2026:   get_igraph_layout(): applying graph_attr layout() 
+#> (15:33:57) 20Nov2026: get_igraph_layout(): using graph_attr layout.
+#> (15:33:57) 20Nov2026: get_igraph_layout(): applying graph_attr layout()
 identical(gl2, gl3)
 #> [1] TRUE
 #> TRUE

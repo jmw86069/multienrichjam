@@ -15,7 +15,7 @@ find_enrich_colnames(
   geneRatioColname = c("GeneRatio", "^Ratio"),
   pvalueColname = c("padjust", "p.adjust", "adjp", "padj", "qvalue", "qval", "q.value",
     "pvalue", "p.value", "pval", "FDR"),
-  directionColname = c("activation.z.{0,1}score", "NES", "direction", "z.{0,1}score"),
+  directionColname = c("direction", "NES", "activation.z.{0,1}score", "z.{0,1}score"),
   pathGenes = c("setSize", "pathGenes", "Count"),
   geneHits = c("Count", "geneHits", "gene_count"),
   verbose = FALSE,
@@ -67,10 +67,20 @@ find_enrich_colnames(
 
 - directionColname:
 
-  `character` default 'zscore' with a directional score, typically a
-  z-score or some other reasonably scaled numeric value where the sign
-  indicates directionality, with '+' meaning activated and '-' meaning
-  suppressed.
+  `character` default looks for matching entries in order:
+
+  - 'direction': some directional score with positive and negative
+    scores, reasonably scaled so that -2 and +2 are meaningful values,
+    but the exact values are not critical to this analysis.
+
+  - 'NES': the GSEA normalized enrichment score),
+
+  - 'activation z-score': provided by Ingenuity Pathway Analysis
+
+  - 'z-score' or 'zScore': provided alternative by some tools. This
+    score may be removedin future, since clusterProfiler provides it as
+    a supplement to the hypergeometric enrichment, and it only contains
+    positive values, therefore it is not directional.
 
 - pathGenes:
 
@@ -107,6 +117,7 @@ Other jam utility functions:
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),

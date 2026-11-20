@@ -10,6 +10,8 @@ cell_fun_bivariate(
   prefix = "",
   suffix = "",
   cex = 1,
+  placement = "center",
+  font = 2,
   col_hm,
   outline = FALSE,
   outline_style = c("none", "darker", "contrast", "lighter", "black", "same"),
@@ -21,6 +23,7 @@ cell_fun_bivariate(
   pch = NULL,
   size_fun = NULL,
   size_by = 1,
+  round_digits = 3,
   grid_color = "grey80",
   type = c("bivariate", "univariate"),
   invert = FALSE,
@@ -44,6 +47,15 @@ cell_fun_bivariate(
 - cex:
 
   `numeric` adjustment for the fontsize used for each label
+
+- placement:
+
+  `character` placement of text label, when defined.
+
+- font:
+
+  `numeric` font style when a label is used, default 2 applies bont
+  font.
 
 - col_hm:
 
@@ -114,6 +126,17 @@ cell_fun_bivariate(
   `function` used to define point size, only when `pch` is also defined.
   Together these arguments allow customized points.
 
+- size_by:
+
+  `integer` indicating which matrix of values to use for point sizing.
+
+- round_digits:
+
+  `integer` number of digits used to round `numeric` values that are
+  less than 1000. Values at or above 1000 are rounded to `integer` then
+  formatted using `big.mark=','`. Default `round_digits=3` will convert
+  any `numeric` value at or below `0.0005` to `0`.
+
 - grid_color:
 
   `character` valid R color used with `style="dotplot"` to draw lines
@@ -130,10 +153,18 @@ cell_fun_bivariate(
   `logical` indicating whether to invert the color fill, such that each
   cell is filled with color, and the circle is drawn empty on top.
 
+- verbose:
+
+  `logical` whether to print verbose output.
+
 - ...:
 
   additional arguments are passed to `col_hm()` to allow custom options
   relevant to that function.
+
+## Value
+
+`function` that takes x,y numeric values, and returns a color.
 
 ## Details
 
@@ -161,6 +192,7 @@ Other jam utility functions:
 [`ashape()`](https://jmw86069.github.io/multienrichjam/reference/ashape.md),
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),
@@ -193,14 +225,7 @@ colnames(m) <- LETTERS[1:4]
 rownames(m) <- letters[1:9]
 m2 <- m;
 m2[] <- abs(rnorm(36)*3);
-mcolor <- matrix(ncol=3,
-   c("white", "white", "white",
-   "royalblue4", "gold", "red"),
-   byrow=TRUE);
-col_bivariate <- colorRamp2D(
-   column_breaks=seq(from=-2, to=2, length.out=3),
-   row_breaks=seq(from=0, to=5, length.out=2),
-   mcolor);
+col_bivariate <- col_pvdir_xf(p_cutoff=0.05, direction_cutoff=1)
 display_colorRamp2D(col_bivariate)
 
 
@@ -224,12 +249,6 @@ lgds <- make_legend_bivariate(col_bivariate,
    xlab="z-score");
 #> Loading required namespace: gridtext
 ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
-
-
-lgds2 <- make_legend_bivariate(col_bivariate,
-   row_breaks=seq(from=0, to=2, by=0.25),
-   ylab="-log10pvalue");
-ComplexHeatmap::draw(hm, annotation_legend_list=lgds2)
 
 
 # heatmap using point circles

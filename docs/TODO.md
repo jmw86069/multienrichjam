@@ -1,12 +1,422 @@
 # TODO
 
+## 20nov2026
+
+- [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  - Make top enrichment annotation use
+    [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    colors, legend, etc.
+  - Add/Fix option to rotate the heatmap 90 degrees.
+  - Rename arguments from ‘row\_’, ‘column\_’, to ‘gene\_’, ‘enrich\_’.
+- Port `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
+
+## 19nov2026
+
+- DONE. Recognize gene hits in attributes of `enrichResult` or
+  `gseaResult` to be used as `geneHitList`.
+- [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md)
+  - DONE. Make it work well with
+    [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+    output.
+  - DONE. Improve verbose levels, `TRUE` should be minimal.
+
+## 16nov2026
+
+- Future work: `jam_ggraph()`
+  - Port
+    [`jam_igraph()`](https://jmw86069.github.io/multienrichjam/reference/jam_igraph.md)
+    to use `ggplot2` output, via `ggraph` and other relevant packages.
+  - Use custom rendering to store edge-bundling intermediate points for
+    bezier curves.
+  - Create node shapes: ‘jampie’, ‘coloredrectangle’
+  - Start with `grid` rendering, transition into ggplot2 geoms.
+
+## 12nov2026
+
+- DONE.
+  [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  bivariate legend should use custom row and column label positions when
+  defined, which will also enable showing the cutoffs (p_cutoff,
+  direction_cutoff) when in use.
+- Add `MemtestDir` data with better example of directional enrichment
+  results.
+- [`make_legend_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/make_legend_bivariate.md)
+  eventually should have the option to display continuous color legend,
+  not the grid pattern.
+- `ClusterSummary()` should have other options to format the text
+  summary, for example some way to show the raw output in the event the
+  markdown/LaTeX formatting is not supported by Quarto/Rmarkdown
+  rendering.
+
+## 05nov2026
+
+- Revisit option to pivot
+  [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  so it can show pathway cluster labels.
+- DONE. Add cluster prefix “A:” to `EnrichmentMap()` when showing
+  [`ClusterLabels()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md).
+- Consider creative ways to highlight Cnet plot genes.
+  - Highlight “unique” genes, or with certain patterns.
+  - Perhaps apply layouts with subgroups of genes, for “genes only in
+    enrichments 1 and 3” which is not the same as genes in Pathway
+    Clusters.
+  - Perhaps ‘label_mpf_genes()’ could be useful, annotate a set of
+    genes?
+  - Consider Venn-like subgroups of genes.
+
+## 15oct2026
+
+- Note system dependencies? Required by ‘sf’ via ‘s2’ for spherical data
+  manipulations: ‘abseil-cpp-devel’ - s2 ‘libuv-devel’ - fs, however it
+  only causes error using ‘pak’.
+
+## 05oct2026
+
+- Use same color gradient in
+  [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  at the top as
+  [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md).
+
+  - Add option to include the gene circles as well.
+  - Add option to asterisk the significant pathways.
+
+- [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+
+  - Tighten up the process for using custom clustering function.
+  - Evaluate options for dendrogram ordering, specifically to help
+    re-order gene dendrogram leaves using gene directional data.
+
+- `EnrichmentMap()`
+
+  - use the same color scale as
+    [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    for directionality, e.g. yellow as the middle color.
+  - The bivariate color function could be stored in ‘Mpf’, so it can be
+    used by other plots easily.
+
+- [`CnetCollapsed()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+
+  - When using
+    [`ClusterLabels()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    it should also include cluster name, e.g. “A: Immune Response
+    Pathways”.
+
+- Fix `enrichResult` class dependency: ‘enrichit’?
+
+- Consider moving shiny functions (ShinyCat) to new package.
+
+- Consider “simple wrapper” `jam_enrich()` to run enrichment tests.
+
+  - Input: gene hits, gene scores, or gene stats tables.
+  - Input: pathway gene sets, or list of gene sets.
+  - Option: use genejam to refresh gene symbols.
+  - Option: use genejam to refresh pathway gene symbols.
+  - Apply enrichment: ORA
+    [`clusterProfiler::enricher()`](https://rdrr.io/pkg/clusterProfiler/man/enricher.html)
+    GSEA
+    [`clusterProfiler::GSEA()`](https://rdrr.io/pkg/clusterProfiler/man/GSEA.html)
+    (it uses fgsea) FGSEA
+    [`fgsea::fgsea()`](https://rdrr.io/pkg/fgsea/man/fgsea.html) (not
+    necessary)
+  - Returns: `enrichResult` as `list` by: Enrichment, Source, Method
+
+- Consider ‘ggplot2’, e.g. ‘ggraph’, or ‘SCP’ uses vanilla ‘ggplot2’.
+
+  - Need custom node shapes: ‘jampie’, ‘coloredrectangle’
+  - For ggraph/tidygraph, need bipartite edge bundling. For vanilla
+    ‘ggplot2’ edges could be drawn with existing geoms.
+
+- Consider concaveman for alpha hull shapes
+
+- Consider porting
+  [`layout_with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/layout_with_qfr.md)
+  to remove qgraph dependency.
+
+- Improve bivariate color legend.
+
+  - Include the P-value threshold as a label.
+  - Implement directional score threshold, show a label.
+  - Use consistent P-value steps for color_non_hits TRUE and FALSE.
+
+- DONE. Add Cluster Summary to
+  [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+
+- [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+
+  - Provide some way to obtain the matrices used for clustering, for
+    independent evaluation.
+
+- [`CnetCluster()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+
+  - DONE. Fix border line width adjustment.
+  - DONE. For
+    [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+    use the cluster letter, not the number.
+
+- [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+
+  - Change `show_enrich` to use terms instead of integer. Add option for
+    asterisk to indicate significance, useful together with
+    `color_non_hits=TRUE`.
+  - When `show_enrich` is active, use contrasting text color.
+
+- `EnrichmentMap()`
+
+  - Consider some way to abbreviate/shorten labels based upon the number
+    of nodes in the graph. Many nodes shouldn’t have long labels
+    blocking everything.
+
+- Evaluate `EnrichmentMapCollapsed()` to visualize the effect of
+  collapsed pathway clusters.
+
+  - Is it useful?
+  - Could it inform a better layout, perhaps hierarchical? E.g.- Draw
+    [`CnetCluster()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    for each cluster, then arrange them using
+    `EnrichmentMapCollapsed()`. (There still is no convenient
+    hierarchical layout function.)
+
+## 02oct2026
+
+- Consider options for custom clustering.
+  - Custom function `cluster_columns`.
+  - `list` input with user-defined clusters.
+  - Test `pvclust` for dynamic cutree.
+- Reduce dependencies
+  - Is clusterProfiler necessary? Can `enrichResult`/`gseaResult` be
+    used without DOSE/enrichit?
+- EnrichmentHeatmap:
+  - Option to use the full color gradient.
+- Eventually remove ‘sf’ and use JamPolygons or ggraph/tidygraph.
+  Probably either requires ggplot2 or grid for graph rendering.
+
+## 25sep2026
+
+- CnetCollapsed: Include cluster letter in the title
+- CnetExemplar: include cluster letter in the title
+- Reconsider option to rotate
+  [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  so it uses row labels
+  [`ClusterLabels()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md).
+- Evaluate using “NES” in EnrichmentHeatmap() for point sizes. Deepak
+  suggestion.
+
+## 27aug2026
+
+- Dare I even suggest:
+  [`jam_igraph()`](https://jmw86069.github.io/multienrichjam/reference/jam_igraph.md)
+  using grid? Perhaps JamPolygons?
+- Add `CnetHeatmap()`
+  - Requires something like `heatmap_se()` internally. Simplest form:
+    Require ‘centered’ data from user.
+
+  - Requires expression, or log2fold-type grouped matrix.
+
+    - Column colors, ‘hit boxes’ require: enrichment-to-rep
+    - Without association, heatmap without ‘hit boxes’
+
+  - Define or provide ‘Cnet’.
+
+  - Define heatmap layout. CnetCollapsed uses Clusters. CnetExemplar
+    shows one cluster?
+- Make ‘Cnet’ functions work for ‘Mpf’
+  - User must define which ‘Cnet’ to use.
+- Consider a refactor: one object ‘Mem’, and ‘Mpf’ becomes an optional
+  component?
+  - Pros: Simpler workflow, less duplication since Mem is embedded
+    inside Mpf anyway.
+  - Cons: Potentially more confusing, Mpf gives clear separation that
+    clusters are independent from Mem.
+  - Internally it stores settings, basic clustering results.
+  - Methods
+    [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    become wrapper for actual method, calculates it on the fly, which is
+    more flexible.
+  - Store less results, store mostly the key parameters to define
+    clusters.
+- Another potential refactor: store less in ‘Mpf’, generate when needed.
+  Or start to transition some prep to dynamic when needed.
+  - [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    calls
+    [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+    when custom options require.
+  - [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    calls
+    [`mem_gene_path_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_gene_path_heatmap.md)
+    when custom options require.
+- Refactor function docs:
+  - Move
+    [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md),
+    [`mem_gene_path_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_gene_path_heatmap.md),
+    and similar to exported but internally-called functions. Not
+    typically user-facing.
+  - Create `Cnet` focused functions.
+
+## 24aug2026
+
+- `MemPlotFolio`
+
+  - Subset functions: by GeneClusters, Clusters.
+  - Would be nice to subset and create
+    [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    for specific Cluster and GeneCluster, to “zoom in”.
+  - Test `InteractiveComplexHeatmap()` for
+    [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md).
+    Main goal is to zoom into specific clusters, zoom back out.
+  - When
+    [`ClusterLabels()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    are defined, the print method should be ‘A: Cluster Label’, ‘B:
+    Cluster Label’ and on multiple lines.
+
+- [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+
+  - adjust `row_title_gp` after
+    [`prepare_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md)
+  - Generally, allow more customizations, somehow, even if it means
+    creating a new heatmap to do so.
+  - Test some way of defining `hm_cell_size` using ‘snpc’ units to
+    maintain square cells, while keeping point size consistent? E.g.
+    point size could use some multiple of the max cell size.
+
+## 20aug2026
+
+- [`prepare_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md)
+  support `rotate_heatmap=TRUE` for GP heatmap, update validation
+  method, etc.
+
+- GenePathHeatmap, display
+  [`ClusterLabels()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  somehow.
+
+  - Consider “flip axis” view?
+
+- GenePathHeatmap, options for enrichment P-value
+
+  - Straight P-value color using “Reds”
+  - Color by enrichDirection
+
+- GenePathHeatmap and EnrichmentHeatmap should display ‘topEnrichN’.
+
+- Convnience function: Take `enrichResult@result`, make it pretty: Run
+  `fixSetNames()` on ‘Description’. Put all ’geneID\*’ columns last.
+  Create attribute ‘colWidths’ for kable or Excel. Create attribute
+  ‘color_list’ with colors.
+
+- Convenience function: color_list for enrichResult.
+
+- Convenience function: color gradient function for P-values, which
+  applies a P-value cutoff. Bonus points: Make it work with signed
+  P-values.
+
+- Consider novel GenePathHeatmap clustering options.
+
+  - One cluster is often “miscellaneous” and not well-defined.
+  - Consider scoring clusters by cohesiveness.
+  - Consider methods to use clusters above cohesiveness threshold.
+  - Consider splitting “miscellaneous” clusters above N.
+
+## 10jul2026
+
+- DONE. Add [`c()`](https://rdrr.io/r/base/c.html) to combine two or
+  more Mem objects. Genes and sets are unioned (jamba::mixedSort),
+  matrices expanded with appropriate fill values (0 for numeric, NA for
+  p-values/colors). Overlapping enrichment names raise an error. First
+  object’s metadata (thresholds, headers) is used. 18 unit tests in
+  test-Mem-combine.R.
+- Add `EnrichmentMap()` method for `Mem` and `MemPlotFolio` classes,
+  update
+  [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  params with common options, notably ‘overlap’.
+
+## 26jun2026
+
+- Pass more arguments through
+  [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  to internal functions.
+
+- ‘coloredrectangle’ vertex shape
+
+  - Consider enforcing local ljoin=‘mitre’ to avoid rounded corners
+    leaving tiny gaps.
+  - When coloredrect.border is NA, use coloredrect.color, also to avoid
+    tiny gaps in rounding errors. Visible when one cell has border and
+    the others do not.
+
+- Fix
+  [`subgraph_jam()`](https://jmw86069.github.io/multienrichjam/reference/subgraph_jam.md)
+  when input `v` is out of order, it does not keep layout in order.
+
+- Consider LollipopPlot() or something similar?
+
+  - x-axis by significance, odds ratio, number of genes, etc.
+
+- [`subset_igraph_components()`](https://jmw86069.github.io/multienrichjam/reference/subset_igraph_components.md)
+
+  - Consider new argument ‘containing’ with node name of component(s) to
+    keep.
+
+## 26may2026
+
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+
+  - ‘CnetCluster’ should use cluster labels as plot title by default.
+  - Add option to re-color labels white, when using shadowText.
+  - Add `repulse` and relayout options to Cnet\* methods.
+  - DONE. Make sure
+    [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+    passes all params to ‘EnrichmentMap’ such as ‘node_factor’ or other
+    igraph options.
+
+- `EnrichmentMap()`
+
+  - store the overlap threshold somewhere, potentially use as figure
+    caption.
+  - Make border colors more similar to what is shown in
+    ‘EnrichmentHeatmap’. Ideally it should use the same logic, which
+    implies it should also display the 2D color legend.
+
+- [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+
+  - Rename ‘z-score’ to ‘direction’ in the 2D color legend.
+  - Add option to display ‘enrichIMdirection’ as top annotation, same as
+    ‘geneIMdirection’ used as row annotation. Include option to show
+    both, choose one or neither.
+
+- Consider option to store enrichIMrank, representing the “top N” number
+  for each enrichment. Addresses “Why is this pathway being shown?”
+
+- Evaluate option to flip the border/fill color? Node fill by direction,
+  node border by enrichment?
+
+- Make `EnrichmentMap()` exportable method/function.
+
+- Add convenient method to apply GSEA direction/score to
+  geneIMdirection. For example logFC-ranked data would apply logFC;
+  signedP-ranked data would apply signedP; t-statistic-ranked would
+  apply t-statistic. Multiply by existing geneIM values.
+
+- Add method to store and use
+  [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
+  output in `Mem` and `MemPlotFolio` objects, to keep original term and
+  custom label distinct.
+
 ## 21may2026
 
+- Consider Cnet/Emap info legend similar to GenePathHeatmap? number of
+  genes/sets, layout details?, cluster methods (if Mpf)
+- Add option in
+  [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md)
+  and `EnrichmentMap()` to define edge labels by gene count or weight.
+- Optimize edge bundling, feels like more could be vectorized.
 - Add tests for steps in the vignettes, including input enrichment with
   directionColname in one file, but not the other.
 - Test interactive
   [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   with InteractiveComplexHeatmap.
+- Low prio: Consider better
+  [`mem_legend()`](https://jmw86069.github.io/multienrichjam/reference/mem_legend.md)
+  for multi-column legend, spacing is identical per column which makes
+  it wider than necessary.
 
 ## 19may2026
 
@@ -451,8 +861,8 @@
 
   - Add argument with ‘method’, then add methods.
   - Add IPA z-score: `(N_agree - N_disagree) / sqrt(N)`
-  - Review previous, and find its source:  
-    `dscore <- (N_agree - N_disagree) / N`  
+  - Review previous, and find its source:\
+    `dscore <- (N_agree - N_disagree) / N`\
     `log2(1.2 + abs(dscore)) * sign(dscore)`
 
 - `plot_cnet_heatmaps()`, `CnetHeatmaps()`
@@ -580,7 +990,7 @@
 
     - Accept optional `MemPlotFolio` input, to re-use identical
       settings.
-    - consider new `PrepareFolio()` with `do_plot=FALSE`?  
+    - consider new `PrepareFolio()` with `do_plot=FALSE`?\
       Workflow:
       [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md)
       `PrepareFolio()` individual plots:
@@ -1695,7 +2105,7 @@
     convenient use with
     [`ComplexHeatmap::Heatmap()`](https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html)
     via
-    [`jamses::heatmap_se()`](https://rdrr.io/pkg/jamses/man/heatmap_se.html).
+    [`jamses::heatmap_se()`](https://jmw86069.github.io/jamses/reference/heatmap_se.html).
   - returns `mem` object.
 
 - Update
@@ -1708,13 +2118,13 @@
     plot output.
 
   - consider using
-    [`jamses::heatmap_se()`](https://rdrr.io/pkg/jamses/man/heatmap_se.html)
+    [`jamses::heatmap_se()`](https://jmw86069.github.io/jamses/reference/heatmap_se.html)
     for heatmap functions
 
     - it adds `jamses` as dependency, along with its dependencies
     - it puts pressure to refactor the jamses contrast stats code
     - should
-      [`jamses::heatmap_se()`](https://rdrr.io/pkg/jamses/man/heatmap_se.html)
+      [`jamses::heatmap_se()`](https://jmw86069.github.io/jamses/reference/heatmap_se.html)
       be moved to new package focused only on SummarizedExperiment
       heatmaps?
     - See Bioconductor package `sechm` which is much less capable, but
@@ -1736,7 +2146,7 @@
 - Consider new R package for SummarizedExperiment heatmaps
 
   - move
-    [`jamses::heatmap_se()`](https://rdrr.io/pkg/jamses/man/heatmap_se.html)
+    [`jamses::heatmap_se()`](https://jmw86069.github.io/jamses/reference/heatmap_se.html)
     into this package
   - move
     [`platjam::design2colors()`](https://rdrr.io/pkg/platjam/man/design2colors.html)
@@ -1842,7 +2252,6 @@
 
     &nbsp;
 
-
         * ```
         gsub_vertex(g,
            subset_attr="nodeType",
@@ -1850,7 +2259,7 @@
            pattern="^(WP|KEGG|BIOCARTA|GO|REACTOME)_",
            replacement="")
 
-    -  gsub_vertex(g,
+    -      gsub_vertex(g,
            subset_attr_l=list(nodeType=c("Set")),
            pattern="^(WP|KEGG|BIOCARTA|GO|REACTOME)_",
            replacement="")

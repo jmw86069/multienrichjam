@@ -15,8 +15,10 @@ enrichDF2enrichResult(
   geneHits = "geneHits",
   geneRatioColname = c("GeneRatio", "^Ratio"),
   geneDelim = "[,/ ]+",
-  geneSep = ",",
-  pvalueColname = c("P.Value", "Pvalue", "FDR", "adj.P.Val"),
+  geneSep = "/",
+  pvalueColname = c("P.Value", "Pvalue", "Pval", "FDR", "adj.P.Val"),
+  padjustColname = c("p.adjust", "p.adjusted", "padjust", "adjp", "adj.P.Val", "FDR"),
+  qvalueColname = c("Q.Value", "Qvalue", "qval", "FDR"),
   descriptionColname = c("Description", "Name", "Pathway", "ID"),
   readable = NULL,
   msigdbGmtT = NULL,
@@ -45,29 +47,30 @@ enrichDF2enrichResult(
 
 - keyColname:
 
-  `character` value of the `colname(enrichDF)` containing the unique row
-  identifier. It can be a pathway_ID or any uniquely identifying value.
+  `character` value of the `colnames(enrichDF)` containing the unique
+  row identifier. It can be a pathway_ID or any uniquely identifying
+  value.
 
 - pathGenes:
 
-  `character` or value of the `colname(enrichDF)` containing the number
+  `character` or value of the `colnames(enrichDF)` containing the number
   of genes in each pathway. This value will be derived from
   `geneRatioColname` if needed.
 
 - geneColname:
 
-  `character` value of the `colname(enrichDF)` containing delimiited
+  `character` value of the `colnames(enrichDF)` containing delimiited
   genes in each pathway.
 
 - geneHits:
 
-  `character` value of the `colname(enrichDF)` containing the integer
+  `character` value of the `colnames(enrichDF)` containing the integer
   count of the gene hits in each pathway. This value will be derived
   from `geneRatioColname` if needed.
 
 - geneRatioColname:
 
-  `character` value of the `colname(enrichDF)` containing the character
+  `character` value of the `colnames(enrichDF)` containing the character
   ratio of gene hits to pathway size, in format "50/100". This value is
   used when either `"pathGenes"` or `"geneHits"` are not supplied.
 
@@ -76,10 +79,32 @@ enrichDF2enrichResult(
   `character` regular expression pattern used to separate genes in the
   `pathGenes` column into a vector of character values.
 
-- pvalueColname:
+- geneSep:
 
-  `character` value of the `colname(enrichDF)` containing enrichment
-  P-values to use in downstream processing.
+  `character` string with separator to use for output genes. Only `'/'`
+  is supported for most `enrichResult` methods.
+
+- pvalueColname, padjustColname, qvalueColname:
+
+  `character` vector to search `colnames(enrichDF)`, with enrichment
+  P-value, adjusted P-value, and Q-value, respectively.
+
+  - The P-value is stored in 'pvalue' in the output object, to match
+    `enrichResult` convention.
+
+  - When there is no adjusted P-value column matched, by default it uses
+    the P-value without change, since some downstream methods require
+    'p.adjust' exists.
+
+  - When there is no Q-value column matched, by default it uses the
+    adjusted P-value column value 'p.adjust' without change. Note that
+    the 'p.adjust' may also contain the value from 'pvalue' as described
+    above.
+
+- descriptionColname:
+
+  `character` vector to search `colnames(enrichDF)`, for pathway or gene
+  set description.
 
 - readable:
 
@@ -88,7 +113,7 @@ enrichDF2enrichResult(
 
 - msigdbGmtT:
 
-  optional GmtT object (not currently implemented)
+  optional 'GmtT' object (not currently implemented)
 
 - verbose:
 
@@ -100,14 +125,17 @@ enrichDF2enrichResult(
 
 ## Value
 
-`DOSE::enrichResult-class` object.
+`enrichResult` object.
 
 ## Details
 
 This function takes a `data.frame` containing gene set enrichment
-results, and converts it to a proper 'enrichResult' object defined in
-`DOSE::enrichResult-class`. This object is supported by other functions
-in the `clusterProfiler` suite of tools.
+results, and converts it to a proper
+``` enrichResult`` object defined in  ```DOSE`for R-4.5 and older, or`enrichit\`
+for R-4.6 and newer.
+
+This object is supported by other functions in the `clusterProfiler`
+suite of tools.
 
 ## See also
 

@@ -2,13 +2,12 @@
 
 ``` r
 
-library(multienrichjam);
-#> 
-library(jamba);
-library(colorjam);
-suppressPackageStartupMessages(library(igraph));
-suppressPackageStartupMessages(library(ComplexHeatmap));
-options("stringsAsFactors"=FALSE, "warn"=-1);
+library(multienrichjam)
+library(jamba)
+library(colorjam)
+suppressPackageStartupMessages(library(igraph))
+suppressPackageStartupMessages(library(ComplexHeatmap))
+options("warn" = -1)
 ```
 
 ## Import Ingenuity IPA data
@@ -42,10 +41,12 @@ It works the same when importing Excel `.xlsx` format.
 
 ``` r
 
-newborn_txt <- system.file("extdata",
+newborn_txt <- system.file(
+   "extdata",
    "Newborns-IPA.txt",
-   package="multienrichjam");
-newborn_dfl <- importIPAenrichment(newborn_txt);
+   package = "multienrichjam"
+)
+newborn_dfl <- importIPAenrichment(newborn_txt)
 ```
 
 The result is a `list`, named by the IPA analysis. Each element contains
@@ -55,7 +56,7 @@ results, with number of rows and columns, created with
 
 ``` r
 
-sdim(newborn_dfl);
+sdim(newborn_dfl)
 #>                            rows cols      class
 #> Canonical Pathways          113    8 data.frame
 #> Upstream Regulators         117    7 data.frame
@@ -72,17 +73,20 @@ import multiple IPA files.
 
 ``` r
 
-newborn_txt <- system.file("extdata",
+newborn_txt <- system.file(
+   "extdata",
    "Newborns-IPA.txt",
-   package="multienrichjam");
-olderchildren_txt <- system.file("extdata",
+   package = "multienrichjam"
+)
+olderchildren_txt <- system.file(
+   "extdata",
    "OlderChildren-IPA.txt",
-   package="multienrichjam");
+   package = "multienrichjam"
+)
 
-ipa_files <- c(Newborns=newborn_txt,
-   OlderChildren=olderchildren_txt)
+ipa_files <- c(Newborns = newborn_txt, OlderChildren = olderchildren_txt)
 
-ipa_l <- lapply(ipa_files, importIPAenrichment);
+ipa_l <- lapply(ipa_files, importIPAenrichment)
 ```
 
 A summary of the list of lists is shown below, using
@@ -90,7 +94,7 @@ A summary of the list of lists is shown below, using
 
 ``` r
 
-ssdim(ipa_l);
+ssdim(ipa_l)
 #> $Newborns
 #>                            rows cols      class
 #> Canonical Pathways          113    8 data.frame
@@ -142,10 +146,10 @@ Extract ‘Canonical Pathways’ from each IPA result:
 ``` r
 
 ## Take only the Ingenuity Canonical Pathways
-enrichList_canonical <- lapply(ipa_l, function(i){
-   i[["Canonical Pathways"]];
-});
-sdim(enrichList_canonical);
+enrichList_canonical <- lapply(ipa_l, function(i) {
+   i[["Canonical Pathways"]]
+})
+sdim(enrichList_canonical)
 #>               rows cols      class
 #> Newborns       113    8 data.frame
 #> OlderChildren  237    8 data.frame
@@ -164,35 +168,40 @@ This option may be useful to review the conversion.
 
 ## Convert data.frame to enrichResult
 ## multienrichjam::enrichDF2enrichResult
-er_canonical <- lapply(enrichList_canonical, function(i){
-   enrichDF2enrichResult(i,
-      keyColname="Name",
-      pvalueColname="P-value",
-      geneColname="geneNames",
-      geneRatioColname="Ratio",
-      pvalueCutoff=1)
-});
-sdim(er_canonical);
-#>               rows cols        class
-#> Newborns       113   12 enrichResult
-#> OlderChildren  237   12 enrichResult
+er_canonical <- lapply(enrichList_canonical, function(i) {
+   enrichDF2enrichResult(
+      i,
+      keyColname = "Name",
+      pvalueColname = "P-value",
+      geneColname = "geneNames",
+      geneRatioColname = "Ratio",
+      pvalueCutoff = 1
+   )
+})
+sdim(er_canonical)
+#>               rows        class
+#> Newborns         1 enrichResult
+#> OlderChildren    1 enrichResult
 kable_coloring(
-   head(as.data.frame(er_canonical[[1]])),
-   caption="Top 10 rows of enrichment data",
-   row.names=FALSE) %>%
-   kableExtra::column_spec(column=seq_len(ncol(er_canonical[[1]])),
-      border_left="1px solid #DDDDDD",
-      extra_css="white-space: nowrap;")
+   head(er_canonical[[1]]@result),
+   caption = "Top 10 rows of enrichment data",
+   row.names = FALSE
+) %>%
+   kableExtra::column_spec(
+      column = seq_len(ncol(er_canonical[[1]]@result)),
+      border_left = "1px solid #DDDDDD",
+      extra_css = "white-space: nowrap;"
+   )
 ```
 
-| ID | Ingenuity Canonical Pathways | -log(p-value) | zScore | GeneRatio | geneID | pvalue | geneNames.ipa | Description | p.adjust | Count | setSize |
-|:---|:---|---:|---:|---:|:---|---:|:---|:---|---:|---:|---:|
-| Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis | Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis | 0.405 | NaN | 0.00321 | TNFSF13B | 0.3935501 | TNFSF13B | Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis | 0.3935501 | 1 | 312 |
-| Neuroinflammation Signaling Pathway | Neuroinflammation Signaling Pathway | 0.406 | NaN | 0.00322 | CASP8 | 0.3926449 | CASP8 | Neuroinflammation Signaling Pathway | 0.3926449 | 1 | 311 |
-| Sirtuin Signaling Pathway | Sirtuin Signaling Pathway | 0.428 | NaN | 0.00344 | HIST1H1D | 0.3732502 | HIST1H1D | Sirtuin Signaling Pathway | 0.3732502 | 1 | 291 |
-| G-Protein Coupled Receptor Signaling | G-Protein Coupled Receptor Signaling | 0.447 | NaN | 0.00362 | PRKAR2B | 0.3572728 | PRKAR2B | G-Protein Coupled Receptor Signaling | 0.3572728 | 1 | 276 |
-| Protein Ubiquitination Pathway | Protein Ubiquitination Pathway | 0.461 | NaN | 0.00377 | TAP2 | 0.3459394 | TAP2 | Protein Ubiquitination Pathway | 0.3459394 | 1 | 265 |
-| Signaling by Rho Family GTPases | Signaling by Rho Family GTPases | 0.478 | NaN | 0.00397 | RDX | 0.3326596 | RDX | Signaling by Rho Family GTPases | 0.3326596 | 1 | 252 |
+| ID | Ingenuity Canonical Pathways | -log(p-value) | zScore | GeneRatio | geneID | pvalue | geneNames.ipa | Description | p.adjust | qvalue | Count | setSize |
+|:---|:---|---:|---:|---:|:---|---:|:---|:---|---:|---:|---:|---:|
+| Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis | Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis | 0.405 | NaN | 0.00321 | TNFSF13B | 0.3935501 | TNFSF13B | Role of Macrophages, Fibroblasts and Endothelial Cells in Rheumatoid Arthritis | 0.3935501 | 0.3935501 | 1 | 312 |
+| Neuroinflammation Signaling Pathway | Neuroinflammation Signaling Pathway | 0.406 | NaN | 0.00322 | CASP8 | 0.3926449 | CASP8 | Neuroinflammation Signaling Pathway | 0.3926449 | 0.3926449 | 1 | 311 |
+| Sirtuin Signaling Pathway | Sirtuin Signaling Pathway | 0.428 | NaN | 0.00344 | HIST1H1D | 0.3732502 | HIST1H1D | Sirtuin Signaling Pathway | 0.3732502 | 0.3732502 | 1 | 291 |
+| G-Protein Coupled Receptor Signaling | G-Protein Coupled Receptor Signaling | 0.447 | NaN | 0.00362 | PRKAR2B | 0.3572728 | PRKAR2B | G-Protein Coupled Receptor Signaling | 0.3572728 | 0.3572728 | 1 | 276 |
+| Protein Ubiquitination Pathway | Protein Ubiquitination Pathway | 0.461 | NaN | 0.00377 | TAP2 | 0.3459394 | TAP2 | Protein Ubiquitination Pathway | 0.3459394 | 0.3459394 | 1 | 265 |
+| Signaling by Rho Family GTPases | Signaling by Rho Family GTPases | 0.478 | NaN | 0.00397 | RDX | 0.3326596 | RDX | Signaling by Rho Family GTPases | 0.3326596 | 0.3326596 | 1 | 252 |
 
 Top 10 rows of enrichment data {.table .table
 style="margin-left: auto; margin-right: auto;"}
@@ -204,10 +213,12 @@ Now given a list of `data.frame` results, we can run
 
 ``` r
 
-mem_canonical <- multiEnrichMap(er_canonical,
-   enrichBaseline=1,
-   p_cutoff=0.05,
-   topEnrichN=10)
+mem_canonical <- multiEnrichMap(
+   er_canonical,
+   enrichBaseline = 1,
+   p_cutoff = 0.05,
+   topEnrichN = 10
+)
 ```
 
 Output is a `list` containing summary results.
@@ -216,10 +227,13 @@ Output is a `list` containing summary results.
 
 kable_coloring(
    sdim(mem_canonical),
-   caption="sdim(mem_canonical)") %>%
-   kableExtra::column_spec(column=seq_len(4),
-      border_left="1px solid #DDDDDD",
-      extra_css="white-space: nowrap;")
+   caption = "sdim(mem_canonical)"
+) %>%
+   kableExtra::column_spec(
+      column = seq_len(4),
+      border_left = "1px solid #DDDDDD",
+      extra_css = "white-space: nowrap;"
+   )
 ```
 
 |                       | rows | cols | class        | class_v2 |
@@ -232,8 +246,8 @@ kable_coloring(
 | memIM                 |   22 | 11   | matrix       | array    |
 | geneIM                |   22 | 2    | matrix       | array    |
 | enrichIM              |   11 | 2    | matrix       | array    |
-| multiEnrichDF         |   11 | 11   | data.frame   | NA       |
-| multiEnrichResult     |   11 | 13   | enrichResult | NA       |
+| multiEnrichDF         |   11 | 12   | data.frame   | NA       |
+| multiEnrichResult     |    1 |      | enrichResult | NA       |
 | thresholds            |    6 |      | list         | NA       |
 | headers               |    9 |      | list         | NA       |
 | enrichIMcolors        |   11 | 2    | matrix       | array    |
@@ -275,16 +289,19 @@ The example below shows the first four plots from
 
 ``` r
 
-Mpf <- mem_plot_folio(mem_canonical,
-   pathway_column_split=4,
-   column_cex=0.4, row_cex=0.4,
-   row_names_max_width=grid::unit(9, "cm"),
-   column_names_max_height=grid::unit(4, "cm"),
-   node_factor=2.5,
-   label_factor_l=list(nodeType=c(Set=0.7, Gene=1.5)),
-   use_shadowText=TRUE,
-   do_which=c(1, 2, 3, 4),
-   main="Canonical Pathways");
+Mpf <- mem_plot_folio(
+   mem_canonical,
+   pathway_column_split = 4,
+   column_cex = 0.4,
+   row_cex = 0.4,
+   row_names_max_width = grid::unit(9, "cm"),
+   column_names_max_height = grid::unit(4, "cm"),
+   node_factor = 2.5,
+   label_factor_l = list(nodeType = c(Set = 0.7, Gene = 1.5)),
+   use_shadowText = TRUE,
+   do_which = c(1, 2, 3, 4),
+   main = "Canonical Pathways"
+)
 ```
 
 ![Mem plot folio showing the first four
@@ -316,15 +333,16 @@ for custom plotting options.
 ``` r
 
 # generate the data
-Mpf4 <- prepare_folio(mem_canonical,
-   do_which=c(4))
+Mpf4 <- prepare_folio(mem_canonical, do_which = c(4))
 
 # extract the cnet
-cnet <- CnetCollapsed(Mpf4,
-   type="set",
-   node_factor=2,
-   use_shadowText=TRUE,
-   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+cnet <- CnetCollapsed(
+   Mpf4,
+   type = "set",
+   node_factor = 2,
+   use_shadowText = TRUE,
+   label_factor_l = list(nodeType = c(Gene = 2, Set = 1))
+)
 ```
 
 ![Cnet collapsed network extracted from mem_plot_folio() to use for
@@ -332,7 +350,7 @@ custom figures.](importIPA_files/figure-html/cnet-collapsed-1.png)
 
 ``` r
 
-   
+
 ## jam_graph()
 # jam_igraph(cnet)
 ```
@@ -351,7 +369,7 @@ internal function
 
 ``` r
 
-EnrichmentHeatmap(Mpf);
+EnrichmentHeatmap(Mpf)
 ```
 
 ![Enrichment heatmap shown using the MemPlotFolio object as
@@ -361,8 +379,7 @@ Note that the Mem object can be plotted directly as follows:
 
 ``` r
 
-mem_enrichment_heatmap(mem_canonical,
-   p_cutoff=0.05);
+mem_enrichment_heatmap(mem_canonical, p_cutoff = 0.05)
 ```
 
 ![Enrichment heatmap shown as a dotplot to indicate the number of genes
@@ -372,9 +389,7 @@ The same data can be plotted as a heatmap.
 
 ``` r
 
-mem_enrichment_heatmap(mem_canonical,
-   style="heatmap",
-   p_cutoff=0.05);
+mem_enrichment_heatmap(mem_canonical, style = "heatmap", p_cutoff = 0.05)
 ```
 
 ![Enrichment heatmap showing the heatmap style, without dot
@@ -386,9 +401,11 @@ column, using `colorV` colors defined in from
 
 ``` r
 
-memhm <- mem_enrichment_heatmap(mem_canonical,
-   style="heatmap",
-   color_by_column=TRUE);
+memhm <- mem_enrichment_heatmap(
+   mem_canonical,
+   style = "heatmap",
+   color_by_column = TRUE
+)
 ```
 
 ![Enrichment heatmap, colorized by column, showing an alternative
@@ -418,7 +435,7 @@ internal function
 
 ``` r
 
-hm_drawn <- GenePathHeatmap(Mpf);
+hm_drawn <- GenePathHeatmap(Mpf)
 ```
 
 ![Gene-pathway heatmap drawn specifically with
@@ -434,8 +451,8 @@ for example.
 
 ``` r
 
-hm_sets <- heatmap_column_order(hm_drawn);
-hm_sets;
+hm_sets <- heatmap_column_order(hm_drawn)
+hm_sets
 #> $A
 #>   Gluconeogenesis I        Glycolysis I 
 #> "Gluconeogenesis I"      "Glycolysis I" 
@@ -468,12 +485,14 @@ relevant.
 
 cnet <- mem2cnet(mem_canonical)
 
-withr::with_par(list(mar=c(1, 1, 1, 1)+0.1), {
-   jam_igraph(cnet,
-      use_shadowText=TRUE,
-      node_factor=0.5,
-      vertex.label.cex=0.6);
-   mem_legend(mem_canonical);
+withr::with_par(list(mar = c(1, 1, 1, 1) + 0.1), {
+   jam_igraph(
+      cnet,
+      use_shadowText = TRUE,
+      node_factor = 0.5,
+      vertex.label.cex = 0.6
+   )
+   mem_legend(mem_canonical)
 })
 ```
 
@@ -484,12 +503,14 @@ Extract the largest connected subnetwork.
 
 ``` r
 
-cnet_largest_sub <- subset_igraph_components(cnet, keep=1)
+cnet_largest_sub <- subset_igraph_components(cnet, keep = 1)
 
-jam_igraph(cnet_largest_sub,
-   use_shadowText=TRUE,
-   label_factor=0.5,
-   node_factor=0.5);
+jam_igraph(
+   cnet_largest_sub,
+   use_shadowText = TRUE,
+   label_factor = 0.5,
+   node_factor = 0.5
+)
 ```
 
 ![Cnet plot showing the largest connected
@@ -503,15 +524,19 @@ using `hm_sets` defined above.
 
 ``` r
 
-cnet_sub <- subsetCnetIgraph(cnet,
-   repulse=3.5,
-   includeSets=unlist(hm_sets[c("A")]));
-jam_igraph(cnet_sub,
-   node_factor=1,
-   use_shadowText=TRUE,
-   label_dist_factor=3,
-   label_factor=1.3);
-mem_legend(mem_canonical);
+cnet_sub <- subsetCnetIgraph(
+   cnet,
+   repulse = 3.5,
+   includeSets = unlist(hm_sets[c("A")])
+)
+jam_igraph(
+   cnet_sub,
+   node_factor = 1,
+   use_shadowText = TRUE,
+   label_dist_factor = 3,
+   label_factor = 1.3
+)
+mem_legend(mem_canonical)
 ```
 
 ![Cnet plot showing a specific Cnet
@@ -539,14 +564,14 @@ Other useful defaults:
 
 ``` r
 
-cnet3 <- multienrichjam::subsetCnetIgraph(cnet,
-   repulse=5,
-   minSetDegree=6,
-   minGeneDegree=1);
-jam_igraph(cnet3,
-   node_factor=0.7,
-   use_shadowText=TRUE);
-mem_legend(mem_canonical);
+cnet3 <- multienrichjam::subsetCnetIgraph(
+   cnet,
+   repulse = 5,
+   minSetDegree = 6,
+   minGeneDegree = 1
+)
+jam_igraph(cnet3, node_factor = 0.7, use_shadowText = TRUE)
+mem_legend(mem_canonical)
 ```
 
 ![Subset Cnet plot using a specific set of
@@ -566,10 +591,8 @@ The default `0.2` is stored in the ‘Mem’ object `mem_canonical`.
 
 emap <- mem2emap(mem_canonical)
 
-jam_igraph(emap,
-   node_factor=2,
-   use_shadowText=TRUE)
-title(main="overlap=0.2")
+jam_igraph(emap, node_factor = 2, use_shadowText = TRUE)
+title(main = "overlap=0.2")
 ```
 
 ![Multi-enrichment network creating using mem2emap(), using the default
@@ -585,15 +608,12 @@ solid starting point for future adjustments.
 
 ``` r
 
-use_overlap <- mem_find_overlap(mem_canonical);
+use_overlap <- mem_find_overlap(mem_canonical)
 
-emap2 <- mem2emap(mem_canonical,
-   overlap=use_overlap)
+emap2 <- mem2emap(mem_canonical, overlap = use_overlap)
 
-jam_igraph(emap2,
-   node_factor=3,
-   use_shadowText=TRUE)
-title(main=paste0("overlap=", use_overlap))
+jam_igraph(emap2, node_factor = 3, use_shadowText = TRUE)
+title(main = paste0("overlap=", use_overlap))
 ```
 
 ![Multi-enrichment network shown after using alternative overlap
@@ -626,17 +646,13 @@ We also call two other helper functions:
 ``` r
 
 ## You can alternatively pull out any other component
-g_sub <- subset_igraph_components(emap2, keep=1);
+g_sub <- subset_igraph_components(emap2, keep = 1)
 
 ## Re-apply network layout, and remove blank colors
-g_sub <- relayout_with_qfr(repulse=3.5,
-   removeIgraphBlanks(g_sub))
+g_sub <- relayout_with_qfr(repulse = 3.5, removeIgraphBlanks(g_sub))
 
 ## Plot
-jam_igraph(g_sub,
-   node_factor=3,
-   label_factor=2,
-   use_shadowText=TRUE)
+jam_igraph(g_sub, node_factor = 3, label_factor = 2, use_shadowText = TRUE)
 ```
 
 ![Network plot showing the largest connected sub-network of the
@@ -678,12 +694,14 @@ Consider the following changes, demonstrated below:
 
 ``` r
 
-jam_igraph(cnet3,
-   node_factor=2,
-   edge_factor=2,
-   label_factor=1.2, 
-   label_dist_factor=5,
-   use_shadowText=TRUE)
+jam_igraph(
+   cnet3,
+   node_factor = 2,
+   edge_factor = 2,
+   label_factor = 1.2,
+   label_dist_factor = 5,
+   use_shadowText = TRUE
+)
 ```
 
 ![Network plot created using jam_igraph() as an enhanced alternative to
@@ -699,13 +717,15 @@ This process is performed using
 
 ``` r
 
-jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
-   edge_bundling="connections",
+jam_igraph(
+   color_edges_by_nodes(cnet3, alpha = 0.7),
+   edge_bundling = "connections",
    # edge_factor=2,
    # node_factor=2,
-   label_factor=1.2, 
-   label_dist_factor=5,
-   use_shadowText=TRUE)
+   label_factor = 1.2,
+   label_dist_factor = 5,
+   use_shadowText = TRUE
+)
 ```
 
 ![Network plot is shown using edges colorized based upon the colors for
@@ -734,7 +754,7 @@ The R-shiny app uses several functions:
 
 ``` r
 
-output_env <- launch_shinycat(g=cnet)
+output_env <- launch_shinycat(g = cnet)
 ```
 
 The output is stored in an `environment` called `output_env`.
@@ -742,7 +762,7 @@ The output is stored in an `environment` called `output_env`.
 ``` r
 
 # obtain the output data
-adj_cnet <- output_env$adj_cnet;
+adj_cnet <- output_env$adj_cnet
 ```
 
 Then the new Cnet plot can be plotted, for example:
@@ -750,10 +770,12 @@ Then the new Cnet plot can be plotted, for example:
 ``` r
 
 # jam_graph
-jam_igraph(adj_cnet,
-   node_factor=2,
-   use_shadowText=TRUE,
-   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+jam_igraph(
+   adj_cnet,
+   node_factor = 2,
+   use_shadowText = TRUE,
+   label_factor_l = list(nodeType = c(Gene = 2, Set = 1))
+)
 ```
 
 ### ShinyCat Screenshot

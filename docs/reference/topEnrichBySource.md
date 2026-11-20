@@ -16,7 +16,7 @@ topEnrichBySource(
   sortColname = NULL,
   countColname = c("gene_count", "count", "geneHits"),
   pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
-  directionColname = c("activation.z.{0,1}score", "z.{0,1}score"),
+  directionColname = c("direction", "NES", "activation.z.{0,1}score", "z.{0,1}score"),
   direction_cutoff = 0,
   newColname = "EnrichGroup",
   curateFrom = NULL,
@@ -42,7 +42,7 @@ topEnrichListBySource(
     "-Count", "-geneHits"),
   countColname = c("gene_count", "count", "geneHits"),
   pvalueColname = c("P.Value", "pvalue", "FDR", "adj.P.Val", "qvalue"),
-  directionColname = c("activation.z.{0,1}score", "NES", "direction", "z.{0,1}score"),
+  directionColname = c("direction", "NES", "activation.z.{0,1}score", "z.{0,1}score"),
   direction_cutoff = 1,
   newColname = "EnrichGroup",
   curateFrom = NULL,
@@ -241,9 +241,6 @@ that pathway should then be included for all enrichments for the purpose
 of comparative analysis.
 
 ## See also
-
-Other jam enrichment functions:
-[`add_pathway_direction()`](https://jmw86069.github.io/multienrichjam/reference/add_pathway_direction.md)
 
 Other jam enrichment functions:
 [`add_pathway_direction()`](https://jmw86069.github.io/multienrichjam/reference/add_pathway_direction.md)

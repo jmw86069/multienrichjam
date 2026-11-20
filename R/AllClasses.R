@@ -1,5 +1,26 @@
 # AllClasses.R
 
+if (!methods::isClass("enrichResult")) {
+   methods::setClass("enrichResult",
+      slots = c(
+         result = "data.frame",
+         pvalueCutoff = "numeric",
+         pAdjustMethod = "character",
+         qvalueCutoff = "character",
+         organism = "character",
+         ontology = "character",
+         gene = "character",
+         keytype = "character",
+         universe = "character",
+         gene2Symbol = "character",
+         geneSets = "list",
+         readable = "logical",
+         termsim = "matrix",
+         method = "character",
+         dr = "list"
+      )
+   )
+}
 
 #' Check Mem object
 #'

@@ -186,4 +186,9 @@ different gene products:\tabular{llll}{
 \references{
 Subramanian, Tamayo, et al. PNAS 2005, https://www.pnas.org/content/102/43/15545
 }
-\keyword{internal}
+\seealso{
+Other jam enrich functions:
+\code{\link[=jam_enricher]{jam_enricher()}},
+\code{\link[=process_genedata]{process_genedata()}}
+}
+\concept{jam enrich functions}

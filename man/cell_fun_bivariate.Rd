@@ -145,14 +145,7 @@ colnames(m) <- LETTERS[1:4]
 rownames(m) <- letters[1:9]
 m2 <- m;
 m2[] <- abs(rnorm(36)*3);
-mcolor <- matrix(ncol=3,
-   c("white", "white", "white",
-   "royalblue4", "gold", "red"),
-   byrow=TRUE);
-col_bivariate <- colorRamp2D(
-   column_breaks=seq(from=-2, to=2, length.out=3),
-   row_breaks=seq(from=0, to=5, length.out=2),
-   mcolor);
+col_bivariate <- col_pvdir_xf(p_cutoff=0.05, direction_cutoff=1)
 display_colorRamp2D(col_bivariate)
 
 # the heatmap can be created in one step
@@ -174,11 +167,6 @@ lgds <- make_legend_bivariate(col_bivariate,
    ylab="-log10pvalue",
    xlab="z-score");
 ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
-
-lgds2 <- make_legend_bivariate(col_bivariate,
-   row_breaks=seq(from=0, to=2, by=0.25),
-   ylab="-log10pvalue");
-ComplexHeatmap::draw(hm, annotation_legend_list=lgds2)
 
 # heatmap using point circles
 ctmax <- 6;

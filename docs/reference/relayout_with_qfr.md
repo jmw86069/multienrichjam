@@ -26,17 +26,46 @@ relayout_with_qfr(
 
 - repulse:
 
-  exponent power used to scale the radius effect around each vertex. The
-  default is slightly higher than the cube of the number of vertices,
-  but as the number of vertices increases, values from 3.5 to 4 and
-  higher are more effective for layout.
+  `numeric` exponent power used to scale the radius effect around each
+  vertex. The default is slightly higher than the cube of the number of
+  vertices, but as the number of vertices increases, values from 3.5 to
+  4 and higher are more effective for layout.
 
 - spread_labels:
 
-  logical indicating whether to call
+  `logical` indicating whether to call
   [`spread_igraph_labels()`](https://jmw86069.github.io/multienrichjam/reference/spread_igraph_labels.md),
   which places node labels at an angle offset from the node, in order to
   improve default label positions.
+
+- seed:
+
+  `numeric` to set consistent random seed.
+
+- init:
+
+  optional `numeric` matrix with initial positions. Default NULL will
+  use existing layout coordinates if defined, otherwise it uses NULL.
+
+- constrain:
+
+  `character` optional vector of node names that should be constrained.
+  This argument is a convenient shortcut for defining `constraints`,
+  which is a layout coordinate matrix with `NA` values on each row where
+  the coordinate is free to move, and `numeric` values where the
+  coordinate is fixed. For graph `g` that contains layout in
+  `igraph::graph_attr(g, "layout")`, the `init` can be defined with this
+  layout, then `constraints` is defined using `constrain`.
+
+- constraints:
+
+  optional two-column matrix with the coordinates of nodes which should
+  not be modified, and NA values for nodes where the position can be
+  modified.
+
+- verbose:
+
+  `logical` whether to print verbose output.
 
 - ...:
 

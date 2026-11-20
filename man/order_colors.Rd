@@ -14,6 +14,9 @@ passed as argument 'byCols' to \code{colorjam::sort_colors()}.}
 
 \item{...}{additional arguments are passed to \code{colorjam::sort_colors()}.}
 }
+\value{
+\code{integer} index of colors in order
+}
 \description{
 Order colors
 }

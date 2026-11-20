@@ -11,6 +11,7 @@ display_colorRamp2D(
   xlab = "",
   ylab = "",
   main = "",
+  verbose = FALSE,
   ...
 )
 ```
@@ -33,16 +34,30 @@ display_colorRamp2D(
   `character` strings passed to
   [`title()`](https://rdrr.io/r/graphics/title.html).
 
+- verbose:
+
+  `logical` whether to print verbose output.
+
 - ...:
 
   additional arguments are passed to
   [`title()`](https://rdrr.io/r/graphics/title.html).
+
+## Value
+
+`matrix` with `character` R colors, invisibly.
 
 ## Details
 
 This function provides a very rudimentary method for displaying a
 bivariate 2-D color matrix out from
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md).
+
+### Todo
+
+- Use optional attributes with pre-determined breaks and labels, useful
+  when cutoffs (floors) were defined. In this case, `pretty.n` would
+  likely be ignored, in favor of using label positions already in place.
 
 ## See also
 
@@ -51,6 +66,7 @@ Other jam utility functions:
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),

@@ -3,7 +3,6 @@
 ``` r
 
 library(multienrichjam)
-#> 
 ```
 
 ## Where is the Multi Enrichment Map?

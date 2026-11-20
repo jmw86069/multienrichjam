@@ -23,6 +23,10 @@ removeIgraphSinglets(g, min_degree = 1, ...)
 
   additional arguments are ignored.
 
+## Value
+
+`igraph` with singlet (disconnected) nodes removed.
+
 ## Details
 
 This function is a lightweight method to remove igraph nodes with no

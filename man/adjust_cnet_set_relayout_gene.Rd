@@ -67,6 +67,7 @@ were included in \code{nodes}.
 }
 \seealso{
 Other jam cnet utilities:
+\code{\link{Cnet-methods}},
 \code{\link[=adjust_cnet_nodeset]{adjust_cnet_nodeset()}},
 \code{\link[=apply_nodeset_spacing]{apply_nodeset_spacing()}},
 \code{\link[=bulk_cnet_adjustments]{bulk_cnet_adjustments()}},

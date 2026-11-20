@@ -96,30 +96,17 @@ This function produces a \code{"Legend"} object as defined by
 \code{ComplexHeatmap::Legend()}.
 }
 \examples{
-mcolor <- matrix(ncol=3,
-   c("white", "salmon1", "firebrick3",
-      "white", "lightgoldenrod1", "gold",
-      "white", "skyblue", "dodgerblue3"));
-row_breaks <- c(0, 0.5, 5);
-column_breaks <- c(-1, 0, 1);
-rownames(mcolor) <- row_breaks;
-colnames(mcolor) <- column_breaks;
-jamba::imageByColors(mcolor);
-
-col_fun <- colorRamp2D(column_breaks=column_breaks,
-   row_breaks=row_breaks,
-   mcolor=mcolor)
 col_fun <- col_pvdir_xf(p_cutoff=0.01)
 display_colorRamp2D(col_fun)
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="direction",
-   pretty.n=c(5, 10));
+   xlab="direction");
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 
 # same as above with slightly larger grid size
 # and slightly larger font sizes
+col_fun <- col_pvdir_xf(p_cutoff=0.05, direction_cutoff=1, direction_max=3)
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
    xlab="direction",
@@ -134,17 +121,6 @@ lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
    xlab="direction",
    pretty.n=NULL);
-jamba::nullPlot(doBoxes=FALSE);
-ComplexHeatmap::draw(lgds)
-
-lgds <- make_legend_bivariate(col_fun,
-   ylab="-log10pvalue",
-   xlab="direction",
-   column_breaks=c(-1, -0.5,  0, 0.5, 1),
-   row_breaks=c(0, 0.25, 0.5, 0.75, 1),
-   column_gap=grid::unit(1, "mm"),
-   row_gap=grid::unit(1, "mm"),
-   pretty.n=c(5, 10));
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 

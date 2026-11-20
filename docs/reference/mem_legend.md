@@ -9,7 +9,7 @@ mem_legend(
   mem,
   x = "bottomleft",
   y = NULL,
-  bg = "#FFFFFF99",
+  bg = "#FFFFFF00",
   box.col = "transparent",
   title = "Color Key",
   cex = 0.8,
@@ -78,6 +78,11 @@ mem_legend(
 
   additional arguments are passed to
   [`legend()`](https://rdrr.io/r/graphics/legend.html).
+
+## Value
+
+invisible output from
+[`graphics::legend()`](https://rdrr.io/r/graphics/legend.html)
 
 ## Details
 

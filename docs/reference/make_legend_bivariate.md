@@ -7,10 +7,10 @@ Display colors from bivariate color function
 ``` r
 make_legend_bivariate(
   col_fun,
-  pretty.n = 5,
+  pretty.n = c(10, 5),
   name = "bivariate",
-  xlab = "",
-  ylab = "",
+  xlab = "Direction",
+  ylab = "-log10pvalue",
   title = "",
   border = TRUE,
   digits = 3,
@@ -19,9 +19,12 @@ make_legend_bivariate(
   grid_height = grid::unit(5, "mm"),
   grid_width = grid_height,
   row_breaks = NULL,
+  row_label = NULL,
   column_breaks = NULL,
+  column_label = NULL,
   row_gap = grid::unit(0, "mm"),
   column_gap = grid::unit(0, "mm"),
+  p_cutoff = NULL,
   ...
 )
 ```
@@ -88,6 +91,11 @@ make_legend_bivariate(
   column values displayed in the color legend. When not supplied, these
   values are defined using `pretty` and argument `pretty.n`.
 
+- row_label, column_label:
+
+  `character` vector of labels to use, should be equal to the length of
+  row_breaks,column_breaks, respectively.
+
 - row_gap, column_gap:
 
   [`grid::unit()`](https://rdrr.io/r/grid/unit.html) object to define
@@ -95,6 +103,13 @@ make_legend_bivariate(
   default, there is no gap. These arguments are provided as a convenient
   way to impose a gap, since the method used does not otherwise provide
   a reasonable way to adjust the spacing.
+
+- p_cutoff:
+
+  `numeric` optional P-value cutoff, used to add a label indicating this
+  cutoff on the legend. It is NULL by default, which makes it ignored.
+  When provided, it should be in P-value units (between 0 and 1) and
+  will be -log10 transformed.
 
 - ...:
 
@@ -119,6 +134,7 @@ Other jam utility functions:
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),
@@ -144,57 +160,34 @@ Other jam utility functions:
 ## Examples
 
 ``` r
-mcolor <- matrix(ncol=3,
-   c("white", "salmon1", "firebrick3",
-      "white", "lightgoldenrod1", "gold",
-      "white", "skyblue", "dodgerblue3"));
-row_breaks <- c(0, 0.5, 5);
-column_breaks <- c(-1, 0, 1);
-rownames(mcolor) <- row_breaks;
-colnames(mcolor) <- column_breaks;
-jamba::imageByColors(mcolor);
+col_fun <- col_pvdir_xf(p_cutoff=0.01)
+display_colorRamp2D(col_fun)
 
-
-col_fun <- colorRamp2D(column_breaks=column_breaks,
-   row_breaks=row_breaks,
-   mcolor=mcolor)
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="z-score",
-   pretty.n=5);
+   xlab="direction");
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 
 
 # same as above with slightly larger grid size
 # and slightly larger font sizes
+col_fun <- col_pvdir_xf(p_cutoff=0.05, direction_cutoff=1, direction_max=3)
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="z-score",
+   xlab="direction",
    title_fontsize=14,
    legend_fontsize=12,
    grid_height=grid::unit(7, "mm"),
-   pretty.n=5);
+   pretty.n=c(5, 10));
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 
 
 lgds <- make_legend_bivariate(col_fun,
    ylab="-log10pvalue",
-   xlab="z-score",
+   xlab="direction",
    pretty.n=NULL);
-jamba::nullPlot(doBoxes=FALSE);
-ComplexHeatmap::draw(lgds)
-
-
-lgds <- make_legend_bivariate(col_fun,
-   ylab="-log10pvalue",
-   xlab="z-score",
-   column_breaks=c(-1, -0.5,  0, 0.5, 1),
-   row_breaks=c(0, 0.25, 0.5, 0.75, 1),
-   column_gap=grid::unit(1, "mm"),
-   row_gap=grid::unit(1, "mm"),
-   pretty.n=5);
 jamba::nullPlot(doBoxes=FALSE);
 ComplexHeatmap::draw(lgds)
 

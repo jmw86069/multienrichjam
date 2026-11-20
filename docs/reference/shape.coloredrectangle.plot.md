@@ -79,6 +79,12 @@ shape coloredrectangle. The coloredrectangle shape is described as:
   width to the final node. The frame border is drawn before the node
   squares are drawn.
 
+- **New 0.0.119.900**: Each square can display a text label via
+  `coloredrect.label` and sized with `coloredrect.label.cex`. It will
+  use graph attribute 'use_shadowText' to enable
+  [`jamba::shadowText()`](https://jmw86069.github.io/jamba/reference/shadowText.html)
+  to draw the label.
+
 - The size of each square inside the rectangle is defined by `size2`,
   such that the rectangle width is `coloredrect.ncol * size2` and the
   rectangle height is `coloredrect.nrow * size2`.
@@ -158,12 +164,6 @@ Other jam igraph shapes:
 [`shape.ellipse.plot()`](https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.plot.md),
 [`shape.jampie.plot()`](https://jmw86069.github.io/multienrichjam/reference/shape.jampie.plot.md)
 
-Other jam igraph shapes:
-[`jam_mypie()`](https://jmw86069.github.io/multienrichjam/reference/jam_mypie.md),
-[`shape.ellipse.clip()`](https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.clip.md),
-[`shape.ellipse.plot()`](https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.plot.md),
-[`shape.jampie.plot()`](https://jmw86069.github.io/multienrichjam/reference/shape.jampie.plot.md)
-
 ## Examples
 
 ``` r
@@ -192,20 +192,21 @@ igraph::V(g1)$coloredrect.color <- lapply(vseq, function(i){
 })
 igraph::V(g1)$coloredrect.ncol <- c(2, 2, 2, 1, 1);
 igraph::V(g1)$coloredrect.nrow <- c(2, 1, 1, 2, 1);
-igraph::V(g1)$coloredrect.lwd <- rep(3, igraph::vcount(g1))
+igraph::V(g1)$coloredrect.lwd <- rep(4, igraph::vcount(g1))
 igraph::V(g1)$frame.width <- c(2, 1, 1, 1, 1);
 igraph::V(g1)$frame.color <- "black"
 igraph::V(g1)$size2 <- 10;
 igraph::V(g1)$shape <- "coloredrectangle";
 
-jam_igraph(g1, vertex.label="")
-#> ##  (11:03:55) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]    0.5555556    0.5555556
-#> [2,]    0.5555556    0.2777778
-#> [3,]    0.5555556    0.2777778
-#> [4,]    0.2777778    0.5555556
-#> [5,]    0.2777778    0.2777778
+igraph::V(g1)$coloredrect.label <- lapply(igraph::V(g1)$coloredrect.color,
+   function(i){
+   head(LETTERS, length(i))
+})
+igraph::V(g1)$coloredrect.label.cex <- 2;
+
+igraph::graph_attr(g1, "use_shadowText") <- TRUE;
+jam_igraph(g1, label_factor=2)
+
 title(font.main=1, line=1.5, main=paste0(
    "Each square is consistent size by vertex.size2\n"))
 title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -215,13 +216,6 @@ title(font.main=1, cex.main=1, line=0.5, main=paste0(
 
 # equalize shortest side to size2
 jam_igraph(g1, vertex.label="", vertex.coloredrect.equalize_sizes=TRUE)
-#> ##  (11:03:55) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]    0.2777778    0.2777778
-#> [2,]    0.5555556    0.2777778
-#> [3,]    0.5555556    0.2777778
-#> [4,]    0.2777778    0.5555556
-#> [5,]    0.2777778    0.2777778
 title(font.main=1, line=1.5, main=paste0(
    "The shortest side is fixed by vertex.size2\n"))
 title(font.main=1, cex.main=1, line=0.5, main=paste0(
@@ -231,13 +225,6 @@ title(font.main=1, cex.main=1, line=0.5, main=paste0(
 
 # equalize longest side to size2
 jam_igraph(g1, vertex.label="", vertex.coloredrect.equalize_sizes=2)
-#> ##  (11:03:56) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]    0.2777778    0.2777778
-#> [2,]    0.2777778    0.1388889
-#> [3,]    0.2777778    0.1388889
-#> [4,]    0.1388889    0.2777778
-#> [5,]    0.2777778    0.2777778
 title(font.main=1, line=1.5, main=paste0(
    "The longest side is fixed by vertex.size2\n"))
 title(font.main=1, cex.main=1, line=0.5, main=paste0(

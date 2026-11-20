@@ -6,6 +6,20 @@
 \usage{
 avg_angles(x, w = 1, maxAngle = 360, na.rm = TRUE, ...)
 }
+\arguments{
+\item{x}{\code{numeric} angles in degrees}
+
+\item{w}{\code{numeric} weight applied to each angle}
+
+\item{maxAngle}{\code{numeric} with maximum angle, default 360.}
+
+\item{na.rm}{\code{logical} whether to ignore NA values.}
+
+\item{...}{additional arguments are ignored.}
+}
+\value{
+\code{numeric} value with average angle in degrees
+}
 \description{
 Average geometric angles
 }

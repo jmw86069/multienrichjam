@@ -2,6 +2,7 @@
 
 #' Cnet-methods for MemPlotFolio
 #' 
+#' @family jam cnet utilities
 #' @description
 #' Methods to create Concept Network (Cnet) plots
 #' from a `MemPlotFolio` object.

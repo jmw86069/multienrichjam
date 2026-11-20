@@ -7,11 +7,12 @@ EnrichmentMap internal function
 ``` r
 internal_EnrichmentMap(
   x,
-  do_plot,
+  do_plot = TRUE,
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
-    = TRUE),
+  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4,
+    do_fixSetLabels = FALSE, do_legend = TRUE, em_group = c("default", "community",
+    "communities", "clusters", "cluster_labels", "nodegroups", "none")),
   ...
 )
 ```
@@ -69,8 +70,19 @@ internal_EnrichmentMap(
   - `'do_legend'`: `logical` default TRUE, whether to render the color
     legend.
 
-  - Other parameters will be added to the function arguments with
-    default values when implemented.
+  - `'do_fixSetLabels'`: `logical` whether to apply
+    [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
+    to adjust pathway/set nodes to be more user-friendly. Default is
+    FALSE. When TRUE it calls
+    [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
+    with `width=params$width`, and when FALSE it calls
+    [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
+    with `width=params$width` however it does no other adjustments
+    except to apply word-wrap. For pathways with underscores, it will
+    therefore not word-wrap at all, which may not be ideal.
+
+    - Other parameters will be added to the function arguments with
+      default values when implemented.
 
 - ...:
 

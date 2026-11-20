@@ -194,6 +194,7 @@ Bonus points:
 ## See also
 
 Other jam cnet utilities:
+[`Cnet-methods`](https://jmw86069.github.io/multienrichjam/reference/Cnet-methods.md),
 [`adjust_cnet_nodeset()`](https://jmw86069.github.io/multienrichjam/reference/adjust_cnet_nodeset.md),
 [`adjust_cnet_set_relayout_gene()`](https://jmw86069.github.io/multienrichjam/reference/adjust_cnet_set_relayout_gene.md),
 [`apply_nodeset_spacing()`](https://jmw86069.github.io/multienrichjam/reference/apply_nodeset_spacing.md),
@@ -215,8 +216,8 @@ jam_igraph(cnet, mark.groups=ns["SetA,SetB"], nodegroups=ns,
 
 
 cnet2 <- relayout_nodegroups(cnet, nodegroups=ns["SetA,SetB"], do_final_layout=TRUE, verbose=TRUE)
-#> ##  (11:03:42) 22May2026:   relayout_nodegroups(): Using nodegroups as supplied. 
-#> ##  (11:03:42) 22May2026:   relayout_nodegroups(): Applying to nodegroup 'SetA,SetB' with members: BH,BT,BU 
+#> (15:34:52) 20Nov2026: relayout_nodegroups(): Using nodegroups as supplied.
+#> (15:34:52) 20Nov2026: relayout_nodegroups(): Applying to nodegroup 'SetA,SetB' with members: BH,BT,BU
 jam_igraph(cnet2, mark.groups=ns["SetA,SetB"], nodegroups=ns,
    main="This nodegroup is 'encouraged' to re-group")
 

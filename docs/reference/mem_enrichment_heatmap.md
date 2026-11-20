@@ -10,6 +10,7 @@ mem_enrichment_heatmap(
   style = c("dotplot_inverted", "dotplot", "heatmap"),
   apply_direction = FALSE,
   p_cutoff = NULL,
+  color_non_hits = FALSE,
   min_count = 1,
   p_floor = 1e-10,
   point_size_factor = 1,
@@ -33,6 +34,9 @@ mem_enrichment_heatmap(
   cex.axis = 1,
   lens = 3,
   cexCellnote = 1,
+  placementCellnote = c("center", "bottomleft", "bottom", "bottomright", "right",
+    "topleft", "top", "topright", "left"),
+  fontCellnote = 2,
   column_title = NULL,
   row_names_max_width = grid::unit(300, "mm"),
   column_names_max_height = grid::unit(300, "mm"),
@@ -41,6 +45,7 @@ mem_enrichment_heatmap(
   legend_height = grid::unit(6, "cm"),
   legend_cex = 1,
   direction_cutoff = 0,
+  direction_max = 2,
   gene_count_max = NULL,
   top_annotation = NULL,
   outline = TRUE,
@@ -87,6 +92,11 @@ mem_enrichment_heatmap(
   above this threshold did not meet the threshold, instead of pathways
   with similar P-values displaying with similar color.
 
+- color_non_hits:
+
+  `logical` default FALSE, whether to colorize cells in the heatmap
+  which do not meet P-value threshold defined by `p_cutoff.`
+
 - min_count:
 
   `numeric` number of genes required for a pathway to be considered
@@ -118,6 +128,12 @@ mem_enrichment_heatmap(
   clustering. The clustering is performed by
   [`amap::hcluster()`](https://rdrr.io/pkg/amap/man/hcluster.html).
 
+- column_method:
+
+  `character` string of the distance method to use for row and column
+  clustering. The clustering is performed by
+  [`amap::hcluster()`](https://rdrr.io/pkg/amap/man/hcluster.html).
+
 - name:
 
   `character` value passed to
@@ -132,11 +148,36 @@ mem_enrichment_heatmap(
   The end result is minor reshuffling of leaf nodes on the dendrogram
   based upon mean signal in each row, which can sometimes look cleaner.
 
+- row_dend_width:
+
+  [`grid::unit`](https://rdrr.io/r/grid/unit.html) width of the row
+  dendrogram, the default is 30 mm in absolute units.
+
 - row_fontsize, column_fontsize:
 
   optional `numeric` arguments passed to
   [`ComplexHeatmap::Heatmap()`](https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html)
   to size row and column labels.
+
+- row_cex, column_cex:
+
+  `numeric` expansion factor, used to adjust font size of rows and
+  columns, respectively. Default 1. Most useful when the fontsize is not
+  specified, and it is determined by the number of rows and columns.
+
+- row_split:
+
+  `integer` number of clusters, the default NULL determines the number
+  of clusters based upon the number of rows.
+
+- row_gap:
+
+  [`grid::unit`](https://rdrr.io/r/grid/unit.html) with fixed gap size
+  used when rows are split, default is '2mm'.
+
+- cluster_rows:
+
+  `logical` default TRUE, whether to cluster rows.
 
 - cluster_columns:
 
@@ -176,6 +217,16 @@ mem_enrichment_heatmap(
   `color_by_column=TRUE`, used to adjust the P-value label size inside
   each heatmap cell.
 
+- placementCellnote:
+
+  `character` string with location to place the cell note, default
+  'center'.
+
+- fontCellnote:
+
+  `integer` with font face to use for cell notes. The default 2 uses
+  bold font face; use 1 for normal font.
+
 - column_title:
 
   optional `character` string with title to display above the heatmap.
@@ -208,6 +259,23 @@ mem_enrichment_heatmap(
   default fontsize `10`. This value is only used when
   `heatmap_legend_param` is not defined.
 
+- direction_cutoff:
+
+  `numeric` default 0, with directional score cutoff required for an
+  entry to be colorized by direction.
+
+- direction_max:
+
+  `numeric` default 2, the maximum direction score for color gradient,
+  as shown in the bivariate color legend. It is automatically set to at
+  least the `direction_cutoff`.
+
+- gene_count_max:
+
+  `integer` number of genes in the incidence matrix pathway-enrichment
+  with gene counts, stored as 'enrichIMgeneCount'. Default NULL uses the
+  highest observed value. This ceiling is used to define the max color.
+
 - top_annotation:
 
   `HeatmapAnnotation` as produced by
@@ -230,11 +298,13 @@ mem_enrichment_heatmap(
   prefix, but for multiple types, a prefix is shown for each. The
   metrics in order include:
 
-  1.  "-log10P"
+  1.  "-log10P": the `-log10(P-value)`
 
-  2.  "z-score"
+  2.  "direction": the `'direction'` score
 
-  3.  "number of genes"
+  3.  "genes": the number of genes
+
+  4.  "rank": the rank order of enrichment
 
 - use_raster:
 
@@ -258,6 +328,11 @@ mem_enrichment_heatmap(
   additional arguments are passed to
   [`ComplexHeatmap::Heatmap()`](https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html)
   for customization.
+
+## Value
+
+[`ComplexHeatmap::Heatmap`](https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html)
+object.
 
 ## Details
 

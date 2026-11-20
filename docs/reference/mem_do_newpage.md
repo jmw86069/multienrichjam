@@ -8,6 +8,16 @@ Determine whether Mem should call newpage
 mem_do_newpage(x, ...)
 ```
 
+## Arguments
+
+- x:
+
+  not currently implemented, it may be used in future.
+
+- ...:
+
+  additional arguments are ignored.
+
 ## Details
 
 ### Rules

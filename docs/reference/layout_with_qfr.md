@@ -68,6 +68,25 @@ layout_with_qfr(
   `igraph::graph_attr(g, "layout")`, the `init` can be defined with this
   layout, then `constraints` is defined using `constrain`.
 
+- seed:
+
+  `numeric` to set consistent random seed.
+
+- weights, niter, max.delta, cool.exp, groups, rotation, layout.control,
+  round, digits:
+
+  arguments passed to
+  [`qgraph::qgraph.layout.fruchtermanreingold()`](https://rdrr.io/pkg/qgraph/man/qgraph.layout.fruchtermanreingold.html).
+
+- init:
+
+  optional `numeric` matrix with initial positions. Default NULL will
+  use existing layout coordinates if defined, otherwise it uses NULL.
+
+- verbose:
+
+  `logical` whether to print verbose output.
+
 - ...:
 
   other arguments are sent to

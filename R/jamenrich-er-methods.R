@@ -49,8 +49,8 @@
 #' 
 #' * Consider flattening the nested list output.
 #' * Consider alternative enrichment methods:
-#'    * `clusterProfiler` enrichment functions
-#'    * `enrichR::enrichr()`
+#'    * 'clusterProfiler' enrichment functions
+#'    * 'enrichR::enrichr()'
 #' 
 #' * Consider some custom "hooks":
 #'    * Custom enrichment function with x,y,z input
@@ -599,9 +599,10 @@ detect_genedata_format <- function(
 #'    * 'GENE': one gene per row, after updating genes when
 #'    `params$refresh_genes=TRUE`.
 #' 
+#' @family jam enrich functions
+#' 
 #' @inheritParams jam_enricher
 #' 
-#' @keywords internal
 #' @export
 process_pathwaydata <- function(
    pathwaydata,
@@ -927,10 +928,9 @@ process_pathwaydata <- function(
 #'    * Finally, attribute 'compatible_method' indicates which
 #'    enrichment tests are suitable.
 #' 
-#' @inheritParams jam_enricher
+#' @family jam enrich functions
 #' 
-#' @examples
-#' # example code
+#' @inheritParams jam_enricher
 #' 
 #' @export
 process_genedata <- function(

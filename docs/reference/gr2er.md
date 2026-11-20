@@ -33,6 +33,13 @@ and other supporting functions.
 
 Specific changes:
 
-- Renames 'core_enrichment' to 'geneID' if 'geneID' does not exist.
+- Renames `'core_enrichment'` to `'geneID'` if `'geneID'` does not
+  exist.
 
-- Uses 'geneID' to create 'Count' column with number of genes.
+- Uses `'geneID'` to create `'Count'` column with number of genes that
+  contribute to enrichment.
+
+- Adds new attribute `'genes_signed'` which contains a subset of the
+  gene rank scores stored in attribute `'geneList'`, only including
+  those genes that contribute to enrichment, which is defined by the
+  presence of a gene in the column `'core_enrichment'`.

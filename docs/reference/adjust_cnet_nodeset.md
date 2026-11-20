@@ -93,6 +93,7 @@ help the visual clarity of the plot, and to reduce node label overlaps.
 ## See also
 
 Other jam cnet utilities:
+[`Cnet-methods`](https://jmw86069.github.io/multienrichjam/reference/Cnet-methods.md),
 [`adjust_cnet_set_relayout_gene()`](https://jmw86069.github.io/multienrichjam/reference/adjust_cnet_set_relayout_gene.md),
 [`apply_nodeset_spacing()`](https://jmw86069.github.io/multienrichjam/reference/apply_nodeset_spacing.md),
 [`bulk_cnet_adjustments()`](https://jmw86069.github.io/multienrichjam/reference/bulk_cnet_adjustments.md),

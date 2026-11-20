@@ -1,5 +1,9 @@
 # multienrichjam 0.0.124.900
 
+* Updated pkgdown, added `enrichResult` stub S4 class,
+updated R methods to avoid proper S4 methods if 'DOSE'
+or 'enrichit' is not loaded. Fixed some examples.
+
 ## Changes
 
 * `gr2er()` internal function adjusts `gseaResult` to
@@ -32,6 +36,12 @@ in `multiEnrichMap()`; it now adds attribute attribute
 * `cell_fun_bivariate()`
    * New argument 'round_digits=3' for values less than 1000.
    * NA values are now hidden, useful for `show_enrich='rank'`.
+
+* Added minimal 'enrichResult' object definition in the event
+'DOSE' or 'enrichit' R packages are not loaded into the workspace,
+since the S4 object definition is transitioning from one to
+the other package. Updated other functions to avoid assuming
+the support functions are also available.
 
 ## New functions
 

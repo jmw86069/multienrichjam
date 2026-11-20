@@ -7,23 +7,20 @@ Prepare MultiEnrichMap data from enrichList
 ``` r
 multiEnrichMap(
   enrichList,
+  p_cutoff = 0.05,
+  min_count = 3,
+  topEnrichN = 20,
   geneHitList = NULL,
   geneHitIM = NULL,
   colorV = NULL,
-  nrow = NULL,
-  ncol = NULL,
-  byrow = FALSE,
   enrichLabels = NULL,
   subsetSets = NULL,
   overlapThreshold = deprecated(),
-  p_cutoff = 0.05,
   cutoffRowMinP = deprecated(),
   enrichBaseline = -log10(p_cutoff),
   enrichLens = 0,
   enrichNumLimit = 4,
   nEM = 500,
-  min_count = 3,
-  topEnrichN = 20,
   topEnrichSources = c("gs_cat", "gs_subcat"),
   topEnrichCurateFrom = NULL,
   topEnrichCurateTo = NULL,
@@ -39,13 +36,11 @@ multiEnrichMap(
   descriptionColname = c("Description", "Name", "Pathway", "ID"),
   descriptionCurateFrom = c("^Genes annotated by the GO term "),
   descriptionCurateTo = c(""),
-  directionColname = c("activation.z.{0,1}score", "NES", "direction", "z.{0,1}score"),
+  directionColname = c("direction", "NES", "activation.z.{0,1}score"),
   direction_cutoff = 0,
   pathGenes = c("setSize", "pathGenes", "Count"),
   geneHits = c("Count", "geneHits", "gene_count"),
   geneDelim = "[,/ ]+",
-  GmtTname = NULL,
-  msigdbGmtT = NULL,
   returnType = c("Mem", "list"),
   verbose = FALSE,
   ...
@@ -66,6 +61,29 @@ multiEnrichMap(
 
   - Recommendation is to confirm each `data.frame` is properly converted
     to `enrichResult` upfront.
+
+- p_cutoff:
+
+  `numeric` value between 0 and 1, default 0.05, enrichment P-value
+  required by at least one enrichment result to be retained in
+  downstream analyses. This P-value can be reviewed in `enrichIM(Mem)`
+  of the output, which is a matrix of P-values by pathway and
+  enrichment. The column header assigned as P-value is stored in
+  `headers(Mem)$pvalueColname`.
+
+- min_count:
+
+  `integer` minimum genes involved in enrichment, in order for a pathway
+  to be considered 'enriched'. Default `3` requires at least three genes
+  involved.
+
+- topEnrichN:
+
+  `integer` maximum rows to retain from each `enrichResult` in
+  'enrichList', for each source when supplied. Set `topEnrichN=0` or
+  `topEnrichN=NULL` to retain all rows. Only rows where the pathway met
+  other filtering criteria in at least one enrichment in 'enrichList'
+  will be retained.
 
 - geneHitList:
 
@@ -88,15 +106,6 @@ multiEnrichMap(
   `character` vector of colors, length equal to `length(enrichList)`,
   used to assign specific colors to each enrichment result.
 
-- nrow, ncol, byrow:
-
-  optional arguments used to customize `igraph` node shape
-  `"coloredrectangle"`, useful when the number of `enrichList` results
-  is larger than around 4. It defines the number of columns and rows
-  used for each node, to display enrichment result colors, and whether
-  to fill colors by row when `byrow=TRUE`, or by column when
-  `byrow=FALSE`.
-
 - enrichLabels:
 
   `character` vector of enrichment labels to use, as an optional
@@ -118,15 +127,6 @@ multiEnrichMap(
 
   - overlapThreshold is the Jaccard overlap score above which two
     pathways will be linked in the resulting network.
-
-- p_cutoff:
-
-  `numeric` value between 0 and 1, default 0.05, enrichment P-value
-  required by at least one enrichment result to be retained in
-  downstream analyses. This P-value can be reviewed in `enrichIM(Mem)`
-  of the output, which is a matrix of P-values by pathway and
-  enrichment. The column header assigned as P-value is stored in
-  `headers(Mem)$pvalueColname`.
 
 - cutoffRowMinP:
 
@@ -165,14 +165,6 @@ multiEnrichMap(
   - To create a Multi-Enrichment Map `igraph` object, see
     [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md).
 
-- topEnrichN:
-
-  `integer` maximum rows to retain from each `enrichResult` in
-  'enrichList', for each source when supplied. Set `topEnrichN=0` or
-  `topEnrichN=NULL` to retain all rows. Only rows where the pathway met
-  other filtering criteria in at least one enrichment in 'enrichList'
-  will be retained.
-
 - topEnrichSources, topEnrichCurateFrom, topEnrichCurateTo,
   topEnrichSourceSubset, topEnrichDescriptionGrep, topEnrichNameGrep:
 
@@ -181,7 +173,7 @@ multiEnrichMap(
   when `topEnrichN` is greater than `0`. The default values are used
   only when input data matches these patterns.
 
-- keyColname, nameColname, geneColname, pvalueColname,
+- keyColname, nameColname, geneColname, countColname, pvalueColname,
   descriptionColname:
 
   `character` vector in each case with text strings or patterns to use
@@ -193,6 +185,8 @@ multiEnrichMap(
 
   - `gene`: column with delimited gene symbols or identifiers tested for
     enrichment of each pathway.
+
+  - `count`: integer number of genes associated with enrichment.
 
   - `pvalue`: column with enrichment P-value, typically prioritizing
     either 'qvalue' or 'p.adjust'. Per `enrichResult` convention, the
@@ -215,6 +209,29 @@ multiEnrichMap(
   label can be manually curated later in the `Mem-class` methods,
   specifically `sets()<-` will allows assignment of custom names.
 
+- directionColname:
+
+  `character` values to search colnames for directionality, and is
+  optional. The default looks for:
+
+  - 'direction' - typically a signed value
+
+  - 'NES' - GSEA normalized enrichment score, which can be positive or
+    negative
+
+  - 'activation z-score' - as produced by Ingenuity Pathway Analysis
+    (IPA)
+
+  - **Change:** It no longer uses 'z-score' or 'zScore' by default,
+    since `clusterProfiler` now reports an enrichment z-score which does
+    not indicate directionality.
+
+- direction_cutoff:
+
+  `numeric` default 0, used when `directionColname` is defined, to apply
+  a minimum `numeric` magnitude to be considered 'up' or 'down'. This
+  value is not yet strictly enforced in downstream methods.
+
 - pathGenes, geneHits:
 
   `character` values indicating the colnames that contain the number of
@@ -228,6 +245,15 @@ multiEnrichMap(
   gene values into a list of vectors. The default (required) delimiter
   for `enrichResult` objects is `'/'`. A common alternative is `','`
   (comma-delimited).
+
+- returnType:
+
+  `character` string, deprecated, to define return type.
+
+  - 'Mem' (default) is recommended.
+
+  - 'list' is older legacy format, and features are being removed to
+    simplify the R codebase.
 
 - verbose:
 

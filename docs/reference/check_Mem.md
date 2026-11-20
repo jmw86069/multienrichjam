@@ -14,6 +14,10 @@ check_Mem(object)
 
   `Mem` object
 
+## Value
+
+`logical` whether the object is valid.
+
 ## Details
 
 It requires:

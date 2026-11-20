@@ -1,11 +1,21 @@
 # TODO
 
+## 20nov2026
+
+* `GenePathHeatmap()`
+   * Make top enrichment annotation use `EnrichmentHeatmap()`
+   colors, legend, etc.
+   * Add/Fix option to rotate the heatmap 90 degrees.
+   * Rename arguments from 'row_', 'column_', to 'gene_', 'enrich_'.
+
+* Port `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
+
 ## 19nov2026
 
-* Recognize gene hits in attributes of `enrichResult` or
+* DONE. Recognize gene hits in attributes of `enrichResult` or
 `gseaResult` to be used as `geneHitList`.
 * `multiEnrichMap()`
-   * Make it work well with `jam_enricher()` output.
+   * DONE. Make it work well with `jam_enricher()` output.
    * DONE. Improve verbose levels, `TRUE` should be minimal.
 
 ## 16nov2026

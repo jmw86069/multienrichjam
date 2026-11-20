@@ -4,6 +4,11 @@ Mem class containing results from
 [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md),
 current class version "1.0.0".
 
+Combine two or more `Mem` objects by concatenating along the enrichment
+dimension. All input enrichment names must not overlap. Note that in
+some cases, performing new multienrichment may be preferred, in order to
+retain consistent pathways from each enrichment result.
+
 ## Usage
 
 ``` r
@@ -20,6 +25,9 @@ as.list(x)
 
 # S4 method for class 'Mem'
 names(x)
+
+# S4 method for class 'Mem'
+names(x) <- value
 
 # S4 method for class 'Mem'
 enrichments(x)
@@ -126,18 +134,22 @@ setsByGene(x)
 EnrichmentMap(
   x,
   do_plot,
+  params = list(repulse = 3.5, width = 30, group = "default", mark.expand = 4, do_legend
+    = TRUE),
   legend_x = "bottomleft",
   legend_y = NULL,
-  params = list(),
   ...
 )
+
+# S4 method for class 'Mem'
+c(x, ..., recursive = FALSE)
 ```
 
 ## Arguments
 
 - x:
 
-  `Mem` object
+  first `Mem` object
 
 - i:
 
@@ -153,7 +165,7 @@ EnrichmentMap(
 
 - ...:
 
-  additional arguments are ignored
+  additional `Mem` objects to combine
 
 - value:
 
@@ -163,6 +175,10 @@ EnrichmentMap(
 
   `list` output from
   [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md)
+
+- y:
+
+  second `Mem` object
 
 ## Value
 
@@ -191,10 +207,35 @@ any serialized 'Mem' object from previous class versions.
 vectors with associated gene sets. For the reciprocal, see
 `geneInCategory()`.
 
+A new `Mem` object with combined enrichment data
+
+## Details
+
+This method combines `Mem` objects by adding new enrichments while
+keeping the same genes and sets. This is useful when you have enrichment
+results from different databases (e.g., GO, KEGG) and want to combine
+them into a single `Mem` object for integrated visualization and
+analysis.
+
+The combining process:
+
+- Verifies all input `Mem` objects are valid
+
+- Checks that all objects have identical genes and sets
+
+- Checks that enrichment names do not overlap (error if they do)
+
+- Column-binds all enrichment-related matrices
+
+- Combines enrichment lists and color vectors
+
+- Uses thresholds and headers from the first object
+
 ## Functions
 
-- `x[i`: Subset a Mem object, `Mem[i, j, k]`, where `i` are genes, `j`
-  are pathways, and `k` are enrichments.
+- `x = Mem[i = ANY, j = ANY, drop = ANY]`: Subset a Mem object,
+  `Mem[i, j, k]`, where `i` are genes, `j` are pathways, and `k` are
+  enrichments.
 
 - `show(Mem)`: Show summary of a Mem object, dimensions defined by
   genes, sets, enrichments, showing up to 5 entries of each. Also
@@ -205,6 +246,9 @@ vectors with associated gene sets. For the reciprocal, see
 - `as.list(Mem)`: Coerce S4 `Mem` to legacy `list` mem format
 
 - `names(Mem)`: Names for the enrichment tests in a Mem object
+
+- `names(Mem) <- value`: Assign enrichment names via `names<-`,
+  equivalent to `enrichments<-(x, value)`.
 
 - `enrichments(Mem)`: Names for the enrichment tests in a Mem object
 
@@ -302,7 +346,27 @@ vectors with associated gene sets. For the reciprocal, see
   and
   [`mem_legend()`](https://jmw86069.github.io/multienrichjam/reference/mem_legend.md)
   when `do_plot=TRUE`. Argument `'params'` is a `list` with additional
-  arguments: 'repulse', 'width', 'group', 'mark.expand', 'do_legend'.
+  arguments:
+
+  - 'repulse': `numeric` repulse passed to
+    [`layout_with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/layout_with_qfr.md).
+
+  - 'width': `integer` word-wrap width used for cluster labels.
+
+  - 'group': `character` used to define the type of node group,
+    'clusters' uses pathway cluster title; 'cluster_labels' uses cluster
+    labels if defined; 'community' uses igraph community, 'none' display
+    no node grouping.
+
+  - 'mark.expand': passed to
+    [`jam_igraph()`](https://jmw86069.github.io/multienrichjam/reference/jam_igraph.md)
+    to control the buffer around the alpha hull shaded regions for node
+    groups.
+
+  - 'do_legend': `logical` whether to display the legend
+
+- `c(Mem)`: Combine multiple Mem objects by concatenating enrichments
+  (same genes and sets required, overlapping enrichments error)
 
 ## See also
 
@@ -313,6 +377,7 @@ Other Mem:
 
 Other jam Mem utilities:
 [`MemPlotFolio-class`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md),
+[`enrichIMrank()`](https://jmw86069.github.io/multienrichjam/reference/enrichIMrank.md),
 [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md),
 [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md),
 [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md)
@@ -465,4 +530,7 @@ setsByGene(Memtest)
 #> $YWHAQ
 #> [1] "HIPPO Signaling"  "p70S6K Signaling"
 #> 
+# Example assumes you have two Mem objects with same genes/sets
+# but different enrichments (e.g., from different databases)
+# mem_combined <- c(mem_GO, mem_KEGG)
 ```

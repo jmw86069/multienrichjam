@@ -19,8 +19,7 @@ add_pathway_direction(
 
 - x:
 
-  `enrichResult` object as returned by
-  [`clusterProfiler::enricher()`](https://rdrr.io/pkg/clusterProfiler/man/enricher.html)
+  `enrichResult` object as used with `clusterProfiler`
 
 - gene_hits:
 

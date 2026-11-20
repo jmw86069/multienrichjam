@@ -68,6 +68,7 @@ by \code{launch_shinycat()}.
 }
 \seealso{
 Other jam cnet utilities:
+\code{\link{Cnet-methods}},
 \code{\link[=adjust_cnet_nodeset]{adjust_cnet_nodeset()}},
 \code{\link[=adjust_cnet_set_relayout_gene]{adjust_cnet_set_relayout_gene()}},
 \code{\link[=apply_nodeset_spacing]{apply_nodeset_spacing()}},

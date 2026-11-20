@@ -369,14 +369,7 @@ display_colorRamp2D <- function(
 #' rownames(m) <- letters[1:9]
 #' m2 <- m;
 #' m2[] <- abs(rnorm(36)*3);
-#' mcolor <- matrix(ncol=3,
-#'    c("white", "white", "white",
-#'    "royalblue4", "gold", "red"),
-#'    byrow=TRUE);
-#' col_bivariate <- colorRamp2D(
-#'    column_breaks=seq(from=-2, to=2, length.out=3),
-#'    row_breaks=seq(from=0, to=5, length.out=2),
-#'    mcolor);
+#' col_bivariate <- col_pvdir_xf(p_cutoff=0.05, direction_cutoff=1)
 #' display_colorRamp2D(col_bivariate)
 #'
 #' # the heatmap can be created in one step
@@ -398,11 +391,6 @@ display_colorRamp2D <- function(
 #'    ylab="-log10pvalue",
 #'    xlab="z-score");
 #' ComplexHeatmap::draw(hm, annotation_legend_list=lgds)
-#'
-#' lgds2 <- make_legend_bivariate(col_bivariate,
-#'    row_breaks=seq(from=0, to=2, by=0.25),
-#'    ylab="-log10pvalue");
-#' ComplexHeatmap::draw(hm, annotation_legend_list=lgds2)
 #'
 #' # heatmap using point circles
 #' ctmax <- 6;
@@ -774,30 +762,17 @@ cell_fun_bivariate <- function(
 #'    of legends, otherwise known as a legend list.
 #'
 #' @examples
-#' mcolor <- matrix(ncol=3,
-#'    c("white", "salmon1", "firebrick3",
-#'       "white", "lightgoldenrod1", "gold",
-#'       "white", "skyblue", "dodgerblue3"));
-#' row_breaks <- c(0, 0.5, 5);
-#' column_breaks <- c(-1, 0, 1);
-#' rownames(mcolor) <- row_breaks;
-#' colnames(mcolor) <- column_breaks;
-#' jamba::imageByColors(mcolor);
-#'
-#' col_fun <- colorRamp2D(column_breaks=column_breaks,
-#'    row_breaks=row_breaks,
-#'    mcolor=mcolor)
 #' col_fun <- col_pvdir_xf(p_cutoff=0.01)
 #' display_colorRamp2D(col_fun)
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
-#'    xlab="direction",
-#'    pretty.n=c(5, 10));
+#'    xlab="direction");
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
 #'
 #' # same as above with slightly larger grid size
 #' # and slightly larger font sizes
+#' col_fun <- col_pvdir_xf(p_cutoff=0.05, direction_cutoff=1, direction_max=3)
 #' lgds <- make_legend_bivariate(col_fun,
 #'    ylab="-log10pvalue",
 #'    xlab="direction",
@@ -812,17 +787,6 @@ cell_fun_bivariate <- function(
 #'    ylab="-log10pvalue",
 #'    xlab="direction",
 #'    pretty.n=NULL);
-#' jamba::nullPlot(doBoxes=FALSE);
-#' ComplexHeatmap::draw(lgds)
-#'
-#' lgds <- make_legend_bivariate(col_fun,
-#'    ylab="-log10pvalue",
-#'    xlab="direction",
-#'    column_breaks=c(-1, -0.5,  0, 0.5, 1),
-#'    row_breaks=c(0, 0.25, 0.5, 0.75, 1),
-#'    column_gap=grid::unit(1, "mm"),
-#'    row_gap=grid::unit(1, "mm"),
-#'    pretty.n=c(5, 10));
 #' jamba::nullPlot(doBoxes=FALSE);
 #' ComplexHeatmap::draw(lgds)
 #'
@@ -854,9 +818,9 @@ make_legend_bivariate <- function(
    }
 
    # column breaks
+   column_at <- attr(col_fun, "column_at");
+   column_label <- attr(col_fun, "column_label");
    if (length(column_breaks) == 0) {
-      column_at <- attr(col_fun, "column_at");
-      column_label <- attr(col_fun, "column_label");
       if (length(column_at) > 0) {
          column_breaks <- column_at;
       } else {
@@ -865,18 +829,18 @@ make_legend_bivariate <- function(
             column_breaks <- pretty(column_breaks,
                n=pretty.n[2])
          }
-         column_label <- signif(digits=3, column_at);
+         column_label <- signif(digits=3, column_breaks);
       }
    }
    if (length(column_label) == 0 ||
       length(column_label) != length(column_breaks)) {
-      column_label <- signif(digits=3, column_at);
+      column_label <- signif(digits=3, column_breaks);
    }
 
    # row breaks
+   row_at <- attr(col_fun, "row_at");
+   row_label <- attr(col_fun, "row_label");
    if (length(row_breaks) == 0) {
-      row_at <- attr(col_fun, "row_at");
-      row_label <- attr(col_fun, "row_label");
       if (length(row_at) > 0) {
          row_breaks <- row_at;
       } else {
@@ -885,7 +849,7 @@ make_legend_bivariate <- function(
             row_breaks <- pretty(row_breaks,
                n=pretty.n[1])
          }
-         row_label <- signif(digits=3, row_at);
+         row_label <- signif(digits=3, row_breaks);
       }
       if (length(p_cutoff) == 1 && is.numeric(p_cutoff)) {
          p_cut_val <- signif(digits=3, -log10(p_cutoff));
@@ -896,7 +860,7 @@ make_legend_bivariate <- function(
    }
    if (length(row_label) == 0 ||
       length(row_label) != length(row_breaks)) {
-      row_label <- signif(digits=3, row_at);
+      row_label <- signif(digits=3, row_breaks);
    }
    row_breaks <- rev(row_breaks);
    row_label <- rev(row_label);

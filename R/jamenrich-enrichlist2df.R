@@ -61,7 +61,11 @@ enrichList2df <- function
  ...)
 {
    ## Purpose is to combine a list of enrichment data.frames into one data.frame
-   iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
+   if (inherits(enrichList[[1]], c("enrichResult", "gseaResult"))) {
+      iDF1 <- head(enrichList[[1]]@result, 3);
+   } else {
+      iDF1 <- head(as.data.frame(enrichList[[1]]), 3);
+   }
    # version 0.0.56.900: changed to use enrichList which tests all results not
    # just the first in the list
    keyColname <- find_colname(keyColname, enrichList);
@@ -95,10 +99,11 @@ enrichList2df <- function
    enrichCols <- enrichCols[unique(names(enrichCols))];
 
    ## Get first non-NULL data.frame from enrichList
-   if (!jamba::igrepHas("data.frame", class(head(jamba::rmNULL(enrichList), 1)))) {
-      iDF <- as.data.frame(jamba::rmNULL(enrichList)[[1]]);
-   } else {
-      iDF <- jamba::rmNULL(enrichList)[[1]];
+   iDF <- jamba::rmNULL(enrichList)[[1]];
+   if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+      iDF <- iDF@result;
+   } else if (!inherits(iDF, "data.frame")) {
+      iDF <- as.data.frame(iDF);
    }
 
    if (verbose) {
@@ -128,20 +133,22 @@ enrichList2df <- function
    enrichValuesM <- do.call(cbind, lapply(jamba::nameVector(names(enrichCols)), function(iCol){
       useType <- enrichCols[iCol];
       if (verbose) {
-      	jamba::printDebug("enrichList2df(): ",
-      		"iCol: ", iCol, ", useType: ", useType);
+         jamba::printDebug("enrichList2df(): ",
+            "iCol: ", iCol, ", useType: ", useType);
       }
       enrichIMP <- list2imSigned(lapply(enrichList, function(iDF){
-         if (!inherits(iDF, "data.frame")) {
+         if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+            iDF <- iDF@result;
+         } else if (!inherits(iDF, "data.frame")) {
             iDF <- as.data.frame(iDF);
          }
-      	if (verbose) {
-      		jamba::printDebug("enrichList2df(): ",
-      			"c(iCol,keyColname):", c(iCol, keyColname));
-      		print(c(iCol, keyColname) %in% colnames(iDF));
-      	}
-      	if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
-         	lo_floor <- (iDF[,iCol] <= pvalueFloor);
+         if (verbose) {
+            jamba::printDebug("enrichList2df(): ",
+               "c(iCol,keyColname):", c(iCol, keyColname));
+            print(c(iCol, keyColname) %in% colnames(iDF));
+         }
+         if (useType %in% "lo" && any(iDF[,iCol] <= pvalueFloor)) {
+            lo_floor <- (iDF[,iCol] <= pvalueFloor);
             if (verbose) {
                jamba::printDebug("enrichList2df(): ",
                   "Some ", iCol, " values are less than ",
@@ -166,12 +173,12 @@ enrichList2df <- function
       if (useType %in% "lo") {
          enrichIMP[enrichIMP == 0] <- 1;
          jamba::nameVector(
-         	apply(enrichIMP, 1, min, na.rm=TRUE),
-         	rownames(enrichIMP));
+            apply(enrichIMP, 1, min, na.rm=TRUE),
+            rownames(enrichIMP));
       } else if (useType %in% "hi") {
          jamba::nameVector(
-         	apply(enrichIMP, 1, max, na.rm=TRUE),
-         	rownames(enrichIMP));
+            apply(enrichIMP, 1, max, na.rm=TRUE),
+            rownames(enrichIMP));
       }
    }));
    if (verbose) {
@@ -188,7 +195,9 @@ enrichList2df <- function
 
    ## Generate list with genes per pathway
    allGenes <- jamba::mixedSort(unique(unlist(lapply(enrichList, function(iDF){
-      if (!jamba::igrepHas("data.frame", class(iDF))) {
+      if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+         iDF <- iDF@result;
+      } else if (!jamba::igrepHas("data.frame", class(iDF))) {
          iDF <- as.data.frame(iDF);
       }
       unlist(
@@ -210,7 +219,9 @@ enrichList2df <- function
       ## if GmtT is not supplied, use the pathway enrichment data as a substitute
       enrichL1L1 <- lapply(jamba::nameVectorN(enrichList), function(iName){
          iDF <- enrichList[[iName]];
-         if (!jamba::igrepHas("data.frame", class(iDF))) {
+         if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+            iDF <- iDF@result;
+         } else if (!jamba::igrepHas("data.frame", class(iDF))) {
             iDF <- as.data.frame(iDF);
          }
          iDF <- jamba::renameColumn(iDF,
@@ -267,6 +278,11 @@ enrichList2df <- function
       to=keyColname);
    for (iName in names(enrichList)) {
       iDF <- enrichList[[iName]];
+      if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+         iDF <- iDF@result;
+      } else if (!inherits(iDF, "data.frame")) {
+         iDF <- as.data.frame(iDF)
+      }
       if (verbose) {
          jamba::printDebug("iName:", iName);
          jamba::printDebug("dim(iDF):", dim(iDF));

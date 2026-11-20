@@ -99,6 +99,7 @@ jam_igraph(g2)
 }
 \seealso{
 Other jam cnet utilities:
+\code{\link{Cnet-methods}},
 \code{\link[=adjust_cnet_set_relayout_gene]{adjust_cnet_set_relayout_gene()}},
 \code{\link[=apply_nodeset_spacing]{apply_nodeset_spacing()}},
 \code{\link[=bulk_cnet_adjustments]{bulk_cnet_adjustments()}},

@@ -1,5 +1,264 @@
 # Changelog
 
+## multienrichjam 0.0.124.900
+
+### Changes
+
+- [`gr2er()`](https://jmw86069.github.io/multienrichjam/reference/gr2er.md)
+  internal function adjusts `gseaResult` to similar format to
+  `enrichResult` to be used smoothly in
+  [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md);
+  it now adds attribute attribute `'genes_signed'`.
+- [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+  - GSEA inserts attribute `'genes_ordered'` equivalent to `'geneList'`
+    output from GSEA itself.
+  - ORA inserts attribute `'genes_signed'` with +1, -1 signs for the
+    genes provided.
+- [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md)
+  - When `geneHitIM` and `geneHitList` are not provided, it will create
+    `geneHitList` using each enrichment attribute `'genes_signed'` when
+    present in all enrichments.
+  - Verbose output is more stratified, `verbose=TRUE` is reasonable;
+    `verbose=2` adds more detail and passes `verbose=TRUE` to internal
+    functions; `verbose=3` is like a debug mode with detail.
+- [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+  - `show_enrich` now accepts `character` or `integer` index of label
+    types: -log10P, direction, genes, rank. Multiple labels can be
+    shown, which then enables a prefix.
+  - Labels now use proper contrasting color based upon the cell fill
+    color.
+- [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md)
+  - New argument ‘round_digits=3’ for values less than 1000.
+  - NA values are now hidden, useful for `show_enrich='rank'`.
+- Added minimal ‘enrichResult’ object definition in the event ‘DOSE’ or
+  ‘enrichit’ R packages are not loaded into the workspace, since the S4
+  object definition is transitioning from one to the other package.
+  Updated other functions to avoid assuming the support functions are
+  also available.
+
+### New functions
+
+- [`process_genedata()`](https://jmw86069.github.io/multienrichjam/reference/process_genedata.md),[`process_pathwaydata()`](https://jmw86069.github.io/multienrichjam/reference/process_pathwaydata.md)
+  - Previously internal functions, now exported to be visible so the
+    steps can be reviewed outside of
+    [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md).
+  - Help docs have substantial detail regarding gene symbol resolution,
+    logic, and justification of the approaches used.
+- [`enrichIMrank()`](https://jmw86069.github.io/multienrichjam/reference/enrichIMrank.md)
+  - New function returns rank-order for each enrichment column, after
+    applying thresholds `p_cutoff`, `min_count`, and `topEnrichN`.
+  - It can be used with
+    [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+    to review the rank as used when applying `topEnrichN`.
+
+## multienrichjam 0.0.123.900
+
+### Changes
+
+- [`make_legend_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/make_legend_bivariate.md)
+  recognizes optional ‘row_at’, ‘row_label’, ‘column_at’,
+  ‘column_label’, which are defined by
+  [`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md)
+  custom bivariate label function.
+- [`display_colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/display_colorRamp2D.md)
+  recognizes optional ‘row_at’, ‘row_label’, ‘column_at’,
+  ‘column_label’.
+- Added ‘genejam’ dependency for gene symbol resolution.
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  - ‘ce_num’ now uses all exemplars in ‘mpf’ by default.
+  - ClusterSummary is added to plot_list and plot_names.
+  - Now returns invisible `list` with ‘plot_list’, ‘plot_names’.
+- [`mem_plot_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md)
+  - Now passes ‘cluster_columns’, ‘cluster_rows’ to internal functions
+    so a custom clustering function can be used.
+- [`CnetCollapsed()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  now uses the cluster name and label in the title when both are
+  defined.
+- [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  and
+  [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+  call
+  [`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md)
+  to define bivariate color scale, and use custom labels and label
+  positions in the legend.
+
+### New functions
+
+- [`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md)
+  creates bivariate color function, with optional numeric floor for
+  P-value cutoff, and directional cutoff. Values that do not meet the
+  cutoffs are not colorized accordingly. It defines custom legend ‘at’
+  and ‘label’ to indicate when the threshold(s) are defined.
+
+- [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+  still in development
+
+  - intended as a convenient wrapper to produce enrichment results
+    suitable for multienrichment analysis. It will iterate:
+    - method ORA or GSEA or both
+    - one or more gene tables,
+    - one or more pathway tables
+    - refreshes gene symbols using `genejam` when requested
+    - custom gene universe when provided
+    - calculates “direction” column using each gene table
+    - produces suitable `enrichResult` or `gseaResult`
+
+## multienrichjam 0.0.122.960
+
+### Changes
+
+- [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+  - New argument ‘color_non_hits=TRUE’ optionally colors pathways which
+    do not meet the P-value threshold. It is applied consistently for
+    directional and non-directional colors.
+  - Fixed `show_enrich` label to be consistent when using bivariate
+    color, which colors by direction first, however `show_enrich=1`
+    should label -log10 P-value.
+- [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  and
+  [`mem_gene_path_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_gene_path_heatmap.md)
+  - Added ‘topEnrichN’ to the legend Thresholds.
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  - Moved EnrichmentMap ‘em’ to the end of the default order.
+  - [`CnetCluster()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    fixed Markdown labels to use cluster letters from `Clusters()`
+    instead of integers.
+  - [`CnetCluster()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    fixed missing plot ‘main’ title.
+  - Added `ClusterSummary` to produce markdown output when available in
+    [`ClusterData()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+    for the Mpf object, for example from
+    [`llamajam::summarize_mpf_clusters()`](https://rdrr.io/pkg/llamajam/man/summarize_mpf_clusters.html).
+- [`make_legend_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/make_legend_bivariate.md)
+  - New default `pretty.n=c(5, 10)` so the P-value steps are typically
+    each log10 unit from 1 through 10.
+  - Added option ‘p_cutoff’ to display the cutoff label, making it
+    clearer the color at this threshold.
+
+## multienrichjam 0.0.121.900
+
+- Improve support of `enrichResult` and `gseaResult` without package
+  dependency on DOSE, enrichplot, enrichit.
+- Added cli dependency.
+- Removed deprecated `cnetplotJam()`, `cnetplot_internalJam()`.
+- Fixed numerous R syntax issues from Arity.
+
+## multienrichjam 0.0.120.900
+
+### New methods
+
+- [`c()`](https://rdrr.io/r/base/c.html) will combine multiple `Mem`
+  objects. While potentially powerful, in hindsight it may be more
+  useful to repeat the
+  [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md)
+  with the original input data. More to be done in this space in future,
+  notably to enable [`rbind()`](https://rdrr.io/r/base/cbind.html)
+  functionality to append multiple results to the same enrichment names.
+- `names()<-` now works like `enrichments()<-` to assign names, which
+  are enrichment names, in `Mem` objects.
+
+## multienrichjam 0.0.119.900
+
+### Changes
+
+- igraph vertex shape ‘coloredrectangle’ has optional label for each
+  colored square, via `vertex.coloredrect.label` and sized with
+  `vertex.coloredrect.label.cex`.
+- Fixed bug in
+  [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
+  when called without loading the package.
+- [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+  new arguments `placementCellnote` and `fontCellnote` to customize
+  placement of cell labels, allowing the gene count to be displayed in
+  each cell, in a custom location, and optionally using bold font.
+- [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md)
+  gains arguments ‘placement’ and ‘font’ to customize placement of
+  labels when shown.
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  now properly passes extra params to
+  [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md).
+- Two options are recognized to help fine tune inner/outer border
+  calculations with ‘jampie’ `igraph` node shapes:
+  getOption(“jam.lwd_inch”, 1/96/2), and getOption(“jam.inner_cex”,
+  1.001). The ‘jam.lwd_inch’ adjusts the line width per inch, related to
+  dpi calculation, and is now smaller to reduce tiny gaps between the
+  inner and outer borders. It is especially noticeable in Positron,
+  whose dpi is calculated some non-standard way.
+
+## multienrichjam 0.0.118.950
+
+- Fixed some S4 method dispatch issues, specifically how ‘params’
+  arguments are passed to generics.
+
+### Hot fixes
+
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  dispatch to generic functions was not properly passing ‘params’ and
+  ‘legend_x’, causing errors. Arg order and use of ‘params’ to pass
+  ‘legend_x’,‘legend_y’ is workaround.
+- [`CnetCluster()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  and
+  [`CnetExemplar()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  were updated to prefer ‘params’ instead of ‘…’ for custom arguments.
+  Fixed hidden gene labels.
+- `EnrichmentMap` improved how ‘params’ is used without ‘…’
+
+### Other updates
+
+- ‘directionColname’ priority is: “direction”, “NES”, “activation
+  z-score”, so the GSEA NES is used before any type of calculated
+  z-score-like stat. In future, ‘direction’ with be preferred, as a
+  generic metric.
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  hides gene label in ‘CnetCollapsed’ with over 500 nodes.
+- [`make_point_hull()`](https://jmw86069.github.io/multienrichjam/reference/make_point_hull.md)
+  adjusts the text label adjustment for lower magnitude with longer
+  labels. Over about 20 nchar width will become 0.5 the magnitude, the
+  maximum effect.
+
+## multienrichjam 0.0.118.900
+
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  will become the primary method to visualize `MemPlotFolio` objects,
+  called internally by
+  [`mem_plot_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md).
+  Generic [`plot()`](https://rdrr.io/r/graphics/plot.default.html) works
+  with `MemPlotFolio`.
+
+### Hot Fixes
+
+- [`mem_legend()`](https://jmw86069.github.io/multienrichjam/reference/mem_legend.md)
+  default background is now transparent.
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  added missing GenePathHeatmap().
+
+### New functions
+
+- [`plot()`](https://rdrr.io/r/graphics/plot.default.html) generic for
+  `MemPlotFolio` objects, it calls
+  [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+
+### Changes to existing functions
+
+- [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md)
+
+  - New behavior, `overlap=NULL` uses an automated threshold based upon
+    the median and mean Jaccard overlap. Intent is to provide more
+    connectivity than conservative, in order to visualize structure in
+    the data, then aggressively use edge color and width to convery
+    overlap.
+
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+
+  - Passes optional arguments to internal functions via argument
+    ‘params’ as a `list` named by type of plot.
+
+- New setter method `CaptionLegendList<-` to customize the caption
+  legend list entries shown in
+  [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  and
+  [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md).
+
 ## multienrichjam 0.0.117.900
 
 ### New functions
@@ -238,7 +497,7 @@
     colnames must be consistent across inputs.
   - When the `enrichList` tables contain different colnames, it now goes
     through each entry and updates colnames to match the first matching
-    colname of each type.  
+    colname of each type.\
     The updated enrichments can be reviewed with `enrichList(Mem)`.
   - Work is active and ongoing to handle multiple types of enrichment
     data.
@@ -1786,8 +2045,7 @@ size with `mark.cex`, and position with `mark.x.nudge`, `mark.y.nudge`.
 
 - [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md)
 
-  - replacement for
-    [`enrichMapJam()`](https://jmw86069.github.io/multienrichjam/reference/enrichMapJam.md)
+  - replacement for `enrichMapJam()`
   - converts `mem` output to an `igraph` object with multienrichment
     features, such as `pie` nodes with appropriate color fill,
     `pie.border` colored by direction when `enrichIMdirection` is
@@ -3996,8 +4254,7 @@ overall workflow.
 - [`jam_igraph()`](https://jmw86069.github.io/multienrichjam/reference/jam_igraph.md)
   is a custom `igraph::plot()` with proper sizing when `rescale=FALSE`,
   allowing better aspect ratios for certain network layout coordinates.
-- [`with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/with_qfr.md)
-  is a wrapper to
+- `with_qfr()` is a wrapper to
   [`layout_with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/layout_with_qfr.md)
   that returns a layout specification object, for use with
   [`igraph::add_layout_()`](https://r.igraph.org/reference/add_layout_.html)
@@ -4295,8 +4552,7 @@ overall workflow.
 - [`enrichDF2enrichResult()`](https://jmw86069.github.io/multienrichjam/reference/enrichDF2enrichResult.md)
   converts a data.frame into an `enrichResult` object as used in
   `clusterProfiler` and `DOSE`.
-- [`cnetplotJam()`](https://jmw86069.github.io/multienrichjam/reference/cnetplotJam.md)
-  custom function to create a cnet plot igraph object.
+- `cnetplotJam()` custom function to create a cnet plot igraph object.
 - [`mergeAllXY()`](https://jmw86069.github.io/jamba/reference/mergeAllXY.html)
   which merges a list of data.frames while keeping all rows.
 - [`unnestList()`](https://jmw86069.github.io/jamba/reference/unnestList.html)
@@ -4316,9 +4572,8 @@ overall workflow.
 - [`isColorBlank()`](https://jmw86069.github.io/multienrichjam/reference/isColorBlank.md)
   checks if a color is a blank color, either by comparison to known
   colors, or transparency, or saturation/brightness.
-- [`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md)
-  converts an igraph into one with pie node shapes, optionally
-  coloredrectangle node shapes.
+- `igraph2pieGraph()` converts an igraph into one with pie node shapes,
+  optionally coloredrectangle node shapes.
 - [`layout_with_qfrf()`](https://jmw86069.github.io/multienrichjam/reference/layout_with_qfrf.md)
   is an extension to
   [`layout_with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/layout_with_qfr.md)

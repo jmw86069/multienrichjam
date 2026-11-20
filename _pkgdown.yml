@@ -5,10 +5,12 @@ home:
     and enhancements to facilitate interpretation of complex biological data.
 figures:
   dev: ragg::agg_png
+  fig.ext: png
   fig.width: 10
   fig.height: 10
   fig.retina: 2
   dpi: 96
+  bg: #FFFFFF
 template:
   bootstrap: 5
   bootswatch: cosmo

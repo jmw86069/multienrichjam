@@ -3,11 +3,10 @@
 ``` r
 
 library(multienrichjam)
-#> 
-library(jamba);
+library(jamba)
 # library(colorjam);
 # suppressPackageStartupMessages(library(ComplexHeatmap))
-options("warn"=-1)
+options("warn" = -1)
 ```
 
 ## msigdbr Requirement
@@ -16,9 +15,12 @@ This guide requires the `msigdbr` R package from CRAN.
 
 ``` r
 
-if (!requireNamespace("msigdbr", quietly=TRUE)) {
-   jamba::printDebugHtml("The ", "msigdbr",
-      " package is required for this vignette. Stopping here.")
+if (!requireNamespace("msigdbr", quietly = TRUE)) {
+   jamba::printDebugHtml(
+      "The ",
+      "msigdbr",
+      " package is required for this vignette. Stopping here."
+   )
    knitr::knit_exit()
 }
 ```
@@ -65,7 +67,7 @@ sets available from MSigDB, shown below.
 
 ``` r
 
-msigdb_collections <- msigdbr::msigdbr_collections(db_species="HS")
+msigdb_collections <- msigdbr::msigdbr_collections(db_species = "HS")
 ```
 
 | gs_collection | gs_subcollection | gs_collection_name | num_genesets |
@@ -121,8 +123,10 @@ rows.
 msig_cp <- subset(
    msigdbr::msigdbr(
       species = "Homo sapiens",
-      collection="C2"),
-   grepl("CP", gs_subcollection))
+      collection = "C2"
+   ),
+   grepl("CP", gs_subcollection)
+)
 msig_cp_gs <- unique(data.frame(msig_cp[, c("gs_name", "gene_symbol")]))
 head(msig_cp_gs, 10)
 ```
@@ -161,7 +165,7 @@ example
 >
 > `pvalueCutoff=1`
 >
-> This option retains all enrichment results without filtering.  
+> This option retains all enrichment results without filtering.\
 > The P-value will be filtered later by multienrichjam.
 
 This example uses `Reese_genes` containing genes identified by [Reese
@@ -178,12 +182,16 @@ list using [`lapply()`](https://rdrr.io/r/base/lapply.html).
 data(Reese_genes)
 
 # enricher() for each element of a list
-erlist <- lapply(Reese_genes, function(igenes){
-   er <- clusterProfiler::enricher(igenes,
-      pvalueCutoff=1,
-      TERM2GENE=msig_test,
-      minGSSize=5, maxGSSize=5000)
+erlist <- lapply(Reese_genes, function(igenes) {
+   er <- clusterProfiler::enricher(
+      igenes,
+      pvalueCutoff = 1,
+      TERM2GENE = msig_test,
+      minGSSize = 5,
+      maxGSSize = 5000
+   )
 })
+#> 
 ```
 
 You may also run a specific enrichment function in `clusterProfiler`
@@ -196,10 +204,13 @@ which automatically uses **Pathway Commons** pathways.
 data(Reese_genes)
 
 # Optionally run enrichPC() which tests PathwayCommons
-erlist2 <- lapply(Reese_genes, function(igenes){
-   er <- clusterProfiler::enrichPC(igenes,
-      pvalueCutoff=1,
-      minGSSize=5, maxGSSize=5000)
+erlist2 <- lapply(Reese_genes, function(igenes) {
+   er <- clusterProfiler::enrichPC(
+      igenes,
+      pvalueCutoff = 1,
+      minGSSize = 5,
+      maxGSSize = 5000
+   )
 })
 ```
 
@@ -210,35 +221,36 @@ The `erlist` from the previous step will be the input to
 
 ``` r
 
-mem <- multiEnrichMap(erlist,
-   pvalueColname="qvalue",
-   p_cutoff=0.01,
-   cutoffRowMinP=0.2,
-   min_count=2,
-   topEnrichN=20)
+Mem <- multiEnrichMap(
+   erlist,
+   pvalueColname = "qvalue",
+   p_cutoff = 0.01,
+   cutoffRowMinP = 0.2,
+   min_count = 2,
+   topEnrichN = 20
+)
 ```
 
 The default summary for `mem` describes the contents, shown below:
 
 ``` r
 
-mem
+Mem
 #> class: Mem
-#> dim: 2 enrichments, 14 sets, 17 genes
+#> dim: 2 enrichments, 14 sets, 23 genes
 #> - enrichments (2): Newborns, OlderChildren
-#> - sets (14): REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION, KEGG_APOPTOSIS, ..., KEGG_ASTHMA, WP_HEAD_AND_NECK_SQUAMOUS_CELL_CARCINOMA
-#> - genes (17): ACTN1, ALPK1, ..., RUNX1, SPP2
+#> - sets (14): REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION, KEGG_APOPTOSIS, ..., WP_HEAD_AND_NECK_SQUAMOUS_CELL_CARCINOMA, KEGG_ASTHMA
+#> - genes (23): ACTN1, ALPK1, ..., TANK, YWHAQ
 #> Analysis parameters:
 #> - top N per enrichment: 20
 #> - significance threshold: 0.2 (colname: qvalue)
 #> - min gene count: 2
-#> - direction colname: zScore
 ```
 
-### Mem Plot Folio
+### Prepare Plot Folio
 
 The
-[`mem_plot_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md)
+[`prepare_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md)
 represents a key step in the analysis workflow.
 
 Pathway clusters are defined by analyst parameters:
@@ -247,36 +259,117 @@ Pathway clusters are defined by analyst parameters:
 - The relative weight of the gene-pathway incidence matrix.
 - The method used for clustering.
 
-Mem Plot Folio then provides a series of visualizations, described in
-detail in
-[`mem_plot_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md).
-
-**Only the first four plots are shown below** using
-`do_which=c(1, 2, 3, 4)`.
+The returned `MemPlotFolio` provides a series of visualizations,
+described in detail in
+[`prepare_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md).
 
 ``` r
 
-Mpf <- mem_plot_folio(mem,
-   pathway_column_split=4,
-   column_cex=0.4, row_cex=0.4,
-   row_names_max_width=grid::unit(9, "cm"),
-   column_names_max_height=grid::unit(4, "cm"),
-   node_factor=2.5,
-   label_factor_l=list(nodeType=c(Set=0.7, Gene=1.5)),
-   use_shadowText=TRUE,
-   do_which=c(1, 2, 3, 4),
-   main="Canonical Pathways")
-#> Loading required namespace: gridtext
+Mpf <- prepare_folio(
+   Mem,
+   pathway_column_split = 4,
+   column_cex = 0.4,
+   row_cex = 0.4,
+   row_names_max_width = grid::unit(9, "cm"),
+   column_names_max_height = grid::unit(4, "cm"),
+   node_factor = 2.5,
+   label_factor_l = list(
+      nodeType = c(
+         Set = 0.7,
+         Gene = 1.5
+      )
+   ),
+   use_shadowText = TRUE,
+   main = "Canonical Pathways"
+)
 ```
 
+### Mem Plot Folio
+
+A helper function
+[`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+and generic function
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) both provide a
+convenient way to plot “all the data”.
+
+- Use `do_md_tabs='Rmd'` to enable Rmarkdown HTML output to use tabs.
+- Use `do_md_tabs='Qmd'` to enable Quarto HTML output to use tabs.
+
+When using HTML tabs, be sure to add this chunk option: `results='asis'`
+
+``` r
+
+plot_mpf(
+   Mpf,
+   md_tab_level = 3,
+   md_title = FALSE,
+   do_md_tabs = 'Rmd',
+   params = list(
+      em = list(edge_factor = 0.2)
+   )
+)
+```
+
+#### EnrichmentHeatmap
+
 ![mem_plot_folio, plot 1, enrichment
-heatmap](importClusterProfiler_files/figure-html/mem-folio-1.png)![mem_plot_folio,
-plot 2, Gene-Pathway
-heatmap](importClusterProfiler_files/figure-html/mem-folio-2.png)![mem_plot_folio,
-plot 3, Cnet plot with Cluster
-Letters](importClusterProfiler_files/figure-html/mem-folio-3.png)![mem_plot_folio,
-plot 4, Cnet plot with Cluster Summary
+heatmap](importClusterProfiler_files/figure-html/mem-folio-1.png)
+
+#### GenePathHeatmap
+
+![mem_plot_folio, plot 2, Gene-Pathway
+heatmap](importClusterProfiler_files/figure-html/mem-folio-2.png)
+
+#### CnetCollapsed
+
+![mem_plot_folio, plot 3, Cnet plot with Cluster
+Letters](importClusterProfiler_files/figure-html/mem-folio-3.png)
+
+#### CnetExemplar
+
+##### 1
+
+![mem_plot_folio, plot 4, Cnet plot with Cluster Summary
 Labels](importClusterProfiler_files/figure-html/mem-folio-4.png)
+
+##### 2
+
+![mem_plot_folio, plot 1, enrichment
+heatmap](importClusterProfiler_files/figure-html/mem-folio-5.png)
+
+##### 3
+
+![mem_plot_folio, plot 2, Gene-Pathway
+heatmap](importClusterProfiler_files/figure-html/mem-folio-6.png)
+
+#### CnetCluster
+
+##### A
+
+![mem_plot_folio, plot 3, Cnet plot with Cluster
+Letters](importClusterProfiler_files/figure-html/mem-folio-7.png)
+
+##### B
+
+![mem_plot_folio, plot 4, Cnet plot with Cluster Summary
+Labels](importClusterProfiler_files/figure-html/mem-folio-8.png)
+
+##### C
+
+![mem_plot_folio, plot 1, enrichment
+heatmap](importClusterProfiler_files/figure-html/mem-folio-9.png)
+
+##### D
+
+![mem_plot_folio, plot 2, Gene-Pathway
+heatmap](importClusterProfiler_files/figure-html/mem-folio-10.png)
+
+#### EnrichmentMap
+
+![mem_plot_folio, plot 3, Cnet plot with Cluster
+Letters](importClusterProfiler_files/figure-html/mem-folio-11.png)
+
+## Specific Plots
 
 ### Cnet Collapsed Cluster Plot
 
@@ -285,19 +378,21 @@ figures. The typical workflow is demonstrated below.
 
 - `cnet <- CnetCollapsed(mpf, type="set")` retrieves the Cnet `igraph`
   object.
+- `do_plot = FALSE` does not plot the Cnet network just yet.
 
 ``` r
 
 # extract the cnet
-cnet <- CnetCollapsed(Mpf, do_plot=FALSE, type="set");
+cnet <- CnetCollapsed(Mpf, do_plot = FALSE, type = "cluster")
 ```
 
 [`jam_igraph()`](https://jmw86069.github.io/multienrichjam/reference/jam_igraph.md)
 is a custom plotting function with enhancements:
 
-- `node_factor=2` multiplies node size by 2.
-- `label_dist_factor=2` multiplies label distance from node center by 5.
-- `use_shadowText=TRUE` uses shadowing around the text labels.
+- `node_factor = 2` multiplies node size by 2.
+- `label_dist_factor = 2` multiplies label distance from node center by
+  5.
+- `use_shadowText = TRUE` uses shadowing around the text labels.
 - `label_factor_l` resizes the node labels by ‘nodeType’ for Gene and
   Set.
 - It applies edge bundling, which helps with large networks.
@@ -306,11 +401,18 @@ is a custom plotting function with enhancements:
 ``` r
 
 # jam_graph instead of plot()
-jam_igraph(cnet,
-   node_factor=2,
-   use_shadowText=TRUE,
-   label_dist_factor=5,
-   label_factor_l=list(nodeType=c(Gene=2, Set=0.8)))
+jam_igraph(
+   cnet,
+   node_factor = 2,
+   use_shadowText = TRUE,
+   label_dist_factor = 5,
+   label_factor_l = list(
+      nodeType = c(
+         Gene = 2,
+         Set = 1
+      )
+   )
+)
 ```
 
 ![Cnet collapsed plot suitable for
@@ -339,7 +441,7 @@ The R-shiny app uses several functions:
 
 ``` r
 
-output_env <- launch_shinycat(g=cnet)
+output_env <- launch_shinycat(g = cnet)
 ```
 
 The output is stored in an `environment` called `output_env`.
@@ -347,7 +449,7 @@ The output is stored in an `environment` called `output_env`.
 ``` r
 
 # obtain the output data
-adj_cnet <- output_env$adj_cnet;
+adj_cnet <- output_env$adj_cnet
 ```
 
 Then the new Cnet plot can be plotted, for example:
@@ -355,10 +457,12 @@ Then the new Cnet plot can be plotted, for example:
 ``` r
 
 # jam_graph
-jam_igraph(adj_cnet,
-   node_factor=2,
-   use_shadowText=TRUE,
-   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+jam_igraph(
+   adj_cnet,
+   node_factor = 2,
+   use_shadowText = TRUE,
+   label_factor_l = list(nodeType = c(Gene = 2, Set = 1))
+)
 ```
 
 ### ShinyCat Screenshot

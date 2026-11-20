@@ -60,7 +60,8 @@ For example if the cluster name is 'A' the new title would be:
 the fraction of pathways in a cluster which has "non blank"
 assigned color in \code{enrichIMcolors()} in order for the color
 to be assigned to the resulting node, in the case of Cnet
-output with \code{return_type="cnet"}.}
+output with \code{return_type="cnet"}.
+It should range from 0 to 1.}
 
 \item{verbose}{\code{logical} whether to print verbose output.}
 

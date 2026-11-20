@@ -7,9 +7,9 @@ Plot function for MemPlotFolio objects
 ``` r
 plot_mpf(
   Mpf,
-  plot_which = c("all", "EnrichmentHeatmap", "eh", "GenePathHeatmap", "gphm",
+  plot_which = c("all", "EnrichmentHeatmap", "eh", "GenePathHeatmap", "gp",
     "CnetCollapsed", "cc", "CnetExemplar", "ce", "CnetCluster", "c", "EnrichmentMap",
-    "em"),
+    "em", "ClusterSummary", "cs"),
   do_md_tabs = FALSE,
   md_tab_open = NULL,
   md_tab_suffix = NULL,
@@ -19,9 +19,12 @@ plot_mpf(
   cc_type = NULL,
   ce_num = NULL,
   c_cluster = NULL,
-  em_group = NULL,
+  cs_cluster = NULL,
+  em_group = "default",
   Mem = NULL,
-  params = list(em = list(repulse = 3.5, width = 30)),
+  params = list(eh = list(do_plot = TRUE), em = list(repulse = 3.5, node_factor = 1,
+    width = 30), cc = list(repulse = 3.5, node_factor = 1), ce = list(node_factor = 1),
+    gp = list(width = 30), c = list(node_factor = 1)),
   do_newpage = NULL,
   verbose = FALSE,
   ...
@@ -46,25 +49,31 @@ plot_mpf(
 
   - 'all': All available plot types are included.
 
-  - 'EnrichmentHeatmap' or 'eh':
+  - 'eh' or 'EnrichmentHeatmap':
     [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
 
-  - 'GenePathHeatmap' or 'gp':
+  - 'gp' or 'GenePathHeatmap':
     [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
 
-  - 'CnetCollapsed' or 'cc':
+  - 'cc' or 'CnetCollapsed':
     [`CnetCollapsed()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
 
-  - 'CnetExemplar' or 'ce':
+  - 'ce' or 'CnetExemplar':
     [`CnetExemplar()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
 
-  - 'CnetCluster' or 'c':
+  - 'c' or 'CnetCluster':
     [`CnetCluster()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
 
-  - 'EnrichmentMap' or 'em':
+  - 'em' or 'EnrichmentMap':
     [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md).
     Note this plot requires either 'Mem' argument, or 'Mem' being
     included in the `Mpf@metadata$Mem`.
+
+  - 'cs' or 'ClusterSummary': Relevant when `llamajam` is installed and
+    when clusters are summarized using
+    [`llamajam::summarize_mpf_clusters()`](https://rdrr.io/pkg/llamajam/man/summarize_mpf_clusters.html).
+    Alternatively, any data stored in `ClusterData(Mpf)` can be used. It
+    is expected to provide markdown formatting.
 
 - do_md_tabs:
 
@@ -125,7 +134,7 @@ plot_mpf(
 
   - Use md_title=FALSE or md_title=NULL to suppress this header.
 
-- cc_type, ce_num, c_cluster:
+- cc_type, ce_num, c_cluster, cs_cluster:
 
   passed to corresponding functions, and supports multiple values.
 
@@ -139,6 +148,10 @@ plot_mpf(
 
   - c_cluster: passed to CnetCluster(Mpf, cluster=c_cluster). When NULL
     it will iterate each cluster in Mpf.
+
+  - cs_cluster: describes which cluster summaries to print. When NULL it
+    will iterate each cluster in Mpf, provided there is data available
+    from `ClusterData(Mpf)`.
 
 - em_group:
 
@@ -159,10 +172,12 @@ plot_mpf(
 
 - params:
 
-  `list` named by shorthand plot type ('eh','gphm','em', 'cc', 'ce',
-  'c') each containing a list of optional parameters relevant to each
-  plot. Limited functionality currently, however check here for
-  recognized arguments as they become available.
+  `list` named by shorthand plot type ('eh','gp','em', 'cc', 'ce', 'c')
+  each containing a list of optional parameters relevant to each plot.
+  In each case, parameters in `params` are passed to the internal
+  function as arguments.For example, `em=list(repulse=3.5)` is passed as
+  `EnrichmentMap(..., repulse=3.5)`. Limited functionality currently,
+  however check here for recognized arguments as they become available.
 
   - 'em' EnrichmentMap:
 
@@ -202,7 +217,12 @@ plot_mpf(
 
 ## Value
 
-`list` plot data, named by type, returned invisibly.
+`list` returned invisibly with:
+
+- plot_list: `list` with each plot object, named by type.
+
+- plot_names: `character` vector of plot names, in the order they were
+  created.
 
 ## Details
 

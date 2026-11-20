@@ -92,6 +92,14 @@ mem_gene_path_heatmap(
   the nrow/ncol of the heatmap are used to infer a reasonable starting
   point fontsize, which can be adjusted with `column_cex` and `row_cex`.
 
+- column_cex, row_cex:
+
+  `numeric` expansion factor to adjust column and row text label sizes,
+  respectively. It is applied to the fontsize which is either defined
+  using `column_fontsize` / `row_fontsize` or using the automatic
+  fontsize calculated based upon the number of columns / rows,
+  respectively.
+
 - row_method, column_method:
 
   `character` string with distance method, default is 'binary' which
@@ -157,6 +165,23 @@ mem_gene_path_heatmap(
   by default, it may be helpful to add "hit" or "dir" to distinguish the
   enrichment labels.
 
+- simple_anno_size:
+
+  [`grid::unit`](https://rdrr.io/r/grid/unit.html) with default size of
+  each annotation stripe in the row and column annotations, the default
+  is 5mm.
+
+- cluster_columns, cluster_rows:
+
+  default NULL, with optional `function` to cluster columns and rows,
+  respectively. The function should produce `hclust` or `dendrogram`
+  output.
+
+- cluster_column_slices, cluster_row_slices:
+
+  `logical` default FALSE, whether to cluster the column and row
+  clusters among each other to produce one large dendrogram.
+
 - name:
 
   `character` value passed to
@@ -172,6 +197,12 @@ mem_gene_path_heatmap(
   cell that has a color meets at least the minimum P-value threshold.
   The default is taken from input `mem` for consistency with the input
   multienrichment analysis.
+
+- p_floor:
+
+  `numeric` lowest P-value used in the color gradient, default `1e-10`
+  will show the -log10 P-value gradient only up to `10`, which is
+  usually a reasonable and consistent default.
 
 - column_split, row_split:
 

@@ -92,7 +92,6 @@ Other jam igraph functions:
 [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md),
 [`flip_edges()`](https://jmw86069.github.io/multienrichjam/reference/flip_edges.md),
 [`highlight_edges_by_node()`](https://jmw86069.github.io/multienrichjam/reference/highlight_edges_by_node.md),
-[`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md),
 [`label_communities()`](https://jmw86069.github.io/multienrichjam/reference/label_communities.md),
 [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md),
 [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md),

@@ -104,12 +104,11 @@ This function calls
 [`isColorBlank()`](https://jmw86069.github.io/multienrichjam/reference/isColorBlank.md)
 to determine which colors are blank.
 
-This function is originally intended to follow
-[`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md)
-which assigns colors to pie and coloredrectangle attributes, where
-missing values or values of zero are often given a "blank" color. To
-enhance the resulting node coloration, these blank colors can be removed
-in order to make the remaining colors more visibly distinct.
+This function is originally intended to follow `igraph2pieGraph()` which
+assigns colors to pie and coloredrectangle attributes, where missing
+values or values of zero are often given a "blank" color. To enhance the
+resulting node coloration, these blank colors can be removed in order to
+make the remaining colors more visibly distinct.
 
 ## See also
 
@@ -122,7 +121,6 @@ Other jam igraph functions:
 [`flip_edges()`](https://jmw86069.github.io/multienrichjam/reference/flip_edges.md),
 [`get_bipartite_nodeset()`](https://jmw86069.github.io/multienrichjam/reference/get_bipartite_nodeset.md),
 [`highlight_edges_by_node()`](https://jmw86069.github.io/multienrichjam/reference/highlight_edges_by_node.md),
-[`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md),
 [`label_communities()`](https://jmw86069.github.io/multienrichjam/reference/label_communities.md),
 [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md),
 [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md),
@@ -172,27 +170,7 @@ g4 <- removeIgraphBlanks(g, constrain="ncol");
 jam_igraph(g4, layout=lg, use_shadowText=TRUE,
    main="constrain='ncol'");
 })
-#> ##  (11:03:46) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]    0.0832034    0.1248051
-#> [2,]    0.1248051    0.1248051
-#> [3,]    0.0832034    0.1248051
-#> ##  (11:03:46) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]    0.0832034    0.0416017
-#> [2,]    0.1248051    0.0416017
-#> [3,]    0.1248051    0.0416017
-#> ##  (11:03:46) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]    0.0832034    0.1248051
-#> [2,]    0.0832034    0.1248051
-#> [3,]    0.0832034    0.1248051
 
-#> ##  (11:03:46) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]    0.1248051    0.1248051
-#> [2,]    0.1872076    0.1248051
-#> [3,]    0.0832034    0.1248051
 
 #
 g7 <- make_full_graph(n=7);
@@ -209,13 +187,4 @@ jam_igraph(g7, layout=lg7,
    use_shadowText=TRUE,
    vertex.size2=5);
 
-#> ##  (11:03:46) 22May2026:   vertex.size: 
-#>      vertex.size1 vertex.size2
-#> [1,]   0.08605783   0.08605783
-#> [2,]   0.08605783   0.17211566
-#> [3,]   0.08605783   0.25817349
-#> [4,]   0.08605783   0.34423132
-#> [5,]   0.17211566   0.08605783
-#> [6,]   0.25817349   0.08605783
-#> [7,]   0.34423132   0.08605783
 ```

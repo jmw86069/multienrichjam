@@ -11,8 +11,8 @@ adjust_polygon_border(
   x,
   y = NULL,
   type = "inner",
-  lwd_inch = 1/96,
-  inner_cex = 1.001,
+  lwd_inch = getOption("jam.lwd_inch", 1/96/2),
+  inner_cex = getOption("jam.inner_cex", 1.001),
   lwd = par("lwd"),
   lwd_buffer = 0,
   verbose = FALSE,
@@ -24,9 +24,9 @@ adjust_rect_border(
   y,
   rectangles = NULL,
   type = "inner",
-  lwd = par("lwd"),
+  lwd = NULL,
   lwd_buffer = 0,
-  lwd_inch = 1/96,
+  lwd_inch = getOption("jam.lwd_inch", 1/96/2),
   verbose = FALSE,
   ...
 )

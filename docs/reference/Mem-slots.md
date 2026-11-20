@@ -25,29 +25,29 @@ even under the best of intentions.
   named by enrichment test.
 
 - **geneHitList**: `list` of vectors named by enrichment test. Vectors
-  are either:  
-  `character` vector of genes tested as hits for enrichment, or  
+  are either:\
+  `character` vector of genes tested as hits for enrichment, or\
   `integer` vector named by genes with values indicating the
   directionality, using `1` or `-1`.
 
 - **geneHitIM**: `numeric` matrix with enrichment tests as colnames, and
-  genes as rownames.  
-  Values are `1` or `0` to indicate gene hits tested,  
+  genes as rownames.\
+  Values are `1` or `0` to indicate gene hits tested,\
   optionally `1` or `-1` to indicate directionality.
 
 ## Incidence matrix data
 
 - **memIM**: `numeric` matrix with gene sets / pathways as colnames, and
-  genes as rownames.  
+  genes as rownames.\
   Values are `1` or `0` indicating genes present in each pathway.
 
 - **geneIM**: `numeric` matrix with enrichment test as colnames, and
-  genes as rownames.  
+  genes as rownames.\
   This matrix differs from 'geneHitIM' in that it only includes genes
   also in 'memIM', and in that order.
 
 - **enrichIM**: `numeric` matrix with enrichment test as colnames, and
-  gene sets / pathways as rownames.  
+  gene sets / pathways as rownames.\
   Matrix values are enrichment P-values, using the appropriate adjusted
   P-value or FDR to represent significance.
 
@@ -58,11 +58,11 @@ be used with `clusterProfiler` related functions. Also the `data.frame`
 could be used as a supplemental table.
 
 - **multiEnrichDF**: `data.frame` with single combined enrichment
-  table.  
+  table.\
   Data include union of genes involved in each pathway, and lowest
   P-value observed across all enrichment tests.
 
-- **multiEnrichResult**: `enrichResult` equivalent of 'multiEnrichDF'.  
+- **multiEnrichResult**: `enrichResult` equivalent of 'multiEnrichDF'.\
   It is intended to facilitate use in `enrichplot` functions.
 
 ### Analysis details
@@ -84,26 +84,26 @@ could be used as a supplemental table.
 ### Additional incidence matrix data
 
 - **geneIMcolors**: `character` matrix with enrichment test colnames,
-  and gene rownames.  
+  and gene rownames.\
   Values are colors assigned using 'colorV'.
 
 - **geneIMdirection**: `numeric` matrix equivalent to 'geneIM' with
-  values `1` and `-1` indicating directionality.  
+  values `1` and `-1` indicating directionality.\
   When no directionality is provided, all values will be `1` or `0`.
 
 - **enrichIMcolors**: `character` matrix with enrichment test colnames,
-  and gene set / pathway rownames.  
+  and gene set / pathway rownames.\
   Values are color gradients using the appropriate P-value threshold
   used with
   [`multiEnrichMap()`](https://jmw86069.github.io/multienrichjam/reference/multiEnrichMap.md).
 
 - **enrichIMdirection**: `numeric` matrix equivalent to 'enrichIM' with
-  values indicating directional score.  
+  values indicating directional score.\
   Directional scores may include a IPA z-score or other directional
-  score where available.  
+  score where available.\
   When not available, all values are `1`.
 
-- **enrichIMgeneCount**: `integer` matrix equivalent to 'enrichIM'.  
+- **enrichIMgeneCount**: `integer` matrix equivalent to 'enrichIM'.\
   Values are the number of genes involved in the enrichment of each
   pathway.
 

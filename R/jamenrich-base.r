@@ -880,7 +880,9 @@ multiEnrichMap <- function(
    ## Note: the rownames use values from descriptionColname
    ##
    enrichLsetNames <- unique(unlist(lapply(enrichList, function(iDF){
-      if (!inherits(iDF, "data.frame")) {
+      if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+         iDF@result[[nameColname]]
+      } else if (!inherits(iDF, "data.frame")) {
          as.data.frame(iDF)[[nameColname]];
       } else {
          iDF[[nameColname]];
@@ -941,7 +943,7 @@ multiEnrichMap <- function(
       geneCountColname <- head(
          jamba::provigrep(
             geneCountsGrep,
-            colnames(as.data.frame(enrichList[[1]]))),
+            colnames(enrichList[[1]]@result)),
          1
       );
    } else {
@@ -1055,7 +1057,9 @@ multiEnrichMap <- function(
          print(jamba::sdim(enrichList));
       }
       enrichList <- lapply(enrichList, function(iDF){
-         if (!jamba::igrepHas("data.frame", class(iDF))) {
+         if (inherits(iDF, c("enrichResult", "gseaResult"))) {
+            iDF <- iDF@result;
+         } else if (!inherits(iDF, "data.frame")) {
             iDF <- as.data.frame(iDF);
          }
          subset(iDF, iDF[[nameColname]] %in% i1use);
@@ -1120,7 +1124,7 @@ multiEnrichMap <- function(
    if (verbose > 1) {
       jamba::printDebug("multiEnrichMap(): ",
          "head(enrichDF):");
-      print(head(as.data.frame(enrichDF)));
+      print(head(enrichDF));
       jamba::printDebug("multiEnrichMap(): ",
          "enrichER <- enrichDF2enrichResult(), keyColname:",
          keyColname);
@@ -1142,7 +1146,7 @@ multiEnrichMap <- function(
    if (verbose > 2) {
       jamba::printDebug("multiEnrichMap(): ",
          "head(enrichER):");
-      print(head(as.data.frame(enrichER)));
+      print(head(enrichER@result));
    }
 
    mem$multiEnrichDF <- enrichDF;

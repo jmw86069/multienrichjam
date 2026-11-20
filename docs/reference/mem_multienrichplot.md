@@ -89,6 +89,42 @@ mem_multienrichplot(
   [`spread_igraph_labels()`](https://jmw86069.github.io/multienrichjam/reference/spread_igraph_labels.md)
   when `spread_labels=TRUE`.
 
+- label_edges:
+
+  `character` vector with edge attribute to use as an edge label. It
+  takes the first matching value in the `igraph` edge attributes, if it
+  exists. The defaults:
+
+  - 'overlap_count'
+
+  - 'count'
+
+  - 'overlap': the overlap metric, current Jaccard overlap
+
+  - 'label': uses any existing edge 'label' attribute
+
+  - 'none': no label
+
+- edge_cex, node_cex:
+
+  `numeric` expansion factor to adjust the default edge and node size,
+  respectively.
+
+- node_size:
+
+  \`numeric“ with default node size, default is 5.
+
+- edge_color, frame_color:
+
+  `character` color used for default edge and node frame color,
+  respectively.
+
+- shape:
+
+  `character` node shape, default 'pie' uses pie nodes, which are
+  interpreted as 'jampie' by
+  [`jam_igraph()`](https://jmw86069.github.io/multienrichjam/reference/jam_igraph.md).
+
 - repulse:
 
   numeric value used for network layout when
@@ -110,6 +146,11 @@ mem_multienrichplot(
   settings during the change. The effect is mainly to keep layout aspect
   intact, in cases where the x- and y-axis ranges are not roughly the
   same size, for example a short-wide layout.
+
+- edge_bundling:
+
+  `character` string passed to `edge_bundle_groups()` to control edge
+  bundling behavior. Default 'connections'.
 
 - main:
 
@@ -157,7 +198,4 @@ visualization has insightful structure.
 ## See also
 
 Other jam deprecated functions:
-[`cnetplotJam()`](https://jmw86069.github.io/multienrichjam/reference/cnetplotJam.md),
-[`enrichMapJam()`](https://jmw86069.github.io/multienrichjam/reference/enrichMapJam.md),
-[`grid_with_title()`](https://jmw86069.github.io/multienrichjam/reference/grid_with_title.md),
-[`with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/with_qfr.md)
+[`grid_with_title()`](https://jmw86069.github.io/multienrichjam/reference/grid_with_title.md)

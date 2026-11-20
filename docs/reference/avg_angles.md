@@ -8,12 +8,39 @@ Average geometric angles
 avg_angles(x, w = 1, maxAngle = 360, na.rm = TRUE, ...)
 ```
 
+## Arguments
+
+- x:
+
+  `numeric` angles in degrees
+
+- w:
+
+  `numeric` weight applied to each angle
+
+- maxAngle:
+
+  `numeric` with maximum angle, default 360.
+
+- na.rm:
+
+  `logical` whether to ignore NA values.
+
+- ...:
+
+  additional arguments are ignored.
+
+## Value
+
+`numeric` value with average angle in degrees
+
 ## See also
 
 Other jam utility functions:
 [`ashape()`](https://jmw86069.github.io/multienrichjam/reference/ashape.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`collapse_mem_clusters()`](https://jmw86069.github.io/multienrichjam/reference/collapse_mem_clusters.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),

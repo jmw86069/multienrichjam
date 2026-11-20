@@ -363,6 +363,7 @@ connected Gene nodes, can be filtered by calling
 Other jam Mem utilities:
 [`Mem-class`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md),
 [`MemPlotFolio-class`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md),
+[`enrichIMrank()`](https://jmw86069.github.io/multienrichjam/reference/enrichIMrank.md),
 [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md),
 [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md)
 
@@ -375,7 +376,6 @@ Other jam igraph functions:
 [`flip_edges()`](https://jmw86069.github.io/multienrichjam/reference/flip_edges.md),
 [`get_bipartite_nodeset()`](https://jmw86069.github.io/multienrichjam/reference/get_bipartite_nodeset.md),
 [`highlight_edges_by_node()`](https://jmw86069.github.io/multienrichjam/reference/highlight_edges_by_node.md),
-[`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md),
 [`label_communities()`](https://jmw86069.github.io/multienrichjam/reference/label_communities.md),
 [`mem2emap()`](https://jmw86069.github.io/multienrichjam/reference/mem2emap.md),
 [`nodegroups2communities()`](https://jmw86069.github.io/multienrichjam/reference/nodegroups2communities.md),

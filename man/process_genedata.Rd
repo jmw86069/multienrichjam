@@ -252,7 +252,9 @@ before choosing most significant row?
 }
 }
 }
-\examples{
-# example code
-
+\seealso{
+Other jam enrich functions:
+\code{\link[=jam_enricher]{jam_enricher()}},
+\code{\link[=process_pathwaydata]{process_pathwaydata()}}
 }
+\concept{jam enrich functions}

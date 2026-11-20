@@ -62,12 +62,6 @@ Other jam igraph shapes:
 [`shape.ellipse.clip()`](https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.clip.md),
 [`shape.ellipse.plot()`](https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.plot.md)
 
-Other jam igraph shapes:
-[`jam_mypie()`](https://jmw86069.github.io/multienrichjam/reference/jam_mypie.md),
-[`shape.coloredrectangle.plot()`](https://jmw86069.github.io/multienrichjam/reference/shape.coloredrectangle.plot.md),
-[`shape.ellipse.clip()`](https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.clip.md),
-[`shape.ellipse.plot()`](https://jmw86069.github.io/multienrichjam/reference/shape.ellipse.plot.md)
-
 ## Examples
 
 ``` r

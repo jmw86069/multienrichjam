@@ -14,6 +14,10 @@ check_MemPlotFolio(object)
 
   `MemPlotFolio` object
 
+## Value
+
+`logical` whether the object is valid.
+
 ## Details
 
 It requires:

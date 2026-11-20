@@ -25,6 +25,17 @@ Functions to use external data in multienrichjam
 - [`IPAlist_to_hits()`](https://jmw86069.github.io/multienrichjam/reference/IPAlist_to_hits.md)
   : Convert IPA list to a gene hit list or matrix
 
+### Enrichment functions
+
+Pathway and gene set enrichment functions
+
+- [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+  : Simple wrapper for pathway enrichment methods
+- [`process_genedata()`](https://jmw86069.github.io/multienrichjam/reference/process_genedata.md)
+  : Process gene data for enrichment
+- [`process_pathwaydata()`](https://jmw86069.github.io/multienrichjam/reference/process_pathwaydata.md)
+  : Process pathway data for enrichment using 'jam_enricher()'
+
 ## Other Useful Functions
 
 ### Custom plot functions
@@ -95,6 +106,8 @@ Utilities for Cnet igraph objects
   : Apply minimum node spacing for each Cnet node set
 - [`bulk_cnet_adjustments()`](https://jmw86069.github.io/multienrichjam/reference/bulk_cnet_adjustments.md)
   : Bulk Cnet plot adjustments
+- [`Cnet-methods`](https://jmw86069.github.io/multienrichjam/reference/Cnet-methods.md)
+  : Cnet-methods for MemPlotFolio
 - [`get_cnet_nodeset()`](https://jmw86069.github.io/multienrichjam/reference/get_cnet_nodeset.md)
   : Get Cnet node set by connected Sets
 - [`get_cnet_nodeset_vector()`](https://jmw86069.github.io/multienrichjam/reference/get_cnet_nodeset_vector.md)
@@ -110,6 +123,8 @@ Utilities for Cnet igraph objects
 
 Functions useful for ‘Mem’ results
 
+- [`enrichIMrank()`](https://jmw86069.github.io/multienrichjam/reference/enrichIMrank.md)
+  : Return the Mem enrichment matrix using column ranks
 - [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
   [`words`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
   [`abbrev`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
@@ -119,6 +134,7 @@ Functions useful for ‘Mem’ results
   [`Mem_to_list()`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`as.list(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`names(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
+  [`` `names<-`( ``*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`enrichments(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`` `enrichments<-`( ``*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`sets(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
@@ -154,6 +170,7 @@ Functions useful for ‘Mem’ results
   [`geneInCategory(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`setsByGene(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`EnrichmentMap(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
+  [`c(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   : Mem S4 class, accessors, getters, and setters
 - [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md)
   [`memIM2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md)
@@ -173,6 +190,7 @@ Functions useful for ‘Mem’ results
   [`metadata(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`Caption(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`CaptionLegendList(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  [`` `CaptionLegendList<-`( ``*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`EnrichmentHeatmap(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`GenePathHeatmap(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`CnetCollapsed(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
@@ -241,8 +259,6 @@ Functions that extend or customize igraph-related features
   : Get partite/connected graph nodesets
 - [`highlight_edges_by_node()`](https://jmw86069.github.io/multienrichjam/reference/highlight_edges_by_node.md)
   : Highlight edges connected to a node or nodes
-- [`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md)
-  : Convert igraph to use pie node shapes
 - [`label_communities()`](https://jmw86069.github.io/multienrichjam/reference/label_communities.md)
   : Assign labels to igraph communities
 - [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md)
@@ -294,6 +310,7 @@ Functions supporting Mem S4 object use
   [`Mem_to_list()`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`as.list(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`names(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
+  [`` `names<-`( ``*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`enrichments(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`` `enrichments<-`( ``*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`sets(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
@@ -329,6 +346,7 @@ Functions supporting Mem S4 object use
   [`geneInCategory(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`setsByGene(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   [`EnrichmentMap(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
+  [`c(`*`<Mem>`*`)`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   : Mem S4 class, accessors, getters, and setters
 - [`Memtest`](https://jmw86069.github.io/multienrichjam/reference/Mem-data.md)
   [`Reese_genes`](https://jmw86069.github.io/multienrichjam/reference/Mem-data.md)
@@ -355,6 +373,7 @@ Functions supporting MemPlotFolio S4 object use
   [`metadata(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`Caption(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`CaptionLegendList(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  [`` `CaptionLegendList<-`( ``*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`EnrichmentHeatmap(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`GenePathHeatmap(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   [`CnetCollapsed(`*`<MemPlotFolio>`*`)`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
@@ -416,6 +435,8 @@ Functions used by other multienrichjam functions
   : Collapse Multienrichment clusters
 - [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md)
   : Color ramp for bivariate colors
+- [`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md)
+  : Bivariate color interpolation function with optional floors
 - [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md)
   : Curate Ingenuity IPA colnames
 - [`deconcat_df2()`](https://jmw86069.github.io/multienrichjam/reference/deconcat_df2.md)
@@ -488,14 +509,8 @@ were internal igraph functions.
 
 Functions moved or removed
 
-- [`cnetplotJam()`](https://jmw86069.github.io/multienrichjam/reference/cnetplotJam.md)
-  : Create a cnetplot igraph object, deprecated
-- [`enrichMapJam()`](https://jmw86069.github.io/multienrichjam/reference/enrichMapJam.md)
-  : Create enrichMap igraph object from enrichResult, deprecated
 - [`grid_with_title()`](https://jmw86069.github.io/multienrichjam/reference/grid_with_title.md)
   : Draw Heatmap with title and subtitle using grid viewports,
   deprecated
 - [`mem_multienrichplot()`](https://jmw86069.github.io/multienrichjam/reference/mem_multienrichplot.md)
   : MultiEnrichMap plot
-- [`with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/with_qfr.md)
-  : Layout specification for Qgraph Fruchterman-Reingold, deprecated

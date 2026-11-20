@@ -23,6 +23,14 @@ which effectively converts the RGB angles to RYB (red-yellow-blue),
 and therefore makes additive color blending more sensible.
 Specifically, "yellow and blue makes green".}
 
+\item{Cmethod, Lmethod}{\code{character} string with method of combining
+multiple values in the 'C' and 'L' color channels of HCL.}
+
+\item{c_min}{\code{numeric} 'C' channel value at or below which a color is
+converted to grey hue}
+
+\item{grey_hue}{\code{numeric} hue used to identify grey colors.}
+
 \item{...}{additional arguments are ignored.}
 }
 \value{

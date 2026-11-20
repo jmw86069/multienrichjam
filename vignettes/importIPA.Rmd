@@ -16,22 +16,22 @@ vignette: >
 # }
 
 knitr::opts_chunk$set(
-   collapse=TRUE,
-   comment="#>",
-   fig.height=12,
-   fig.width=10,
-   fig.align="center",
-   dev="ragg_png"
+   collapse = TRUE,
+   comment = "#>",
+   fig.height = 12,
+   fig.width = 10,
+   fig.align = "center",
+   dev = "ragg_png"
 )
 ```
 
 ```{r setup}
-library(multienrichjam);
-library(jamba);
-library(colorjam);
-suppressPackageStartupMessages(library(igraph));
-suppressPackageStartupMessages(library(ComplexHeatmap));
-options("stringsAsFactors"=FALSE, "warn"=-1);
+library(multienrichjam)
+library(jamba)
+library(colorjam)
+suppressPackageStartupMessages(library(igraph))
+suppressPackageStartupMessages(library(ComplexHeatmap))
+options("warn" = -1)
 ```
 
 # Import Ingenuity IPA data
@@ -62,10 +62,12 @@ To import an IPA text file, use `importIPAenrichment()`.
 It works the same when importing Excel `.xlsx` format.
 
 ```{r, import_ipa_1}
-newborn_txt <- system.file("extdata",
+newborn_txt <- system.file(
+   "extdata",
    "Newborns-IPA.txt",
-   package="multienrichjam");
-newborn_dfl <- importIPAenrichment(newborn_txt);
+   package = "multienrichjam"
+)
+newborn_dfl <- importIPAenrichment(newborn_txt)
 ```
 
 The result is a `list`, named by the IPA analysis.
@@ -74,31 +76,34 @@ Shown below is a summary of results, with number of rows and columns,
 created with `jamba::sdim()`.
 
 ```{r, ipa_1_sdim}
-sdim(newborn_dfl);
+sdim(newborn_dfl)
 ```
 
 In `multienrichjam`, you may want to analyze multiple IPA analyses.
 The example below uses `lapply()` to import multiple IPA files.
 
 ```{r, import_ipa_1_2}
-newborn_txt <- system.file("extdata",
+newborn_txt <- system.file(
+   "extdata",
    "Newborns-IPA.txt",
-   package="multienrichjam");
-olderchildren_txt <- system.file("extdata",
+   package = "multienrichjam"
+)
+olderchildren_txt <- system.file(
+   "extdata",
    "OlderChildren-IPA.txt",
-   package="multienrichjam");
+   package = "multienrichjam"
+)
 
-ipa_files <- c(Newborns=newborn_txt,
-   OlderChildren=olderchildren_txt)
+ipa_files <- c(Newborns = newborn_txt, OlderChildren = olderchildren_txt)
 
-ipa_l <- lapply(ipa_files, importIPAenrichment);
+ipa_l <- lapply(ipa_files, importIPAenrichment)
 ```
 
 A summary of the list of lists is shown below, using
 `jamba::ssdim()`:
 
 ```{r, ipa_ssdim}
-ssdim(ipa_l);
+ssdim(ipa_l)
 ```
 
 
@@ -131,10 +136,10 @@ Extract 'Canonical Pathways' from each IPA result:
 
 ```{r, extract_canonical}
 ## Take only the Ingenuity Canonical Pathways
-enrichList_canonical <- lapply(ipa_l, function(i){
-   i[["Canonical Pathways"]];
-});
-sdim(enrichList_canonical);
+enrichList_canonical <- lapply(ipa_l, function(i) {
+   i[["Canonical Pathways"]]
+})
+sdim(enrichList_canonical)
 ```
 
 ### Convert to enrichResult (optional)
@@ -148,23 +153,27 @@ This option may be useful to review the conversion.
 ```{r, extract_canonical_er}
 ## Convert data.frame to enrichResult
 ## multienrichjam::enrichDF2enrichResult
-er_canonical <- lapply(enrichList_canonical, function(i){
-   enrichDF2enrichResult(i,
-      keyColname="Name",
-      pvalueColname="P-value",
-      geneColname="geneNames",
-      geneRatioColname="Ratio",
-      pvalueCutoff=1)
-});
-sdim(er_canonical);
+er_canonical <- lapply(enrichList_canonical, function(i) {
+   enrichDF2enrichResult(
+      i,
+      keyColname = "Name",
+      pvalueColname = "P-value",
+      geneColname = "geneNames",
+      geneRatioColname = "Ratio",
+      pvalueCutoff = 1
+   )
+})
+sdim(er_canonical)
 kable_coloring(
-   head(as.data.frame(er_canonical[[1]])),
-   caption="Top 10 rows of enrichment data",
-   row.names=FALSE) %>%
-   kableExtra::column_spec(column=seq_len(ncol(er_canonical[[1]])),
-      border_left="1px solid #DDDDDD",
-      extra_css="white-space: nowrap;")
-
+   head(er_canonical[[1]]@result),
+   caption = "Top 10 rows of enrichment data",
+   row.names = FALSE
+) %>%
+   kableExtra::column_spec(
+      column = seq_len(ncol(er_canonical[[1]]@result)),
+      border_left = "1px solid #DDDDDD",
+      extra_css = "white-space: nowrap;"
+   )
 ```
 
 # multiEnrichMap() to create 'Mem'
@@ -173,10 +182,12 @@ Now given a list of `data.frame` results, we can
 run `multiEnrichMap()`:
 
 ```{r, mem_canonical, fig.height=9, fig.width=10}
-mem_canonical <- multiEnrichMap(er_canonical,
-   enrichBaseline=1,
-   p_cutoff=0.05,
-   topEnrichN=10)
+mem_canonical <- multiEnrichMap(
+   er_canonical,
+   enrichBaseline = 1,
+   p_cutoff = 0.05,
+   topEnrichN = 10
+)
 ```
 
 Output is a `list` containing summary results.
@@ -184,10 +195,13 @@ Output is a `list` containing summary results.
 ```{r, mem_sdim}
 kable_coloring(
    sdim(mem_canonical),
-   caption="sdim(mem_canonical)") %>%
-   kableExtra::column_spec(column=seq_len(4),
-      border_left="1px solid #DDDDDD",
-      extra_css="white-space: nowrap;")
+   caption = "sdim(mem_canonical)"
+) %>%
+   kableExtra::column_spec(
+      column = seq_len(4),
+      border_left = "1px solid #DDDDDD",
+      extra_css = "white-space: nowrap;"
+   )
 ```
 
 
@@ -212,16 +226,19 @@ and can be plotted directly using:
 The example below shows the first four plots from `mem_plot_folio()`:
 
 ```{r, mem-folio, fig.height=12, fig.width=8, fig.alt="Mem plot folio showing the first four plots"}
-Mpf <- mem_plot_folio(mem_canonical,
-   pathway_column_split=4,
-   column_cex=0.4, row_cex=0.4,
-   row_names_max_width=grid::unit(9, "cm"),
-   column_names_max_height=grid::unit(4, "cm"),
-   node_factor=2.5,
-   label_factor_l=list(nodeType=c(Set=0.7, Gene=1.5)),
-   use_shadowText=TRUE,
-   do_which=c(1, 2, 3, 4),
-   main="Canonical Pathways");
+Mpf <- mem_plot_folio(
+   mem_canonical,
+   pathway_column_split = 4,
+   column_cex = 0.4,
+   row_cex = 0.4,
+   row_names_max_width = grid::unit(9, "cm"),
+   column_names_max_height = grid::unit(4, "cm"),
+   node_factor = 2.5,
+   label_factor_l = list(nodeType = c(Set = 0.7, Gene = 1.5)),
+   use_shadowText = TRUE,
+   do_which = c(1, 2, 3, 4),
+   main = "Canonical Pathways"
+)
 ```
 
 The object `Mpf` is a `'MemPlotFolio'` object containing
@@ -241,16 +258,17 @@ custom plotting options.
 
 ```{r, cnet-collapsed, fig.height=12, fig.width=10, fig.alt="Cnet collapsed network extracted from mem_plot_folio() to use for custom figures."}
 # generate the data
-Mpf4 <- prepare_folio(mem_canonical,
-   do_which=c(4))
+Mpf4 <- prepare_folio(mem_canonical, do_which = c(4))
 
 # extract the cnet
-cnet <- CnetCollapsed(Mpf4,
-   type="set",
-   node_factor=2,
-   use_shadowText=TRUE,
-   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
-   
+cnet <- CnetCollapsed(
+   Mpf4,
+   type = "set",
+   node_factor = 2,
+   use_shadowText = TRUE,
+   label_factor_l = list(nodeType = c(Gene = 2, Set = 1))
+)
+
 ## jam_graph()
 # jam_igraph(cnet)
 ```
@@ -267,22 +285,19 @@ Additional options for a enrichment heatmap are described in
 the internal function `mem_enrichment_heatmap()`.
 
 ```{r, enrich-hm-mpf, fig.alt="Enrichment heatmap shown using the MemPlotFolio object as input."}
-EnrichmentHeatmap(Mpf);
+EnrichmentHeatmap(Mpf)
 ```
 
 Note that the Mem object can be plotted directly as follows:
 
 ```{r, enrich-hm, fig.alt="Enrichment heatmap shown as a dotplot to indicate the number of genes involved."}
-mem_enrichment_heatmap(mem_canonical,
-   p_cutoff=0.05);
+mem_enrichment_heatmap(mem_canonical, p_cutoff = 0.05)
 ```
 
 The same data can be plotted as a heatmap.
 
 ```{r, enrich-hm-1, fig.alt="Enrichment heatmap showing the heatmap style, without dot plot."}
-mem_enrichment_heatmap(mem_canonical,
-   style="heatmap",
-   p_cutoff=0.05);
+mem_enrichment_heatmap(mem_canonical, style = "heatmap", p_cutoff = 0.05)
 ```
 
 Argument `color_by_column=TRUE` applies the
@@ -290,9 +305,11 @@ color gradient to each column, using `colorV` colors defined
 in from `multiEnrichMap()`.
 
 ```{r, enrich-hm-2, fig.alt="Enrichment heatmap, colorized by column, showing an alternative style."}
-memhm <- mem_enrichment_heatmap(mem_canonical,
-   style="heatmap",
-   color_by_column=TRUE);
+memhm <- mem_enrichment_heatmap(
+   mem_canonical,
+   style = "heatmap",
+   color_by_column = TRUE
+)
 ```
 
 Any of these custom options can be passed to `mem_plot_folio()`,
@@ -315,7 +332,7 @@ present in each enrichment test.
 will also indicate directionality.
 
 ```{r, mem-hm-mpf, fig.height=14, fig.width=10, fig.alt="Gene-pathway heatmap drawn specifically with mem_gene_path_heatmap()."}
-hm_drawn <- GenePathHeatmap(Mpf);
+hm_drawn <- GenePathHeatmap(Mpf)
 ```
 
 You can pull out pathway clusters using `Clusters(Mpf)`, and
@@ -326,8 +343,8 @@ the row and column order can be interrogated using
 `jamba::heatmap_column_order()` for example.
 
 ```{r, mem_hm_sets}
-hm_sets <- heatmap_column_order(hm_drawn);
-hm_sets;
+hm_sets <- heatmap_column_order(hm_drawn)
+hm_sets
 ```
 
 ## Full Cnet plot
@@ -340,24 +357,28 @@ Note that the pathways can be subset using `[` bracket notation if relevant.
 ```{r, cnet-plot-1, fig.height=10, fig.width=8, fig.alt="Full Cnet plot, for all pathways and genes."}
 cnet <- mem2cnet(mem_canonical)
 
-withr::with_par(list(mar=c(1, 1, 1, 1)+0.1), {
-   jam_igraph(cnet,
-      use_shadowText=TRUE,
-      node_factor=0.5,
-      vertex.label.cex=0.6);
-   mem_legend(mem_canonical);
+withr::with_par(list(mar = c(1, 1, 1, 1) + 0.1), {
+   jam_igraph(
+      cnet,
+      use_shadowText = TRUE,
+      node_factor = 0.5,
+      vertex.label.cex = 0.6
+   )
+   mem_legend(mem_canonical)
 })
 ```
 
 Extract the largest connected subnetwork.
 
 ```{r, cnet-plot-2, fig.height=10, fig.width=8, fig.alt="Cnet plot showing the largest connected sub-network."}
-cnet_largest_sub <- subset_igraph_components(cnet, keep=1)
+cnet_largest_sub <- subset_igraph_components(cnet, keep = 1)
 
-jam_igraph(cnet_largest_sub,
-   use_shadowText=TRUE,
-   label_factor=0.5,
-   node_factor=0.5);
+jam_igraph(
+   cnet_largest_sub,
+   use_shadowText = TRUE,
+   label_factor = 0.5,
+   node_factor = 0.5
+)
 ```
 
 #### Subset Cnet by Cluster
@@ -366,15 +387,19 @@ Subset the pathway nodes with `subsetCnetIgraph()`,
 using `hm_sets` defined above.
 
 ```{r, cnet-plot-1-custom, fig.height=10, fig.width=8, fig.alt="Cnet plot showing a specific Cnet cluster."}
-cnet_sub <- subsetCnetIgraph(cnet,
-   repulse=3.5,
-   includeSets=unlist(hm_sets[c("A")]));
-jam_igraph(cnet_sub,
-   node_factor=1,
-   use_shadowText=TRUE,
-   label_dist_factor=3,
-   label_factor=1.3);
-mem_legend(mem_canonical);
+cnet_sub <- subsetCnetIgraph(
+   cnet,
+   repulse = 3.5,
+   includeSets = unlist(hm_sets[c("A")])
+)
+jam_igraph(
+   cnet_sub,
+   node_factor = 1,
+   use_shadowText = TRUE,
+   label_dist_factor = 3,
+   label_factor = 1.3
+)
+mem_legend(mem_canonical)
 ```
 
 
@@ -397,14 +422,14 @@ Other useful defaults:
 * `remove_blanks=FALSE`: optionally remove blank colors from pie nodes.
 
 ```{r, subnet, fig.height=10, fig.width=8, fig.alt="Subset Cnet plot using a specific set of pathways."}
-cnet3 <- multienrichjam::subsetCnetIgraph(cnet,
-   repulse=5,
-   minSetDegree=6,
-   minGeneDegree=1);
-jam_igraph(cnet3,
-   node_factor=0.7,
-   use_shadowText=TRUE);
-mem_legend(mem_canonical);
+cnet3 <- multienrichjam::subsetCnetIgraph(
+   cnet,
+   repulse = 5,
+   minSetDegree = 6,
+   minGeneDegree = 1
+)
+jam_igraph(cnet3, node_factor = 0.7, use_shadowText = TRUE)
+mem_legend(mem_canonical)
 ```
 
 
@@ -423,10 +448,8 @@ The default `0.2` is stored in the 'Mem' object `mem_canonical`.
 ```{r, mem-plot-1, fig.height=12, fig.width=10, fig.alt="Multi-enrichment network creating using mem2emap(), using the default overlap threshold 0.2."}
 emap <- mem2emap(mem_canonical)
 
-jam_igraph(emap,
-   node_factor=2,
-   use_shadowText=TRUE)
-title(main="overlap=0.2")
+jam_igraph(emap, node_factor = 2, use_shadowText = TRUE)
+title(main = "overlap=0.2")
 ```
 
 You can provide the Jaccard overlap threshold directly,
@@ -438,15 +461,12 @@ of connectivity, and should be a solid starting point for
 future adjustments.
 
 ```{r, mem-plot-1b, fig.height=12, fig.width=10, fig.alt="Multi-enrichment network shown after using alternative overlap threshold."}
-use_overlap <- mem_find_overlap(mem_canonical);
+use_overlap <- mem_find_overlap(mem_canonical)
 
-emap2 <- mem2emap(mem_canonical,
-   overlap=use_overlap)
+emap2 <- mem2emap(mem_canonical, overlap = use_overlap)
 
-jam_igraph(emap2,
-   node_factor=3,
-   use_shadowText=TRUE)
-title(main=paste0("overlap=", use_overlap))
+jam_igraph(emap2, node_factor = 3, use_shadowText = TRUE)
+title(main = paste0("overlap=", use_overlap))
 ```
 
 
@@ -475,17 +495,13 @@ We also call two other helper functions:
 
 ```{r, mem-plot-2, fig.alt="Network plot showing the largest connected sub-network of the multi-enrichment network."}
 ## You can alternatively pull out any other component
-g_sub <- subset_igraph_components(emap2, keep=1);
+g_sub <- subset_igraph_components(emap2, keep = 1)
 
 ## Re-apply network layout, and remove blank colors
-g_sub <- relayout_with_qfr(repulse=3.5,
-   removeIgraphBlanks(g_sub))
+g_sub <- relayout_with_qfr(repulse = 3.5, removeIgraphBlanks(g_sub))
 
 ## Plot
-jam_igraph(g_sub,
-   node_factor=3,
-   label_factor=2,
-   use_shadowText=TRUE)
+jam_igraph(g_sub, node_factor = 3, label_factor = 2, use_shadowText = TRUE)
 ```
 
 
@@ -519,12 +535,14 @@ Consider the following changes, demonstrated below:
 * `label_dist_factor=5`: label distance 5x farther from node center
 
 ```{r, jam-igraph-1, fig.height=10, fig.width=8, fig.alt="Network plot created using jam_igraph() as an enhanced alternative to the default igraph plot function."}
-jam_igraph(cnet3,
-   node_factor=2,
-   edge_factor=2,
-   label_factor=1.2, 
-   label_dist_factor=5,
-   use_shadowText=TRUE)
+jam_igraph(
+   cnet3,
+   node_factor = 2,
+   edge_factor = 2,
+   label_factor = 1.2,
+   label_dist_factor = 5,
+   use_shadowText = TRUE
+)
 ```
 
 ## Colored edges
@@ -534,13 +552,15 @@ a visual enhancement inspired by the Gephi network visualization tool.
 This process is performed using `color_edges_by_nodes()`.
 
 ```{r, jam-igraph-2, fig.height=10, fig.width=8, fig.alt="Network plot is shown using edges colorized based upon the colors for the connected nodes."}
-jam_igraph(color_edges_by_nodes(cnet3, alpha=0.7),
-   edge_bundling="connections",
+jam_igraph(
+   color_edges_by_nodes(cnet3, alpha = 0.7),
+   edge_bundling = "connections",
    # edge_factor=2,
    # node_factor=2,
-   label_factor=1.2, 
-   label_dist_factor=5,
-   use_shadowText=TRUE)
+   label_factor = 1.2,
+   label_dist_factor = 5,
+   use_shadowText = TRUE
+)
 ```
 
 
@@ -561,24 +581,26 @@ The R-shiny app uses several functions:
 from within the R-shiny app. For example:
 
 ```{r shinycat_1, eval=FALSE}
-output_env <- launch_shinycat(g=cnet)
+output_env <- launch_shinycat(g = cnet)
 ```
 
 The output is stored in an `environment` called `output_env`.
 
 ```{r shinycat_2, eval=FALSE}
 # obtain the output data
-adj_cnet <- output_env$adj_cnet;
+adj_cnet <- output_env$adj_cnet
 ```
 
 Then the new Cnet plot can be plotted, for example:
 
 ```{r shinycat_3, eval=FALSE}
 # jam_graph
-jam_igraph(adj_cnet,
-   node_factor=2,
-   use_shadowText=TRUE,
-   label_factor_l=list(nodeType=c(Gene=2, Set=1)))
+jam_igraph(
+   adj_cnet,
+   node_factor = 2,
+   use_shadowText = TRUE,
+   label_factor_l = list(nodeType = c(Gene = 2, Set = 1))
+)
 ```
 
 ## ShinyCat Screenshot

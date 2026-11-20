@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Multienrichment with clusterProfiler • multienrichjam</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Multienrichment with clusterProfiler">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.118.950</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.124.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,6 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jmw86069.github.io/multienrichjam/">multienrichjam</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jmw86069.github.io/jamba/" class="external-link">jamba</a></span><span class="op">)</span></span>
 <span><span class="co"># library(colorjam);</span></span>
 <span><span class="co"># suppressPackageStartupMessages(library(ComplexHeatmap))</span></span>
@@ -134,7 +133,7 @@ collections of gene sets available from MSigDB, shown below.</p>
 MSigDB Collections
 </caption>
 <thead><tr>
-<th style="text-align:left;">
+<th style="text-align:left;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 gs_collection
 </th>
 <th style="text-align:left;">
@@ -149,7 +148,7 @@ num_genesets
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C1
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -162,7 +161,7 @@ Positional
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -176,7 +175,7 @@ Chemical and Genetic Perturbations
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -190,7 +189,7 @@ Canonical Pathways
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -204,7 +203,7 @@ BioCarta Pathways
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -218,7 +217,7 @@ KEGG Legacy Pathways
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -232,7 +231,7 @@ KEGG Medicus Pathways
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -246,7 +245,7 @@ PID Pathways
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -260,7 +259,7 @@ Reactome Pathways
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C2
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -274,7 +273,7 @@ WikiPathways
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C3
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -288,7 +287,7 @@ miRDB
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C3
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -302,7 +301,7 @@ MIR_Legacy
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C3
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -316,7 +315,7 @@ GTRD
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C3
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -330,7 +329,7 @@ TFT_Legacy
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C4
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -344,7 +343,7 @@ Curated Cancer Cell Atlas gene sets
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C4
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -358,7 +357,7 @@ Cancer Gene Neighborhoods
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C4
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -372,7 +371,7 @@ Cancer Modules
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C5
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -386,7 +385,7 @@ GO Biological Process
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C5
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -400,7 +399,7 @@ GO Cellular Component
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C5
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -414,7 +413,7 @@ GO Molecular Function
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C5
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -428,7 +427,7 @@ Human Phenotype Ontology
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C6
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -441,7 +440,7 @@ Oncogenic Signature
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C7
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -455,7 +454,7 @@ ImmuneSigDB
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C7
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -469,7 +468,7 @@ HIPC Vaccine Response
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 C8
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -482,7 +481,7 @@ Cell Type Signature
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 H
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -531,7 +530,7 @@ for this analysis.</p>
 MSigDB Canonical Pathways
 </caption>
 <thead><tr>
-<th style="text-align:left;">
+<th style="text-align:left;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 gs_name
 </th>
 <th style="text-align:left;">
@@ -540,7 +539,7 @@ gene_symbol
 </tr></thead>
 <tbody>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_AGPCR_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -548,7 +547,7 @@ ARRB1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_AKAP13_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -556,7 +555,7 @@ AKAP13
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_AKAP95_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -564,7 +563,7 @@ AKAP8
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_AKAPCENTROSOME_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -572,7 +571,7 @@ AKAP9
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_BAD_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -580,7 +579,7 @@ ADCY1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_CARM1_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -588,7 +587,7 @@ CARM1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_CASPASE_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -596,7 +595,7 @@ APAF1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_CELL2CELL_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -604,7 +603,7 @@ ACTN1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_CERAMIDE_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -612,7 +611,7 @@ AIFM1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
+<td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;white-space: nowrap;position: sticky; left: 0; background: white; z-index: 3;">
 BIOCARTA_CFTR_PATHWAY
 </td>
 <td style="text-align:left;border-left:1px solid #DDDDDD;white-space: nowrap;">
@@ -657,7 +656,8 @@ we iterate the list using <code><a href="https://rdrr.io/r/base/lapply.html" cla
 <span>      minGSSize <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>      maxGSSize <span class="op">=</span> <span class="fl">5000</span></span>
 <span>   <span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span></code></pre></div>
 <p>You may also run a specific enrichment function in
 <code>clusterProfiler</code> such as
 <code><a href="https://rdrr.io/pkg/clusterProfiler/man/enrichPC.html" class="external-link">clusterProfiler::enrichPC()</a></code> which automatically uses
@@ -695,15 +695,14 @@ shown below:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Mem</span></span>
 <span><span class="co">#&gt; class: Mem</span></span>
-<span><span class="co">#&gt; dim: 2 enrichments, 14 sets, 17 genes</span></span>
+<span><span class="co">#&gt; dim: 2 enrichments, 14 sets, 23 genes</span></span>
 <span><span class="co">#&gt; - enrichments (2): Newborns, OlderChildren</span></span>
-<span><span class="co">#&gt; - sets (14): REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION, KEGG_APOPTOSIS, ..., KEGG_ASTHMA, WP_HEAD_AND_NECK_SQUAMOUS_CELL_CARCINOMA</span></span>
-<span><span class="co">#&gt; - genes (17): ACTN1, ALPK1, ..., RUNX1, SPP2</span></span>
+<span><span class="co">#&gt; - sets (14): REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION, KEGG_APOPTOSIS, ..., WP_HEAD_AND_NECK_SQUAMOUS_CELL_CARCINOMA, KEGG_ASTHMA</span></span>
+<span><span class="co">#&gt; - genes (23): ACTN1, ALPK1, ..., TANK, YWHAQ</span></span>
 <span><span class="co">#&gt; Analysis parameters:</span></span>
 <span><span class="co">#&gt; - top N per enrichment: 20</span></span>
 <span><span class="co">#&gt; - significance threshold: 0.2 (colname: qvalue)</span></span>
-<span><span class="co">#&gt; - min gene count: 2</span></span>
-<span><span class="co">#&gt; - direction colname: zScore</span></span></code></pre></div>
+<span><span class="co">#&gt; - min gene count: 2</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="prepare-plot-folio">Prepare Plot Folio<a class="anchor" aria-label="anchor" href="#prepare-plot-folio"></a>
 </h3>
@@ -734,8 +733,7 @@ visualizations, described in detail in <code><a href="../reference/mem_plot_foli
 <span>   <span class="op">)</span>,</span>
 <span>   use_shadowText <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>   main <span class="op">=</span> <span class="st">"Canonical Pathways"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required namespace: gridtext</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 class="tabset" id="mem-plot-folio">Mem Plot Folio<a class="anchor" aria-label="anchor" href="#mem-plot-folio"></a>
@@ -758,7 +756,7 @@ use tabs.</li>
 <span>   md_title <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>   do_md_tabs <span class="op">=</span> <span class="st">'Rmd'</span>,</span>
 <span>   params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      em <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>edge_factor <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span>      em <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>edge_factor <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
 <span>   <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
@@ -767,48 +765,62 @@ use tabs.</li>
 <p><img src="importClusterProfiler_files/figure-html/mem-folio-1.png" class="r-plt" alt="mem_plot_folio, plot 1, enrichment heatmap" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 class="tabset" id="enrichmentmap">EnrichmentMap<a class="anchor" aria-label="anchor" href="#enrichmentmap"></a>
+<h4 class="tabset" id="genepathheatmap">GenePathHeatmap<a class="anchor" aria-label="anchor" href="#genepathheatmap"></a>
 </h4>
 <p><img src="importClusterProfiler_files/figure-html/mem-folio-2.png" class="r-plt" alt="mem_plot_folio, plot 2, Gene-Pathway heatmap" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 class="tabset" id="genepathheatmap">GenePathHeatmap<a class="anchor" aria-label="anchor" href="#genepathheatmap"></a>
+<h4 class="tabset" id="cnetcollapsed">CnetCollapsed<a class="anchor" aria-label="anchor" href="#cnetcollapsed"></a>
 </h4>
 <p><img src="importClusterProfiler_files/figure-html/mem-folio-3.png" class="r-plt" alt="mem_plot_folio, plot 3, Cnet plot with Cluster Letters" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 class="tabset" id="cnetcollapsed">CnetCollapsed<a class="anchor" aria-label="anchor" href="#cnetcollapsed"></a>
-</h4>
-<p><img src="importClusterProfiler_files/figure-html/mem-folio-4.png" class="r-plt" alt="mem_plot_folio, plot 4, Cnet plot with Cluster Summary Labels" width="100%" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level4">
 <h4 class="tabset" id="cnetexemplar">CnetExemplar<a class="anchor" aria-label="anchor" href="#cnetexemplar"></a>
 </h4>
+<div class="section level5">
+<h5 class="tabset" id="section">1<a class="anchor" aria-label="anchor" href="#section"></a>
+</h5>
+<p><img src="importClusterProfiler_files/figure-html/mem-folio-4.png" class="r-plt" alt="mem_plot_folio, plot 4, Cnet plot with Cluster Summary Labels" width="100%" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level5">
+<h5 class="tabset" id="section-1">2<a class="anchor" aria-label="anchor" href="#section-1"></a>
+</h5>
 <p><img src="importClusterProfiler_files/figure-html/mem-folio-5.png" class="r-plt" alt="mem_plot_folio, plot 1, enrichment heatmap" width="100%" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level5">
+<h5 class="tabset" id="section-2">3<a class="anchor" aria-label="anchor" href="#section-2"></a>
+</h5>
+<p><img src="importClusterProfiler_files/figure-html/mem-folio-6.png" class="r-plt" alt="mem_plot_folio, plot 2, Gene-Pathway heatmap" width="100%" style="display: block; margin: auto;"></p>
+</div>
 </div>
 <div class="section level4">
 <h4 class="tabset" id="cnetcluster">CnetCluster<a class="anchor" aria-label="anchor" href="#cnetcluster"></a>
 </h4>
 <div class="section level5">
-<h5 class="tabset" id="section">1<a class="anchor" aria-label="anchor" href="#section"></a>
-</h5>
-<p><img src="importClusterProfiler_files/figure-html/mem-folio-6.png" class="r-plt" alt="mem_plot_folio, plot 2, Gene-Pathway heatmap" width="100%" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level5">
-<h5 class="tabset" id="section-1">2<a class="anchor" aria-label="anchor" href="#section-1"></a>
+<h5 class="tabset" id="a">A<a class="anchor" aria-label="anchor" href="#a"></a>
 </h5>
 <p><img src="importClusterProfiler_files/figure-html/mem-folio-7.png" class="r-plt" alt="mem_plot_folio, plot 3, Cnet plot with Cluster Letters" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level5">
-<h5 class="tabset" id="section-2">3<a class="anchor" aria-label="anchor" href="#section-2"></a>
+<h5 class="tabset" id="b">B<a class="anchor" aria-label="anchor" href="#b"></a>
 </h5>
 <p><img src="importClusterProfiler_files/figure-html/mem-folio-8.png" class="r-plt" alt="mem_plot_folio, plot 4, Cnet plot with Cluster Summary Labels" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level5">
-<h5 class="tabset" id="section-3">4<a class="anchor" aria-label="anchor" href="#section-3"></a>
+<h5 class="tabset" id="c">C<a class="anchor" aria-label="anchor" href="#c"></a>
 </h5>
 <p><img src="importClusterProfiler_files/figure-html/mem-folio-9.png" class="r-plt" alt="mem_plot_folio, plot 1, enrichment heatmap" width="100%" style="display: block; margin: auto;"></p>
 </div>
+<div class="section level5">
+<h5 class="tabset" id="d">D<a class="anchor" aria-label="anchor" href="#d"></a>
+</h5>
+<p><img src="importClusterProfiler_files/figure-html/mem-folio-10.png" class="r-plt" alt="mem_plot_folio, plot 2, Gene-Pathway heatmap" width="100%" style="display: block; margin: auto;"></p>
+</div>
+</div>
+<div class="section level4">
+<h4 class="tabset" id="enrichmentmap">EnrichmentMap<a class="anchor" aria-label="anchor" href="#enrichmentmap"></a>
+</h4>
+<p><img src="importClusterProfiler_files/figure-html/mem-folio-11.png" class="r-plt" alt="mem_plot_folio, plot 3, Cnet plot with Cluster Letters" width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>

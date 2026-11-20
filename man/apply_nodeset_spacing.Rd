@@ -121,6 +121,7 @@ so that no subsequent adjustments are performed on the nodeset.
 }
 \seealso{
 Other jam cnet utilities:
+\code{\link{Cnet-methods}},
 \code{\link[=adjust_cnet_nodeset]{adjust_cnet_nodeset()}},
 \code{\link[=adjust_cnet_set_relayout_gene]{adjust_cnet_set_relayout_gene()}},
 \code{\link[=bulk_cnet_adjustments]{bulk_cnet_adjustments()}},

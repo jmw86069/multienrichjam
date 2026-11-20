@@ -102,7 +102,4 @@ associated annotations.
 ## See also
 
 Other jam deprecated functions:
-[`cnetplotJam()`](https://jmw86069.github.io/multienrichjam/reference/cnetplotJam.md),
-[`enrichMapJam()`](https://jmw86069.github.io/multienrichjam/reference/enrichMapJam.md),
-[`mem_multienrichplot()`](https://jmw86069.github.io/multienrichjam/reference/mem_multienrichplot.md),
-[`with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/with_qfr.md)
+[`mem_multienrichplot()`](https://jmw86069.github.io/multienrichjam/reference/mem_multienrichplot.md)

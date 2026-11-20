@@ -83,7 +83,8 @@ collapse_mem_clusters(
   which has "non blank" assigned color in
   [`enrichIMcolors()`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md)
   in order for the color to be assigned to the resulting node, in the
-  case of Cnet output with `return_type="cnet"`.
+  case of Cnet output with `return_type="cnet"`. It should range from 0
+  to 1.
 
 - verbose:
 
@@ -132,6 +133,7 @@ Other jam utility functions:
 [`avg_angles()`](https://jmw86069.github.io/multienrichjam/reference/avg_angles.md),
 [`avg_colors_by_list()`](https://jmw86069.github.io/multienrichjam/reference/avg_colors_by_list.md),
 [`cell_fun_bivariate()`](https://jmw86069.github.io/multienrichjam/reference/cell_fun_bivariate.md),
+[`col_pvdir_xf()`](https://jmw86069.github.io/multienrichjam/reference/col_pvdir_xf.md),
 [`colorRamp2D()`](https://jmw86069.github.io/multienrichjam/reference/colorRamp2D.md),
 [`curateIPAcolnames()`](https://jmw86069.github.io/multienrichjam/reference/curateIPAcolnames.md),
 [`deconcat_df2()`](https://jmw86069.github.io/multienrichjam/reference/deconcat_df2.md),

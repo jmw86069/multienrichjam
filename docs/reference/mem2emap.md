@@ -9,6 +9,7 @@ mem2emap(
   mem,
   overlap = 0.2,
   p_cutoff = NULL,
+  p_floor = NULL,
   min_count = NULL,
   colorV = NULL,
   cluster_function = igraph::cluster_walktrap,
@@ -64,6 +65,9 @@ mem2emap(
     genes shared between two pathway nodes, relative to the union of
     genes in those two pathway nodes.
 
+  - `overlap=NULL` is a special case which uses the average between
+    median and mean Jaccard overlap, excluding the diagonal.
+
   - Note these genes must be involved in enrichment, and therefore does
     not use all possible genes annotated to a pathway. Therefore,
     connections are only created with enriched genes are shared between
@@ -75,6 +79,14 @@ mem2emap(
   default NULL uses the value in the `mem` object. This cutoff, together
   with `min_count`, define which nodes are included, and the color fill
   for those nodes.
+
+- p_floor:
+
+  `numeric` threshold used as the maximum enrichment P-value for color
+  gradient scales. It should be in P-value form, and is transformed
+  internally by `-log10(p_floor)`. It will use
+  [`thresholds()`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.html)
+  to determine if a default value is defined, otherwise it uses `1e-10`.
 
 - min_count:
 
@@ -120,8 +132,8 @@ mem2emap(
   [`layout_with_qfr()`](https://jmw86069.github.io/multienrichjam/reference/layout_with_qfr.md),
   default 3.3.
 
-  - Use repulse 'FALSE', 'NULL', or '0' will skip the layout, which is
-    used by
+  - Use repulse 'FALSE', 'NULL', or '0' will skip the layout, as is used
+    internally by
     [`mem_find_overlap()`](https://jmw86069.github.io/multienrichjam/reference/mem_find_overlap.md)
     to iterate numerous overlaps without spending time on layout each
     iteration.
@@ -149,6 +161,10 @@ mem2emap(
 
   `numeric` used when `size_by_genes=TRUE` to define the median size,
   default is 5.
+
+- max_size:
+
+  `numeric` max node size.
 
 - apply_edge_width:
 
@@ -303,6 +319,7 @@ node size.
 Other jam Mem utilities:
 [`Mem-class`](https://jmw86069.github.io/multienrichjam/reference/Mem-class.md),
 [`MemPlotFolio-class`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md),
+[`enrichIMrank()`](https://jmw86069.github.io/multienrichjam/reference/enrichIMrank.md),
 [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md),
 [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md)
 
@@ -315,7 +332,6 @@ Other jam igraph functions:
 [`flip_edges()`](https://jmw86069.github.io/multienrichjam/reference/flip_edges.md),
 [`get_bipartite_nodeset()`](https://jmw86069.github.io/multienrichjam/reference/get_bipartite_nodeset.md),
 [`highlight_edges_by_node()`](https://jmw86069.github.io/multienrichjam/reference/highlight_edges_by_node.md),
-[`igraph2pieGraph()`](https://jmw86069.github.io/multienrichjam/reference/igraph2pieGraph.md),
 [`label_communities()`](https://jmw86069.github.io/multienrichjam/reference/label_communities.md),
 [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md),
 [`nodegroups2communities()`](https://jmw86069.github.io/multienrichjam/reference/nodegroups2communities.md),
