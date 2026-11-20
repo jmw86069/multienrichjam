@@ -131,11 +131,14 @@ and all other annotations should be retrieved separately as needed.
 \value{
 nested \code{list} of \code{enrichResult} objects.
 \itemize{
-\item \code{list} by 'genedata', each with:
-\item \code{list} by 'pathwaydata', each with
-\item \code{list} by 'enrich_method', each with
-\item \code{enrichResult} or \code{gseaResult}
+\item \code{list} named by 'genedata', each with:
+\item \code{list} named by 'pathwaydata', each with
+\item \code{list} named by 'enrich_method', each with
+\item 'ORA'=\code{enrichResult} or 'GSEA'=\code{gseaResult}
 }
+
+In addition, an attribute 'pathwaydata' is added with the
+updated \code{pathwaydata} after \code{process_pathwaydata()}
 }
 \description{
 Simple wrapper for pathway enrichment methods, to produce

@@ -33,6 +33,14 @@ in `multiEnrichMap()`; it now adds attribute attribute
    * New argument 'round_digits=3' for values less than 1000.
    * NA values are now hidden, useful for `show_enrich='rank'`.
 
+## New functions
+
+* `process_genedata()`,`process_pathwaydata()`
+   * Previously internal functions, now exported to be visible
+   so the steps can be reviewed outside of `jam_enricher()`.
+   * Help docs have substantial detail regarding gene symbol
+   resolution, logic, and justification of the approaches used.
+
 * `enrichIMrank()`
    * New function returns rank-order for each enrichment column,
    after applying thresholds `p_cutoff`, `min_count`, and

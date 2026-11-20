@@ -65,10 +65,13 @@
 #'    * `list` of 'genedata' `data.frame` used for enrichment
 #' 
 #' @returns nested `list` of `enrichResult` objects.
-#'    * `list` by 'genedata', each with:
-#'    * `list` by 'pathwaydata', each with
-#'    * `list` by 'enrich_method', each with
-#'    * `enrichResult` or `gseaResult`
+#'    * `list` named by 'genedata', each with:
+#'    * `list` named by 'pathwaydata', each with
+#'    * `list` named by 'enrich_method', each with
+#'    * 'ORA'=`enrichResult` or 'GSEA'=`gseaResult`
+#'    
+#'    In addition, an attribute 'pathwaydata' is added with the
+#'    updated `pathwaydata` after `process_pathwaydata()`
 #' 
 #' @family jam enrich functions
 #' 
@@ -389,6 +392,9 @@ jam_enricher <- function
       attr(pd_results, "genedata") <- igdf;
       pd_results
    })
+
+   # add pathwaydata as attribute for review
+   attr(gd_results, "pathwaydata") <- pathwaydata;
    return(gd_results);
 }
 
@@ -460,7 +466,133 @@ detect_genedata_format <- function(
 }
 
 
-#' Process pathway data for enrichment
+#' Process pathway data for enrichment using 'jam_enricher()'
+#' 
+#' Process pathway data for enrichment using 'jam_enricher()'
+#' 
+#' This function recognizes several types of pathway data as input,
+#' and returns a consistent format as output: a `list` of pathway
+#' sources, each containing a `data.frame` with columns
+#' 'TERM' and 'GENE'.
+#' 
+#' ## Custom parameters
+#' 
+#' Argument `pathwaydata_params` controls additional options:
+#' 
+#' * `refresh_genes=TRUE` enables `genejam::freshenGenes()` which
+#' uses Bioconductor annotations to update the current gene annotation
+#' to the current version available (to the active R session).  
+#' Several arguments are passed to this function:
+#'    * `ann_lib`: the core annotation library,
+#'    'org.Hs.eg.db' is default for Human; 'org.Mm.eg.db' is used
+#'    for Mouse. This annotation database must be available,
+#'    for example install Rat data with
+#'    `BiocManager::install('org.Rn.eg.db')`.
+#'    Alternatively, `ann_lib` can be a `list` with one or more
+#'    `AnnotationDbi` or `OrgDb` objects.
+#'    * `handle_multiple='best_each'`: converts each gene to the best
+#'    available match, using the priority order defined in `try_list`.
+#'    * `ignore.case=TRUE`: Note that Human symbols are UPPERCASE,
+#'    so for a moderate speed boost use `ignore.case=FALSE`.
+#'    Note that Mouse by convention uses mixed case, for example "Apoe",
+#'    and so for mouse and most other species, use `ignore.case=TRUE`.
+#'    * `empty_rule='empty'`: converts any unmatched entry to '' or NA
+#'    so it is not retained in the output. This decision prevents keeping
+#'    a gene or accession which can never be recognized as an official
+#'    gene during pathway enrichment analysis.  
+#'    Use `empty_rule='original'` to retain the original entry whenever
+#'    the entry cannot be matched to any other annotation in `try_list`.
+#'    * `try_list=c('SYMBOL2EG', 'ACCNUM2EG', 'ENSEMBL2EG', 'ALIAS2EG')`:
+#'    is the recommended order of sources to use when equating a gene
+#'    symbol or identifier with Bioconductor gene annotations. They are
+#'    attempted in order, to convert each entry to an ENTREZID ('EG').
+#'       * When using `handle_multiple='best_each'`, each method in `try_list`
+#'       is attempted, in order, for each gene entry, and the first
+#'       successful result is retained as one or more `ENTREZID` values
+#'       for each input gene.
+#'       * Specifically, when `'SYMBOL2EG'` is successful, it is used.
+#'       Only when `'SYMBOL2EG'` is not successful, `'ACCNUM2EG'` is
+#'       attempted. Only when `'ACCNUM2EG'` is also unsuccessful,
+#'       `'ENSEMBL2EG'` is used, and so on.
+#'       * The lowest priority is `'ALIAS2EG'` since this association has
+#'       the lowest confidence for association, and is most prone to
+#'       multiple associations. In general pathway enrichment is somewhat
+#'       tolerant to such lower-confidence associations, in return for
+#'       having more potential opportunities for the correct association.
+#'       * Finally, the matching ENTREZID values are converted to 'SYMBOL'
+#'       so the "official gene SYMBOL" is associated with the original
+#'       gene entry.
+#'       * For each pathway, only the unique `'SYMBOL'` values are retained.
+#'       * In the event two gene identifiers in a pathway are converted to
+#'       the same `'SYMBOL'`, only the unique `'SYMBOL'` is associated with
+#'       the corresponding pathways.
+#'       * In the event one gene identifier is converted to two 'SYMBOL' values
+#'       of equivalent priority, both 'SYMBOL' values are retained and
+#'       associated with the corresponding pathways.  
+#'       For this purpose, 'priority' refers to the order in `try_list`.
+#'  
+#' * `gene_colnames`: vector of columns that could be recognized to
+#' contain gene symbols or identifiers.
+#' * `pathway_colnames`: vector of columns that may contain pathway
+#' names or identifiers. The first matching entry is assumed to contain
+#' the pathway identifier associated with each gene set.
+#' 
+#' ## Handling other species
+#' 
+#' In the event the `pathwaydata` entries were derived from one species,
+#' and you want to test enrichment using gene data from species.
+#' In this case, the recommended order of operations:
+#' 1. Convert `pathwaydata` to the most current gene symbols in the
+#' species used for that pathway data, for example Human.
+#' 2. Use another resource such as `babelgene::orthologs()` to convert
+#' Human to the corresponding species; or use OrtholoGene to provide
+#' a species-to-species mapping to the relevant gene SYMBOL.
+#' 
+#' 
+#' ## The decision to use SYMBOL
+#' 
+#' The primary reason to use SYMBOL is to focus pathway analyses,
+#' and comparison of pathway analyses, on the functional product
+#' of gene loci in the cell: a protein product, or active transcript
+#' (lncRNA, snRNA, snoRNA, miRNA, tRNA).
+#' 
+#' There are often multiple genetic copies of a gene locus which
+#' produce identical transcript and/or protein products, and
+#' the decision to use SYMBOL is motivated to focus on the product
+#' and not the genetic source/coordinates of that product.
+#' 
+#' In Gene Ontology, Biological Process (GOBP), the gene
+#' `'RN7SK'` (also known as '7S rRNA') is represented only once,
+#' although there are over 200 copies of `'RN7SK'` in the
+#' human genome assembly hg38 as of 2026.
+#' 
+#' In contrast, the 'Transcription Factor Target' (TFT) resource
+#' of the Molescular Signature Database (MSigDB version 2025.1.Hs)
+#' contains `'RN7SK'` and 97 distinct pseudogenes
+#' named `'RN7SKP1'` through `'RN7SKP296'`.
+#' The utility of each pseudogene for the purpose of gene set
+#' enrichment is unclear, specifically whether enrichment of
+#' one particular genetic copy of 7S rRNA is truly indicative
+#' of transcription factor control, or indicative of cell type
+#' specificity as represented in the 'Cell Type (C8)' signatures
+#' also in MSigDB.
+#' 
+#' See [https://docs.gsea-msigdb.org/#MSigDB/Release_Notes/MSigDB_2025.1.Hs/](Release_Notes:MSigDB_2025.1.Hs)
+#' 
+#' The intent of 'MultiEnrichJam' is to use one gene symbol entry
+#' to represent any and all copies of genetic locus associated with
+#' that gene symbol.
+#' 
+#' As of November 2026, there are three gene SYMBOL values associated
+#' to multiple ENTREZID values in human, which appear to be distinctly
+#' different gene products:
+#' |**SYMBOL** |**ENTREZID**     |**GENENAME**                                                                     |**ALIAS**   |
+#' |:----------|:----------------|:--------------------------------------------------------------------------------|:-----------|
+#' |TEC        |7006,100124696   |tec protein tyrosine kinase,transient erythroblastopenia of childhood            |PSCTK4,TEC  |
+#' |HBD        |3045,100187828   |hemoglobin subunit delta,hypophosphatemic bone disease                           |HBD,HBK     |
+#' |MMD2       |221938,100505381 |Miyoshi muscular dystrophy 2,monocyte to macrophage differentiation associated 2 |MMD2,PAQR10 |
+#' 
+#' @references Subramanian, Tamayo, et al. PNAS 2005, https://www.pnas.org/content/102/43/15545
 #' 
 #' @returns `data.frame` with two columns:
 #'    * 'TERM': the pathway name
@@ -470,7 +602,7 @@ detect_genedata_format <- function(
 #' @inheritParams jam_enricher
 #' 
 #' @keywords internal
-#' @noRd
+#' @export
 process_pathwaydata <- function(
    pathwaydata,
    pathwaydata_params=list(
@@ -478,6 +610,7 @@ process_pathwaydata <- function(
       ann_lib="org.Hs.eg.db",
       handle_multiple="best_each",
       empty_rule="empty",
+      ignore.case=TRUE,
       gene_colnames=c(
          "gene_symbol",
          "db_gene_symbol",
@@ -672,12 +805,81 @@ process_pathwaydata <- function(
 #'    * Sort by absolute value of sign descending, then sign descending.
 #'    * Retain the first observation per 'SYMBOL'
 #' 
-#' ## Params recognized
+#' ## Custom parameters
 #' 
-#' * ann_lib: passed to `genejam::freshenGenes()`
-#' * pvalue_cutoff, fold_cutoff: used to define gene hits when
+#' Argument `genedata_params` controls additional options:
+#' 
+#' * `refresh_genes=TRUE` enables `genejam::freshenGenes()` which
+#' uses Bioconductor annotations to update the current gene annotation
+#' to the current version available (to the active R session).  
+#' Several arguments are passed to this function:
+#'    * `ann_lib`: the core annotation library,
+#'    'org.Hs.eg.db' is default for Human; 'org.Mm.eg.db' is used
+#'    for Mouse. This annotation database must be available,
+#'    for example install Rat data with
+#'    `BiocManager::install('org.Rn.eg.db')`.
+#'    Alternatively, `ann_lib` can be a `list` with one or more
+#'    `AnnotationDbi` or `OrgDb` objects.
+#'    * `handle_multiple='best_each'`: converts each gene to the best
+#'    available match, using the priority order defined in `try_list`.
+#'    * `ignore.case=TRUE`: Note that Human symbols are UPPERCASE,
+#'    so for a moderate speed boost use `ignore.case=FALSE`.
+#'    Note that Mouse by convention uses mixed case, for example "Apoe",
+#'    and so for mouse and most other species, use `ignore.case=TRUE`.
+#'    * `empty_rule='empty'`: converts any unmatched entry to '' or NA
+#'    so it is not retained in the output. This decision prevents keeping
+#'    a gene or accession which can never be recognized as an official
+#'    gene during pathway enrichment analysis.  
+#'    Use `empty_rule='original'` to retain the original entry whenever
+#'    the entry cannot be matched to any other annotation in `try_list`.
+#'    Note that this decision is intended only when the pathway data
+#'    also contain similar gene entries which may also not have official
+#'    gene symbols.
+#'    * `try_list=c('SYMBOL2EG', 'ACCNUM2EG', 'ENSEMBL2EG', 'ALIAS2EG')`:
+#'    is the recommended order of sources to use when equating a gene
+#'    symbol or identifier with Bioconductor gene annotations. They are
+#'    attempted in order, to convert each entry to an ENTREZID ('EG').
+#'       * When using `handle_multiple='best_each'`, each method in `try_list`
+#'       is attempted, in order, for each gene entry, and the first
+#'       successful result is retained as one or more `ENTREZID` values
+#'       for each input gene.
+#'       * Specifically, when `'SYMBOL2EG'` is successful, it is used.
+#'       Only when `'SYMBOL2EG'` is not successful, `'ACCNUM2EG'` is
+#'       attempted. Only when `'ACCNUM2EG'` is also unsuccessful,
+#'       `'ENSEMBL2EG'` is used, and so on.
+#'       * The lowest priority is `'ALIAS2EG'` since this association has
+#'       the lowest confidence for association, and is most prone to
+#'       multiple associations. In general pathway enrichment is somewhat
+#'       tolerant to such lower-confidence associations, in return for
+#'       having more potential opportunities for the correct association.
+#'       * Finally, the matching ENTREZID values are converted to 'SYMBOL'
+#'       so the "official gene SYMBOL" is associated with the original
+#'       gene entry.
+#'       * For each gene result, only the first unique `'SYMBOL'` is retained,
+#'       after applying the rank/sort operation. Typically the most
+#'       significant result is retained for each gene.
+#'       * In the event two gene identifiers are converted to
+#'       the same `'SYMBOL'`, only the first unique `'SYMBOL'` is retained,
+#'       after applying the rank/sort operation.
+#'       Typically, the most significant result is retained for each gene.
+#'       * In the event one gene identifier is converted to two 'SYMBOL' values
+#'       of equivalent priority, the both 'SYMBOL' values are retained,
+#'       by splitting the row into multiple rows which each contain one
+#'       'SYMBOL' entry. Then the `'SYMBOL'` entries overall are sorted
+#'       as described above, and the first unique `'SYMBOL'` is
+#'       retained.
+#'       Typically, the most significant result is retained for each gene.
+#'  
+#' * `gene_colnames`: vector of columns that could be recognized to
+#' contain gene symbols or identifiers.
+#' * `pvalue_cutoff`, `fold_cutoff`: used to define gene hits when
 #' 'genedata' is `data.frame`. When not supplied, data can only
 #' be used for ranked enrichment.
+#' * `mgm_cutoff`: applied to max group mean (mgm) values to
+#' require each gene hit to involve one group mean of at least
+#' this value.
+#' * `apply_mgm_universe`: When `TRUE` it restricts the gene universe
+#' to genes with max group mean (mgm) of at least this value.
 #' 
 #' ## Todo
 #' 
@@ -692,7 +894,7 @@ process_pathwaydata <- function(
 #' * Add optional `detected_genes`.
 #'    * For now, this step is pushed onto the scientist.
 #' 
-#' * Add `mgm_cutoff` (max group mean)
+#' * DONE. Add `mgm_cutoff` (max group mean)
 #'    * Detect 'mgm' or 'mean' columns, calculate row max.
 #'    * Apply `mgm_cutoff` to define gene hits.
 #'    * Optional: Define universe using `mgm_cutoff` genes.
@@ -727,8 +929,10 @@ process_pathwaydata <- function(
 #' 
 #' @inheritParams jam_enricher
 #' 
-#' @keywords internal
-#' @noRd
+#' @examples
+#' # example code
+#' 
+#' @export
 process_genedata <- function(
    genedata,
    genedata_params=list(
@@ -736,9 +940,11 @@ process_genedata <- function(
       ann_lib="org.Hs.eg.db",
       handle_multiple="best_each",
       empty_rule="empty",
+      ignore.case=TRUE,
       fold_cutoff=NULL,
       pvalue_cutoff=NULL,
       mgm_cutoff=NULL,
+      apply_mgm_universe=TRUE,
       gene_colnames=c(
          "SYMBOL",
          "probes",
@@ -853,6 +1059,12 @@ process_genedata <- function(
             formals(process_genedata)$genedata_params$rank_strategy
          )
       )
+      apply_mgm_universe <- match.arg(
+         params$apply_mgm_universe,
+         choices=eval(
+            formals(process_genedata)$genedata_params$apply_mgm_universe
+         )
+      )
       fold_colname <- find_colname(params$fold_colnames, genedata)
       pvalue_colname <- find_colname(params$pvalue_colnames, genedata)
       mgm_colname <- find_colname(params$mgm_colnames, genedata, max=5);
@@ -928,6 +1140,7 @@ process_genedata <- function(
          );
       }
       # Apply mgm_cutoff
+      met_mgm_cutoff <- rep_len(TRUE, nrow(genedata))
       if (length(mgm_cutoff) == 1 &&
          is.numeric(mgm_cutoff) &&
          length(mgm_colname) > 0) {
@@ -946,11 +1159,13 @@ process_genedata <- function(
          } else {
             mgm_values <- genedata[[mgm_colname]]
          }
-         use_gene_hits <- (
-            use_gene_hits &
-               !is.na(mgm_values) &
-               mgm_values >= mgm_cutoff
+         met_mgm_cutoff <- (
+            !is.na(mgm_values) &
+            mgm_values >= mgm_cutoff
          )
+         use_gene_hits <- (use_gene_hits & met_mgm_cutoff)
+      } else {
+         mgm_cutoff <- NULL;
       }
       if (length(use_gene_hits) == 0) {
          use_gene_hits <- rep_len(FALSE, nrow(genedata));
@@ -1016,6 +1231,30 @@ process_genedata <- function(
       use_signs <- use_signs[new_order];
       use_genes <- use_genes[new_order];
       use_gene_hits <- use_gene_hits[new_order];
+      met_mgm_cutoff <- met_mgm_cutoff[new_order];
+
+      # Optionally filter universe using mgm_cutoff
+      if (isTRUE(apply_mgm_universe) && !all(met_mgm_cutoff)) {
+         if (verbose) {
+            jamba::printDebug(
+               "process_genedata(): ",
+               "filtering gene universe by mgm_cutoff ",
+               mgm_cutoff,
+               ", retaining ",
+               sep="",
+               c(
+                  jamba::formatInt(sum(met_mgm_cutoff)),
+                  " of ",
+                  jamba::formatInt(length(met_mgm_cutoff))
+               ),
+               " rows."
+            )
+         }
+         use_signs <- use_signs[met_mgm_cutoff];
+         use_genes <- use_genes[met_mgm_cutoff];
+         use_gene_hits <- use_gene_hits[met_mgm_cutoff];
+         met_mgm_cutoff <- met_mgm_cutoff[met_mgm_cutoff];
+      }
    } else {
       cli::cli_abort(c(
          "{.var genedata} as {.cls {class(genedata)}} is not supported."
