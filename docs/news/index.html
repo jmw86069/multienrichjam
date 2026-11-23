@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.124.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.125.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,8 +43,23 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.124.900" id="multienrichjam-00124900">multienrichjam 0.0.124.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00124900"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.0.125.900" id="multienrichjam-00125900">multienrichjam 0.0.125.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00125900"></a></h2>
 <div class="section level3">
+<h3 id="changes-0-0-125-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-125-900"></a></h3>
+<ul><li>Fixed error in <code><a href="../reference/jam_enricher.html">jam_enricher()</a></code> when applying an mgm cutoff.</li>
+<li>
+<code><a href="../reference/fixSetLabels.html">fixSetLabels()</a></code>
+<ul><li>New argument ‘reset’: <code>reset=TRUE</code> uses original labels and applies renaming rules; <code>reset=2</code> resets to original labels.</li>
+<li>Added unit tests.</li>
+</ul></li>
+<li>
+<code>sets(Mem)&lt;-</code> now stores the original set labels in a hidden attribute <code>attr(x@enrichIM, 'setLabels_df')</code> to allow labels to be reset to the original input sets. The accessor <code>enrichIM(x)</code> silently removes this attribute.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.124.900" id="multienrichjam-00124900">multienrichjam 0.0.124.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00124900"></a></h2>
+<ul><li>Updated pkgdown, added <code>enrichResult</code> stub S4 class, updated R methods to avoid proper S4 methods if ‘DOSE’ or ‘enrichit’ is not loaded. Fixed some examples.</li>
+</ul><div class="section level3">
 <h3 id="changes-0-0-124-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-124-900"></a></h3>
 <ul><li>
 <code><a href="../reference/gr2er.html">gr2er()</a></code> internal function adjusts <code>gseaResult</code> to similar format to <code>enrichResult</code> to be used smoothly in <code><a href="../reference/multiEnrichMap.html">multiEnrichMap()</a></code>; it now adds attribute attribute <code>'genes_signed'</code>.</li>

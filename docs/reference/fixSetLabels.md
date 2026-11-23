@@ -10,6 +10,7 @@ fixSetLabels(
   wrap = TRUE,
   width = 40,
   maxNchar = Inf,
+  reset = FALSE,
   suffix = "...",
   nodeType = c("Set", "Gene", "any"),
   do_abbreviations = TRUE,
@@ -79,6 +80,16 @@ used as default in `fixSetLabels(..., abbrev_from)`.
   each string. This option is preferred when `wrap=TRUE` is not
   feasible, for example heatmap labels. When `NULL` or `Inf` no limit is
   applied. See [`base::nchar()`](https://rdrr.io/r/base/nchar.html).
+
+- reset:
+
+  `logical` default FALSE, reset to original labels:
+
+  - `reset=FALSE`: edit existing set labels.
+
+  - `reset=TRUE`: edit the original set labels.
+
+  - `reset=2` reset to original labels, make no further changes.
 
 - suffix:
 

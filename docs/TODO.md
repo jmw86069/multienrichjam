@@ -2,6 +2,16 @@
 
 ## 20nov2026
 
+- [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  - show_enrich=‘hits’ ‘significance’ to show ’\*’, useful with
+    `color_non_hits=TRUE`.
+- DONE. Store
+  [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
+  before:after in `Mem` so it can be reverted or updated from the
+  original values.
+- Consider some way to cache
+  [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+  results.
 - [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   - Make top enrichment annotation use
     [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
@@ -9,6 +19,9 @@
   - Add/Fix option to rotate the heatmap 90 degrees.
   - Rename arguments from ‘row\_’, ‘column\_’, to ‘gene\_’, ‘enrich\_’.
 - Port `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
+- `PathwayHeatmap()` with heatmap for given pathway(s), referencing
+  `Mem` or `MemPlotFolio`.
+  - Need method to import expression data.
 
 ## 19nov2026
 

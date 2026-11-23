@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.124.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.125.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,6 +54,7 @@
 <span>  wrap <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  width <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  maxNchar <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  reset <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  suffix <span class="op">=</span> <span class="st">"..."</span>,</span>
 <span>  nodeType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Set"</span>, <span class="st">"Gene"</span>, <span class="st">"any"</span><span class="op">)</span>,</span>
 <span>  do_abbreviations <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -118,6 +119,13 @@ the supplied <code>width</code> argument.</p></dd>
 allowed for each string. This option is preferred when <code>wrap=TRUE</code>
 is not feasible, for example heatmap labels. When <code>NULL</code> or <code>Inf</code>
 no limit is applied. See <code><a href="https://rdrr.io/r/base/nchar.html" class="external-link">base::nchar()</a></code>.</p></dd>
+
+
+<dt id="arg-reset">reset<a class="anchor" aria-label="anchor" href="#arg-reset"></a></dt>
+<dd><p><code>logical</code> default FALSE, reset to original labels:</p><ul><li><p><code>reset=FALSE</code>: edit existing set labels.</p></li>
+<li><p><code>reset=TRUE</code>: edit the original set labels.</p></li>
+<li><p><code>reset=2</code> reset to original labels, make no further changes.</p></li>
+</ul></dd>
 
 
 <dt id="arg-suffix">suffix<a class="anchor" aria-label="anchor" href="#arg-suffix"></a></dt>

@@ -1,6 +1,26 @@
 # Changelog
 
+## multienrichjam 0.0.125.900
+
+### Changes
+
+- Fixed error in
+  [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+  when applying an mgm cutoff.
+- [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
+  - New argument ‘reset’: `reset=TRUE` uses original labels and applies
+    renaming rules; `reset=2` resets to original labels.
+  - Added unit tests.
+- `sets(Mem)<-` now stores the original set labels in a hidden attribute
+  `attr(x@enrichIM, 'setLabels_df')` to allow labels to be reset to the
+  original input sets. The accessor `enrichIM(x)` silently removes this
+  attribute.
+
 ## multienrichjam 0.0.124.900
+
+- Updated pkgdown, added `enrichResult` stub S4 class, updated R methods
+  to avoid proper S4 methods if ‘DOSE’ or ‘enrichit’ is not loaded.
+  Fixed some examples.
 
 ### Changes
 
