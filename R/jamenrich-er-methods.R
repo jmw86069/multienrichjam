@@ -1059,12 +1059,8 @@ process_genedata <- function(
             formals(process_genedata)$genedata_params$rank_strategy
          )
       )
-      apply_mgm_universe <- match.arg(
-         params$apply_mgm_universe,
-         choices=eval(
-            formals(process_genedata)$genedata_params$apply_mgm_universe
-         )
-      )
+      apply_mgm_universe <- params$apply_mgm_universe;
+      
       fold_colname <- find_colname(params$fold_colnames, genedata)
       pvalue_colname <- find_colname(params$pvalue_colnames, genedata)
       mgm_colname <- find_colname(params$mgm_colnames, genedata, max=5);

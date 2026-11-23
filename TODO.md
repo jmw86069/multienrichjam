@@ -2,6 +2,13 @@
 
 ## 20nov2026
 
+* `EnrichmentHeatmap()`
+   * show_enrich='hits' 'significance' to show '*',
+   useful with `color_non_hits=TRUE`.
+
+* DONE. Store `fixSetLabels()` before:after in `Mem` so it can be
+reverted or updated from the original values.
+* Consider some way to cache `jam_enricher()` results.
 * `GenePathHeatmap()`
    * Make top enrichment annotation use `EnrichmentHeatmap()`
    colors, legend, etc.
@@ -9,6 +16,9 @@
    * Rename arguments from 'row_', 'column_', to 'gene_', 'enrich_'.
 
 * Port `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
+* `PathwayHeatmap()` with heatmap for given pathway(s),
+referencing `Mem` or `MemPlotFolio`.
+   * Need method to import expression data.
 
 ## 19nov2026
 

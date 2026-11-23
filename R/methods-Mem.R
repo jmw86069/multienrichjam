@@ -463,13 +463,36 @@ setMethod("sets", "Mem",
 setMethod("sets<-", "Mem",
    function(x, value) {
       jslot_cols <- c("memIM")
-      jslot_rows <- c("enrichIM",
+      jslot_rows <- c(
+         "enrichIM",
          "enrichIMcolors",
          "enrichIMdirection",
-         "enrichIMgeneCount")
+         "enrichIMgeneCount"
+      );
+
+      # prepare xref data.frame for input,output labels
+      setLabels_df <- attr(x@enrichIM, "setLabels_df");
+      if (inherits(setLabels_df, "data.frame")) {
+         if (
+            nrow(setLabels_df) != nrow(x@enrichIM) ||
+            !all(setLabels_df$input == rownames(x@enrichIM))
+         ) {
+            setLabels_df <- NULL;
+         }
+         setLabels_df$output <- value;
+      }
+      if (!inherits(setLabels_df, "data.frame")) {
+         setLabels_df <- data.frame(
+            input=rownames(x@enrichIM),
+            row.names=value,
+            output=value
+         )
+      }
       for (use_j in jslot_cols) {
          if (length(value) != ncol(slot(x, use_j))) {
-            stop(paste0("length is not equal to ncol(x@", use_j, ")"));
+            cli::cli_abort(paste0(
+               "length is not equal to ncol(x@", use_j, ")"
+            ));
          }
          xmatrix <- slot(x, use_j);
          colnames(xmatrix) <- value;
@@ -481,6 +504,10 @@ setMethod("sets<-", "Mem",
          }
          xmatrix <- slot(x, use_j);
          rownames(xmatrix) <- value;
+         # store xref inside enrichIM(x)
+         if ("enrichIM" %in% use_j) {
+            attr(xmatrix, "setLabels_df") <- setLabels_df;
+         }
          slot(x, use_j, check=FALSE) <- xmatrix;
       }
       x
@@ -656,7 +683,11 @@ setMethod("enrichList", "Mem",
 #' @aliases enrichIM
 #' @export
 setMethod("enrichIM", "Mem",
-   function(x, ...) x@enrichIM
+   function(x, ...) {
+      y <- x@enrichIM;
+      attr(y, "setLabels_df") <- NULL;
+      y
+   }
 )
 
 #' The pathway-enrichment color matrix from a Mem object

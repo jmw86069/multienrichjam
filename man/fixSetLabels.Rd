@@ -22,6 +22,7 @@ fixSetLabels(
   wrap = TRUE,
   width = 40,
   maxNchar = Inf,
+  reset = FALSE,
   suffix = "...",
   nodeType = c("Set", "Gene", "any"),
   do_abbreviations = TRUE,
@@ -68,6 +69,13 @@ the supplied \code{width} argument.}
 allowed for each string. This option is preferred when \code{wrap=TRUE}
 is not feasible, for example heatmap labels. When \code{NULL} or \code{Inf}
 no limit is applied. See \code{base::nchar()}.}
+
+\item{reset}{\code{logical} default FALSE, reset to original labels:
+\itemize{
+\item \code{reset=FALSE}: edit existing set labels.
+\item \code{reset=TRUE}: edit the original set labels.
+\item \code{reset=2} reset to original labels, make no further changes.
+}}
 
 \item{suffix}{\code{character} value, default \code{"..."}, used
 when \code{maxNchar} is below \code{Inf}.

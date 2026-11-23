@@ -6,7 +6,6 @@ test_that("fixSetLabels examples", {
 		"Genes Up-regulated during fasting",
 		"Genes regulated by Tnfalpha, TGF beta, Pi3kakt, mtorc"
 	)
-	fixSetLabels(a, wrap=FALSE)
 	
 	testthat::expect_equal(
 		fixSetLabels(a, wrap=FALSE),
@@ -74,4 +73,9 @@ test_that("fixSetLabels examples", {
 			"Hippo Signaling_v1",
 			"Hippo Signaling_v2"))
 	
+	testthat::expect_equal(
+		sets(fixSetLabels(Memtest, reset=2)),
+      sets(Memtest)
+   )
+
 })

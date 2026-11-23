@@ -58,6 +58,10 @@
 #'    allowed for each string. This option is preferred when `wrap=TRUE`
 #'    is not feasible, for example heatmap labels. When `NULL` or `Inf`
 #'    no limit is applied. See `base::nchar()`.
+#' @param reset `logical` default FALSE, reset to original labels:
+#'    * `reset=FALSE`: edit existing set labels.
+#'    * `reset=TRUE`: edit the original set labels.
+#'    * `reset=2` reset to original labels, make no further changes.
 #' @param suffix `character` value, default `"..."`, used
 #'    when `maxNchar` is below `Inf`.
 #'    When a string is shortened to `maxNchar`, the `suffix` helps indicate
@@ -140,33 +144,34 @@
 #'    preset=c("top", "center", "bottom"));
 #'
 #' @export
-fixSetLabels <- function
-(x,
- wrap=TRUE,
- width=40,
- maxNchar=Inf,
- suffix="...",
- nodeType=c("Set",
-    "Gene",
-    "any"),
- do_abbreviations=TRUE,
- adjustCase=TRUE,
- lowercaseAll=TRUE,
- removeGrep=c(
- 	"^(KEGG(_MEDICUS|)(_REFERENCE|_VARIANT|))[_. ]",
- 	"^(PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
- 	"^((Mmu|Hsa|Rno|Dme)[0-9]+|Wp[0-9]+|^M[0-9]+)[:]",
- 	"^(R-(Hsa|Mmu|Rno|Dme)-[0-9]+)[:]"),
- words_from=NULL,
- words_to=NULL,
- add_from=NULL,
- add_to=NULL,
- abbrev_from=NULL,
- abbrev_to=NULL,
- perl=TRUE,
- makeUnique=FALSE,
- ...)
-{
+fixSetLabels <- function(
+   x,
+   wrap=TRUE,
+   width=40,
+   maxNchar=Inf,
+   reset=FALSE,
+   suffix="...",
+   nodeType=c("Set",
+      "Gene",
+      "any"),
+   do_abbreviations=TRUE,
+   adjustCase=TRUE,
+   lowercaseAll=TRUE,
+   removeGrep=c(
+      "^(KEGG(_MEDICUS|)(_REFERENCE|_VARIANT|))[_. ]",
+      "^(PID|REACTOME|BIOCARTA|NABA|SA|SIG|ST|WP|HALLMARK)[_. ]",
+      "^((Mmu|Hsa|Rno|Dme)[0-9]+|Wp[0-9]+|^M[0-9]+)[:]",
+      "^(R-(Hsa|Mmu|Rno|Dme)-[0-9]+)[:]"),
+   words_from=NULL,
+   words_to=NULL,
+   add_from=NULL,
+   add_to=NULL,
+   abbrev_from=NULL,
+   abbrev_to=NULL,
+   perl=TRUE,
+   makeUnique=FALSE,
+   ...
+) {
    # validate nodeType
    nodeType <- match.arg(nodeType);
    
@@ -222,28 +227,41 @@ fixSetLabels <- function
    
    # validate length for from,to pairs
    if (length(words_from) != length(words_to)) {
-     stop(paste0(
-       "length(words_from) does not equal length(words_to).",
-       "Please remedy."));
+      cli::cli_abort(c(
+         "{.code length(words_from)} does not equal {.code length(words_to)}.",
+         "Please remedy."));
    }
    if (length(add_from) != length(add_to)) {
-     stop(paste0(
-       "length(add_from) does not equal length(add_to).",
-       "Please remedy."));
+      cli::cli_abort(c(
+         "{.code length(add_from)} does not equal {.code length(add_to)}.",
+         "Please remedy."));
    }
    if (length(abbrev_from) != length(abbrev_to)) {
-     stop(paste0(
-       "length(abbrev_from) does not equal length(abbrev_to).",
-       "Please remedy."));
+      cli::cli_abort(paste0(
+         "{.code length(abbrev_from)} does not equal {.code length(abbrev_to)}.",
+         "Please remedy."));
    }
 
    ## define xPrep for processing, based upon the input class of 'x'
    xMem <- NULL;
    if (inherits(x, "Mem")) {
-   	# Force makeUnique=TRUE to protect the Mem object integrity
-   	makeUnique <- TRUE;
+      # Force makeUnique=TRUE to protect the Mem object integrity
+      makeUnique <- TRUE;
       xMem <- x;
-      x <- sets(xMem);
+      if (isFALSE(reset)) {
+         x <- sets(xMem);
+      } else {
+         setLabels_df <- attr(x@enrichIM, "setLabels_df");
+         if (inherits(setLabels_df, "data.frame") && "input" %in% colnames(setLabels_df)) {
+            x <- setLabels_df$input;
+         } else {
+            x <- sets(xMem)
+         }
+         if (2 %in% reset) {
+            sets(xMem) <- x;
+            return(xMem);
+         }
+      }
       xPrep <- x;
       which_nodes <- seq_along(x);
       for (i in seq_along(removeGrep)) {
@@ -259,13 +277,13 @@ fixSetLabels <- function
       } else {
          which_nodes <- which(igraph::V(x)$nodeType %in% nodeType);
       }
-   	xPrep <- igraph::V(x)$name[which_nodes];
+      xPrep <- igraph::V(x)$name[which_nodes];
       for (i in seq_along(removeGrep)) {
          xPrep <- gsub("[_ ]+", " ",
             gsub(removeGrep[[i]],
                "",
                ignore.case=TRUE,
-            	xPrep));
+               xPrep));
       }
    } else if (is.atomic(x)) {
       which_nodes <- seq_along(x);
@@ -281,25 +299,26 @@ fixSetLabels <- function
       stop("Input must be atomic vector, or 'igraph', or 'Mem'.")
    }
    if (TRUE %in% adjustCase) {
-      xPrep <- jamba::ucfirst(xPrep,
+      xPrep <- jamba::ucfirst(
+         xPrep,
          lowercaseAll=lowercaseAll,
          ...);
    }
 
    ## Confirm words_from,words_to have identical length
    if (length(words_from) > 0) {
-      words_to <- rep(words_to, length.out=length(words_from))
+      words_to <- rep_len(words_to, length(words_from))
    }
    ## When add_from,add_to are defined
    if (length(add_from) > 0) {
-      add_to <- rep(add_to, length.out=length(add_from))
+      add_to <- rep_len(add_to, length(add_from))
       # append to words_from
       words_from <- c(words_from, add_from)
       words_to <- c(words_to, add_to)
    }
    ## When abbrev_from,abbrev_to are defined
    if (isTRUE(do_abbreviations) && length(abbrev_from) > 0) {
-      abbrev_to <- rep(abbrev_to, length.out=length(abbrev_from))
+      abbrev_to <- rep_len(abbrev_to, length(abbrev_from))
       # trim trailing space in pattern match
       abbrev_from <- gsub("[ ]*$", "", abbrev_from);
       # append to words_from
@@ -310,19 +329,21 @@ fixSetLabels <- function
    # Apply replacements, case-insensitive match, case-sensitive replacement
    if (length(words_from) > 0 && length(words_to) == length(words_from)) {
       for (i in seq_along(words_from)) {
-      	if (isTRUE(perl)) {
-      		xPrep <- gsub(paste0("\\b", words_from[i], "\\b"),
-	            words_to[i],
-	            ignore.case=TRUE,
-	            perl=TRUE,
-	            xPrep);
-      	} else {
-      		xPrep <- gsub(paste0("", words_from[i], ""),
-      			words_to[i],
-      			ignore.case=TRUE,
-      			perl=FALSE,
-      			xPrep);
-      	}
+         if (isTRUE(perl)) {
+            xPrep <- gsub(
+               paste0("\\b", words_from[i], "\\b"),
+               words_to[i],
+               ignore.case=TRUE,
+               perl=TRUE,
+               xPrep);
+         } else {
+            xPrep <- gsub(
+               paste0("", words_from[i], ""),
+               words_to[i],
+               ignore.case=TRUE,
+               perl=FALSE,
+               xPrep);
+         }
       }
    }
    ## Optionally limit the character length
@@ -345,9 +366,10 @@ fixSetLabels <- function
 
    ## Optionally makeUnique
    if (isTRUE(makeUnique)) {
-   	xPrep <- jamba::makeNames(xPrep,
-   		...);
-   	## Todo: save relationship from input value to new value
+      xPrep <- jamba::makeNames(
+         xPrep,
+         ...);
+      ## Todo: save relationship from input value to new value
    }
    
    ## Optionally apply word wrap
@@ -363,6 +385,7 @@ fixSetLabels <- function
 
    ## Update the proper data to return
    if (inherits(xMem, "Mem")) {
+      # update sets
       sets(xMem) <- xNew;
       return(xMem);
    } else if (inherits(x, "igraph")) {
