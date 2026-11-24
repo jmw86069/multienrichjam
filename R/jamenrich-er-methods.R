@@ -376,7 +376,8 @@ jam_enricher <- function
                   maxGSSize=10000,
                   pvalueCutoff=1,
                   eps=1e-50,
-                  verbose=verbose > 1
+                  verbose=verbose > 1,
+                  ...
                )
                # add pathwaydata name as 'gs_cat'
                gsear@result$gs_cat <- pwname;
@@ -625,7 +626,8 @@ process_pathwaydata <- function(
          "name",
          "ID",
          "Pathway",
-         "GO[:]*(BP|MF|CC)"
+         "GO[:]*(BP|MF|CC)",
+         "TERM"
       ),
       try_list=c(
          "SYMBOL2EG", "ACCNUM2EG",
@@ -990,6 +992,25 @@ process_genedata <- function(
       keep.null=FALSE
    )
 
+   # process list of genedata
+   if (inherits(genedata, "list")) {
+      if (verbose) {
+         jamba::printDebug(
+            "process_genedata(): ",
+            "Processing list of genedata."
+         )
+      }
+      genedatas <- lapply(genedata, function(igenedata){
+         process_genedata(
+            genedata=igenedata,
+            genedata_params=genedata_params,
+            verbose=verbose,
+            ...
+         )
+      })
+      return(genedatas)
+   }
+
    # process each type of genedata as relevant
    use_genes <- character();
    use_gene_hits <- character();
@@ -998,7 +1019,7 @@ process_genedata <- function(
       if (verbose) {
          jamba::printDebug(
             "process_genedata(): ",
-            "detected gene hits"
+            "Detected gene hits."
          )
       }
       use_genes <- unique(as.character(genedata));
@@ -1016,7 +1037,7 @@ process_genedata <- function(
          if (verbose) {
             jamba::printDebug(
                "process_genedata(): ",
-               "detected directional gene hits"
+               "Detected directional gene hits."
             )
          }
          # directional sign
@@ -1035,7 +1056,7 @@ process_genedata <- function(
          if (verbose) {
             jamba::printDebug(
                "process_genedata(): ",
-               "detected scalar gene hits"
+               "Detected scalar gene hits."
             )
          }
          # directional scalar
@@ -1044,13 +1065,41 @@ process_genedata <- function(
          use_signs <- genedata[not_na];
          use_genes <- use_genes[not_na];
       }
-      use_gene_hits <- rep_len(TRUE, length(use_genes))
+      use_gene_hits <- rep_len(FALSE, length(use_genes))
+   } else if (inherits(genedata, c("data.frame", "tbl")) &&
+      all(c("gene", "sign", "hit") %in% colnames(genedata))) {
+      # previous rank table
+      if (verbose) {
+         jamba::printDebug(
+            "process_genedata(): ",
+            "Detected gene/rank/hit table, using as-is."
+         )
+      }
+      use_genes <- unique(as.character(genedata$gene));
+      use_signs <- rep_len(1, length(use_genes));
+      names(use_signs) <- use_genes;
+      use_gene_hits <- rep_len(FALSE, length(use_genes))
+      names(use_gene_hits) <- use_genes;
+      if (!all(is.na(genedata$sign))) {
+         # take first instance of each gene
+         gd_signs <- subset(subset(genedata, !is.na(sign)), !duplicated(gene));
+         use_signs <- jamba::nameVector(
+            gd_signs[, c("sign", "gene"), drop=FALSE]
+         )
+      }
+      if (any(!is.na(genedata$hit) & genedata$hit)) {
+         # take first instance of each gene
+         gd_hits <- subset(subset(genedata, !is.na(hit) & hit), !duplicated(gene));
+         use_gene_hits <- jamba::nameVector(
+            gd_hits[, c("hit", "gene"), drop=FALSE]
+         )
+      }
    } else if (inherits(genedata, c("data.frame", "tbl"))) {
       # data.frame
       if (verbose) {
          jamba::printDebug(
             "process_genedata(): ",
-            "detected gene stat table"
+            "Detected gene stat table."
          )
       }
       rank_strategy <- match.arg(

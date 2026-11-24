@@ -1,3 +1,21 @@
+# multienrichjam 0.0.126.900
+
+## Changes
+
+* `EnrichmentHeatmap()`
+   * `'show_enrich=5'` will show an asterisk `'*'` for significant
+   pathways, applying `p_cutoff` and `min_count` thresholds.
+
+* `jam_enricher()`
+   * `genedata` now recognizes `data.frame` with columns:
+   'gene', 'sign', 'hit', to allow pre-processed data to be
+   considered both for ORA and GSEA.
+
+* `process_genedata()`
+   * now accepts `list` input for batch processing
+   * accepts `data.frame` with columns 'gene', 'sign', 'hit',
+   to re-use output from itself.
+
 # multienrichjam 0.0.125.900
 
 ## Changes

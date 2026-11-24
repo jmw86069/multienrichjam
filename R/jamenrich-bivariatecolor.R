@@ -513,6 +513,8 @@ cell_fun_bivariate <- function(
          cell_value2 <- jamba::rmNA(naValue=0, mx[i, j]);
          if (is.na(mx[i, j])) {
             cell_label2 <- "";
+         } else if (inherits(mx[i, j], "character")) {
+            cell_label2 <- format(mx[i, j], trim=TRUE);
          } else if (abbrev && max(cell_value2) >= 1000) {
             cell_label2 <- jamba::asSize(
                cell_value2,
@@ -626,7 +628,7 @@ cell_fun_bivariate <- function(
                gp=grid::gpar(
                   col=outline_col,
                   fill=cell_color));
-            text_col <- "white"
+            text_col <- "black"
             if (grepl("center", fixed=TRUE, placement)) {
                text_col <- jamba::setTextContrastColor(
                   cell_color,
@@ -634,8 +636,6 @@ cell_fun_bivariate <- function(
                );
             }
          }
-         # text_col <- jamba::setTextContrastColor(cell_color,
-         #    useGrey=15);
       } else {
          grid::grid.rect(x=x,
             y=y,
@@ -649,7 +649,6 @@ cell_fun_bivariate <- function(
 
       if (cex > 0 && !"" %in% cell_label) {
          fontsize <- (10 * cex);
-         # grid::grid.text(cell_label,
          xnote <- x;
          ynote <- y;
          just <- c("center", "center");

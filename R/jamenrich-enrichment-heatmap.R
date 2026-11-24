@@ -172,6 +172,8 @@
 #'    2. "direction": the `'direction'` score
 #'    3. "genes": the number of genes
 #'    4. "rank": the rank order of enrichment
+#'    5. "significant": shows an asterisk `'*'` for significant pathways,
+#'    applying the `p_cutoff` and `min_count` thresholds.
 #' @param use_raster `logical` passed to `ComplexHeatmap::Heatmap()`
 #'    indicating whether to rasterize the heatmap output, used when
 #'    `style="heatmap"`. Rasterization is not relevant to dotplot output
@@ -527,12 +529,14 @@ mem_enrichment_heatmap <- function(
       # 2: direction / z-score
       # 3: gene count
       # 4: rank - pathway P-value rank
+      # 5: significant - "*" for hits
       if (inherits(show_enrich, "character")) {
          show_enrich_values <- c(
             "log10p",
             "direction",
             "genes",
-            "rank"
+            "rank",
+            "significant"
          )
          # convert to integer
          show_enrich <- jamba::rmNA(
@@ -549,72 +553,22 @@ mem_enrichment_heatmap <- function(
       use_prefix <- NULL;
       if (length(show_enrich) > 1) {
          use_prefixes <- c(
-            "-log10P: ",
-            "direction: ",
-            # "z-score: ",
-            "genes: ",
-            "rank: ")
+            # "-log10P: ",
+            "logP: ",
+            "dir: ",
+            "ct: ",
+            "rank: ",
+            "")
          use_prefix <- use_prefixes[show_enrich];
       }
       # improved cell_fun
       if (apply_direction) {
-         # tcount <- jamba::tcount;
-         dir_colors <- c("royalblue4", "gold3", "firebrick3");
-         dir_colors2 <- c("skyblue", "gold", "indianred1");
-         dir_colors3 <- c("white", "white", "white");
-         dir_colors2.5 <- sapply(dir_colors2, function(i){
-            colorjam::blend_colors(c(i, "white"))
-         })
-         mcolor <- jamba::rbindList(list(
-            dir_colors3,
-            dir_colors2.5,
-            dir_colors2,
-            dir_colors))
-         # jamba::imageByColors(mcolor)
-         # white_num controls the intensity of the first non-white color
-         # in the color gradient
-         # white_num <- 2;
-         # mcolor2 <- matrix(ncol=3,
-         #    c("white", "white", "white",
-         #       colorjam::blend_colors(c(dir_colors[1], rep("white", white_num))),
-         #       colorjam::blend_colors(c(dir_colors[2], rep("white", white_num))),
-         #       colorjam::blend_colors(c(dir_colors[3], rep("white", white_num))),
-         #       dir_colors),
-         #    byrow=TRUE);
-         p_cut_lvl <- 10^(-1 * (ceiling(-log10(p_cutoff)) + 5));
-         row_breaks <- c(
-            -log10(p_cutoff),
-            seq(from=-log10(p_cutoff),
-               to=-log10(p_floor),
-               length.out=3));
-         if (p_cutoff == 1) {
-            row_breaks[2] <- row_breaks[1] + p_cut_lvl;
-         } else {
-            row_breaks[1] <- row_breaks[2] - p_cut_lvl;
-         }
-         if (p_cutoff < 1) {
-            if (isTRUE(color_non_hits)) {
-               row_breaks[1] <- 0;
-            } else {
-               row_breaks <- c(0, row_breaks);
-               mcolor <- rbind(mcolor[1, , drop=FALSE], mcolor)
-            }
-         }
-         # if (p_cutoff == 1) {
-         #    row_breaks <- tail(row_breaks, -1);
-         #    mcolor <- mcolor[-2, , drop=FALSE]
-         # }
          col_bivariate <- col_pvdir_xf(
             p_cutoff=p_cutoff,
             direction_cutoff=direction_cutoff,
             direction_max=direction_max,
             color_non_hits=color_non_hits
          )
-         # col_bivariate <- colorRamp2D(
-         #    column_breaks=seq(from=-2, to=2, length.out=3),
-         #    row_breaks=row_breaks,
-         #    mcolor=mcolor,
-         #    ...);
          size_by <- match(
             "geneCount",
             c(
@@ -642,12 +596,16 @@ mem_enrichment_heatmap <- function(
                show_enrich
             )
          )
+         use_enrichIMhit <- enrichIMrank(Mem, topEnrichN=Inf);
+         use_enrichIMhit[] <- ifelse(!is.na(use_enrichIMhit), "*", "")
          cell_fun_matrixlist <- list(
             "direction"=use_direction,
             "log10p"=use_matrix,
             "genes"=enrichIMgeneCount(Mem),
-            "rank"=enrichIMrank(Mem)
+            "rank"=enrichIMrank(Mem),
+            "significant"=use_enrichIMhit
          );
+
          cell_fun_custom <- cell_fun_bivariate(
             cell_fun_matrixlist,
             invert=grepl("invert", fixed=TRUE, style),
@@ -674,22 +632,31 @@ mem_enrichment_heatmap <- function(
          #       rep("#FFFFFF", length.out=length(x))
          #    };
          # }
+         use_enrichIMhit <- enrichIMrank(Mem, topEnrichN=Inf);
+         use_enrichIMhit[] <- ifelse(!is.na(use_enrichIMhit), "*", "")
+         cell_fun_matrixlist <- list(
+            "log10p"=use_matrix,
+            "direction"=use_direction,
+            "genes"=enrichIMgeneCount(Mem),
+            "rank"=enrichIMrank(Mem),
+            "significant"=use_enrichIMhit
+         );
+
          show_heatmap_legend <- TRUE;
+         size_by <- 3;
          # remove show_enrich 2 or 3 if no supporting directional data is present
          cell_fun_custom <- cell_fun_bivariate(
-            list(
-               use_matrix,
-               use_direction,
-               enrichIMgeneCount(Mem)),
-            invert=grepl("invert", style),
+            cell_fun_matrixlist,
+            invert=grepl("invert", fixed=TRUE, style),
             pch=pch,
             size_fun=ct_approxfun,
-            size_by=3,
+            size_by=size_by,
+            outline=outline,
             outline_style="darker",
             col_hm=use_col_fn,
             show=show_enrich,
-            outline=outline,
             cex=cexCellnote,
+            placement=placementCellnote,
             type="univariate",
             prefix=use_prefix,
             ...
@@ -702,7 +669,7 @@ mem_enrichment_heatmap <- function(
             row_split <- row_split[rownames(use_matrix)];
          }
       }
-      if (is.numeric(row_split) && row_split == 1) {
+      if (is.numeric(row_split) && row_split[1] == 1) {
          row_split <- NULL
       }
       if (is.logical(cluster_rows) && FALSE %in% cluster_rows) {
@@ -725,7 +692,8 @@ mem_enrichment_heatmap <- function(
       }
 
       # dot plot or heatmap style
-      hm <- jamba::call_fn_ellipsis(ComplexHeatmap::Heatmap,
+      hm <- jamba::call_fn_ellipsis(
+         FUN=ComplexHeatmap::Heatmap,
          matrix=use_matrix,
          name=name,
          col=col_logp,
@@ -750,7 +718,8 @@ mem_enrichment_heatmap <- function(
          top_annotation=top_annotation,
          use_raster=use_raster,
          raster_device=raster_device,
-         ...);
+         ...
+      );
       attr(hm,
          "annotation_legend_list") <- anno_legends;
       if (do_plot) {
@@ -774,7 +743,7 @@ mem_enrichment_heatmap <- function(
                      to=-log10(p_floor),
                      length.out=24)),
                colors=c("white",
-                  getColorRamp(mem$colorV[i],
+                  jamba::getColorRamp(mem$colorV[i],
                      n=24,
                      trimRamp=c(1, 0),
                      lens=lens)));

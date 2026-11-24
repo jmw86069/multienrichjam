@@ -222,6 +222,8 @@ types, a prefix is shown for each. The metrics in order include:
 \item "direction": the \code{'direction'} score
 \item "genes": the number of genes
 \item "rank": the rank order of enrichment
+\item "significant": shows an asterisk \code{'*'} for significant pathways,
+applying the \code{p_cutoff} and \code{min_count} thresholds.
 }}
 
 \item{use_raster}{\code{logical} passed to \code{ComplexHeatmap::Heatmap()}

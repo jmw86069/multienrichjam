@@ -2,23 +2,35 @@
 
 ## 20nov2026
 
-* `EnrichmentHeatmap()`
+* `jam_enricher()`
+   * Consider caching each result using `memoise`.
+   Each enrichment must have a wrapper, then wrapped in memoise function.
+   * Check abnormally high memory usage by `clusterProfiler::GSEA()`.
+   * Consider calling `fgsea()` directly.
+   * Consider new GSEA ranking: `logFC * sqrt(F)` seen in edgeR refs
+   * Consider `GSVA::gsva()`
+
+* Consider better Emap layout, consistent with `GenePathHeatmap()`
+   * Evaluate re-using hclust data for layout from `Mpf`.
+
+* Add tests for `process_genedata()` scenarios.
+* DONE. `EnrichmentHeatmap()`
    * show_enrich='hits' 'significance' to show '*',
    useful with `color_non_hits=TRUE`.
 
 * DONE. Store `fixSetLabels()` before:after in `Mem` so it can be
 reverted or updated from the original values.
-* Consider some way to cache `jam_enricher()` results.
 * `GenePathHeatmap()`
    * Make top enrichment annotation use `EnrichmentHeatmap()`
    colors, legend, etc.
    * Add/Fix option to rotate the heatmap 90 degrees.
    * Rename arguments from 'row_', 'column_', to 'gene_', 'enrich_'.
 
-* Port `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
+* Implement `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
 * `PathwayHeatmap()` with heatmap for given pathway(s),
 referencing `Mem` or `MemPlotFolio`.
    * Need method to import expression data.
+
 
 ## 19nov2026
 
