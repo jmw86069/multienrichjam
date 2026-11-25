@@ -56,16 +56,28 @@ adjust_rect_border(
 - lwd_inch:
 
   `numeric` conversion of line width `lwd` units per inch, by default
-  `lwd=1` is defined as 1/96 inch.
+  `lwd=1` is defined as `1/96/2` inch, which is half the previous value,
+  perhaps due to updates to the R graphics device since R-3.5.1. This
+  value uses option `'jam.lwd_inch'` so it can persist.
 
 - inner_cex:
 
-  `numeric` minor adjustment to calculations
+  `numeric` minor adjustment to calculations, default `1.001`. This
+  value uses option `'jam.inner_cex'` so it can persist.
 
 - lwd:
 
   `numeric` to define the intended line width for the resulting polygon
   border. By default it uses `par("lwd")`.
+
+- lwd_buffer:
+
+  `numeric` additional line width as a buffer, used to stack lines
+  adjacent to each other.
+
+- verbose:
+
+  `logical` whether to print verbose output.
 
 - ...:
 

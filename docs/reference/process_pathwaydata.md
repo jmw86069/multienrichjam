@@ -11,7 +11,7 @@ process_pathwaydata(
     handle_multiple = "best_each", empty_rule = "empty", ignore.case = TRUE,
     gene_colnames = c("gene_symbol", "db_gene_symbol", "gene", "ncbi_gene", "SYMBOL"),
     pathway_colnames = c("gs_name", "gs_description", "name", "ID", "Pathway",
-    "GO[:]*(BP|MF|CC)"), try_list = c("SYMBOL2EG", "ACCNUM2EG", "ENSEMBL2EG",
+    "GO[:]*(BP|MF|CC)", "TERM"), try_list = c("SYMBOL2EG", "ACCNUM2EG", "ENSEMBL2EG",
     "ALIAS2EG"), sep = "/"),
   verbose = FALSE,
   ...

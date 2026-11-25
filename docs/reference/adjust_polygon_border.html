@@ -9,7 +9,7 @@ Adjust rectangle border"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.125.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.126.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,16 +101,30 @@ be displayed:</p><ul><li><p><code>"inner"</code>: the polygon is shrunk by half 
 
 <dt id="arg-lwd-inch">lwd_inch<a class="anchor" aria-label="anchor" href="#arg-lwd-inch"></a></dt>
 <dd><p><code>numeric</code> conversion of line width <code>lwd</code> units per inch,
-by default <code>lwd=1</code> is defined as 1/96 inch.</p></dd>
+by default <code>lwd=1</code> is defined as <code>1/96/2</code> inch, which is half the
+previous value, perhaps due to updates to the R graphics device
+since R-3.5.1.
+This value uses option <code>'jam.lwd_inch'</code> so it can persist.</p></dd>
 
 
 <dt id="arg-inner-cex">inner_cex<a class="anchor" aria-label="anchor" href="#arg-inner-cex"></a></dt>
-<dd><p><code>numeric</code> minor adjustment to calculations</p></dd>
+<dd><p><code>numeric</code> minor adjustment to calculations, default
+<code>1.001</code>.
+This value uses option <code>'jam.inner_cex'</code> so it can persist.</p></dd>
 
 
 <dt id="arg-lwd">lwd<a class="anchor" aria-label="anchor" href="#arg-lwd"></a></dt>
 <dd><p><code>numeric</code> to define the intended line width for the resulting
 polygon border. By default it uses <code>par("lwd")</code>.</p></dd>
+
+
+<dt id="arg-lwd-buffer">lwd_buffer<a class="anchor" aria-label="anchor" href="#arg-lwd-buffer"></a></dt>
+<dd><p><code>numeric</code> additional line width as a buffer, used
+to stack lines adjacent to each other.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p><code>logical</code> whether to print verbose output.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

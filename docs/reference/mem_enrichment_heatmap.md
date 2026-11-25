@@ -306,6 +306,9 @@ mem_enrichment_heatmap(
 
   4.  "rank": the rank order of enrichment
 
+  5.  "significant": shows an asterisk `'*'` for significant pathways,
+      applying the `p_cutoff` and `min_count` thresholds.
+
 - use_raster:
 
   `logical` passed to

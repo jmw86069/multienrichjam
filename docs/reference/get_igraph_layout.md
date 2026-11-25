@@ -214,20 +214,20 @@ Other jam utility functions:
 ``` r
 g <- make_cnet_test(2, c(12, 5))
 gl <- get_igraph_layout(g, verbose=TRUE)
-#> (10:06:04) 23Nov2026: get_igraph_layout(): using graph_attr layout.
+#> (16:49:24) 25Nov2026: get_igraph_layout(): using graph_attr layout.
 jam_igraph(g)
 
 
 # apply repulse=4
 gl2 <- get_igraph_layout(g, layout=layout_with_qfrf(repulse=4), verbose=TRUE)
-#> (10:06:04) 23Nov2026: get_igraph_layout(): creating layout using layout()
+#> (16:49:24) 25Nov2026: get_igraph_layout(): creating layout using layout()
 jam_igraph(g, layout=gl2)
 
 
 igraph::graph_attr(g, "layout") <- layout_with_qfrf(repulse=4)
 gl3 <- get_igraph_layout(g, verbose=TRUE)
-#> (10:06:04) 23Nov2026: get_igraph_layout(): using graph_attr layout.
-#> (10:06:04) 23Nov2026: get_igraph_layout(): applying graph_attr layout()
+#> (16:49:24) 25Nov2026: get_igraph_layout(): using graph_attr layout.
+#> (16:49:24) 25Nov2026: get_igraph_layout(): applying graph_attr layout()
 identical(gl2, gl3)
 #> [1] TRUE
 #> TRUE

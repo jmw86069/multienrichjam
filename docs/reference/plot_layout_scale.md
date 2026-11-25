@@ -41,6 +41,10 @@ plot_layout_scale(
 
   additional arguments are ignored.
 
+## Value
+
+invisible `list` with 'ticks_x', 'ticks_y'
+
 ## Details
 
 The `layout` argument supplied coordinates, and largest numeric range of

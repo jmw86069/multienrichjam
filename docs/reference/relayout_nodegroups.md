@@ -216,8 +216,8 @@ jam_igraph(cnet, mark.groups=ns["SetA,SetB"], nodegroups=ns,
 
 
 cnet2 <- relayout_nodegroups(cnet, nodegroups=ns["SetA,SetB"], do_final_layout=TRUE, verbose=TRUE)
-#> (10:07:02) 23Nov2026: relayout_nodegroups(): Using nodegroups as supplied.
-#> (10:07:02) 23Nov2026: relayout_nodegroups(): Applying to nodegroup 'SetA,SetB' with members: BH,BT,BU
+#> (16:50:22) 25Nov2026: relayout_nodegroups(): Using nodegroups as supplied.
+#> (16:50:22) 25Nov2026: relayout_nodegroups(): Applying to nodegroup 'SetA,SetB' with members: BH,BT,BU
 jam_igraph(cnet2, mark.groups=ns["SetA,SetB"], nodegroups=ns,
    main="This nodegroup is 'encouraged' to re-group")
 

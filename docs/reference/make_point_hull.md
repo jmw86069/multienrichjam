@@ -248,9 +248,9 @@ plot(x4, col="red", pch=20, cex=3,
    main="hull_method='chull'")
 phxy2 <- make_point_hull(x=xy, expand=0.05, do_plot=TRUE,
    add=TRUE, verbose=TRUE, xpd=TRUE, hull_method="chull")
-#> (10:06:40) 23Nov2026: make_point_hull(): label.y.nudge:0
-#> (10:06:40) 23Nov2026: make_point_hull(): calculated alpha: 10
-#> (10:06:40) 23Nov2026: make_point_hull(): Iterating alpha values up to 100 times.
-#> (10:06:40) 23Nov2026: make_point_hull(): Iterated 1 times, 126 mxys points.
+#> (16:50:02) 25Nov2026: make_point_hull(): label.y.nudge:0
+#> (16:50:02) 25Nov2026: make_point_hull(): calculated alpha: 10
+#> (16:50:02) 25Nov2026: make_point_hull(): Iterating alpha values up to 100 times.
+#> (16:50:02) 25Nov2026: make_point_hull(): Iterated 1 times, 126 mxys points.
 
 ```

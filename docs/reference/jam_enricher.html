@@ -11,7 +11,7 @@ analysis."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.125.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.126.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,6 +62,10 @@ analysis.</p>
 <span>  universe <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  genedata_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ann_lib <span class="op">=</span> <span class="st">"org.Hs.eg.db"</span><span class="op">)</span>,</span>
 <span>  pathwaydata_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ann_lib <span class="op">=</span> <span class="st">"org.Hs.eg.db"</span><span class="op">)</span>,</span>
+<span>  enrichment_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>eps <span class="op">=</span> <span class="fl">1e-20</span><span class="op">)</span>,</span>
+<span>  cache_results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cache_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"jam_enrich.cache_path"</span><span class="op">)</span>,</span>
+<span>  cache_force_refresh <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -174,6 +178,39 @@ is used as the pathway name.
 For the purpose of this process, only the pathway name is retained,
 and all other annotations should be retrieved separately as needed.</p></li>
 </ul></dd>
+
+
+<dt id="arg-enrichment-params">enrichment_params<a class="anchor" aria-label="anchor" href="#arg-enrichment-params"></a></dt>
+<dd><p><code>list</code> with optional parameters specific
+to each enrichment method. Currently only <code>eps</code> is recognized,
+passed to 'GSEA' to define the level of detail in P-values.
+Default <code>eps = 1e-20</code>.
+Use <code>eps = 1e-50</code> or <code>eps = 0</code> for high detail.
+Use <code>eps = 1e-10</code> or <code>eps = 1e-5</code> for rapid data mining.</p></dd>
+
+
+<dt id="arg-cache-results">cache_results<a class="anchor" aria-label="anchor" href="#arg-cache-results"></a></dt>
+<dd><p><code>logical</code> default TRUE, whether to cache each
+enrichment result. By default, it is enabled, the main reason not
+to enable would be to preserve disk space over a large number of
+pathway analysis datasets. Otherwise, it can only help, as re-running
+<code>jam_enricher()</code> with additional 'genedata', 'pathwaydata', 'enrich_method'
+should not need to recalculate any result previously completed,
+only new entries. Also useful when run within Rmarkdown/Quarto context
+to prevent re-calculating large enrichment results when the
+chunk itself is not being cached.
+<strong>Work in progress.</strong></p></dd>
+
+
+<dt id="arg-cache-path">cache_path<a class="anchor" aria-label="anchor" href="#arg-cache-path"></a></dt>
+<dd><p><code>character</code> path to cache folder.
+Default NULL uses <code><a href="https://rappdirs.r-lib.org/reference/user_cache_dir.html" class="external-link">rappdirs::user_cache_dir()</a></code> with <code>'jam_enricher'</code>
+as the <code>appname</code>.</p></dd>
+
+
+<dt id="arg-cache-force-refresh">cache_force_refresh<a class="anchor" aria-label="anchor" href="#arg-cache-force-refresh"></a></dt>
+<dd><p><code>logical</code>, default FALSE, whether to force
+the cache to be reset.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>

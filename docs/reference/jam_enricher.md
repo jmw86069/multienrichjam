@@ -13,6 +13,10 @@ jam_enricher(
   universe = NULL,
   genedata_params = list(ann_lib = "org.Hs.eg.db"),
   pathwaydata_params = list(ann_lib = "org.Hs.eg.db"),
+  enrichment_params = list(eps = 1e-20),
+  cache_results = TRUE,
+  cache_path = getOption("jam_enrich.cache_path"),
+  cache_force_refresh = FALSE,
   verbose = FALSE,
   ...
 )
@@ -149,6 +153,36 @@ jam_enricher(
     `find_colname(pattern, x)` is used as the pathway name. For the
     purpose of this process, only the pathway name is retained, and all
     other annotations should be retrieved separately as needed.
+
+- enrichment_params:
+
+  `list` with optional parameters specific to each enrichment method.
+  Currently only `eps` is recognized, passed to 'GSEA' to define the
+  level of detail in P-values. Default `eps = 1e-20`. Use `eps = 1e-50`
+  or `eps = 0` for high detail. Use `eps = 1e-10` or `eps = 1e-5` for
+  rapid data mining.
+
+- cache_results:
+
+  `logical` default TRUE, whether to cache each enrichment result. By
+  default, it is enabled, the main reason not to enable would be to
+  preserve disk space over a large number of pathway analysis datasets.
+  Otherwise, it can only help, as re-running `jam_enricher()` with
+  additional 'genedata', 'pathwaydata', 'enrich_method' should not need
+  to recalculate any result previously completed, only new entries. Also
+  useful when run within Rmarkdown/Quarto context to prevent
+  re-calculating large enrichment results when the chunk itself is not
+  being cached. **Work in progress.**
+
+- cache_path:
+
+  `character` path to cache folder. Default NULL uses
+  [`rappdirs::user_cache_dir()`](https://rappdirs.r-lib.org/reference/user_cache_dir.html)
+  with `'jam_enricher'` as the `appname`.
+
+- cache_force_refresh:
+
+  `logical`, default FALSE, whether to force the cache to be reset.
 
 - verbose:
 

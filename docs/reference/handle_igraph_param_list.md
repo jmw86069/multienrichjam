@@ -60,6 +60,10 @@ handle_igraph_param_list(
   - `"edge"` refers to
     [`igraph::edge_attr()`](https://r.igraph.org/reference/edge_attr.html)
 
+- verbose:
+
+  `logical` whether to print verbose output.
+
 - ...:
 
   additional arguments are ignored.

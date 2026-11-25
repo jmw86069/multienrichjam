@@ -9,7 +9,7 @@ current class version "1.0.0".'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.125.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.126.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,7 +103,8 @@ current class version "1.0.0".</p>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">type</span>,</span>
 <span>  <span class="va">do_plot</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">30</span>, maxNchar <span class="op">=</span> <span class="cn">Inf</span>, layout <span class="op">=</span> <span class="cn">NULL</span>, rotate_degrees <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">30</span>, maxNchar <span class="op">=</span> <span class="cn">Inf</span>, layout <span class="op">=</span> <span class="cn">NULL</span>, rotate_degrees <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    max_node_labels <span class="op">=</span> <span class="fl">1000</span>, sortAttributes <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
 <span>  legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
 <span>  legend_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -114,7 +115,8 @@ current class version "1.0.0".</p>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">num</span>,</span>
 <span>  <span class="va">do_plot</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">30</span>, maxNchar <span class="op">=</span> <span class="cn">Inf</span>, layout <span class="op">=</span> <span class="cn">NULL</span>, rotate_degrees <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">30</span>, maxNchar <span class="op">=</span> <span class="cn">Inf</span>, layout <span class="op">=</span> <span class="cn">NULL</span>, rotate_degrees <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    max_node_labels <span class="op">=</span> <span class="fl">1000</span>, sortAttributes <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
 <span>  legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
 <span>  legend_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -126,7 +128,8 @@ current class version "1.0.0".</p>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">cluster</span>,</span>
 <span>  <span class="va">do_plot</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">30</span>, maxNchar <span class="op">=</span> <span class="cn">Inf</span>, layout <span class="op">=</span> <span class="cn">NULL</span>, rotate_degrees <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">30</span>, maxNchar <span class="op">=</span> <span class="cn">Inf</span>, layout <span class="op">=</span> <span class="cn">NULL</span>, rotate_degrees <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    max_node_labels <span class="op">=</span> <span class="fl">1000</span>, sortAttributes <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
 <span>  legend_x <span class="op">=</span> <span class="st">"bottomleft"</span>,</span>
 <span>  legend_y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  main <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -278,13 +281,18 @@ Argument 'type' can be:</p><ul><li><p><code>type='title'</code> or <code>type=''
 <li><p><code>type='cluster'</code> to use cluster labels</p></li>
 <li><p><code>type='attribute'</code> to use any existing vertex attribute.</p></li>
 <li><p>Append <strong>'2'</strong> to the end to hide gene labels. For example <code>type='set2'</code>.</p></li>
-</ul><p>Recognized arguments in '...':</p><ul><li><p><code>'width'</code> to apply word-wrap to cluster labels, or vertex attribute.</p></li>
+</ul><p>Recognized arguments in 'params':</p><ul><li><p><code>'width'</code> to apply word-wrap to cluster labels, or vertex attribute.</p></li>
 <li><p><code>'maxNchar'</code> to set maximum string character length, passed to
 <code><a href="fixSetLabels.html">fixSetLabels()</a></code>.</p></li>
 <li><p><code>'layout'</code> passed to <code>set_igraph_layout(cnet, layout)</code> to update
 the node layout.</p></li>
 <li><p><code>'rotate_degrees'</code> with <code>numeric</code> value. When set, it calls
 <code><a href="rotate_igraph_layout.html">rotate_igraph_layout()</a></code> with defaults.</p></li>
+<li><p><code>'sortAttributes'</code> with <code>character</code> vector, enables
+<code><a href="spread_igraph_labels.html">spread_igraph_labels()</a></code> which is used to reorder nodes, then
+spread labels accordingly.
+<strong><code>sortAttributes='default'</code></strong> will define defaults using
+<code>reorder_igraph_nodes</code>.</p></li>
 <li><p>All other '...' arguments are passed to <code><a href="jam_igraph.html">jam_igraph()</a></code>.</p></li>
 </ul><p>The legend includes direction if encoded in the 'MemPlotFolio', but
 can be forced with <code>do_directional=TRUE</code> or FALSE.</p></li>

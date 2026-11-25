@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.125.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.126.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,18 +47,34 @@
 <div class="section level2">
 <h2 id="id_20nov2026">20nov2026<a class="anchor" aria-label="anchor" href="#id_20nov2026"></a></h2>
 <ul><li>
-<code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>
+<code><a href="reference/jam_enricher.html">jam_enricher()</a></code>
+<ul><li>Consider caching each result using <code>memoise</code>. Each enrichment must have a wrapper, then wrapped in memoise function.</li>
+<li>Check abnormally high memory usage by <code><a href="https://rdrr.io/pkg/clusterProfiler/man/GSEA.html" class="external-link">clusterProfiler::GSEA()</a></code>.</li>
+<li>Consider calling <code>fgsea()</code> directly.</li>
+<li>Consider new GSEA ranking: <code>logFC * sqrt(F)</code> seen in edgeR refs</li>
+<li>Consider <code>GSVA::gsva()</code>
+</li>
+</ul></li>
+<li>
+<code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code>
+<ul><li>When showing gene direction, and it includes continuous data, show the color legend.</li>
+<li>Give option to use bivariate colors for top annotations, then show the 2D bivariate color legend, consistent with <code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>.</li>
+</ul></li>
+<li>Consider better Emap layout, consistent with <code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code>
+<ul><li>Evaluate re-using hclust data for layout from <code>Mpf</code>.</li>
+</ul></li>
+<li>Add tests for <code><a href="reference/process_genedata.html">process_genedata()</a></code> scenarios.</li>
+<li>DONE. <code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code>
 <ul><li>show_enrich=‘hits’ ‘significance’ to show ’*’, useful with <code>color_non_hits=TRUE</code>.</li>
 </ul></li>
 <li>DONE. Store <code><a href="reference/fixSetLabels.html">fixSetLabels()</a></code> before:after in <code>Mem</code> so it can be reverted or updated from the original values.</li>
-<li>Consider some way to cache <code><a href="reference/jam_enricher.html">jam_enricher()</a></code> results.</li>
 <li>
 <code><a href="reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code>
 <ul><li>Make top enrichment annotation use <code><a href="reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code> colors, legend, etc.</li>
 <li>Add/Fix option to rotate the heatmap 90 degrees.</li>
 <li>Rename arguments from ‘row_’, ‘column_’, to ‘gene_’, ‘enrich_’.</li>
 </ul></li>
-<li>Port <code>CnetHeatmaps()</code>, currently <code>plot_cnet_heatmaps()</code>.</li>
+<li>Implement <code>CnetHeatmaps()</code>, currently <code>plot_cnet_heatmaps()</code>.</li>
 <li>
 <code>PathwayHeatmap()</code> with heatmap for given pathway(s), referencing <code>Mem</code> or <code>MemPlotFolio</code>.
 <ul><li>Need method to import expression data.</li>

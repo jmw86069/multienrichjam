@@ -237,10 +237,10 @@ The default summary for `mem` describes the contents, shown below:
 
 Mem
 #> class: Mem
-#> dim: 2 enrichments, 14 sets, 23 genes
-#> - enrichments (2): Newborns, OlderChildren
-#> - sets (14): REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION, KEGG_APOPTOSIS, ..., WP_HEAD_AND_NECK_SQUAMOUS_CELL_CARCINOMA, KEGG_ASTHMA
+#> dim: 23 genes, 14 sets, 2 enrichments
 #> - genes (23): ACTN1, ALPK1, ..., TANK, YWHAQ
+#> - sets (14): REACTOME_TAK1_DEPENDENT_IKK_AND_NF_KAPPA_B_ACTIVATION, KEGG_APOPTOSIS, ..., WP_HEAD_AND_NECK_SQUAMOUS_CELL_CARCINOMA, KEGG_ASTHMA
+#> - enrichments (2): Newborns, OlderChildren
 #> Analysis parameters:
 #> - top N per enrichment: 20
 #> - significance threshold: 0.2 (colname: qvalue)

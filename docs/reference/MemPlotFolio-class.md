@@ -58,7 +58,8 @@ CnetCollapsed(
   x,
   type,
   do_plot,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0,
+    max_node_labels = 1000, sortAttributes = NULL),
   legend_x = "bottomleft",
   legend_y = NULL,
   ...
@@ -69,7 +70,8 @@ CnetExemplar(
   x,
   num,
   do_plot,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0,
+    max_node_labels = 1000, sortAttributes = NULL),
   legend_x = "bottomleft",
   legend_y = NULL,
   main = NULL,
@@ -81,7 +83,8 @@ CnetCluster(
   x,
   cluster,
   do_plot,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0,
+    max_node_labels = 1000, sortAttributes = NULL),
   legend_x = "bottomleft",
   legend_y = NULL,
   main = NULL,
@@ -293,7 +296,7 @@ all pathways in the cluster defined with argument `cluster`.
   - Append **'2'** to the end to hide gene labels. For example
     `type='set2'`.
 
-  Recognized arguments in '...':
+  Recognized arguments in 'params':
 
   - `'width'` to apply word-wrap to cluster labels, or vertex attribute.
 
@@ -306,6 +309,12 @@ all pathways in the cluster defined with argument `cluster`.
   - `'rotate_degrees'` with `numeric` value. When set, it calls
     [`rotate_igraph_layout()`](https://jmw86069.github.io/multienrichjam/reference/rotate_igraph_layout.md)
     with defaults.
+
+  - `'sortAttributes'` with `character` vector, enables
+    [`spread_igraph_labels()`](https://jmw86069.github.io/multienrichjam/reference/spread_igraph_labels.md)
+    which is used to reorder nodes, then spread labels accordingly.
+    **`sortAttributes='default'`** will define defaults using
+    `reorder_igraph_nodes`.
 
   - All other '...' arguments are passed to
     [`jam_igraph()`](https://jmw86069.github.io/multienrichjam/reference/jam_igraph.md).

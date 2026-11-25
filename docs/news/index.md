@@ -1,5 +1,52 @@
 # Changelog
 
+## multienrichjam 0.0.126.900
+
+### Changes
+
+- [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+  - **Caching**: By default, results are cached in a user folder, to
+    allow re-running enrichment and re-using previously calculated
+    results.
+  - `genedata` now recognizes `data.frame` with columns: ‘gene’, ‘sign’,
+    ‘hit’, to allow pre-processed data to be considered both for ORA and
+    GSEA.
+- `Mem` summary now prints the dim preview in the same order as
+  [`dim()`](https://rdrr.io/r/base/dim.html).
+- [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  via
+  [`mem_enrichment_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_enrichment_heatmap.md)
+  - `'show_enrich=5'` will show an asterisk `'*'` for significant
+    pathways, applying `p_cutoff` and `min_count` thresholds. Useful
+    with `color_non_hits=TRUE` with continuous range.
+- [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  via
+  [`mem_gene_path_heatmap()`](https://jmw86069.github.io/multienrichjam/reference/mem_gene_path_heatmap.md)
+  - The gene direction color function now has a ceiling `8` while
+    maintaining blue/red at `-1` and `1` respectively, in order to
+    satisfy both ORA and GSEA style gene scores. **Still being
+    evaluated.**\
+    ORA data with gene direction may notice slightly less blue/red
+    saturation for down/up hits. GSEA may notice wider range of values
+    are not at the ‘ceiling’ color.
+- [`process_genedata()`](https://jmw86069.github.io/multienrichjam/reference/process_genedata.md)
+  - now accepts `list` input for batch processing
+  - accepts `data.frame` with columns ‘gene’, ‘sign’, ‘hit’, to re-use
+    output from itself.
+- [`mem2cnet()`](https://jmw86069.github.io/multienrichjam/reference/mem2cnet.md)
+  now calls `get_gene_color_fun()`
+- `CnetCollapsed`, `CnetCluster`, `CnetExemplar`
+  - More arguments can be modified without re-running
+    [`prepare_folio()`](https://jmw86069.github.io/multienrichjam/reference/mem_plot_folio.md).
+  - When ‘layout’ is defined, it now spreads node labels properly.
+  - When ‘repulse’ is defined, it calls `layout_with_qfrf(repulse)` then
+    spreads node labels.
+  - When ‘sortAttributes’ is defined, it enables node re-ordering, which
+    also spreads node labels.
+  - ‘max_node_labels’ controls visibility of gene node labels.
+- [`plot_mpf()`](https://jmw86069.github.io/multienrichjam/reference/plot_mpf.md)
+  also passes ‘sortAttributes’ to the Cnet\* methods.
+
 ## multienrichjam 0.0.125.900
 
 ### Changes

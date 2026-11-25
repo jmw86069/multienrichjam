@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multienrichjam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.125.900</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.126.900</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,49 @@
       <small>Source: <a href="http://github.com/jmw86069/multienrichjam/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.126.900" id="multienrichjam-00126900">multienrichjam 0.0.126.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00126900"></a></h2>
+<div class="section level3">
+<h3 id="changes-0-0-126-900">Changes<a class="anchor" aria-label="anchor" href="#changes-0-0-126-900"></a></h3>
+<ul><li>
+<code><a href="../reference/jam_enricher.html">jam_enricher()</a></code>
+<ul><li>
+<strong>Caching</strong>: By default, results are cached in a user folder, to allow re-running enrichment and re-using previously calculated results.</li>
+<li>
+<code>genedata</code> now recognizes <code>data.frame</code> with columns: ‘gene’, ‘sign’, ‘hit’, to allow pre-processed data to be considered both for ORA and GSEA.</li>
+</ul></li>
+<li>
+<code>Mem</code> summary now prints the dim preview in the same order as <code><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim()</a></code>.</li>
+<li>
+<code><a href="../reference/MemPlotFolio-class.html">EnrichmentHeatmap()</a></code> via <code><a href="../reference/mem_enrichment_heatmap.html">mem_enrichment_heatmap()</a></code>
+<ul><li>
+<code>'show_enrich=5'</code> will show an asterisk <code>'*'</code> for significant pathways, applying <code>p_cutoff</code> and <code>min_count</code> thresholds. Useful with <code>color_non_hits=TRUE</code> with continuous range.</li>
+</ul></li>
+<li>
+<code><a href="../reference/MemPlotFolio-class.html">GenePathHeatmap()</a></code> via <code><a href="../reference/mem_gene_path_heatmap.html">mem_gene_path_heatmap()</a></code>
+<ul><li>The gene direction color function now has a ceiling <code>8</code> while maintaining blue/red at <code>-1</code> and <code>1</code> respectively, in order to satisfy both ORA and GSEA style gene scores. <strong>Still being evaluated.</strong><br>
+ORA data with gene direction may notice slightly less blue/red saturation for down/up hits. GSEA may notice wider range of values are not at the ‘ceiling’ color.</li>
+</ul></li>
+<li>
+<code><a href="../reference/process_genedata.html">process_genedata()</a></code>
+<ul><li>now accepts <code>list</code> input for batch processing</li>
+<li>accepts <code>data.frame</code> with columns ‘gene’, ‘sign’, ‘hit’, to re-use output from itself.</li>
+</ul></li>
+<li>
+<code><a href="../reference/mem2cnet.html">mem2cnet()</a></code> now calls <code>get_gene_color_fun()</code>
+</li>
+<li>
+<code>CnetCollapsed</code>, <code>CnetCluster</code>, <code>CnetExemplar</code>
+<ul><li>More arguments can be modified without re-running <code><a href="../reference/mem_plot_folio.html">prepare_folio()</a></code>.</li>
+<li>When ‘layout’ is defined, it now spreads node labels properly.</li>
+<li>When ‘repulse’ is defined, it calls <code>layout_with_qfrf(repulse)</code> then spreads node labels.</li>
+<li>When ‘sortAttributes’ is defined, it enables node re-ordering, which also spreads node labels.</li>
+<li>‘max_node_labels’ controls visibility of gene node labels.</li>
+</ul></li>
+<li>
+<code><a href="../reference/plot_mpf.html">plot_mpf()</a></code> also passes ‘sortAttributes’ to the Cnet* methods.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.125.900" id="multienrichjam-00125900">multienrichjam 0.0.125.900<a class="anchor" aria-label="anchor" href="#multienrichjam-00125900"></a></h2>
 <div class="section level3">

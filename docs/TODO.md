@@ -2,23 +2,41 @@
 
 ## 20nov2026
 
-- [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+- [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
+  - Consider caching each result using `memoise`. Each enrichment must
+    have a wrapper, then wrapped in memoise function.
+  - Check abnormally high memory usage by
+    [`clusterProfiler::GSEA()`](https://rdrr.io/pkg/clusterProfiler/man/GSEA.html).
+  - Consider calling `fgsea()` directly.
+  - Consider new GSEA ranking: `logFC * sqrt(F)` seen in edgeR refs
+  - Consider `GSVA::gsva()`
+- [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  - When showing gene direction, and it includes continuous data, show
+    the color legend.
+  - Give option to use bivariate colors for top annotations, then show
+    the 2D bivariate color legend, consistent with
+    [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md).
+- Consider better Emap layout, consistent with
+  [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
+  - Evaluate re-using hclust data for layout from `Mpf`.
+- Add tests for
+  [`process_genedata()`](https://jmw86069.github.io/multienrichjam/reference/process_genedata.md)
+  scenarios.
+- DONE.
+  [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   - show_enrich=‘hits’ ‘significance’ to show ’\*’, useful with
     `color_non_hits=TRUE`.
 - DONE. Store
   [`fixSetLabels()`](https://jmw86069.github.io/multienrichjam/reference/fixSetLabels.md)
   before:after in `Mem` so it can be reverted or updated from the
   original values.
-- Consider some way to cache
-  [`jam_enricher()`](https://jmw86069.github.io/multienrichjam/reference/jam_enricher.md)
-  results.
 - [`GenePathHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
   - Make top enrichment annotation use
     [`EnrichmentHeatmap()`](https://jmw86069.github.io/multienrichjam/reference/MemPlotFolio-class.md)
     colors, legend, etc.
   - Add/Fix option to rotate the heatmap 90 degrees.
   - Rename arguments from ‘row\_’, ‘column\_’, to ‘gene\_’, ‘enrich\_’.
-- Port `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
+- Implement `CnetHeatmaps()`, currently `plot_cnet_heatmaps()`.
 - `PathwayHeatmap()` with heatmap for given pathway(s), referencing
   `Mem` or `MemPlotFolio`.
   - Need method to import expression data.
