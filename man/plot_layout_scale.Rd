@@ -28,6 +28,9 @@ between big grid lines, and small grid lines, respectively.}
 
 \item{...}{additional arguments are ignored.}
 }
+\value{
+invisible \code{list} with 'ticks_x', 'ticks_y'
+}
 \description{
 Plot layout scale by percentage of coordinate range
 }

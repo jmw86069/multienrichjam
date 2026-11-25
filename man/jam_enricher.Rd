@@ -11,6 +11,10 @@ jam_enricher(
   universe = NULL,
   genedata_params = list(ann_lib = "org.Hs.eg.db"),
   pathwaydata_params = list(ann_lib = "org.Hs.eg.db"),
+  enrichment_params = list(eps = 1e-20),
+  cache_results = TRUE,
+  cache_path = getOption("jam_enrich.cache_path"),
+  cache_force_refresh = FALSE,
   verbose = FALSE,
   ...
 )
@@ -123,6 +127,31 @@ is used as the pathway name.
 For the purpose of this process, only the pathway name is retained,
 and all other annotations should be retrieved separately as needed.
 }}
+
+\item{enrichment_params}{\code{list} with optional parameters specific
+to each enrichment method. Currently only \code{eps} is recognized,
+passed to 'GSEA' to define the level of detail in P-values.
+Default \code{eps = 1e-20}.
+Use \code{eps = 1e-50} or \code{eps = 0} for high detail.
+Use \code{eps = 1e-10} or \code{eps = 1e-5} for rapid data mining.}
+
+\item{cache_results}{\code{logical} default TRUE, whether to cache each
+enrichment result. By default, it is enabled, the main reason not
+to enable would be to preserve disk space over a large number of
+pathway analysis datasets. Otherwise, it can only help, as re-running
+\code{jam_enricher()} with additional 'genedata', 'pathwaydata', 'enrich_method'
+should not need to recalculate any result previously completed,
+only new entries. Also useful when run within Rmarkdown/Quarto context
+to prevent re-calculating large enrichment results when the
+chunk itself is not being cached.
+\strong{Work in progress.}}
+
+\item{cache_path}{\code{character} path to cache folder.
+Default NULL uses \code{rappdirs::user_cache_dir()} with \code{'jam_enricher'}
+as the \code{appname}.}
+
+\item{cache_force_refresh}{\code{logical}, default FALSE, whether to force
+the cache to be reset.}
 
 \item{verbose}{\code{logical} whether to print verbose output.}
 

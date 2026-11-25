@@ -45,12 +45,22 @@ be displayed:
 }}
 
 \item{lwd_inch}{\code{numeric} conversion of line width \code{lwd} units per inch,
-by default \code{lwd=1} is defined as 1/96 inch.}
+by default \code{lwd=1} is defined as \code{1/96/2} inch, which is half the
+previous value, perhaps due to updates to the R graphics device
+since R-3.5.1.
+This value uses option \code{'jam.lwd_inch'} so it can persist.}
 
-\item{inner_cex}{\code{numeric} minor adjustment to calculations}
+\item{inner_cex}{\code{numeric} minor adjustment to calculations, default
+\code{1.001}.
+This value uses option \code{'jam.inner_cex'} so it can persist.}
 
 \item{lwd}{\code{numeric} to define the intended line width for the resulting
 polygon border. By default it uses \code{par("lwd")}.}
+
+\item{lwd_buffer}{\code{numeric} additional line width as a buffer, used
+to stack lines adjacent to each other.}
+
+\item{verbose}{\code{logical} whether to print verbose output.}
 
 \item{...}{additional arguments are ignored.}
 }

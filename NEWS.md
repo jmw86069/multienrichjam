@@ -2,19 +2,47 @@
 
 ## Changes
 
-* `EnrichmentHeatmap()`
-   * `'show_enrich=5'` will show an asterisk `'*'` for significant
-   pathways, applying `p_cutoff` and `min_count` thresholds.
-
 * `jam_enricher()`
+   * **Caching**: By default, results are cached in a user folder,
+   to allow re-running enrichment and re-using previously
+   calculated results.
    * `genedata` now recognizes `data.frame` with columns:
    'gene', 'sign', 'hit', to allow pre-processed data to be
    considered both for ORA and GSEA.
+
+* `Mem` summary now prints the dim preview in the same
+order as `dim()`.
+* `EnrichmentHeatmap()` via `mem_enrichment_heatmap()`
+   * `'show_enrich=5'` will show an asterisk `'*'` for significant
+   pathways, applying `p_cutoff` and `min_count` thresholds.
+   Useful with `color_non_hits=TRUE` with continuous range.
+
+* `GenePathHeatmap()` via `mem_gene_path_heatmap()`
+   * The gene direction color function now has a ceiling `8`
+   while maintaining blue/red at `-1` and `1` respectively,
+   in order to satisfy both ORA and GSEA style gene scores.
+   **Still being evaluated.**  
+   ORA data with gene direction may notice slightly less blue/red
+   saturation for down/up hits. GSEA may notice wider range
+   of values are not at the 'ceiling' color.
 
 * `process_genedata()`
    * now accepts `list` input for batch processing
    * accepts `data.frame` with columns 'gene', 'sign', 'hit',
    to re-use output from itself.
+
+* `mem2cnet()` now calls `get_gene_color_fun()`
+* `CnetCollapsed`, `CnetCluster`, `CnetExemplar`
+   * More arguments can be modified without re-running `prepare_folio()`.
+   * When 'layout' is defined, it now spreads node labels properly.
+   * When 'repulse' is defined, it calls `layout_with_qfrf(repulse)`
+   then spreads node labels.
+   * When 'sortAttributes' is defined, it enables node re-ordering,
+   which also spreads node labels.
+   * 'max_node_labels' controls visibility of gene node labels.
+
+* `plot_mpf()` also passes 'sortAttributes' to the Cnet* methods.
+
 
 # multienrichjam 0.0.125.900
 

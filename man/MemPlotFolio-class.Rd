@@ -75,7 +75,8 @@ MemPlotFolio_to_list(x, ...)
   x,
   type,
   do_plot,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0,
+    max_node_labels = 1000, sortAttributes = NULL),
   legend_x = "bottomleft",
   legend_y = NULL,
   ...
@@ -85,7 +86,8 @@ MemPlotFolio_to_list(x, ...)
   x,
   num,
   do_plot,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0,
+    max_node_labels = 1000, sortAttributes = NULL),
   legend_x = "bottomleft",
   legend_y = NULL,
   main = NULL,
@@ -96,7 +98,8 @@ MemPlotFolio_to_list(x, ...)
   x,
   cluster,
   do_plot,
-  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0),
+  params = list(width = 30, maxNchar = Inf, layout = NULL, rotate_degrees = 0,
+    max_node_labels = 1000, sortAttributes = NULL),
   legend_x = "bottomleft",
   legend_y = NULL,
   main = NULL,
@@ -276,7 +279,7 @@ Argument 'type' can be:
 \item Append \strong{'2'} to the end to hide gene labels. For example \code{type='set2'}.
 }
 
-Recognized arguments in '...':
+Recognized arguments in 'params':
 \itemize{
 \item \code{'width'} to apply word-wrap to cluster labels, or vertex attribute.
 \item \code{'maxNchar'} to set maximum string character length, passed to
@@ -285,6 +288,11 @@ Recognized arguments in '...':
 the node layout.
 \item \code{'rotate_degrees'} with \code{numeric} value. When set, it calls
 \code{rotate_igraph_layout()} with defaults.
+\item \code{'sortAttributes'} with \code{character} vector, enables
+\code{spread_igraph_labels()} which is used to reorder nodes, then
+spread labels accordingly.
+\strong{\code{sortAttributes='default'}} will define defaults using
+\code{reorder_igraph_nodes}.
 \item All other '...' arguments are passed to \code{jam_igraph()}.
 }
 

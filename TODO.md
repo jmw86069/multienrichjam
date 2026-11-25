@@ -10,6 +10,12 @@
    * Consider new GSEA ranking: `logFC * sqrt(F)` seen in edgeR refs
    * Consider `GSVA::gsva()`
 
+* `GenePathHeatmap()`
+   * When showing gene direction, and it includes continuous data,
+   show the color legend.
+   * Give option to use bivariate colors for top annotations, then show
+   the 2D bivariate color legend, consistent with `EnrichmentHeatmap()`.
+
 * Consider better Emap layout, consistent with `GenePathHeatmap()`
    * Evaluate re-using hclust data for layout from `Mpf`.
 

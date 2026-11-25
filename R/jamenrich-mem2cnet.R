@@ -308,10 +308,10 @@ mem2cnet <- function
 
    # Confirm rownames and colnames do not contain duplicate values.
    # If so, make them unique.
-   make_unique_im_dims <- function
-   (memIM,
-    warn=TRUE)
-   {
+   make_unique_im_dims <- function(
+      memIM,
+      warn=TRUE
+   ) {
       #
       if (length(rownames(memIM)) == 0) {
          rownames(memIM) <- paste0("row", seq_len(nrow(memIM)));
@@ -321,23 +321,22 @@ mem2cnet <- function
       }
       rcnames <- c(rownames(memIM),
          colnames(memIM));
-      if (any(duplicated(rcnames))) {
+      if (anyDuplicated(rcnames) > 0) {
          # duplicated rownames
-         if (any(duplicated(rownames(memIM)))) {
+         if (anyDuplicated(rownames(memIM)) > 0) {
             rownames(memIM) <- jamba::makeNames(rownames(memIM),
                suffix="_r");
          }
          # duplicated colnames
-         if (any(duplicated(rownames(memIM)))) {
+         if (anyDuplicated(rownames(memIM)) > 0) {
             colnames(memIM) <- jamba::makeNames(colnames(memIM),
                suffix="_c");
          }
          # duplicated across rownames and colnames
          rcnames <- c(rownames(memIM),
             colnames(memIM));
-         if (any(duplicated(rcnames))) {
-            new_rc <- jamba::makeNames(rcnames,
-               suffix="_v");
+         if (anyDuplicated(rcnames) > 0) {
+            # new_rc <- jamba::makeNames(rcnames, suffix="_v");
             rownames(memIM) <- head(rcnames,
                nrow(memIM));
             colnames(memIM) <- tail(rcnames,
@@ -346,7 +345,7 @@ mem2cnet <- function
          # very rare change the versioned rownames/colnames are duplicated
          rcnames <- c(rownames(memIM),
             colnames(memIM));
-         if (any(duplicated(rcnames))) {
+         if (anyDuplicated(rcnames) > 0) {
             memIM <- make_unique_im_dims(memIM,
                warn=FALSE)
          }
@@ -659,16 +658,23 @@ mem2cnet <- function
       if (length(gene_direction_col_fn) == 0) {
          if (length(gene_direction_max) == 0 ||
                any(gene_direction_max <= 0)) {
-            gene_direction_max <- 1.2;
+            gene_direction_max <- 2;
          }
-         if (length(gene_direction_cutoff) > 0 &&
+         gene_direction_max <- head(gene_direction_max, 1);
+         gene_direction_cutoff <- head(gene_direction_cutoff, 1);
+         if (length(gene_direction_cutoff) == 1 &&
                any(gene_direction_cutoff >= gene_direction_max)) {
-            gene_direction_max <- max(gene_direction_cutoff, na.rm=TRUE);
-            gene_direction_cutoff <- gene_direction_max - 
-               (gene_direction_max / 1e5);
+            gene_direction_max <- gene_direction_cutoff + 1e-5;
+            # gene_direction_cutoff <- gene_direction_max - 
+            #    (gene_direction_max / 1e5);
          }
-         gene_direction_col_fn <- colorjam::col_div_xf(gene_direction_max,
-            floor=gene_direction_cutoff)
+         gene_direction_col_fn <- get_gene_color_fun(
+            x=gene_direction_max,
+            floor=gene_direction_cutoff
+         )
+         # gene_direction_col_fn <- colorjam::col_div_xf(
+         #    x=gene_direction_max,
+         #    floor=gene_direction_cutoff)
       }
       g <- apply_cnet_direction(cnet=g,
          hitim=geneIMdirection,
@@ -693,6 +699,7 @@ mem2cnet <- function
             direction_max <- max(direction_cutoff, na.rm=TRUE);
             direction_cutoff <- direction_max - (direction_max / 1e5);
          }
+         # Todo: Re-use bivariate color function
          direction_col_fn <- colorjam::col_div_xf(direction_max,
             floor=direction_cutoff)
       }

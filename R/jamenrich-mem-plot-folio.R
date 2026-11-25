@@ -584,7 +584,7 @@ mem_plot_folio <- function(
    # metadata
    metadata <- list(
       colorV=Mem@colorV,
-   	hasDirection=hasDirection,
+      hasDirection=hasDirection,
       Mem=Mem
    );
    
@@ -633,7 +633,8 @@ mem_plot_folio <- function(
          "Gene-pathway heatmap (pre-emptive)");
    }
    use_raster <- FALSE;
-   gp_hm <- mem_gene_path_heatmap(mem,
+   gp_hm <- mem_gene_path_heatmap(
+      mem,
       p_cutoff=p_cutoff,
       p_floor=p_floor,
       row_method=row_method,
@@ -654,7 +655,8 @@ mem_plot_folio <- function(
       gene_im_weight=gene_im_weight,
       colorize_by_gene=colorize_by_gene,
       rotate_heatmap=rotate_heatmap,
-      ...);
+      ...
+   );
 
    # Extract hclust object for re-use in the enrichment heatmap
    use_sets <- colnames(gp_hm@matrix);
@@ -867,7 +869,8 @@ mem_plot_folio <- function(
       }
 
       cnet_collapsed <- tryCatch({
-         collapse_mem_clusters(mem=mem,
+         collapse_mem_clusters(
+            mem=mem,
             clusters=clusters_mem,
             verbose=verbose>1,
             max_labels=max_labels,
@@ -878,7 +881,8 @@ mem_plot_folio <- function(
             max_nchar_labels=max_nchar_labels,
             include_cluster_title=include_cluster_title,
             return_type="cnet",
-            ...);
+            ...
+         );
       }, error=function(e){
          jamba::printDebug("Error during collapse_mem_clusters(), ",
             "returning NULL.");

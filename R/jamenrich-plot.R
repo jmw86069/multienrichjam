@@ -900,14 +900,19 @@ mem_gene_path_heatmap <- function(
             gene_anno_list <- c(
                list(direction=dir_matrix),
                gene_anno_list)
-            gene_color_list <- c(list(
-               direction=colorjam::col_div_xf(1.2)),
+            gene_colors_fun1 <- get_gene_color_fun()
+            gene_color_list <- c(
+               list(direction=gene_colors_fun1),
+               # direction=colorjam::col_div_xf(1.2)),
                gene_color_list);
+            # Todo: Consider continuous legend if scores exceed 1
             gene_param_list <- c(
-               list(direction=list(color_bar="discrete",
+               list(direction=list(
+                  color_bar="discrete",
                   at=c(-1, 0, 1),
                   labels=c("down", "no change", "up"),
-                  border="black")),
+                  border="black"
+               )),
                gene_param_list)
          }
          if ("im" %in% gene_ann) {

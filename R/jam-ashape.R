@@ -37,12 +37,12 @@
 #'    y0=ashape.obj$edges[, "y1"], y1=ashape.obj$edges[, "y2"])
 #' 
 #' @export
-ashape <- function
-(x,
- y=NULL,
- alpha,
- ...)
-{
+ashape <- function(
+   x,
+   y=NULL,
+   alpha,
+   ...
+) {
    if (alpha < 0) {
       stop("Parameter alpha must be greater or equal to zero")
    }
@@ -69,7 +69,7 @@ ashape <- function
    ind <- seq_len(n);
    ind.on <- grDevices::chull(xy.data)
    ind.in <- ind[-ind.on]
-   n.on <- length(ind.on)
+   # n.on <- length(ind.on)
    n.in <- length(ind.in)
    
    if (n.in > 0) {
@@ -92,9 +92,9 @@ ashape <- function
       alpha.ext <- ind.on
    }
    
-   n.edges <- nrow(mesh);
+   # n.edges <- nrow(mesh);
    is.edge <- numeric(0);
-   ind.is <- 0;
+   # ind.is <- 0;
    i1 <- match(mesh[, 1], alpha.ext);
    i2 <- match(mesh[, 2], alpha.ext);
    is.edge <- which(i1 & i2);
@@ -109,7 +109,7 @@ ashape <- function
       (aux[, "x1"] - aux[, "x2"])^2 +
       (aux[, "y1"] - aux[, "y2"])^2) * 0.5;
    betw <- rep(NA, n.pos)
-   for (i in 1:n.pos) {
+   for (i in seq_len(n.pos)) {
       if (aux[i, "mx1"] == aux[i, "mx2"]) {
          test_rank_y <- rank(c(
             aux[i, "my1"],
@@ -177,7 +177,7 @@ delvor <- function
    nt <- nrow(tri)
    circenter <- matrix(nrow=nt, ncol=2) 
    colnames(circenter) <- c("circumx", "circumy")
-   for (i in 1:nt){
+   for (i in seq_len(nt)){
       aux <- interp::circum(
          x=c(x[tri[i, 1], 1],
             x[tri[i, 2], 1],
@@ -190,7 +190,7 @@ delvor <- function
    tri.info <- cbind(tri, circenter)
    
    n.tri <- nrow(tri.info)
-   n.arc <- max(tri.info[, 7:9])
+   # n.arc <- max(tri.info[, 7:9])
    
    # simplified previous logic
    aux1 <- cbind(
@@ -219,7 +219,7 @@ delvor <- function
    bp1 <- (aux[, "indm1"] == 0)
    bp2 <- (aux[, "indm2"] == 0)
    is.dummy <- which(bp2)
-   n.dummy <- length(is.dummy)
+   # n.dummy <- length(is.dummy)
    circumcentres <- tri.info[, c("circumx", "circumy"), drop=FALSE]
    
    away <- max(diff(range(x[, 1])),

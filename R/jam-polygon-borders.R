@@ -25,10 +25,18 @@
 #'    * `"inner"`: the polygon is shrunk by half the border line width
 #'    * `"outer"`: the polygon is expanded by half the border line width
 #' @param lwd_inch `numeric` conversion of line width `lwd` units per inch,
-#'    by default `lwd=1` is defined as 1/96 inch.
-#' @param inner_cex `numeric` minor adjustment to calculations
+#'    by default `lwd=1` is defined as `1/96/2` inch, which is half the
+#'    previous value, perhaps due to updates to the R graphics device
+#'    since R-3.5.1.  
+#'    This value uses option `'jam.lwd_inch'` so it can persist.
+#' @param inner_cex `numeric` minor adjustment to calculations, default
+#'    `1.001`.  
+#'    This value uses option `'jam.inner_cex'` so it can persist.
 #' @param lwd `numeric` to define the intended line width for the resulting
 #'    polygon border. By default it uses `par("lwd")`.
+#' @param lwd_buffer `numeric` additional line width as a buffer, used
+#'    to stack lines adjacent to each other.
+#' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
 #' @examples
@@ -347,19 +355,17 @@
 #'    lwd=5)
 #'
 #' @export
-adjust_polygon_border <- function
-(x,
- y=NULL,
- type="inner",
- lwd_inch=getOption("jam.lwd_inch", 1/96/2),
-#  lwd_inch=getOption("jam.lwd_inch", 1/96),
-#  inner_cex=1.001,
- inner_cex=getOption("jam.inner_cex", 1.001),
- lwd=par("lwd"),
- lwd_buffer=0,
- verbose=FALSE,
- ...)
-{
+adjust_polygon_border <- function(
+   x,
+   y=NULL,
+   type="inner",
+   lwd_inch=getOption("jam.lwd_inch", 1/96/2),
+   inner_cex=getOption("jam.inner_cex", 1.001),
+   lwd=par("lwd"),
+   lwd_buffer=0,
+   verbose=FALSE,
+   ...
+) {
    #
    # check for open device
    if (!requireNamespace("sf")) {
@@ -383,7 +389,7 @@ adjust_polygon_border <- function
       x <- x[,1];
    }
    if (length(lwd_inch) == 0) {
-      lwd_inch <- 1/96;
+      lwd_inch <- 1 / 96 / 2;
    }
    if (length(inner_cex) == 0) {
       inner_cex <- 1.01;
@@ -393,7 +399,7 @@ adjust_polygon_border <- function
    }
 
    # check coordinates for NA breaks between multiple polygons
-   if (any(is.na(x))) {
+   if (anyNA(x)) {
       x_cuts <- sort(unique(c(0,
          which(is.na(x)) + 0.5,
          which(is.na(x)) - 0.5,
@@ -403,9 +409,9 @@ adjust_polygon_border <- function
       x_keep <- sapply(x_list, function(i){!all(is.na(i))});
       x_set <- x_list[x_keep];
       y_set <- y_list[x_keep];
-      lwd <- rep(lwd, length.out=length(x_set));
-      lwd_buffer <- rep(lwd_buffer, length.out=length(x_set));
-      type <- rep(type, length.out=length(x_set));
+      lwd <- rep_len(lwd, length(x_set));
+      lwd_buffer <- rep_len(lwd_buffer, length(x_set));
+      type <- rep_len(type, length(x_set));
       xy_list <- lapply(seq_along(x_set), function(i){
          i_xy <- adjust_polygon_border(x=x_set[[i]],
             y=y_set[[i]],
@@ -478,17 +484,17 @@ adjust_polygon_border <- function
 #' @rdname adjust_polygon_border
 #'
 #' @export
-adjust_rect_border <- function
-(x,
- y,
- rectangles=NULL,
- type="inner",
- lwd=NULL,
- lwd_buffer=0,
- lwd_inch=getOption("jam.lwd_inch", 1/96/2),
- verbose=FALSE,
- ...)
-{
+adjust_rect_border <- function(
+   x,
+   y,
+   rectangles=NULL,
+   type="inner",
+   lwd=NULL,
+   lwd_buffer=0,
+   lwd_inch=getOption("jam.lwd_inch", 1/96/2),
+   verbose=FALSE,
+   ...
+) {
    #
    # confirm a device is already open
    if (length(dev.cur()) == 0) {
@@ -507,9 +513,9 @@ adjust_rect_border <- function
    if (length(type) == 0) {
       type <- "inner";
    }
-   lwd <- rep(lwd, length.out=length(x));
-   lwd_buffer <- rep(lwd_buffer, length.out=length(x));
-   type <- rep(type, length.out=length(x));
+   lwd <- rep_len(lwd, length(x));
+   lwd_buffer <- rep_len(lwd_buffer, length(x));
+   type <- rep_len(type, length(x));
 
    # attempt direct adjustment
    # inner adjustment converts device size and coordinate range,

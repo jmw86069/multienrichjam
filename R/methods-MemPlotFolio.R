@@ -553,7 +553,7 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x,
 #'    * `type='attribute'` to use any existing vertex attribute.
 #'    * Append **'2'** to the end to hide gene labels. For example `type='set2'`.
 #' 
-#'    Recognized arguments in '...':
+#'    Recognized arguments in 'params':
 #'    * `'width'` to apply word-wrap to cluster labels, or vertex attribute.
 #'    * `'maxNchar'` to set maximum string character length, passed to
 #'    `fixSetLabels()`.
@@ -561,6 +561,11 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x,
 #'    the node layout.
 #'    * `'rotate_degrees'` with `numeric` value. When set, it calls
 #'    `rotate_igraph_layout()` with defaults.
+#'    * `'sortAttributes'` with `character` vector, enables
+#'    `spread_igraph_labels()` which is used to reorder nodes, then
+#'    spread labels accordingly.  
+#'    **`sortAttributes='default'`** will define defaults using
+#'    `reorder_igraph_nodes`.
 #'    * All other '...' arguments are passed to `jam_igraph()`.
 #'    
 #'    The legend includes direction if encoded in the 'MemPlotFolio', but
@@ -572,12 +577,18 @@ setMethod("GenePathHeatmap", "MemPlotFolio", function(x,
 #'    are passed to `mem_legend()` as 'x' and 'y'.
 #' @export
 setMethod("CnetCollapsed", "MemPlotFolio",
-   function(x, type, do_plot,
+   function(
+      x,
+      type,
+      do_plot,
       params=list(
          width=30,
          maxNchar=Inf,
          layout=NULL,
-         rotate_degrees=0),
+         rotate_degrees=0,
+         max_node_labels=1000,
+         sortAttributes=NULL
+      ),
       legend_x="bottomleft", legend_y=NULL,
       ...) {
    if (missing(do_plot)) {
@@ -615,24 +626,76 @@ setMethod("CnetCollapsed", "MemPlotFolio",
    maxNchar <- params$maxNchar;
    params[["maxNchar"]] <- NULL;
 
+   # if layout is supplied, update in place
+   needs_spread <- FALSE;
    if (length(params$layout) > 0) {
-      cnet <- set_igraph_layout(g=cnet,
+      cnet <- set_igraph_layout(
+         g=cnet,
          layout=params$layout)
       params[["layout"]] <- NULL;
+      needs_spread <- TRUE;
+   } else if ("repulse" %in% names(params)) {
+      cnet <- set_igraph_layout(
+         g=cnet,
+         layout=layout_with_qfrf(
+            repulse=unlist(params$repulse)
+         )
+      )
+      params[["repulse"]] <- NULL;
+      needs_spread <- TRUE;
    }
+   # if rotate_degrees is supplied, rotate here
    if ("rotate_degrees" %in% names(params) &&
       !params$rotate_degrees %in% c(NA, 0, 360)) {
       cnet <- rotate_igraph_layout(cnet,
          degrees=params$rotate_degrees)
+      needs_spread <- FALSE;
    }
    params[["rotate_degrees"]] <- NULL;
 
-   if (missing(type)) {
+   # if sortAttributes is supplied, update in place
+   if (length(params$sortAttributes) > 0) {
+      # option to re-use defaults
+      if (length(params$sortAttributes) == 1 &&
+         params$sortAttributes == "default") {
+         #
+         params$sortAttributes <- eval(formals(reorder_igraph_nodes)$sortAttributes)
+      }
+      cnet <- do.call(
+         spread_igraph_labels,
+         c(
+            alist(
+               g=cnet
+            ),
+            params
+         )
+      )
+      params[["sortAttributes"]] <- NULL;
+      needs_spread <- FALSE;
+   }
+   if (isTRUE(needs_spread)) {
+      if (!"do_reorder" %in% names(params)) {
+         params[["do_reorder"]] <- FALSE;
+      }
+      cnet <- do.call(
+         spread_igraph_labels,
+         c(
+            alist(
+               g=cnet
+            ),
+            params
+         )
+      )
+   }
+
+
+   if (missing(type) || length(type) == 0) {
       type <- "title";
       if (length(ClusterLabels(x)) > 0) {
          type <- "cluster";
       }
-      if (igraph::vcount(cnet) > 1000) {
+      if (igraph::vcount(cnet) > params$max_node_labels) {
+         jamba::printDebug("params$max_node_labels:", params$max_node_labels);# debug
          type <- paste0(type, "2");
       }
    }
@@ -788,7 +851,10 @@ setMethod("CnetExemplar", "MemPlotFolio",
          width=30,
          maxNchar=Inf,
          layout=NULL,
-         rotate_degrees=0),
+         rotate_degrees=0,
+         max_node_labels=1000,
+         sortAttributes=NULL
+      ),
       legend_x="bottomleft", legend_y=NULL,
       main=NULL, ...) {
    if (missing(do_plot)) {
@@ -796,7 +862,7 @@ setMethod("CnetExemplar", "MemPlotFolio",
    }
    arglist <- list(...);
    params <- modifyList(
-      eval(formals(CnetCollapsed)$params),
+      eval(formals(CnetExemplar)$params),
       params)
    if ("legend_x" %in% names(params)) {
       legend_x <- params$legend_x;
@@ -859,17 +925,67 @@ setMethod("CnetExemplar", "MemPlotFolio",
          maxNchar=maxNchar)
    }
 
+   # if layout is supplied, update in place
+   needs_spread <- FALSE;
    if (length(params$layout) > 0) {
-      cnet <- set_igraph_layout(g=cnet,
+      cnet <- set_igraph_layout(
+         g=cnet,
          layout=params$layout)
       params[["layout"]] <- NULL;
+      needs_spread <- TRUE;
+   } else if ("repulse" %in% names(params)) {
+      cnet <- set_igraph_layout(
+         g=cnet,
+         layout=layout_with_qfrf(
+            repulse=unlist(params$repulse)
+         )
+      )
+      params[["repulse"]] <- NULL;
+      needs_spread <- TRUE;
    }
+   # if rotate_degrees is supplied, rotate here
    if ("rotate_degrees" %in% names(params) &&
       !params$rotate_degrees %in% c(NA, 0, 360)) {
       cnet <- rotate_igraph_layout(cnet,
          degrees=params$rotate_degrees)
+      needs_spread <- FALSE;
    }
    params[["rotate_degrees"]] <- NULL;
+
+   # if sortAttributes is supplied, update in place
+   if (length(params$sortAttributes) > 0) {
+      # option to re-use defaults
+      if (length(params$sortAttributes) == 1 &&
+         params$sortAttributes == "default") {
+         #
+         params$sortAttributes <- eval(formals(reorder_igraph_nodes)$sortAttributes)
+      }
+      cnet <- do.call(
+         spread_igraph_labels,
+         c(
+            alist(
+               g=cnet
+            ),
+            params
+         )
+      )
+      params[["sortAttributes"]] <- NULL;
+      needs_spread <- FALSE;
+   }
+   if (isTRUE(needs_spread)) {
+      if (!"do_reorder" %in% names(params)) {
+         params[["do_reorder"]] <- FALSE;
+      }
+      cnet <- do.call(
+         spread_igraph_labels,
+         c(
+            alist(
+               g=cnet
+            ),
+            params
+         )
+      )
+   }
 
    if (isTRUE(do_plot)) {
       if (length(main) > 0) {
@@ -926,7 +1042,10 @@ setMethod("CnetCluster", "MemPlotFolio",
          width=30,
          maxNchar=Inf,
          layout=NULL,
-         rotate_degrees=0),
+         rotate_degrees=0,
+         max_node_labels=1000,
+         sortAttributes=NULL
+      ),
       legend_x="bottomleft", legend_y=NULL,
       main=NULL, ...) {
    if (missing(do_plot)) {
@@ -1020,17 +1139,67 @@ setMethod("CnetCluster", "MemPlotFolio",
          maxNchar=maxNchar)
    }
 
+   # if layout is supplied, update in place
+   needs_spread <- FALSE;
    if (length(params$layout) > 0) {
-      cnet <- set_igraph_layout(g=cnet,
+      cnet <- set_igraph_layout(
+         g=cnet,
          layout=params$layout)
       params[["layout"]] <- NULL;
+      needs_spread <- TRUE;
+   } else if ("repulse" %in% names(params)) {
+      cnet <- set_igraph_layout(
+         g=cnet,
+         layout=layout_with_qfrf(
+            repulse=unlist(params$repulse)
+         )
+      )
+      params[["repulse"]] <- NULL;
+      needs_spread <- TRUE;
    }
+   # if rotate_degrees is supplied, rotate here
    if ("rotate_degrees" %in% names(params) &&
       !params$rotate_degrees %in% c(NA, 0, 360)) {
       cnet <- rotate_igraph_layout(cnet,
          degrees=params$rotate_degrees)
+      needs_spread <- FALSE;
    }
    params[["rotate_degrees"]] <- NULL;
+
+   # if sortAttributes is supplied, update in place
+   if (length(params$sortAttributes) > 0) {
+      # option to re-use defaults
+      if (length(params$sortAttributes) == 1 &&
+         params$sortAttributes == "default") {
+         #
+         params$sortAttributes <- eval(formals(reorder_igraph_nodes)$sortAttributes)
+      }
+      cnet <- do.call(
+         spread_igraph_labels,
+         c(
+            alist(
+               g=cnet
+            ),
+            params
+         )
+      )
+      params[["sortAttributes"]] <- NULL;
+      needs_spread <- FALSE;
+   }
+   if (isTRUE(needs_spread)) {
+      if (!"do_reorder" %in% names(params)) {
+         params[["do_reorder"]] <- FALSE;
+      }
+      cnet <- do.call(
+         spread_igraph_labels,
+         c(
+            alist(
+               g=cnet
+            ),
+            params
+         )
+      )
+   }
 
    if (isTRUE(do_plot)) {
       if (length(main) > 0) {

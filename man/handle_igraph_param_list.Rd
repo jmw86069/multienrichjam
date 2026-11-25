@@ -44,6 +44,8 @@ being adjusted in \code{x}:
 \item \code{"edge"} refers to \code{igraph::edge_attr()}
 }}
 
+\item{verbose}{\code{logical} whether to print verbose output.}
+
 \item{...}{additional arguments are ignored.}
 }
 \value{

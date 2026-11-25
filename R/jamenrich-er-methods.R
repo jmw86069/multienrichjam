@@ -164,6 +164,27 @@
 #'    is used as the pathway name.
 #'    For the purpose of this process, only the pathway name is retained,
 #'    and all other annotations should be retrieved separately as needed.
+#' @param enrichment_params `list` with optional parameters specific
+#'    to each enrichment method. Currently only `eps` is recognized,
+#'    passed to 'GSEA' to define the level of detail in P-values.
+#'    Default `eps = 1e-20`.  
+#'    Use `eps = 1e-50` or `eps = 0` for high detail.  
+#'    Use `eps = 1e-10` or `eps = 1e-5` for rapid data mining.
+#' @param cache_results `logical` default TRUE, whether to cache each
+#'    enrichment result. By default, it is enabled, the main reason not
+#'    to enable would be to preserve disk space over a large number of
+#'    pathway analysis datasets. Otherwise, it can only help, as re-running
+#'    `jam_enricher()` with additional 'genedata', 'pathwaydata', 'enrich_method'
+#'    should not need to recalculate any result previously completed,
+#'    only new entries. Also useful when run within Rmarkdown/Quarto context
+#'    to prevent re-calculating large enrichment results when the
+#'    chunk itself is not being cached.  
+#'    **Work in progress.**
+#' @param cache_path `character` path to cache folder.
+#'    Default NULL uses `rappdirs::user_cache_dir()` with `'jam_enricher'`
+#'    as the `appname`.
+#' @param cache_force_refresh `logical`, default FALSE, whether to force
+#'    the cache to be reset.
 #' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are passed to internal functions.
 #' 
@@ -190,6 +211,12 @@ jam_enricher <- function
    pathwaydata_params=list(
       ann_lib="org.Hs.eg.db"
    ),
+   enrichment_params=list(
+      eps=1e-20
+   ),
+   cache_results=TRUE,
+   cache_path=getOption("jam_enrich.cache_path"),
+   cache_force_refresh=FALSE,
    verbose=FALSE,
    ...
 ) {
@@ -227,6 +254,24 @@ jam_enricher <- function
       pathwaydata_params,
       keep.null=FALSE
    )
+
+   # default params (for now)
+   minGSSize <- 10;
+   maxGSSize <- 10000;
+
+   # cache_path
+   if (isTRUE(cache_results) &&
+      length(cache_path) == 0) {
+      cache_path <- rappdirs::user_cache_dir("jam_enrich")
+      if (isTRUE(cache_results) && !dir.exists(cache_path)) {
+         # create cache_path if necessary
+         dir.create(
+            path=cache_path,
+            showWarnings=FALSE,
+            recursive=TRUE
+         )
+      }
+   }
 
    # genedata
    if (!is.list(genedata) || length(names(genedata)) == 0) {
@@ -311,39 +356,76 @@ jam_enricher <- function
                }
                use_igdf <- subset(igdf, hit & !is.na(sign) & sign != 0)
                use_gene <- use_igdf$gene;
-               er <- clusterProfiler::enricher(
-                  gene=use_gene,
-                  pvalueCutoff=1,
-                  qvalueCutoff=1,
-                  universe=universe,
-                  minGSSize=10,
-                  maxGSSize=10000,
-                  TERM2GENE=ipdf
-               )
-               # add pathwaydata name as 'gs_cat'
-               er@result$gs_cat <- pwname;
-               use_gene_hits <- jamba::nameVector(
-                  sign(use_igdf$sign),
-                  use_igdf$gene
-               )
-               if (any(jamba::rmNA(igdf$sign) < 0)) {
-                  if (verbose) {
-                     jamba::printDebug(
-                        "jam_enricher(): ",
-                        sep="",
-                        c(
-                           "ORA: ",
-                           "add_pathway_direction()")
-                     )
-                  }
-                  er <- add_pathway_direction(
-                     x=er,
-                     gene_hits=use_gene_hits,
-                     delim="/",
-                     dir_colname="direction"
+
+               # check for cached results
+               cache_file <- "";
+               if (isTRUE(cache_results)) {
+                  cache_key <- get_enrich_cache_key(
+                     genedata=use_gene,
+                     pathwaydata=ipdf,
+                     enrich_method=iem,
+                     universe=universe,
+                     minGSSize=minGSSize,
+                     maxGSSize=maxGSSize,
+                     params=NULL
+                  )
+                  cache_file <- get_enrich_cache_file(
+                     cache_path=cache_path,
+                     cache_key=cache_key
                   )
                }
-               attr(er, "genes_signed") <- use_gene_hits;
+               if (!cache_force_refresh && file.exists(cache_file)) {
+                  # re-load cached result
+                  if (verbose) {
+                     jamba::printDebug(
+                        "                ",
+                        "Restored from cache.",
+                        fgText=c("darkorange2", "seagreen3")
+                     )
+                  }
+                  er <- readRDS(cache_file);
+               } else {
+                  er <- clusterProfiler::enricher(
+                     gene=use_gene,
+                     pvalueCutoff=1,
+                     qvalueCutoff=1,
+                     universe=universe,
+                     minGSSize=minGSSize,
+                     maxGSSize=maxGSSize,
+                     TERM2GENE=ipdf
+                  )
+                  # add pathwaydata name as 'gs_cat'
+                  er@result$gs_cat <- pwname;
+                  use_gene_hits <- jamba::nameVector(
+                     sign(use_igdf$sign),
+                     use_igdf$gene
+                  )
+                  if (any(jamba::rmNA(igdf$sign) < 0)) {
+                     if (verbose) {
+                        jamba::printDebug(
+                           "jam_enricher(): ",
+                           sep="",
+                           c(
+                              "ORA: ",
+                              "add_pathway_direction()")
+                        )
+                     }
+                     er <- add_pathway_direction(
+                        x=er,
+                        gene_hits=use_gene_hits,
+                        delim="/",
+                        dir_colname="direction"
+                     )
+                  }
+                  attr(er, "genes_signed") <- use_gene_hits;
+                  # Save to cache
+                  if (isTRUE(cache_results) &&
+                     length(cache_file) == 1 &&
+                     nzchar(cache_file)) {
+                     # Store cached results
+                     saveRDS(object=er, file=cache_file)
+                  }
+               }
                er
             } else if ("GSEA" %in% iem) {
                # GSEA
@@ -369,19 +451,57 @@ jam_enricher <- function
                      "middle(use_genes_ordered):");
                   jamba::middle(use_genes_ordered, 20);
                }
-               gsear <- clusterProfiler::GSEA(
-                  geneList=use_genes_ordered,
-                  TERM2GENE=ipdf,
-                  minGSSize=10,
-                  maxGSSize=10000,
-                  pvalueCutoff=1,
-                  eps=1e-50,
-                  verbose=verbose > 1,
-                  ...
-               )
-               # add pathwaydata name as 'gs_cat'
-               gsear@result$gs_cat <- pwname;
-               attr(gsear, "genes_ordered") <- use_genes_ordered;
+               # check for cached results
+               cache_file <- "";
+               if (isTRUE(cache_results)) {
+                  cache_key <- get_enrich_cache_key(
+                     genedata=use_genes_ordered,
+                     pathwaydata=ipdf,
+                     enrich_method=iem,
+                     universe=universe,
+                     minGSSize=minGSSize,
+                     maxGSSize=maxGSSize,
+                     params=list(
+                        eps=1e-20
+                     )
+                  )
+                  cache_file <- get_enrich_cache_file(
+                     cache_path=cache_path,
+                     cache_key=cache_key
+                  )
+               }
+               if (!cache_force_refresh && file.exists(cache_file)) {
+                  # re-load cached result
+                  if (verbose) {
+                     jamba::printDebug(
+                        "                ",
+                        "Restored from cache.",
+                        fgText=c("darkorange2", "seagreen3")
+                     )
+                  }
+                  gsear <- readRDS(cache_file);
+               } else {
+                  gsear <- clusterProfiler::GSEA(
+                     geneList=use_genes_ordered,
+                     TERM2GENE=ipdf,
+                     minGSSize=minGSSize,
+                     maxGSSize=maxGSSize,
+                     pvalueCutoff=1,
+                     eps=1e-20,
+                     verbose=verbose > 1,
+                     ...
+                  )
+                  # add pathwaydata name as 'gs_cat'
+                  gsear@result$gs_cat <- pwname;
+                  attr(gsear, "genes_ordered") <- use_genes_ordered;
+                  # Save to cache
+                  if (isTRUE(cache_results) &&
+                     length(cache_file) == 1 &&
+                     nzchar(cache_file)) {
+                     # Store cached results
+                     saveRDS(object=gsear, file=cache_file)
+                  }
+               }
                gsear
             } else {
                cli::cli_abort("No other enrichment methods yet implemented.")

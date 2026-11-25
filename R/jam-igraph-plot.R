@@ -356,67 +356,72 @@
 #' title(main="edge_bundling='connections'")
 #'
 #' @export
-jam_igraph <- function
-(x,
- ...,
- xlim=NULL,
- ylim=NULL,
- expand=0.03,
-#  main=NULL,
- rescale=FALSE,
- node_factor=1,
- node_factor_l=NULL,
- edge_factor=1,
- edge_factor_l=NULL,
- label_factor=1,
- label_factor_l=NULL,
- border_factor=1,
- label_fontsize_l=NULL,
- label_dist_factor=1,
- label_dist_factor_l=1,
- use_shadowText=NULL,
- edge_bundling=c(
-    "default",
-    "connections",
-    "none",
-    "mark.groups",
-    "nodegroups"),
- bundle_self=FALSE,
- nodegroups=NULL,
- render_nodes=TRUE,
- render_edges=TRUE,
- render_nodelabels=TRUE,
- render_groups=TRUE,
- vectorized_node_shapes=TRUE,
- plot_grid=FALSE,
- plot_function=jam_plot_igraph,
- mark.groups=list(),
- mark.shape=1/2,
- mark.col=NULL,
- mark.alpha=0.2,
- mark.border=NULL,
- mark.expand=NULL,
- mark.lwd=2,
- mark.lty=1,
- mark.smooth=TRUE,
- mark.cex=1,
- mark.x.nudge=0,
- mark.y.nudge=0,
- verbose=FALSE,
- debug=NULL)
-{
+jam_igraph <- function(
+   x,
+   ...,
+   xlim=NULL,
+   ylim=NULL,
+   expand=0.03,
+   #  main=NULL,
+   rescale=FALSE,
+   node_factor=1,
+   node_factor_l=NULL,
+   edge_factor=1,
+   edge_factor_l=NULL,
+   label_factor=1,
+   label_factor_l=NULL,
+   border_factor=1,
+   label_fontsize_l=NULL,
+   label_dist_factor=1,
+   label_dist_factor_l=1,
+   use_shadowText=NULL,
+   edge_bundling=c(
+      "default",
+      "connections",
+      "none",
+      "mark.groups",
+      "nodegroups"),
+   bundle_self=FALSE,
+   nodegroups=NULL,
+   render_nodes=TRUE,
+   render_edges=TRUE,
+   render_nodelabels=TRUE,
+   render_groups=TRUE,
+   vectorized_node_shapes=TRUE,
+   plot_grid=FALSE,
+   plot_function=jam_plot_igraph,
+   mark.groups=list(),
+   mark.shape=1/2,
+   mark.col=NULL,
+   mark.alpha=0.2,
+   mark.border=NULL,
+   mark.expand=NULL,
+   mark.lwd=2,
+   mark.lty=1,
+   mark.smooth=TRUE,
+   mark.cex=1,
+   mark.x.nudge=0,
+   mark.y.nudge=0,
+   verbose=FALSE,
+   debug=NULL
+) {
    ##
    # validate edge_bundling input
    if (length(edge_bundling) == 0) {
       edge_bundling <- "none";
    } else if (is.atomic(edge_bundling)) {
-      edge_bundling <- head(intersect(edge_bundling,
-         eval(formals(jam_igraph)$edge_bundling)), 1);
+      edge_bundling <- head(
+         intersect(
+            edge_bundling,
+            eval(formals(jam_igraph)$edge_bundling)
+         ),
+         1);
       if (length(edge_bundling) == 0) {
-         stop("edge_bundling method not recognized")
+         cli::cli_abort("{.var edge_bundling} method not recognized")
       }
    } else if (is.function(edge_bundling)) {
-      edge_function <- edge_bundling;
+      # Why is this conversion done here?
+      # edge_function <- edge_bundling;
       edge_bundling <- "function";
    }
 
@@ -662,13 +667,13 @@ jam_igraph <- function
             "nodeType" %in% igraph::vertex_attr_names(x)) {
          mark.groups <- tryCatch({
             get_cnet_nodeset(x,
-            	...)
+               ...)
          }, error=function(e){
             NULL
          })
          if (any(mark.cex == 0)) {
-         	names(mark.groups) <- NULL;
-         	mark.cex <- 1;
+            names(mark.groups) <- NULL;
+            mark.cex <- 1;
          }
       } else {
          mark.groups <- NULL;
@@ -706,9 +711,10 @@ jam_igraph <- function
          k <- (mark.groups$names %in% igraph::V(x)$name);
          new.mark.groups <- split(mark.groups$names[k],
             factor(mark.groups$membership)[k]);
-         names(new.mark.groups) <- rep(
+         names(new.mark.groups) <- rep_len(
             jamba::cPaste(mark.groups$cluster_names, sep=",\n"),
-            length.out=length(new.mark.groups))
+            length(new.mark.groups)
+         )
          mark.groups <- new.mark.groups[lengths(new.mark.groups) > 0];
       }
       # confirm all elements of mark.groups are present as node names
@@ -722,10 +728,10 @@ jam_igraph <- function
       }
    }
    if (any(mark.cex == 0)) {
-   	if (length(mark.groups) > 0) {
-	   	names(mark.groups) <- NULL;
-   	}
-   	mark.cex <- 1;
+      if (length(mark.groups) > 0) {
+         names(mark.groups) <- NULL;
+      }
+      mark.cex <- 1;
    }
 
    plot_function(x=x,
@@ -763,7 +769,7 @@ jam_igraph <- function
       vectorized_node_shapes=vectorized_node_shapes,
       plot_grid=plot_grid,
       params=params,
-   	verbose=(any(verbose > 1)),
+      verbose=(any(verbose > 1)),
       debug=debug);
    return(invisible(params));
 }
@@ -819,19 +825,20 @@ jam_igraph <- function
 #'    being adjusted in `x`:
 #'    * `"node"` or `"vertex"` refers to `igraph::vertex_attr()`
 #'    * `"edge"` refers to `igraph::edge_attr()`
+#' @param verbose `logical` whether to print verbose output.
 #' @param ... additional arguments are ignored.
 #'
 #'
 #' @export
-handle_igraph_param_list <- function
-(x,
- attr,
- factor_l,
- i_values=NULL,
- attr_type=c("node", "vertex", "edge"),
- verbose=FALSE,
- ...)
-{
+handle_igraph_param_list <- function(
+   x,
+   attr,
+   factor_l,
+   i_values=NULL,
+   attr_type=c("node", "vertex", "edge"),
+   verbose=FALSE,
+   ...
+) {
    attr_type <- match.arg(attr_type);
    if (attr_type %in% c("node", "vertex")) {
       vct <- igraph::vcount(x);
@@ -840,8 +847,7 @@ handle_igraph_param_list <- function
          i_values <- igraph::vertex_attr(x, attr);
       }
       if (length(i_values) > 0 && length(i_values) < vct) {
-         i_values <- rep(i_values,
-            length.out=vct);
+         i_values <- rep_len(i_values, vct);
       }
    } else if (attr_type %in% c("edge")) {
       ect <- igraph::ecount(x);
@@ -850,8 +856,7 @@ handle_igraph_param_list <- function
          i_values <- igraph::edge_attr(x, attr);
       }
       if (length(i_values) > 0 && length(i_values) < ect) {
-         i_values <- rep(i_values,
-            length.out=ect);
+         i_values <- rep_len(i_values, ect);
       }
    }
    if (is.numeric(factor_l)) {
@@ -932,16 +937,18 @@ handle_igraph_param_list <- function
 #' @param big_tick,small_tick `numeric` values in percent, the step size
 #'    between big grid lines, and small grid lines, respectively.
 #' @param ... additional arguments are ignored.
-#'
+#' 
+#' @returns invisible `list` with 'ticks_x', 'ticks_y'
+#' 
 #' @export
-plot_layout_scale <- function
-(layout,
- grid_colors=c("grey80", "grey70"),
- grid_lty=c("dotted", "solid"),
- big_tick=10,
- small_tick=2.5,
- ...)
-{
+plot_layout_scale <- function(
+   layout,
+   grid_colors=c("grey80", "grey70"),
+   grid_lty=c("dotted", "solid"),
+   big_tick=10,
+   small_tick=2.5,
+   ...
+) {
    #
    if (!any(c("numeric", "matrix", "data.frame", "tbl_df") %in% class(layout))) {
       stop("layout must contain numeric coordinates as matrix or data.frame")
@@ -949,15 +956,15 @@ plot_layout_scale <- function
    if (length(grid_colors) == 0) {
       grid_colors <- c("grey80", "grey70")
    }
-   grid_colors <- rep(grid_colors, length.out=2)
+   grid_colors <- rep_len(grid_colors, 2)
    if (length(grid_lty) == 0) {
       grid_lty <- c("dotted", "solid")
    }
-   grid_lty <- rep(grid_lty, length.out=2)
+   grid_lty <- rep_len(grid_lty, 2)
    xy_ranges <- apply(layout, 2, function(i){
       jamba::nameVector(range(i, na.rm=TRUE),
          c("min", "max"))})
-   xy_mids <- apply(xy_ranges, 2, mean)
+   xy_mids <- colMeans(xy_ranges)
    xy_spans <- apply(xy_ranges, 2, diff)
    xy_max <- max(xy_spans)
    # tick mark steps
@@ -982,6 +989,9 @@ plot_layout_scale <- function
       lwd=2,
       lty=grid_lty[[2]],
       col=NA, border=grid_colors[[2]])
-
+   invisible(list(
+      ticks_x=ticks_x,
+      ticks_y=ticks_y
+   ))
 }
 

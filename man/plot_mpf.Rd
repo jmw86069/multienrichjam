@@ -22,8 +22,8 @@ plot_mpf(
   em_group = "default",
   Mem = NULL,
   params = list(eh = list(do_plot = TRUE), em = list(repulse = 3.5, node_factor = 1,
-    width = 30), cc = list(repulse = 3.5, node_factor = 1), ce = list(node_factor = 1),
-    gp = list(width = 30), c = list(node_factor = 1)),
+    width = 30), cc = list(node_factor = 1, max_node_labels = 1000), ce =
+    list(node_factor = 1), gp = list(width = 30), c = list(node_factor = 1)),
   do_newpage = NULL,
   verbose = FALSE,
   ...
@@ -134,7 +134,7 @@ Experimental.}
 ('eh','gp','em', 'cc', 'ce', 'c') each containing a list of
 optional parameters relevant to each plot.
 In each case, parameters in \code{params} are passed to the
-internal function as arguments.For example,
+internal function as arguments. For example,
 \code{em=list(repulse=3.5)} is passed as
 \code{EnrichmentMap(..., repulse=3.5)}.
 Limited functionality currently, however check here for

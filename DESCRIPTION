@@ -44,7 +44,10 @@ Imports: jamba (>= 1.0.4),
    BiocStyle,
    kableExtra,
    cli,
-   genejam
+   genejam,
+   rappdirs,
+   digest,
+   cachem
 Suggests: 
    knitr,
    openxlsx,

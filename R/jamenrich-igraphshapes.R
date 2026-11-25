@@ -1460,7 +1460,7 @@ shape.jampie.clip <- function
       # vertex.frame.lwd <- new.frame.lwd;
       new.frame.width <- ifelse(
          vertex.frame.width > vertex.pie.lwd.max &
-           vertex.pie.lwd.max > 0,
+            vertex.pie.lwd.max > 0,
          vertex.pie.lwd.max,
          vertex.frame.width)
       vertex.frame.width <- new.frame.width;
@@ -1481,7 +1481,7 @@ shape.jampie.clip <- function
    # inner_adjustment <- (overall_lwd / 96) * fig_adj;
    # outer_adjustment <- (vertex.frame.lwd / 96) * fig_adj;
    outer_adjustment <- (vertex.frame.width / 96) * fig_adj;
-  
+
    ## Two options here:
    ## 1. Draw edges to the inner border, overlapping outer border
    # radius_add <- inner_adjustment*1.01 - outer_adjustment;
@@ -1736,7 +1736,7 @@ jam_mypie <- function
          diff(par("usr")[1:2]) / par("pin")[1]);
       outer_adjustment <- ((frame.lwd / 96) *
          diff(par("usr")[1:2]) / par("pin")[1]);
-     
+
       # radii <- radius + (inner_adjustment) - max(outer_adjustment);
       radii <- (radius +
             (inner_adjustment)*(max(inner_adjustment)/inner_adjustment) -
